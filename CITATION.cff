@@ -1,0 +1,12 @@
+cff-version: 1.2.0
+message: "If you base your work on it, please cite it as below."
+authors:
+- family-names: Dorrer
+  given-names: Simon
+  orcid: https://orcid.org/0009-0001-5994-5477
+title: "GitHub Repository for an Open-Source Analog-Mixed Signal Chip Design Template for the ihp-sg13g2 Open-PDK."
+date-released: 2026
+url: https://github.com/iic-jku/ihp-sg13g2-ams-chip-template
+identifiers:
+  - type: doi
+    value: ToDo
