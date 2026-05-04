@@ -27,7 +27,7 @@ module chip_core #(
 	inout  wire [NUM_ANALOG_PADS-1:0] analog_padbare    // Analog (direct pad connection with primary ESD protection)
 );
 	// ======================================================
-	// RISC-V CPU (Digital)
+	// Counter (Digital)
 	// ======================================================
 	logic si;
 	logic sclk;
@@ -53,7 +53,7 @@ module chip_core #(
 	logic ds_Q_oe;
 	logic Q_ae;
 	
-	riscv_top riscv_top (
+	counter_top counter_top (
 		`ifdef USE_POWER_PINS
         .VDD(VDD),
 		.VSS(VSS),
@@ -99,14 +99,14 @@ module chip_core #(
 	// ======================================================
 	
 	// ======================================================
-	// IQ-Modulator (Analog)
+	// Inverter (Analog)
 	// ======================================================
 	wire voutp_I_RF;
 	wire voutn_I_RF;
 	wire voutn_Q_RF;
 	wire voutp_Q_RF;
 	
-	iqmod_top iqmod_top (
+	inverter_top inverter_top (
 		`ifdef USE_POWER_PINS
 		.VDD(VDD),
 		.VSS(VSS),
@@ -136,7 +136,7 @@ module chip_core #(
 	// ======================================================
 	// Assignments
     // ======================================================
-	// RISC-V CPU
+	// counter
 	// Outputs
 	assign output_out[8] = si;
 	assign output_out[7] = sclk;
@@ -185,7 +185,7 @@ module chip_core #(
 	assign bidir_out[0] = ds_I_p_o;
 	assign bidir_oe[0]  = ds_I_oe;
 
-	// IQ-Modulator
+	// Inverter
 	// Not connected analog pads (only padres or padbare is connected per analog pad)
 	// - analog_padres[2], analog_padres[3], analog_padres[4], analog_padres[5]
 	// - analog_padbare[0], analog_padbare[1], analog_padbare[6], analog_padbare[7]
