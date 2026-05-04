@@ -107,7 +107,7 @@ ToDo
 │  │  ├─ 📁 schematic/
 │  │  ├─ 📁 scripts/
 │  │  └─ 📁 testbenches/
-│  ├─ 📁 iqmod/
+│  ├─ 📁 inverter/
 │  │  ├─ 📁 final/
 │  │  ├─ 📁 layout/
 │  │  ├─ 📁 netlist/
@@ -118,7 +118,7 @@ ToDo
 │  │  ├─ 📁 verification/
 │  │  ├─ Makefile
 │  │  └─ README.md
-│  └─ 📁 riscv/
+│  └─ 📁 counter/
 │     ├─ 📁 final/
 │     ├─ 📁 flow/
 │     ├─ 📁 fpga/
@@ -203,7 +203,7 @@ make help
 
 ## Initialize Git Submodules
 
-Initializes and updates the repository submodules (for example `ihp130/artistic`):
+Initializes and updates the repository submodules (for example `artistic`):
 
 ```sh
 make init-submodules
@@ -375,26 +375,26 @@ make build-macros
 
 ### Build Digital Macros
 
-The following command builds the `riscv` digital macro:
+The following command builds the `counter` digital macro:
 
 ```sh
-make build-riscv
+make build-counter
 ```
 
 For each digital macro the following commands are executed: `make librelane`, `make copy-reports`, and `make render-gds`.
 
 > [!TIP]
 > Each macro has its own `Makefile` and `README.md` with additional targets, such as linting, simulation, and verification.
-> For example, to lint the RISC-V CPU or run its simulation, refer to [ihp130/macros/riscv/README.md](macros/riscv/README.md).
+> For example, to lint the counter or run its simulation, refer to [macros/counter/README.md](macros/counter/README.md).
 
 ### Build Analog Macros
 
 Each analog macro has its own `klayout-verify` and `magic-verify` targets that runs LVS, DRC, and PEX for the top level cell.
 
-To build the IQ modulator macro:
+To build the inverter macro:
 
 ```sh
-make build-iqmod
+make build-inverter
 ```
 
 All analog macros are included in `build-macros` alongside the digital macros.
@@ -409,8 +409,8 @@ make build-all
 ```
 
 > [!NOTE]
-> The `make build-all` target does **not** currently build the digital macros (e.g., RISC-V CPU, IQ modulator).
-> To build specific macros, use `make build-riscv`, `make build-iqmod`, or `make build-macros` to build all enabled macros separately.
+> The `make build-all` target does **not** currently build the digital macros (e.g., counter, inverter).
+> To build specific macros, use `make build-counter`, `make build-inverter`, or `make build-macros` to build all enabled macros separately.
 
 This is useful if you want to rebuild the chip from scratch. Clone the repository, enter the IIC-OSIC-TOOLS environment, and run `make build-all`.
 

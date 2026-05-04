@@ -223,15 +223,15 @@ build-logos: ## Build the logos
 	@$(MAKE) -C $(IP_DIR)/sg13g2_ip__ce_names all
 .PHONY: build-logos
 
-build-riscv: ## Build the RISC-V macro
-	@$(MAKE) -C $(MACROS_DIR)/riscv all
-.PHONY: build-riscv
+build-counter: ## Build the counter macro
+	@$(MAKE) -C $(MACROS_DIR)/counter all
+.PHONY: build-counter
 
-build-iqmod: ## Build the IQ modulator macro
-	@$(MAKE) -C $(MACROS_DIR)/iqmod all
-.PHONY: build-iqmod
+build-inverter: ## Build the inverter macro
+	@$(MAKE) -C $(MACROS_DIR)/inverter all
+.PHONY: build-inverter
 
-build-macros: build-riscv build-iqmod ## Build macros (RISC-V and IQ modulator)
+build-macros: build-counter build-inverter ## Build macros (counter and inverter)
 .PHONY: build-macros
 
 # This target adds the Chip logo and fill structures on all layers.
@@ -241,7 +241,7 @@ add-logo-fill: ## Call add_logo_fill.sh to add the Chip logo and fill structures
 .PHONY: add-logo-fill
 
 # TODO: See above, `make librelane-nodrc` must be used for now until IHP fixes the `metal1_pin_offgrid` errors. Once fixed, `make librelane` can be used again.
-# TODO: Add `make build-macros`. For now, this is not possible. RISC-V CPU is built with nix-shell. Top-Level is built with `next` release of IIC-OSIC-TOOLS due to https://github.com/FPGA-Research/heichips25-tapeout/blob/8944926f1f49e382616fbdd150e356bbdcf23b8c/nix/disable_auto_taper.patch#L4.
+# TODO: Add `make build-macros`. For now, this is not possible. counter is built with nix-shell. Top-Level is built with `next` release of IIC-OSIC-TOOLS due to https://github.com/FPGA-Research/heichips25-tapeout/blob/8944926f1f49e382616fbdd150e356bbdcf23b8c/nix/disable_auto_taper.patch#L4.
 build-all: ## Build the whole chip (build bondpad, build logos, build macros, run LibreLane, copy reports, copy GDS, copy netlist, render gds, open GDS in OpenROAD GUI)
 	$(MAKE) init-submodules
 	$(MAKE) build-bondpad
