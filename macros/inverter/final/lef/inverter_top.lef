@@ -1,0 +1,230 @@
+VERSION 5.7 ;
+  NOWIREEXTENSIONATPIN ON ;
+  DIVIDERCHAR "/" ;
+  BUSBITCHARS "[]" ;
+MACRO iqmod_top
+  CLASS BLOCK ;
+  FOREIGN iqmod_top ;
+  ORIGIN 0.000 0.000 ;
+  SIZE 337.000 BY 142.280 ;
+  PIN di_spdt_ctrl_Q
+    PORT
+      LAYER Metal2 ;
+        RECT 4.005 37.895 7.400 38.895 ;
+    END
+  END di_spdt_ctrl_Q
+  PIN di_spdt_ctrl_I
+    PORT
+      LAYER Metal2 ;
+        RECT 4.005 103.385 7.400 104.385 ;
+    END
+  END di_spdt_ctrl_I
+  PIN voutn_I_RF
+    ANTENNADIFFAREA 10711.463867 ;
+    PORT
+      LAYER Metal3 ;
+        RECT 326.775 90.875 328.775 96.875 ;
+    END
+  END voutn_I_RF
+  PIN voutp_I_RF
+    ANTENNADIFFAREA 10711.463867 ;
+    PORT
+      LAYER Metal3 ;
+        RECT 326.775 110.895 328.775 116.895 ;
+    END
+  END voutp_I_RF
+  PIN voutn_Q_RF
+    ANTENNADIFFAREA 10711.463867 ;
+    PORT
+      LAYER Metal3 ;
+        RECT 326.775 45.405 328.775 51.405 ;
+    END
+  END voutn_Q_RF
+  PIN voutp_Q_RF
+    ANTENNADIFFAREA 10711.463867 ;
+    PORT
+      LAYER Metal3 ;
+        RECT 326.775 25.385 328.775 31.385 ;
+    END
+  END voutp_Q_RF
+  PIN di_analog_en
+    PORT
+      LAYER Metal3 ;
+        RECT 3.005 70.640 5.005 71.640 ;
+    END
+  END di_analog_en
+  PIN vinp_Q
+    ANTENNADIFFAREA 10711.463867 ;
+    PORT
+      LAYER Metal4 ;
+        RECT 4.005 32.665 6.005 35.665 ;
+    END
+  END vinp_Q
+  PIN vinn_Q
+    ANTENNADIFFAREA 10711.463867 ;
+    PORT
+      LAYER Metal4 ;
+        RECT 4.005 41.125 6.005 44.125 ;
+    END
+  END vinn_Q
+  PIN vinn_I
+    ANTENNADIFFAREA 10711.463867 ;
+    PORT
+      LAYER Metal4 ;
+        RECT 4.005 98.155 6.005 101.155 ;
+    END
+  END vinn_I
+  PIN vinp_I
+    ANTENNADIFFAREA 10711.463867 ;
+    PORT
+      LAYER Metal4 ;
+        RECT 4.005 106.615 6.005 109.615 ;
+    END
+  END vinp_I
+  PIN di_lo_I
+    PORT
+      LAYER Metal4 ;
+        RECT 4.005 134.880 227.335 135.880 ;
+    END
+  END di_lo_I
+  PIN di_ds_I_p
+    ANTENNADIFFAREA 10711.463867 ;
+    PORT
+      LAYER Metal4 ;
+        RECT 4.005 110.730 26.700 111.730 ;
+    END
+  END di_ds_I_p
+  PIN di_ds_I_n
+    ANTENNADIFFAREA 10711.463867 ;
+    PORT
+      LAYER Metal4 ;
+        RECT 4.005 96.040 26.700 97.040 ;
+    END
+  END di_ds_I_n
+  PIN di_lo_Ix
+    PORT
+      LAYER Metal4 ;
+        RECT 4.005 71.890 227.335 72.890 ;
+    END
+  END di_lo_Ix
+  PIN di_lo_Qx
+    PORT
+      LAYER Metal4 ;
+        RECT 4.005 69.390 227.335 70.390 ;
+    END
+  END di_lo_Qx
+  PIN di_ds_Q_n
+    ANTENNADIFFAREA 10711.463867 ;
+    PORT
+      LAYER Metal4 ;
+        RECT 4.005 45.240 26.700 46.240 ;
+    END
+  END di_ds_Q_n
+  PIN di_ds_Q_p
+    ANTENNADIFFAREA 10711.463867 ;
+    PORT
+      LAYER Metal4 ;
+        RECT 4.005 30.550 26.700 31.550 ;
+    END
+  END di_ds_Q_p
+  PIN di_lo_Q
+    PORT
+      LAYER Metal4 ;
+        RECT 4.005 6.400 227.335 7.400 ;
+    END
+  END di_lo_Q
+  PIN VSS
+    USE GROUND ;
+    PORT
+      LAYER TopMetal1 ;
+        RECT 334.800 0.000 337.000 142.280 ;
+    END
+    PORT
+      LAYER TopMetal1 ;
+        RECT 0.000 0.000 2.205 142.280 ;
+    END
+    PORT
+      LAYER Metal5 ;
+        RECT 0.000 140.080 337.000 142.280 ;
+    END
+    PORT
+      LAYER Metal5 ;
+        RECT 0.000 0.000 337.000 2.200 ;
+    END
+  END VSS
+  PIN VDD
+    USE POWER ;
+    PORT
+      LAYER TopMetal1 ;
+        RECT 330.600 4.200 332.800 138.080 ;
+    END
+    PORT
+      LAYER TopMetal1 ;
+        RECT 4.200 4.200 6.400 138.080 ;
+    END
+    PORT
+      LAYER Metal5 ;
+        RECT 4.200 4.200 332.800 6.400 ;
+    END
+    PORT
+      LAYER Metal5 ;
+        RECT 4.200 135.880 332.800 138.080 ;
+    END
+  END VDD
+  OBS
+      LAYER GatPoly ;
+        RECT 8.400 12.680 328.195 129.600 ;
+      LAYER Metal1 ;
+        RECT 8.400 10.680 328.195 131.600 ;
+      LAYER Metal2 ;
+        RECT 6.400 104.595 328.195 133.380 ;
+        RECT 7.610 103.175 328.195 104.595 ;
+        RECT 6.400 39.105 328.195 103.175 ;
+        RECT 7.610 37.685 328.195 39.105 ;
+        RECT 6.400 8.900 328.195 37.685 ;
+      LAYER Metal3 ;
+        RECT 4.005 117.105 328.195 133.380 ;
+        RECT 4.005 110.685 326.565 117.105 ;
+        RECT 4.005 97.085 328.195 110.685 ;
+        RECT 4.005 90.665 326.565 97.085 ;
+        RECT 4.005 71.850 328.195 90.665 ;
+        RECT 5.215 70.430 328.195 71.850 ;
+        RECT 4.005 51.615 328.195 70.430 ;
+        RECT 4.005 45.195 326.565 51.615 ;
+        RECT 4.005 31.595 328.195 45.195 ;
+        RECT 4.005 25.175 326.565 31.595 ;
+        RECT 4.005 8.900 328.195 25.175 ;
+      LAYER Metal4 ;
+        RECT 227.545 134.670 327.760 134.880 ;
+        RECT 4.005 111.940 327.760 134.670 ;
+        RECT 26.910 110.520 327.760 111.940 ;
+        RECT 4.005 109.825 327.760 110.520 ;
+        RECT 6.215 106.405 327.760 109.825 ;
+        RECT 4.005 101.365 327.760 106.405 ;
+        RECT 6.215 97.945 327.760 101.365 ;
+        RECT 4.005 97.250 327.760 97.945 ;
+        RECT 26.910 95.830 327.760 97.250 ;
+        RECT 4.005 73.100 327.760 95.830 ;
+        RECT 227.545 71.680 327.760 73.100 ;
+        RECT 4.005 70.600 327.760 71.680 ;
+        RECT 227.545 69.180 327.760 70.600 ;
+        RECT 4.005 46.450 327.760 69.180 ;
+        RECT 26.910 45.030 327.760 46.450 ;
+        RECT 4.005 44.335 327.760 45.030 ;
+        RECT 6.215 40.915 327.760 44.335 ;
+        RECT 4.005 35.875 327.760 40.915 ;
+        RECT 6.215 32.455 327.760 35.875 ;
+        RECT 4.005 31.760 327.760 32.455 ;
+        RECT 26.910 30.340 327.760 31.760 ;
+        RECT 4.005 7.610 327.760 30.340 ;
+        RECT 227.545 7.400 327.760 7.610 ;
+      LAYER Metal5 ;
+        RECT 333.010 135.670 337.000 135.880 ;
+        RECT 33.170 6.610 337.000 135.670 ;
+        RECT 333.010 6.400 337.000 6.610 ;
+      LAYER TopMetal1 ;
+        RECT 33.990 8.390 123.150 133.890 ;
+  END
+END iqmod_top
+END LIBRARY
+

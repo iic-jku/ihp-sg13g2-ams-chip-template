@@ -1,0 +1,455 @@
+#--------------------------------------------------------------
+# CACE circuit characterization file
+#--------------------------------------------------------------
+
+name:           iqmod_mfb_lpf
+description:    Third-Order Multiple Feedback Filter
+PDK:            ihp-sg13g2
+
+cace_format:    5.2
+
+authorship:
+  designer:         Simon Dorrer
+  company:          Johannes Kepler University
+  creation_date:    August 14, 2025
+  license:          Apache 2.0
+
+paths:
+  root:             ..
+  schematic:        ../schematic
+  netlist:          cace/netlist
+  documentation:    cace/_docs
+  runs:             cace/_runs
+
+pins:
+  VDD:
+    description: Positive analog power supply
+    type: power
+    direction: inout
+    Vmin: 1.4
+    Vmax: 1.6
+  VSS:
+    description: Analog ground
+    type: ground
+    direction: inout
+  Vcm:
+    description: Common-mode voltage
+    type: power
+    direction: inout
+  di_filter_en:
+    description: Enable input
+    type: enable
+    direction: input
+  vinp:
+    description: Voltage positive input
+    type: signal
+    direction: input
+  vinn:
+    description: Voltage negative input
+    type: signal
+    direction: input
+  voutp:
+    description: Voltage positive output
+    type: signal
+    direction: output
+  voutn:
+    description: Voltage negative output
+    type: signal
+    direction: output 
+
+default_conditions:
+  vdd:
+    description: Analog power supply voltage
+    display: VDD
+    unit: V
+    typical: 1.5
+  vcm:
+    description: Input common-mode voltage
+    display: Vcm
+    unit: V
+    typical: 0.75
+  corner_mos:
+    description: Process corner MOSFET
+    display: Corner MOSFET
+    typical: tt
+  corner_rc:
+    description: Process corner RC
+    display: Corner RC
+    typical: typ
+  temp:
+    description: Ambient temperature
+    display: Temperature
+    unit: °C
+    typical: 27
+  cload:
+    description: Load capacitance
+    display: Cload
+    unit: pF
+    typical: 10
+
+parameters:
+  ac_params:
+    spec:
+      Adc_cl_dB:
+        display: Closed-loop dc gain
+        description: Small-signal closed-loop gain at 10Hz
+        unit: dB
+        minimum:
+          value: -1
+        typical:
+          value: any
+        maximum:
+          value: 1
+      fcu:
+        display: Upper -3dB cut-off frequency
+        description: Upper -3dB cut-off frequency
+        unit: Hz
+        minimum:
+          value: 350000
+        typical:
+          value: any
+        maximum:
+          value: any
+      CMRR_dc_dB:
+        display: Common-mode Rejection Ratio
+        description: Small-signal CMRR at 10Hz
+        unit: dB
+        minimum:
+          value: 30
+        typical:
+          value: any
+        maximum:
+          value: any
+      # PSRR_dc_dB:
+        # display: Power-Supply Rejection Ratio
+        # description: Small-signal PSRR at 10Hz
+        # unit: dB
+        # minimum:
+          # value: 20
+        # typical:
+          # value: any
+        # maximum:
+          # value: any
+    tool:
+      ngspice:
+        template: iqmod_mfb_lpf_tb_ac.sch
+        format: ascii
+        suffix: .data
+        # variables: [Adc_cl_dB, fcu, CMRR_dc_dB, PSRR_dc_dB]
+        variables: [Adc_cl_dB, fcu, CMRR_dc_dB]
+    plot:
+      Adc_cl_dB_vs_vdd:
+        type: xyplot
+        xaxis: vdd
+        yaxis: Adc_cl_dB
+        limits: auto
+      Adc_cl_dB_vs_vcm:
+        type: xyplot
+        xaxis: vcm
+        yaxis: Adc_cl_dB
+        limits: auto
+      Adc_cl_dB_vs_corner_mos:
+        type: xyplot
+        xaxis: corner_mos
+        yaxis: Adc_cl_dB
+        limits: auto
+      Adc_cl_dB_vs_temp:
+        type: xyplot
+        xaxis: temp
+        yaxis: Adc_cl_dB
+        limits: auto
+      Adc_cl_dB_vs_cload:
+        type: xyplot
+        xaxis: cload
+        yaxis: Adc_cl_dB
+        limits: auto
+      fcu_vs_vdd:
+        type: xyplot
+        xaxis: vdd
+        yaxis: fcu
+        limits: auto
+      fcu_vs_vcm:
+        type: xyplot
+        xaxis: vcm
+        yaxis: fcu
+        limits: auto
+      fcu_vs_corner_mos:
+        type: xyplot
+        xaxis: corner_mos
+        yaxis: fcu
+        limits: auto
+      fcu_vs_temp:
+        type: xyplot
+        xaxis: temp
+        yaxis: fcu
+        limits: auto
+      fcu_vs_cload:
+        type: xyplot
+        xaxis: cload
+        yaxis: fcu
+        limits: auto
+      CMRR_vs_vdd:
+        type: xyplot
+        xaxis: vdd
+        yaxis: CMRR_dc_dB
+        limits: auto
+      CMRR_vs_vcm:
+        type: xyplot
+        xaxis: vcm
+        yaxis: CMRR_dc_dB
+        limits: auto
+      CMRR_vs_corner_mos:
+        type: xyplot
+        xaxis: corner_mos
+        yaxis: CMRR_dc_dB
+        limits: auto
+      CMRR_vs_temp:
+        type: xyplot
+        xaxis: temp
+        yaxis: CMRR_dc_dB
+        limits: auto
+      CMRR_vs_cload:
+        type: xyplot
+        xaxis: cload
+        yaxis: CMRR_dc_dB
+        limits: auto
+      # PSRR_vs_vdd:
+        # type: xyplot
+        # xaxis: vdd
+        # yaxis: PSRR_dc_dB
+        # limits: auto
+      # PSRR_vs_vcm:
+        # type: xyplot
+        # xaxis: vcm
+        # yaxis: PSRR_dc_dB
+        # limits: auto
+      # PSRR_vs_corner_mos:
+        # type: xyplot
+        # xaxis: corner_mos
+        # yaxis: PSRR_dc_dB
+        # limits: auto
+      # PSRR_vs_temp:
+        # type: xyplot
+        # xaxis: temp
+        # yaxis: PSRR_dc_dB
+        # limits: auto
+      # PSRR_vs_cload:
+        # type: xyplot
+        # xaxis: cload
+        # yaxis: PSRR_dc_dB
+        # limits: auto
+    conditions:
+      vdd:
+        minimum: 1.2
+        typical: 1.5
+        maximum: 1.8
+      vcm:
+        # minimum: 0.60
+        typical: 0.75
+        # maximum: 0.90
+      corner_mos:
+        # enumerate: [ss, sf, tt, fs, ff]
+        typical: tt
+      corner_rc:
+        typical: typ
+      temp:
+        #minimum: 0
+        typical: 27
+        #maximum: 70
+      cload:
+        #minimum: 1       # 1pF
+        typical: 10       # 10pF
+        #maximum: 50      # 50pF
+  
+  ac_mc_params:
+    spec:
+      Adc_cl_dB:
+        display: Closed-loop dc gain - Monte Carlo
+        description: Small-signal closed-loop gain at 10Hz
+        unit: dB
+        minimum:
+          value: -1
+        typical:
+          value: any
+        maximum:
+          value: 1
+      fcu:
+        display: Upper -3dB cut-off frequency - Monte Carlo
+        description: Upper -3dB cut-off frequency
+        unit: Hz
+        minimum:
+          value: 350000
+        typical:
+          value: any
+        maximum:
+          value: any
+      CMRR_dc_dB:
+        display: Common-mode Rejection Ratio - Monte Carlo
+        description: Small-signal CMRR at 10Hz
+        unit: dB
+        minimum:
+          value: 30
+        typical:
+          value: any
+        maximum:
+          value: any
+      # PSRR_dc_dB:
+        # display: Power-Supply Rejection Ratio - Monte Carlo
+        # description: Small-signal PSRR at 10Hz
+        # unit: dB
+        # minimum:
+          # value: 20
+        # typical:
+          # value: any
+        # maximum:
+          # value: any
+    tool:
+      ngspice:
+        template: iqmod_mfb_lpf_tb_ac.sch
+        collate: iterations
+        format: ascii
+        suffix: .data
+        # variables: [Adc_cl_dB, fcu, CMRR_dc_dB, PSRR_dc_dB]
+        variables: [Adc_cl_dB, fcu, CMRR_dc_dB]
+        script: iqmod_mfb_lpf_tb_ac.py
+        # script_variables: [Adc_cl_dB_arr, fcu_arr, CMRR_dc_dB_arr, PSRR_dc_dB_arr]
+        script_variables: [Adc_cl_dB_arr, fcu_arr, CMRR_dc_dB_arr]
+    plot:
+      Adc_cl_dB_mc:
+        type: histogram
+        xaxis: Adc_cl_dB_arr
+      fcu_mc:
+        type: histogram
+        xaxis: fcu_arr
+      CMRR_dc_dB_mc:
+        type: histogram
+        xaxis: CMRR_dc_dB_arr
+      # PSRR_dc_dB_mc:
+        # type: histogram
+        # xaxis: PSRR_dc_dB_arr
+    conditions:
+      vdd:
+        #minimum: 1.4
+        typical: 1.5
+        #maximum: 1.6
+      vcm:
+        #minimum: 0.60
+        typical: 0.75
+        #maximum: 0.90
+      iterations: # for Monte Carlo
+        description: Iterations to run
+        display: Iterations
+        minimum: 1
+        maximum: 200
+        step: linear
+        stepsize: 1
+      corner_mos:
+        typical: tt_stat    # Process variation Monte Carlo
+      corner_rc:
+        typical: typ_stat   # Process variation Monte Carlo
+      temp:
+        #minimum: 0
+        typical: 27
+        #maximum: 70
+      cload:
+        #minimum: 1       # 1pF
+        typical: 10       # 10pF
+        #maximum: 50      # 50pF
+        
+  ac_mm_params:
+    spec:
+      Adc_cl_dB:
+        display: Closed-loop dc gain - Mismatch
+        description: Small-signal closed-loop gain at 10Hz
+        unit: dB
+        minimum:
+          value: -1
+        typical:
+          value: any
+        maximum:
+          value: 1
+      fcu:
+        display: Upper -3dB cut-off frequency - Mismatch
+        description: Upper -3dB cut-off frequency
+        unit: Hz
+        minimum:
+          value: 350000
+        typical:
+          value: any
+        maximum:
+          value: any
+      CMRR_dc_dB:
+        display: Common-mode Rejection Ratio - Mismatch
+        description: Small-signal CMRR at 10Hz
+        unit: dB
+        minimum:
+          value: 30
+        typical:
+          value: any
+        maximum:
+          value: any
+      # PSRR_dc_dB:
+        # display: Power-Supply Rejection Ratio - Mismatch
+        # description: Small-signal PSRR at 10Hz
+        # unit: dB
+        # minimum:
+          # value: 20
+        # typical:
+          # value: any
+        # maximum:
+          # value: any
+    tool:
+      ngspice:
+        template: iqmod_mfb_lpf_tb_ac.sch
+        collate: iterations
+        format: ascii
+        suffix: .data
+        # variables: [Adc_cl_dB, fcu, CMRR_dc_dB, PSRR_dc_dB]
+        variables: [Adc_cl_dB, fcu, CMRR_dc_dB]
+        script: iqmod_mfb_lpf_tb_ac.py
+        # script_variables: [Adc_cl_dB_arr, fcu_arr, CMRR_dc_dB_arr, PSRR_dc_dB_arr]
+        script_variables: [Adc_cl_dB_arr, fcu_arr, CMRR_dc_dB_arr]
+    plot:
+      Adc_cl_dB_mm:
+        type: histogram
+        xaxis: Adc_cl_dB_arr
+      fcu_mm:
+        type: histogram
+        xaxis: fcu_arr
+      CMRR_dc_dB_mm:
+        type: histogram
+        xaxis: CMRR_dc_dB_arr
+      # PSRR_dc_dB_mm:
+        # type: histogram
+        # xaxis: PSRR_dc_dB_arr
+    conditions:
+      vdd:
+        #minimum: 1.4
+        typical: 1.5
+        #maximum: 1.6
+      vcm:
+        #minimum: 0.60
+        typical: 0.75
+        #maximum: 0.90
+      iterations: # for Mismatch
+        description: Iterations to run
+        display: Iterations
+        minimum: 1
+        maximum: 200
+        step: linear
+        stepsize: 1
+      corner_mos:
+        typical: tt_mismatch
+        # typical: ss_mismatch
+        # typical: ff_mismatch
+        # typical: sf_mismatch
+      corner_rc:
+        typical: typ_mismatch
+      temp:
+        #minimum: 0
+        typical: 27
+        #maximum: 70
+      cload:
+        #minimum: 1       # 1pF
+        typical: 10       # 10pF
+        #maximum: 50      # 50pF
