@@ -12,8 +12,8 @@
         6        - ports
        34        - port bits
        62   806400 cells
-        1        -   iqmod_top
-        1        -   riscv_top
+        1        -   inverter_top
+        1        -   counter_top
         8   115200   sg13g2_IOPadAnalog
         3    43200   sg13g2_IOPadIOVdd
         3    43200   sg13g2_IOPadIOVss
@@ -27,12 +27,12 @@
         1        -   sg13g2_ip__jku
         1        -   sg13g2_ip__jku_names
 
-   Area for cell type \iqmod_top is unknown!
+   Area for cell type \inverter_top is unknown!
    Area for cell type \sg13g2_ip__ce is unknown!
    Area for cell type \sg13g2_ip__ce_names is unknown!
    Area for cell type \sg13g2_ip__jku is unknown!
    Area for cell type \sg13g2_ip__jku_names is unknown!
-   Area for cell type \riscv_top is unknown!
+   Area for cell type \counter_top is unknown!
 
    Chip area for module '\chip_top': 806400.000000
      of which used for sequential elements: 0.000000 (0.00%)

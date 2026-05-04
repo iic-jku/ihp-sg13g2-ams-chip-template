@@ -328,30 +328,30 @@ vss                                        |vss
 Cell pin lists are equivalent.
 Device classes sg13g2_IOPadVdd and sg13g2_IOPadVdd are equivalent.
 
-Cell iqmod_top (0) disconnected node: di_spdt_ctrl_Q
-Cell iqmod_top (0) disconnected node: di_spdt_ctrl_I
-Cell iqmod_top (0) disconnected node: voutn_I_RF
-Cell iqmod_top (0) disconnected node: voutp_I_RF
-Cell iqmod_top (0) disconnected node: voutn_Q_RF
-Cell iqmod_top (0) disconnected node: voutp_Q_RF
-Cell iqmod_top (0) disconnected node: di_analog_en
-Cell iqmod_top (0) disconnected node: vinp_Q
-Cell iqmod_top (0) disconnected node: vinn_Q
-Cell iqmod_top (0) disconnected node: vinn_I
-Cell iqmod_top (0) disconnected node: vinp_I
-Cell iqmod_top (0) disconnected node: di_lo_I
-Cell iqmod_top (0) disconnected node: di_ds_I_p
-Cell iqmod_top (0) disconnected node: di_ds_I_n
-Cell iqmod_top (0) disconnected node: di_lo_Ix
-Cell iqmod_top (0) disconnected node: di_lo_Qx
-Cell iqmod_top (0) disconnected node: di_ds_Q_n
-Cell iqmod_top (0) disconnected node: di_ds_Q_p
-Cell iqmod_top (0) disconnected node: di_lo_Q
-Cell iqmod_top (0) disconnected node: VSS
-Cell iqmod_top (0) disconnected node: VDD
+Cell inverter_top (0) disconnected node: di_spdt_ctrl_Q
+Cell inverter_top (0) disconnected node: di_spdt_ctrl_I
+Cell inverter_top (0) disconnected node: voutn_I_RF
+Cell inverter_top (0) disconnected node: voutp_I_RF
+Cell inverter_top (0) disconnected node: voutn_Q_RF
+Cell inverter_top (0) disconnected node: voutp_Q_RF
+Cell inverter_top (0) disconnected node: di_analog_en
+Cell inverter_top (0) disconnected node: vinp_Q
+Cell inverter_top (0) disconnected node: vinn_Q
+Cell inverter_top (0) disconnected node: vinn_I
+Cell inverter_top (0) disconnected node: vinp_I
+Cell inverter_top (0) disconnected node: di_lo_I
+Cell inverter_top (0) disconnected node: di_ds_I_p
+Cell inverter_top (0) disconnected node: di_ds_I_n
+Cell inverter_top (0) disconnected node: di_lo_Ix
+Cell inverter_top (0) disconnected node: di_lo_Qx
+Cell inverter_top (0) disconnected node: di_ds_Q_n
+Cell inverter_top (0) disconnected node: di_ds_Q_p
+Cell inverter_top (0) disconnected node: di_lo_Q
+Cell inverter_top (0) disconnected node: VSS
+Cell inverter_top (0) disconnected node: VDD
 
 Subcircuit pins:
-Circuit 1: iqmod_top                       |Circuit 2: iqmod_top                       
+Circuit 1: inverter_top                       |Circuit 2: inverter_top                       
 -------------------------------------------|-------------------------------------------
 di_spdt_ctrl_Q                             |di_spdt_ctrl_Q                             
 di_spdt_ctrl_I                             |di_spdt_ctrl_I                             
@@ -376,7 +376,7 @@ VSS                                        |VSS
 VDD                                        |VDD                                        
 ---------------------------------------------------------------------------------------
 Cell pin lists are equivalent.
-Device classes iqmod_top and iqmod_top are equivalent.
+Device classes inverter_top and inverter_top are equivalent.
 
 
 Subcircuit pins:
@@ -416,54 +416,54 @@ vss                                        |vss
 Cell pin lists are equivalent.
 Device classes sg13g2_IOPadIn and sg13g2_IOPadIn are equivalent.
 
-Cell riscv_top (0) disconnected node: I_ae
-Cell riscv_top (0) disconnected node: Q_ae
-Cell riscv_top (0) disconnected node: VDD
-Cell riscv_top (0) disconnected node: VSS
-Cell riscv_top (0) disconnected node: analog_en
-Cell riscv_top (0) disconnected node: clk
-Cell riscv_top (0) disconnected node: ds_I_n_i
-Cell riscv_top (0) disconnected node: ds_I_n_o
-Cell riscv_top (0) disconnected node: ds_I_oe
-Cell riscv_top (0) disconnected node: ds_I_p_i
-Cell riscv_top (0) disconnected node: ds_I_p_o
-Cell riscv_top (0) disconnected node: ds_Q_n_i
-Cell riscv_top (0) disconnected node: ds_Q_n_o
-Cell riscv_top (0) disconnected node: ds_Q_oe
-Cell riscv_top (0) disconnected node: ds_Q_p_i
-Cell riscv_top (0) disconnected node: ds_Q_p_o
-Cell riscv_top (0) disconnected node: gpio_in[0]
-Cell riscv_top (0) disconnected node: gpio_in[1]
-Cell riscv_top (0) disconnected node: gpio_in[2]
-Cell riscv_top (0) disconnected node: gpio_in[3]
-Cell riscv_top (0) disconnected node: gpio_out[0]
-Cell riscv_top (0) disconnected node: gpio_out[1]
-Cell riscv_top (0) disconnected node: gpio_out[2]
-Cell riscv_top (0) disconnected node: gpio_out[3]
-Cell riscv_top (0) disconnected node: lo_I_i
-Cell riscv_top (0) disconnected node: lo_I_o
-Cell riscv_top (0) disconnected node: lo_I_oe
-Cell riscv_top (0) disconnected node: lo_Ix_i
-Cell riscv_top (0) disconnected node: lo_Ix_o
-Cell riscv_top (0) disconnected node: lo_Q_i
-Cell riscv_top (0) disconnected node: lo_Q_o
-Cell riscv_top (0) disconnected node: lo_Q_oe
-Cell riscv_top (0) disconnected node: lo_Qx_i
-Cell riscv_top (0) disconnected node: lo_Qx_o
-Cell riscv_top (0) disconnected node: reset
-Cell riscv_top (0) disconnected node: rx
-Cell riscv_top (0) disconnected node: scl
-Cell riscv_top (0) disconnected node: sclk
-Cell riscv_top (0) disconnected node: sda_i
-Cell riscv_top (0) disconnected node: sda_o
-Cell riscv_top (0) disconnected node: sda_oe
-Cell riscv_top (0) disconnected node: si
-Cell riscv_top (0) disconnected node: so
-Cell riscv_top (0) disconnected node: sram_ce
-Cell riscv_top (0) disconnected node: tx
+Cell counter_top (0) disconnected node: I_ae
+Cell counter_top (0) disconnected node: Q_ae
+Cell counter_top (0) disconnected node: VDD
+Cell counter_top (0) disconnected node: VSS
+Cell counter_top (0) disconnected node: analog_en
+Cell counter_top (0) disconnected node: clk
+Cell counter_top (0) disconnected node: ds_I_n_i
+Cell counter_top (0) disconnected node: ds_I_n_o
+Cell counter_top (0) disconnected node: ds_I_oe
+Cell counter_top (0) disconnected node: ds_I_p_i
+Cell counter_top (0) disconnected node: ds_I_p_o
+Cell counter_top (0) disconnected node: ds_Q_n_i
+Cell counter_top (0) disconnected node: ds_Q_n_o
+Cell counter_top (0) disconnected node: ds_Q_oe
+Cell counter_top (0) disconnected node: ds_Q_p_i
+Cell counter_top (0) disconnected node: ds_Q_p_o
+Cell counter_top (0) disconnected node: gpio_in[0]
+Cell counter_top (0) disconnected node: gpio_in[1]
+Cell counter_top (0) disconnected node: gpio_in[2]
+Cell counter_top (0) disconnected node: gpio_in[3]
+Cell counter_top (0) disconnected node: gpio_out[0]
+Cell counter_top (0) disconnected node: gpio_out[1]
+Cell counter_top (0) disconnected node: gpio_out[2]
+Cell counter_top (0) disconnected node: gpio_out[3]
+Cell counter_top (0) disconnected node: lo_I_i
+Cell counter_top (0) disconnected node: lo_I_o
+Cell counter_top (0) disconnected node: lo_I_oe
+Cell counter_top (0) disconnected node: lo_Ix_i
+Cell counter_top (0) disconnected node: lo_Ix_o
+Cell counter_top (0) disconnected node: lo_Q_i
+Cell counter_top (0) disconnected node: lo_Q_o
+Cell counter_top (0) disconnected node: lo_Q_oe
+Cell counter_top (0) disconnected node: lo_Qx_i
+Cell counter_top (0) disconnected node: lo_Qx_o
+Cell counter_top (0) disconnected node: reset
+Cell counter_top (0) disconnected node: rx
+Cell counter_top (0) disconnected node: scl
+Cell counter_top (0) disconnected node: sclk
+Cell counter_top (0) disconnected node: sda_i
+Cell counter_top (0) disconnected node: sda_o
+Cell counter_top (0) disconnected node: sda_oe
+Cell counter_top (0) disconnected node: si
+Cell counter_top (0) disconnected node: so
+Cell counter_top (0) disconnected node: sram_ce
+Cell counter_top (0) disconnected node: tx
 
 Subcircuit pins:
-Circuit 1: riscv_top                       |Circuit 2: riscv_top                       
+Circuit 1: counter_top                       |Circuit 2: counter_top                       
 -------------------------------------------|-------------------------------------------
 I_ae                                       |I_ae                                       
 Q_ae                                       |Q_ae                                       
@@ -512,7 +512,7 @@ sram_ce                                    |sram_ce
 tx                                         |tx                                         
 ---------------------------------------------------------------------------------------
 Cell pin lists are equivalent.
-Device classes riscv_top and riscv_top are equivalent.
+Device classes counter_top and counter_top are equivalent.
 
 
 Subcircuit pins:
@@ -617,10 +617,10 @@ sg13g2_IOPadAnalog (8)                     |sg13g2_IOPadAnalog (8)
 sg13g2_IOPadOut30mA (9)                    |sg13g2_IOPadOut30mA (9)                    
 sg13g2_Corner (4)                          |sg13g2_Corner (4)                          
 sg13g2_IOPadVdd (7)                        |sg13g2_IOPadVdd (7)                        
-iqmod_top (1)                              |iqmod_top (1)                              
+inverter_top (1)                              |inverter_top (1)                              
 sg13g2_ip__jku (1)                         |sg13g2_ip__jku (1)                         
 sg13g2_IOPadIn (8)                         |sg13g2_IOPadIn (8)                         
-riscv_top (1)                              |riscv_top (1)                              
+counter_top (1)                              |counter_top (1)                              
 sg13g2_ip__ce (1)                          |sg13g2_ip__ce (1)                          
 sg13g2_ip__jku_names (1)                   |sg13g2_ip__jku_names (1)                   
 sg13g2_IOPadIOVss (3)                      |sg13g2_IOPadIOVss (3)                      

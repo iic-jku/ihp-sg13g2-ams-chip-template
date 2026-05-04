@@ -194,22 +194,22 @@ add_pdn_connect \
     -layers "$::env(PDN_VERTICAL_LAYER) $::env(PDN_HORIZONTAL_LAYER)"
 
 
-# Custom connect for iqmod
+# Custom connect for inverter
 # The top-level power ring is on TM1 (horizontal) and TM2 (vertical).
-# iqmod has its own power ring on M5 (horizontal) and TM1 (vertical).
-# Hence, the connection between the top-level power ring and the iqmod power ring are crossing nicely.
-# Note that within the iqmod power ring no top-level TM1 or TM2 power rails are routed.
+# inverter has its own power ring on M5 (horizontal) and TM1 (vertical).
+# Hence, the connection between the top-level power ring and the inverter power ring are crossing nicely.
+# Note that within the inverter power ring no top-level TM1 or TM2 power rails are routed.
 define_pdn_grid \
     -macro \
-    -instance i_chip_core.iqmod_top \
-    -name iqmod_top \
+    -instance i_chip_core.inverter_top \
+    -name inverter_top \
     -starts_with POWER \
     -halo "$::env(PDN_HORIZONTAL_HALO) $::env(PDN_VERTICAL_HALO)"
 
 add_pdn_connect \
-    -grid iqmod_top \
+    -grid inverter_top \
     -layers "$::env(PDN_VERTICAL_LAYER) $::env(PDN_HORIZONTAL_LAYER)"
 
 add_pdn_connect \
-    -grid iqmod_top \
+    -grid inverter_top \
     -layers "$::env(PDN_VERTICAL_LAYER) Metal5"

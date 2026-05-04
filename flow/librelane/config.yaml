@@ -298,42 +298,42 @@ RSZ_DONT_TOUCH_LIST:
 
 MACROS:
   # Digital Macros
-  riscv_top:
+  counter_top:
     gds:
-      - dir::../../macros/riscv/final/gds/riscv_top.gds
+      - dir::../../macros/counter/final/gds/counter_top.gds
     lef:
-      - dir::../../macros/riscv/final/lef/riscv_top.lef
+      - dir::../../macros/counter/final/lef/counter_top.lef
     pnl:
-      - dir::../../macros/riscv/final/pnl/riscv_top.pnl.v
+      - dir::../../macros/counter/final/pnl/counter_top.pnl.v
     nl:
-      - dir::../../macros/riscv/final/nl/riscv_top.nl.v
+      - dir::../../macros/counter/final/nl/counter_top.nl.v
     spef:
-      nom_*: dir::../../macros/riscv/final/spef/nom/riscv_top.nom.spef
+      nom_*: dir::../../macros/counter/final/spef/nom/counter_top.nom.spef
     lib:
-      nom_fast_1p32V_m40C: dir::../../macros/riscv/final/lib/nom_fast_1p32V_m40C/riscv_top__nom_fast_1p32V_m40C.lib
-      nom_fast_1p65V_m40C: dir::../../macros/riscv/final/lib/nom_fast_1p65V_m40C/riscv_top__nom_fast_1p65V_m40C.lib
-      # nom_slow_1p08V_125C: dir::../../macros/riscv/final/lib/nom_slow_1p08V_125C/riscv_top__nom_slow_1p08V_125C.lib
-      nom_slow_1p35V_125C: dir::../../macros/riscv/final/lib/nom_slow_1p35V_125C/riscv_top__nom_slow_1p35V_125C.lib
-      nom_typ_1p20V_25C: dir::../../macros/riscv/final/lib/nom_typ_1p20V_25C/riscv_top__nom_typ_1p20V_25C.lib
-      nom_typ_1p50V_25C: dir::../../macros/riscv/final/lib/nom_typ_1p50V_25C/riscv_top__nom_typ_1p50V_25C.lib
+      nom_fast_1p32V_m40C: dir::../../macros/counter/final/lib/nom_fast_1p32V_m40C/counter_top__nom_fast_1p32V_m40C.lib
+      nom_fast_1p65V_m40C: dir::../../macros/counter/final/lib/nom_fast_1p65V_m40C/counter_top__nom_fast_1p65V_m40C.lib
+      # nom_slow_1p08V_125C: dir::../../macros/counter/final/lib/nom_slow_1p08V_125C/counter_top__nom_slow_1p08V_125C.lib
+      nom_slow_1p35V_125C: dir::../../macros/counter/final/lib/nom_slow_1p35V_125C/counter_top__nom_slow_1p35V_125C.lib
+      nom_typ_1p20V_25C: dir::../../macros/counter/final/lib/nom_typ_1p20V_25C/counter_top__nom_typ_1p20V_25C.lib
+      nom_typ_1p50V_25C: dir::../../macros/counter/final/lib/nom_typ_1p50V_25C/counter_top__nom_typ_1p50V_25C.lib
     instances:
-      i_chip_core.riscv_top:
+      i_chip_core.counter_top:
         location: ["expr::365 + 70", "expr::365 + 70"]
         orientation: N
   
   # Analog Macros    
-  iqmod_top:
+  inverter_top:
     gds:
-      - dir::../../macros/iqmod/final/gds/iqmod_top.gds
+      - dir::../../macros/inverter/final/gds/inverter_top.gds
     lef:
-      - dir::../../macros/iqmod/final/lef/iqmod_top.lef
+      - dir::../../macros/inverter/final/lef/inverter_top.lef
     vh:
-      - dir::../../macros/iqmod/final/vh/iqmod_top.v
+      - dir::../../macros/inverter/final/vh/inverter_top.v
 #   lib:
 #     "*":
-#       - dir::../macros/iqmod/final/lib/iqmod_top.lib
+#       - dir::../macros/inverter/final/lib/inverter_top.lib
     instances:
-      i_chip_core.iqmod_top:
+      i_chip_core.inverter_top:
         # X should be multiple of 0.48 (Metal3 pitch)
         # Y should be multiple of 0.42 (Metal3 pitch)
         location: [expr::(0.48 * 2532), expr::(0.42 * 2220)] # x = 1215.36, y = 932.40
