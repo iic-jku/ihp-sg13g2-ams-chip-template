@@ -1,0 +1,31 @@
+﻿[*]
+[*] GTKWave Analyzer v4.0.0-prealpha (1dbe6d0) (w)1999-2022 BSI
+[*] Sat May  2 14:24:43 2026
+[*]
+[dumpfile] "/foss/designs/Chip/ihp130/testbenches/cocotb/sim_build/chip_top.fst"
+[dumpfile_mtime] "Sat May  2 14:12:32 2026"
+[dumpfile_size] 569093158
+[savefile] "/foss/designs/Chip/ihp130/testbenches/cocotb/chip_top_tb.gtkw"
+[timestart] 0
+[size] 1920 1029
+[pos] -911 -420
+*-41.248856 -1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+[treeopen] chip_top.
+[sst_width] 276
+[signals_width] 150
+[sst_expanded] 1
+[sst_vpaned_height] 300
+@29
+chip_top.IOVDD
+@28
+chip_top.IOVSS
+chip_top.VDD
+chip_top.VSS
+chip_top.clk_PAD
+chip_top.rst_n_PAD
+chip_top.input_PAD[5:0]
+chip_top.output_PAD[8:0]
+chip_top.bidir_PAD[8:0]
+chip_top.analog_PAD[7:0]
+[pattern_trace] 1
+[pattern_trace] 0
