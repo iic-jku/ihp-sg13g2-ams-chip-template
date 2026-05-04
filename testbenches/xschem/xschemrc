@@ -23,6 +23,3 @@ if {![info exists PDK]} {
 # Add current directory to xschem library path
 append XSCHEM_LIBRARY_PATH :../../schematic
 append XSCHEM_LIBRARY_PATH :[file dirname [info script]]
-
-# Source project xschemrc
-source [file dirname [info script]]/../../macros/coupled_resonator_lc_bpf/schematic/xschemrc
