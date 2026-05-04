@@ -88,7 +88,7 @@ help: ## Show this help message
 
 # GIT Submodule Target
 init-submodules: ## Initialize and update git submodules (e.g. ihp130/artistic)
-	git -C $(MAKEFILE_DIR)/.. submodule update --init
+	git -C $(MAKEFILE_DIR) submodule update --init
 .PHONY: init-submodules
 # ================================================================================================
 
