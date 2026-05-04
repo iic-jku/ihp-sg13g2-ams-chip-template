@@ -1,4 +1,4 @@
-﻿v {xschem version=3.4.8RC file_version=1.3}
+v {xschem version=3.4.8RC file_version=1.3}
 G {}
 K {}
 V {}
@@ -438,7 +438,6 @@ value=\{Cload\}
 footprint=1206
 device="ceramic capacitor"}
 C {devices/gnd.sym} 1420 -570 0 0 {name=l43 lab=GND}
-C {coupled_resonator_lc_bpf_1k_1k.sym} 1580 -750 0 0 {name=x3}
 C {devices/lab_wire.sym} 180 -1080 0 0 {name=p1 sig_type=std_logic lab=reset_n}
 C {devices/lab_wire.sym} 180 -1140 0 0 {name=p2 sig_type=std_logic lab=clock}
 C {devices/lab_wire.sym} 180 -480 0 0 {name=p7 sig_type=std_logic lab=i2c_scl}
