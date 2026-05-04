@@ -1,4 +1,4 @@
-v {xschem version=3.4.8RC file_version=1.3}
+﻿v {xschem version=3.4.8RC file_version=1.3}
 G {}
 K {}
 V {}
@@ -66,7 +66,7 @@ N 1360 -760 1360 -740 {lab=GND}
 C {devices/code_shown.sym} 60 -1450 0 0 {name=NGSPICE
 only_toplevel=true 
 value="
-.include ../../netlist/pex/iqmod_mfb_lpf_ota_core_inv_NF20_pex.spice
+.include ../../netlist/pex/inverter_mfb_lpf_ota_core_inv_NF20_pex.spice
 .param VDD=1.5
 .param Vcm=VDD/2
 .param temp=27
@@ -129,7 +129,7 @@ print PM
 unset appendwrite
 set wr_vecnames
 set wr_singlescale
-wrdata $PROJECT_PATH/scripts/plot_simulations/data/iqmod_mfb_lpf_ota_core_inv_tb_ac_ol.txt v(Aol_dB) v(Aol_arg)
+wrdata $PROJECT_PATH/scripts/plot_simulations/data/inverter_mfb_lpf_ota_core_inv_tb_ac_ol.txt v(Aol_dB) v(Aol_arg)
 
 *quit
 .endc
@@ -185,9 +185,9 @@ m=1
 spice_ignore=true}
 C {devices/gnd.sym} 1260 -740 0 0 {name=l5 lab=GND}
 C {devices/gnd.sym} 1360 -740 0 0 {name=l6 lab=GND}
-C {iqmod_mfb_lpf_ota_core_inv_NF20.sym} 1120 -1160 0 0 {name=x1
+C {inverter_mfb_lpf_ota_core_inv_NF20.sym} 1120 -1160 0 0 {name=x1
 spice_ignore=true}
-C {iqmod_mfb_lpf_ota_core_inv_NF20_pex.sym} 1120 -1340 0 0 {name=x2
+C {inverter_mfb_lpf_ota_core_inv_NF20_pex.sym} 1120 -1340 0 0 {name=x2
 spice_ignore=true}
-C {iqmod_mfb_lpf_ota_core_inv_NF20_pex.sym} 1120 -840 0 0 {name=x3
+C {inverter_mfb_lpf_ota_core_inv_NF20_pex.sym} 1120 -840 0 0 {name=x3
 }

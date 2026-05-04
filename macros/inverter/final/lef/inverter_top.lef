@@ -1,10 +1,10 @@
-VERSION 5.7 ;
+﻿VERSION 5.7 ;
   NOWIREEXTENSIONATPIN ON ;
   DIVIDERCHAR "/" ;
   BUSBITCHARS "[]" ;
-MACRO iqmod_top
+MACRO inverter_top
   CLASS BLOCK ;
-  FOREIGN iqmod_top ;
+  FOREIGN inverter_top ;
   ORIGIN 0.000 0.000 ;
   SIZE 337.000 BY 142.280 ;
   PIN di_spdt_ctrl_Q
@@ -225,6 +225,6 @@ MACRO iqmod_top
       LAYER TopMetal1 ;
         RECT 33.990 8.390 123.150 133.890 ;
   END
-END iqmod_top
+END inverter_top
 END LIBRARY
 

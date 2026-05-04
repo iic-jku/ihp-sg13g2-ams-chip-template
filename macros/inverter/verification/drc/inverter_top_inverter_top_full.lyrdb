@@ -1,9 +1,9 @@
-<?xml version='1.0' encoding='utf-8'?>
+﻿<?xml version='1.0' encoding='utf-8'?>
 <report-database>
  <description>Main DRC Run Report at</description>
  <original-file />
  <generator>drc: script='/foss/pdks/ihp-sg13g2/libs.tech/klayout/tech/drc/ihp-sg13g2.drc'</generator>
- <top-cell>iqmod_top</top-cell>
+ <top-cell>inverter_top</top-cell>
  <tags>
  </tags>
  <categories>
@@ -3251,7 +3251,7 @@
  </categories>
  <cells>
   <cell>
-   <name>iqmod_top</name>
+   <name>inverter_top</name>
    <variant />
    <layout-name />
    <references>

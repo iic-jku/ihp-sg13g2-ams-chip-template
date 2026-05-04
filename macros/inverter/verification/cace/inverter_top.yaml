@@ -1,8 +1,8 @@
-#--------------------------------------------------------------
+﻿#--------------------------------------------------------------
 # CACE circuit characterization file
 #--------------------------------------------------------------
 
-name:           iqmod_mfb_lpf
+name:           inverter_top
 description:    Third-Order Multiple Feedback Filter
 PDK:            ihp-sg13g2
 
@@ -132,7 +132,7 @@ parameters:
           # value: any
     tool:
       ngspice:
-        template: iqmod_mfb_lpf_tb_ac.sch
+        template: inverter_top_tb_ac.sch
         format: ascii
         suffix: .data
         # variables: [Adc_cl_dB, fcu, CMRR_dc_dB, PSRR_dc_dB]
@@ -305,13 +305,13 @@ parameters:
           # value: any
     tool:
       ngspice:
-        template: iqmod_mfb_lpf_tb_ac.sch
+        template: inverter_top_tb_ac.sch
         collate: iterations
         format: ascii
         suffix: .data
         # variables: [Adc_cl_dB, fcu, CMRR_dc_dB, PSRR_dc_dB]
         variables: [Adc_cl_dB, fcu, CMRR_dc_dB]
-        script: iqmod_mfb_lpf_tb_ac.py
+        script: inverter_top_tb_ac.py
         # script_variables: [Adc_cl_dB_arr, fcu_arr, CMRR_dc_dB_arr, PSRR_dc_dB_arr]
         script_variables: [Adc_cl_dB_arr, fcu_arr, CMRR_dc_dB_arr]
     plot:
@@ -400,13 +400,13 @@ parameters:
           # value: any
     tool:
       ngspice:
-        template: iqmod_mfb_lpf_tb_ac.sch
+        template: inverter_top_tb_ac.sch
         collate: iterations
         format: ascii
         suffix: .data
         # variables: [Adc_cl_dB, fcu, CMRR_dc_dB, PSRR_dc_dB]
         variables: [Adc_cl_dB, fcu, CMRR_dc_dB]
-        script: iqmod_mfb_lpf_tb_ac.py
+        script: inverter_top_tb_ac.py
         # script_variables: [Adc_cl_dB_arr, fcu_arr, CMRR_dc_dB_arr, PSRR_dc_dB_arr]
         script_variables: [Adc_cl_dB_arr, fcu_arr, CMRR_dc_dB_arr]
     plot:

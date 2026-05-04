@@ -1,4 +1,4 @@
-# Set default PDK_ROOT
+﻿# Set default PDK_ROOT
 if { ![info exists env(PDK_ROOT)] } {
   puts stderr "Warning: PDK_ROOT env. var. not found or empty, trying to find an open_pdks install"
   if {[file isdir /usr/share/pdk]} {set ::env(PDK_ROOT) /usr/share/pdk
@@ -25,5 +25,4 @@ append XSCHEM_LIBRARY_PATH :../schematic
 append XSCHEM_LIBRARY_PATH :[file dirname [info script]]
 
 # Source project xschemrc
-source [file dirname [info script]]/../../coupled_resonator_lc_bpf/schematic/xschemrc
-source [file dirname [info script]]/../../riscv/schematic/xschemrc
+# source [file dirname [info script]]/../../other_macro/schematic/xschemrc

@@ -1,4 +1,4 @@
-v {xschem version=3.4.8RC file_version=1.3}
+﻿v {xschem version=3.4.8RC file_version=1.3}
 G {}
 K {}
 V {}
@@ -266,11 +266,11 @@ C {devices/gnd.sym} 660 -260 0 0 {name=l52 lab=GND}
 C {devices/vsource.sym} 660 -310 0 0 {name=VDD_PSRR value=CACE\{vdd\}}
 C {devices/vsource.sym} 660 -390 0 0 {name=VDD_NOISE value="dc 0 ac 1"}
 C {devices/lab_pin.sym} 660 -440 1 0 {name=l41 sig_type=std_logic lab=vdd_noise}
-C {iqmod_mfb_lpf.sym} 1160 -1860 0 0 {name=x1
+C {inverter_top.sym} 1160 -1860 0 0 {name=x1
 spice_ignore=false}
-C {iqmod_mfb_lpf.sym} 1160 -1140 0 0 {name=x2
+C {inverter_top.sym} 1160 -1140 0 0 {name=x2
 spice_ignore=false}
-C {iqmod_mfb_lpf.sym} 1160 -480 0 0 {name=x3
+C {inverter_top.sym} 1160 -480 0 0 {name=x3
 spice_ignore=false}
 C {devices/lab_pin.sym} 900 -1180 0 0 {name=l10 sig_type=std_logic lab=vinp2}
 C {devices/lab_pin.sym} 900 -1100 0 0 {name=l11 sig_type=std_logic lab=vinn2}

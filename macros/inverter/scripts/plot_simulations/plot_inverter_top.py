@@ -45,7 +45,7 @@ def main():
     # ------------------------------------------------------------------
     # 1. Load ngspice closed-loop AC simulation data
     # ------------------------------------------------------------------
-    ngspice_file = data_dir / "iqmod_mfb_lpf_tb_ac_cl.txt"
+    ngspice_file = data_dir / "inverter_top_tb_ac_ol.txt"
 
     data_frequency = ng.loadngspicecol(str(ngspice_file), "frequency")
     frequency = data_frequency[0::2]
@@ -95,9 +95,9 @@ def main():
     # ------------------------------------------------------------------
     # 4. Export figures and CSV
     # ------------------------------------------------------------------
-    fig1.savefig(str(figures_dir / "iqmod_mfb_lpf_tb_ac_cl.svg"), bbox_inches='tight')
-    fig1.savefig(str(figures_dir / "iqmod_mfb_lpf_tb_ac_cl.pdf"), bbox_inches='tight')
-    np.savetxt(str(figures_dir / "iqmod_mfb_lpf_tb_ac_cl.csv"),
+    fig1.savefig(str(figures_dir / "inverter_top_tb_ac_ol.svg"), bbox_inches='tight')
+    fig1.savefig(str(figures_dir / "inverter_top_tb_ac_ol.pdf"), bbox_inches='tight')
+    np.savetxt(str(figures_dir / "inverter_top_tb_ac_ol.csv"),
                np.column_stack((frequency, mag_dB, phase_deg)), comments="",
                header="frequency,Amag_dB,Aarg", delimiter=",")
     # ============================================

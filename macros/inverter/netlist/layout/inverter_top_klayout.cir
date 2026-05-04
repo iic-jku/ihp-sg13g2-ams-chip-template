@@ -1,23 +1,23 @@
-* Extracted by KLayout with SG13G2 LVS runset on : 02/05/2026 22:11
+﻿* Extracted by KLayout with SG13G2 LVS runset on : 02/05/2026 22:11
 
-.SUBCKT iqmod_top di_spdt_ctrl_Q di_spdt_ctrl_I voutn_I_RF voutp_I_RF
+.SUBCKT inverter_top di_spdt_ctrl_Q di_spdt_ctrl_I voutn_I_RF voutp_I_RF
 + voutn_Q_RF voutp_Q_RF di_analog_en vinp_I di_lo_I di_ds_I_p vinn_I di_ds_I_n
 + di_lo_Ix di_lo_Qx di_ds_Q_n vinn_Q vinp_Q di_ds_Q_p di_lo_Q VDD VSS
 X$2 \$1 di_ds_Q_n di_lo_Qx vinn_Q VSS VDD voutn_Q_RF di_ds_Q_p di_analog_en
-+ di_spdt_ctrl_Q vinp_Q voutp_Q_RF di_lo_Q iqmod_top_half
++ di_spdt_ctrl_Q vinp_Q voutp_Q_RF di_lo_Q inverter_top_half
 X$3 \$1 di_ds_I_n di_lo_Ix vinn_I VSS VDD voutn_I_RF di_ds_I_p di_analog_en
-+ di_spdt_ctrl_I vinp_I voutp_I_RF di_lo_I iqmod_top_half
-.ENDS iqmod_top
++ di_spdt_ctrl_I vinp_I voutp_I_RF di_lo_I inverter_top_half
+.ENDS inverter_top
 
-.SUBCKT iqmod_top_half \$1 di_ds_I_n di_lo_Ix vinn_I VSS VDD voutn_I_RF
+.SUBCKT inverter_top_half \$1 di_ds_I_n di_lo_Ix vinn_I VSS VDD voutn_I_RF
 + di_ds_I_p di_analog_en di_spdt_ctrl_I vinp_I voutp_I_RF di_lo_I
-X$1 \$1 di_spdt_ctrl_I \$47 vinp_I di_ds_I_p VDD VSS iqmod_spdt_switch
-X$3 \$22 di_lo_Ix VSS voutn_I_RF VDD di_lo_I voutp_I_RF \$1 \$42 iqmod_mixer
-X$8 \$1 di_spdt_ctrl_I \$21 vinn_I di_ds_I_n VDD VSS iqmod_spdt_switch
-X$16 \$1 di_analog_en \$47 \$21 VDD VSS \$42 \$22 iqmod_mfb_lpf
-.ENDS iqmod_top_half
+X$1 \$1 di_spdt_ctrl_I \$47 vinp_I di_ds_I_p VDD VSS inverter_spdt_switch
+X$3 \$22 di_lo_Ix VSS voutn_I_RF VDD di_lo_I voutp_I_RF \$1 \$42 inverter_mixer
+X$8 \$1 di_spdt_ctrl_I \$21 vinn_I di_ds_I_n VDD VSS inverter_spdt_switch
+X$16 \$1 di_analog_en \$47 \$21 VDD VSS \$42 \$22 inverter_mfb_lpf
+.ENDS inverter_top_half
 
-.SUBCKT iqmod_mixer vinn_IF vinn_LO VSS voutn_RF VDD vinp_LO voutp_RF \$21
+.SUBCKT inverter_mixer vinn_IF vinn_LO VSS voutn_RF VDD vinp_LO voutp_RF \$21
 + vinp_IF
 M$1 voutn_RF \$I211 vinn_IF \$21 sg13_lv_nmos L=0.13u W=108u AS=20.97p
 + AD=20.52p PS=124.98u PD=121.68u rfmode=0
@@ -155,9 +155,9 @@ M$1116 VDD \$I233 \$I219 \$3 sg13_lv_pmos L=0.13u W=18u AS=3.42p AD=3.42p
 + PS=20.28u PD=20.28u rfmode=0
 M$1125 VDD \$I219 \$I231 \$3 sg13_lv_pmos L=0.13u W=18u AS=3.42p AD=3.42p
 + PS=20.28u PD=20.28u rfmode=0
-.ENDS iqmod_mixer
+.ENDS inverter_mixer
 
-.SUBCKT iqmod_spdt_switch \$1 di_spdt_ctrl v_c v_a v_b VDD VSS
+.SUBCKT inverter_spdt_switch \$1 di_spdt_ctrl v_c v_a v_b VDD VSS
 M$1 v_b \$8 v_c \$1 sg13_lv_nmos L=0.13u W=6u AS=1.29p AD=1.29p PS=9.58u
 + PD=9.58u rfmode=0
 R$7 VSS \$1 ptap1 A=18.36p P=122.4u
@@ -180,9 +180,9 @@ M$40 VSS \$8 \$7 \$1 sg13_lv_nmos L=0.13u W=2u AS=0.38p AD=0.38p PS=2.76u
 + PD=2.76u rfmode=0
 M$45 VSS di_spdt_ctrl \$8 \$1 sg13_lv_nmos L=0.13u W=2u AS=0.38p AD=0.38p
 + PS=2.76u PD=2.76u rfmode=0
-.ENDS iqmod_spdt_switch
+.ENDS inverter_spdt_switch
 
-.SUBCKT iqmod_mfb_lpf \$1 di_filter_en vinp vinn VDD VSS voutp voutn
+.SUBCKT inverter_mfb_lpf \$1 di_filter_en vinp vinn VDD VSS voutp voutn
 C$1 voutn \$5.vinp cap_cmim w=8u l=8u A=64p P=32u m=1
 C$2 voutp \$8.vinp cap_cmim w=8u l=8u A=64p P=32u m=1
 C$3 \$3 \$4 cap_cmim w=8u l=8u A=64p P=32u m=3
@@ -310,4 +310,4 @@ M$646 VSS di_filter_en \$I49 \$1 sg13_lv_nmos L=0.13u W=2u AS=0.38p AD=0.38p
 + PS=2.76u PD=2.76u rfmode=0
 M$651 VSS \$I49 \$I68 \$1 sg13_lv_nmos L=0.13u W=2u AS=0.38p AD=0.38p PS=2.76u
 + PD=2.76u rfmode=0
-.ENDS iqmod_mfb_lpf
+.ENDS inverter_mfb_lpf

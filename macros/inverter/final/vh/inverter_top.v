@@ -1,4 +1,4 @@
-module iqmod_top (
+﻿module inverter_top (
 `ifdef USE_POWER_PINS
     inout VDD,
     inout VSS,

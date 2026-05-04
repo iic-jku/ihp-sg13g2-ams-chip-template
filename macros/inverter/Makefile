@@ -67,54 +67,33 @@ sim-xschem: ## Run TB simulation with Xschem (usage: make sim-xschem TB=<testben
 
 sim-cace: ## Run CACE simulations and collect result plots
 	cd $(CACE_DIR) && \
-	mkdir -p results/iqmod_mfb_lpf results/iqmod_mfb_lpf_ota_core && \
+	mkdir -p results/inverter && \
 	\
-	cace iqmod_mfb_lpf.yaml -p ac_mm_params && \
-	cp _runs/RUN_*/parameters/ac_mm_params/Adc_cl_dB_mm.png results/iqmod_mfb_lpf/ && \
-	cp _runs/RUN_*/parameters/ac_mm_params/CMRR_dc_dB_mm.png results/iqmod_mfb_lpf/ && \
-	cp _runs/RUN_*/parameters/ac_mm_params/fcu_mm.png results/iqmod_mfb_lpf/ && \
+	cace inverter.yaml -p ac_mm_params && \
+	cp _runs/RUN_*/parameters/ac_mm_params/Adc_cl_dB_mm.png results/inverter/ && \
+	cp _runs/RUN_*/parameters/ac_mm_params/CMRR_dc_dB_mm.png results/inverter/ && \
+	cp _runs/RUN_*/parameters/ac_mm_params/fcu_mm.png results/inverter/ && \
 	rm -rf _runs/RUN_* && \
 	\
-	cace iqmod_mfb_lpf.yaml -p ac_mc_params && \
-	cp _runs/RUN_*/parameters/ac_mc_params/Adc_cl_dB_mc.png results/iqmod_mfb_lpf/ && \
-	cp _runs/RUN_*/parameters/ac_mc_params/CMRR_dc_dB_mc.png results/iqmod_mfb_lpf/ && \
-	cp _runs/RUN_*/parameters/ac_mc_params/fcu_mc.png results/iqmod_mfb_lpf/ && \
+	cace inverter.yaml -p ac_mc_params && \
+	cp _runs/RUN_*/parameters/ac_mc_params/Adc_cl_dB_mc.png results/inverter/ && \
+	cp _runs/RUN_*/parameters/ac_mc_params/CMRR_dc_dB_mc.png results/inverter/ && \
+	cp _runs/RUN_*/parameters/ac_mc_params/fcu_mc.png results/inverter/ && \
 	rm -rf _runs/RUN_* && \
 	\
-	cace iqmod_mfb_lpf.yaml -p ac_params && \
-	cp _runs/RUN_*/parameters/ac_params/Adc_cl_dB_vs_vdd.png results/iqmod_mfb_lpf/ && \
-	cp _runs/RUN_*/parameters/ac_params/CMRR_dc_dB_vs_vdd.png results/iqmod_mfb_lpf/ && \
-	cp _runs/RUN_*/parameters/ac_params/fcu_vs_vdd.png results/iqmod_mfb_lpf/ && \
-	rm -rf _runs/RUN_* && \
-	\
-	cace iqmod_mfb_lpf_ota_core.yaml -p ac_mm_params && \
-	cp _runs/RUN_*/parameters/ac_mm_params/Adc_ol_dB_mm.png results/iqmod_mfb_lpf_ota_core/ && \
-	cp _runs/RUN_*/parameters/ac_mm_params/CMRR_dc_dB_mm.png results/iqmod_mfb_lpf_ota_core/ && \
-	cp _runs/RUN_*/parameters/ac_mm_params/fcu_mm.png results/iqmod_mfb_lpf_ota_core/ && \
-	rm -rf _runs/RUN_* && \
-	\
-	cace iqmod_mfb_lpf_ota_core.yaml -p ac_mc_params && \
-	cp _runs/RUN_*/parameters/ac_mc_params/Adc_ol_dB_mc.png results/iqmod_mfb_lpf_ota_core/ && \
-	cp _runs/RUN_*/parameters/ac_mc_params/CMRR_dc_dB_mc.png results/iqmod_mfb_lpf_ota_core/ && \
-	cp _runs/RUN_*/parameters/ac_mc_params/fcu_mc.png results/iqmod_mfb_lpf_ota_core/ && \
-	rm -rf _runs/RUN_* && \
-	\
-	cace iqmod_mfb_lpf_ota_core.yaml -p ac_params && \
-	cp _runs/RUN_*/parameters/ac_params/Adc_ol_dB_vs_vdd.png results/iqmod_mfb_lpf_ota_core/ && \
-	cp _runs/RUN_*/parameters/ac_params/CMRR_dc_dB_vs_vdd.png results/iqmod_mfb_lpf_ota_core/ && \
-	cp _runs/RUN_*/parameters/ac_params/fcu_vs_vdd.png results/iqmod_mfb_lpf_ota_core/ && \
+	cace inverter.yaml -p ac_params && \
+	cp _runs/RUN_*/parameters/ac_params/Adc_cl_dB_vs_vdd.png results/inverter/ && \
+	cp _runs/RUN_*/parameters/ac_params/CMRR_dc_dB_vs_vdd.png results/inverter/ && \
+	cp _runs/RUN_*/parameters/ac_params/fcu_vs_vdd.png results/inverter/ && \
 	rm -rf _runs/RUN_* && \
 	\
 	rm -rf _runs _docs netlist
 .PHONY: sim-cace
 
 sim-all: ## Simulate the macro
-	$(MAKE) sim-xschem TB=iqmod_mfb_lpf_ota_core_tb_ac_ol
-	$(MAKE) sim-xschem TB=iqmod_mfb_lpf_tb_ac_cl
-	$(MAKE) sim-xschem TB=iqmod_mixer_se2diff_tb_tran
-	$(MAKE) sim-xschem TB=iqmod_mixer_tb_tran
-	$(MAKE) sim-xschem TB=iqmod_top_tb_ac
-	$(MAKE) sim-xschem TB=iqmod_top_tb_tran
+	$(MAKE) sim-xschem TB=inverter_top_tb_ac_ol
+	$(MAKE) sim-xschem TB=inverter_top_tb_tran
+	$(MAKE) sim-xschem TB=inverter_top_tb_Vout
 	$(MAKE) sim-cace
 .PHONY: sim-all
 # ================================================================================================
@@ -365,9 +344,8 @@ klayout-verify: ## Verify CELL cell with KLayout (usage: make klayout-verify [CE
 .PHONY: klayout-verify
 
 klayout-verify-all: ## Verify all main subcells with KLayout (LVS, DRC, PEX)
-	$(MAKE) klayout-verify CELL=iqmod_mfb_lpf
-	$(MAKE) klayout-verify CELL=iqmod_mixer
-	$(MAKE) klayout-verify CELL=iqmod_top
+#	$(MAKE) klayout-verify CELL=other_subcell
+	$(MAKE) klayout-verify CELL=inverter_top
 .PHONY: klayout-verify-all
 
 magic-verify: ## Verify CELL cell with Magic (usage: make magic-verify [CELL=<cellname>])
@@ -377,9 +355,8 @@ magic-verify: ## Verify CELL cell with Magic (usage: make magic-verify [CELL=<ce
 .PHONY: magic-verify
 
 magic-verify-all: ## Verify all main subcells with Magic (LVS, DRC, PEX)
-	$(MAKE) magic-verify CELL=iqmod_mfb_lpf
-	$(MAKE) magic-verify CELL=iqmod_mixer
-	$(MAKE) magic-verify CELL=iqmod_top
+#	$(MAKE) magic-verify CELL=other_subcell
+	$(MAKE) magic-verify CELL=inverter_top
 .PHONY: magic-verify-all
 # ================================================================================================
 
