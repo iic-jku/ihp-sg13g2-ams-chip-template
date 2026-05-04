@@ -512,9 +512,9 @@ C {ngspice_probe.sym} 2290 -730 0 0 {name=r57}
 C {ngspice_probe.sym} 2080 -730 0 0 {name=r58}
 C {ngspice_probe.sym} 1870 -730 0 0 {name=r59}
 C {ngspice_probe.sym} 1660 -730 0 0 {name=r60}
-C {riscv_top.sym} 1640 -2280 0 0 {name=xcpu}
+C {counter_top.sym} 1640 -2280 0 0 {name=xcounter}
 C {lab_pin.sym} 3250 -1760 3 0 {name=p26 sig_type=std_logic lab=VSS}
-C {iqmod_top.sym} 3250 -2280 0 0 {name=xiqmod
+C {inverter_top.sym} 3250 -2280 0 0 {name=xinverter
 lvs_ignore=true}
 C {lab_pin.sym} 3250 -2800 1 0 {name=p33 sig_type=std_logic lab=VDD}
 C {ngspice_probe.sym} 3250 -2780 0 0 {name=r62}
