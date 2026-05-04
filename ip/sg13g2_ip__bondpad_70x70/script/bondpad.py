@@ -1,4 +1,4 @@
-﻿# SPDX-FileCopyrightText: 2025-2026 The Chip Team
+﻿# SPDX-FileCopyrightText: 2025-2026 Simon Dorrer
 # SPDX-License-Identifier: Apache-2.0
 
 """Automated bondpad generator for the IHP SG13G2 PDK.
