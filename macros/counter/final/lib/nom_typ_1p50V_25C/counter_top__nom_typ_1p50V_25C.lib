@@ -1,4 +1,4 @@
-library (riscv_top) {
+﻿library (counter_top) {
   comment                        : "";
   delay_model                    : table_lookup;
   simulation                     : false;
@@ -44,7 +44,7 @@ library (riscv_top) {
     bit_to : 0;
   }
 
-  cell ("riscv_top") {
+  cell ("counter_top") {
     area : 754162.750 
     is_macro_cell : true;
     pin("I_ae") {

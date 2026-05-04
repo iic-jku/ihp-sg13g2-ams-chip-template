@@ -1,7 +1,7 @@
-# ihp-sg13g2 RISC-V FPGA Flow
+﻿# ihp-sg13g2 counter FPGA Flow
 
 > [!IMPORTANT]
-> This flow is intended to run inside the `ihp130/macros/riscv/fpga/` directory and requires an FPGA toolchain with `iverilog`, `yosys`, `nextpnr-ice40`, `icepack`, and `dfu-util`.
+> This flow is intended to run inside the `ihp130/macros/counter/fpga/` directory and requires an FPGA toolchain with `iverilog`, `yosys`, `nextpnr-ice40`, `icepack`, and `dfu-util`.
 >
 > The default synthesis flow targets iCE40 (`TARGET=synth_ice40`).
 

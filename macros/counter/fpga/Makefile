@@ -4,7 +4,7 @@
 MAKEFILE_DIR := $(shell dirname $(realpath $(firstword $(MAKEFILE_LIST))))
 
 # Variables
-TOP = riscv_top
+TOP = counter_top
 TARGET ?= synth_ice40
 
 .DEFAULT_GOAL := help

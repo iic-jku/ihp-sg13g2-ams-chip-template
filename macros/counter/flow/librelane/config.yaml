@@ -1,4 +1,4 @@
-meta:
+﻿meta:
   version: 3
   flow: Classic
   substituting_steps:
@@ -96,9 +96,9 @@ INSERT_ECO_BUFFERS:
 
 # ======= END OF ECO_BUFFERS =========
     
-DESIGN_NAME: riscv_top
+DESIGN_NAME: counter_top
 VERILOG_FILES: ["dir::../../rtl/constants.sv",
-"dir::../../rtl/riscv_top.sv",
+"dir::../../rtl/counter_top.sv",
 "dir::../../rtl/alu.sv",
 "dir::../../rtl/lo_gen.v",
 "dir::../../rtl/csr.sv",

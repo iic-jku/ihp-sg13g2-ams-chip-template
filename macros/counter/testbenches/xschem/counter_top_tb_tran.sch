@@ -121,7 +121,7 @@ logy=0
 linewidth_mult=3
 autoload=0
 digital=1}
-T {Testbench for transient analysis - WSPR Transmitter RISC-V CPU} 840 -2310 0 0 1 1 {}
+T {Testbench for transient analysis - WSPR Transmitter counter} 840 -2310 0 0 1 1 {}
 N 1220 -1720 1220 -1680 {lab=VDD}
 N 1220 -1620 1220 -1580 {lab=GND}
 N 1540 -1620 1540 -1580 {lab=GND}
@@ -193,7 +193,7 @@ C {devices/code_shown.sym} 80 -2110 0 0 {name=NGSPICE
 only_toplevel=true 
 value="
 * Gate-Level Analog Mixed Signal Simulation (.xspice)
-.include /foss/designs/Chip/ihp130/macros/riscv/netlist/xspice/riscv_top/riscv_top.xspice
+.include /foss/designs/Chip/ihp130/macros/counter/netlist/xspice/counter_top/counter_top.xspice
 .param VDD=1.5
 .param temp=27
 .param fclk=56e6
@@ -287,5 +287,5 @@ C {devices/lab_wire.sym} 2240 -720 0 1 {name=p23 sig_type=std_logic lab=lo_Q_oe}
 C {devices/lab_wire.sym} 2240 -800 0 1 {name=p24 sig_type=std_logic lab=lo_Q}
 C {devices/lab_wire.sym} 2240 -880 0 1 {name=p25 sig_type=std_logic lab=lo_Qx}
 C {devices/gnd.sym} 2200 -380 0 0 {name=l6 lab=GND}
-C {riscv_top.sym} 1220 -900 0 0 {name=x1}
+C {counter_top.sym} 1220 -900 0 0 {name=x1}
 C {devices/lab_wire.sym} 2240 -1400 0 1 {name=p26 sig_type=std_logic lab=analog_en}

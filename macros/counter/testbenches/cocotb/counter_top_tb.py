@@ -18,7 +18,7 @@ pdk = os.getenv("PDK", "ihp-sg13g2")
 scl = os.getenv("SCL", "sg13g2_stdcell")
 gl = os.getenv("GL", False)
 
-hdl_toplevel = "riscv_top"
+hdl_toplevel = "counter_top"
 
 CPU_CLK_FREQ = 56  # MHz
 
@@ -657,7 +657,7 @@ async def test_cpu_wspr(dut):
     logger.info("Done!")
 
 
-def riscv_top_runner():
+def counter_top_runner():
 
     proj_path = Path(__file__).resolve().parent
 
@@ -674,12 +674,12 @@ def riscv_top_runner():
 
         # We use the unpowered netlist
         # sources.append(proj_path / f"../final/nl/{hdl_toplevel}.nl.v")
-        sources.append(proj_path / f"../../../final/nl/riscv_top.nl.v")
+        sources.append(proj_path / f"../../../final/nl/counter_top.nl.v")
 
         defines = {"USE_POWER_PINS": False}
     else:
         sources.append(proj_path / "../../../rtl/constants.sv")
-        sources.append(proj_path / "../../../rtl/riscv_top.sv")
+        sources.append(proj_path / "../../../rtl/counter_top.sv")
         sources.append(proj_path / "../../../rtl/alu.sv")
         sources.append(proj_path / "../../../rtl/lo_gen.v")
         sources.append(proj_path / "../../../rtl/csr.sv")
@@ -725,11 +725,11 @@ def riscv_top_runner():
 
     runner.test(
         hdl_toplevel=hdl_toplevel,
-        test_module="riscv_top_tb,",
+        test_module="counter_top_tb,",
         plusargs=plusargs,
         waves=True,
     )
 
 
 if __name__ == "__main__":
-    riscv_top_runner()
+    counter_top_runner()

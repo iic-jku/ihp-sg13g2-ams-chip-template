@@ -1,14 +1,14 @@
-# ihp-sg13g2 Counter
+﻿# ihp-sg13g2 Counter
 
 > [!IMPORTANT]
 > This repository requires the [IIC-OSIC-TOOLS](https://github.com/iic-jku/IIC-OSIC-TOOLS) container with tag `2026.05` or later.
 
 <p align="center">
   <a href="render/img/counter_top_white.png">
-    <img src="render/img/counter_top_white.png" alt="Render of the ihp-sg13g2 RISC-V layout (700um x 1130um)" width=50%>
+    <img src="render/img/counter_top_white.png" alt="Render of the ihp-sg13g2 counter layout (700um x 1130um)" width=50%>
   </a>
   <br>
-  <em>Render of the ihp-sg13g2 RISC-V layout (700um x 1130um).</em>
+  <em>Render of the ihp-sg13g2 counter layout (700um x 1130um).</em>
 </p>
 
 
@@ -82,6 +82,7 @@
 │  │  └─ counter_top.spice
 │  └─ 📁 xspice/
 │     ├─ 📁 counter_top/
+│     │  └─ counter_top.xspice
 │     ├─ reorder_xspice_pins.py
 │     ├─ spi2xspice.py
 │     └─ verilog2xspice.sh
@@ -92,33 +93,8 @@
 │     ├─ counter_top_librelane.png
 │     └─ counter_top_white.png
 ├─ 📁 rtl/
-│  ├─ 📁 matlab/
-│  │  ├─ dec2frac.m
-│  │  ├─ getCordicScaling.m
-│  │  ├─ getRotationAngles.m
-│  │  ├─ iterative_cordic_main.m
-│  │  ├─ sfixed_qa.m
-│  │  └─ unsigned2bin.m
-│  ├─ alu.sv
-│  ├─ constants.sv
-│  ├─ control.sv
-│  ├─ cordic_iterative.v
-│  ├─ cordic_slice.v
-│  ├─ csr.sv
-│  ├─ dsmod.v
-│  ├─ freq_generator.sv
-│  ├─ i2c_master.sv
-│  ├─ i2c_master_mc.sv
-│  ├─ imm_gen.sv
-│  ├─ instructioncounter.sv
-│  ├─ lo_gen.v
-│  ├─ memory.sv
-│  ├─ regs.sv
-│  ├─ counter_top.sv
-│  ├─ spi_master.sv
-│  ├─ sram_sim.sv
-│  ├─ uart_rx.v
-│  └─ uart_tx.v
+│  ├─ *.sv
+│  └─ counter_top.sv
 ├─ 📁 schematic/
 │  ├─ counter_top.sym
 │  └─ xschemrc
@@ -126,21 +102,13 @@
 │  └─ lay2img.py
 ├─ 📁 testbenches/
 │  ├─ 📁 cocotb/
-│  │  ├─ 📁 dsmod/
-│  │  │  ├─ Makefile
-│  │  │  └─ README.md
-│  │  └─ 📁 counter_top/
-│  │     ├─ counter_top_tb.gtkw
-│  │     └─ counter_top_tb.surf.ron
+│  │  ├─ counter_top_tb.gtkw
+│  │  ├─ counter_top_tb.py
+│  │  └─ counter_top_tb.surf.ron
 │  ├─ 📁 verilog/
-│  │  ├─ 📁 dsmod/
-│  │  │  ├─ dsmod_tb.v
-│  │  │  ├─ dsmod_tb.gtkw
-│  │  │  └─ dsmod_tb.surf.ron
-│  │  └─ 📁 counter_top/
-│  │     ├─ counter_top_tb.sv
-│  │     ├─ counter_top_tb.gtkw
-│  │     └─ counter_top_tb.surf.ron
+│  │  ├─ counter_top_tb.gtkw
+│  │  ├─ counter_top_tb.surf.ron
+│  │  └─ counter_top_tb.sv
 │  └─ 📁 xschem/
 │     ├─ counter_top_tb_tran.sch
 │     └─ xschemrc
@@ -192,7 +160,7 @@ The waveform viewer can be changed with `WAVEFORM_VIEWER=<gtkwave|surfer>` (defa
 ### RTL Verilog Simulation
 
 Compiles the RTL with Icarus Verilog and runs the simulation.
-When `CELL=counter_top` (the default), the full `RISCV_MODULES_SIM` source list and the `.sv` testbench are selected automatically.
+When `CELL=counter_top` (the default), the full `COUNTER_MODULES_SIM` source list and the `.sv` testbench are selected automatically.
 The waveform is written to `testbenches/verilog/<CELL>/` (e.g. `testbenches/verilog/counter_top/counter_top_tb.vcd`):
 
 ```sh

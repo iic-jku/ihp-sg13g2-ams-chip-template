@@ -1,4 +1,4 @@
-* NGSPICE file created from riscv_top.ext - technology: ihp-sg13g2
+﻿* NGSPICE file created from counter_top.ext - technology: ihp-sg13g2
 
 * Black-box entry subcircuit for sg13g2_decap_8 abstract view
 .subckt sg13g2_decap_8 VDD VSS
@@ -196,7 +196,7 @@
 .subckt sg13g2_a21o_2 X A1 A2 B1 VDD VSS
 .ends
 
-.subckt riscv_top I_ae Q_ae VDD VSS analog_en clk ds_I_n_i ds_I_n_o ds_I_oe ds_I_p_i
+.subckt counter_top I_ae Q_ae VDD VSS analog_en clk ds_I_n_i ds_I_n_o ds_I_oe ds_I_p_i
 + ds_I_p_o ds_Q_n_i ds_Q_n_o ds_Q_oe ds_Q_p_i ds_Q_p_o gpio_in[0] gpio_in[1] gpio_in[2]
 + gpio_in[3] gpio_out[0] gpio_out[1] gpio_out[2] gpio_out[3] lo_I_i lo_I_o lo_I_oe
 + lo_Ix_i lo_Ix_o lo_Q_i lo_Q_o lo_Q_oe lo_Qx_i lo_Qx_o reset rx scl sclk sda_i sda_o

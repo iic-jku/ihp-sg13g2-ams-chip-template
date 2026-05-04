@@ -1,4 +1,4 @@
-(
+﻿(
     show_hierarchy: None,
     show_menu: None,
     show_ticks: None,
@@ -24,11 +24,11 @@
     autoload_sibling_state_files: None,
     autoreload_files: None,
     waves: Some((
-        source: File("testbenches/cocotb/riscv_top/sim_build/riscv_top.fst"),
+        source: File("testbenches/cocotb/counter_top/sim_build/counter_top.fst"),
         format: Fst,
         active_scope: Some(WaveScope((
             strs: [
-                "riscv_top",
+                "counter_top",
             ],
             id: Wellen((2)),
         ))),
@@ -263,7 +263,7 @@
                 variable_ref: (
                     path: (
                         strs: [
-                            "riscv_top",
+                            "counter_top",
                         ],
                         id: Wellen((2)),
                     ),
@@ -285,7 +285,7 @@
                 variable_ref: (
                     path: (
                         strs: [
-                            "riscv_top",
+                            "counter_top",
                         ],
                         id: Wellen((2)),
                     ),
@@ -307,7 +307,7 @@
                 variable_ref: (
                     path: (
                         strs: [
-                            "riscv_top",
+                            "counter_top",
                         ],
                         id: Wellen((2)),
                     ),
@@ -329,7 +329,7 @@
                 variable_ref: (
                     path: (
                         strs: [
-                            "riscv_top",
+                            "counter_top",
                         ],
                         id: Wellen((2)),
                     ),
@@ -351,7 +351,7 @@
                 variable_ref: (
                     path: (
                         strs: [
-                            "riscv_top",
+                            "counter_top",
                         ],
                         id: Wellen((2)),
                     ),
@@ -373,7 +373,7 @@
                 variable_ref: (
                     path: (
                         strs: [
-                            "riscv_top",
+                            "counter_top",
                         ],
                         id: Wellen((2)),
                     ),
@@ -395,7 +395,7 @@
                 variable_ref: (
                     path: (
                         strs: [
-                            "riscv_top",
+                            "counter_top",
                         ],
                         id: Wellen((2)),
                     ),
@@ -417,7 +417,7 @@
                 variable_ref: (
                     path: (
                         strs: [
-                            "riscv_top",
+                            "counter_top",
                         ],
                         id: Wellen((2)),
                     ),
@@ -439,7 +439,7 @@
                 variable_ref: (
                     path: (
                         strs: [
-                            "riscv_top",
+                            "counter_top",
                         ],
                         id: Wellen((2)),
                     ),
@@ -461,7 +461,7 @@
                 variable_ref: (
                     path: (
                         strs: [
-                            "riscv_top",
+                            "counter_top",
                         ],
                         id: Wellen((2)),
                     ),
@@ -483,7 +483,7 @@
                 variable_ref: (
                     path: (
                         strs: [
-                            "riscv_top",
+                            "counter_top",
                         ],
                         id: Wellen((2)),
                     ),
@@ -505,7 +505,7 @@
                 variable_ref: (
                     path: (
                         strs: [
-                            "riscv_top",
+                            "counter_top",
                         ],
                         id: Wellen((2)),
                     ),
@@ -527,7 +527,7 @@
                 variable_ref: (
                     path: (
                         strs: [
-                            "riscv_top",
+                            "counter_top",
                         ],
                         id: Wellen((2)),
                     ),
@@ -549,7 +549,7 @@
                 variable_ref: (
                     path: (
                         strs: [
-                            "riscv_top",
+                            "counter_top",
                         ],
                         id: Wellen((2)),
                     ),
@@ -571,7 +571,7 @@
                 variable_ref: (
                     path: (
                         strs: [
-                            "riscv_top",
+                            "counter_top",
                         ],
                         id: Wellen((2)),
                     ),
@@ -593,7 +593,7 @@
                 variable_ref: (
                     path: (
                         strs: [
-                            "riscv_top",
+                            "counter_top",
                         ],
                         id: Wellen((2)),
                     ),
@@ -615,7 +615,7 @@
                 variable_ref: (
                     path: (
                         strs: [
-                            "riscv_top",
+                            "counter_top",
                         ],
                         id: Wellen((2)),
                     ),
@@ -637,7 +637,7 @@
                 variable_ref: (
                     path: (
                         strs: [
-                            "riscv_top",
+                            "counter_top",
                         ],
                         id: Wellen((2)),
                     ),
@@ -659,7 +659,7 @@
                 variable_ref: (
                     path: (
                         strs: [
-                            "riscv_top",
+                            "counter_top",
                         ],
                         id: Wellen((2)),
                     ),
@@ -681,7 +681,7 @@
                 variable_ref: (
                     path: (
                         strs: [
-                            "riscv_top",
+                            "counter_top",
                         ],
                         id: Wellen((2)),
                     ),
@@ -703,7 +703,7 @@
                 variable_ref: (
                     path: (
                         strs: [
-                            "riscv_top",
+                            "counter_top",
                         ],
                         id: Wellen((2)),
                     ),
@@ -725,7 +725,7 @@
                 variable_ref: (
                     path: (
                         strs: [
-                            "riscv_top",
+                            "counter_top",
                         ],
                         id: Wellen((2)),
                     ),
@@ -747,7 +747,7 @@
                 variable_ref: (
                     path: (
                         strs: [
-                            "riscv_top",
+                            "counter_top",
                         ],
                         id: Wellen((2)),
                     ),
@@ -769,7 +769,7 @@
                 variable_ref: (
                     path: (
                         strs: [
-                            "riscv_top",
+                            "counter_top",
                         ],
                         id: Wellen((2)),
                     ),
@@ -791,7 +791,7 @@
                 variable_ref: (
                     path: (
                         strs: [
-                            "riscv_top",
+                            "counter_top",
                         ],
                         id: Wellen((2)),
                     ),
@@ -813,7 +813,7 @@
                 variable_ref: (
                     path: (
                         strs: [
-                            "riscv_top",
+                            "counter_top",
                         ],
                         id: Wellen((2)),
                     ),
@@ -835,7 +835,7 @@
                 variable_ref: (
                     path: (
                         strs: [
-                            "riscv_top",
+                            "counter_top",
                         ],
                         id: Wellen((2)),
                     ),
@@ -857,7 +857,7 @@
                 variable_ref: (
                     path: (
                         strs: [
-                            "riscv_top",
+                            "counter_top",
                         ],
                         id: Wellen((2)),
                     ),
@@ -879,7 +879,7 @@
                 variable_ref: (
                     path: (
                         strs: [
-                            "riscv_top",
+                            "counter_top",
                         ],
                         id: Wellen((2)),
                     ),
@@ -901,7 +901,7 @@
                 variable_ref: (
                     path: (
                         strs: [
-                            "riscv_top",
+                            "counter_top",
                         ],
                         id: Wellen((2)),
                     ),
@@ -923,7 +923,7 @@
                 variable_ref: (
                     path: (
                         strs: [
-                            "riscv_top",
+                            "counter_top",
                         ],
                         id: Wellen((2)),
                     ),
@@ -945,7 +945,7 @@
                 variable_ref: (
                     path: (
                         strs: [
-                            "riscv_top",
+                            "counter_top",
                         ],
                         id: Wellen((2)),
                     ),
@@ -967,7 +967,7 @@
                 variable_ref: (
                     path: (
                         strs: [
-                            "riscv_top",
+                            "counter_top",
                         ],
                         id: Wellen((2)),
                     ),
@@ -989,7 +989,7 @@
                 variable_ref: (
                     path: (
                         strs: [
-                            "riscv_top",
+                            "counter_top",
                         ],
                         id: Wellen((2)),
                     ),
@@ -1011,7 +1011,7 @@
                 variable_ref: (
                     path: (
                         strs: [
-                            "riscv_top",
+                            "counter_top",
                         ],
                         id: Wellen((2)),
                     ),
@@ -1033,7 +1033,7 @@
                 variable_ref: (
                     path: (
                         strs: [
-                            "riscv_top",
+                            "counter_top",
                         ],
                         id: Wellen((2)),
                     ),
@@ -1055,7 +1055,7 @@
                 variable_ref: (
                     path: (
                         strs: [
-                            "riscv_top",
+                            "counter_top",
                         ],
                         id: Wellen((2)),
                     ),

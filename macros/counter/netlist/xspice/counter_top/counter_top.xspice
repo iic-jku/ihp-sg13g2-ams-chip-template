@@ -1,6 +1,6 @@
-* XSpice netlist created from SPICE and liberty sources by spi2xspice.py
-*SPICE netlist created from verilog structural netlist module riscv_top by vlog2Spice (qflow)
-.subckt riscv_top a_VPWR a_VGND a_I_ae a_Q_ae a_clk a_ds_I_n_i a_ds_I_n_o
+﻿* XSpice netlist created from SPICE and liberty sources by spi2xspice.py
+*SPICE netlist created from verilog structural netlist module counter_top by vlog2Spice (qflow)
+.subckt counter_top a_VPWR a_VGND a_I_ae a_Q_ae a_clk a_ds_I_n_i a_ds_I_n_o
 + a_ds_I_oe a_ds_I_p_i a_ds_I_p_o a_ds_Q_n_i a_ds_Q_n_o a_ds_Q_oe a_ds_Q_p_i
 + a_ds_Q_p_o a_lo_I_i a_lo_I_o a_lo_I_oe a_lo_Ix_i a_lo_Ix_o a_lo_Q_i a_lo_Q_o
 + a_lo_Q_oe a_lo_Qx_i a_lo_Qx_o a_reset a_rx a_scl a_sclk a_sda_i a_sda_o

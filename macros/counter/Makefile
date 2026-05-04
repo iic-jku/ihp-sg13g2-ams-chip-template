@@ -53,36 +53,25 @@ FLOW_FINAL_SPICE_DIR  := flow/final/spice
 FLOW_FINAL_RENDER_DIR := flow/final/render
 
 # Variables for running the testbenches
-RISCV_MODULES_SYNTH := \
-	$(SRC_DIR)/uart_tx.v \
-	$(SRC_DIR)/uart_rx.v \
-	$(SRC_DIR)/i2c_master.sv \
-	$(SRC_DIR)/i2c_master_mc.sv \
-	$(SRC_DIR)/spi_master.sv \
-	$(SRC_DIR)/dsmod.v \
-	$(SRC_DIR)/cordic_slice.v \
-	$(SRC_DIR)/cordic_iterative.v \
-	$(SRC_DIR)/lo_gen.v \
-	$(SRC_DIR)/freq_generator.sv \
-	$(SRC_DIR)/memory.sv \
-	$(SRC_DIR)/regs.sv \
-	$(SRC_DIR)/alu.sv \
-	$(SRC_DIR)/control.sv \
-	$(SRC_DIR)/instructioncounter.sv \
-	$(SRC_DIR)/csr.sv \
-	$(SRC_DIR)/imm_gen.sv \
-	$(SRC_DIR)/riscv_top.sv
+COUNTER_MODULES_SYNTH := \
+	$(SRC_DIR)/counter_top.sv
 
-RISCV_MODULES_SIM :=  \
-	$(SRC_DIR)/constants.sv \
-	$(RISCV_MODULES_SYNTH) \
-	$(SRC_DIR)/sram_sim.sv
+COUNTER_MODULES_SIM :=  \
+	$(COUNTER_MODULES_SYNTH)
 
-# Source files for sim-rtl-verilog: auto-selects RISCV_MODULES_SIM when CELL == TOP, single-file otherwise
-_SIM_SRCS = $(if $(filter $(CELL),$(TOP)),$(RISCV_MODULES_SIM),$(SRC_DIR)/$(CELL).v)
+# COUNTER_MODULES_SYNTH := \
+# 	$(SRC_DIR)/other.sv
+# 	$(SRC_DIR)/counter_top.sv
+
+# COUNTER_MODULES_SIM :=  \
+# 	$(SRC_DIR)/constants.sv \
+# 	$(COUNTER_MODULES_SYNTH)
+
+# Source files for sim-rtl-verilog: auto-selects COUNTER_MODULES_SIM when CELL == TOP, single-file otherwise
+_SIM_SRCS = $(if $(filter $(CELL),$(TOP)),$(COUNTER_MODULES_SIM),$(SRC_DIR)/$(CELL).v)
 
 # Source files for lint-verilog: constants + all synthesis sources for TOP, single-file (auto-detecting .sv/.v) otherwise
-_LINT_SRCS = $(if $(filter $(CELL),$(TOP)),$(SRC_DIR)/constants.sv $(RISCV_MODULES_SYNTH),$(SRC_DIR)/constants.sv $(or $(wildcard $(SRC_DIR)/$(CELL).sv),$(SRC_DIR)/$(CELL).v))
+_LINT_SRCS = $(if $(filter $(CELL),$(TOP)),$(SRC_DIR)/constants.sv $(COUNTER_MODULES_SYNTH),$(SRC_DIR)/constants.sv $(or $(wildcard $(SRC_DIR)/$(CELL).sv),$(SRC_DIR)/$(CELL).v))
 
 # Testbench extension: sv for TOP, v otherwise (dot is added at use site)
 _TB_EXT   = $(if $(filter $(CELL),$(TOP)),sv,v)

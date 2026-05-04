@@ -1,9 +1,9 @@
-*SPICE netlist created from verilog structural netlist module riscv_top by vlog2Spice (qflow)
+﻿*SPICE netlist created from verilog structural netlist module counter_top by vlog2Spice (qflow)
 *This file may contain array delimiters, not for use in simulation.
 
 .include /foss/pdks/ihp-sg13g2/libs.ref/sg13g2_stdcell/spice/sg13g2_stdcell.spice
 
-.subckt riscv_top VPWR VGND clk reset so si sclk
+.subckt counter_top VPWR VGND clk reset so si sclk
 + sram_ce sda_i sda_o sda_oe scl rx tx gpio_in[0]
 + gpio_in[1] gpio_in[2] gpio_in[3] gpio_out[0] gpio_out[1] gpio_out[2] gpio_out[3] analog_en
 + I_ae ds_I_oe ds_I_p_i ds_I_p_o ds_I_n_i ds_I_n_o lo_I_oe lo_I_i

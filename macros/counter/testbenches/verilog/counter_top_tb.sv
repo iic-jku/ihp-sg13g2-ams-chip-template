@@ -1,112 +1,66 @@
-﻿// SPDX-FileCopyrightText: 2025-2026 The Chip Team
+﻿// SPDX-FileCopyrightText: 2026 Simon Dorrer
 // SPDX-License-Identifier: Apache-2.0
+// Description: This file implements a testbench testing the SystemVerilog counter entity.
 
 `timescale 1ns / 1ps;
 
-module riscv_top_tb ();
-  localparam real F_CLK = 12_000_000;
-  realtime PERIOD_NS = (1 / F_CLK) * 1_000_000_000;
-  realtime HALFPERIOD_NS = PERIOD_NS / 2;
+module counter_top_tb;
 
-  logic clk, reset, memwrite, valid, busy, ce;
-  logic so, si, sclk, sram_ce;
-  logic rst_n;
-  logic intr_ext;
-  logic [3:0] gpio_in;
+  // Constants
+	parameter CLK_FREQ = 50e6;
+  parameter COUNTER_MAX = 255;
+  parameter COUNTER_BITWIDTH = $clog2(COUNTER_MAX);
+	
+  // Inputs
+  reg clock = 0;
+  reg reset_n = 1; // active low reset
+  reg enable = 0;
 
-  logic rx;
-  logic uart_en;
-  riscv_top dut (
-      .clk(clk),
-      .reset(rst_n),
-      .so(so),
-      .si(si),
-      .sclk(sclk),
-      .sram_ce(sram_ce),
-      .gpio_in(gpio_in),
-      .rx(rx)
+  // Outputs
+  wire [COUNTER_BITWIDTH-1:0] counter_value;
+
+  // End of Simulation
+  reg tb_end = 0;
+  
+  // N-Bit Counter (written in Verilog)
+  counter_top dut_counter (
+    .clock_i(clock),
+    .reset_n_i(reset_n),
+    .enable_i(enable),
+    .counter_value_o(counter_value)
   );
-
-  assign gpio_in = {3'b0, intr_ext};
-  sram_sim #(
-      .INIT_FILE("demo.txt")
-  ) sram (
-      .sclk(sclk),
-      .reset(reset),
-      .ce(sram_ce),
-      .si(si),
-      .so(so)
-  );
-
-  uart_tx uart_tx (
-      .clk(clk),
-      .resetn(rst_n),
-      .uart_txd(rx),
-      .uart_tx_data(8'hA5),
-      .uart_tx_en(uart_en)
-  );
-
-  always begin
-    clk   = 0;
-    reset = 1;
-    rst_n = 0;
-
-    forever #HALFPERIOD_NS clk = ~clk;
+	
+	// Generate clock
+	/* verilator lint_off STMTDLY */
+	always begin
+    #((1e9 / (2 * CLK_FREQ))); // Calculate half-period in nanoseconds
+    clock = ~clock;
   end
-
-  logic [7:0] memory_content[200];
-  generate
-    genvar i;
-    for (i = 0; i < 200; i = i + 1) begin
-      assign memory_content[i] = sram.mem[i];
-    end
-  endgenerate
-
-  initial begin
-    $dumpfile("riscv_top_tb.vcd");
-    $dumpvars(0, dut, sram, uart_tx);
-
-    intr_ext = 0;
-    uart_en  = 0;
-
-    // Uncomment and adjust the name to your own instance names for regs
-    // and registers
-    for (int i = 0; i < 200; i++) $dumpvars(1, memory_content[i]);
-
-    #PERIOD_NS;
-    #PERIOD_NS;
-    reset = 0;
-    rst_n = 1;
-    // for (int i = 0; i < 300000; i++) #PERIOD_NS;
-    #20_000_000;
-    // intr_ext = 1;
-    uart_en = 1;
-    #PERIOD_NS;
-    #PERIOD_NS;
-    #PERIOD_NS;
-    #PERIOD_NS;
-    #PERIOD_NS;
-    #PERIOD_NS;
-    intr_ext = 0;
-    uart_en  = 0;
-
-    #20_000_000;
-    #20_000_000;
-    #20_000_000;
-    #20_000_000;
-    #20_000_000;
-    #20_000_000;
-    $display("\033[32mTestbench finished running! Verify with the waveform\033[0m");
-    $finish;
-  end
-
-  // initial begin : ext_interrupt
-  //     intr_ext = 0;
-  //     #10000;
-  //     intr_ext = 0;
-  //     // intr_ext = 1;
-  //     #2;
-  //     intr_ext = 0;
-  // end
-
-endmodule  // cputb
+	/* verilator lint_on STMTDLY */
+	
+	initial begin
+		$dumpfile("counter_top_tb.vcd");
+		$dumpvars;
+    
+    // Reset
+    reset_n = 0;
+    #(1e9 / CLK_FREQ); // 1 clock period
+    reset_n = 1;
+    #(1e9 / CLK_FREQ); // 1 clock period
+    
+    // Test enable
+    #(5 * (1e9 / CLK_FREQ)); // 5 clock periods
+    enable = 1;
+    #(10 * (1e9 / CLK_FREQ)); // 10 clock periods
+    enable = 0;
+    #(5 * (1e9 / CLK_FREQ)); // 5 clock periods
+    enable = 1;
+    #(10 * (1e9 / CLK_FREQ)); // 10 clock periods
+	
+		/* verilator lint_off STMTDLY */
+    tb_end = 1;
+    $display("End of simulation.");
+		$finish; // finish
+		/* verilator lint_on STMTDLY */
+	end
+endmodule // counter_top_tb

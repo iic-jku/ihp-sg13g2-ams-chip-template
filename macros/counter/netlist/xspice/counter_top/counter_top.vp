@@ -1,8 +1,8 @@
-/* Verilog module written by vlog2Verilog (qflow) */
+﻿/* Verilog module written by vlog2Verilog (qflow) */
 /* With explicit power connections */
 /* With case-insensitive names (SPICE-compatible) */
 
-module riscv_top(
+module counter_top(
     inout VPWR,
     inout VGND,
     input clk,

@@ -1,10 +1,10 @@
-VERSION 5.7 ;
+﻿VERSION 5.7 ;
   NOWIREEXTENSIONATPIN ON ;
   DIVIDERCHAR "/" ;
   BUSBITCHARS "[]" ;
-MACRO riscv_top
+MACRO counter_top
   CLASS BLOCK ;
-  FOREIGN riscv_top ;
+  FOREIGN counter_top ;
   ORIGIN 0.000 0.000 ;
   SIZE 700.000 BY 1130.000 ;
   PIN I_ae
@@ -580,6 +580,6 @@ MACRO riscv_top
         RECT 400.100 121.400 400.820 985.300 ;
         RECT 406.300 121.400 465.300 985.300 ;
   END
-END riscv_top
+END counter_top
 END LIBRARY
 
