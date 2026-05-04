@@ -1,0 +1,39 @@
+﻿108. Printing statistics.
+
+=== chip_top ===
+
+        +----------Local Count, excluding submodules.
+        |        +-Local Area, excluding submodules.
+        |        | 
+       65        - wires
+       93        - wire bits
+       65        - public wires
+       93        - public wire bits
+        6        - ports
+       34        - port bits
+       62   806400 cells
+        1        -   iqmod_top
+        1        -   riscv_top
+        8   115200   sg13g2_IOPadAnalog
+        3    43200   sg13g2_IOPadIOVdd
+        3    43200   sg13g2_IOPadIOVss
+        8   115200   sg13g2_IOPadIn
+        9   129600   sg13g2_IOPadInOut30mA
+        9   129600   sg13g2_IOPadOut30mA
+        7   100800   sg13g2_IOPadVdd
+        9   129600   sg13g2_IOPadVss
+        1        -   sg13g2_ip__ce
+        1        -   sg13g2_ip__ce_names
+        1        -   sg13g2_ip__jku
+        1        -   sg13g2_ip__jku_names
+
+   Area for cell type \iqmod_top is unknown!
+   Area for cell type \sg13g2_ip__ce is unknown!
+   Area for cell type \sg13g2_ip__ce_names is unknown!
+   Area for cell type \sg13g2_ip__jku is unknown!
+   Area for cell type \sg13g2_ip__jku_names is unknown!
+   Area for cell type \riscv_top is unknown!
+
+   Chip area for module '\chip_top': 806400.000000
+     of which used for sequential elements: 0.000000 (0.00%)
+

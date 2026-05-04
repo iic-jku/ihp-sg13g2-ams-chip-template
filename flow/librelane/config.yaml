@@ -1,0 +1,401 @@
+﻿meta:
+  version: 3
+  flow: Chip
+  substituting_steps:
+
+    # Magic reports some overlaps which can be ignored
+    Checker.IllegalOverlap: null
+
+    # Disable KLayout DRC
+    #KLayout.DRC: null
+    #Checker.KLayoutDRC: null
+
+    # Disable magic DRC
+    #Magic.DRC: null
+    #Checker.MagicDRC: null
+
+    # Disable KLayout antenna check
+    #KLayout.Antenna: null
+    #Checker.KLayoutAntenna: null
+
+    # Disable KLayout density check
+    #KLayout.Density: null
+    #Checker.KLayoutDensity: null
+    
+    # Save time
+    #OpenROAD.IRDropReport: null
+    #KLayout.XOR: null
+    #Netgen.LVS: null
+    #Checker.LVS: null
+    
+    # Use Magic.Filler instead of KLayout.Filler
+    # This can help in some cases where the target
+    # density cannot be met using KLayout.
+    #KLayout.Filler: Magic.Filler
+
+    # Disable KLayout filler (all layers)
+    KLayout.Filler: null
+
+    # Disable setup violation errors
+    #Checker.SetupViolations: null
+
+    # Fix Hold violations by inserting buffers
+    #"+OpenROAD.DetailedRouting": "Odb.InsertECOBuffers"
+    #"+Odb.InsertECOBuffers": "OpenROAD.DetailedRouting"
+
+
+# INSERT_ECO_BUFFERS:
+#  - target: rst_n_pad/Y
+#    buffer: sg13g2_buf_4
+    
+DESIGN_NAME: chip_top
+VERILOG_FILES:
+- dir::../../rtl/chip_top.sv
+- dir::../../rtl/chip_core.sv
+
+VERILOG_DEFINES: [FUNCTIONAL]
+
+# Enable plugin for better SystemVerilog support
+# USE_SLANG: True
+# SLANG_ARGUMENTS: ['--keep-hierarchy']
+
+# Slightly smaller file sizes
+PRIMARY_GDSII_STREAMOUT_TOOL: klayout
+
+# Specify the pad instances for the padring
+# bottom to top
+PAD_EAST: [
+    "analogs\\[0\\].analog_pad",        # Vinp_Q
+    "analogs\\[1\\].analog_pad",        # Vinn_Q
+    "vss_pads\\[0\\].vss_pad",          # VSS
+    "vdd_pads\\[0\\].vdd_pad",          # VDD
+    "vss_pads\\[1\\].vss_pad",          # VSS
+    "analogs\\[2\\].analog_pad",        # Voutp_Q_RF
+    "analogs\\[3\\].analog_pad",        # Voutn_Q_RF
+    "analogs\\[4\\].analog_pad",        # Voutn_I_RF
+    "analogs\\[5\\].analog_pad",        # Voutp_I_RF
+    "vss_pads\\[2\\].vss_pad",          # VSS
+    "vdd_pads\\[1\\].vdd_pad",          # VDD
+    "vss_pads\\[3\\].vss_pad",          # VSS
+    "analogs\\[6\\].analog_pad",        # Vinn_I
+    "analogs\\[7\\].analog_pad"         # Vinp_I
+]
+
+# left to right
+PAD_NORTH: [
+    "iovdd_pads\\[0\\].iovdd_pad",      # IOVDD
+    "iovss_pads\\[0\\].iovss_pad",      # IOVSS
+    "vdd_pads\\[2\\].vdd_pad",          # VDD
+    "vss_pads\\[4\\].vss_pad",          # VSS
+    "inputs\\[0\\].input_pad",          # GPIO_i[0]
+    "inputs\\[1\\].input_pad",          # GPIO_i[1]
+    "inputs\\[2\\].input_pad",          # GPIO_i[2]
+    "inputs\\[3\\].input_pad",          # GPIO_i[3]
+    "vdd_pads\\[3\\].vdd_pad",          # VDD
+    "vss_pads\\[5\\].vss_pad",          # VSS
+    "bidirs\\[0\\].bidir_pad",          # I_p_i / I_p_o
+    "bidirs\\[1\\].bidir_pad",          # I_n_i / I_n_o
+    "bidirs\\[2\\].bidir_pad",          # lo_I_i / lo_I_o
+    "bidirs\\[3\\].bidir_pad"           # lo_Ix_i / lo_Ix_o
+]
+
+# left to right
+PAD_SOUTH: [
+    "iovdd_pads\\[1\\].iovdd_pad",      # IOVDD
+    "iovss_pads\\[1\\].iovss_pad",      # IOVSS
+    "vdd_pads\\[4\\].vdd_pad",          # VDD
+    "vss_pads\\[6\\].vss_pad",          # VSS
+    "outputs\\[0\\].output_pad",        # GPIO_o[0]
+    "outputs\\[1\\].output_pad",        # GPIO_o[1]
+    "outputs\\[2\\].output_pad",        # GPIO_o[2]
+    "outputs\\[3\\].output_pad",        # GPIO_o[3]
+    "vdd_pads\\[5\\].vdd_pad",          # VDD
+    "vss_pads\\[7\\].vss_pad",          # VSS
+    "bidirs\\[4\\].bidir_pad",          # Q_p_i / Q_p_o
+    "bidirs\\[5\\].bidir_pad",          # Q_n_i / Q_n_o
+    "bidirs\\[6\\].bidir_pad",          # lo_Q_i / lo_Q_o
+    "bidirs\\[7\\].bidir_pad"           # lo_Qx_i / lo_Qx_o
+]
+
+# bottom to top
+PAD_WEST: [
+    "outputs\\[4\\].output_pad",        # tx
+    "inputs\\[4\\].input_pad",          # rx
+    "outputs\\[5\\].output_pad",        # scl
+    "bidirs\\[8\\].bidir_pad",          # sda_i / sda_o
+    "vss_pads\\[8\\].vss_pad",          # VSS
+    "vdd_pads\\[6\\].vdd_pad",          # VDD
+    "iovss_pads\\[2\\].iovss_pad",      # IOVSS
+    "iovdd_pads\\[2\\].iovdd_pad",      # IOVDD
+    "outputs\\[6\\].output_pad",        # sram_ce
+    "outputs\\[7\\].output_pad",        # sclk
+    "outputs\\[8\\].output_pad",        # si
+    "inputs\\[5\\].input_pad",          # so
+    rst_n_pad,                          # rst_n
+    clk_pad                             # clk
+]
+
+# SDC files
+PNR_SDC_FILE: dir::chip_top.sdc
+SIGNOFF_SDC_FILE: dir::chip_top.sdc
+FALLBACK_SDC: dir::chip_top.sdc
+
+# Power / ground nets
+VDD_NETS: ["VDD"]
+GND_NETS: ["VSS"]
+VERILOG_POWER_DEFINE: "USE_POWER_PINS"
+
+# Clock
+CLOCK_PORT: clk_PAD
+CLOCK_NET: clk_pad/p2c
+
+CLOCK_PERIOD: 17 # in ns == ~56MHz
+
+# Floorplanning
+FP_SIZING: absolute
+DIE_AREA: [0, 0, 2000, 2000]
+CORE_AREA: [365, 365, 1635, 1635]
+
+# Increase for more logic on your die
+PL_TARGET_DENSITY_PCT: 10
+GRT_ALLOW_CONGESTION: true
+
+# Override bondpad name
+PAD_BONDPAD_NAME: sg13g2_ip__bondpad_70x70 # VIAs only at pad borders
+
+# Bondpads
+EXTRA_GDS:
+- dir::../../ip/sg13g2_ip__bondpad_70x70/final/gds/sg13g2_ip__bondpad_70x70.gds
+
+EXTRA_LEFS:
+- dir::../../ip/sg13g2_ip__bondpad_70x70/final/lef/sg13g2_ip__bondpad_70x70.lef
+
+IGNORE_DISCONNECTED_MODULES:
+- bondpad_70x70
+- sg13g2_ip__ce
+- sg13g2_ip__ce_names
+- sg13g2_ip__jku
+- sg13g2_ip__jku_names
+
+# PDN
+PDN_CORE_RING: True
+
+# Maximum metal width without slotting: 30um
+PDN_CORE_RING_VWIDTH: 15
+PDN_CORE_RING_HWIDTH: 15
+# Ensure minimum spacing for long metals
+PDN_CORE_RING_VSPACING: 5
+PDN_CORE_RING_HSPACING: 5
+
+PDN_CORE_RING_CONNECT_TO_PADS: True
+PDN_ENABLE_PINS: False
+
+# Because we have multiple power pads for one power domain
+MAGIC_EXT_UNIQUE: notopports
+
+MAGIC_GDS_FLATGLOB:
+ # For DRC of SRAM macros
+ - "lvsres_*"
+ - "VIA_M1_*"
+ - "VIA_M2_*"
+ - "*_CELL_CORNER"
+ - "RSC_*"
+ - "*_CELL_SUB"
+
+# Custom PDN config
+PDN_CFG: dir::pdn_cfg.tcl
+
+# SRAM Settings (if required)
+# This is an alternative method compared to
+# specifying the power connections in the RTL
+# PDN_MACRO_CONNECTIONS:
+# - "i_chip_core.sram_0 VDD VSS VDDARRAY! VSS!"
+# - "i_chip_core.sram_0 VDD VSS VDD! VSS!"
+
+
+# Custom Pad Files for PADBARE
+PAD_LEFS: dir::../../ip/sg13g2_io_custom/lef/sg13g2_io.lef
+PAD_VERILOG_MODELS: dir::../../ip/sg13g2_io_custom/verilog/sg13g2_io.v
+
+# Technology LIBs
+LIB:
+  "*_fast_1p32V_m40C":
+    - pdk_dir::libs.ref/sg13g2_stdcell/lib/sg13g2_stdcell_fast_1p32V_m40C.lib
+    - dir::../../ip/sg13g2_io_custom/lib/sg13g2_io_fast_1p32V_3p6V_m40C.lib
+
+  "*_fast_1p65V_m40C":
+    - pdk_dir::libs.ref/sg13g2_stdcell/lib/sg13g2_stdcell_fast_1p65V_m40C.lib
+    - dir::../../ip/sg13g2_io_custom/lib/sg13g2_io_fast_1p65V_3p6V_m40C.lib
+  
+# "*_slow_1p08V_125C":
+#   - pdk_dir::libs.ref/sg13g2_stdcell/lib/sg13g2_stdcell_slow_1p08V_125C.lib
+#   - dir::../../ip/sg13g2_io_custom/lib/sg13g2_io_slow_1p08V_3p0V_125C.lib
+
+  "*_slow_1p35V_125C":
+    - pdk_dir::libs.ref/sg13g2_stdcell/lib/sg13g2_stdcell_slow_1p35V_125C.lib
+    - dir::../../ip/sg13g2_io_custom/lib/sg13g2_io_slow_1p35V_3p0V_125C.lib
+
+  "*_typ_1p20V_25C":
+    - pdk_dir::libs.ref/sg13g2_stdcell/lib/sg13g2_stdcell_typ_1p20V_25C.lib
+    - dir::../../ip/sg13g2_io_custom/lib/sg13g2_io_typ_1p2V_3p3V_25C.lib
+
+  "*_typ_1p50V_25C":
+    - pdk_dir::libs.ref/sg13g2_stdcell/lib/sg13g2_stdcell_typ_1p50V_25C.lib
+    - dir::../../ip/sg13g2_io_custom/lib/sg13g2_io_typ_1p5V_3p3V_25C.lib
+
+# Corners
+STA_CORNERS:
+  - nom_fast_1p32V_m40C
+  - nom_fast_1p65V_m40C
+  # - nom_slow_1p08V_125C
+  - nom_slow_1p35V_125C
+  - nom_typ_1p20V_25C
+  - nom_typ_1p50V_25C
+
+DEFAULT_CORNER: nom_typ_1p50V_25C
+
+# Limit detailed routing to 10 iterations
+# DRT_OPT_ITERS: 10
+
+# Non-Default Rules (NDRs) for the following analog traces
+# Note for the AUTO_TAPER_NDR_NETS variable:
+# OpenROAD needs to be recompiled with the following patch when the AUTO_TAPER_NDR_NETS variable is changed from true (default) to false:
+# https://github.com/FPGA-Research/heichips25-tapeout/blob/main/nix/disable_auto_taper.patch
+# The AUTO_TAPER_NDR_NETS variable tells the detailed router whether it is allowed to automatically "shrink" those wide NDR wires to fit onto small pins.
+# When Enabled (1 or true - Default): The router will automatically taper the wide wire down to the minimum width of the pin's metal layer as it makes the final connection.
+# When Disabled (0 or false): The router will attempt to maintain the full NDR width all the way into the pin.
+# Pending issue to change AUTO_TAPER_NDR_NETS in the LibreLane `config.yaml`: https://github.com/The-OpenROAD-Project/OpenROAD/issues/10032
+NON_DEFAULT_RULES:
+  # Rules for RF traces (Voutp_Q_RF, Voutn_Q_RF, Voutn_I_RF, Voutp_I_RF)
+  # 1.35um width and 1.0um spacing on Metal1 through TopMetal2
+  NDR_RF:
+    width: ["1.35"]
+    spacing: ["1.0"]
+    via: ["Via1_DC1B", "Via2_DC1B", "Via3_DC1B", "Via4_DC1B", "TopVia1EWNS", "TopVia2EWNS"]
+
+  # Rules for analog traces (Vinp_Q, Vinn_Q, Vinn_I, Vinp_I)
+  # 1.35um width and 0.5um spacing on Metal1 through TopMetal2
+  NDR_analog:
+    width: ["1.35"]
+    spacing: ["0.5"]
+    via: ["Via1_DC1B", "Via2_DC1B", "Via3_DC1B", "Via4_DC1B", "TopVia1EWNS", "TopVia2EWNS"]
+
+# Apply NDRs to analog traces during detailed routing
+DRT_ASSIGN_NDR:
+  "^.*PADRES.*$": NDR_analog
+  "^.*PADBARE.*$": NDR_RF
+
+# Do not touch analog traces --> no optimization or buffering
+RSZ_DONT_TOUCH_LIST:
+- "analog_PADRES[0]"
+- "analog_PADRES[1]"
+- "analog_PADBARE[2]"
+- "analog_PADBARE[3]"
+- "analog_PADBARE[4]"
+- "analog_PADBARE[5]"
+- "analog_PADRES[6]"
+- "analog_PADRES[7]"
+
+MACROS:
+  # Digital Macros
+  riscv_top:
+    gds:
+      - dir::../../macros/riscv/final/gds/riscv_top.gds
+    lef:
+      - dir::../../macros/riscv/final/lef/riscv_top.lef
+    pnl:
+      - dir::../../macros/riscv/final/pnl/riscv_top.pnl.v
+    nl:
+      - dir::../../macros/riscv/final/nl/riscv_top.nl.v
+    spef:
+      nom_*: dir::../../macros/riscv/final/spef/nom/riscv_top.nom.spef
+    lib:
+      nom_fast_1p32V_m40C: dir::../../macros/riscv/final/lib/nom_fast_1p32V_m40C/riscv_top__nom_fast_1p32V_m40C.lib
+      nom_fast_1p65V_m40C: dir::../../macros/riscv/final/lib/nom_fast_1p65V_m40C/riscv_top__nom_fast_1p65V_m40C.lib
+      # nom_slow_1p08V_125C: dir::../../macros/riscv/final/lib/nom_slow_1p08V_125C/riscv_top__nom_slow_1p08V_125C.lib
+      nom_slow_1p35V_125C: dir::../../macros/riscv/final/lib/nom_slow_1p35V_125C/riscv_top__nom_slow_1p35V_125C.lib
+      nom_typ_1p20V_25C: dir::../../macros/riscv/final/lib/nom_typ_1p20V_25C/riscv_top__nom_typ_1p20V_25C.lib
+      nom_typ_1p50V_25C: dir::../../macros/riscv/final/lib/nom_typ_1p50V_25C/riscv_top__nom_typ_1p50V_25C.lib
+    instances:
+      i_chip_core.riscv_top:
+        location: ["expr::365 + 70", "expr::365 + 70"]
+        orientation: N
+  
+  # Analog Macros    
+  iqmod_top:
+    gds:
+      - dir::../../macros/iqmod/final/gds/iqmod_top.gds
+    lef:
+      - dir::../../macros/iqmod/final/lef/iqmod_top.lef
+    vh:
+      - dir::../../macros/iqmod/final/vh/iqmod_top.v
+#   lib:
+#     "*":
+#       - dir::../macros/iqmod/final/lib/iqmod_top.lib
+    instances:
+      i_chip_core.iqmod_top:
+        # X should be multiple of 0.48 (Metal3 pitch)
+        # Y should be multiple of 0.42 (Metal3 pitch)
+        location: [expr::(0.48 * 2532), expr::(0.42 * 2220)] # x = 1215.36, y = 932.40
+        orientation: N
+        
+  # Logos
+  sg13g2_ip__ce:
+    gds:
+      - dir::../../ip/sg13g2_ip__ce/final/gds/sg13g2_ip__ce.gds
+    lef:
+      - dir::../../ip/sg13g2_ip__ce/final/lef/sg13g2_ip__ce.lef
+    vh:
+      - dir::../../ip/sg13g2_ip__ce/final/vh/sg13g2_ip__ce.v
+    lib:
+      "*":
+        - dir::../../ip/sg13g2_ip__ce/final/lib/sg13g2_ip__ce.lib
+    instances:
+      ce_logo:
+        location: ["expr::$DIE_AREA[2] - 36.4 - 120.4", "expr::$DIE_AREA[1] + 36.4 + 20.4"]
+        orientation: N
+
+  sg13g2_ip__ce_names:
+    gds:
+      - dir::../../ip/sg13g2_ip__ce_names/final/gds/sg13g2_ip__ce_names.gds
+    lef:
+      - dir::../../ip/sg13g2_ip__ce_names/final/lef/sg13g2_ip__ce_names.lef
+    vh:
+      - dir::../../ip/sg13g2_ip__ce_names/final/vh/sg13g2_ip__ce_names.v
+    lib:
+      "*":
+        - dir::../../ip/sg13g2_ip__ce_names/final/lib/sg13g2_ip__ce_names.lib
+    instances:
+      ce_names:
+        location: ["expr::$DIE_AREA[0] + 36.4 + 20.4", "expr::$DIE_AREA[1] + 36.4 + 20.4"]
+        orientation: N
+
+  sg13g2_ip__jku:
+    gds:
+      - dir::../../ip/sg13g2_ip__jku/final/gds/sg13g2_ip__jku.gds
+    lef:
+      - dir::../../ip/sg13g2_ip__jku/final/lef/sg13g2_ip__jku.lef
+    vh:
+      - dir::../../ip/sg13g2_ip__jku/final/vh/sg13g2_ip__jku.v
+    lib:
+      "*":
+        - dir::../../ip/sg13g2_ip__jku/final/lib/sg13g2_ip__jku.lib
+    instances:
+      jku_logo:
+        location: ["expr::$DIE_AREA[0] + 36.4 + 20.4", "expr::$DIE_AREA[3] - 36.4 - 120.4"]
+        orientation: N
+
+  sg13g2_ip__jku_names:
+    gds:
+      - dir::../../ip/sg13g2_ip__jku_names/final/gds/sg13g2_ip__jku_names.gds
+    lef:
+      - dir::../../ip/sg13g2_ip__jku_names/final/lef/sg13g2_ip__jku_names.lef
+    vh:
+      - dir::../../ip/sg13g2_ip__jku_names/final/vh/sg13g2_ip__jku_names.v
+    lib:
+      "*":
+        - dir::../../ip/sg13g2_ip__jku_names/final/lib/sg13g2_ip__jku_names.lib
+    instances:
+      jku_names:
+        location: ["expr::$DIE_AREA[2] - 36.4 - 120.4", "expr::$DIE_AREA[3] - 36.4 - 120.4"]
+        orientation: N
