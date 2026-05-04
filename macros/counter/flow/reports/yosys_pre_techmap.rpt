@@ -1,0 +1,59 @@
+173. Printing statistics.
+
+=== riscv_top ===
+
+        +----------Local Count, excluding submodules.
+        | 
+    15378 wires
+    18604 wire bits
+      234 public wires
+     3134 public wire bits
+       37 ports
+       43 port bits
+    18338 cells
+     4350   $_ANDNOT_
+      534   $_AND_
+      582   $_DFFE_PP_
+       62   $_DFF_P_
+     3309   $_MUX_
+      500   $_NAND_
+      933   $_NOR_
+     1126   $_NOT_
+      529   $_ORNOT_
+     2739   $_OR_
+       28   $_SDFFCE_PN0P_
+        1   $_SDFFE_NN0P_
+       16   $_SDFFE_PN0N_
+     1230   $_SDFFE_PN0P_
+       80   $_SDFFE_PN1P_
+       86   $_SDFFE_PP0P_
+        5   $_SDFFE_PP1P_
+        5   $_SDFF_NN0_
+      389   $_SDFF_PN0_
+       16   $_SDFF_PP0_
+      434   $_XNOR_
+     1384   $_XOR_
+
+   Area for cell type $_ANDNOT_ is unknown!
+   Area for cell type $_AND_ is unknown!
+   Area for cell type $_DFFE_PP_ is unknown!
+   Area for cell type $_DFF_P_ is unknown!
+   Area for cell type $_MUX_ is unknown!
+   Area for cell type $_NAND_ is unknown!
+   Area for cell type $_NOR_ is unknown!
+   Area for cell type $_NOT_ is unknown!
+   Area for cell type $_ORNOT_ is unknown!
+   Area for cell type $_OR_ is unknown!
+   Area for cell type $_SDFFCE_PN0P_ is unknown!
+   Area for cell type $_SDFFE_NN0P_ is unknown!
+   Area for cell type $_SDFFE_PN0N_ is unknown!
+   Area for cell type $_SDFFE_PN0P_ is unknown!
+   Area for cell type $_SDFFE_PN1P_ is unknown!
+   Area for cell type $_SDFFE_PP0P_ is unknown!
+   Area for cell type $_SDFFE_PP1P_ is unknown!
+   Area for cell type $_SDFF_NN0_ is unknown!
+   Area for cell type $_SDFF_PN0_ is unknown!
+   Area for cell type $_SDFF_PP0_ is unknown!
+   Area for cell type $_XNOR_ is unknown!
+   Area for cell type $_XOR_ is unknown!
+

@@ -1,0 +1,62 @@
+# SPDX-License-Identifier: MIT
+# Copyright (c) tinyVision.ai Inc
+#
+# This file acts as a catalogue of all pinout bindings you may want,
+# so that you can copy-paste them to build your own .pcf file out
+# of it. It is also possible, of course, to use custom names.
+#
+# See https://pico-ice.tinyvision.ai/pinout.html for the position
+# of the pins on the board.
+
+# Reference for PMOD names:
+# https://digilent.com/reference/pmod/start
+
+# Signals used by the default firmware
+set_io -nowarn clk              35
+
+# reset set to ice push_button. active low!
+set_io -nowarn reset            10
+set_io -nowarn sclk             15
+set_io -nowarn sram_ce          37
+
+set_io -nowarn si               14
+set_io -nowarn so               17
+set_io -nowarn sda              19
+set_io -nowarn scl              18
+set_io -nowarn tx               25
+set_io -nowarn rx               27 # 27
+# set_io -nowarn intr_ext         20
+
+# gpio inputs on top left pmod
+
+set_io gpio_in[0] 31
+set_io gpio_in[1] 34
+set_io gpio_in[2] 38
+set_io gpio_in[3] 43
+# set_io gpio_in[4] 28
+# set_io gpio_in[5] 32
+# set_io gpio_in[6] 36
+# set_io gpio_in[7] 42
+set_io gpio_out[0] 28
+set_io gpio_out[1] 32
+set_io gpio_out[2] 36
+set_io gpio_out[3] 42
+
+# gpio outputs on bottom left pmod
+# set_io gpio_out[0] 45
+# set_io gpio_out[1] 47
+# set_io gpio_out[2] 2
+# set_io gpio_out[3] 4
+# set_io gpio_out[4] 44
+# set_io gpio_out[5] 46
+# set_io gpio_out[6] 48
+# set_io gpio_out[7] 3
+
+set_io ds_I_p_o   45
+set_io ds_I_n_o 47
+set_io ds_Q_p_o    2
+set_io ds_Q_n_o  4
+set_io lo_I_o     44
+set_io lo_Q_o     46
+set_io lo_Ix_o    48
+set_io lo_Qx_o     3

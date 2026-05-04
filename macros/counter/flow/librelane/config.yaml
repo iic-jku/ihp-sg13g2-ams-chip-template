@@ -1,0 +1,198 @@
+meta:
+  version: 3
+  flow: Classic
+  substituting_steps:
+
+    # Magic reports some overlaps which can be ignored
+    Checker.IllegalOverlap: null
+
+    "+OpenROAD.DetailedRouting": "Odb.InsertECOBuffers"
+    "+Odb.InsertECOBuffers": "OpenROAD.DetailedRouting"
+
+INSERT_ECO_BUFFERS:
+  # === East Pads ===
+  - target: output19/X # analog_en
+    buffer: sg13g2_buf_4
+
+  - target: output17/X # I_ae
+    buffer: sg13g2_buf_4
+
+  - target: output21/X # ds_I_oe
+    buffer: sg13g2_buf_4
+
+  - target: output22/X # ds_I_p_o
+    buffer: sg13g2_buf_4
+
+  - target: output20/X # ds_I_n_o
+    buffer: sg13g2_buf_4
+
+  - target: output31/X # lo_I_oe
+    buffer: sg13g2_buf_4
+
+  - target: output30/X # lo_I_o
+    buffer: sg13g2_buf_4
+
+  - target: output32/X # lo_Ix_o
+    buffer: sg13g2_buf_4
+
+  - target: output35/X # lo_Qx_o
+    buffer: sg13g2_buf_4
+
+  - target: output33/X # lo_Q_o
+    buffer: sg13g2_buf_4
+
+  - target: output34/X # lo_Q_oe
+    buffer: sg13g2_buf_4
+
+  - target: output23/X # ds_Q_n_o
+    buffer: sg13g2_buf_4
+
+  - target: output25/X # ds_Q_p_o
+    buffer: sg13g2_buf_4
+
+  - target: output24/X # ds_Q_oe
+    buffer: sg13g2_buf_4
+
+  - target: output18/X # Q_ae
+    buffer: sg13g2_buf_4
+
+  # === South Pads ===
+  - target: output29/X # gpio_out[3]
+    buffer: sg13g2_buf_4
+
+  - target: output28/X # gpio_out[2]
+    buffer: sg13g2_buf_4
+
+  - target: output27/X # gpio_out[1]
+    buffer: sg13g2_buf_4
+
+  - target: output26/X # gpio_out[0]
+    buffer: sg13g2_buf_4
+
+  # === West Pads ===
+  - target: output42/X # tx
+    buffer: sg13g2_buf_4
+
+  - target: output36/X # scl
+    buffer: sg13g2_buf_4
+
+  - target: output39/X # sda_oe
+    buffer: sg13g2_buf_4
+
+  - target: output38/X # sda_o
+    buffer: sg13g2_buf_4
+
+  - target: output41/X # sram_ce
+    buffer: sg13g2_buf_4
+
+  - target: output37/X # sclk
+    buffer: sg13g2_buf_4
+
+  - target: output40/X # si
+    buffer: sg13g2_buf_4
+
+  # === North Pads ===
+  # Only gpio_inputs
+
+# ======= END OF ECO_BUFFERS =========
+    
+DESIGN_NAME: riscv_top
+VERILOG_FILES: ["dir::../../rtl/constants.sv",
+"dir::../../rtl/riscv_top.sv",
+"dir::../../rtl/alu.sv",
+"dir::../../rtl/lo_gen.v",
+"dir::../../rtl/csr.sv",
+"dir::../../rtl/memory.sv",
+"dir::../../rtl/dsmod.v",
+"dir::../../rtl/regs.sv",
+"dir::../../rtl/freq_generator.sv",
+"dir::../../rtl/spi_master.sv",
+"dir::../../rtl/control.sv",
+"dir::../../rtl/i2c_master.sv",
+"dir::../../rtl/i2c_master_mc.sv",
+"dir::../../rtl/imm_gen.sv",
+"dir::../../rtl/uart_tx.v",
+"dir::../../rtl/uart_rx.v",
+"dir::../../rtl/cordic_slice.v",
+"dir::../../rtl/cordic_iterative.v",
+"dir::../../rtl/instructioncounter.sv"]
+
+# Enable plugin for better SystemVerilog support
+# USE_SLANG: True
+
+# Slightly smaller file sizes
+# PRIMARY_GDSII_STREAMOUT_TOOL: klayout
+
+# Layout / Floorplan Rules
+DIE_AREA: [0, 0, 700, 1130]
+PL_TARGET_DENSITY_PCT: 40
+GRT_ALLOW_CONGESTION: true
+RUN_MAGIC_DRC: true
+RUN_CTS: true
+
+# Valid values are AREA 0-3 and DELAY 0-4
+# DELAY 4 = fastest, but largest area
+# AREA 3 = slowest, but smallest area
+SYNTH_STRATEGY: DELAY 4
+# MAX_FANOUT_CONSTRAINT: 6
+# RT_MAX_LAYER: Metal5
+FP_PIN_ORDER_CFG: dir::pin_order.cfg
+FP_PDN_MULTILAYER: false
+FP_SIZING: absolute
+
+# SDC files
+PNR_SDC_FILE: dir::impl.sdc
+SIGNOFF_SDC_FILE: dir::signoff.sdc
+
+# Power / ground nets
+VDD_NETS: ["VDD"]
+GND_NETS: ["VSS"]
+VERILOG_POWER_DEFINE: "USE_POWER_PINS"
+
+# Clock
+CLOCK_PORT: clk
+CLOCK_NET: clk
+CLOCK_PERIOD: 17 # in ns == ~56MHz
+
+# Define Standard Cells
+STD_CELL_LIBRARY: sg13g2_stdcell
+
+# Technology LIBs
+LIB:
+  "*_fast_1p32V_m40C":
+    - pdk_dir::libs.ref/sg13g2_stdcell/lib/sg13g2_stdcell_fast_1p32V_m40C.lib
+
+  "*_fast_1p65V_m40C":
+    - pdk_dir::libs.ref/sg13g2_stdcell/lib/sg13g2_stdcell_fast_1p65V_m40C.lib
+  
+  # "*_slow_1p08V_125C":
+  #   - pdk_dir::libs.ref/sg13g2_stdcell/lib/sg13g2_stdcell_slow_1p08V_125C.lib
+
+  "*_slow_1p35V_125C":
+    - pdk_dir::libs.ref/sg13g2_stdcell/lib/sg13g2_stdcell_slow_1p35V_125C.lib
+
+  "*_typ_1p20V_25C":
+    - pdk_dir::libs.ref/sg13g2_stdcell/lib/sg13g2_stdcell_typ_1p20V_25C.lib
+
+  "*_typ_1p50V_25C":
+    - pdk_dir::libs.ref/sg13g2_stdcell/lib/sg13g2_stdcell_typ_1p50V_25C.lib
+
+# Corners
+STA_CORNERS:
+  - nom_fast_1p32V_m40C
+  - nom_fast_1p65V_m40C
+  # - nom_slow_1p08V_125C
+  - nom_slow_1p35V_125C
+  - nom_typ_1p20V_25C
+  - nom_typ_1p50V_25C
+
+DEFAULT_CORNER: nom_typ_1p50V_25C
+
+# Fix setup violations
+# PL_RESIZER_SETUP_SLACK_MARGIN: 0.60
+# GRT_RESIZER_SETUP_SLACK_MARGIN: 0.55
+
+# Fix hold violations
+GRT_RESIZER_HOLD_SLACK_MARGIN: 0.05
+PL_RESIZER_HOLD_SLACK_MARGIN: 0.1
+PL_RESIZER_HOLD_MAX_BUFFER_PCT: 100

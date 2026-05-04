@@ -1,0 +1,59 @@
+﻿[*]
+[*] GTKWave Analyzer v4.0.0-prealpha (1dbe6d0) (w)1999-2022 BSI
+[*] Sat May  2 13:10:19 2026
+[*]
+[dumpfile] "/foss/designs/Chip/ihp130/macros/riscv/testbenches/cocotb/riscv_top/sim_build/riscv_top.fst"
+[dumpfile_mtime] "Sat May  2 12:50:57 2026"
+[dumpfile_size] 40466420
+[savefile] "/foss/designs/Chip/ihp130/macros/riscv/testbenches/cocotb/riscv_top/sim_build/riscv_top_tb.gtkw"
+[timestart] 0
+[size] 1920 1029
+[pos] -1 -420
+*-41.462627 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+[sst_width] 276
+[signals_width] 353
+[sst_expanded] 1
+[sst_vpaned_height] 300
+@29
+riscv_top.clk
+@28
+riscv_top.reset
+riscv_top.so
+riscv_top.si
+riscv_top.sclk
+riscv_top.sram_ce
+riscv_top.sda_i
+riscv_top.sda_o
+riscv_top.sda_oe
+riscv_top.scl
+riscv_top.rx
+riscv_top.tx
+@22
+riscv_top.gpio_in[3:0]
+riscv_top.gpio_out[3:0]
+@28
+riscv_top.analog_en
+riscv_top.I_ae
+riscv_top.ds_I_oe
+riscv_top.ds_I_p_i
+riscv_top.ds_I_p_o
+riscv_top.ds_I_n_i
+riscv_top.ds_I_n_o
+riscv_top.lo_I_oe
+riscv_top.lo_I_i
+riscv_top.lo_I_o
+riscv_top.lo_Ix_i
+riscv_top.lo_Ix_o
+riscv_top.lo_Qx_i
+riscv_top.lo_Qx_o
+riscv_top.lo_Q_i
+riscv_top.lo_Q_o
+riscv_top.lo_Q_oe
+riscv_top.ds_Q_n_i
+riscv_top.ds_Q_n_o
+riscv_top.ds_Q_p_i
+riscv_top.ds_Q_p_o
+riscv_top.ds_Q_oe
+riscv_top.Q_ae
+[pattern_trace] 1
+[pattern_trace] 0
