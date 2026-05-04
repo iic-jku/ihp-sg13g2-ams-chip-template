@@ -1,0 +1,15 @@
+VERSION 5.8 ;
+  NOWIREEXTENSIONATPIN ON ;
+  DIVIDERCHAR "/" ;
+  BUSBITCHARS "[]" ;
+MACRO sg13g2_ip__jku_names
+  CLASS BLOCK ;
+  FOREIGN sg13g2_ip__jku_names ;
+  ORIGIN 0.000 0.000 ;
+  SIZE 100 BY 100 ;
+  OBS
+      LAYER TopMetal2 ;
+        RECT 0.0 0.0 100 100 ;
+  END
+END sg13g2_ip__jku_names
+END LIBRARY
