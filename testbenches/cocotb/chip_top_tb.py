@@ -1,4 +1,4 @@
-﻿# SPDX-FileCopyrightText: 2025-2026 The Chip Team
+﻿# SPDX-FileCopyrightText: 2025-2026 Simon Dorrer
 # SPDX-License-Identifier: Apache-2.0
 
 import os
@@ -716,7 +716,7 @@ def chip_top_runner():
 
         # We use the unpowered netlist
         sources.append(root_path / f"netlist/nl/{hdl_toplevel}.nl.v")
-        sources.append(root_path / "macros/riscv/final/nl/riscv_top.nl.v")
+        sources.append(root_path / "macros/counter/final/nl/counter_top.nl.v")
 
         defines = {"USE_POWER_PINS": False}
     else:
@@ -726,29 +726,11 @@ def chip_top_runner():
         # sources.append(proj_path / "../src/slot_defines.svh") TODO: can this safely be removed?
 
         # Chip
-        sources.append(root_path / "macros/riscv/rtl/constants.sv")
-        sources.append(root_path / "macros/riscv/rtl/riscv_top.sv")
-        sources.append(root_path / "macros/riscv/rtl/alu.sv")
-        sources.append(root_path / "macros/riscv/rtl/lo_gen.v")
-        sources.append(root_path / "macros/riscv/rtl/csr.sv")
-        sources.append(root_path / "macros/riscv/rtl/memory.sv")
-        sources.append(root_path / "macros/riscv/rtl/dsmod.v")
-        sources.append(root_path / "macros/riscv/rtl/regs.sv")
-        sources.append(root_path / "macros/riscv/rtl/freq_generator.sv")
-        sources.append(root_path / "macros/riscv/rtl/spi_master.sv")
-        sources.append(root_path / "macros/riscv/rtl/control.sv")
-        sources.append(root_path / "macros/riscv/rtl/i2c_master.sv")
-        sources.append(root_path / "macros/riscv/rtl/i2c_master_mc.sv")
-        sources.append(root_path / "macros/riscv/rtl/cordic_iterative.v")
-        sources.append(root_path / "macros/riscv/rtl/imm_gen.sv")
-        sources.append(root_path / "macros/riscv/rtl/uart_tx.v")
-        sources.append(root_path / "macros/riscv/rtl/uart_rx.v")
-        sources.append(root_path / "macros/riscv/rtl/cordic_slice.v")
-        sources.append(root_path / "macros/riscv/rtl/instructioncounter.sv")
+        sources.append(root_path / "macros/counter/rtl/counter_top.sv")
 
     sources += [
         # Macro models
-        root_path / "macros/iqmod/final/vh/iqmod_top.v",
+        root_path / "macros/inverter/final/vh/inverter_top.v",
 
         # IO pad models
         # Path(pdk_root) / pdk / "libs.ref/sg13g2_io/verilog/sg13g2_io.v",
@@ -758,9 +740,7 @@ def chip_top_runner():
         root_path / "ip/sg13g2_io_custom/verilog/sg13g2_io.v",
 
         # Custom IPs
-        root_path / "ip/sg13g2_ip__ce/final/vh/sg13g2_ip__ce.v",
         root_path / "ip/sg13g2_ip__jku/final/vh/sg13g2_ip__jku.v",
-        root_path / "ip/sg13g2_ip__ce_names/final/vh/sg13g2_ip__ce_names.v",
         root_path / "ip/sg13g2_ip__jku_names/final/vh/sg13g2_ip__jku_names.v",
     ]
 
