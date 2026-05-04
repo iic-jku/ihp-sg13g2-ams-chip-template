@@ -57863,7 +57863,7 @@
     .X(net8));
  sg13g2_dlygate4sd3_1 hold9 (.A(\i_chip_core.input_in[1] ),
     .X(net9));
- iqmod_top \i_chip_core.iqmod_top  (.di_spdt_ctrl_Q(\i_chip_core.Q_ae ),
+ inverter_top \i_chip_core.inverter_top  (.di_spdt_ctrl_Q(\i_chip_core.Q_ae ),
     .di_spdt_ctrl_I(\i_chip_core.I_ae ),
     .voutn_I_RF(\analog_PADBARE[4] ),
     .voutp_I_RF(\analog_PADBARE[5] ),
@@ -57882,7 +57882,7 @@
     .di_ds_Q_n(\i_chip_core.ds_Q_n_o ),
     .di_ds_Q_p(\i_chip_core.ds_Q_p_o ),
     .di_lo_Q(\i_chip_core.lo_Q_o ));
- riscv_top \i_chip_core.riscv_top  (.I_ae(\i_chip_core.I_ae ),
+ counter_top \i_chip_core.counter_top  (.I_ae(\i_chip_core.I_ae ),
     .Q_ae(\i_chip_core.Q_ae ),
     .analog_en(\i_chip_core.analog_en ),
     .clk(clk_PAD2CORE),

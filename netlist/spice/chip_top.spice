@@ -64,8 +64,8 @@
 .subckt sg13g2_IOPadVdd iovdd iovss vdd vss
 .ends
 
-* Black-box entry subcircuit for iqmod_top abstract view
-.subckt iqmod_top di_spdt_ctrl_Q di_spdt_ctrl_I voutn_I_RF voutp_I_RF voutn_Q_RF voutp_Q_RF
+* Black-box entry subcircuit for inverter_top abstract view
+.subckt inverter_top di_spdt_ctrl_Q di_spdt_ctrl_I voutn_I_RF voutp_I_RF voutn_Q_RF voutp_Q_RF
 + di_analog_en vinp_Q vinn_Q vinn_I vinp_I di_lo_I di_ds_I_p di_ds_I_n di_lo_Ix di_lo_Qx
 + di_ds_Q_n di_ds_Q_p di_lo_Q VSS VDD
 .ends
@@ -78,8 +78,8 @@
 .subckt sg13g2_IOPadIn iovdd iovss p2c pad vdd vss
 .ends
 
-* Black-box entry subcircuit for riscv_top abstract view
-.subckt riscv_top I_ae Q_ae VDD VSS analog_en clk ds_I_n_i ds_I_n_o ds_I_oe ds_I_p_i
+* Black-box entry subcircuit for counter_top abstract view
+.subckt counter_top I_ae Q_ae VDD VSS analog_en clk ds_I_n_i ds_I_n_o ds_I_oe ds_I_p_i
 + ds_I_p_o ds_Q_n_i ds_Q_n_o ds_Q_oe ds_Q_p_i ds_Q_p_o gpio_in[0] gpio_in[1] gpio_in[2]
 + gpio_in[3] gpio_out[0] gpio_out[1] gpio_out[2] gpio_out[3] lo_I_i lo_I_o lo_I_oe
 + lo_Ix_i lo_Ix_o lo_Q_i lo_Q_o lo_Q_oe lo_Qx_i lo_Qx_o reset rx scl sclk sda_i sda_o
@@ -18652,13 +18652,13 @@ XFILLER_127_2220 VDD VSS sg13g2_decap_8
 XFILLER_129_1828 VDD VSS sg13g2_decap_8
 XFILLER_283_2493 VDD VSS sg13g2_decap_8
 XFILLER_244_2444 VDD VSS sg13g2_decap_8
-Xi_chip_core.iqmod_top i_chip_core.riscv_top/Q_ae i_chip_core.riscv_top/I_ae
+Xi_chip_core.inverter_top i_chip_core.counter_top/Q_ae i_chip_core.counter_top/I_ae
 + analogs\[4\].analog_pad/padbare analogs\[5\].analog_pad/padbare analogs\[3\].analog_pad/padbare
-+ analogs\[2\].analog_pad/padbare i_chip_core.riscv_top/analog_en analogs\[0\].analog_pad/padres
++ analogs\[2\].analog_pad/padbare i_chip_core.counter_top/analog_en analogs\[0\].analog_pad/padres
 + analogs\[1\].analog_pad/padres analogs\[6\].analog_pad/padres analogs\[7\].analog_pad/padres
 + bidirs\[2\].bidir_pad/c2p bidirs\[0\].bidir_pad/c2p bidirs\[1\].bidir_pad/c2p bidirs\[3\].bidir_pad/c2p
 + bidirs\[7\].bidir_pad/c2p bidirs\[5\].bidir_pad/c2p bidirs\[4\].bidir_pad/c2p bidirs\[6\].bidir_pad/c2p
-+ VSS VDD iqmod_top
++ VSS VDD inverter_top
 XFILLER_36_2136 VDD VSS sg13g2_decap_8
 XFILLER_75_2185 VDD VSS sg13g2_decap_8
 XFILLER_221_98 VDD VSS sg13g2_decap_8
@@ -32317,8 +32317,8 @@ XFILLER_89_1723 VDD VSS sg13g2_decap_8
 XFILLER_102_1625 VDD VSS sg13g2_decap_8
 XFILLER_141_1674 VDD VSS sg13g2_decap_8
 XFILLER_89_2479 VDD VSS sg13g2_decap_8
-Xi_chip_core.riscv_top i_chip_core.riscv_top/I_ae i_chip_core.riscv_top/Q_ae
-+ VDD VSS i_chip_core.riscv_top/analog_en clk_pad/p2c bidirs\[1\].bidir_pad/p2c
+Xi_chip_core.counter_top i_chip_core.counter_top/I_ae i_chip_core.counter_top/Q_ae
++ VDD VSS i_chip_core.counter_top/analog_en clk_pad/p2c bidirs\[1\].bidir_pad/p2c
 + bidirs\[1\].bidir_pad/c2p bidirs\[1\].bidir_pad/c2p_en bidirs\[0\].bidir_pad/p2c
 + bidirs\[0\].bidir_pad/c2p bidirs\[5\].bidir_pad/p2c bidirs\[5\].bidir_pad/c2p bidirs\[5\].bidir_pad/c2p_en
 + bidirs\[4\].bidir_pad/p2c bidirs\[4\].bidir_pad/c2p hold12/X hold10/X hold14/X hold16/X
@@ -32329,7 +32329,7 @@ Xi_chip_core.riscv_top i_chip_core.riscv_top/I_ae i_chip_core.riscv_top/Q_ae
 + bidirs\[7\].bidir_pad/p2c bidirs\[7\].bidir_pad/c2p hold8/X hold7/X outputs\[5\].output_pad/c2p
 + outputs\[7\].output_pad/c2p hold18/X bidirs\[8\].bidir_pad/c2p bidirs\[8\].bidir_pad/c2p_en
 + outputs\[8\].output_pad/c2p hold6/X outputs\[6\].output_pad/c2p outputs\[4\].output_pad/c2p
-+ riscv_top
++ counter_top
 XFILLER_11_1519 VDD VSS sg13g2_decap_8
 XFILLER_15_1688 VDD VSS sg13g2_decap_8
 XFILLER_7_861 VDD VSS sg13g2_decap_8
