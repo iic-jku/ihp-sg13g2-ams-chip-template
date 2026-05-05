@@ -1,0 +1,18 @@
+
+Cell inverter (0) disconnected node: vin
+Cell inverter (0) disconnected node: VSS
+
+Subcircuit pins:
+Circuit 1: inverter                        |Circuit 2: inverter                        
+-------------------------------------------|-------------------------------------------
+vin                                        |vin                                        
+VSS                                        |VSS                                        
+(no matching pin)                          |VDD                                        
+(no matching pin)                          |VDD                                        
+(no matching pin)                          |vout                                       
+(no matching pin)                          |vout                                       
+---------------------------------------------------------------------------------------
+Cell pin lists for inverter and inverter altered to match.
+Device classes inverter and inverter are equivalent.
+
+Final result: Top level cell failed pin matching.

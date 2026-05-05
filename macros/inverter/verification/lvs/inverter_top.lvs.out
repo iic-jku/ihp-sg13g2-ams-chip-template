@@ -1,0 +1,31 @@
+Flattening unmatched subcell inverter in circuit inverter_top (1)(4 instances)
+
+Cell inverter_top (0) disconnected node: vin1
+Cell inverter_top (0) disconnected node: vin2
+Cell inverter_top (0) disconnected node: vin3
+Cell inverter_top (0) disconnected node: vin4
+Cell inverter_top (0) disconnected node: VSS
+
+Subcircuit pins:
+Circuit 1: inverter_top                    |Circuit 2: inverter_top                    
+-------------------------------------------|-------------------------------------------
+vin1                                       |vin1                                       
+vin2                                       |vin2                                       
+vin3                                       |vin3                                       
+vin4                                       |vin4                                       
+VSS                                        |VSS                                        
+(no matching pin)                          |VDD                                        
+(no matching pin)                          |VDD                                        
+(no matching pin)                          |vout4                                      
+(no matching pin)                          |vout4                                      
+(no matching pin)                          |vout3                                      
+(no matching pin)                          |vout3                                      
+(no matching pin)                          |vout2                                      
+(no matching pin)                          |vout2                                      
+(no matching pin)                          |vout1                                      
+(no matching pin)                          |vout1                                      
+---------------------------------------------------------------------------------------
+Cell pin lists for inverter_top and inverter_top altered to match.
+Device classes inverter_top and inverter_top are equivalent.
+
+Final result: Top level cell failed pin matching.
