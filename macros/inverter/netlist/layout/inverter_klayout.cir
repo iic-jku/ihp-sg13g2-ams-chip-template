@@ -1,4 +1,4 @@
-* Extracted by KLayout with SG13G2 LVS runset on : 05/05/2026 17:50
+* Extracted by KLayout with SG13G2 LVS runset on : 05/05/2026 22:25
 
 .SUBCKT inverter VSS VDD vout vin
 M$1 VSS VSS VSS \$1 sg13_lv_nmos L=1u W=2u AS=0.53p AD=0.53p PS=4.06u PD=4.06u
