@@ -137,7 +137,8 @@ ToDo
 │  │  └─ chip_top.nl.v
 │  ├─ 📁 pex/
 │  │  ├─ reorder_spice_pins.py
-│  │  └─ chip_top_pex.spice
+│  │  ├─ chip_top_klayout_pex_*.spice
+│  │  └─ chip_top_magic_pex_*.spice
 │  ├─ 📁 pnl/
 │  │  └─ chip_top.pnl.v
 │  └─ 📁 spice/
@@ -494,6 +495,10 @@ make magic-drc CELL=chip_top
 
 Runs parasitic extraction on the GDS layout in `layout/`. The extracted SPICE netlist is written to `netlist/pex/`.
 
+The extracted SPICE filenames include the selected extraction mode:
+- `klayout-pex` writes `netlist/pex/<CELL>_klayout_pex_<EXT_MODE>.spice`
+- `magic-pex` writes `netlist/pex/<CELL>_magic_pex_<EXT_MODE>.spice`
+
 The `EXT_MODE` parameter selects the extraction mode:
 - `1` = C-decoupled
 - `2` = C-coupled
@@ -503,7 +508,7 @@ The `EXT_MODE` parameter selects the extraction mode:
 
 The `.subckt` name in the extracted SPICE file is automatically renamed from `<CELL>_flat` (kpex) or `<CELL>` (Magic) to `<CELL>_pex`.
 
-If a matching Xschem symbol (`schematic/<CELL>_pex.sym`) exists, the `.subckt` pin order in the extracted SPICE file is automatically reordered to match the symbol's pin positions. This ensures the PEX netlist can be used directly with the corresponding Xschem symbol for simulation.
+If a matching Xschem symbol (`schematic/<CELL>_pex.sym`) exists, the `.subckt` pin order in the extracted SPICE file is automatically reordered to match the symbol's pin positions. This ensures the PEX netlist can be used directly with the corresponding Xschem symbol for simulation regardless of the selected `EXT_MODE`.
 
 **KLayout PEX** uses `kpex` with the Magic extraction engine currently (2.5D engine is work in progress):
 
