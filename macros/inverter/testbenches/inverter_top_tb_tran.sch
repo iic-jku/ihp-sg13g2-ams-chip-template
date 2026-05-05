@@ -6,8 +6,8 @@ S {}
 F {}
 E {}
 B 2 1660 -1160 2460 -760 {flags=graph
-y1=-0.0008
-y2=-0.00074
+y1=-0.0032
+y2=-0.0029
 ypos1=0
 ypos2=2
 divy=5
@@ -104,7 +104,7 @@ N 1200 -780 1320 -780 {lab=vout3}
 N 1200 -780 1200 -540 {lab=vout3}
 N 1160 -940 1160 -580 {lab=vout4}
 N 1160 -940 1320 -940 {lab=vout4}
-C {devices/code_shown.sym} 40 -1430 0 0 {name=NGSPICE
+C {devices/code_shown.sym} 60 -1410 0 0 {name=NGSPICE
 only_toplevel=true 
 value="
 * .include ../../netlist/pex/inverter_top_pex.spice
@@ -134,7 +134,7 @@ tran 1u 5m
 write @schname\\\\.raw
 
 * Plotting
-plot vin vout
+plot vin vout1 vout2 vout3 vout4
 * plot i(VDD)
 
 * Measurements
@@ -154,7 +154,7 @@ print vout_pp
 unset appendwrite
 set wr_vecnames
 set wr_singlescale
-wrdata $PROJECT_PATH/scripts/plot_simulations/data/inverter_top_tb_tran.txt
+wrdata ../../scripts/plot_simulations/data/@schname\\\\.txt
 + v(vin) v(vout1) v(vout2) v(vout3) v(vout4)
 
 *quit

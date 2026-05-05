@@ -67,7 +67,7 @@ N 1220 -860 1320 -860 {lab=vout}
 N 1320 -780 1320 -760 {lab=GND}
 N 1080 -960 1080 -900 {lab=VDD}
 N 1080 -820 1080 -760 {lab=GND}
-C {devices/code_shown.sym} 40 -1250 0 0 {name=NGSPICE
+C {devices/code_shown.sym} 60 -1250 0 0 {name=NGSPICE
 only_toplevel=true 
 value="
 * .include ../../netlist/pex/inverter_top_pex.spice
@@ -106,7 +106,7 @@ print Vgsp_at_Vcm
 unset appendwrite
 set wr_vecnames
 set wr_singlescale
-wrdata $PROJECT_PATH/scripts/plot_simulations/data/inverter_top_tb_Vout.txt v(vin) v(vout)
+wrdata ../../scripts/plot_simulations/data/@schname\\\\.txt v(vin) v(vout)
 
 *quit
 .endc

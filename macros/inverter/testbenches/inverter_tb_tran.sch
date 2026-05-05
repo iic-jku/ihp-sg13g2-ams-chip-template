@@ -13,8 +13,8 @@ ypos2=2
 divy=5
 subdivy=1
 unity=1
-x1=0
-x2=0.005
+x1=-0.0005
+x2=0.0045
 divx=5
 subdivx=1
 xlabmag=1.0
@@ -37,8 +37,8 @@ ypos2=2
 divy=5
 subdivy=1
 unity=1
-x1=0
-x2=0.005
+x1=-0.0005
+x2=0.0045
 divx=5
 subdivx=1
 xlabmag=1.0
@@ -135,7 +135,7 @@ echo efficiency = $&efficiency %
 unset appendwrite
 set wr_vecnames
 set wr_singlescale
-wrdata $PROJECT_PATH/scripts/plot_simulations/data/inverter_top_tb_tran.txt v(vin) v(vout)
+wrdata ../../scripts/plot_simulations/data/@schname\\\\.txt v(vin) v(vout)
 
 *quit
 .endc
