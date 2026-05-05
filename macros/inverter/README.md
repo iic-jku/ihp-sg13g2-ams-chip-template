@@ -112,20 +112,22 @@ make <target> [CELL=<cellname>] [EXT_MODE=<1|2|3>] [EV_PRECISION=<digits>]
 
 ## Layout File Extension Usage
 
-The current Makefile uses fixed layout extensions per target group:
+The Makefile defines a `_GDS_EXT` variable that auto-selects the layout file extension: it prefers `.gds` when available, and falls back to `.klay.gds` otherwise.
 
-- Targets using `layout/<name>.gds`:
+- KLayout targets use `layout/<name>.$(_GDS_EXT)` and work with either `.gds` or `.klay.gds`:
+  - `klayout-lvs`
+  - `klayout-drc`
+  - `klayout-pex`
+
+- Magic targets always use `layout/<name>.gds` (Magic requires standard `.gds`):
+  - `magic-lvs`
+  - `magic-drc`
+  - `magic-pex`
+
+- Build targets always use `layout/<name>.gds`:
   - `lef`
   - `copy-gds`
   - `render-gds`
-  - `magic-lvs`
-  - `magic-drc`
-  - `klayout-pex`
-  - `magic-pex`
-
-- Targets using `layout/<name>.klay.gds`:
-  - `klayout-lvs`
-  - `klayout-drc`
 
 
 ## Run Xschem Testbench Simulation
@@ -257,8 +259,8 @@ make magic-lvs-netlist EV_PRECISION=5
 
 Exports the schematic netlist from Xschem, then runs LVS. Compares the layout in `layout/` against the schematic netlist in `netlist/schematic/`.
 
-- `klayout-lvs` uses `layout/<CELL>.klay.gds`
-- `magic-lvs` uses `layout/<CELL>.gds`
+- `klayout-lvs` uses `layout/<CELL>.$(_GDS_EXT)` (`.gds` if present, otherwise `.klay.gds`)
+- `magic-lvs` uses `layout/<CELL>.gds` (Magic requires `.gds`)
 
 Reports are saved to `verification/lvs/`. The extracted layout netlist is moved to `netlist/layout/`.
 
@@ -281,8 +283,8 @@ make magic-lvs CELL=inverter_top
 
 Runs DRC on the layout in `layout/`.
 
-- `klayout-drc` uses `layout/<CELL>.klay.gds`
-- `magic-drc` uses `layout/<CELL>.gds`
+- `klayout-drc` uses `layout/<CELL>.$(_GDS_EXT)` (`.gds` if present, otherwise `.klay.gds`)
+- `magic-drc` uses `layout/<CELL>.gds` (Magic requires `.gds`)
 
 Reports are saved to `verification/drc/`.
 
@@ -303,7 +305,10 @@ make magic-drc CELL=inverter_top
 
 ## Parasitic Extraction (PEX)
 
-Runs parasitic extraction on the layout in `layout/`. Both PEX targets currently use `layout/<CELL>.gds`. The extracted SPICE netlist is written to `netlist/pex/`.
+Runs parasitic extraction on the layout in `layout/`. The extracted SPICE netlist is written to `netlist/pex/`.
+
+- `klayout-pex` uses `layout/<CELL>.$(_GDS_EXT)` (`.gds` if present, otherwise `.klay.gds`)
+- `magic-pex` uses `layout/<CELL>.gds` (Magic requires `.gds`)
 
 The `EXT_MODE` parameter selects the extraction mode:
 - `1` = C-decoupled

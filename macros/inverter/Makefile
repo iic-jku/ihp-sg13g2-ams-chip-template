@@ -20,6 +20,11 @@ EXT_MODE ?= 3
 # Override with: make <target> EV_PRECISION=<digits>
 EV_PRECISION ?= 5
 
+# Preferred GDS extension: use .gds when available, otherwise .klay.gds
+# This checks both TOP and CELL names so it can be used as: $(LAY_DIR)/$(TOP).$(_GDS_EXT) or $(LAY_DIR)/$(CELL).$(_GDS_EXT)
+# KLayout LVS, DRC and PEX work with either .gds or .klay.gds, but Magic LVS, DRC and PEX require .gds.
+_GDS_EXT = $(if $(wildcard $(LAY_DIR)/$(TOP).gds)$(wildcard $(LAY_DIR)/$(CELL).gds),gds,klay.gds)
+
 # Folder structure
 SCH_DIR         := schematic
 LAY_DIR         := layout
@@ -142,25 +147,14 @@ verilog: ## Generate a Verilog stub of the TOP cell from PEX netlist pins
 	@echo '    inout VDD,' >> $(VH_DIR)/$(TOP).v
 	@echo '    inout VSS,' >> $(VH_DIR)/$(TOP).v
 	@echo '`endif' >> $(VH_DIR)/$(TOP).v
-	@echo '    input di_analog_en,' >> $(VH_DIR)/$(TOP).v
-	@echo '    input di_spdt_ctrl_I,' >> $(VH_DIR)/$(TOP).v
-	@echo '    inout vinp_I,' >> $(VH_DIR)/$(TOP).v
-	@echo '    input di_ds_I_p,' >> $(VH_DIR)/$(TOP).v
-	@echo '    inout vinn_I,' >> $(VH_DIR)/$(TOP).v
-	@echo '    input di_ds_I_n,' >> $(VH_DIR)/$(TOP).v
-	@echo '    input di_lo_I,' >> $(VH_DIR)/$(TOP).v
-	@echo '    input di_lo_Ix,' >> $(VH_DIR)/$(TOP).v
-	@echo '    input di_lo_Qx,' >> $(VH_DIR)/$(TOP).v
-	@echo '    input di_lo_Q,' >> $(VH_DIR)/$(TOP).v
-	@echo '    input di_ds_Q_n,' >> $(VH_DIR)/$(TOP).v
-	@echo '    inout vinn_Q,' >> $(VH_DIR)/$(TOP).v
-	@echo '    input di_ds_Q_p,' >> $(VH_DIR)/$(TOP).v
-	@echo '    inout vinp_Q,' >> $(VH_DIR)/$(TOP).v
-	@echo '    input di_spdt_ctrl_Q,' >> $(VH_DIR)/$(TOP).v
-	@echo '    inout voutp_I_RF,' >> $(VH_DIR)/$(TOP).v
-	@echo '    inout voutn_I_RF,' >> $(VH_DIR)/$(TOP).v
-	@echo '    inout voutn_Q_RF,' >> $(VH_DIR)/$(TOP).v
-	@echo '    inout voutp_Q_RF' >> $(VH_DIR)/$(TOP).v
+	@echo '    inout vin1,' >> $(VH_DIR)/$(TOP).v
+	@echo '    inout vin2,' >> $(VH_DIR)/$(TOP).v
+	@echo '    inout vin3,' >> $(VH_DIR)/$(TOP).v
+	@echo '    inout vin4,' >> $(VH_DIR)/$(TOP).v
+	@echo '    inout vout1,' >> $(VH_DIR)/$(TOP).v
+	@echo '    inout vout2,' >> $(VH_DIR)/$(TOP).v
+	@echo '    inout vout3,' >> $(VH_DIR)/$(TOP).v
+	@echo '    inout vout4' >> $(VH_DIR)/$(TOP).v
 	@echo ');' >> $(VH_DIR)/$(TOP).v
 	@echo 'endmodule' >> $(VH_DIR)/$(TOP).v
 	@echo "Checking PEX pins against Verilog stub..."
@@ -223,7 +217,7 @@ klayout-lvs: ## Run KLayout LVS of the CELL cell (usage: make klayout-lvs [CELL=
 	mkdir -p $(LVS_RPT_DIR)
 	mkdir -p $(NET_LAY_DIR)
 	python3 $(PDK_ROOT)/$(PDK)/libs.tech/klayout/tech/lvs/run_lvs.py \
-		--layout=$(LAY_DIR)/$(CELL).klay.gds \
+		--layout=$(LAY_DIR)/$(CELL).$(_GDS_EXT) \
 		--netlist=$(NET_SCH_DIR)/$(CELL)_klayout.cdl \
 		--topcell=$(CELL) \
 		--run_dir=$(LVS_RPT_DIR) \
@@ -266,7 +260,7 @@ magic-lvs: ## Run Magic + Netgen LVS of the CELL cell (usage: make magic-lvs [CE
 klayout-drc: ## Run KLayout DRC of the CELL cell (usage: make klayout-drc [CELL=<cellname>])
 	mkdir -p $(DRC_RPT_DIR)
 	python3 $(PDK_ROOT)/$(PDK)/libs.tech/klayout/tech/drc/run_drc.py \
-		--path=$(LAY_DIR)/$(CELL).klay.gds \
+		--path=$(LAY_DIR)/$(CELL).$(_GDS_EXT) \
 		--topcell=$(CELL) \
 		--run_dir=$(DRC_RPT_DIR) \
 		--no_feol \
@@ -300,7 +294,7 @@ klayout-pex: ## Run Parasitic Extraction with KPEX of the CELL cell (usage: make
 	--pdk $$PDK_UNDERSCORED \
 	--cell $(CELL) \
 	--schematic $(SCH_DIR)/$(CELL).sch \
-	--gds $(LAY_DIR)/$(CELL).gds \
+	--gds $(LAY_DIR)/$(CELL).$(_GDS_EXT) \
 	--magic \
 	--magic_mode $$KPEX_MODE \
 	--out_dir $(NET_PEX_DIR) \
@@ -344,7 +338,7 @@ klayout-verify: ## Verify CELL cell with KLayout (usage: make klayout-verify [CE
 .PHONY: klayout-verify
 
 klayout-verify-all: ## Verify all main subcells with KLayout (LVS, DRC, PEX)
-#	$(MAKE) klayout-verify CELL=other_subcell
+	$(MAKE) klayout-verify CELL=inverter
 	$(MAKE) klayout-verify CELL=inverter_top
 .PHONY: klayout-verify-all
 
@@ -355,7 +349,7 @@ magic-verify: ## Verify CELL cell with Magic (usage: make magic-verify [CELL=<ce
 .PHONY: magic-verify
 
 magic-verify-all: ## Verify all main subcells with Magic (LVS, DRC, PEX)
-#	$(MAKE) magic-verify CELL=other_subcell
+	$(MAKE) magic-verify CELL=inverter
 	$(MAKE) magic-verify CELL=inverter_top
 .PHONY: magic-verify-all
 # ================================================================================================
