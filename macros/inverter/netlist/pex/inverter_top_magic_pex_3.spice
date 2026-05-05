@@ -1,4 +1,4 @@
-* PEX produced on Tue May  5 10:27:07 PM CEST 2026 using /foss/tools/sak/sak-pex.sh with m=3 and s=1
+* PEX produced on Tue May  5 11:31:56 PM CEST 2026 using /foss/tools/sak/sak-pex.sh with m=3 and s=1
 * NGSPICE file created from inverter_top_pex.ext - technology: ihp-sg13g2
 
 .subckt inverter_top_pex VDD vin4 vout4 VSS vin3 vout3 vin2 vout2 vout1 vin1
@@ -3991,21 +3991,21 @@ R3809 VSS.n630 VSS.n81 0.001
 R3810 VSS.n454 VSS.n127 0.001
 R3811 VSS.n456 VSS.n455 0.001
 R3812 VSS.n583 VSS.n582 0.001
-C0 vin1 vout1 18.2968f
-C1 vin3 vout3 18.2968f
-C2 vin2 vin1 0.05053f
-C3 vin3 vin2 0.05785f
-C4 vin2 vout2 18.2968f
-C5 vin4 VDD 29.2329f
-C6 vin4 vin3 0.05053f
-C7 vin4 vout4 18.2968f
-C8 vout1 VDD 15.3949f
-C9 vout3 VDD 15.3834f
-C10 vin1 VDD 29.2329f
-C11 vin3 VDD 29.202f
-C12 vout2 VDD 15.3834f
-C13 vout4 VDD 15.3949f
-C14 vin2 VDD 29.202f
+C0 vin4 VDD 29.2329f
+C1 vin4 vin3 0.05053f
+C2 vin4 vout4 18.2968f
+C3 vout1 VDD 15.3949f
+C4 vout3 VDD 15.3834f
+C5 vin1 VDD 29.2329f
+C6 vin3 VDD 29.202f
+C7 vout2 VDD 15.3834f
+C8 vout4 VDD 15.3949f
+C9 vin2 VDD 29.202f
+C10 vin1 vout1 18.2968f
+C11 vin3 vout3 18.2968f
+C12 vin2 vin1 0.05053f
+C13 vin3 vin2 0.05785f
+C14 vin2 vout2 18.2968f
 C15 vout1 VSS 8.36734f
 C16 vin1 VSS 19.17327f
 C17 vout2 VSS 8.3656f

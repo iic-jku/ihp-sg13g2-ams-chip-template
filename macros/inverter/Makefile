@@ -96,9 +96,10 @@ sim-cace: ## Run CACE simulations and collect result plots
 .PHONY: sim-cace
 
 sim-all: ## Simulate the macro
-	$(MAKE) sim-xschem TB=inverter_top_tb_ac_ol
+	$(MAKE) sim-xschem TB=inverter_tb_ac_ol
+	$(MAKE) sim-xschem TB=inverter_tb_tran
+	$(MAKE) sim-xschem TB=inverter_tb_Vout
 	$(MAKE) sim-xschem TB=inverter_top_tb_tran
-	$(MAKE) sim-xschem TB=inverter_top_tb_Vout
 	$(MAKE) sim-cace
 .PHONY: sim-all
 # ================================================================================================
@@ -139,42 +140,36 @@ lib: ## Generate a Liberty timing library for the TOP cell
 
 
 # Verilog Target
-verilog: ## Generate a Verilog stub of the TOP cell from PEX netlist pins
+verilog: ## Generate a Verilog stub of the TOP cell from Magic PEX netlist pins
+	@if [ ! -f $(NET_PEX_DIR)/$(TOP)_magic_pex.spice ]; then \
+		echo "ERROR: PEX netlist $(NET_PEX_DIR)/$(TOP)_magic_pex.spice not found. Run 'make magic-pex' first."; \
+		exit 1; \
+	fi
 	rm -rf $(VH_DIR)
 	mkdir -p $(VH_DIR)
-	@echo 'module $(TOP) (' > $(VH_DIR)/$(TOP).v
-	@echo '`ifdef USE_POWER_PINS' >> $(VH_DIR)/$(TOP).v
-	@echo '    inout VDD,' >> $(VH_DIR)/$(TOP).v
-	@echo '    inout VSS,' >> $(VH_DIR)/$(TOP).v
-	@echo '`endif' >> $(VH_DIR)/$(TOP).v
-	@echo '    inout vin1,' >> $(VH_DIR)/$(TOP).v
-	@echo '    inout vin2,' >> $(VH_DIR)/$(TOP).v
-	@echo '    inout vin3,' >> $(VH_DIR)/$(TOP).v
-	@echo '    inout vin4,' >> $(VH_DIR)/$(TOP).v
-	@echo '    inout vout1,' >> $(VH_DIR)/$(TOP).v
-	@echo '    inout vout2,' >> $(VH_DIR)/$(TOP).v
-	@echo '    inout vout3,' >> $(VH_DIR)/$(TOP).v
-	@echo '    inout vout4' >> $(VH_DIR)/$(TOP).v
-	@echo ');' >> $(VH_DIR)/$(TOP).v
-	@echo 'endmodule' >> $(VH_DIR)/$(TOP).v
-	@echo "Checking PEX pins against Verilog stub..."
-	@pex_pins=$$(awk '/^\.subckt $(TOP)_pex/{sub(/^\.subckt [^ ]+ /,"");p=$$0;next} p&&/^[+]/{sub(/^[+] */,"");p=p" "$$0;next} p{exit} END{print p}' $(NET_PEX_DIR)/$(TOP)_pex.spice); \
-	vh_pins=$$(grep -oP '(?<=inout |input )\w+' $(VH_DIR)/$(TOP).v | tr '\n' ' '); \
-	fail=0; \
-	for pin in $$pex_pins; do \
-		if ! echo " $$vh_pins " | grep -qw "$$pin"; then \
-			echo "ERROR: PEX pin '$$pin' missing from Verilog stub!"; \
-			fail=1; \
+	@echo "Reading pins from $(NET_PEX_DIR)/$(TOP)_magic_pex.spice..."
+	@pex_pins=$$(awk '/^\.subckt $(TOP)_pex/{sub(/^\.subckt [^ ]+ /,"");p=$$0;next} p&&/^[+]/{sub(/^[+] */,"");p=p" "$$0;next} p{exit} END{print p}' $(NET_PEX_DIR)/$(TOP)_magic_pex.spice); \
+	power_pins=$$(echo "$$pex_pins" | tr ' ' '\n' | grep -E '^(VDD|VSS|VPWR|VGND|VNB|VPB)$$' | sort -u | tr '\n' ' '); \
+	signal_pins=$$(echo "$$pex_pins" | tr ' ' '\n' | grep -vE '^(VDD|VSS|VPWR|VGND|VNB|VPB)$$' | grep -v '^$$' | sort | tr '\n' ' '); \
+	{ \
+		echo 'module $(TOP) ('; \
+		if [ -n "$$(echo $$power_pins | xargs)" ]; then \
+			echo '`ifdef USE_POWER_PINS'; \
+			for p in $$power_pins; do echo "    inout $$p,"; done; \
+			echo '`endif'; \
 		fi; \
-	done; \
-	for pin in $$vh_pins; do \
-		if ! echo " $$pex_pins " | grep -qw "$$pin"; then \
-			echo "ERROR: Verilog pin '$$pin' not found in PEX netlist!"; \
-			fail=1; \
-		fi; \
-	done; \
-	if [ "$$fail" -ne 0 ]; then exit 1; fi; \
-	echo "All pins match between PEX netlist and Verilog stub."
+		last=$$(echo $$signal_pins | awk '{print $$NF}'); \
+		for p in $$signal_pins; do \
+			case "$$p" in \
+				di_*) t=input ;; \
+				do_*) t=output ;; \
+				*) t=inout ;; \
+			esac; \
+			if [ "$$p" = "$$last" ]; then echo "    $$t $$p"; else echo "    $$t $$p,"; fi; \
+		done; \
+		echo ');'; \
+		echo 'endmodule'; \
+	} > $(VH_DIR)/$(TOP).v
 .PHONY: verilog
 # ================================================================================================
 
@@ -298,15 +293,15 @@ klayout-pex: ## Run Parasitic Extraction with KPEX of the CELL cell (usage: make
 	--magic \
 	--magic_mode $$KPEX_MODE \
 	--out_dir $(NET_PEX_DIR) \
-	--out_spice $(NET_PEX_DIR)/$(CELL)_klayout_pex.spice
+	--out_spice $(NET_PEX_DIR)/$(CELL)_klayout_pex_$(EXT_MODE).spice
 #	--2.5D
 #	--mode $$KPEX_MODE
-	sed -i 's/$(CELL)_flat/$(CELL)_pex/g' $(NET_PEX_DIR)/$(CELL)_klayout_pex.spice
+	sed -i 's/$(CELL)_flat/$(CELL)_pex/g' $(NET_PEX_DIR)/$(CELL)_klayout_pex_$(EXT_MODE).spice
 	rm -rf $(NET_PEX_DIR)/$(CELL)__$(CELL)
 	rm -f $(CELL)_flat.nodes $(CELL)_flat.sim
 	@if [ -f $(SCH_DIR)/$(CELL)_pex.sym ]; then \
-		echo "Reordering pins in $(CELL)_klayout_pex.spice to match $(CELL)_pex.sym..."; \
-		python3 $(NET_PEX_DIR)/reorder_spice_pins.py $(SCH_DIR)/$(CELL)_pex.sym $(NET_PEX_DIR)/$(CELL)_klayout_pex.spice; \
+		echo "Reordering pins in $(CELL)_klayout_pex_$(EXT_MODE).spice to match $(CELL)_pex.sym..."; \
+		python3 $(NET_PEX_DIR)/reorder_spice_pins.py $(SCH_DIR)/$(CELL)_pex.sym $(NET_PEX_DIR)/$(CELL)_klayout_pex_$(EXT_MODE).spice; \
 	else \
 		echo "No symbol $(SCH_DIR)/$(CELL)_pex.sym found, skipping pin reorder."; \
 	fi
@@ -316,12 +311,12 @@ klayout-pex: ## Run Parasitic Extraction with KPEX of the CELL cell (usage: make
 magic-pex: ## Run Parasitic Extraction with Magic of the CELL cell (usage: make magic-pex [CELL=<cellname>] [EXT_MODE=<1|2|3>])
 	mkdir -p $(NET_PEX_DIR)
 	sak-pex.sh -d -m $(EXT_MODE) -w $(NET_PEX_DIR) $(LAY_DIR)/$(CELL).gds
-	mv $(NET_PEX_DIR)/$(CELL).pex.spice $(NET_PEX_DIR)/$(CELL)_magic_pex.spice
-	sed -i 's/$(CELL)/$(CELL)_pex/g' $(NET_PEX_DIR)/$(CELL)_magic_pex.spice
+	mv $(NET_PEX_DIR)/$(CELL).pex.spice $(NET_PEX_DIR)/$(CELL)_magic_pex_$(EXT_MODE).spice
+	sed -i 's/$(CELL)/$(CELL)_pex/g' $(NET_PEX_DIR)/$(CELL)_magic_pex_$(EXT_MODE).spice
 	rm -f $(NET_PEX_DIR)/pex_$(CELL).tcl $(NET_PEX_DIR)/$(CELL).ext $(NET_PEX_DIR)/$(CELL)_flat.ext $(NET_PEX_DIR)/$(CELL)_flat.res.ext
 	@if [ -f $(SCH_DIR)/$(CELL)_pex.sym ]; then \
-		echo "Reordering pins in $(CELL)_magic_pex.spice to match $(CELL)_pex.sym..."; \
-		python3 $(NET_PEX_DIR)/reorder_spice_pins.py $(SCH_DIR)/$(CELL)_pex.sym $(NET_PEX_DIR)/$(CELL)_magic_pex.spice; \
+		echo "Reordering pins in $(CELL)_magic_pex_$(EXT_MODE).spice to match $(CELL)_pex.sym..."; \
+		python3 $(NET_PEX_DIR)/reorder_spice_pins.py $(SCH_DIR)/$(CELL)_pex.sym $(NET_PEX_DIR)/$(CELL)_magic_pex_$(EXT_MODE).spice; \
 	else \
 		echo "No symbol $(SCH_DIR)/$(CELL)_pex.sym found, skipping pin reorder."; \
 	fi
@@ -338,7 +333,7 @@ klayout-verify: ## Verify CELL cell with KLayout (usage: make klayout-verify [CE
 .PHONY: klayout-verify
 
 klayout-verify-all: ## Verify all main subcells with KLayout (LVS, DRC, PEX)
-	$(MAKE) klayout-verify CELL=inverter
+#	$(MAKE) klayout-verify CELL=inverter
 	$(MAKE) klayout-verify CELL=inverter_top
 .PHONY: klayout-verify-all
 

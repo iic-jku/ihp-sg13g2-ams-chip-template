@@ -66,7 +66,6 @@ N 1120 -800 1120 -740 {lab=GND}
 C {devices/code_shown.sym} 60 -1450 0 0 {name=NGSPICE
 only_toplevel=true 
 value="
-* .include ../../netlist/pex/inverter_top_pex.spice
 .param VDD=1.5
 .param Vcm=VDD/2
 .param temp=27

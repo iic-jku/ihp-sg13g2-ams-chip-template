@@ -37,7 +37,8 @@
 │  │  └─ inverter_top_magic.ext.spc
 │  ├─ 📁 pex/
 │  │  ├─ *.spice
-│  │  ├─ inverter_top_pex.spice
+│  │  ├─ inverter_top_klayout_pex_*.spice
+│  │  ├─ inverter_top_magic_pex_*.spice
 │  │  └─ reorder_spice_pins.py
 │  └─ 📁 schematic/
 │     ├─ *.cdl
@@ -205,7 +206,13 @@ make lib
 
 ## Verilog Stub
 
-Generates a Verilog stub (`final/vh/<TOP>.v`) for top-level integration into the LibreLane flow. The pin names are hardcoded and all ports are declared as `inout`. After writing the stub, the target performs a bidirectional check against the PEX netlist (`netlist/pex/<TOP>_pex.spice`) to ensure both pin sets match:
+Generates a Verilog stub (`final/vh/<TOP>.v`) for top-level integration into the LibreLane flow by parsing pins from the Magic PEX netlist (`netlist/pex/<TOP>_magic_pex.spice`).
+
+The `verilog` target:
+- requires `netlist/pex/<TOP>_magic_pex.spice` (run `make magic-pex` first)
+- reads the `.subckt <TOP>_pex` pin list (including continuation lines)
+- emits recognized supply pins (`VDD`, `VSS`, `VPWR`, `VGND`, `VNB`, `VPB`) as `inout` under `` `ifdef USE_POWER_PINS ``
+- classifies signal pins by prefix: `di_*` as `input`, `do_*` as `output`, others as `inout`
 
 ```sh
 make verilog
@@ -310,6 +317,10 @@ Runs parasitic extraction on the layout in `layout/`. The extracted SPICE netlis
 - `klayout-pex` uses `layout/<CELL>.$(_GDS_EXT)` (`.gds` if present, otherwise `.klay.gds`)
 - `magic-pex` uses `layout/<CELL>.gds` (Magic requires `.gds`)
 
+The extracted SPICE filenames include the selected extraction mode:
+- `klayout-pex` writes `netlist/pex/<CELL>_klayout_pex_<EXT_MODE>.spice`
+- `magic-pex` writes `netlist/pex/<CELL>_magic_pex_<EXT_MODE>.spice`
+
 The `EXT_MODE` parameter selects the extraction mode:
 - `1` = C-decoupled
 - `2` = C-coupled
@@ -319,7 +330,7 @@ The `EXT_MODE` parameter selects the extraction mode:
 
 The `.subckt` name in the extracted SPICE file is automatically renamed from `<CELL>_flat` (kpex) or `<CELL>` (Magic) to `<CELL>_pex`.
 
-If a matching Xschem symbol (`schematic/<CELL>_pex.sym`) exists, the `.subckt` pin order in the extracted SPICE file is automatically reordered to match the symbol's pin positions. This ensures the PEX netlist can be used directly with the corresponding Xschem symbol for simulation.
+If a matching Xschem symbol (`schematic/<CELL>_pex.sym`) exists, the `.subckt` pin order in the extracted SPICE file is automatically reordered to match the symbol's pin positions. This ensures the PEX netlist can be used directly with the corresponding Xschem symbol for simulation regardless of the selected `EXT_MODE`.
 
 **KLayout PEX** uses `kpex` with the Magic extraction engine currently (2.5D engine is work in progress):
 

@@ -107,7 +107,7 @@ N 1160 -940 1320 -940 {lab=vout4}
 C {devices/code_shown.sym} 60 -1410 0 0 {name=NGSPICE
 only_toplevel=true 
 value="
-* .include ../../netlist/pex/inverter_top_pex.spice
+.include ../../netlist/pex/inverter_top_magic_pex_3.spice
 .param VDD=1.5
 .csparam VDD=VDD
 .param Vcm=VDD/2
@@ -210,7 +210,6 @@ C {inverter_top.sym} 1000 -1180 0 0 {name=x2
 spice_ignore=true}
 C {inverter_top_pex.sym} 1360 -1180 0 0 {name=x3
 spice_ignore=true}
-C {inverter_top.sym} 1000 -520 0 0 {name=x1}
 C {devices/gnd.sym} 1000 -360 0 0 {name=l8 lab=GND}
 C {devices/lab_pin.sym} 1520 -620 0 1 {name=l1 sig_type=std_logic lab=vout2}
 C {capa.sym} 1320 -570 0 0 {name=C2
@@ -257,3 +256,5 @@ m=1
 spice_ignore=true}
 C {devices/gnd.sym} 1320 -840 0 0 {name=l16 lab=GND}
 C {devices/gnd.sym} 1440 -840 0 0 {name=l17 lab=GND}
+C {inverter_top_pex.sym} 1000 -520 0 0 {name=x1
+}
