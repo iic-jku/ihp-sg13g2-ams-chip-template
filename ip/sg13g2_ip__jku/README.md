@@ -1,6 +1,6 @@
 # sg13g2_ip__jku
 
-A logo IP block for [Johannes Kepler University Linz](https://www.jku.at/), rendered as a GDSII layout on `Metal5` with `NoMetFiller` for the IHP SG13G2 130 nm CMOS process.
+A logo IP block for [Johannes Kepler University Linz](https://www.jku.at/), rendered as a GDSII layout on a configurable metal layer (default `Metal5`) with `NoMetFiller` for the IHP SG13G2 130 nm CMOS process.
 
 ## Directory Structure
 
@@ -38,7 +38,7 @@ make all
 | Target    | Description                                              |
 |-----------|----------------------------------------------------------|
 | `logo`    | Convert PNG to GDSII using `make_gds.py`                 |
-| `lef`     | Generate LEF macro (CLASS BLOCK, Metal5 OBS)             |
+| `lef`     | Generate LEF macro (CLASS BLOCK, OBS on `$(LAYER_NAME)`) |
 | `lib`     | Generate Liberty timing stub (empty cell)                |
 | `verilog` | Generate Verilog blackbox stub (no ports)                |
 | `drc`     | Run IHP DRC checks using `run_drc.py`                    |
@@ -48,11 +48,18 @@ make all
 
 The following Makefile variables can be overridden:
 
-| Variable      | Default  | Description                                                                 |
-|---------------|----------|-----------------------------------------------------------------------------|
-| `IMG_SIZE_PX` | `750`    | Source image width/height in pixels                                         |
-| `BLOCK_SIZE`  | `143.25` | Desired physical block size in µm                                           |
-| `PIXEL_SIZE`  | `0.50`   | Pixel size in µm (must be ≥ M5 min width of 0.21 µm to avoid DRC violations)|
+| Variable      | Default  | Description                                                                           |
+|---------------|----------|---------------------------------------------------------------------------------------|
+| `IMG_SIZE_PX` | `750`    | Source image width/height in pixels                                                   |
+| `BLOCK_SIZE`  | `143.25` | Desired physical block size in µm                                                     |
+| `PIXEL_SIZE`  | `0.50`   | Pixel size in µm (must be ≥ M5 min width of 0.21 µm to avoid DRC violations)          |
+| `LAYER`       | `Metal5` | Metal layer the logo is drawn on; one of `Metal1`..`Metal5`, `TopMetal1`, `TopMetal2` |
+
+Setting `LAYER` keeps the GDS artwork (`logo` target) and the LEF obstruction (`lef` target) consistent — the Makefile derives both `LAYER_NUM` (e.g. `67/0`) and `LAYER_NAME` (e.g. `Metal5`) from it.
+
+```sh
+make all LAYER=TopMetal1
+```
 
 The image scale factor is computed automatically.
 
@@ -61,8 +68,8 @@ The image scale factor is computed automatically.
 
 The `script/make_gds.py` script converts a PNG image into a GDSII layout:
 
-- Each dark pixel becomes a rectangle on the `Metal5` layer (67/0)
-- Boundary layers 189/0 and 160/0 mark the block outline
+- Each dark pixel becomes a rectangle on the layer selected via `LAYER` (default `Metal5` → `67/0`)
+- Boundary layers 189/0 (`prBoundary`) and 160/0 (`NoMetFiller`) mark the block outline
 - `--invert` inverts the image (dark ↔ light)
 - `--merge` merges adjacent rectangles to reduce polygon count
 - `--pixel-size` sets the physical size of each pixel in µm

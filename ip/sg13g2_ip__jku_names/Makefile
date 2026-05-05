@@ -27,6 +27,24 @@ PIXEL_SIZE  ?= 0.25 	# Pixel size in microns. Must be >= minimum layer width to 
 # scale = BLOCK_SIZE / (IMG_SIZE_PX * PIXEL_SIZE)
 SCALE       := $(shell python3 -c "print($(BLOCK_SIZE) / ($(IMG_SIZE_PX) * $(PIXEL_SIZE)))")
 
+# Layer selection for the logo (IHP SG13G2)
+# Override with: make <target> LAYER=<Metal1|Metal2|Metal3|Metal4|Metal5|TopMetal1|TopMetal2>
+# LAYER_NAME is used by the lef target, LAYER_NUM (gds_layer/datatype) by the logo target.
+LAYER ?= Metal5
+
+LAYER_NAME := $(LAYER)
+LAYER_NUM  := $(strip \
+    $(if $(filter Metal1,$(LAYER)),8/0,)\
+    $(if $(filter Metal2,$(LAYER)),10/0,)\
+    $(if $(filter Metal3,$(LAYER)),30/0,)\
+    $(if $(filter Metal4,$(LAYER)),50/0,)\
+    $(if $(filter Metal5,$(LAYER)),67/0,)\
+    $(if $(filter TopMetal1,$(LAYER)),126/0,)\
+    $(if $(filter TopMetal2,$(LAYER)),134/0,))
+ifeq ($(LAYER_NUM),)
+$(error Invalid LAYER: '$(LAYER)'. Must be one of Metal1, Metal2, Metal3, Metal4, Metal5, TopMetal1, TopMetal2)
+endif
+
 
 # Help Target
 help: ## Show this help message
@@ -50,19 +68,11 @@ clean: ## Remove generated outputs and reports
 
 
 # Build Target
-# Layers (IHP SG13G2):
-# (8, 0),      # Metal1
-# (10, 0),     # Metal2
-# (30, 0),     # Metal3
-# (50, 0),     # Metal4
-# (67, 0),     # Metal5
-# (126, 0),    # TopMetal1
-# (134, 0),    # TopMetal2
-# (189, 0),    # prBoundary
-# (160, 0),    # NoMetFiller
+# Logo is drawn on $(LAYER) ($(LAYER_NUM)). Override with LAYER=<name>.
+# Boundary layers: 189/0 (prBoundary), 160/0 (NoMetFiller).
 logo: ## Generate GDS from image using Python script
 	mkdir -p $(GDS_DIR)
-	python3 script/make_gds.py $(IMG_FILE) $(GDS_DIR)/$(TOP).gds --cellname $(TOP) --invert --merge --pixel-size $(PIXEL_SIZE) --scale $(SCALE) --foreground "67/0" --boundary "189/0" "160/0"
+	python3 script/make_gds.py $(IMG_FILE) $(GDS_DIR)/$(TOP).gds --cellname $(TOP) --invert --merge --pixel-size $(PIXEL_SIZE) --scale $(SCALE) --foreground "$(LAYER_NUM)" --boundary "189/0" "160/0"
 .PHONY: logo
 # ================================================================================================
 
@@ -94,7 +104,7 @@ magic-drc: ## Run Magic DRC of the CELL cell (usage: make magic-drc [CELL=<celln
 # LEF Target
 lef: ## Generate LEF macro definition for the logo
 	mkdir -p $(LEF_DIR)
-	@printf 'VERSION 5.8 ;\n  NOWIREEXTENSIONATPIN ON ;\n  DIVIDERCHAR "/" ;\n  BUSBITCHARS "[]" ;\nMACRO $(TOP)\n  CLASS BLOCK ;\n  FOREIGN $(TOP) ;\n  ORIGIN 0.000 0.000 ;\n  SIZE $(BLOCK_SIZE) BY $(BLOCK_SIZE) ;\n  OBS\n      LAYER TopMetal2 ;\n        RECT 0.0 0.0 $(BLOCK_SIZE) $(BLOCK_SIZE) ;\n  END\nEND $(TOP)\nEND LIBRARY\n' > $(LEF_DIR)/$(TOP).lef
+	@printf 'VERSION 5.8 ;\n  NOWIREEXTENSIONATPIN ON ;\n  DIVIDERCHAR "/" ;\n  BUSBITCHARS "[]" ;\nMACRO $(TOP)\n  CLASS BLOCK ;\n  FOREIGN $(TOP) ;\n  ORIGIN 0.000 0.000 ;\n  SIZE $(BLOCK_SIZE) BY $(BLOCK_SIZE) ;\n  OBS\n      LAYER $(LAYER_NAME) ;\n        RECT 0.0 0.0 $(BLOCK_SIZE) $(BLOCK_SIZE) ;\n  END\nEND $(TOP)\nEND LIBRARY\n' > $(LEF_DIR)/$(TOP).lef
 .PHONY: lef
 # ================================================================================================
 

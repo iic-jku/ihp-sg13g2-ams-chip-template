@@ -8,7 +8,7 @@ MACRO sg13g2_ip__jku
   ORIGIN 0.000 0.000 ;
   SIZE 100 BY 100 ;
   OBS
-      LAYER TopMetal2 ;
+      LAYER Metal5 ;
         RECT 0.0 0.0 100 100 ;
   END
 END sg13g2_ip__jku
