@@ -79,7 +79,7 @@
 │  │  ├─ 📁 results/
 │  │  ├─ 📁 scripts/
 │  │  ├─ 📁 templates/
-│  │  └─ inverter_top.yaml
+│  │  └─ inverter.yaml
 │  ├─ 📁 drc/
 │  │  │  *.magic.drc.rpt
 │  │  │  *_full.lyrdb
