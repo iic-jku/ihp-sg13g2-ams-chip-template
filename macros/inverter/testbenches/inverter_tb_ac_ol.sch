@@ -185,9 +185,5 @@ m=1
 spice_ignore=true}
 C {devices/gnd.sym} 1260 -740 0 0 {name=l5 lab=GND}
 C {devices/gnd.sym} 1360 -740 0 0 {name=l6 lab=GND}
-C {inverter_top.sym} 1120 -1160 0 0 {name=x2
-spice_ignore=true}
-C {inverter_top_pex.sym} 1120 -1340 0 0 {name=x3
-spice_ignore=true}
-C {inverter_top.sym} 1120 -840 0 0 {name=x1
+C {inverter.sym} 1120 -840 0 0 {name=x1
 }
