@@ -1,4 +1,4 @@
-﻿v {xschem version=3.4.8RC file_version=1.3}
+v {xschem version=3.4.8RC file_version=1.3}
 G {}
 K {}
 V {}
@@ -59,8 +59,6 @@ N 920 -840 920 -820 {lab=vin}
 N 860 -840 920 -840 {lab=vin}
 N 920 -840 980 -840 {lab=vin}
 N 1380 -840 1460 -840 {lab=vout}
-N 1040 -940 1040 -880 {lab=VDD}
-N 1040 -800 1040 -740 {lab=GND}
 N 920 -760 920 -740 {lab=GND}
 N 1260 -840 1260 -820 {lab=vout}
 N 1380 -840 1380 -820 {lab=vout}
@@ -69,10 +67,12 @@ N 1120 -840 1160 -840 {lab=#net1}
 N 1220 -840 1260 -840 {lab=vout}
 N 1260 -760 1260 -740 {lab=GND}
 N 1380 -760 1380 -740 {lab=GND}
+N 1040 -940 1040 -880 {lab=VDD}
+N 1040 -800 1040 -740 {lab=GND}
 C {devices/code_shown.sym} 60 -1510 0 0 {name=NGSPICE
 only_toplevel=true 
 value="
-.include ../../netlist/pex/inverter_mfb_lpf_ota_core_inv_NF20_pex.spice
+* .include ../../netlist/pex/inverter_top_pex.spice
 .param VDD=1.5
 .csparam VDD=VDD
 .param Vcm=VDD/2
@@ -135,8 +135,7 @@ echo efficiency = $&efficiency %
 unset appendwrite
 set wr_vecnames
 set wr_singlescale
-wrdata $PROJECT_PATH/scripts/plot_simulations/data/inverter_mfb_lpf_ota_core_inv_tb_tran.txt
-+ v(vin) v(vout)
+wrdata $PROJECT_PATH/scripts/plot_simulations/data/inverter_top_tb_tran.txt v(vin) v(vout)
 
 *quit
 .endc
@@ -189,9 +188,8 @@ m=1
 spice_ignore=true}
 C {devices/gnd.sym} 1260 -740 0 0 {name=l5 lab=GND}
 C {devices/gnd.sym} 1380 -740 0 0 {name=l6 lab=GND}
-C {inverter_mfb_lpf_ota_core_inv_NF20.sym} 1040 -1160 0 0 {name=x1
+C {inverter_top.sym} 1040 -1160 0 0 {name=x2
 spice_ignore=true}
-C {inverter_mfb_lpf_ota_core_inv_NF20_pex.sym} 1040 -1340 0 0 {name=x2
+C {inverter_top_pex.sym} 1040 -1340 0 0 {name=x3
 spice_ignore=true}
-C {inverter_mfb_lpf_ota_core_inv_NF20_pex.sym} 1040 -840 0 0 {name=x3
-}
+C {inverter_top.sym} 1040 -840 0 0 {name=x1}

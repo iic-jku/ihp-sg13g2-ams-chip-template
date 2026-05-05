@@ -58,8 +58,6 @@ N 960 -860 960 -840 {lab=vin}
 N 900 -860 960 -860 {lab=vin}
 N 960 -860 1020 -860 {lab=vin}
 N 1320 -860 1400 -860 {lab=vout}
-N 1080 -960 1080 -900 {lab=VDD}
-N 1080 -820 1080 -760 {lab=GND}
 N 960 -780 960 -760 {lab=GND}
 N 1220 -860 1220 -840 {lab=vout}
 N 1160 -860 1220 -860 {lab=vout}
@@ -67,10 +65,12 @@ N 1220 -780 1220 -760 {lab=GND}
 N 1320 -860 1320 -840 {lab=vout}
 N 1220 -860 1320 -860 {lab=vout}
 N 1320 -780 1320 -760 {lab=GND}
+N 1080 -960 1080 -900 {lab=VDD}
+N 1080 -820 1080 -760 {lab=GND}
 C {devices/code_shown.sym} 40 -1250 0 0 {name=NGSPICE
 only_toplevel=true 
 value="
-.include ../../netlist/pex/iqmod_mfb_lpf_ota_core_inv_NF20_pex.spice
+* .include ../../netlist/pex/inverter_top_pex.spice
 .param VDD=1.5
 .csparam VDD=VDD
 .param Vcm=VDD/2
@@ -106,7 +106,7 @@ print Vgsp_at_Vcm
 unset appendwrite
 set wr_vecnames
 set wr_singlescale
-wrdata $PROJECT_PATH/scripts/plot_simulations/data/iqmod_mfb_lpf_ota_core_inv_tb_Vout.txt v(vin) v(vout)
+wrdata $PROJECT_PATH/scripts/plot_simulations/data/inverter_top_tb_Vout.txt v(vin) v(vout)
 
 *quit
 .endc
@@ -158,9 +158,9 @@ C {devices/gnd.sym} 1220 -760 0 0 {name=l5 lab=GND}
 C {devices/gnd.sym} 1320 -760 0 0 {name=l6 lab=GND}
 C {devices/vsource.sym} 960 -810 0 0 {name=Vgsp value=0
 }
-C {iqmod_mfb_lpf_ota_core_inv_NF20.sym} 1080 -1160 0 0 {name=x1
+C {inverter_top.sym} 1080 -1160 0 0 {name=x2
 spice_ignore=true}
-C {iqmod_mfb_lpf_ota_core_inv_NF20_pex.sym} 1080 -1340 0 0 {name=x2
+C {inverter_top_pex.sym} 1080 -1340 0 0 {name=x3
 spice_ignore=true}
-C {iqmod_mfb_lpf_ota_core_inv_NF20_pex.sym} 1080 -860 0 0 {name=x3
+C {inverter_top.sym} 1080 -860 0 0 {name=x1
 }
