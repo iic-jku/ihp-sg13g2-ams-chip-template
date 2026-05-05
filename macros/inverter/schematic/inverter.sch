@@ -5,7 +5,9 @@ V {}
 S {}
 F {}
 E {}
+B 4 200 -1480 2180 -1400 {fill = false}
 T {Inverter with Dummies and with LV Transistors} 610 -1700 0 0 1 1 {}
+T {Note that the nw and sub nets are using conditional net labels! Adding further labels also needs to have these options set!!!} 210 -1460 0 0 0.6 0.6 {}
 N 1140 -850 1140 -790 {
 lab=vin}
 N 1100 -850 1140 -850 {
@@ -33,23 +35,23 @@ N 1140 -970 1220 -970 {lab=VDD}
 N 1140 -1030 1140 -970 {lab=VDD}
 N 1140 -730 1220 -730 {lab=VSS}
 N 1140 -730 1140 -670 {lab=VSS}
-N 1220 -1030 1320 -1030 {lab=#net1}
-N 1220 -910 1320 -910 {lab=#net1}
-N 1320 -970 1320 -910 {lab=#net1}
-N 1320 -1050 1320 -1030 {lab=#net1}
+N 1220 -1030 1320 -1030 {lab=nwell}
+N 1220 -910 1320 -910 {lab=nwell}
+N 1320 -970 1320 -910 {lab=nwell}
+N 1320 -1050 1320 -1030 {lab=nwell}
 N 1320 -1140 1320 -1110 {lab=VDD}
-N 1220 -790 1320 -790 {lab=#net2}
-N 1220 -670 1320 -670 {lab=#net2}
-N 1320 -730 1320 -670 {lab=#net2}
-N 1320 -670 1320 -650 {lab=#net2}
+N 1220 -790 1320 -790 {lab=psub}
+N 1220 -670 1320 -670 {lab=psub}
+N 1320 -730 1320 -670 {lab=psub}
+N 1320 -670 1320 -650 {lab=psub}
 N 1320 -590 1320 -560 {lab=VSS}
 N 1220 -850 1360 -850 {
 lab=vout}
 N 1320 -970 1360 -970 {lab=nwell}
 N 1320 -730 1360 -730 {lab=psub}
 N 1220 -880 1220 -850 {lab=vout}
-N 1320 -1030 1320 -970 {lab=#net1}
-N 1320 -790 1320 -730 {lab=#net2}
+N 1320 -1030 1320 -970 {lab=nwell}
+N 1320 -790 1320 -730 {lab=psub}
 C {title-3.sym} 0 0 0 0 {name=l1 author="Simon Dorrer" rev=1.0 lock=true}
 C {devices/ipin.sym} 1100 -850 0 0 {name=p10 lab=vin}
 C {devices/iopin.sym} 1220 -1140 3 0 {name=p11 lab=VDD}
@@ -107,5 +109,5 @@ lvs_ignore=short
 }
 C {lab_pin.sym} 1320 -560 3 0 {name=p12 sig_type=std_logic lab=VSS}
 C {devices/iopin.sym} 1360 -850 0 0 {name=p6 lab=vout}
-C {devices/iopin.sym} 1360 -970 0 0 {name=p2 lab=nwell}
-C {devices/iopin.sym} 1360 -730 0 0 {name=p4 lab=psub}
+C {devices/iopin.sym} 1360 -970 0 0 {name=p2 lab="tcleval([expr \{$lvs_ignore ? \{VDD\} : \{nwell\}\}])"}
+C {devices/iopin.sym} 1360 -730 0 0 {name=p4 lab="tcleval([expr \{$lvs_ignore ? \{VSS\} : \{psub\}\}])"}
