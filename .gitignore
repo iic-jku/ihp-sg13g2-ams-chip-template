@@ -11,6 +11,11 @@ lvs_run_*
 *.pyc
 *.ext
 .DS_Store
+/doc/gen_structure.py
+/doc/IHP__ADC5871-structure.md
+/doc/IHP__LNA1426-structure.md
+/doc/IHP__MCU4057-structure.md
+/doc/IHP__OPA3488-structure.md
 /flow/artistic
 /schematic/simulations
 /testbenches/simulations
