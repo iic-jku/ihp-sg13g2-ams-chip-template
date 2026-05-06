@@ -1,7 +1,7 @@
-﻿# SPDX-FileCopyrightText: 2025-2026 Simon Dorrer
+﻿#!/usr/bin/env python3
+# SPDX-FileCopyrightText: 2025-2026 Simon Dorrer
 # SPDX-License-Identifier: Apache-2.0
 
-#!/usr/bin/env python3
 """
 Reorder the .subckt pin list in a PEX SPICE file to match the pin order
 of an Xschem .sym symbol file.
@@ -137,4 +137,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-    

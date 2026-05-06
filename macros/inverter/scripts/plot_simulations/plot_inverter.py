@@ -41,7 +41,7 @@ def main():
     figures_dir.mkdir(parents=True, exist_ok=True)
 
     # ------------------------------------------------------------------
-    # 1. Load ngspice closed-loop AC simulation data
+    # 1. Load ngspice open-loop AC simulation data
     # ------------------------------------------------------------------
     ngspice_file = data_dir / "inverter_tb_ac_ol.txt"
 

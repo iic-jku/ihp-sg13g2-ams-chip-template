@@ -3,7 +3,7 @@
 #--------------------------------------------------------------
 
 name:           inverter
-description:    Third-Order Multiple Feedback Filter
+description:    Inverter macro for the ihp-sg13g2 chip template
 PDK:            ihp-sg13g2
 
 cace_format:    5.2

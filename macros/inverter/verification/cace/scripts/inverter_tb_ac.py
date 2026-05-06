@@ -3,11 +3,11 @@
 # SPDX-License-Identifier: Apache-2.0
 # Master-Thesis
 # @ JKU IICQC
-# 2025
+# 2026
 # Author: Simon Dorrer
-# Description: This file reads the data from the MFB filter AC analysis and save it to a .csv file.
-# Created: 14.08.2025
-# Last Modified: 14.08.2025
+# Description: This file reads the data from the inverter AC analysis and saves it to a .csv file.
+# Created: 06.05.2026
+# Last Modified: 06.05.2026
 # ============================================
 
 # Imports

@@ -62,11 +62,12 @@
 │  │  ├─ 📁 data/
 │  │  ├─ 📁 figures/
 │  │  ├─ ngspice2python.py
+│  │  ├─ plot_inverter.py
 │  │  └─ plot_inverter_top.py
 │  ├─ 📁 sizing/
 │  │  ├─ 📁 figures/
 │  │  ├─ lookup_commands.ipynb
-│  │  └─ sizing_inverter_top.ipynb
+│  │  └─ sizing_inverter.ipynb
 │  └─ lay2img.py
 ├─ 📁 testbenches/
 │  ├─ *_tb_*.sch
@@ -82,10 +83,10 @@
 │  │  ├─ 📁 templates/
 │  │  └─ inverter.yaml
 │  ├─ 📁 drc/
-│  │  │  *.magic.drc.rpt
-│  │  │  *_full.lyrdb
-│  │  │  inverter_top.magic.drc.rpt
-│  │  └─ inverter_top.inverter_top_full.lyrdb
+│  │  ├─ *.magic.drc.rpt
+│  │  ├─ *_full.lyrdb
+│  │  ├─ inverter_top.magic.drc.rpt
+│  │  └─ inverter_top_inverter_top_full.lyrdb
 │  └─ 📁 lvs/
 │     ├─ *.lvsdb
 │     └─ inverter_top.lvsdb
@@ -404,7 +405,7 @@ make magic-pex CELL=inverter_top EXT_MODE=3
 
 ```sh
 make klayout-verify
-make klayout-verify CELL=inverter_mixer
+make klayout-verify CELL=inverter
 ```
 
 **Verify all cells** (`inverter`, `inverter_top`):
@@ -420,7 +421,7 @@ make klayout-verify-all
 
 ```sh
 make magic-verify
-make magic-verify CELL=inverter_mixer
+make magic-verify CELL=inverter
 ```
 
 **Verify all cells** (`inverter`, `inverter_top`):
