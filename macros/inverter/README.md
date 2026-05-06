@@ -248,10 +248,17 @@ make lib
 
 ## Verilog Stub
 
-Generates a Verilog stub (`final/vh/<TOP>.v`) for top-level integration into the LibreLane flow by parsing pins from the Magic PEX netlist (`netlist/pex/<TOP>_magic_pex.spice`).
+Generates a Verilog stub (`final/vh/<TOP>.v`) for top-level integration into the LibreLane flow by parsing pins from an extracted PEX netlist in `netlist/pex/`.
 
 The `verilog` target:
-- requires `netlist/pex/<TOP>_magic_pex.spice` (run `make magic-pex` first)
+- requires one of the following PEX files (run `make magic-pex` or `make klayout-pex` first):
+  - `netlist/pex/<TOP>_magic_pex_1.spice`
+  - `netlist/pex/<TOP>_magic_pex_2.spice`
+  - `netlist/pex/<TOP>_magic_pex_3.spice`
+  - `netlist/pex/<TOP>_klayout_pex_1.spice`
+  - `netlist/pex/<TOP>_klayout_pex_2.spice`
+  - `netlist/pex/<TOP>_klayout_pex_3.spice`
+- auto-selects the first existing file from the list above
 - reads the `.subckt <TOP>_pex` pin list (including continuation lines)
 - emits recognized supply pins (`VDD`, `VSS`, `VPWR`, `VGND`, `VNB`, `VPB`) as `inout` under `` `ifdef USE_POWER_PINS ``
 - classifies signal pins by prefix: `di_*` as `input`, `do_*` as `output`, others as `inout`
@@ -425,7 +432,7 @@ make magic-verify-all
 
 ## Build All
 
-Runs the full flow in sequence: simulations, top-level build deliverables, and all verification steps (`sim-all`, `build-top`, `klayout-verify-all`, `magic-verify-all`):
+Runs the full flow in sequence: simulations, top-level build deliverables, and all verification steps (`sim-all`, `klayout-verify-all`, `magic-verify-all`, `build-top`):
 
 ```sh
 make all

@@ -102,6 +102,8 @@ sim-all: ## Simulate the macro
 	$(MAKE) sim-xschem TB=inverter_tb_tran
 	$(MAKE) sim-xschem TB=inverter_tb_Vout
 	$(MAKE) sim-xschem TB=inverter_top_tb_tran
+#	$(MAKE) sim-plot-xschem CELL=inverter
+#	$(MAKE) sim-plot-xschem CELL=inverter_top
 	$(MAKE) sim-cace
 .PHONY: sim-all
 # ================================================================================================
@@ -142,15 +144,31 @@ lib: ## Generate a Liberty timing library for the TOP cell
 
 
 # Verilog Target
-verilog: ## Generate a Verilog stub of the TOP cell from Magic PEX netlist pins
-	@if [ ! -f $(NET_PEX_DIR)/$(TOP)_magic_pex.spice ]; then \
-		echo "ERROR: PEX netlist $(NET_PEX_DIR)/$(TOP)_magic_pex.spice not found. Run 'make magic-pex' first."; \
-		exit 1; \
-	fi
+verilog: ## Generate a Verilog stub of the TOP cell from Magic or KLayout PEX netlist pins
 	rm -rf $(VH_DIR)
 	mkdir -p $(VH_DIR)
-	@echo "Reading pins from $(NET_PEX_DIR)/$(TOP)_magic_pex.spice..."
-	@pex_pins=$$(awk '/^\.subckt $(TOP)_pex/{sub(/^\.subckt [^ ]+ /,"");p=$$0;next} p&&/^[+]/{sub(/^[+] */,"");p=p" "$$0;next} p{exit} END{print p}' $(NET_PEX_DIR)/$(TOP)_magic_pex.spice); \
+	@pex_netlist=""; \
+	for f in \
+		$(NET_PEX_DIR)/$(TOP)_magic_pex_1.spice \
+		$(NET_PEX_DIR)/$(TOP)_magic_pex_2.spice \
+		$(NET_PEX_DIR)/$(TOP)_magic_pex_3.spice \
+		$(NET_PEX_DIR)/$(TOP)_klayout_pex_1.spice \
+		$(NET_PEX_DIR)/$(TOP)_klayout_pex_2.spice \
+		$(NET_PEX_DIR)/$(TOP)_klayout_pex_3.spice; do \
+		if [ -f "$$f" ]; then \
+			pex_netlist="$$f"; \
+			break; \
+		fi; \
+	done; \
+	if [ -z "$$pex_netlist" ]; then \
+		echo "ERROR: No PEX netlist found for $(TOP). Expected one of:"; \
+		echo "  $(NET_PEX_DIR)/$(TOP)_magic_pex_{1,2,3}.spice"; \
+		echo "  $(NET_PEX_DIR)/$(TOP)_klayout_pex_{1,2,3}.spice"; \
+		echo "Run 'make magic-pex' or 'make klayout-pex' first."; \
+		exit 1; \
+	fi; \
+	echo "Reading pins from $$pex_netlist..."; \
+	pex_pins=$$(awk '/^\.subckt $(TOP)_pex/{sub(/^\.subckt [^ ]+ /,"");p=$$0;next} p&&/^[+]/{sub(/^[+] */,"");p=p" "$$0;next} p{exit} END{print p}' "$$pex_netlist"); \
 	power_pins=$$(echo "$$pex_pins" | tr ' ' '\n' | grep -E '^(VDD|VSS|VPWR|VGND|VNB|VPB)$$' | sort -u | tr '\n' ' '); \
 	signal_pins=$$(echo "$$pex_pins" | tr ' ' '\n' | grep -vE '^(VDD|VSS|VPWR|VGND|VNB|VPB)$$' | grep -v '^$$' | sort | tr '\n' ' '); \
 	{ \
@@ -355,7 +373,7 @@ magic-verify-all: ## Verify all main subcells with Magic (LVS, DRC, PEX)
 # Simulate, Build and Verify All Target
 all: ## Simulate, build and verify the TOP cell
 	$(MAKE) sim-all
-	$(MAKE) build-top
 	$(MAKE) klayout-verify-all
 	$(MAKE) magic-verify-all
+	$(MAKE) build-top
 .PHONY: all
