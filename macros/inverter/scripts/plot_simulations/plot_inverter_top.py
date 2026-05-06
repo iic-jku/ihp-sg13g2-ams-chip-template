@@ -2,11 +2,10 @@
 # SPDX-FileCopyrightText: 2025-2026 Simon Dorrer
 # SPDX-License-Identifier: Apache-2.0
 # Author: Simon Dorrer
-# Description: Bode plot of the 3rd-order MFB LPF closed-loop AC simulation
-#              (ngspice) compared with the analytical Prototype Filter transfer
-#              function exported by 3rd_order_mfb_lpf_designer.py.
-# Created: 13.12.2024
-# Last Modified: 14.03.2026
+# Description: Transient plots for the inverter top macro
+#              based on ngspice exports.
+# Created: 06.05.2026
+# Last Modified: 06.05.2026
 # ============================================
 
 # Imports
@@ -26,13 +25,13 @@ plt.close("all")
 # %matplotlib qt
 # %matplotlib inline
 
-# Use LaTeX if available, otherwise fallback gracefully
-try:
-    plt.rc('text', usetex=True)
-    plt.rc('font', family='serif', size=14)
-except Exception:
-    print("Warning: LaTeX not available. Using standard fonts.")
-    plt.rc('font', size=12)
+# Pure Matplotlib text rendering (no external LaTeX dependency)
+plt.rcParams.update({
+    "text.usetex": False,
+    "mathtext.fontset": "cm",
+    "font.family": "serif",
+    "font.size": 14,
+})
 # =========================================================================
 
 def main():
@@ -43,63 +42,53 @@ def main():
     figures_dir.mkdir(parents=True, exist_ok=True)
 
     # ------------------------------------------------------------------
-    # 1. Load ngspice closed-loop AC simulation data
+    # 1. Load ngspice transient simulation data
     # ------------------------------------------------------------------
-    ngspice_file = data_dir / "inverter_top_tb_ac_ol.txt"
+    ngspice_file = data_dir / "inverter_top_tb_tran.txt"
 
-    data_frequency = ng.loadngspicecol(str(ngspice_file), "frequency")
-    frequency = data_frequency[0::2]
+    time = ng.loadngspicecol(str(ngspice_file), "time")
+    vin = ng.loadngspicecol(str(ngspice_file), "v(vin)")
+    vout1 = ng.loadngspicecol(str(ngspice_file), "v(vout1)")
+    vout2 = ng.loadngspicecol(str(ngspice_file), "v(vout2)")
+    vout3 = ng.loadngspicecol(str(ngspice_file), "v(vout3)")
+    vout4 = ng.loadngspicecol(str(ngspice_file), "v(vout4)")
 
-    data_mag_dB = ng.loadngspicecol(str(ngspice_file), "v(Amag_dB)")
-    mag_dB = data_mag_dB[0::2]
-
-    data_phase = ng.loadngspicecol(str(ngspice_file), "v(Aarg)")
-    phase_deg = data_phase[0::2]
-
-    # ------------------------------------------------------------------
-    # 2. Load analytical Prototype Filter Bode data (from designer)
-    # ------------------------------------------------------------------
-    prototype_filter_file = data_dir / "3rd_order_mfb_lpf_prototype_bode.csv" # "biquad_mfb_lpf_prototype_bode.csv"
-    prototype_filter_data = np.genfromtxt(str(prototype_filter_file), delimiter=',', names=True)
-    freq_prototype = prototype_filter_data['frequency']
-    mag_dB_prototype = prototype_filter_data['mag_dB']
-    phase_deg_prototype = prototype_filter_data['phase_deg']
+    # Display-friendly axis scale
+    time_ms = time * 1e3
 
     # ------------------------------------------------------------------
-    # 3. Bode Plot
+    # 2. Transient Plot (Voltages over Time)
     # ------------------------------------------------------------------
-    fig1, axs = plt.subplots(2)
-    fig1.set_figwidth(10)
-    fig1.set_figheight(7)
+    vin_color = '#0c5da5'
+    vout1_color = '#ff6b35'
+    vout2_color = '#2f855a'
+    vout3_color = '#805ad5'
+    vout4_color = '#c05621'
 
-    # Magnitude
-    axs[0].set_xscale('log')
-    axs[0].plot(frequency, mag_dB, linewidth=2, label='ngspice Simulation')
-    axs[0].plot(freq_prototype, mag_dB_prototype, linewidth=2, linestyle='--', label='Prototype Filter (Analytical)')
-    axs[0].set_xlabel('$f$ (Hz)')
-    axs[0].set_ylabel('Magnitude (dB)')
-    axs[0].grid(visible=True, which='both', linestyle='--', alpha=0.5)
-    axs[0].legend(loc='lower left')
+    fig1, ax = plt.subplots(figsize=(10, 6.2))
+    fig1.suptitle('Inverter Top - Transient Response')
 
-    # Phase
-    axs[1].set_xscale('log')
-    axs[1].plot(frequency, phase_deg, linewidth=2, label='ngspice Simulation')
-    axs[1].plot(freq_prototype, phase_deg_prototype, linewidth=2, linestyle='--', label='Prototype Filter (Analytical)')
-    axs[1].set_xlabel('$f$ (Hz)')
-    axs[1].set_ylabel(r'Phase ($^\circ$)')
-    axs[1].grid(visible=True, which='both', linestyle='--', alpha=0.5)
-    axs[1].legend(loc='lower left')
+    ax.plot(time_ms, vin, color=vin_color, linewidth=2.4, label=r'$V_\mathrm{in}$')
+    ax.plot(time_ms, vout1, color=vout1_color, linewidth=2.0, linestyle='-', label=r'$V_\mathrm{out1}$')
+    ax.plot(time_ms, vout2, color=vout2_color, linewidth=2.0, linestyle='--', label=r'$V_\mathrm{out2}$')
+    ax.plot(time_ms, vout3, color=vout3_color, linewidth=2.0, linestyle='-.', label=r'$V_\mathrm{out3}$')
+    ax.plot(time_ms, vout4, color=vout4_color, linewidth=2.0, linestyle=':', label=r'$V_\mathrm{out4}$')
+
+    ax.set_xlabel(r'$t$ (ms)')
+    ax.set_ylabel(r'$V$ (V)')
+    ax.grid(visible=True, which='major', linestyle='--', alpha=0.45)
+    ax.legend(loc='best')
     plt.tight_layout()
     plt.show()
 
     # ------------------------------------------------------------------
-    # 4. Export figures and CSV
+    # 3. Export transient figures and CSV
     # ------------------------------------------------------------------
-    fig1.savefig(str(figures_dir / "inverter_top_tb_ac_ol.svg"), bbox_inches='tight')
-    fig1.savefig(str(figures_dir / "inverter_top_tb_ac_ol.pdf"), bbox_inches='tight')
-    np.savetxt(str(figures_dir / "inverter_top_tb_ac_ol.csv"),
-               np.column_stack((frequency, mag_dB, phase_deg)), comments="",
-               header="frequency,Amag_dB,Aarg", delimiter=",")
+    fig1.savefig(str(figures_dir / "inverter_top_tb_tran.svg"), bbox_inches='tight')
+    fig1.savefig(str(figures_dir / "inverter_top_tb_tran.pdf"), bbox_inches='tight')
+    np.savetxt(str(figures_dir / "inverter_top_tb_tran.csv"),
+               np.column_stack((time_ms, vin, vout1, vout2, vout3, vout4)), comments="",
+               header="time_ms,vin,vout1,vout2,vout3,vout4", delimiter=",")
     # ============================================
 
 # Main Execution
