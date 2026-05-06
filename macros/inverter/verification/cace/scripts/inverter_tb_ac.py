@@ -29,8 +29,8 @@ def postprocess(results: dict[str, list], conditions: dict[str, Any]) -> dict[st
     print(f'Adc_ol_dB_arr = {Adc_ol_dB_arr}')
     
     # Delete statistical outliers in Adc_ol_dB_arr
-    Adc_ol_dB_arr = [val for val in Adc_ol_dB_arr if -20 <= val <= 20]
-    print(f'Adc_ol_dB_arr = {Adc_ol_dB_arr}')
+    # Adc_ol_dB_arr = [val for val in Adc_ol_dB_arr if -10 <= val <= 50]
+    # print(f'Adc_ol_dB_arr = {Adc_ol_dB_arr}')
     
     # Iterate over fcu MC results
     fcu_arr = []
@@ -39,8 +39,8 @@ def postprocess(results: dict[str, list], conditions: dict[str, Any]) -> dict[st
     print(f'fcu_arr = {fcu_arr}')
     
     # Delete statistical outliers in fcu_arr
-    fcu_arr = [val for val in fcu_arr if 1 <= val <= 1e6]
-    print(f'fcu_arr = {fcu_arr}')
+    # fcu_arr = [val for val in fcu_arr if 1 <= val <= 1e9]
+    # print(f'fcu_arr = {fcu_arr}')
     
     # Save data as .csv
     csv_filename = Path(__file__).with_suffix('.csv').name
