@@ -75,20 +75,17 @@ sim-cace: ## Run CACE simulations and collect result plots
 	mkdir -p results/inverter && \
 	\
 	cace inverter.yaml -p ac_mm_params && \
-	cp _runs/RUN_*/parameters/ac_mm_params/Adc_cl_dB_mm.png results/inverter/ && \
-	cp _runs/RUN_*/parameters/ac_mm_params/CMRR_dc_dB_mm.png results/inverter/ && \
+	cp _runs/RUN_*/parameters/ac_mm_params/Adc_ol_dB_mm.png results/inverter/ && \
 	cp _runs/RUN_*/parameters/ac_mm_params/fcu_mm.png results/inverter/ && \
 	rm -rf _runs/RUN_* && \
 	\
 	cace inverter.yaml -p ac_mc_params && \
-	cp _runs/RUN_*/parameters/ac_mc_params/Adc_cl_dB_mc.png results/inverter/ && \
-	cp _runs/RUN_*/parameters/ac_mc_params/CMRR_dc_dB_mc.png results/inverter/ && \
+	cp _runs/RUN_*/parameters/ac_mc_params/Adc_ol_dB_mc.png results/inverter/ && \
 	cp _runs/RUN_*/parameters/ac_mc_params/fcu_mc.png results/inverter/ && \
 	rm -rf _runs/RUN_* && \
 	\
 	cace inverter.yaml -p ac_params && \
-	cp _runs/RUN_*/parameters/ac_params/Adc_cl_dB_vs_vdd.png results/inverter/ && \
-	cp _runs/RUN_*/parameters/ac_params/CMRR_dc_dB_vs_vdd.png results/inverter/ && \
+	cp _runs/RUN_*/parameters/ac_params/Adc_ol_dB_vs_vdd.png results/inverter/ && \
 	cp _runs/RUN_*/parameters/ac_params/fcu_vs_vdd.png results/inverter/ && \
 	rm -rf _runs/RUN_* && \
 	\
