@@ -29,6 +29,7 @@ _GDS_EXT = $(if $(wildcard $(LAY_DIR)/$(TOP).gds)$(wildcard $(LAY_DIR)/$(CELL).g
 SCH_DIR         := schematic
 LAY_DIR         := layout
 SCRIPTS_DIR     := scripts
+SIM_PLOT_DIR    := scripts/plot_simulations
 XSCHEM_TB_DIR   := testbenches
 GDS_DIR         := final/gds
 LEF_DIR         := final/lef
@@ -70,6 +71,10 @@ sim-xschem: ## Run TB simulation with Xschem (usage: make sim-xschem TB=<testben
 	' $(TB).sch
 .PHONY: sim-xschem
 
+sim-xschem-plot: ## Plot Xschem simulation results (usage: make sim-xschem-plot CELL=<cellname>)
+	python3 $(SIM_PLOT_DIR)/plot_$(CELL).py
+.PHONY: sim-xschem-plot
+
 sim-cace: ## Run CACE simulations and collect result plots
 	cd $(CACE_DIR) && \
 	mkdir -p results/inverter && \
@@ -97,6 +102,8 @@ sim-all: ## Simulate the macro
 	$(MAKE) sim-xschem TB=inverter_tb_tran
 	$(MAKE) sim-xschem TB=inverter_tb_Vout
 	$(MAKE) sim-xschem TB=inverter_top_tb_tran
+	$(MAKE) sim-xschem-plot CELL=inverter
+	$(MAKE) sim-xschem-plot CELL=inverter_top
 	$(MAKE) sim-cace
 .PHONY: sim-all
 # ================================================================================================
