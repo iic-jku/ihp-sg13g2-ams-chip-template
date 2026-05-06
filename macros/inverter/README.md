@@ -70,9 +70,10 @@
 │  └─ lay2img.py
 ├─ 📁 testbenches/
 │  ├─ *_tb_*.sch
-│  ├─ inverter_top_tb_ac_ol.sch
+│  ├─ inverter_tb_ac_ol.sch
+│  ├─ inverter_tb_tran.sch
+│  ├─ inverter_tb_Vout.sch
 │  ├─ inverter_top_tb_tran.sch
-│  ├─ inverter_top_tb_Vout.sch
 │  └─ xschemrc
 ├─ 📁 verification/
 │  ├─ 📁 cace/
@@ -142,40 +143,81 @@ make sim-xschem TB=<testbenchname>
 For example:
 
 ```sh
+make sim-xschem TB=inverter_tb_ac_ol
+make sim-xschem TB=inverter_tb_tran
+make sim-xschem TB=inverter_tb_Vout
 make sim-xschem TB=inverter_top_tb_tran
-make sim-xschem TB=inverter_top_tb_ac
-make sim-xschem TB=inverter_mfb_lpf_tb_ac_cl
-make sim-xschem TB=inverter_mfb_lpf_ota_core_tb_ac_ol
-make sim-xschem TB=inverter_mixer_se2diff_tb_tran
-make sim-xschem TB=inverter_mixer_tb_tran
 ```
 
 All available testbench schematics are located in `testbenches/`. Generated netlists are written to `testbenches/simulations/`.
 
 
+## Plot Xschem Simulation Results
+
+Plots simulation results using the Python script selected by `CELL`:
+
+```sh
+make sim-plot-xschem [CELL=<cellname>]
+```
+
+The target runs:
+- `python3 scripts/plot_simulations/plot_<CELL>.py`
+
+`CELL` defaults to `inverter_top`, so running without `CELL` uses `plot_inverter_top.py`.
+
+Examples:
+
+```sh
+make sim-plot-xschem
+make sim-plot-xschem CELL=inverter_top
+make sim-plot-xschem CELL=inverter
+```
+
+
 ## CACE Simulations
 
-Runs [CACE](https://github.com/fossi-foundation/cace) characterization simulations for the LPF and OTA core, collecting result plots into `verification/cace/results/`. Each CACE YAML
-- `inverter_mfb_lpf.yaml` — characterization of the 3rd-order MFB low-pass filter
-- `inverter_mfb_lpf_ota_core.yaml` — characterization of the inverter-based OTA core
-is invoked with its AC parameter sets (mismatch, Monte Carlo, corner sweep), the generated plots are copied, and temporary run artifacts are cleaned up:
+Runs [CACE](https://github.com/fossi-foundation/cace) characterization for the inverter macro using `verification/cace/inverter.yaml`.
+
+The `sim-cace` target runs these parameter sets in sequence:
+- `ac_mm_params`
+- `ac_mc_params`
+- `ac_params`
+
+For each run, selected result plots are copied to `verification/cace/results/inverter/`, and temporary `_runs` folders are cleaned between runs. At the end, `_runs`, `_docs`, and `netlist` under `verification/cace/` are removed.
+
+Run with:
 
 ```sh
 make sim-cace
 ```
 
 Result plots are saved to:
-- `verification/cace/results/inverter_mfb_lpf/` — closed-loop gain, CMRR, and unity-gain frequency plots
-- `verification/cace/results/inverter_mfb_lpf_ota_core/` — open-loop gain, CMRR, and unity-gain frequency plots
+- `verification/cace/results/inverter/`
+  - `Adc_ol_dB_mm.png`, `fcu_mm.png`
+  - `Adc_ol_dB_mc.png`, `fcu_mc.png`
+  - `Adc_ol_dB_vs_vdd.png`, `fcu_vs_vdd.png`
 
 
 ## Simulate All
 
-Runs all simulations:
+Runs all simulation steps in sequence:
+- `make sim-xschem TB=inverter_tb_ac_ol`
+- `make sim-xschem TB=inverter_tb_tran`
+- `make sim-xschem TB=inverter_tb_Vout`
+- `make sim-xschem TB=inverter_top_tb_tran`
+- `make sim-cace`
+
+Invoke with:
 
 ```sh
 make sim-all
 ```
+
+> [!NOTE]
+> The `sim-plot-xschem` target is intentionally **not** called by `sim-all`.
+> It opens the generated Python figures, which blocks the shell until the window is closed.
+> They are designed for interactive use and must be called manually after the simulation has completed.
+
 
 ## Build Top Cell
 
@@ -358,7 +400,7 @@ make klayout-verify
 make klayout-verify CELL=inverter_mixer
 ```
 
-**Verify all cells** (`inverter_mfb_lpf`, `inverter_mixer`, `inverter_top`):
+**Verify all cells** (`inverter`, `inverter_top`):
 
 ```sh
 make klayout-verify-all
@@ -374,7 +416,7 @@ make magic-verify
 make magic-verify CELL=inverter_mixer
 ```
 
-**Verify all cells** (`inverter_mfb_lpf`, `inverter_mixer`, `inverter_top`):
+**Verify all cells** (`inverter`, `inverter_top`):
 
 ```sh
 make magic-verify-all
