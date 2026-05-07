@@ -1,59 +1,68 @@
-﻿[*]
-[*] GTKWave Analyzer v4.0.0-prealpha (1dbe6d0) (w)1999-2022 BSI
-[*] Sat May  2 13:10:19 2026
 [*]
-[dumpfile] "/foss/designs/Chip/ihp130/macros/counter/testbenches/cocotb/counter_top/sim_build/counter_top.fst"
-[dumpfile_mtime] "Sat May  2 12:50:57 2026"
-[dumpfile_size] 40466420
-[savefile] "/foss/designs/Chip/ihp130/macros/counter/testbenches/cocotb/counter_top/sim_build/counter_top_tb.gtkw"
+[*] GTKWave Analyzer v4.0.0-prealpha (8ba24ab) (w)1999-2022 BSI
+[*] Thu May  7 21:02:35 2026
+[*]
+[dumpfile] "/foss/designs/ihp-sg13g2-ams-chip-template/macros/counter/testbenches/cocotb/sim_build/counter_top.fst"
+[dumpfile_mtime] "Thu May  7 21:00:30 2026"
+[dumpfile_size] 839
+[savefile] "/foss/designs/ihp-sg13g2-ams-chip-template/macros/counter/testbenches/cocotb/counter_top_tb.gtkw"
 [timestart] 0
 [size] 1920 1029
-[pos] -1 -420
-*-41.462627 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
-[sst_width] 276
+[pos] -1 -1
+*-27.197605 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+[markername] AA
+[markername] BB
+[markername] CC
+[markername] DD
+[markername] EE
+[markername] FF
+[markername] GG
+[markername] HH
+[markername] II
+[markername] JJ
+[markername] KK
+[markername] LL
+[markername] MM
+[markername] NN
+[markername] OO
+[markername] PP
+[markername] QQ
+[markername] RR
+[markername] SS
+[markername] TT
+[markername] UU
+[markername] VV
+[markername] WW
+[markername] XX
+[markername] YY
+[markername] ZZ
+[treeopen] counter_top.
+[sst_width] 297
 [signals_width] 353
 [sst_expanded] 1
 [sst_vpaned_height] 300
-@29
-counter_top.clk
+@200
+-CONSTANTS
+@24
+counter_top.COUNTER_MAX
+counter_top.COUNTER_BITWIDTH
+@200
+-INPUTS
 @28
+counter_top.clock_i
+counter_top.reset_n_i
 counter_top.reset
-counter_top.so
-counter_top.si
-counter_top.sclk
-counter_top.sram_ce
-counter_top.sda_i
-counter_top.sda_o
-counter_top.sda_oe
-counter_top.scl
-counter_top.rx
-counter_top.tx
-@22
-counter_top.gpio_in[3:0]
-counter_top.gpio_out[3:0]
+counter_top.enable_i
+@200
+-OUTPUTS
+@800024
+counter_top.counter_value_o[3:0]
 @28
-counter_top.analog_en
-counter_top.I_ae
-counter_top.ds_I_oe
-counter_top.ds_I_p_i
-counter_top.ds_I_p_o
-counter_top.ds_I_n_i
-counter_top.ds_I_n_o
-counter_top.lo_I_oe
-counter_top.lo_I_i
-counter_top.lo_I_o
-counter_top.lo_Ix_i
-counter_top.lo_Ix_o
-counter_top.lo_Qx_i
-counter_top.lo_Qx_o
-counter_top.lo_Q_i
-counter_top.lo_Q_o
-counter_top.lo_Q_oe
-counter_top.ds_Q_n_i
-counter_top.ds_Q_n_o
-counter_top.ds_Q_p_i
-counter_top.ds_Q_p_o
-counter_top.ds_Q_oe
-counter_top.Q_ae
+(0)counter_top.counter_value_o[3:0]
+(1)counter_top.counter_value_o[3:0]
+(2)counter_top.counter_value_o[3:0]
+(3)counter_top.counter_value_o[3:0]
+@1001204
+-group_end
 [pattern_trace] 1
 [pattern_trace] 0

@@ -1,37 +1,67 @@
-﻿[*]
-[*] GTKWave Analyzer v4.0.0-prealpha (7d7b4db) (w)1999-2022 BSI
-[*] Sat May  2 11:59:04 2026
 [*]
-[dumpfile] "/foss/designs/Chip/ihp130/macros/counter/testbenches/verilog/counter_top/counter_top_tb.vcd"
-[dumpfile_mtime] "Sat May  2 11:41:39 2026"
-[dumpfile_size] 2026097208
-[savefile] "/foss/designs/Chip/ihp130/macros/counter/testbenches/verilog/counter_top/counter_top_tb.gtkw"
+[*] GTKWave Analyzer v4.0.0-prealpha (8ba24ab) (w)1999-2022 BSI
+[*] Thu May  7 20:47:17 2026
+[*]
+[dumpfile] "/foss/designs/ihp-sg13g2-ams-chip-template/macros/counter/testbenches/verilog/counter_top_tb.vcd"
+[dumpfile_mtime] "Thu May  7 20:40:28 2026"
+[dumpfile_size] 2976
+[savefile] "/foss/designs/ihp-sg13g2-ams-chip-template/macros/counter/testbenches/verilog/counter_top_tb.gtkw"
 [timestart] 0
 [size] 1427 600
 [pos] -1 -1
-*-34.693218 -1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+*-17.600056 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+[markername] AA
+[markername] BB
+[markername] CC
+[markername] DD
+[markername] EE
+[markername] FF
+[markername] GG
+[markername] HH
+[markername] II
+[markername] JJ
+[markername] KK
+[markername] LL
+[markername] MM
+[markername] NN
+[markername] OO
+[markername] PP
+[markername] QQ
+[markername] RR
+[markername] SS
+[markername] TT
+[markername] UU
+[markername] VV
+[markername] WW
+[markername] XX
+[markername] YY
+[markername] ZZ
 [treeopen] counter_top_tb.
 [sst_width] 297
-[signals_width] 102
+[signals_width] 204
 [sst_expanded] 1
 [sst_vpaned_height] 149
-@201
+@200
 -CONSTANTS
-@420
-counter_top_tb.dut.BAUD
-counter_top_tb.dut.CLK_FREQ
+@24
+counter_top_tb.dut_counter.COUNTER_MAX
+counter_top_tb.dut_counter.COUNTER_BITWIDTH
 @200
 -INPUTS
 @28
-counter_top_tb.dut.clk
-counter_top_tb.dut.reset
-counter_top_tb.dut.si
+counter_top_tb.dut_counter.clock_i
+counter_top_tb.dut_counter.reset_n_i
+counter_top_tb.dut_counter.enable_i
 @200
 -OUTPUTS
+@800024
+counter_top_tb.dut_counter.counter_value_o[3:0]
 @28
-counter_top_tb.dut.so
-counter_top_tb.dut.sclk
-counter_top_tb.dut.sram_ce
-counter_top_tb.dut.rx
+(0)counter_top_tb.dut_counter.counter_value_o[3:0]
+(1)counter_top_tb.dut_counter.counter_value_o[3:0]
+(2)counter_top_tb.dut_counter.counter_value_o[3:0]
+(3)counter_top_tb.dut_counter.counter_value_o[3:0]
+@1001200
+-group_end
 [pattern_trace] 1
 [pattern_trace] 0

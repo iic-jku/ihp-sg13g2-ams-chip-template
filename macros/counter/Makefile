@@ -139,11 +139,19 @@ sim-gl-xschem: ## Run gate-level simulation of CELL cell with Xschem (usage: mak
 	' $(CELL)_tb_tran.sch
 .PHONY: sim-gl-xschem
 
+sim-plot-xschem: ## Plot Xschem simulation results (usage: make sim-plot-xschem CELL=<cellname>)
+	python3 $(SIM_PLOT_DIR)/plot_$(CELL).py
+.PHONY: sim-plot-xschem
+
 sim-all: ## Simulate the macro (RTL Verilog + RTL/GL cocotb + GL Xschem for counter_top)
 	$(MAKE) sim-rtl-verilog
+#	$(MAKE) sim-view-verilog
 	$(MAKE) sim-rtl-cocotb
+#	$(MAKE) sim-view-cocotb
 	$(MAKE) sim-gl-cocotb
+#	$(MAKE) sim-view-cocotb
 	$(MAKE) sim-gl-xschem
+#	$(MAKE) sim-plot-xschem
 .PHONY: sim-all
 # ================================================================================================
 
@@ -233,8 +241,8 @@ build-fpga: ## Build target for FPGA usage
 	@$(MAKE) -C fpga all
 .PHONY: build-fpga
 
-build-all: ## Build macro (run LibreLane with only Magic DRC checks, copy reports, copy GDS, copy netlists, copy render, and render final GDS)
-	$(MAKE) librelane-magicdrc
+build-all: ## Build macro (run LibreLane with KLayout & Magic DRC checks, copy reports, copy GDS, copy netlists, copy render, and render final GDS)
+	$(MAKE) librelane
 	$(MAKE) copy-reports
 	$(MAKE) copy-gds
 	$(MAKE) copy-netlist

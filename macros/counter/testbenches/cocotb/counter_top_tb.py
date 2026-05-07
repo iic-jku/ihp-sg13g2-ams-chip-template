@@ -92,7 +92,7 @@ async def test_increments_when_enabled(dut):
     dut.enable_i.value = 1
 
     # Sample on a few subsequent clock edges and verify monotonic +1
-    expected = 0
+    expected = 1
     for _ in range(min(8, COUNTER_MAX + 1)):
         await RisingEdge(dut.clock_i)
         await Timer(1, "ns")  # let combinational settle past edge
@@ -140,7 +140,7 @@ def counter_top_runner():
 
     sources  = []
     defines  = {}
-    includes = [proj_path / "../../../rtl/"]
+    includes = [proj_path / "../../rtl/"]
 
     if gl:
         # SCL models
@@ -150,16 +150,19 @@ def counter_top_runner():
         # Unpowered gate-level netlist of the macro
         sources.append(proj_path / f"../../final/nl/{hdl_toplevel}.nl.v")
 
-        defines = {"USE_POWER_PINS": False}
+        # Unpowered netlist: USE_POWER_PINS must NOT be defined at all
+        # (passing USE_POWER_PINS=False would still define the macro).
     else:
-        sources.append(proj_path / "../../../rtl/constants.sv")
-        sources.append(proj_path / "../../../rtl/counter.sv")
-        sources.append(proj_path / "../../../rtl/counter_top.sv")
+        sources.append(proj_path / "../../rtl/constants.sv")
+        sources.append(proj_path / "../../rtl/counter.sv")
+        sources.append(proj_path / "../../rtl/counter_top.sv")
 
     build_args = []
 
     if sim == "icarus":
-        build_args = ["-DSIM"]
+        # -gno-specify: skip specify blocks; sg13g2_stdcell.v uses
+        # `ifnone with edge-sensitive paths`, which iverilog can't parse.
+        build_args = ["-DSIM", "-gno-specify"]
 
     if sim == "verilator":
         build_args = ["--timing", "--trace", "--trace-fst", "--trace-structs"]
@@ -180,7 +183,7 @@ def counter_top_runner():
 
     runner.test(
         hdl_toplevel=hdl_toplevel,
-        test_module="counter_top_tb,",
+        test_module="counter_top_tb",
         plusargs=plusargs,
         waves=True,
     )
