@@ -6,10 +6,8 @@
 `ifndef __COUNTER_TOP__
 `define __COUNTER_TOP__
 
-module counter_top
-  import counter_pkg::*;
-#(
-  parameter  int COUNTER_MAX      = COUNTER_MAX_DEFAULT,
+module counter_top #(
+  parameter  int COUNTER_MAX      = `COUNTER_MAX_DEFAULT,
   localparam int COUNTER_BITWIDTH = $clog2(COUNTER_MAX + 1)
 )(
   input  wire clock_i,
