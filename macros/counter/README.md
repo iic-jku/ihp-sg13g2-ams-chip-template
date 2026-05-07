@@ -8,7 +8,7 @@
     <img src="render/img/counter_top_white.png" alt="Render of the ihp-sg13g2 counter layout (200um x 200um)" width=50%>
   </a>
   <br>
-  <em>Render of the ihp-sg13g2 counter layout (700um x 1130um).</em>
+  <em>Render of the ihp-sg13g2 counter layout (200um x 200um).</em>
 </p>
 
 
