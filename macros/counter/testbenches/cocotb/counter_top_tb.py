@@ -19,7 +19,7 @@ gl       = os.getenv("GL", False)
 hdl_toplevel = "counter_top"
 
 # Defaults match counter_pkg::COUNTER_MAX_DEFAULT in rtl/constants.sv
-COUNTER_MAX      = 15
+COUNTER_MAX      = 255
 COUNTER_BITWIDTH = (COUNTER_MAX + 1).bit_length() if COUNTER_MAX > 0 else 1
 CLK_FREQ_MHZ     = 50
 

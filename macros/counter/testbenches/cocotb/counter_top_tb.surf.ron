@@ -80,16 +80,10 @@
                     item_ref: (10),
                     level: 0,
                     unfolded: true,
-                    selected: true,
-                ),
-                (
-                    item_ref: (6),
-                    level: 0,
-                    unfolded: true,
                     selected: false,
                 ),
                 (
-                    item_ref: (7),
+                    item_ref: (11),
                     level: 0,
                     unfolded: true,
                     selected: false,
@@ -97,7 +91,7 @@
             ],
         ),
         displayed_items: {
-            (5): Variable((
+            (4): Variable((
                 variable_ref: (
                     path: (
                         strs: [
@@ -105,13 +99,13 @@
                         ],
                         id: Wellen((2)),
                     ),
-                    name: "reset_n_i",
-                    id: Wellen((4)),
+                    name: "enable_i",
+                    id: Wellen((2)),
                     index: None,
                 ),
                 color: None,
                 background_color: None,
-                display_name: "reset_n_i",
+                display_name: "enable_i",
                 display_name_type: Unique,
                 manual_name: None,
                 format: None,
@@ -119,7 +113,7 @@
                 height_scaling_factor: None,
                 analog: None,
             )),
-            (6): Variable((
+            (11): Variable((
                 variable_ref: (
                     path: (
                         strs: [
@@ -133,10 +127,37 @@
                 ),
                 color: None,
                 background_color: None,
-                display_name: "counter_value_o [3:0]",
+                display_name: "counter_value_o [7:0]",
                 display_name_type: Unique,
                 manual_name: None,
                 format: Some("Unsigned"),
+                field_formats: [],
+                height_scaling_factor: None,
+                analog: None,
+            )),
+            (9): Divider((
+                color: None,
+                background_color: None,
+                name: Some("INPUTS"),
+            )),
+            (3): Variable((
+                variable_ref: (
+                    path: (
+                        strs: [
+                            "counter_top",
+                        ],
+                        id: Wellen((2)),
+                    ),
+                    name: "clock_i",
+                    id: Wellen((1)),
+                    index: None,
+                ),
+                color: None,
+                background_color: None,
+                display_name: "clock_i",
+                display_name_type: Unique,
+                manual_name: None,
+                format: None,
                 field_formats: [],
                 height_scaling_factor: None,
                 analog: None,
@@ -163,49 +184,10 @@
                 height_scaling_factor: None,
                 analog: None,
             )),
-            (3): Variable((
-                variable_ref: (
-                    path: (
-                        strs: [
-                            "counter_top",
-                        ],
-                        id: Wellen((2)),
-                    ),
-                    name: "clock_i",
-                    id: Wellen((1)),
-                    index: None,
-                ),
+            (10): Divider((
                 color: None,
                 background_color: None,
-                display_name: "clock_i",
-                display_name_type: Unique,
-                manual_name: None,
-                format: None,
-                field_formats: [],
-                height_scaling_factor: None,
-                analog: None,
-            )),
-            (4): Variable((
-                variable_ref: (
-                    path: (
-                        strs: [
-                            "counter_top",
-                        ],
-                        id: Wellen((2)),
-                    ),
-                    name: "enable_i",
-                    id: Wellen((2)),
-                    index: None,
-                ),
-                color: None,
-                background_color: None,
-                display_name: "enable_i",
-                display_name_type: Unique,
-                manual_name: None,
-                format: None,
-                field_formats: [],
-                height_scaling_factor: None,
-                analog: None,
+                name: Some("OUTPUTS"),
             )),
             (1): Variable((
                 variable_ref: (
@@ -234,23 +216,30 @@
                 background_color: None,
                 name: Some("CONSTANTS"),
             )),
-            (10): Divider((
+            (5): Variable((
+                variable_ref: (
+                    path: (
+                        strs: [
+                            "counter_top",
+                        ],
+                        id: Wellen((2)),
+                    ),
+                    name: "reset_n_i",
+                    id: Wellen((4)),
+                    index: None,
+                ),
                 color: None,
                 background_color: None,
-                name: Some("OUTPUTS"),
-            )),
-            (7): Divider((
-                color: None,
-                background_color: None,
-                name: None,
-            )),
-            (9): Divider((
-                color: None,
-                background_color: None,
-                name: Some("INPUTS"),
+                display_name: "reset_n_i",
+                display_name_type: Unique,
+                manual_name: None,
+                format: None,
+                field_formats: [],
+                height_scaling_factor: None,
+                analog: None,
             )),
         },
-        display_item_ref_counter: 10,
+        display_item_ref_counter: 11,
         viewports: [
             (
                 curr_left: (0.0),
@@ -265,7 +254,7 @@
         ],
         cursor: None,
         markers: {},
-        focused_item: Some((7)),
+        focused_item: None,
         focused_transaction: (None, None),
         default_variable_name_type: Unique,
         scroll_offset: 0.0,
@@ -274,7 +263,10 @@
     )),
     drag_started: false,
     drag_source_idx: None,
-    drag_target_idx: None,
+    drag_target_idx: Some((
+        before: (9),
+        level: 0,
+    )),
     previous_waves: None,
     count: None,
     blacklisted_translators: [],

@@ -1,15 +1,15 @@
 [*]
 [*] GTKWave Analyzer v4.0.0-prealpha (8ba24ab) (w)1999-2022 BSI
-[*] Thu May  7 20:47:17 2026
+[*] Thu May  7 21:18:07 2026
 [*]
 [dumpfile] "/foss/designs/ihp-sg13g2-ams-chip-template/macros/counter/testbenches/verilog/counter_top_tb.vcd"
-[dumpfile_mtime] "Thu May  7 20:40:28 2026"
-[dumpfile_size] 2976
+[dumpfile_mtime] "Thu May  7 21:16:41 2026"
+[dumpfile_size] 19558
 [savefile] "/foss/designs/ihp-sg13g2-ams-chip-template/macros/counter/testbenches/verilog/counter_top_tb.gtkw"
 [timestart] 0
 [size] 1427 600
 [pos] -1 -1
-*-17.600056 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+*-20.263020 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
 [markername] AA
 [markername] BB
 [markername] CC
@@ -37,6 +37,7 @@
 [markername] YY
 [markername] ZZ
 [treeopen] counter_top_tb.
+[treeopen] counter_top_tb.dut_counter.
 [sst_width] 297
 [signals_width] 204
 [sst_expanded] 1
@@ -55,13 +56,17 @@ counter_top_tb.dut_counter.enable_i
 @200
 -OUTPUTS
 @800024
-counter_top_tb.dut_counter.counter_value_o[3:0]
+counter_top_tb.counter_value[7:0]
 @28
-(0)counter_top_tb.dut_counter.counter_value_o[3:0]
-(1)counter_top_tb.dut_counter.counter_value_o[3:0]
-(2)counter_top_tb.dut_counter.counter_value_o[3:0]
-(3)counter_top_tb.dut_counter.counter_value_o[3:0]
-@1001200
+(0)counter_top_tb.counter_value[7:0]
+(1)counter_top_tb.counter_value[7:0]
+(2)counter_top_tb.counter_value[7:0]
+(3)counter_top_tb.counter_value[7:0]
+(4)counter_top_tb.counter_value[7:0]
+(5)counter_top_tb.counter_value[7:0]
+(6)counter_top_tb.counter_value[7:0]
+(7)counter_top_tb.counter_value[7:0]
+@1001204
 -group_end
 [pattern_trace] 1
 [pattern_trace] 0

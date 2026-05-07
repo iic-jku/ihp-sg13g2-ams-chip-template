@@ -5,11 +5,9 @@
 `timescale 1ns / 1ps
 
 module counter_top_tb;
-  import counter_pkg::*;
-
   // Constants
-  parameter real CLK_FREQ         = 50e6;
-  parameter int  COUNTER_MAX      = COUNTER_MAX_DEFAULT;
+  parameter real CLK_FREQ         = `CLK_FREQ_DEFAULT;
+  parameter int  COUNTER_MAX      = `COUNTER_MAX_DEFAULT;
   parameter int  COUNTER_BITWIDTH = $clog2(COUNTER_MAX + 1);
 
   // Inputs

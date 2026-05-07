@@ -1,15 +1,15 @@
 [*]
 [*] GTKWave Analyzer v4.0.0-prealpha (8ba24ab) (w)1999-2022 BSI
-[*] Thu May  7 21:02:35 2026
+[*] Thu May  7 21:20:10 2026
 [*]
 [dumpfile] "/foss/designs/ihp-sg13g2-ams-chip-template/macros/counter/testbenches/cocotb/sim_build/counter_top.fst"
-[dumpfile_mtime] "Thu May  7 21:00:30 2026"
-[dumpfile_size] 839
+[dumpfile_mtime] "Thu May  7 21:19:43 2026"
+[dumpfile_size] 1192
 [savefile] "/foss/designs/ihp-sg13g2-ams-chip-template/macros/counter/testbenches/cocotb/counter_top_tb.gtkw"
 [timestart] 0
 [size] 1920 1029
 [pos] -1 -1
-*-27.197605 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+*-29.814701 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
 [markername] AA
 [markername] BB
 [markername] CC
@@ -41,7 +41,7 @@
 [signals_width] 353
 [sst_expanded] 1
 [sst_vpaned_height] 300
-@200
+@201
 -CONSTANTS
 @24
 counter_top.COUNTER_MAX
@@ -56,12 +56,16 @@ counter_top.enable_i
 @200
 -OUTPUTS
 @800024
-counter_top.counter_value_o[3:0]
+counter_top.counter_value_o[7:0]
 @28
-(0)counter_top.counter_value_o[3:0]
-(1)counter_top.counter_value_o[3:0]
-(2)counter_top.counter_value_o[3:0]
-(3)counter_top.counter_value_o[3:0]
+(0)counter_top.counter_value_o[7:0]
+(1)counter_top.counter_value_o[7:0]
+(2)counter_top.counter_value_o[7:0]
+(3)counter_top.counter_value_o[7:0]
+(4)counter_top.counter_value_o[7:0]
+(5)counter_top.counter_value_o[7:0]
+(6)counter_top.counter_value_o[7:0]
+(7)counter_top.counter_value_o[7:0]
 @1001204
 -group_end
 [pattern_trace] 1

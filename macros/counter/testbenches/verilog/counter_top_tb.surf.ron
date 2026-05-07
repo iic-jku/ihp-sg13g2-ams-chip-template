@@ -84,23 +84,35 @@
                     selected: false,
                 ),
                 (
-                    item_ref: (8),
+                    item_ref: (14),
                     level: 0,
                     unfolded: true,
-                    selected: false,
+                    selected: true,
                 ),
             ],
         ),
         displayed_items: {
-            (10): Divider((
+            (3): Variable((
+                variable_ref: (
+                    path: (
+                        strs: [
+                            "counter_top_tb",
+                        ],
+                        id: Wellen((2)),
+                    ),
+                    name: "COUNTER_BITWIDTH",
+                    id: Wellen((3)),
+                    index: None,
+                ),
                 color: None,
                 background_color: None,
-                name: Some("CONSTANTS"),
-            )),
-            (12): Divider((
-                color: None,
-                background_color: None,
-                name: Some("OUTPUTS"),
+                display_name: "COUNTER_BITWIDTH",
+                display_name_type: Unique,
+                manual_name: None,
+                format: Some("Unsigned"),
+                field_formats: [],
+                height_scaling_factor: None,
+                analog: None,
             )),
             (7): Variable((
                 variable_ref: (
@@ -125,6 +137,11 @@
                 height_scaling_factor: None,
                 analog: None,
             )),
+            (12): Divider((
+                color: None,
+                background_color: None,
+                name: Some("OUTPUTS"),
+            )),
             (5): Variable((
                 variable_ref: (
                     path: (
@@ -148,7 +165,7 @@
                 height_scaling_factor: None,
                 analog: None,
             )),
-            (8): Variable((
+            (14): Variable((
                 variable_ref: (
                     path: (
                         strs: [
@@ -163,13 +180,23 @@
                 ),
                 color: None,
                 background_color: None,
-                display_name: "counter_value_o [3:0]",
+                display_name: "counter_value_o [7:0]",
                 display_name_type: Unique,
                 manual_name: None,
                 format: Some("Unsigned"),
                 field_formats: [],
                 height_scaling_factor: None,
                 analog: None,
+            )),
+            (10): Divider((
+                color: None,
+                background_color: None,
+                name: Some("CONSTANTS"),
+            )),
+            (11): Divider((
+                color: None,
+                background_color: None,
+                name: Some("INPUTS"),
             )),
             (4): Variable((
                 variable_ref: (
@@ -216,39 +243,12 @@
                 height_scaling_factor: None,
                 analog: None,
             )),
-            (11): Divider((
-                color: None,
-                background_color: None,
-                name: Some("INPUTS"),
-            )),
-            (3): Variable((
-                variable_ref: (
-                    path: (
-                        strs: [
-                            "counter_top_tb",
-                        ],
-                        id: Wellen((2)),
-                    ),
-                    name: "COUNTER_BITWIDTH",
-                    id: Wellen((3)),
-                    index: None,
-                ),
-                color: None,
-                background_color: None,
-                display_name: "COUNTER_BITWIDTH",
-                display_name_type: Unique,
-                manual_name: None,
-                format: Some("Unsigned"),
-                field_formats: [],
-                height_scaling_factor: None,
-                analog: None,
-            )),
         },
-        display_item_ref_counter: 13,
+        display_item_ref_counter: 14,
         viewports: [
             (
-                curr_left: (0.0),
-                curr_right: (1.0),
+                curr_left: (0.005),
+                curr_right: (1.005),
                 target_left: (0.0),
                 target_right: (1.0),
                 move_start_left: (0.0),
