@@ -11,111 +11,14 @@
 
 INSERT_ECO_BUFFERS:
   # === East Pads ===
-  - target: output19/X # analog_en
-    buffer: sg13g2_buf_4
-
-  - target: output17/X # I_ae
-    buffer: sg13g2_buf_4
-
-  - target: output21/X # ds_I_oe
-    buffer: sg13g2_buf_4
-
-  - target: output22/X # ds_I_p_o
-    buffer: sg13g2_buf_4
-
-  - target: output20/X # ds_I_n_o
-    buffer: sg13g2_buf_4
-
-  - target: output31/X # lo_I_oe
-    buffer: sg13g2_buf_4
-
-  - target: output30/X # lo_I_o
-    buffer: sg13g2_buf_4
-
-  - target: output32/X # lo_Ix_o
-    buffer: sg13g2_buf_4
-
-  - target: output35/X # lo_Qx_o
-    buffer: sg13g2_buf_4
-
-  - target: output33/X # lo_Q_o
-    buffer: sg13g2_buf_4
-
-  - target: output34/X # lo_Q_oe
-    buffer: sg13g2_buf_4
-
-  - target: output23/X # ds_Q_n_o
-    buffer: sg13g2_buf_4
-
-  - target: output25/X # ds_Q_p_o
-    buffer: sg13g2_buf_4
-
-  - target: output24/X # ds_Q_oe
-    buffer: sg13g2_buf_4
-
-  - target: output18/X # Q_ae
-    buffer: sg13g2_buf_4
-
-  # === South Pads ===
-  - target: output29/X # gpio_out[3]
-    buffer: sg13g2_buf_4
-
-  - target: output28/X # gpio_out[2]
-    buffer: sg13g2_buf_4
-
-  - target: output27/X # gpio_out[1]
-    buffer: sg13g2_buf_4
-
-  - target: output26/X # gpio_out[0]
-    buffer: sg13g2_buf_4
-
-  # === West Pads ===
-  - target: output42/X # tx
-    buffer: sg13g2_buf_4
-
-  - target: output36/X # scl
-    buffer: sg13g2_buf_4
-
-  - target: output39/X # sda_oe
-    buffer: sg13g2_buf_4
-
-  - target: output38/X # sda_o
-    buffer: sg13g2_buf_4
-
-  - target: output41/X # sram_ce
-    buffer: sg13g2_buf_4
-
-  - target: output37/X # sclk
-    buffer: sg13g2_buf_4
-
-  - target: output40/X # si
-    buffer: sg13g2_buf_4
-
-  # === North Pads ===
-  # Only gpio_inputs
-
-# ======= END OF ECO_BUFFERS =========
+  # - target: output19/X # enable_i
+  # buffer: sg13g2_buf_4
+  # === END OF ECO_BUFFERS ===
     
 DESIGN_NAME: counter_top
 VERILOG_FILES: ["dir::../../rtl/constants.sv",
-"dir::../../rtl/counter_top.sv",
-"dir::../../rtl/alu.sv",
-"dir::../../rtl/lo_gen.v",
-"dir::../../rtl/csr.sv",
-"dir::../../rtl/memory.sv",
-"dir::../../rtl/dsmod.v",
-"dir::../../rtl/regs.sv",
-"dir::../../rtl/freq_generator.sv",
-"dir::../../rtl/spi_master.sv",
-"dir::../../rtl/control.sv",
-"dir::../../rtl/i2c_master.sv",
-"dir::../../rtl/i2c_master_mc.sv",
-"dir::../../rtl/imm_gen.sv",
-"dir::../../rtl/uart_tx.v",
-"dir::../../rtl/uart_rx.v",
-"dir::../../rtl/cordic_slice.v",
-"dir::../../rtl/cordic_iterative.v",
-"dir::../../rtl/instructioncounter.sv"]
+"dir::../../rtl/counter.sv",
+"dir::../../rtl/counter_top.sv"]
 
 # Enable plugin for better SystemVerilog support
 # USE_SLANG: True
@@ -124,7 +27,7 @@ VERILOG_FILES: ["dir::../../rtl/constants.sv",
 # PRIMARY_GDSII_STREAMOUT_TOOL: klayout
 
 # Layout / Floorplan Rules
-DIE_AREA: [0, 0, 700, 1130]
+DIE_AREA: [0, 0, 400, 400]
 PL_TARGET_DENSITY_PCT: 40
 GRT_ALLOW_CONGESTION: true
 RUN_MAGIC_DRC: true
@@ -150,9 +53,9 @@ GND_NETS: ["VSS"]
 VERILOG_POWER_DEFINE: "USE_POWER_PINS"
 
 # Clock
-CLOCK_PORT: clk
-CLOCK_NET: clk
-CLOCK_PERIOD: 17 # in ns == ~56MHz
+CLOCK_PORT: clock_i
+CLOCK_NET: clock_i
+CLOCK_PERIOD: 20 # in ns == ~50MHz
 
 # Define Standard Cells
 STD_CELL_LIBRARY: sg13g2_stdcell
@@ -165,8 +68,8 @@ LIB:
   "*_fast_1p65V_m40C":
     - pdk_dir::libs.ref/sg13g2_stdcell/lib/sg13g2_stdcell_fast_1p65V_m40C.lib
   
-  # "*_slow_1p08V_125C":
-  #   - pdk_dir::libs.ref/sg13g2_stdcell/lib/sg13g2_stdcell_slow_1p08V_125C.lib
+  "*_slow_1p08V_125C":
+    - pdk_dir::libs.ref/sg13g2_stdcell/lib/sg13g2_stdcell_slow_1p08V_125C.lib
 
   "*_slow_1p35V_125C":
     - pdk_dir::libs.ref/sg13g2_stdcell/lib/sg13g2_stdcell_slow_1p35V_125C.lib
@@ -181,7 +84,7 @@ LIB:
 STA_CORNERS:
   - nom_fast_1p32V_m40C
   - nom_fast_1p65V_m40C
-  # - nom_slow_1p08V_125C
+  - nom_slow_1p08V_125C
   - nom_slow_1p35V_125C
   - nom_typ_1p20V_25C
   - nom_typ_1p50V_25C
