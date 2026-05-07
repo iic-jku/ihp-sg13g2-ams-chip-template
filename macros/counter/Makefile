@@ -194,10 +194,16 @@ copy-reports: ## Copy yosys, antenna violations, hold & setup timing and manufac
 	cp $(LIBRELANE_DIR)/runs/${RUN_TAG}/*-yosys-synthesis/reports/stat.rpt $(FLOW_REPORT_DIR)/stat.rpt
 	cp $(LIBRELANE_DIR)/runs/${RUN_TAG}/*-openroad-checkantennas-1/reports/antenna.rpt $(FLOW_REPORT_DIR)/antenna_violations.rpt
 	cp $(LIBRELANE_DIR)/runs/${RUN_TAG}/*-openroad-checkantennas-1/reports/antenna_summary.rpt $(FLOW_REPORT_DIR)/antenna_summary.rpt
-	cp $(LIBRELANE_DIR)/runs/${RUN_TAG}/*-openroad-stapostpnr/summary.rpt $(FLOW_REPORT_DIR)/hold_setup_timing.rpt
-# 	cp $(LIBRELANE_DIR)/runs/${RUN_TAG}/*-klayout-antenna/reports/antenna.klayout.json $(FLOW_REPORT_DIR)/antenna.klayout.json
+	cp $(LIBRELANE_DIR)/runs/${RUN_TAG}/*-openroad-stapostpnr/summary.rpt $(FLOW_REPORT_DIR)/stapostpnr_summary.rpt
+	cp $(LIBRELANE_DIR)/runs/${RUN_TAG}/*-openroad-stapostpnr/nom_fast_1p32V_m40C/power.rpt $(FLOW_REPORT_DIR)/stapostpnr_nom_fast_1p32V_m40C_power.rpt
+	cp $(LIBRELANE_DIR)/runs/${RUN_TAG}/*-openroad-stapostpnr/nom_fast_1p65V_m40C/power.rpt $(FLOW_REPORT_DIR)/stapostpnr_nom_fast_1p65V_m40C_power.rpt
+	cp $(LIBRELANE_DIR)/runs/${RUN_TAG}/*-openroad-stapostpnr/nom_slow_1p08V_125C/power.rpt $(FLOW_REPORT_DIR)/stapostpnr_nom_slow_1p08V_125C_power.rpt
+	cp $(LIBRELANE_DIR)/runs/${RUN_TAG}/*-openroad-stapostpnr/nom_slow_1p35V_125C/power.rpt $(FLOW_REPORT_DIR)/stapostpnr_nom_slow_1p35V_125C_power.rpt
+	cp $(LIBRELANE_DIR)/runs/${RUN_TAG}/*-openroad-stapostpnr/nom_typ_1p20V_25C/power.rpt $(FLOW_REPORT_DIR)/stapostpnr_nom_typ_1p20V_25C_power.rpt
+	cp $(LIBRELANE_DIR)/runs/${RUN_TAG}/*-openroad-stapostpnr/nom_typ_1p50V_25C/power.rpt $(FLOW_REPORT_DIR)/stapostpnr_nom_typ_1p50V_25C_power.rpt
+	cp $(LIBRELANE_DIR)/runs/${RUN_TAG}/*-openroad-irdropreport/irdrop.rpt $(FLOW_REPORT_DIR)/irdrop.rpt
 	cp $(LIBRELANE_DIR)/runs/${RUN_TAG}/*-magic-drc/reports/drc.magic.rpt $(FLOW_REPORT_DIR)/drc.magic.rpt
-# 	cp $(LIBRELANE_DIR)/runs/${RUN_TAG}/*-klayout-drc/reports/drc.klayout.json $(FLOW_REPORT_DIR)/drc.klayout.json
+	cp $(LIBRELANE_DIR)/runs/${RUN_TAG}/*-klayout-drc/reports/drc.klayout.json $(FLOW_REPORT_DIR)/drc.klayout.json
 	cp $(LIBRELANE_DIR)/runs/${RUN_TAG}/*-netgen-lvs/reports/lvs.netgen.rpt $(FLOW_REPORT_DIR)/lvs.netgen.rpt
 	cp $(LIBRELANE_DIR)/runs/${RUN_TAG}/*-misc-reportmanufacturability/manufacturability.rpt $(FLOW_REPORT_DIR)/manufacturability.rpt
 .PHONY: copy-reports
@@ -241,7 +247,7 @@ build-fpga: ## Build target for FPGA usage
 	@$(MAKE) -C fpga all
 .PHONY: build-fpga
 
-build-all: ## Build macro (run LibreLane with KLayout & Magic DRC checks, copy reports, copy GDS, copy netlists, copy render, and render final GDS)
+build-top: ## Build macro (run LibreLane with KLayout & Magic DRC checks, copy reports, copy GDS, copy netlists, copy render, and render final GDS)
 	$(MAKE) librelane
 	$(MAKE) copy-reports
 	$(MAKE) copy-gds
@@ -249,7 +255,7 @@ build-all: ## Build macro (run LibreLane with KLayout & Magic DRC checks, copy r
 	$(MAKE) copy-render
 	$(MAKE) render-gds
 #	$(MAKE) librelane-openroad
-.PHONY: build-all
+.PHONY: build-top
 # ================================================================================================
 
 
@@ -263,7 +269,7 @@ all: ## Simulate, build and verify the macro
 	$(MAKE) lint-verilog-all
 	$(MAKE) sim-all
 	$(MAKE) build-fpga
-	$(MAKE) build-all
+	$(MAKE) build-top
 .PHONY: all
 # ================================================================================================
 

@@ -5,7 +5,7 @@
 
 <p align="center">
   <a href="render/img/counter_top_white.png">
-    <img src="render/img/counter_top_white.png" alt="Render of the ihp-sg13g2 counter layout (700um x 1130um)" width=50%>
+    <img src="render/img/counter_top_white.png" alt="Render of the ihp-sg13g2 counter layout (200um x 200um)" width=50%>
   </a>
   <br>
   <em>Render of the ihp-sg13g2 counter layout (700um x 1130um).</em>
@@ -62,7 +62,16 @@
 │  │  ├─ pin_order.cfg
 │  │  └─ signoff.sdc
 │  └─ 📁 reports/
-│     ├─ hold_setup_timing.rpt
+│     ├─ stapostpnr_summary.rpt
+│     ├─ stapostpnr_nom_fast_1p32V_m40C_power.rpt
+│     ├─ stapostpnr_nom_fast_1p65V_m40C_power.rpt
+│     ├─ stapostpnr_nom_slow_1p08V_125C_power.rpt
+│     ├─ stapostpnr_nom_slow_1p35V_125C_power.rpt
+│     ├─ stapostpnr_nom_typ_1p20V_25C_power.rpt
+│     ├─ stapostpnr_nom_typ_1p50V_25C_power.rpt
+│     ├─ irdrop.rpt
+│     ├─ drc.magic.rpt
+│     ├─ drc.klayout.json
 │     ├─ lvs.netgen.rpt
 │     ├─ manufacturability.rpt
 │     ├─ stat.rpt
@@ -287,7 +296,7 @@ make librelane-klayout
 
 ## Copy Important Reports
 
-To copy the yosys, antenna-violation, DRC errors, hold & setup violation, timing, LVS, and manufacturability reports from the latest run into `flow/reports/`, run:
+To copy the yosys synthesis checks, antenna reports, post-PnR timing summary, per-corner power reports, IR-drop report, Magic/KLayout DRC results, LVS report, and manufacturability report from the latest run into `flow/reports/`, run:
 
 ```sh
 make copy-reports
@@ -365,12 +374,12 @@ make -C fpga flash_bitstream # flash via dfu-util
 > - **`dfu-util`** uses the USB DFU standard — the pico-ice's RP2040 co-processor acts as the DFU bootloader and forwards the bitstream to the iCE40 flash. `iceprog` does not work on this board.
 
 
-## Build All
+## Build Top
 
 To build the macro with LibreLane, copy its reports, copy GDS, copy netlists, copy the render, and render the final GDS, run:
 
 ```sh
-make build-all
+make build-top
 ```
 
 
@@ -386,7 +395,7 @@ Builds and verifies the whole macro by running both simulation and build steps:
 - `lint-verilog-all`
 - `sim-all`
 - `build-fpga`
-- `build-all`
+- `build-top`
 
 The LVS and DRC verification is done within the LibreLane flow.
 

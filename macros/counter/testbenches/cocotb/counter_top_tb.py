@@ -2,6 +2,7 @@
 # SPDX-License-Identifier: Apache-2.0
 
 import os
+import re
 import logging
 from pathlib import Path
 
@@ -18,10 +19,23 @@ gl       = os.getenv("GL", False)
 
 hdl_toplevel = "counter_top"
 
-# Defaults match counter_pkg::COUNTER_MAX_DEFAULT in rtl/constants.sv
-COUNTER_MAX      = 255
+# Defaults sourced from rtl/constants.sv — single source of truth shared with the SV testbench and the DUT.
+_CONSTANTS_SV = Path(__file__).resolve().parent / "../../rtl/constants.sv"
+
+
+def _read_define(name: str) -> str:
+    """Extract the value of a `define <name> <value>` macro from rtl/constants.sv."""
+    text = _CONSTANTS_SV.read_text()
+    m = re.search(rf"^\s*`define\s+{re.escape(name)}\s+(\S+)", text, re.MULTILINE)
+    if m is None:
+        raise RuntimeError(f"`{name} not found in {_CONSTANTS_SV}")
+    return m.group(1)
+
+
+COUNTER_MAX      = int(_read_define("COUNTER_MAX_DEFAULT"))
+CLK_FREQ_HZ      = float(_read_define("CLK_FREQ_DEFAULT"))
+CLK_FREQ_MHZ     = int(CLK_FREQ_HZ / 1e6)
 COUNTER_BITWIDTH = (COUNTER_MAX + 1).bit_length() if COUNTER_MAX > 0 else 1
-CLK_FREQ_MHZ     = 50
 
 
 async def start_clock(clock, freq=CLK_FREQ_MHZ):

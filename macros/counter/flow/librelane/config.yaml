@@ -27,7 +27,7 @@ VERILOG_FILES: ["dir::../../rtl/constants.sv",
 # PRIMARY_GDSII_STREAMOUT_TOOL: klayout
 
 # Layout / Floorplan Rules
-DIE_AREA: [0, 0, 400, 400]
+DIE_AREA: [0, 0, 200, 200]
 PL_TARGET_DENSITY_PCT: 40
 GRT_ALLOW_CONGESTION: true
 RUN_MAGIC_DRC: true

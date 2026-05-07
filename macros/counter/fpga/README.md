@@ -132,10 +132,13 @@ make all
 
 The current `all` recipe executes these steps in order:
 
-1. `make lint-verilog-all`
-2. `make synthesis`
-3. `make pr`
-4. `make gen_bitstream`
+1. `make clean`
+2. `make lint-verilog-all`
+3. `make synthesis`
+4. `make pr`
+5. `make gen_bitstream`
+
+This ensures stale artifacts from previous runs are removed before a fresh build.
 
 > [!NOTE]
 > `make all` intentionally stops after bitstream generation and does not call `flash_bitstream`.
