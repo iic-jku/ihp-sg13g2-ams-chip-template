@@ -94,6 +94,8 @@
 │     └─ counter_top_white.png
 ├─ 📁 rtl/
 │  ├─ *.sv
+│  ├─ constants.sv
+│  ├─ counter.sv
 │  └─ counter_top.sv
 ├─ 📁 schematic/
 │  ├─ counter_top.sym
@@ -132,20 +134,18 @@ make help
 To lint the Verilog/SystemVerilog source files with [Verilator](https://www.veripool.org/verilator/), run:
 
 ```sh
-make lint-verilog              # lint the full counter_top design
-make lint-verilog CELL=dsmod   # lint a single module
-make lint-verilog-all          # lint dsmod, cordic_iterative, lo_gen, and counter_top
+make lint-verilog                # lint the full counter_top design
+make lint-verilog CELL=counter   # lint the standalone counter cell
+make lint-verilog-all            # lint counter and counter_top in sequence
 ```
 
-When `CELL=counter_top` (the default), all synthesis sources plus `constants.sv` are passed to Verilator.
-For a single cell, the correct extension (`.sv` or `.v`) is detected automatically, and `constants.sv` is always included so opcode and funct constants are in scope.
+When `CELL=counter_top` (the default), all synthesis sources (`constants.sv`, `counter.sv`, `counter_top.sv`) are passed to Verilator.
+For a single cell, `constants.sv` is always included first so the shared `counter_pkg` parameters are in scope.
 
 The `lint-verilog-all` target runs these lint checks in sequence:
 
-1. `make lint-verilog CELL=dsmod`
-2. `make lint-verilog CELL=cordic_iterative`
-3. `make lint-verilog CELL=lo_gen`
-4. `make lint-verilog` (default: `counter_top`)
+1. `make lint-verilog CELL=counter`
+2. `make lint-verilog` (default: `counter_top`)
 
 This is also the lint step used by `make all`.
 
@@ -157,60 +157,62 @@ We use [cocotb](https://www.cocotb.org/), a Python-based testbench environment, 
 The simulation targets are unified and accept an optional `CELL` variable (default: `counter_top`).
 The waveform viewer can be changed with `WAVEFORM_VIEWER=<gtkwave|surfer>` (default: `gtkwave`).
 
+> [!NOTE]
+> In the current repository state, the provided Verilog, cocotb, and Xschem testbench/viewer files are for `counter_top`.
+> Running simulation/view targets with another `CELL` requires corresponding testbench files (for example, `testbenches/verilog/<CELL>_tb.*`, `testbenches/cocotb/<CELL>_tb.py`, and `testbenches/xschem/<CELL>_tb_tran.sch`).
+
 ### RTL Verilog Simulation
 
 Compiles the RTL with Icarus Verilog and runs the simulation.
-When `CELL=counter_top` (the default), the full `COUNTER_MODULES_SIM` source list and the `.sv` testbench are selected automatically.
-The waveform is written to `testbenches/verilog/<CELL>/` (e.g. `testbenches/verilog/counter_top/counter_top_tb.vcd`):
+When `CELL=counter_top` (the default), the full `MODULES_SIM` source list and the `.sv` testbench are selected automatically.
+For non-top cells, the RTL source is auto-selected as `rtl/<CELL>.sv` when present, otherwise `rtl/<CELL>.v`.
+The waveform is written to `testbenches/verilog/` (e.g. `testbenches/verilog/counter_top_tb.vcd`):
 
 ```sh
 make sim-rtl-verilog              # run counter_top RTL simulation
-make sim-rtl-verilog CELL=dsmod   # run dsmod RTL simulation
 ```
 
 To view the waveform afterwards:
 
 ```sh
-make sim-view-verilog                                          # view counter_top waveform
-make sim-view-verilog CELL=dsmod                               # view dsmod waveform
-make sim-view-verilog CELL=dsmod WAVEFORM_VIEWER=surfer        # use Surfer instead
+make sim-view-verilog                                  # view counter_top waveform
+make sim-view-verilog WAVEFORM_VIEWER=surfer           # use Surfer instead
 ```
 
-Each simulation folder contains a pre-configured waveform layout file (`<CELL>_tb.gtkw` for GTKWave, `<CELL>_tb.surf.ron` for Surfer).
+The simulation folder contains a pre-configured waveform layout file (`counter_top_tb.gtkw` for GTKWave, `counter_top_tb.surf.ron` for Surfer).
 The view target loads it automatically together with the current `.vcd`, so signal formatting is preserved across runs.
 
 ### RTL / GL cocotb Simulation
 
-The cocotb testbenches are located in `testbenches/cocotb/`.
-For `CELL=dsmod`, the simulation delegates to the sub-Makefile in `testbenches/cocotb/dsmod/` (PSD, SNDR sweep, and ramp tests).
-For all other cells the Python runner is invoked directly.
+The cocotb testbench is located in `testbenches/cocotb/counter_top_tb.py` and exercises:
+
+- reset clears the counter to 0
+- the counter holds its value while `enable_i` is low
+- the counter increments by 1 on every rising clock edge while `enable_i` is high
+- the counter wraps from `COUNTER_MAX` back to 0
 
 ```sh
 make sim-rtl-cocotb               # run counter_top RTL cocotb simulation
-make sim-rtl-cocotb CELL=dsmod    # run dsmod cocotb test suite
 ```
 
-See `testbenches/cocotb/dsmod/README.md` for `dsmod`-specific configuration options and environment variables.
-
-To run the gate-level (GL) cocotb simulation:
+To run the gate-level (GL) cocotb simulation (sources the post-synthesis netlist from `final/nl/`):
 
 ```sh
 make sim-gl-cocotb                # gate-level simulation of counter_top
 ```
 
 > [!NOTE]
-> Gate-level simulation requires the latest implementation in `flow/final/`.
+> Gate-level simulation requires the latest implementation in `flow/final/` (and a `final/nl/counter_top.nl.v` copy via `make copy-netlist`).
 
-A waveform file is generated under `testbenches/cocotb/<cell>/sim_build/<cell>.fst`.
+A waveform file is generated under `testbenches/cocotb/sim_build/counter_top.fst`.
 To view it:
 
 ```sh
-make sim-view-cocotb                                          # view counter_top waveform
-make sim-view-cocotb CELL=dsmod                               # view dsmod waveform
-make sim-view-cocotb CELL=dsmod WAVEFORM_VIEWER=surfer        # use Surfer instead
+make sim-view-cocotb                                  # view counter_top waveform
+make sim-view-cocotb WAVEFORM_VIEWER=surfer           # use Surfer instead
 ```
 
-Each cocotb simulation folder contains a pre-configured waveform layout file (`<CELL>_tb.gtkw` for GTKWave, `<CELL>_tb.surf.ron` for Surfer).
+The cocotb folder contains a pre-configured waveform layout file (`counter_top_tb.gtkw` for GTKWave, `counter_top_tb.surf.ron` for Surfer).
 The view target loads it automatically together with the current `.fst`, so signal formatting is preserved across runs.
 
 ### Gate-Level Xschem Simulation
@@ -240,12 +242,10 @@ make sim-all
 
 This executes the following targets in order:
 
-1. `sim-rtl-verilog CELL=dsmod`
-2. `sim-rtl-cocotb CELL=dsmod`
-3. `sim-rtl-verilog` (default: `counter_top`)
-4. `sim-rtl-cocotb` (default: `counter_top`)
-5. `sim-gl-cocotb` (default: `counter_top`)
-6. `sim-gl-xschem` (default: `counter_top`)
+1. `sim-rtl-verilog` (default: `counter_top`)
+2. `sim-rtl-cocotb` (default: `counter_top`)
+3. `sim-gl-cocotb` (default: `counter_top`)
+4. `sim-gl-xschem` (default: `counter_top`)
 
 > [!NOTE]
 > The `sim-view-verilog` and `sim-view-cocotb` targets are intentionally **not** called by `sim-all`.
@@ -342,11 +342,27 @@ This only works if the latest run completed without errors.
 
 ## Build FPGA
 
-To build the FPGA design, run:
+The FPGA flow targets a [pico-ice](https://pico-ice.tinyvision.ai/) board (iCE40 UP5K, sg48 package) and uses the open-source iCE40 toolchain: Yosys → nextpnr → icepack.
+
+To run the full flow (lint → synthesis → place-and-route → bitstream), run:
 
 ```sh
 make build-fpga
 ```
+
+This invokes `make -C fpga all`. Individual steps can also be run from `fpga/`:
+
+```sh
+make -C fpga synthesis       # Yosys iCE40 synthesis
+make -C fpga pr              # nextpnr place-and-route
+make -C fpga gen_bitstream   # icepack → .bin
+make -C fpga flash_bitstream # flash via dfu-util
+```
+
+> [!NOTE]
+> Flashing uses `dfu-util`, not `iceprog`. Both flash iCE40 bitstreams, but they target different interfaces:
+> - **`iceprog`** speaks directly over SPI via an FTDI USB bridge (iCEstick, iCEBreaker, …).
+> - **`dfu-util`** uses the USB DFU standard — the pico-ice's RP2040 co-processor acts as the DFU bootloader and forwards the bitstream to the iCE40 flash. `iceprog` does not work on this board.
 
 
 ## Build All
@@ -369,6 +385,7 @@ Builds and verifies the whole macro by running both simulation and build steps:
 
 - `lint-verilog-all`
 - `sim-all`
+- `build-fpga`
 - `build-all`
 
 The LVS and DRC verification is done within the LibreLane flow.

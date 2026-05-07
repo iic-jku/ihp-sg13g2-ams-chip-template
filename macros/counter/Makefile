@@ -52,29 +52,25 @@ FLOW_FINAL_PNL_DIR    := flow/final/pnl
 FLOW_FINAL_SPICE_DIR  := flow/final/spice
 FLOW_FINAL_RENDER_DIR := flow/final/render
 
-# Variables for running the testbenches
-COUNTER_MODULES_SYNTH := \
+# Variables for simulation and linting targets
+# constants.sv defines the counter_pkg and must compile before any module that imports it,
+# so it is always prepended in MODULES_SIM and in the single-cell branches below.
+MODULES_SYNTH := \
+	$(SRC_DIR)/counter.sv \
 	$(SRC_DIR)/counter_top.sv
 
-COUNTER_MODULES_SIM :=  \
-	$(COUNTER_MODULES_SYNTH)
+MODULES_SIM :=  \
+	$(SRC_DIR)/constants.sv \
+	$(MODULES_SYNTH)
 
-# COUNTER_MODULES_SYNTH := \
-# 	$(SRC_DIR)/other.sv
-# 	$(SRC_DIR)/counter_top.sv
-
-# COUNTER_MODULES_SIM :=  \
-# 	$(SRC_DIR)/constants.sv \
-# 	$(COUNTER_MODULES_SYNTH)
-
-# Source files for sim-rtl-verilog: auto-selects COUNTER_MODULES_SIM when CELL == TOP, single-file otherwise
-_SIM_SRCS = $(if $(filter $(CELL),$(TOP)),$(COUNTER_MODULES_SIM),$(SRC_DIR)/$(CELL).v)
+# Source files for sim-rtl-verilog: auto-selects MODULES_SIM when CELL == TOP, single-file otherwise (auto-detecting .sv/.v)
+_SIM_SRCS = $(if $(filter $(CELL),$(TOP)),$(MODULES_SIM),$(or $(wildcard $(SRC_DIR)/$(CELL).sv),$(SRC_DIR)/$(CELL).v))
 
 # Source files for lint-verilog: constants + all synthesis sources for TOP, single-file (auto-detecting .sv/.v) otherwise
-_LINT_SRCS = $(if $(filter $(CELL),$(TOP)),$(SRC_DIR)/constants.sv $(COUNTER_MODULES_SYNTH),$(SRC_DIR)/constants.sv $(or $(wildcard $(SRC_DIR)/$(CELL).sv),$(SRC_DIR)/$(CELL).v))
+_LINT_SRCS = $(if $(filter $(CELL),$(TOP)),$(SRC_DIR)/constants.sv $(MODULES_SYNTH),$(SRC_DIR)/constants.sv $(or $(wildcard $(SRC_DIR)/$(CELL).sv),$(SRC_DIR)/$(CELL).v))
 
 # Testbench extension: sv for TOP, v otherwise (dot is added at use site)
-_TB_EXT   = $(if $(filter $(CELL),$(TOP)),sv,v)
+_TB_EXT = $(if $(filter $(CELL),$(TOP)),sv,v)
 
 
 # Help Target
@@ -92,52 +88,45 @@ lint-verilog: ## Lint Verilog source files with Verilator (usage: make lint-veri
 	verilator --lint-only -I"$(SRC_DIR)" $(_LINT_SRCS)
 .PHONY: lint-verilog
 
-lint-verilog-all: ## Lint all Verilog source files
-	$(MAKE) lint-verilog CELL=dsmod
-	$(MAKE) lint-verilog CELL=cordic_iterative
-	$(MAKE) lint-verilog CELL=lo_gen
+lint-verilog-all: ## Lint all Verilog source files (counter, counter_top)
+	$(MAKE) lint-verilog CELL=counter
 	$(MAKE) lint-verilog
 .PHONY: lint-verilog-all
 # ================================================================================================
 
 
 # Simulation Targets
-sim-rtl-verilog: ## Run RTL simulation of CELL cell with Verilog (usage: make sim-rtl-verilog [CELL=<cellname>])
-	mkdir -p $(VERILOG_TB_DIR)/$(CELL)
-	iverilog -g2012 -DSIM -o $(VERILOG_TB_DIR)/$(CELL)/test_$(CELL) $(_SIM_SRCS) $(VERILOG_TB_DIR)/$(CELL)/$(CELL)_tb.$(_TB_EXT)
-	cd $(VERILOG_TB_DIR)/$(CELL) && vvp test_$(CELL)
-	rm -f $(VERILOG_TB_DIR)/$(CELL)/test_$(CELL)
+sim-rtl-verilog: ## Run RTL simulation of CELL cell with Icarus Verilog (usage: make sim-rtl-verilog [CELL=<cellname>])
+	iverilog -g2012 -DSIM -o $(VERILOG_TB_DIR)/test_$(CELL) $(_SIM_SRCS) $(VERILOG_TB_DIR)/$(CELL)_tb.$(_TB_EXT)
+	cd $(VERILOG_TB_DIR) && vvp test_$(CELL)
+	rm -f $(VERILOG_TB_DIR)/test_$(CELL)
 .PHONY: sim-rtl-verilog
 
 sim-view-verilog: ## View CELL cell Verilog simulation waveforms (usage: make sim-view-verilog [CELL=<cellname>] [WAVEFORM_VIEWER=<gtkwave|surfer>])
 	@if [ "$(WAVEFORM_VIEWER)" = "gtkwave" ]; then \
-		$(WAVEFORM_VIEWER) $(VERILOG_TB_DIR)/$(CELL)/$(CELL)_tb.vcd $(VERILOG_TB_DIR)/$(CELL)/$(CELL)_tb.gtkw; \
+		$(WAVEFORM_VIEWER) $(VERILOG_TB_DIR)/$(CELL)_tb.vcd $(VERILOG_TB_DIR)/$(CELL)_tb.gtkw; \
 	elif [ "$(WAVEFORM_VIEWER)" = "surfer" ]; then \
-		$(WAVEFORM_VIEWER) -s $(VERILOG_TB_DIR)/$(CELL)/$(CELL)_tb.surf.ron $(VERILOG_TB_DIR)/$(CELL)/$(CELL)_tb.vcd; \
+		$(WAVEFORM_VIEWER) -s $(VERILOG_TB_DIR)/$(CELL)_tb.surf.ron $(VERILOG_TB_DIR)/$(CELL)_tb.vcd; \
 	else \
-		$(WAVEFORM_VIEWER) $(VERILOG_TB_DIR)/$(CELL)/$(CELL)_tb.vcd; \
+		$(WAVEFORM_VIEWER) $(VERILOG_TB_DIR)/$(CELL)_tb.vcd; \
 	fi
 .PHONY: sim-view-verilog
 
 sim-rtl-cocotb: ## Run RTL simulation of CELL cell with cocotb (usage: make sim-rtl-cocotb [CELL=<cellname>])
-	@if [ "$(CELL)" = "dsmod" ]; then \
-		$(MAKE) -C $(COCOTB_DIR)/$(CELL) all; \
-	else \
-		cd $(COCOTB_DIR)/$(CELL); python3 $(CELL)_tb.py; \
-	fi
+	cd $(COCOTB_DIR) && python3 $(CELL)_tb.py
 .PHONY: sim-rtl-cocotb
 
 sim-gl-cocotb: ## Run gate-level simulation of CELL cell with cocotb (usage: make sim-gl-cocotb [CELL=<cellname>])
-	cd $(COCOTB_DIR)/$(CELL); GL=1 python3 $(CELL)_tb.py
+	cd $(COCOTB_DIR) && GL=1 python3 $(CELL)_tb.py
 .PHONY: sim-gl-cocotb
 
 sim-view-cocotb: ## View CELL cell cocotb simulation waveforms (usage: make sim-view-cocotb [CELL=<cellname>] [WAVEFORM_VIEWER=<gtkwave|surfer>])
 	@if [ "$(WAVEFORM_VIEWER)" = "gtkwave" ]; then \
-		$(WAVEFORM_VIEWER) $(COCOTB_DIR)/$(CELL)/sim_build/$(CELL).fst $(COCOTB_DIR)/$(CELL)/$(CELL)_tb.gtkw; \
+		$(WAVEFORM_VIEWER) $(COCOTB_DIR)/sim_build/$(CELL).fst $(COCOTB_DIR)/$(CELL)_tb.gtkw; \
 	elif [ "$(WAVEFORM_VIEWER)" = "surfer" ]; then \
-		$(WAVEFORM_VIEWER) -s $(COCOTB_DIR)/$(CELL)/$(CELL)_tb.surf.ron $(COCOTB_DIR)/$(CELL)/sim_build/$(CELL).fst; \
+		$(WAVEFORM_VIEWER) -s $(COCOTB_DIR)/$(CELL)_tb.surf.ron $(COCOTB_DIR)/sim_build/$(CELL).fst; \
 	else \
-		$(WAVEFORM_VIEWER) $(COCOTB_DIR)/$(CELL)/sim_build/$(CELL).fst; \
+		$(WAVEFORM_VIEWER) $(COCOTB_DIR)/sim_build/$(CELL).fst; \
 	fi
 .PHONY: sim-view-cocotb
 
@@ -150,9 +139,7 @@ sim-gl-xschem: ## Run gate-level simulation of CELL cell with Xschem (usage: mak
 	' $(CELL)_tb_tran.sch
 .PHONY: sim-gl-xschem
 
-sim-all: ## Simulate the macro
-	$(MAKE) sim-rtl-verilog CELL=dsmod
-	$(MAKE) sim-rtl-cocotb CELL=dsmod
+sim-all: ## Simulate the macro (RTL Verilog + RTL/GL cocotb + GL Xschem for counter_top)
 	$(MAKE) sim-rtl-verilog
 	$(MAKE) sim-rtl-cocotb
 	$(MAKE) sim-gl-cocotb
@@ -267,6 +254,7 @@ build-all: ## Build macro (run LibreLane with only Magic DRC checks, copy report
 all: ## Simulate, build and verify the macro
 	$(MAKE) lint-verilog-all
 	$(MAKE) sim-all
+	$(MAKE) build-fpga
 	$(MAKE) build-all
 .PHONY: all
 # ================================================================================================

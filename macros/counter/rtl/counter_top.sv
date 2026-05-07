@@ -1,43 +1,40 @@
-﻿// SPDX-FileCopyrightText: 2026 Simon Dorrer
+// SPDX-FileCopyrightText: 2026 Simon Dorrer
 // SPDX-License-Identifier: Apache-2.0
-// Description: This file implements an N-Bit counter with synchronous reset & enable in SystemVerilog.
+// Description: This file implements the top-level wrapper module in SystemVerilog.
 
-module counter_top #(
-  parameter COUNTER_BITWIDTH = 8,
-  parameter COUNTER_MAX = 255
+`default_nettype none
+`ifndef __COUNTER_TOP__
+`define __COUNTER_TOP__
+
+module counter_top
+  import counter_pkg::*;
+#(
+  parameter  int COUNTER_MAX      = COUNTER_MAX_DEFAULT,
+  localparam int COUNTER_BITWIDTH = $clog2(COUNTER_MAX + 1)
 )(
-  input wire clock_i,
-  input wire reset_n_i,
-  input wire enable_i,
-  
+  input  wire clock_i,
+  input  wire reset_n_i,  // Active-low reset ('1' not pressed, '0' pressed)
+  input  wire enable_i,
+
   output wire [COUNTER_BITWIDTH-1:0] counter_value_o
 );
-	
-  // Internal signals
+
+  // Internal active-high reset (wrapper handles polarity conversion)
   wire reset;
-  reg [COUNTER_BITWIDTH-1:0] counter_value;
-  // =====================================================
-  
-  // Inverting Input Logic
   assign reset = ~reset_n_i;
 
-  // Counter Implementation
-  always @(posedge clock_i) begin 
-		if (reset == 1'b1) begin
-			// if reset is enabled
-			counter_value <= {COUNTER_BITWIDTH{1'b0}}; //reset the counter value
-		end else if (enable_i == 1'b1) begin
-			// increment the counter value by 1, wrap around at COUNTER_MAX
-			if (counter_value == COUNTER_MAX[COUNTER_BITWIDTH-1:0])
-				counter_value <= {COUNTER_BITWIDTH{1'b0}};
-			else
-				counter_value <= counter_value + 1'b1;
-		end
-	end
-  // =====================================================
-  
-  // Concurrent statement
-	// assign the counter value to the output
-  assign counter_value_o = counter_value;
+  // Embed Counter
+  counter #(
+    .COUNTER_BITWIDTH(COUNTER_BITWIDTH),
+    .COUNTER_MAX(COUNTER_MAX)
+  ) counter_0 (
+    .clock_i(clock_i),
+    .reset_i(reset),
+    .enable_i(enable_i),
+    .counter_value_o(counter_value_o)
+  );
   // =====================================================
 endmodule // counter_top
+
+`endif
+`default_nettype wire
