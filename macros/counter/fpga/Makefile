@@ -14,23 +14,17 @@ CELL ?= $(TOP)
 SRC_DIR     := ../rtl
 PCF_FILE    := pico-ice.pcf
 
-# Variables for linting targets
-# constants.sv defines the counter_pkg and must compile before any module that imports it,
-# so it is always prepended in MODULES_SIM and in the single-cell branches below.
+# Variables for linting and synthesis targets
+# constants.sv defines the `COUNTER_MAX_DEFAULT / `CLK_FREQ_DEFAULT macros and must
+# compile before any module that references them, so it is the first entry in MODULES_SYNTH
+# (Yosys 0.64 cannot parse `import pkg::*` in a module header — see rtl/constants.sv).
 MODULES_SYNTH := \
+	$(SRC_DIR)/constants.sv \
 	$(SRC_DIR)/counter.sv \
 	$(SRC_DIR)/counter_top.sv
 
-MODULES_SIM :=  \
-	$(SRC_DIR)/constants.sv \
-	$(MODULES_SYNTH)
-
-# Source files for sim-rtl-verilog: auto-selects MODULES_SIM when CELL == TOP, single-file otherwise
-_SIM_SRCS = $(if $(filter $(CELL),$(TOP)),$(MODULES_SIM),$(SRC_DIR)/$(CELL).v)
-
-# Source files for lint-verilog: constants + all synthesis sources for TOP, single-file (auto-detecting .sv/.v) otherwise
-_LINT_SRCS = $(if $(filter $(CELL),$(TOP)),$(SRC_DIR)/constants.sv $(MODULES_SYNTH),$(SRC_DIR)/constants.sv $(or $(wildcard $(SRC_DIR)/$(CELL).sv),$(SRC_DIR)/$(CELL).v))
-
+# Source files for lint-verilog: full module list for TOP, single-file (with constants.sv, auto-detecting .sv/.v) otherwise
+_LINT_SRCS = $(if $(filter $(CELL),$(TOP)),$(MODULES_SYNTH),$(SRC_DIR)/constants.sv $(or $(wildcard $(SRC_DIR)/$(CELL).sv),$(SRC_DIR)/$(CELL).v))
 
 
 # Help Target
@@ -69,14 +63,14 @@ lint-verilog-all: ## Lint all Verilog source files (counter, counter_top)
 synthesis: $(TOP).json ## Run technology-mapped synthesis for iCE40
 .PHONY: synthesis
 
-$(TOP).json: $(SRC_DIR)/$(TOP).sv $(MODULES_SYNTH)
-	yosys -DFPGA -p '$(TARGET) -dsp -spram -top $(TOP); write_json $(TOP).json;' $(SRC_DIR)/$(TOP).sv $(MODULES_SYNTH)
+$(TOP).json: $(MODULES_SYNTH)
+	yosys -DFPGA -p '$(TARGET) -dsp -spram -top $(TOP); write_json $(TOP).json;' $(MODULES_SYNTH)
 
 synthesis_generic: $(TOP)_generic.json ## Run generic synthesis and generate Yosys graph
 .PHONY: synthesis_generic
 
-$(TOP)_generic.json: $(SRC_DIR)/$(TOP).sv $(MODULES_SYNTH)
-	yosys -p 'hierarchy -top $(TOP); proc; write_json $(TOP)_generic.json; show -format svg -prefix $(TOP)_generic_yosys $(TOP);' $(SRC_DIR)/$(TOP).sv $(MODULES_SYNTH)
+$(TOP)_generic.json: $(MODULES_SYNTH)
+	yosys -p 'hierarchy -top $(TOP); proc; write_json $(TOP)_generic.json; show -format svg -prefix $(TOP)_generic_yosys $(TOP);' $(MODULES_SYNTH)
 # ================================================================================================
 
 
@@ -129,13 +123,14 @@ flash_bitstream: $(TOP).bin ## Flash FPGA bitstream
 convert: $(TOP).v ## Convert SystemVerilog top to Verilog
 .PHONY: convert
 
-$(TOP).v: $(SRC_DIR)/$(TOP).sv $(MODULES_SYNTH)
-	yosys -DFPGA -p 'hierarchy -top $(TOP); proc; write_verilog $(TOP).v;' $(SRC_DIR)/$(TOP).sv $(MODULES_SYNTH)
+$(TOP).v: $(MODULES_SYNTH)
+	yosys -DFPGA -p 'hierarchy -top $(TOP); proc; write_verilog $(TOP).v;' $(MODULES_SYNTH)
 # ================================================================================================
 
 
 # All Target
 all: ## Run full FPGA flow (lint, synthesis, place-and-route, bitstream)
+	$(MAKE) clean
 	$(MAKE) lint-verilog-all
 	$(MAKE) synthesis
 	$(MAKE) pr
