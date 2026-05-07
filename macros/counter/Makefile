@@ -229,7 +229,7 @@ render-gds: ## Render an image from the final GDS using lay2img.py
 
 
 # Build Targets
-build-fpga: ## Build target for FPGA usage (run simulation, synthesis, place & route, generate bitstream and flash bitstream)
+build-fpga: ## Build target for FPGA usage
 	@$(MAKE) -C fpga all
 .PHONY: build-fpga
 
