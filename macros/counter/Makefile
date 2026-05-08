@@ -1,4 +1,4 @@
-# SPDX-FileCopyrightText: 2026 Simon Dorrer and Harald Pretl
+﻿# SPDX-FileCopyrightText: 2026 Simon Dorrer and Harald Pretl
 # SPDX-License-Identifier: Apache-2.0
 
 MAKEFILE_DIR := $(shell dirname $(realpath $(firstword $(MAKEFILE_LIST))))
@@ -31,7 +31,6 @@ COCOTB_DIR      	  := testbenches/cocotb
 VERILOG_TB_DIR        := testbenches/verilog
 XSCHEM_TB_DIR         := testbenches/xschem
 SCH_DIR               := schematic
-LAY_DIR               := final/gds
 SCRIPTS_DIR     	  := scripts
 SRC_DIR 			  := rtl
 RENDER_IMG_DIR        := render/img
@@ -47,10 +46,21 @@ LIBRELANE_DIR         := flow/librelane
 FLOW_REPORT_DIR       := flow/reports
 FLOW_FINAL_DIR        := flow/final
 FLOW_FINAL_GDS_DIR    := flow/final/gds
+FLOW_FINAL_LEF_DIR    := flow/final/lef
+FLOW_FINAL_LIB_DIR    := flow/final/lib
 FLOW_FINAL_NL_DIR     := flow/final/nl
 FLOW_FINAL_PNL_DIR    := flow/final/pnl
+FLOW_FINAL_SPEF_DIR   := flow/final/spef
 FLOW_FINAL_SPICE_DIR  := flow/final/spice
+FLOW_FINAL_VH_DIR     := flow/final/vh
 FLOW_FINAL_RENDER_DIR := flow/final/render
+FINAL_GDS_DIR         := final/gds
+FINAL_LEF_DIR         := final/lef
+FINAL_LIB_DIR         := final/lib
+FINAL_NL_DIR          := final/nl
+FINAL_PNL_DIR         := final/pnl
+FINAL_SPEF_DIR        := final/spef
+FINAL_VH_DIR          := final/vh
 
 # Variables for simulation and linting targets
 # constants.sv defines the counter_pkg and must compile before any module that imports it,
@@ -208,11 +218,16 @@ copy-reports: ## Copy yosys, antenna violations, hold & setup timing and manufac
 	cp $(LIBRELANE_DIR)/runs/${RUN_TAG}/*-misc-reportmanufacturability/manufacturability.rpt $(FLOW_REPORT_DIR)/manufacturability.rpt
 .PHONY: copy-reports
 
-copy-gds: ## Copy final output GDS from the last LibreLane run to final/gds/
-	rm -rf $(LAY_DIR)/
-	mkdir -p $(LAY_DIR)/
-	cp -r $(FLOW_FINAL_GDS_DIR)/${TOP}.gds $(LAY_DIR)/${TOP}.gds
-.PHONY: copy-gds
+copy-final: ## Copy final output gds, lef, lib, nl, pnl, spef, and vh folders from the last LibreLane run to final/
+	rm -rf $(FINAL_GDS_DIR)/ $(FINAL_LEF_DIR)/ $(FINAL_LIB_DIR)/ $(FINAL_NL_DIR)/ $(FINAL_PNL_DIR)/ $(FINAL_SPEF_DIR)/ $(FINAL_VH_DIR)/
+	cp -r $(FLOW_FINAL_GDS_DIR)  $(FINAL_GDS_DIR)
+	cp -r $(FLOW_FINAL_LEF_DIR)  $(FINAL_LEF_DIR)
+	cp -r $(FLOW_FINAL_LIB_DIR)  $(FINAL_LIB_DIR)
+	cp -r $(FLOW_FINAL_NL_DIR)   $(FINAL_NL_DIR)
+	cp -r $(FLOW_FINAL_PNL_DIR)  $(FINAL_PNL_DIR)
+	cp -r $(FLOW_FINAL_SPEF_DIR) $(FINAL_SPEF_DIR)
+	cp -r $(FLOW_FINAL_VH_DIR)   $(FINAL_VH_DIR)
+.PHONY: copy-final
 
 copy-netlist: ## Copy final output spice, pnl and nl netlists from the last LibreLane run to netlist/
 	rm -rf $(NET_SPICE_DIR)/
@@ -237,7 +252,7 @@ copy-render: ## Copy macro render from the last LibreLane run to render/img/
 # Render Target
 render-gds: ## Render an image from the final GDS using lay2img.py
 	mkdir -p $(RENDER_IMG_DIR)/
-	python3 $(SCRIPTS_DIR)/lay2img.py $(LAY_DIR)/${TOP}.gds $(RENDER_IMG_DIR)/${TOP}.png --width 2048 --oversampling 4
+	python3 $(SCRIPTS_DIR)/lay2img.py $(FINAL_GDS_DIR)/${TOP}.gds $(RENDER_IMG_DIR)/${TOP}.png --width 2048 --oversampling 4
 .PHONY: render-gds
 # ================================================================================================
 
@@ -247,10 +262,10 @@ build-fpga: ## Build target for FPGA usage
 	@$(MAKE) -C fpga all
 .PHONY: build-fpga
 
-build-top: ## Build macro (run LibreLane with KLayout & Magic DRC checks, copy reports, copy GDS, copy netlists, copy render, and render final GDS)
+build-top: ## Build macro (run LibreLane with KLayout & Magic DRC checks, copy reports, copy final files, copy netlists, copy render, and render final GDS)
 	$(MAKE) librelane
 	$(MAKE) copy-reports
-	$(MAKE) copy-gds
+	$(MAKE) copy-final
 	$(MAKE) copy-netlist
 	$(MAKE) copy-render
 	$(MAKE) render-gds
