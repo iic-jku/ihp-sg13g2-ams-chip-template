@@ -90,11 +90,7 @@
 │  ├─ 📁 spice/
 │  │  └─ counter_top.spice
 │  └─ 📁 xspice/
-│     ├─ 📁 counter_top/
-│     │  └─ counter_top.xspice
-│     ├─ reorder_xspice_pins.py
-│     ├─ spi2xspice.py
-│     └─ verilog2xspice.sh
+│     └─ counter_top.xspice
 ├─ 📁 render/
 │  ├─ 📁 blender/
 │  └─ 📁 img/
@@ -110,7 +106,11 @@
 │  ├─ counter_top.sym
 │  └─ xschemrc
 ├─ 📁 scripts/
-│  └─ lay2img.py
+│  ├─ lay2img.py
+│  ├─ reorder_xspice_pins.py
+│  ├─ spi2xspice.py
+│  └─ 📁 plot_simulations/
+│     └─ plot_counter_top.py
 ├─ 📁 testbenches/
 │  ├─ 📁 cocotb/
 │  │  ├─ counter_top_tb.gtkw
@@ -234,12 +234,25 @@ make sim-gl-xschem CELL=<cell>    # run gate-level Xschem simulation for another
 ```
 
 > [!NOTE]
-> This flow expects the generated XSPICE model in `netlist/xspice/counter_top/`. If needed, generate it first with:
+> This flow expects the generated XSPICE model in `netlist/xspice/`. If needed, generate it first with:
 >
 > ```sh
 > make generate-xspice
 > ```
 
+### View Xschem Simulation Results
+
+After the gate-level Xschem simulation has completed, plot the results with:
+
+```sh
+make sim-view-xschem              # plot counter_top simulation results
+make sim-view-xschem CELL=<cell>  # plot results for another cell
+```
+
+This runs `scripts/plot_simulations/plot_<CELL>.py` and exports the figures and a CSV to `scripts/plot_simulations/figures/`.
+
+> [!NOTE]
+> `sim-view-xschem` is intentionally **not** called by `sim-all`. It opens an interactive plot window and must be called manually after the simulation has completed.
 
 ### Run All Simulations
 
@@ -276,7 +289,7 @@ Additional targets are available for different DRC configurations:
 - `make librelane-magicdrc` – run LibreLane with only Magic DRC checks
 - `make librelane-klayoutdrc` – run LibreLane with only KLayout DRC checks
 
-These targets are also available for the digital macros. After the LibreLane flow completes successfully, the generated views are saved under `flow/final/`.
+These targets are also available for the digital macros. After the LibreLane flow completes successfully, the generated views are saved under `flow/final/`. `flow/final/` is included in `.gitignore`.
 
 
 ## View the Design
@@ -305,15 +318,15 @@ make copy-reports
 This only works if at least one LibreLane run exists in `flow/librelane/runs/` and the latest run completed without errors.
 
 
-## Copy the Final GDS
+## Copy the Final Folders
 
-To copy the latest GDS from `flow/final/gds/` into `final/gds/`, run:
+To copy the latest GDS, LEF, LIB, NL, PNL, SPEF, and VH from `flow/final/` into `final/`, run:
 
 ```sh
-make copy-gds
+make copy-final
 ```
 
-This assumes the final GDS view exists under `flow/final/gds/`.
+This assumes the final folders exist under `flow/final/` after a successful LibreLane run.
 
 
 ## Copy the Final Netlist
@@ -376,7 +389,7 @@ make -C fpga flash_bitstream # flash via dfu-util
 
 ## Build Top
 
-To build the macro with LibreLane, copy its reports, copy GDS, copy netlists, copy the render, and render the final GDS, run:
+To build the macro with LibreLane, copy its reports, copy final folders, copy netlists, copy the render, and render the final GDS, run:
 
 ```sh
 make build-top

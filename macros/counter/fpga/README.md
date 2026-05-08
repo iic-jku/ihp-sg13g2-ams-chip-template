@@ -5,7 +5,14 @@
 >
 > The default synthesis flow targets iCE40 (`TARGET=synth_ice40`).
 
-The FPGA flow uses RTL sources from `../rtl/` (`counter.sv`, `counter_top.sv`, `constants.sv`).
+The FPGA flow uses RTL sources from `../rtl/` (`constants.sv`, `counter.sv`, `counter_top.sv`).
+
+The main Makefile variables are:
+
+- `TOP=counter_top`
+- `CELL=$(TOP)` by default for linting
+- `TARGET=synth_ice40`
+- `PCF_FILE=pico-ice.pcf`
 
 ## Show Available Targets
 
@@ -33,11 +40,12 @@ Run Verilator lint checks:
 ```sh
 make lint-verilog
 make lint-verilog CELL=counter
+make lint-verilog CELL=<cellname>
 make lint-verilog-all
 ```
 
 `make lint-verilog` defaults to `CELL=counter_top` and checks `constants.sv`, `counter.sv`, and `counter_top.sv`.
-`make lint-verilog CELL=counter` checks the standalone `counter` cell together with `constants.sv`.
+`make lint-verilog CELL=<cellname>` checks `constants.sv` together with `../rtl/<cellname>.sv` or `../rtl/<cellname>.v`.
 `make lint-verilog-all` runs both lint checks in sequence.
 
 
@@ -49,7 +57,7 @@ Run technology-mapped synthesis for iCE40:
 make synthesis
 ```
 
-Use a custom Yosys synthesis command by overriding `TARGET`:
+Override `TARGET` to pass a different Yosys synthesis command:
 
 ```sh
 make synthesis TARGET=synth_ice40
