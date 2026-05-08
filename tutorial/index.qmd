@@ -1,0 +1,54 @@
+---
+title: "A Tutorial on Open-Source Analog-Mixed Signal Chip Design with the ihp-sg13g2 Open-PDK"
+author:
+  - name: Simon Dorrer
+    orcid: 0009-0001-5994-5477
+    email: simon.dorrer@jku.at
+  - name: Harald Pretl
+    orcid: 0000-0003-1519-076X
+    email: harald.pretl@jku.at
+date: last-modified
+license: "Apache-2.0 license"
+copyright:
+  holder: "Simon Dorrer and Harald Pretl"
+  year: 2026
+format:
+  html:
+    number-sections: true
+    toc: true
+    toc-expand: 3
+  pdf:
+    number-sections: true
+    toc: true
+---
+
+::: {.callout-warning}
+This documentation is a Work in Progress.
+:::
+
+::: {.callout-important}
+This repository requires the [IIC-OSIC-TOOLS](https://github.com/iic-jku/IIC-OSIC-TOOLS) container with tag `2026.05` or later.
+:::
+
+## Overview
+
+ToDo
+
+## Acknowledgements
+
+This project is funded by the JKU/SAL [IWS Lab](https://research.jku.at/de/projects/jku-lit-sal-intelligent-wireless-systems-lab-iws-lab/), a collaboration of [Johannes Kepler University](https://jku.at) and [Silicon Austria Labs](https://silicon-austria-labs.com).
+
+<table width="100%">
+  <tr>
+    <td align="left" width="50%">
+      <a href="https://iic.jku.at" target="_blank">
+        <img src="fig/funding/iic-jku.svg" alt="Johannes Kepler University: Institute for Integrated Circuits and Quantum Computing" width="94%"/>
+      </a>
+    </td>
+    <td align="right" width="50%">
+      <a href="https://silicon-austria-labs.com" target="_blank">
+        <img src="fig/funding/silicon-austria-labs-logo.svg" alt="Silicon Austria Labs" width="94%"/>
+      </a>
+    </td>
+  </tr>
+</table>

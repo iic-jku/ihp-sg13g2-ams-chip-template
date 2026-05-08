@@ -1,0 +1,48 @@
+project:
+  type: website
+  output-dir: _site
+
+var:
+  url-repo: https://github.com/iic-jku/ihp-sg13g2-ams-chip-template
+
+website:
+  title: "Open-Source Analog-Mixed Signal Chip Design Tutorial"
+  favicon: fig/favicon.png
+  site-url: "https://iic-jku.github.io/ihp-sg13g2-ams-chip-template/"
+  repo-url: "{{< meta var.url-repo >}}"
+  repo-branch: main
+  repo-actions: [edit, issue]
+  navbar:
+    background: "#447099"
+    search: true
+    left:
+      - icon: house
+        href: index.qmd
+        text: "Home"
+      - icon: bi-filetype-pdf
+        text: PDF
+        href: index.pdf
+    right:
+      - icon: github
+        href: "{{< meta var.url-repo >}}"
+        target: "_blank"
+  page-footer:
+    left: |
+      [Source code]({{< meta var.url-repo >}}){.external target="_blank"}
+    right: |
+      Website built with [Quarto](https://quarto.org/){.external target="_blank"}
+
+execute:
+  freeze: auto
+
+format:
+  html:
+    toc: true
+    toc-depth: 3
+    number-sections: true
+    theme:
+      light: cosmo
+      dark: solar
+    fig-align: center
+    lang: en-US
+    lightbox: true

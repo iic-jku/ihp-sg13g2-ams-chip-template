@@ -1,10 +1,9 @@
 ﻿# An Open-Source Analog-Mixed Signal Chip Design Template for the ihp-sg13g2 Open-PDK
 
-<!-- 
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.18378633.svg)](https://doi.org/10.5281/zenodo.18378633) 
--->
+[![Quarto Publish](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/actions/workflows/quarto-publish.yml/badge.svg?branch=main)](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/actions/workflows/quarto-publish.yml)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.18378633.svg)](https://doi.org/10.5281/zenodo.18378633)
 
-(c) 2025-2026 Simon Dorrer
+(c) 2026 Simon Dorrer and Harald Pretl
 
 Institute for Integrated Circuits and Quantum Computing, Johannes Kepler University (JKU), Linz, Austria
 
@@ -34,9 +33,9 @@ This shell-script-driven repository uses OpenROAD Flow-Scripts (ORFS) to synthes
 This template repository is Makefile-driven and provides a universal design flow solution: Just clone the repo, run `make all`, and get a tapeout-ready analog-mixed signal chip. This is the starting point for your own custom silicon. Focus on your design and do not care about the tools and the design flow!
 
 
-## How to Use?
+## Tutorial
 
-ToDo
+A step-by-step tutorial, including additional exercises, can be found [here](https://iic-jku.github.io/ihp-sg13g2-ams-chip-template/index.html).
 
 
 ## Directory Structure
@@ -147,6 +146,7 @@ ToDo
 │  ├─ 📁 v.1.0.0/
 │  │  ├─ 📁 doc/
 │  │  ├─ 📁 gds/
+│  │  ├─ 📁 img/
 │  │  └─ ReleaseNote.md
 │  └─ 📁 v.2.0.0/
 │     ├─ 📁 gds/
@@ -596,12 +596,12 @@ This project is funded by the JKU/SAL [IWS Lab](https://research.jku.at/de/proje
   <tr>
     <td align="left" width="50%">
       <a href="https://iic.jku.at" target="_blank">
-        <img src="doc/fig/funding/iic-jku.svg" alt="Johannes Kepler University: Institute for Integrated Circuits and Quantum Computing" width="94%"/>
+        <img src="tutorial/fig/funding/iic-jku.svg" alt="Johannes Kepler University: Institute for Integrated Circuits and Quantum Computing" width="94%"/>
       </a>
     </td>
     <td align="right" width="50%">
       <a href="https://silicon-austria-labs.com" target="_blank">
-        <img src="doc/fig/funding/silicon-austria-labs-logo.svg" alt="Silicon Austria Labs" width="94%"/>
+        <img src="tutorial/fig/funding/silicon-austria-labs-logo.svg" alt="Silicon Austria Labs" width="94%"/>
       </a>
     </td>
   </tr>
