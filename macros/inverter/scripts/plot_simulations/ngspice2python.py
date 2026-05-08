@@ -1,5 +1,5 @@
-﻿# -*- coding: utf-8 -*-
-# SPDX-FileCopyrightText: 2025-2026 Simon Dorrer
+# -*- coding: utf-8 -*-
+# SPDX-FileCopyrightText: 2026 Simon Dorrer and Harald Pretl
 # SPDX-License-Identifier: Apache-2.0
 # Master-Thesis
 # @ JKU IIC / ISP

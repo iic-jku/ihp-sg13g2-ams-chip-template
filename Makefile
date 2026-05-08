@@ -1,8 +1,7 @@
-﻿# Makefile for an Open-Source Analog-Mixed Signal Chip Design Template for the ihp-sg13g2 Open-PDK.
+# Makefile for an Open-Source Analog-Mixed Signal Chip Design Template for the ihp-sg13g2 Open-PDK.
 #
-# SPDX-FileCopyrightText: 2025-2026 Simon Dorrer
+# SPDX-FileCopyrightText: 2026 Simon Dorrer and Harald Pretl
 # Johannes Kepler University, Department for Integrated Circuits
-# Julius-Maximilians-Universität, Department for Computer Engineering
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.

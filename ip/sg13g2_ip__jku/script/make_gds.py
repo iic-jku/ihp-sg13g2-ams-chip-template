@@ -1,4 +1,4 @@
-﻿# SPDX-FileCopyrightText: 2024 Leo Moser, 2025-2026 Simon Dorrer
+# SPDX-FileCopyrightText: 2024 Leo Moser, 2026 Simon Dorrer and Harald Pretl
 # SPDX-License-Identifier: Apache-2.0
 
 import klayout.db as db

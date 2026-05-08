@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# SPDX-FileCopyrightText: 2025-2026 Simon Dorrer
+# SPDX-FileCopyrightText: 2026 Simon Dorrer and Harald Pretl
 # SPDX-License-Identifier: Apache-2.0
 # Author: Simon Dorrer
 # Description: AC and DC plots for the inverter macro based on ngspice exports.
