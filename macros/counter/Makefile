@@ -45,22 +45,7 @@ DRC_RPT_DIR           := verification/drc
 LIBRELANE_DIR         := flow/librelane
 FLOW_REPORT_DIR       := flow/reports
 FLOW_FINAL_DIR        := flow/final
-FLOW_FINAL_GDS_DIR    := flow/final/gds
-FLOW_FINAL_LEF_DIR    := flow/final/lef
-FLOW_FINAL_LIB_DIR    := flow/final/lib
-FLOW_FINAL_NL_DIR     := flow/final/nl
-FLOW_FINAL_PNL_DIR    := flow/final/pnl
-FLOW_FINAL_SPEF_DIR   := flow/final/spef
-FLOW_FINAL_SPICE_DIR  := flow/final/spice
-FLOW_FINAL_VH_DIR     := flow/final/vh
-FLOW_FINAL_RENDER_DIR := flow/final/render
-FINAL_GDS_DIR         := final/gds
-FINAL_LEF_DIR         := final/lef
-FINAL_LIB_DIR         := final/lib
-FINAL_NL_DIR          := final/nl
-FINAL_PNL_DIR         := final/pnl
-FINAL_SPEF_DIR        := final/spef
-FINAL_VH_DIR          := final/vh
+FINAL_DIR             := final
 
 # Variables for simulation and linting targets
 # constants.sv defines the counter_pkg and must compile before any module that imports it,
@@ -219,40 +204,40 @@ copy-reports: ## Copy yosys, antenna violations, hold & setup timing and manufac
 .PHONY: copy-reports
 
 copy-final: ## Copy final output gds, lef, lib, nl, pnl, spef, and vh folders from the last LibreLane run to final/
-	rm -rf $(FINAL_GDS_DIR)/ $(FINAL_LEF_DIR)/ $(FINAL_LIB_DIR)/ $(FINAL_NL_DIR)/ $(FINAL_PNL_DIR)/ $(FINAL_SPEF_DIR)/ $(FINAL_VH_DIR)/
-	cp -r $(FLOW_FINAL_GDS_DIR)  $(FINAL_GDS_DIR)
-	cp -r $(FLOW_FINAL_LEF_DIR)  $(FINAL_LEF_DIR)
-	cp -r $(FLOW_FINAL_LIB_DIR)  $(FINAL_LIB_DIR)
-	cp -r $(FLOW_FINAL_NL_DIR)   $(FINAL_NL_DIR)
-	cp -r $(FLOW_FINAL_PNL_DIR)  $(FINAL_PNL_DIR)
-	cp -r $(FLOW_FINAL_SPEF_DIR) $(FINAL_SPEF_DIR)
-	cp -r $(FLOW_FINAL_VH_DIR)   $(FINAL_VH_DIR)
+	rm -rf $(FINAL_DIR)/gds $(FINAL_DIR)/lef $(FINAL_DIR)/lib $(FINAL_DIR)/nl $(FINAL_DIR)/pnl $(FINAL_DIR)/spef $(FINAL_DIR)/vh
+	cp -r $(FLOW_FINAL_DIR)/gds  $(FINAL_DIR)/gds
+	cp -r $(FLOW_FINAL_DIR)/lef  $(FINAL_DIR)/lef
+	cp -r $(FLOW_FINAL_DIR)/lib  $(FINAL_DIR)/lib
+	cp -r $(FLOW_FINAL_DIR)/nl   $(FINAL_DIR)/nl
+	cp -r $(FLOW_FINAL_DIR)/pnl  $(FINAL_DIR)/pnl
+	cp -r $(FLOW_FINAL_DIR)/spef $(FINAL_DIR)/spef
+	cp -r $(FLOW_FINAL_DIR)/vh   $(FINAL_DIR)/vh
 .PHONY: copy-final
 
 copy-netlist: ## Copy final output spice, pnl and nl netlists from the last LibreLane run to netlist/
 	rm -rf $(NET_SPICE_DIR)/
 	mkdir -p $(NET_SPICE_DIR)/
-	cp -r $(FLOW_FINAL_SPICE_DIR)/${TOP}.spice $(NET_SPICE_DIR)/${TOP}.spice
+	cp -r $(FLOW_FINAL_DIR)/spice/${TOP}.spice $(NET_SPICE_DIR)/${TOP}.spice
 
 	rm -rf $(NET_PNL_DIR)/
 	mkdir -p $(NET_PNL_DIR)/
-	cp -r $(FLOW_FINAL_PNL_DIR)/${TOP}.pnl.v $(NET_PNL_DIR)/${TOP}.pnl.v
+	cp -r $(FLOW_FINAL_DIR)/pnl/${TOP}.pnl.v $(NET_PNL_DIR)/${TOP}.pnl.v
 
 	rm -rf $(NET_NL_DIR)/
 	mkdir -p $(NET_NL_DIR)/
-	cp -r $(FLOW_FINAL_NL_DIR)/${TOP}.nl.v $(NET_NL_DIR)/${TOP}.nl.v
+	cp -r $(FLOW_FINAL_DIR)/nl/${TOP}.nl.v $(NET_NL_DIR)/${TOP}.nl.v
 .PHONY: copy-netlist
 
 copy-render: ## Copy macro render from the last LibreLane run to render/img/
 	mkdir -p $(RENDER_IMG_DIR)/
-	cp -r $(FLOW_FINAL_RENDER_DIR)/${TOP}.png $(RENDER_IMG_DIR)/${TOP}_librelane.png
+	cp -r $(FLOW_FINAL_DIR)/render/${TOP}.png $(RENDER_IMG_DIR)/${TOP}_librelane.png
 .PHONY: copy-render
 # ================================================================================================
 
 # Render Target
 render-gds: ## Render an image from the final GDS using lay2img.py
 	mkdir -p $(RENDER_IMG_DIR)/
-	python3 $(SCRIPTS_DIR)/lay2img.py $(FINAL_GDS_DIR)/${TOP}.gds $(RENDER_IMG_DIR)/${TOP}.png --width 2048 --oversampling 4
+	python3 $(SCRIPTS_DIR)/lay2img.py $(FINAL_DIR)/gds/${TOP}.gds $(RENDER_IMG_DIR)/${TOP}.png --width 2048 --oversampling 4
 .PHONY: render-gds
 # ================================================================================================
 
