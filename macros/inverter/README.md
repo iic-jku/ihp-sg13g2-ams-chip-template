@@ -38,8 +38,7 @@
 │  ├─ 📁 pex/
 │  │  ├─ *.spice
 │  │  ├─ inverter_top_klayout_pex_*.spice
-│  │  ├─ inverter_top_magic_pex_*.spice
-│  │  └─ reorder_spice_pins.py
+│  │  └─ inverter_top_magic_pex_*.spice
 │  └─ 📁 schematic/
 │     ├─ *.cdl
 │     ├─ *.spice
@@ -68,6 +67,7 @@
 │  │  ├─ 📁 figures/
 │  │  ├─ lookup_commands.ipynb
 │  │  └─ sizing_inverter.ipynb
+│  ├─ reorder_spice_pins.py
 │  └─ lay2img.py
 ├─ 📁 testbenches/
 │  ├─ *_tb_*.sch
@@ -158,7 +158,7 @@ All available testbench schematics are located in `testbenches/`. Generated netl
 Plots simulation results using the Python script selected by `CELL`:
 
 ```sh
-make sim-plot-xschem [CELL=<cellname>]
+make sim-view-xschem [CELL=<cellname>]
 ```
 
 The target runs:
@@ -169,9 +169,9 @@ The target runs:
 Examples:
 
 ```sh
-make sim-plot-xschem
-make sim-plot-xschem CELL=inverter_top
-make sim-plot-xschem CELL=inverter
+make sim-view-xschem
+make sim-view-xschem CELL=inverter_top
+make sim-view-xschem CELL=inverter
 ```
 
 
@@ -215,7 +215,7 @@ make sim-all
 ```
 
 > [!NOTE]
-> The `sim-plot-xschem` target is intentionally **not** called by `sim-all`.
+> The `sim-view-xschem` target is intentionally **not** called by `sim-all`.
 > It opens the generated Python figures, which blocks the shell until the window is closed.
 > They are designed for interactive use and must be called manually after the simulation has completed.
 
@@ -433,7 +433,7 @@ make magic-verify-all
 
 ## Build All
 
-Runs the full flow in sequence: simulations, top-level build deliverables, and all verification steps (`sim-all`, `klayout-verify-all`, `magic-verify-all`, `build-top`):
+Runs the full flow in sequence: simulations, KLayout verification, Magic verification, and top-level build deliverables (`sim-all`, `klayout-verify-all`, `magic-verify-all`, `build-top`):
 
 ```sh
 make all
