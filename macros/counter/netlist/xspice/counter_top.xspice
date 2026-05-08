@@ -1,0 +1,122 @@
+* XSpice netlist created from SPICE and liberty sources by spi2xspice.py
+*SPICE netlist created from verilog structural netlist module counter_top by vlog2Spice (qflow)
+.subckt counter_top a_VPWR a_VGND a_clock_i a_reset_n_i a_enable_i
++ a_counter_value_o_0_ a_counter_value_o_1_ a_counter_value_o_2_
++ a_counter_value_o_3_ a_counter_value_o_4_ a_counter_value_o_5_
++ a_counter_value_o_6_ a_counter_value_o_7_
+A_38_ [enable_i counter_value_o_1_ counter_value_o_0_] _08_ d_lut_sg13g2_nand3_1
+A_39_ [_08_] _09_ d_lut_sg13g2_buf_4
+A_40_ [counter_value_o_5_ counter_value_o_4_ counter_value_o_3_ counter_value_o_2_] _10_ d_lut_sg13g2_nand4_1
+A_41_ [_09_ _10_ counter_value_o_6_] _11_ d_lut_sg13g2_o21ai_1
+A_42_ [counter_value_o_6_ _09_ _10_] _12_ d_lut_sg13g2_or3_1
+A_43_ [reset_n_i] _13_ d_lut_sg13g2_inv_1
+A_44_ [_11_ _12_ _13_] _00_ d_lut_sg13g2_a21oi_1
+A_45_ [counter_value_o_7_ reset_n_i] _14_ d_lut_sg13g2_and2_1
+A_46_ [counter_value_o_7_ _13_] _15_ d_lut_sg13g2_nor2_1
+A_47_ [counter_value_o_6_] _16_ d_lut_sg13g2_inv_1
+A_48_ [_16_ _09_ _10_] _17_ d_lut_sg13g2_nor3_2
+A_49_ [_14_ _15_ _17_] _01_ d_lut_sg13g2_mux2_1
+A_50_ [enable_i counter_value_o_0_] _18_ d_lut_sg13g2_xnor2_1
+A_51_ [_13_ _18_] _02_ d_lut_sg13g2_nor2_1
+A_52_ [enable_i counter_value_o_0_] _19_ d_lut_sg13g2_nand2_1
+A_53_ [counter_value_o_1_ _19_] _20_ d_lut_sg13g2_xor2_1
+A_54_ [_13_ _20_] _03_ d_lut_sg13g2_nor2_1
+A_55_ [counter_value_o_2_ _09_] _21_ d_lut_sg13g2_xor2_1
+A_56_ [_13_ _21_] _04_ d_lut_sg13g2_nor2_1
+A_57_ [enable_i counter_value_o_2_ counter_value_o_1_ counter_value_o_0_] _22_ d_lut_sg13g2_nand4_1
+A_58_ [counter_value_o_3_ _22_] _23_ d_lut_sg13g2_xor2_1
+A_59_ [_13_ _23_] _05_ d_lut_sg13g2_nor2_1
+A_60_ [counter_value_o_3_ counter_value_o_2_] _24_ d_lut_sg13g2_nand2_1
+A_61_ [_09_ _24_ counter_value_o_4_] _25_ d_lut_sg13g2_o21ai_1
+A_62_ [counter_value_o_4_ _09_ _24_] _26_ d_lut_sg13g2_or3_1
+A_63_ [_25_ _26_ _13_] _06_ d_lut_sg13g2_a21oi_1
+A_64_ [counter_value_o_4_ counter_value_o_3_ counter_value_o_2_] _27_ d_lut_sg13g2_nand3_1
+A_65_ [_09_ _27_ counter_value_o_5_] _28_ d_lut_sg13g2_o21ai_1
+A_66_ [counter_value_o_5_ _09_ _27_] _29_ d_lut_sg13g2_or3_1
+A_67_ [_28_ _29_ _13_] _07_ d_lut_sg13g2_a21oi_1
+A_68_ _02_ clock_i NULL ~_31_ counter_value_o_0_ NULL ddflop
+A_69_ _03_ clock_i NULL ~_37_ counter_value_o_1_ NULL ddflop
+A_70_ _04_ clock_i NULL ~_35_ counter_value_o_2_ NULL ddflop
+A_71_ _05_ clock_i NULL ~_32_ counter_value_o_3_ NULL ddflop
+A_72_ _06_ clock_i NULL ~_36_ counter_value_o_4_ NULL ddflop
+A_73_ _07_ clock_i NULL ~_30_ counter_value_o_5_ NULL ddflop
+A_74_ _00_ clock_i NULL ~_34_ counter_value_o_6_ NULL ddflop
+A_75_ _01_ clock_i NULL ~_33_ counter_value_o_7_ NULL ddflop
+A_76_ _30_ done
+A_77_ _31_ done
+A_78_ _32_ done
+A_79_ _33_ done
+A_80_ _34_ done
+A_81_ _35_ done
+A_82_ _36_ done
+A_83_ _37_ done
+
+.model todig_1v5 adc_bridge(in_high=1.0 in_low=0.5 rise_delay=500p fall_delay=500p)
+.model toana_1v5 dac_bridge(out_high=1.5 out_low=0)
+
+.model ddflop d_dff(ic=0 rise_delay=50p fall_delay=50p)
+.model dlatch d_dlatch(ic=0 rise_delay=50p fall_delay=50p)
+.model dzero d_pulldown(load=250f)
+.model done d_pullup(load=250f)
+
+AA2D1 [a_VPWR] [VPWR] todig_1v5
+AA2D2 [a_VGND] [VGND] todig_1v5
+AA2D3 [a_clock_i] [clock_i] todig_1v5
+AA2D4 [a_reset_n_i] [reset_n_i] todig_1v5
+AA2D5 [a_enable_i] [enable_i] todig_1v5
+AD2A1 [counter_value_o_0_] [a_counter_value_o_0_] toana_1v5
+AD2A2 [counter_value_o_1_] [a_counter_value_o_1_] toana_1v5
+AD2A3 [counter_value_o_2_] [a_counter_value_o_2_] toana_1v5
+AD2A4 [counter_value_o_3_] [a_counter_value_o_3_] toana_1v5
+AD2A5 [counter_value_o_4_] [a_counter_value_o_4_] toana_1v5
+AD2A6 [counter_value_o_5_] [a_counter_value_o_5_] toana_1v5
+AD2A7 [counter_value_o_6_] [a_counter_value_o_6_] toana_1v5
+AD2A8 [counter_value_o_7_] [a_counter_value_o_7_] toana_1v5
+
+.ends
+
+* sg13g2_nand3_1 !(A*B*C)
+.model d_lut_sg13g2_nand3_1 d_lut (rise_delay=50p fall_delay=50p input_load=250f
++ table_values "11111110")
+* sg13g2_buf_4 A
+.model d_lut_sg13g2_buf_4 d_lut (rise_delay=50p fall_delay=50p input_load=250f
++ table_values "01")
+* sg13g2_nand4_1 !(A*B*C*D)
+.model d_lut_sg13g2_nand4_1 d_lut (rise_delay=50p fall_delay=50p input_load=250f
++ table_values "1111111111111110")
+* sg13g2_o21ai_1 !((A1+A2)*B1)
+.model d_lut_sg13g2_o21ai_1 d_lut (rise_delay=50p fall_delay=50p input_load=250f
++ table_values "11111000")
+* sg13g2_or3_1 (A+B+C)
+.model d_lut_sg13g2_or3_1 d_lut (rise_delay=50p fall_delay=50p input_load=250f
++ table_values "01111111")
+* sg13g2_inv_1 !(A)
+.model d_lut_sg13g2_inv_1 d_lut (rise_delay=50p fall_delay=50p input_load=250f
++ table_values "10")
+* sg13g2_a21oi_1 !((A1*A2)+B1)
+.model d_lut_sg13g2_a21oi_1 d_lut (rise_delay=50p fall_delay=50p input_load=250f
++ table_values "11100000")
+* sg13g2_and2_1 (A*B)
+.model d_lut_sg13g2_and2_1 d_lut (rise_delay=50p fall_delay=50p input_load=250f
++ table_values "0001")
+* sg13g2_nor2_1 !(A+B)
+.model d_lut_sg13g2_nor2_1 d_lut (rise_delay=50p fall_delay=50p input_load=250f
++ table_values "1000")
+* sg13g2_nor3_2 !(A+B+C)
+.model d_lut_sg13g2_nor3_2 d_lut (rise_delay=50p fall_delay=50p input_load=250f
++ table_values "10000000")
+* sg13g2_mux2_1 (!S*A0)+(S*A1)
+.model d_lut_sg13g2_mux2_1 d_lut (rise_delay=50p fall_delay=50p input_load=250f
++ table_values "01010011")
+* sg13g2_xnor2_1 !(A^B)
+.model d_lut_sg13g2_xnor2_1 d_lut (rise_delay=50p fall_delay=50p input_load=250f
++ table_values "1001")
+* sg13g2_nand2_1 !(A*B)
+.model d_lut_sg13g2_nand2_1 d_lut (rise_delay=50p fall_delay=50p input_load=250f
++ table_values "1110")
+* sg13g2_xor2_1 (A^B)
+.model d_lut_sg13g2_xor2_1 d_lut (rise_delay=50p fall_delay=50p input_load=250f
++ table_values "0110")
+* sg13g2_dfrbpq_1 IQ
+* sg13g2_tiehi 1
+.end
