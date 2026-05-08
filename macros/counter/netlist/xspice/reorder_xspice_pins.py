@@ -6,15 +6,19 @@
 Reorder the .subckt pin list in an XSPICE file to match the pin order
 of an Xschem .sym symbol file.
 
-The pin names differ slightly between the two files:
-  - XSPICE uses an ``a_`` prefix on every pin, ``a_VPWR``/``a_VGND``
-    for power, and underscores instead of brackets for buses
-    (e.g. ``a_gpio_in_0_``).
-  - .sym uses plain names without the ``a_`` prefix, ``VDD``/``VSS``
-    for power, and brackets for buses (e.g. ``gpio_in[0]``).
+Symbol and XSPICE pin names do not need to follow a shared naming
+convention. The mapping is built with two rules:
 
-This script converts sym names to XSPICE names and then rewrites the
-.subckt line with the pins reordered to match the .sym order.
+  - Power pins are matched by name: ``VDD`` <-> ``a_VPWR``,
+    ``VSS`` <-> ``a_VGND``.
+  - All other pins are matched by *position*: the i-th non-power pin
+    in the symbol maps to the i-th non-power pin in the XSPICE
+    .subckt. This way the symbol may rename pins (e.g. ``di_clock``
+    while XSPICE has ``a_clock_i``) without breaking the script.
+
+Bus pins in the symbol use the xschem range syntax ``name[A..B]`` and
+are expanded into individual indexed pins (``name[A]``, ``name[A+1]``,
+..., ``name[B]``) before matching.
 
 Usage:
     python reorder_xspice_pins.py <sym_file> <xspice_file> [-o <output_file>]
@@ -26,18 +30,35 @@ import argparse
 import re
 
 
+POWER_MAP = {'VDD': 'a_VPWR', 'VSS': 'a_VGND'}
+XSPICE_POWER = set(POWER_MAP.values())
+
+
 def parse_sym_pins(sym_path: str) -> list[str]:
     """Extract pin names from .sym file in order of appearance.
 
     Pins are defined as: B 5 ... {name=<pin_name> dir=<dir>}
+    A bus pin written as ``name[A..B]`` is expanded into individual
+    indexed pins. ``A`` and ``B`` may be in either order.
     """
     pins = []
-    pattern = re.compile(r'^B\s+5\s+.*\{name=(\S+)\s+dir=\w+\}')
+    pin_pattern = re.compile(r'^B\s+5\s+.*\{name=(\S+)\s+dir=\w+\}')
+    bus_range_pattern = re.compile(r'^(.+)\[(\d+)\.\.(\d+)\]$')
     with open(sym_path, 'r') as f:
         for line in f:
-            m = pattern.match(line.strip())
-            if m:
-                pins.append(m.group(1))
+            m = pin_pattern.match(line.strip())
+            if not m:
+                continue
+            name = m.group(1)
+            bm = bus_range_pattern.match(name)
+            if bm:
+                base = bm.group(1)
+                a, b = int(bm.group(2)), int(bm.group(3))
+                step = 1 if a <= b else -1
+                for i in range(a, b + step, step):
+                    pins.append(f'{base}[{i}]')
+            else:
+                pins.append(name)
     return pins
 
 
@@ -67,23 +88,40 @@ def parse_xspice_subckt(xspice_path: str) -> tuple[str, list[str], int, int]:
     raise ValueError(f"No .subckt line found in {xspice_path}")
 
 
-def sym_to_xspice_name(sym_pin: str) -> str:
-    """Convert a sym pin name to its XSPICE equivalent.
+def build_mapping(sym_pins: list[str],
+                  xspice_pins: list[str]) -> list[tuple[str, str]]:
+    """Pair each sym pin with an XSPICE pin.
 
-    Rules:
-      - VDD -> a_VPWR, VSS -> a_VGND
-      - name[N] -> a_name_N_  (bus pins with brackets)
-      - name -> a_name        (everything else)
+    VDD/VSS are matched to a_VPWR/a_VGND by name. All other sym pins
+    are matched to the remaining XSPICE pins in the order they appear
+    in the .subckt line.
     """
-    if sym_pin == 'VDD':
-        return 'a_VPWR'
-    if sym_pin == 'VSS':
-        return 'a_VGND'
-    # Bus pins: gpio_in[0] -> a_gpio_in_0_
-    m = re.match(r'^(.+)\[(\d+)\]$', sym_pin)
-    if m:
-        return f'a_{m.group(1)}_{m.group(2)}_'
-    return f'a_{sym_pin}'
+    if len(sym_pins) != len(xspice_pins):
+        raise ValueError(
+            f"Pin count mismatch: sym has {len(sym_pins)}, "
+            f"xspice has {len(xspice_pins)} (after bus expansion)"
+        )
+
+    sym_power = {p for p in sym_pins if p in POWER_MAP}
+    xspice_power = {p for p in xspice_pins if p in XSPICE_POWER}
+    expected_xspice_power = {POWER_MAP[p] for p in sym_power}
+    if expected_xspice_power != xspice_power:
+        raise ValueError(
+            f"Power pin mismatch: sym {sorted(sym_power)} maps to "
+            f"{sorted(expected_xspice_power)}, but xspice has "
+            f"{sorted(xspice_power)}"
+        )
+
+    signal_xspice = [p for p in xspice_pins if p not in XSPICE_POWER]
+    sig_iter = iter(signal_xspice)
+
+    mapping = []
+    for sp in sym_pins:
+        if sp in POWER_MAP:
+            mapping.append((sp, POWER_MAP[sp]))
+        else:
+            mapping.append((sp, next(sig_iter)))
+    return mapping
 
 
 def reorder_xspice(xspice_path: str, ordered_pins: list[str],
@@ -99,9 +137,9 @@ def reorder_xspice(xspice_path: str, ordered_pins: list[str],
         missing_in_old = set(ordered_pins) - set(old_pins)
         msg = "Pin set mismatch!\n"
         if missing_in_new:
-            msg += f"  XSPICE pins not in symbol: {missing_in_new}\n"
+            msg += f"  XSPICE pins not in mapping: {missing_in_new}\n"
         if missing_in_old:
-            msg += f"  Symbol pins not in XSPICE: {missing_in_old}\n"
+            msg += f"  Mapped pins not in XSPICE: {missing_in_old}\n"
         raise ValueError(msg)
 
     max_width = 80
@@ -133,7 +171,7 @@ def main():
 
     output_path = args.output if args.output else args.xspice_file
 
-    # 1. Parse pin lists
+    # 1. Parse pin lists (sym pins come back with bus ranges already expanded)
     sym_pins = parse_sym_pins(args.sym_file)
     subckt_name, xspice_pins, _, _ = parse_xspice_subckt(args.xspice_file)
 
@@ -143,19 +181,20 @@ def main():
     print(f"Sym pins:     {len(sym_pins)}")
     print(f"XSPICE pins:  {len(xspice_pins)}")
 
-    # 2. Convert sym pin names to xspice names
-    xspice_ordered = [sym_to_xspice_name(sp) for sp in sym_pins]
+    # 2. Pair sym pins with xspice pins (power by name, others by position)
+    mapping = build_mapping(sym_pins, xspice_pins)
+    ordered_xspice = [xp for _, xp in mapping]
 
     # 3. Show mapping
     print("\nPin mapping (sym -> xspice):")
-    for sp, xp in zip(sym_pins, xspice_ordered):
+    for sp, xp in mapping:
         old_idx = xspice_pins.index(xp)
-        new_idx = xspice_ordered.index(xp)
+        new_idx = ordered_xspice.index(xp)
         marker = "" if new_idx == old_idx else " *REORDERED*"
         print(f"  {sp:25s} -> {xp:25s}{marker}")
 
     # 4. Reorder and write
-    reorder_xspice(args.xspice_file, xspice_ordered, output_path)
+    reorder_xspice(args.xspice_file, ordered_xspice, output_path)
     print(f"\nReordered XSPICE written to: {output_path}")
 
 
