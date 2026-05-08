@@ -24,6 +24,7 @@
 │  ├─ 📁 lib/
 │  │  ├─ 📁 nom_fast_1p32V_m40C/
 │  │  ├─ 📁 nom_fast_1p65V_m40C/
+│  │  ├─ 📁 nom_slow_1p08V_125C/
 │  │  ├─ 📁 nom_slow_1p35V_125C/
 │  │  ├─ 📁 nom_typ_1p20V_25C/
 │  │  └─ 📁 nom_typ_1p50V_25C/
@@ -36,48 +37,31 @@
 │  └─ 📁 vh/
 │     └─ counter_top.vh
 ├─ 📁 flow/
-│  ├─ 📁 final/
-│  │  ├─ 📁 def/
-│  │  ├─ 📁 gds/
-│  │  ├─ 📁 json_h/
-│  │  ├─ 📁 klayout_gds/
-│  │  ├─ 📁 lef/
-│  │  ├─ 📁 lib/
-│  │  ├─ 📁 mag/
-│  │  ├─ 📁 mag_gds/
-│  │  ├─ 📁 nl/
-│  │  ├─ 📁 odb/
-│  │  ├─ 📁 pnl/
-│  │  ├─ 📁 render/
-│  │  ├─ 📁 sdc/
-│  │  ├─ 📁 sdf/
-│  │  ├─ 📁 spef/
-│  │  ├─ 📁 spice/
-│  │  ├─ 📁 vh/
-│  │  ├─ metrics.csv
-│  │  └─ metrics.json
+│  ├─ 📁 final/               # .gitignore'd — important files are copied to counter/final/ (listed here to document LibreLane output folders)
+│  │  ├─ 📁 def/              # Design Exchange Format — cell placement & routing (text-based)
+│  │  ├─ 📁 gds/              # GDSII layout — final tape-out file
+│  │  ├─ 📁 json_h/           # Yosys JSON headers — machine-readable netlist for internal scripts
+│  │  ├─ 📁 klayout_gds/      # KLayout GDS — with extra visual-debug metadata
+│  │  ├─ 📁 lef/              # Library Exchange Format — abstract pin & blockage view for P&R
+│  │  ├─ 📁 lib/              # Liberty timing files — timing, power & area models
+│  │  ├─ 📁 mag/              # Magic layout files — used for DRC & GDS generation
+│  │  ├─ 📁 mag_gds/          # GDS generated/processed by Magic
+│  │  ├─ 📁 nl/               # Netlist — gate-level Verilog after synthesis
+│  │  ├─ 📁 odb/              # OpenDB — internal OpenROAD binary database (LEF+DEF combined)
+│  │  ├─ 📁 pnl/              # Powered Netlist — gate-level Verilog with explicit VDD/VSS (for LVS)
+│  │  ├─ 📁 render/           # Layout render images
+│  │  ├─ 📁 sdc/              # Synopsys Design Constraints — clock periods & timing requirements
+│  │  ├─ 📁 sdf/              # Standard Delay Format — timing delays for gate-level simulation
+│  │  ├─ 📁 spef/             # Standard Parasitic Exchange Format — RC parasitics from layout
+│  │  ├─ 📁 spice/            # SPICE netlist — for LVS & transistor-level simulation
+│  │  ├─ 📁 vh/               # Verilog headers — for hierarchy management & simulation inclusion
+│  │  ├─ metrics.csv          # Design metrics (area, power, timing slack, DRC/LVS) — spreadsheet
+│  │  └─ metrics.json         # Design metrics (area, power, timing slack, DRC/LVS) — JSON summary
 │  ├─ 📁 librelane/
 │  │  ├─ config.yaml
 │  │  ├─ impl.sdc
 │  │  ├─ pin_order.cfg
 │  │  └─ signoff.sdc
-│  └─ 📁 reports/
-│     ├─ stapostpnr_summary.rpt
-│     ├─ stapostpnr_nom_fast_1p32V_m40C_power.rpt
-│     ├─ stapostpnr_nom_fast_1p65V_m40C_power.rpt
-│     ├─ stapostpnr_nom_slow_1p08V_125C_power.rpt
-│     ├─ stapostpnr_nom_slow_1p35V_125C_power.rpt
-│     ├─ stapostpnr_nom_typ_1p20V_25C_power.rpt
-│     ├─ stapostpnr_nom_typ_1p50V_25C_power.rpt
-│     ├─ irdrop.rpt
-│     ├─ drc.magic.rpt
-│     ├─ drc.klayout.json
-│     ├─ lvs.netgen.rpt
-│     ├─ manufacturability.rpt
-│     ├─ stat.rpt
-│     ├─ yosys_post_dff.rpt
-│     ├─ yosys_pre_techmap.rpt
-│     └─ yosys_synth_check.rpt
 ├─ 📁 fpga/
 │  ├─ Makefile
 │  ├─ pico-ice.pcf
@@ -98,7 +82,6 @@
 │     ├─ counter_top_librelane.png
 │     └─ counter_top_white.png
 ├─ 📁 rtl/
-│  ├─ *.sv
 │  ├─ constants.sv
 │  ├─ counter.sv
 │  └─ counter_top.sv
@@ -110,6 +93,7 @@
 │  ├─ reorder_xspice_pins.py
 │  ├─ spi2xspice.py
 │  └─ 📁 plot_simulations/
+│     ├─ ngspice2python.py
 │     └─ plot_counter_top.py
 ├─ 📁 testbenches/
 │  ├─ 📁 cocotb/
@@ -123,6 +107,25 @@
 │  └─ 📁 xschem/
 │     ├─ counter_top_tb_tran.sch
 │     └─ xschemrc
+├─ 📁 reports/
+│  ├─ antenna_summary.rpt
+│  ├─ antenna_violations.rpt
+│  ├─ stapostpnr_summary.rpt
+│  ├─ stapostpnr_nom_fast_1p32V_m40C_power.rpt
+│  ├─ stapostpnr_nom_fast_1p65V_m40C_power.rpt
+│  ├─ stapostpnr_nom_slow_1p08V_125C_power.rpt
+│  ├─ stapostpnr_nom_slow_1p35V_125C_power.rpt
+│  ├─ stapostpnr_nom_typ_1p20V_25C_power.rpt
+│  ├─ stapostpnr_nom_typ_1p50V_25C_power.rpt
+│  ├─ irdrop.rpt
+│  ├─ drc.magic.rpt
+│  ├─ drc.klayout.json
+│  ├─ lvs.netgen.rpt
+│  ├─ manufacturability.rpt
+│  ├─ stat.rpt
+│  ├─ yosys_post_dff.rpt
+│  ├─ yosys_pre_techmap.rpt
+│  └─ yosys_synth_check.rpt
 ├─ Makefile
 └─ README.md
 ```
@@ -149,7 +152,7 @@ make lint-verilog-all            # lint counter and counter_top in sequence
 ```
 
 When `CELL=counter_top` (the default), all synthesis sources (`constants.sv`, `counter.sv`, `counter_top.sv`) are passed to Verilator.
-For a single cell, `constants.sv` is always included first so the shared `counter_pkg` parameters are in scope.
+For a single cell, `constants.sv` is always included first so the shared `` `COUNTER_MAX_DEFAULT `` and `` `CLK_FREQ_DEFAULT `` macros are in scope.
 
 The `lint-verilog-all` target runs these lint checks in sequence:
 
@@ -211,7 +214,7 @@ make sim-gl-cocotb                # gate-level simulation of counter_top
 ```
 
 > [!NOTE]
-> Gate-level simulation requires the latest implementation in `flow/final/` (and a `final/nl/counter_top.nl.v` copy via `make copy-netlist`).
+> Gate-level simulation requires the latest implementation in `flow/final/` (and a `final/nl/counter_top.nl.v` copy via `make copy-final`).
 
 A waveform file is generated under `testbenches/cocotb/sim_build/counter_top.fst`.
 To view it:
@@ -289,7 +292,7 @@ Additional targets are available for different DRC configurations:
 - `make librelane-magicdrc` – run LibreLane with only Magic DRC checks
 - `make librelane-klayoutdrc` – run LibreLane with only KLayout DRC checks
 
-These targets are also available for the digital macros. After the LibreLane flow completes successfully, the generated views are saved under `flow/final/`. `flow/final/` is included in `.gitignore`.
+After the LibreLane flow completes successfully, the generated views are saved under `flow/final/`. `flow/final/` is included in `.gitignore`.
 
 
 ## View the Design
@@ -309,7 +312,7 @@ make librelane-klayout
 
 ## Copy Important Reports
 
-To copy the yosys synthesis checks, antenna reports, post-PnR timing summary, per-corner power reports, IR-drop report, Magic/KLayout DRC results, LVS report, and manufacturability report from the latest run into `flow/reports/`, run:
+To copy the yosys synthesis checks, antenna reports, post-PnR timing summary, per-corner power reports, IR-drop report, Magic/KLayout DRC results, LVS report, and manufacturability report from the latest run into `reports/`, run:
 
 ```sh
 make copy-reports
@@ -398,7 +401,7 @@ make build-top
 
 ## Layout Versus Schematic (LVS) & Design Rule Check (DRC)
 
-The LibreLane flow already includes LVS and DRC checks with Magic and KLayout, and they are saved in the flow/reports folder.
+The LibreLane flow already includes LVS and DRC checks with Magic and KLayout, and they are saved in the `reports/` folder.
 
 
 ## Build and Verify All
