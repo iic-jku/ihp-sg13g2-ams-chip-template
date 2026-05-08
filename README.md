@@ -1,7 +1,7 @@
 ﻿# An Open-Source Analog-Mixed Signal Chip Design Template for the ihp-sg13g2 Open-PDK
 
 [![Quarto Publish](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/actions/workflows/quarto-publish.yml/badge.svg?branch=main)](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/actions/workflows/quarto-publish.yml)
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.18378633.svg)](https://doi.org/10.5281/zenodo.18378633)
+[![DOI](https://zenodo.org/badge/DOI/10.1234/zenodo.12345678.svg)](https://doi.org/10.1234/zenodo.12345678)
 
 (c) 2026 Simon Dorrer and Harald Pretl
 
@@ -43,6 +43,7 @@ A step-by-step tutorial, including additional exercises, can be found [here](htt
 Examples based on this template are:
 - [TinyWhisper](https://github.com/iic-jku/TinyWhisper): An Open-Source Fully-Integrated Multi-Mode Short-Wave Transmitter for Amateur Radio Applications in 130-nm CMOS
 - [SPARX](https://github.com/iic-jku/SG13G2_SPARX): An Open-Source, Automated, Programmatically Generated, Frequency-Scalable Six-Port Receiver in 130-nm CMOS
+
 
 ## Directory Structure
 
@@ -591,6 +592,20 @@ Run with a custom version:
 
 ```sh
 make release VERSION=2.1.0
+```
+
+
+## Cite This Work
+
+```
+@software{2026_ams_chip_template,
+	author = {Dorrer, Simon and Pretl, Harald},
+	month = apr,
+    year = {2026},
+	title = {{GitHub Repository of an Open-Source Analog-Mixed Signal Chip Design Template for the ihp-sg13g2 Open-PDK}},
+	url = {https://github.com/iic-jku/ihp-sg13g2-ams-chip-template},
+	doi = {10.1234/zenodo.12345678}
+}
 ```
 
 
