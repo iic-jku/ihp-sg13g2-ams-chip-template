@@ -14,7 +14,7 @@ divy=5
 subdivy=1
 unity=1
 x1=0
-x2=4e-06
+x2=1e-05
 divx=5
 subdivx=1
 xlabmag=1.0
@@ -22,10 +22,10 @@ ylabmag=1.0
 node="clock
 reset_n
 enable
-bits7
-bits6
-bits5
-bits4"
+b7
+b6
+b5
+b4"
 color="4 5 12 10 10 10 10"
 dataset=-1
 unitx=1
@@ -44,16 +44,16 @@ divy=5
 subdivy=1
 unity=1
 x1=0
-x2=4e-06
+x2=1e-05
 divx=5
 subdivx=1
 xlabmag=1.0
 ylabmag=1.0
-node="bits3
-bits2
-bits1
-bits0
-BITS;bits7,bits6,bits5,bits4,bits3,bits2,bits1,bits0"
+node="b3
+b2
+b1
+b0
+BITS;b7,b6,b5,b4,b3,b2,b1,b0"
 color="10 10 10 10 21"
 dataset=-1
 unitx=1
@@ -63,7 +63,7 @@ hilight_wave=-1
 linewidth_mult=4
 digital=1
 legend=1}
-T {Testbench for transient analysis - 8-Bit Counter} 600 -1720 0 0 1 1 {}
+T {Testbench for transient analysis - 8-Bit Up Counter} 600 -1720 0 0 1 1 {}
 N 200 -360 200 -320 {
 lab=GND}
 N 200 -720 200 -680 {
@@ -80,7 +80,7 @@ N 1100 -380 1140 -380 {lab=reset_n}
 N 1100 -440 1140 -440 {lab=enable}
 N 1240 -560 1240 -540 {lab=VDD}
 N 1240 -340 1240 -320 {lab=GND}
-N 1340 -440 1380 -440 {lab=bits[0..3] bus=true}
+N 1340 -440 1380 -440 {lab=b[0..7] bus=true}
 C {devices/vsource.sym} 200 -650 0 0 {name=VDD value="1.5"}
 C {devices/gnd.sym} 200 -580 0 0 {name=l6 lab=GND}
 C {devices/vdd.sym} 200 -720 0 0 {name=l8 lab=VDD}
@@ -101,7 +101,7 @@ C {code_shown.sym} 60 -1510 0 0 {name=NGSPICE
 only_toplevel=false
 value="
 *True Mixed Signal Simulation (.xspice)
-.include ../../../netlist/xspice/counter_top/counter_top.xspice
+.include ../../../netlist/xspice/counter_top.xspice
 .param VDD=1.5
 .param temp=27
 .param fclk=50e6
@@ -114,7 +114,7 @@ set num_threads=8
 save all
 
 * User Constants
-let tstop = 5u
+let tstop = 10u
 let tstep = 1/fclk
 
 * Operating Point Analysis
@@ -134,16 +134,16 @@ plot v(b7) v(b6) v(b5) v(b4) v(b3) v(b2) v(b1) v(b0)
 unset appendwrite
 set wr_vecnames
 set wr_singlescale
-wrdata ../scripts/plot_simulations/data/@schname\\\\.txt clock enable reset_n b0 b1 b2 b3 b4 b5 b6 b7
+wrdata ../../../scripts/plot_simulations/data/@schname\\\\.txt clock enable reset_n b0 b1 b2 b3 b4 b5 b6 b7
 
-quit
+*quit
 .endc"}
 C {devices/lab_wire.sym} 580 -720 0 0 {name=p1 sig_type=std_logic lab=reset_n}
 C {devices/gnd.sym} 580 -580 0 0 {name=l2 lab=GND}
-C {devices/vsource.sym} 580 -650 0 0 {name=vrst value="pulse(0 1.5 \{1/fclk\} 10p 10p \{0.5/fclk*100\} \{1/fclk*100\})"
+C {devices/vsource.sym} 580 -650 0 0 {name=vrst value="pulse(0 1.5 \{1/fclk\} 10p 10p \{0.5/fclk*800\} \{1/fclk*600\} 1)"
 }
 C {devices/gnd.sym} 580 -320 0 0 {name=l9 lab=GND}
-C {devices/vsource.sym} 580 -390 0 0 {name=ven value="pulse(0 1.5 \{4/fclk\} 10p 10p \{0.5/fclk*100\} \{1/fclk*100\})"
+C {devices/vsource.sym} 580 -390 0 0 {name=ven value="pulse(1.5 0 \{4/fclk\} 10p 10p \{0.5/fclk*100\} \{1/fclk*100\} 1)"
 }
 C {devices/lab_wire.sym} 580 -460 0 0 {name=p11 sig_type=std_logic lab=enable}
 C {devices/launcher.sym} 1680 -1250 0 0 {name=h3
@@ -155,7 +155,7 @@ C {devices/lab_wire.sym} 1100 -380 0 0 {name=p12 sig_type=std_logic lab=reset_n}
 C {devices/gnd.sym} 1240 -320 0 0 {name=l7 lab=GND}
 C {devices/vdd.sym} 1240 -560 0 0 {name=l10 lab=VDD}
 C {devices/lab_wire.sym} 1100 -440 0 0 {name=p13 sig_type=std_logic lab=enable}
-C {devices/lab_wire.sym} 1380 -440 0 1 {name=p14 sig_type=std_logic lab=bits[0..7]}
+C {devices/lab_wire.sym} 1380 -440 0 1 {name=p14 sig_type=std_logic lab=b[0..7]}
 C {devices/code_shown.sym} 1980 -1310 0 0 {name=MODEL only_toplevel=true
 format="tcleval( @value )"
 value="
