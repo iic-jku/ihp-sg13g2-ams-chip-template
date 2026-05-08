@@ -1,26 +1,26 @@
-+ analyze_power_grid -net VDD -voltage_file /foss/designs/ihp-sg13g2-ams-chip-template/macros/counter/flow/librelane/runs/RUN_2026-05-07_23-26-48/58-openroad-irdropreport/net-VDD.csv
++ analyze_power_grid -net VDD -voltage_file /foss/designs/ihp-sg13g2-ams-chip-template/macros/counter/flow/librelane/runs/RUN_2026-05-08_12-37-56/58-openroad-irdropreport/net-VDD.csv
 [INFO PSM-0040] All shapes on net VDD are connected.
 ########## IR report #################
 Net              : VDD
 Corner           : nom_typ_1p50V_25C
-Total power      : 1.20e-04 W
+Total power      : 8.97e-05 W
 Supply voltage   : 1.50e+00 V
 Worstcase voltage: 1.50e+00 V
 Average voltage  : 1.50e+00 V
-Average IR drop  : 5.67e-06 V
-Worstcase IR drop: 5.11e-04 V
-Percentage drop  : 0.03 %
+Average IR drop  : 9.41e-06 V
+Worstcase IR drop: 2.99e-04 V
+Percentage drop  : 0.02 %
 ######################################
-+ analyze_power_grid -net VSS -voltage_file /foss/designs/ihp-sg13g2-ams-chip-template/macros/counter/flow/librelane/runs/RUN_2026-05-07_23-26-48/58-openroad-irdropreport/net-VSS.csv
++ analyze_power_grid -net VSS -voltage_file /foss/designs/ihp-sg13g2-ams-chip-template/macros/counter/flow/librelane/runs/RUN_2026-05-08_12-37-56/58-openroad-irdropreport/net-VSS.csv
 [INFO PSM-0040] All shapes on net VSS are connected.
 ########## IR report #################
 Net              : VSS
 Corner           : nom_typ_1p50V_25C
-Total power      : 1.20e-04 W
+Total power      : 8.97e-05 W
 Supply voltage   : 0.00e+00 V
-Worstcase voltage: 5.29e-04 V
-Average voltage  : 4.19e-06 V
-Average IR drop  : 4.19e-06 V
-Worstcase IR drop: 5.29e-04 V
-Percentage drop  : 0.04 %
+Worstcase voltage: 2.86e-04 V
+Average voltage  : 3.62e-06 V
+Average IR drop  : 3.62e-06 V
+Worstcase IR drop: 2.86e-04 V
+Percentage drop  : 0.02 %
 ######################################
