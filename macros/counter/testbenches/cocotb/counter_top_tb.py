@@ -15,7 +15,8 @@ sim      = os.getenv("SIM", "icarus")
 pdk_root = os.getenv("PDK_ROOT", Path("~/.ciel").expanduser())
 pdk      = os.getenv("PDK", "ihp-sg13g2")
 scl      = os.getenv("SCL", "sg13g2_stdcell")
-gl       = os.getenv("GL", False)
+# GL=1 selects the gate-level netlist; anything else (unset, "0", "") stays in RTL mode.
+gl       = os.getenv("GL", "0").strip().lower() in ("1", "true", "yes", "on")
 
 hdl_toplevel = "counter_top"
 

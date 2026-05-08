@@ -47,8 +47,8 @@ FINAL_DIR      	:= final
 # Variables for simulation and linting targets
 # constants.sv defines the `COUNTER_MAX_DEFAULT / `CLK_FREQ_DEFAULT macros and must
 # compile before any module that references them, so it is the first entry in MODULES_SIM
-# and in both branches of _LINT_SRCS below (Yosys 0.64 cannot parse `import pkg::*` in a
-# module header — see rtl/constants.sv).
+# and in both branches of _SIM_SRCS / _LINT_SRCS below (Yosys 0.64 cannot parse
+# `import pkg::*` in a module header — see rtl/constants.sv).
 MODULES_SYNTH := \
 	$(SRC_DIR)/counter.sv \
 	$(SRC_DIR)/counter_top.sv
@@ -57,10 +57,10 @@ MODULES_SIM :=  \
 	$(SRC_DIR)/constants.sv \
 	$(MODULES_SYNTH)
 
-# Source files for sim-rtl-verilog: auto-selects MODULES_SIM when CELL == TOP, single-file otherwise (auto-detecting .sv/.v)
-_SIM_SRCS = $(if $(filter $(CELL),$(TOP)),$(MODULES_SIM),$(or $(wildcard $(SRC_DIR)/$(CELL).sv),$(SRC_DIR)/$(CELL).v))
+# Source files for sim-rtl-verilog: auto-selects MODULES_SIM when CELL == TOP, constants.sv + single-file otherwise (auto-detecting .sv/.v)
+_SIM_SRCS = $(if $(filter $(CELL),$(TOP)),$(MODULES_SIM),$(SRC_DIR)/constants.sv $(or $(wildcard $(SRC_DIR)/$(CELL).sv),$(SRC_DIR)/$(CELL).v))
 
-# Source files for lint-verilog: constants + all synthesis sources for TOP, single-file (auto-detecting .sv/.v) otherwise
+# Source files for lint-verilog: constants + all synthesis sources for TOP, constants.sv + single-file (auto-detecting .sv/.v) otherwise
 _LINT_SRCS = $(if $(filter $(CELL),$(TOP)),$(SRC_DIR)/constants.sv $(MODULES_SYNTH),$(SRC_DIR)/constants.sv $(or $(wildcard $(SRC_DIR)/$(CELL).sv),$(SRC_DIR)/$(CELL).v))
 
 # Testbench extension: sv for TOP, v otherwise (dot is added at use site)
@@ -259,7 +259,7 @@ build-top: ## Build macro (run LibreLane with KLayout & Magic DRC checks, copy r
 
 
 # LVS & DRC Verification Targets
-# The LibreLane flow already includes LVS and DRC checks with Magic and KLayout, and they are saved in the flow/reports folder.
+# The LibreLane flow already includes LVS and DRC checks with Magic and KLayout, and they are saved in the reports/ folder.
 # ================================================================================================
 
 
