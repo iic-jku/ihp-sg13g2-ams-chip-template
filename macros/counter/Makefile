@@ -27,25 +27,26 @@ EV_PRECISION ?= 5
 WAVEFORM_VIEWER ?= gtkwave
 
 # Folder structure
-COCOTB_DIR      	  := testbenches/cocotb
-VERILOG_TB_DIR        := testbenches/verilog
-XSCHEM_TB_DIR         := testbenches/xschem
-SCH_DIR               := schematic
-SCRIPTS_DIR     	  := scripts
-SRC_DIR 			  := rtl
-RENDER_IMG_DIR        := render/img
-NET_LAY_DIR           := netlist/layout
-NET_PEX_DIR           := netlist/pex
-NET_NL_DIR            := netlist/nl
-NET_PNL_DIR           := netlist/pnl
-NET_SPICE_DIR         := netlist/spice
-XSPICE_DIR            := netlist/xspice
-LVS_RPT_DIR           := verification/lvs
-DRC_RPT_DIR           := verification/drc
-LIBRELANE_DIR         := flow/librelane
-FLOW_REPORT_DIR       := flow/reports
-FLOW_FINAL_DIR        := flow/final
-FINAL_DIR             := final
+COCOTB_DIR      := testbenches/cocotb
+VERILOG_TB_DIR 	:= testbenches/verilog
+XSCHEM_TB_DIR  	:= testbenches/xschem
+SCH_DIR       	:= schematic
+SCRIPTS_DIR   	:= scripts
+SIM_PLOT_DIR  	:= scripts/plot_simulations
+SRC_DIR 		:= rtl
+RENDER_IMG_DIR 	:= render/img
+NET_LAY_DIR    	:= netlist/layout
+NET_PEX_DIR    	:= netlist/pex
+NET_NL_DIR    	:= netlist/nl
+NET_PNL_DIR  	:= netlist/pnl
+NET_SPICE_DIR 	:= netlist/spice
+XSPICE_DIR  	:= netlist/xspice
+LVS_RPT_DIR 	:= verification/lvs
+DRC_RPT_DIR 	:= verification/drc
+LIBRELANE_DIR 	:= flow/librelane
+FLOW_REPORT_DIR	:= flow/reports
+FLOW_FINAL_DIR 	:= flow/final
+FINAL_DIR      	:= final
 
 # Variables for simulation and linting targets
 # constants.sv defines the counter_pkg and must compile before any module that imports it,
@@ -134,9 +135,9 @@ sim-gl-xschem: ## Run gate-level simulation of CELL cell with Xschem (usage: mak
 	' $(CELL)_tb_tran.sch
 .PHONY: sim-gl-xschem
 
-sim-plot-xschem: ## Plot Xschem simulation results (usage: make sim-plot-xschem CELL=<cellname>)
+sim-view-xschem: ## Plot Xschem simulation results (usage: make sim-view-xschem CELL=<cellname>)
 	python3 $(SIM_PLOT_DIR)/plot_$(CELL).py
-.PHONY: sim-plot-xschem
+.PHONY: sim-view-xschem
 
 sim-all: ## Simulate the macro (RTL Verilog + RTL/GL cocotb + GL Xschem for counter_top)
 	$(MAKE) sim-rtl-verilog
@@ -146,7 +147,7 @@ sim-all: ## Simulate the macro (RTL Verilog + RTL/GL cocotb + GL Xschem for coun
 	$(MAKE) sim-gl-cocotb
 #	$(MAKE) sim-view-cocotb
 	$(MAKE) sim-gl-xschem
-#	$(MAKE) sim-plot-xschem
+#	$(MAKE) sim-view-xschem
 .PHONY: sim-all
 # ================================================================================================
 
