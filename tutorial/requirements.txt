@@ -1,7 +1,18 @@
-cocotb==1.9.2
-find-libpython==0.4.1
-iniconfig==2.1.0
-packaging==25.0
-pluggy==1.6.0
-pygments==2.19.2
-pytest==8.4.1
+# Intentionally empty. No Python packages required.
+# This tutorial currently has no Python package requirements.
+#
+# The documentation build in this repository currently renders static Quarto content
+# and does not execute Python code cells or Python-based filters.
+#
+# Add Python packages here only if the tutorial gains executable Python code
+# cells or Python-based build hooks.
+#
+# Keep this file so CI can run `pip install -r doc/requirements.txt` consistently.
+
+# cocotb==1.9.2
+# find-libpython==0.4.1
+# iniconfig==2.1.0
+# packaging==25.0
+# pluggy==1.6.0
+# pygments==2.19.2
+# pytest==8.4.1
