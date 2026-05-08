@@ -38,6 +38,12 @@ This template repository is Makefile-driven and provides a universal design flow
 A step-by-step tutorial, including additional exercises, can be found [here](https://iic-jku.github.io/ihp-sg13g2-ams-chip-template/index.html).
 
 
+## Examples
+
+Examples based on this template are:
+- [TinyWhisper](https://github.com/iic-jku/TinyWhisper): An Open-Source Fully-Integrated Multi-Mode Short-Wave Transmitter for Amateur Radio Applications in 130-nm CMOS
+- [SPARX](https://github.com/iic-jku/SG13G2_SPARX): An Open-Source, Automated, Programmatically Generated, Frequency-Scalable Six-Port Receiver in 130-nm CMOS
+
 ## Directory Structure
 
 ```text
