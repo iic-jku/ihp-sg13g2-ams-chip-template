@@ -2,10 +2,9 @@
 # SPDX-FileCopyrightText: 2026 Simon Dorrer and Harald Pretl
 # SPDX-License-Identifier: Apache-2.0
 # Author: Simon Dorrer
-# Description: Transient plots for the inverter top macro
-#              based on ngspice exports.
 # Created: 06.05.2026
 # Last Modified: 06.05.2026
+# Description: Transient plots for the inverter top macro based on ngspice exports.
 # ============================================
 
 # Imports

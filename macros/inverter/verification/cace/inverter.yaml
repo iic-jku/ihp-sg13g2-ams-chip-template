@@ -11,7 +11,7 @@ cace_format:    5.2
 authorship:
   designer:         Simon Dorrer
   company:          Johannes Kepler University
-  creation_date:    August 14, 2025
+  creation_date:    May 6, 2026
   license:          Apache 2.0
 
 paths:
@@ -32,30 +32,14 @@ pins:
     description: Analog ground
     type: ground
     direction: inout
-  Vcm:
-    description: Common-mode voltage
-    type: power
-    direction: inout
-  di_filter_en:
-    description: Enable input
-    type: enable
-    direction: input
-  vinp:
-    description: Voltage positive input
+  vin:
+    description: Inverter input
     type: signal
     direction: input
-  vinn:
-    description: Voltage negative input
-    type: signal
-    direction: input
-  voutp:
-    description: Voltage positive output
+  vout:
+    description: Inverter output
     type: signal
     direction: output
-  voutn:
-    description: Voltage negative output
-    type: signal
-    direction: output 
 
 default_conditions:
   vdd:

@@ -5,7 +5,7 @@
 
 <p align="center">
   <a href="render/img/inverter_top_white.png">
-    <img src="render/img/inverter_top_white.png" alt="Render of the ihp-sg13g2 inverter layout (337um x 142um)" width=70%>
+    <img src="render/img/inverter_top_white.png" alt="Render of the ihp-sg13g2 inverter layout (54um x 82um)" width=70%>
   </a>
   <br>
   <em>Render of the ihp-sg13g2 inverter layout (54um x 82um).</em>
@@ -64,6 +64,7 @@
 │  │  ├─ plot_inverter.py
 │  │  └─ plot_inverter_top.py
 │  ├─ 📁 sizing/
+│  │  ├─ 📁 data/
 │  │  ├─ 📁 figures/
 │  │  ├─ lookup_commands.ipynb
 │  │  └─ sizing_inverter.ipynb
@@ -376,7 +377,8 @@ The `EXT_MODE` parameter selects the extraction mode:
 - `2` = C-coupled
 - `3` = full-RC (default)
 
-> **Note:** For `klayout-pex`, `EXT_MODE=1` (C-decoupled) is not yet supported by kpex and automatically falls back to `EXT_MODE=2` (CC) with a warning.
+> [!NOTE]
+> For `klayout-pex`, `EXT_MODE=1` (C-decoupled) is not yet supported by kpex and automatically falls back to `EXT_MODE=2` (CC) with a warning.
 
 The `.subckt` name in the extracted SPICE file is automatically renamed from `<CELL>_flat` (kpex) or `<CELL>` (Magic) to `<CELL>_pex`.
 
