@@ -1,5 +1,7 @@
 // SPDX-FileCopyrightText: 2026 Simon Dorrer and Harald Pretl
 // SPDX-License-Identifier: Apache-2.0
+// Description: Top-level chip core.
+// Instantiates and connects the digital and analog macros.
 
 `default_nettype none
 
@@ -26,175 +28,189 @@ module chip_core #(
     inout  wire [NUM_ANALOG_PADS-1:0] analog_padres, 	// Analog (via pad secondary ESD protection)
 	inout  wire [NUM_ANALOG_PADS-1:0] analog_padbare    // Analog (direct pad connection with primary ESD protection)
 );
-	// ======================================================
-	// Counter (Digital)
-	// ======================================================
-	logic si;
-	logic sclk;
-	logic sram_ce;
-	logic sda_o;
-	logic sda_oe;
-	logic scl;
-	logic tx;
-	logic [3:0] gpio_out;
-	logic analog_en;
-	logic I_ae;
-	logic ds_I_oe;
-	logic ds_I_p_o;
-    logic ds_I_n_o;
-	logic lo_I_oe;
-    logic lo_I_o;
-	logic lo_Ix_o;
-    logic lo_Qx_o;
-	logic lo_Q_o;
-	logic lo_Q_oe;
-	logic ds_Q_n_o;
-	logic ds_Q_p_o;
-	logic ds_Q_oe;
-	logic Q_ae;
-	
-	counter_top counter_top (
-		`ifdef USE_POWER_PINS
-        .VDD(VDD),
-		.VSS(VSS),
-		`endif
-		.clk(clk),
-		.reset(rst_n),
-		.so(input_in[5]),
-		.si(si),
-		.sclk(sclk),
-		.sram_ce(sram_ce),
-		.sda_i(bidir_in[8]),
-		.sda_o(sda_o),
-		.sda_oe(sda_oe),
-		.scl(scl),
-		.rx(input_in[4]),
-		.tx(tx),
-		.gpio_in(input_in[3:0]),
-		.gpio_out(gpio_out),
-		.analog_en(analog_en),
-		.I_ae(I_ae),
-		.ds_I_oe(ds_I_oe),
-		.ds_I_p_i(bidir_in[0]),
-		.ds_I_p_o(ds_I_p_o),
-		.ds_I_n_i(bidir_in[1]),
-		.ds_I_n_o(ds_I_n_o),
-		.lo_I_oe(lo_I_oe),
-		.lo_I_i(bidir_in[2]),
-		.lo_I_o(lo_I_o),
-		.lo_Ix_i(bidir_in[3]),
-		.lo_Ix_o(lo_Ix_o),
-		.lo_Qx_i(bidir_in[7]),
-		.lo_Qx_o(lo_Qx_o),
-		.lo_Q_i(bidir_in[6]),
-		.lo_Q_o(lo_Q_o),
-		.lo_Q_oe(lo_Q_oe),
-		.ds_Q_n_i(bidir_in[5]),
-		.ds_Q_n_o(ds_Q_n_o),
-		.ds_Q_p_i(bidir_in[4]),
-		.ds_Q_p_o(ds_Q_p_o),
-		.ds_Q_oe(ds_Q_oe),
-		.Q_ae(Q_ae)
-	);
-	// ======================================================
-	
-	// ======================================================
-	// Inverter (Analog)
-	// ======================================================
-	wire voutp_I_RF;
-	wire voutn_I_RF;
-	wire voutn_Q_RF;
-	wire voutp_Q_RF;
-	
-	inverter_top inverter_top (
-		`ifdef USE_POWER_PINS
-		.VDD(VDD),
-		.VSS(VSS),
-		`endif
-		.di_analog_en(analog_en),
-		.di_spdt_ctrl_I(I_ae),
-		.vinp_I(analog_padres[7]),
-		.di_ds_I_p(ds_I_p_o),
-		.vinn_I(analog_padres[6]),
-		.di_ds_I_n(ds_I_n_o),
-		.di_lo_I(lo_I_o),
-		.di_lo_Ix(lo_Ix_o),
-		.di_lo_Qx(lo_Qx_o),
-		.di_lo_Q(lo_Q_o),
-		.di_ds_Q_n(ds_Q_n_o),
-		.vinn_Q(analog_padres[1]),
-		.di_ds_Q_p(ds_Q_p_o),
-		.vinp_Q(analog_padres[0]),
-		.di_spdt_ctrl_Q(Q_ae),
-		.voutp_I_RF(voutp_I_RF),
-		.voutn_I_RF(voutn_I_RF),
-		.voutn_Q_RF(voutn_Q_RF),
-		.voutp_Q_RF(voutp_Q_RF)
-	);
-	// ======================================================
-	
-	// ======================================================
-	// Assignments
+
     // ======================================================
-	// counter
-	// Outputs
-	assign output_out[8] = si;
-	assign output_out[7] = sclk;
-	assign output_out[6] = sram_ce;
-	assign output_out[5] = scl;
-	assign output_out[4] = tx;
-	assign output_out[3] = gpio_out[3];
-	assign output_out[2] = gpio_out[2];
-	assign output_out[1] = gpio_out[1];
-	assign output_out[0] = gpio_out[0];
-	
-	// Bidirectionals
-	// [8] sda
-	assign bidir_out[8] = sda_o;
-	assign bidir_oe[8]  = sda_oe;
+	// Input Assignments
+    // ======================================================
+    logic enable = input_in[0];
 
-	// [7] lo_Qx
-	assign bidir_out[7] = lo_Qx_o;
-	assign bidir_oe[7]  = lo_Q_oe;
+    // Inverter 1
+    wire inv1_vin1 = bidir_in[0];
+    wire inv1_vin2 = bidir_in[1];
+    wire inv1_vin3 = bidir_in[2];
+    wire inv1_vin4 = bidir_in[3];
 
-	// [6] lo_Q
-	assign bidir_out[6] = lo_Q_o;
-	assign bidir_oe[6]  = lo_Q_oe;
-	
-	// [5] ds_Q_n
-	assign bidir_out[5] = ds_Q_n_o;
-	assign bidir_oe[5]  = ds_Q_oe;
-	
-	// [4] ds_Q_p
-	assign bidir_out[4] = ds_Q_p_o;
-	assign bidir_oe[4]  = ds_Q_oe;
+    // Inverter 2
+    wire inv2_vin1 = analog_padres[0];
+    wire inv2_vin2 = analog_padres[1];
+    // ======================================================
 
-	// [3] lo_Ix
-	assign bidir_out[3] = lo_Ix_o;
-	assign bidir_oe[3]  = lo_I_oe;
-	
-	// [2] lo_I
-	assign bidir_out[2] = lo_I_o;
-	assign bidir_oe[2]  = lo_I_oe;
-	
-	// [1] ds_I_n
-	assign bidir_out[1] = ds_I_n_o;
-	assign bidir_oe[1]  = ds_I_oe;
-	
-	// [0] ds_I_p
-	assign bidir_out[0] = ds_I_p_o;
-	assign bidir_oe[0]  = ds_I_oe;
+    // ======================================================
+    // Counter 1 (digital macro)
+    // ======================================================
+    logic [7:0] counter1_value;
 
-	// Inverter
-	// Not connected analog pads (only padres or padbare is connected per analog pad)
-	// - analog_padres[2], analog_padres[3], analog_padres[4], analog_padres[5]
-	// - analog_padbare[0], analog_padbare[1], analog_padbare[6], analog_padbare[7]
-	
-	assign analog_padbare[5] = voutp_I_RF;
-	assign analog_padbare[4] = voutn_I_RF;
-	assign analog_padbare[3] = voutn_Q_RF;
-	assign analog_padbare[2] = voutp_Q_RF;
-	// ======================================================
+    counter_top counter1 (
+        `ifdef USE_POWER_PINS
+        .VDD(VDD),
+        .VSS(VSS),
+        `endif
+        .clock_i        (clk),
+        .reset_n_i      (rst_n),
+        .enable_i       (enable),
+        .counter_value_o(counter1_value)
+    );
+    // ======================================================
+
+    // ======================================================
+    // Counter 2 (digital macro)
+    // ======================================================
+    logic [7:0] counter2_value;
+
+    counter_top counter2 (
+        `ifdef USE_POWER_PINS
+        .VDD(VDD),
+        .VSS(VSS),
+        `endif
+        .clock_i        (clk),
+        .reset_n_i      (rst_n),
+        .enable_i       (enable),
+        .counter_value_o(counter2_value)
+    );
+    // ======================================================
+
+    // ======================================================
+    // Inverter 1 (analog macro, used as digital inverter)
+    // ======================================================
+    wire inv1_vout1;
+    wire inv1_vout2;
+    wire inv1_vout3;
+    wire inv1_vout4;
+
+    inverter_top inverter1 (
+        `ifdef USE_POWER_PINS
+        .VDD  (VDD),
+        .VSS  (VSS),
+        `endif
+        .vin1 (inv1_vin1),
+        .vin2 (inv1_vin2),
+        .vin3 (inv1_vin3),
+        .vin4 (inv1_vin4),
+        .vout1(inv1_vout1),
+        .vout2(inv1_vout2),
+        .vout3(inv1_vout3),
+        .vout4(inv1_vout4)
+    );
+    // ======================================================
+
+    // ======================================================
+    // Inverter 2 (analog macro)
+    // ======================================================
+    `ifdef USE_POWER_PINS
+    wire vss_tie = VSS;
+    `else
+    wire vss_tie = 1'b0;
+    `endif
+
+    wire inv2_vout1;
+    wire inv2_vout2;
+
+    inverter_top inverter2 (
+        `ifdef USE_POWER_PINS
+        .VDD  (VDD),
+        .VSS  (VSS),
+        `endif
+        .vin1 (inv2_vin1),
+        .vin2 (inv2_vin2),
+        .vin3 (vss_tie),
+        .vin4 (vss_tie),
+        .vout1(inv2_vout1),
+        .vout2(inv2_vout2),
+        .vout3(vss_tie),
+        .vout4(vss_tie)
+    );
+    // ======================================================
+
+    // ======================================================
+    // 1024 x 32 SRAM (digital macro)
+    // ======================================================
+    wire [31:0] sram_0_out;
+
+    RM_IHPSG13_1P_1024x32_c2_bm_bist sram_0 (
+        .A_CLK  (clk),
+        .A_MEN  (1'b1),
+        .A_WEN  (1'b0),
+        .A_REN  (1'b1),
+        .A_ADDR ('0),
+        .A_DIN  ('0),
+        .A_DLY  (1'b1), // tie high!
+        .A_DOUT (sram_0_out),
+        .A_BM   ('0),
+        
+        // Built-in self test port
+        .A_BIST_CLK   ('0),
+        .A_BIST_EN    ('0),
+        .A_BIST_MEN   ('0),
+        .A_BIST_WEN   ('0),
+        .A_BIST_REN   ('0),
+        .A_BIST_ADDR  ('0),
+        .A_BIST_DIN   ('0),
+        .A_BIST_BM    ('0)
+    );
+    // ======================================================
+
+    // ======================================================
+	// Output Assignments
+    // ======================================================
+    // Digital Outputs
+    // Counter 1
+    assign output_out[0] = counter1_value[0];
+    assign output_out[1] = counter1_value[1];
+    assign output_out[2] = counter1_value[2];
+    assign output_out[3] = counter1_value[3];
+
+    // Counter 2
+    assign output_out[4] = counter2_value[0];
+    assign output_out[5] = counter2_value[1];
+    assign output_out[6] = counter2_value[2];
+    assign output_out[7] = counter2_value[3];
+    assign output_out[8] = counter2_value[4];
+    assign output_out[9] = counter2_value[5];
+    assign output_out[10] = counter2_value[6];
+    assign output_out[11] = counter2_value[7];
+
+    // Inverter 1
+    assign output_out[12] = inv1_vout1;
+    assign output_out[13] = inv1_vout2;
+    assign output_out[14] = inv1_vout3;
+    assign output_out[15] = inv1_vout4;
+
+    // SRAM
+    // Reduce the 32-bit SRAM output bits to a single bit by computing the parity bit.
+    // output_out[16] = 1 when an odd number of bits in sram_0_out are 1.
+    // output_out[16] = 0 when an even number of bits in sram_0_out are 1.
+    assign output_out[16] = ^sram_0_out;
+
+    // Digital Bidirectionals (Output)
+    // Bidir output enable: drive when `enable` is high (counter visible),
+    // float as input when low (so external stimuli can drive inverter1).
+    assign bidir_out[0] = counter1_value[4];
+	assign bidir_oe[0]  = input_in[0];
+
+    assign bidir_out[1] = counter1_value[5];
+	assign bidir_oe[1]  = input_in[0];
+
+    assign bidir_out[2] = counter1_value[6];
+	assign bidir_oe[2]  = input_in[0];
+
+    assign bidir_out[3] = counter1_value[7];
+	assign bidir_oe[3]  = input_in[0];
+
+    // Analog Outputs
+    // Inverter 2
+    assign analog_padbare[0] = inv2_vout1;
+    assign analog_padbare[1] = inv2_vout2;
+    // ======================================================
 endmodule
 
 `default_nettype wire

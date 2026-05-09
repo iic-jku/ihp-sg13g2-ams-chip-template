@@ -1,22 +1,28 @@
 // SPDX-FileCopyrightText: 2026 Simon Dorrer and Harald Pretl
 // SPDX-License-Identifier: Apache-2.0
+// Description: Top-level chip wrapper.
+// Instantiates the padframe, the chip core and custom logos.
+// The padframe with bondpads, I/O cells, power ring, corners and fillers is handled by LibreLane.
+// The specifications can be found in doc/specifications.md.
+// The pinout mapping can be found in doc/pinout.md.
+// The floorplan can be found in doc/floorplan.md.
 
 `default_nettype none
 
 module chip_top #(
     // Power / ground pads for digital core / analog front-end
-    parameter NUM_VDD_PADS = 7, 		// 7 x VDD = 1.5V
-	parameter NUM_VSS_PADS = 9, 		// 9 x VSS
+    parameter NUM_VDD_PADS = 1,
+	parameter NUM_VSS_PADS = 1,
 
     // Power/ground pads for I/O
-    parameter NUM_IOVDD_PADS = 3, 		// 3 x IOVDD = 3.3V
-    parameter NUM_IOVSS_PADS = 3, 		// 3 x IOVSS
+    parameter NUM_IOVDD_PADS = 1,
+    parameter NUM_IOVSS_PADS = 1,
     
     // Signal pads
-    parameter NUM_INPUT_PADS  = 6,		// 4 x GPIO inputs, so, rx
-    parameter NUM_OUTPUT_PADS = 9,		// 4 x GPIO outputs, si, sclk, sram_ce, scl, tx
-    parameter NUM_BIDIR_PADS  = 9,		// sda_i / sda_o, lo_I_i / lo_I_o, lo_Ix_i / lo_Ix_o, lo_Q_i / lo_Q_o, lo_Qx_i / lo_Qx_o, Q_p_i / Q_p_o, Q_n_i / Q_n_o, I_p_i / I_p_o, I_n_i / I_n_o
-    parameter NUM_ANALOG_PADS = 8 		// Vinp_I, Vinn_I, Voutp_I_RF, Voutn_I_RF, Voutn_Q_RF, Voutp_Q_RF, Vinn_Q, Vinp_Q
+    parameter NUM_INPUT_PADS  = 1,  // exluding clock and reset pads
+    parameter NUM_OUTPUT_PADS = 17,
+    parameter NUM_BIDIR_PADS  = 4,
+    parameter NUM_ANALOG_PADS = 4
     )(
     `ifdef USE_POWER_PINS
     inout wire IOVDD,
@@ -53,8 +59,8 @@ module chip_top #(
     wire [NUM_BIDIR_PADS-1 :0] bidir_CORE2PAD_OE;
 	
 	// Analog
-    wire [NUM_ANALOG_PADS-1:0] analog_PADRES;   // Vinp_I, Vinn_I, Vinn_Q, Vinp_Q
-    wire [NUM_ANALOG_PADS-1:0] analog_PADBARE;  // Voutp_I_RF, Voutn_I_RF, Voutn_Q_RF, Voutp_Q_RF
+    wire [NUM_ANALOG_PADS-1:0] analog_PADRES;
+    wire [NUM_ANALOG_PADS-1:0] analog_PADBARE;
 	// ======================================================
 	
 	// ======================================================
@@ -279,16 +285,6 @@ module chip_top #(
     // JKU names
     (* keep *)
     sg13g2_ip__jku_names jku_names ();
-	// ======================================================
-	
-    // JMU CE logo
-	(* keep *)
-    sg13g2_ip__ce ce_logo ();
-	// ======================================================
-    
-    // JMU CE names
-	(* keep *)
-    sg13g2_ip__ce_names ce_names ();
 	// ======================================================
 endmodule
 
