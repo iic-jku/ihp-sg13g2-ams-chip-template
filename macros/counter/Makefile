@@ -30,7 +30,7 @@ WAVEFORM_VIEWER ?= gtkwave
 COCOTB_DIR      := testbenches/cocotb
 VERILOG_TB_DIR 	:= testbenches/verilog
 XSCHEM_TB_DIR  	:= testbenches/xschem
-SCH_DIR       	:= schematic
+XSCHEM_SCH_DIR  := schematic/xschem
 SCRIPTS_DIR   	:= scripts
 SIM_PLOT_DIR  	:= scripts/plot_simulations
 RENDER_IMG_DIR 	:= render/img
@@ -283,7 +283,7 @@ generate-xspice: ## Generate XSPICE model from gate-level Verilog netlist
 	vlog2Verilog $(XSPICE_DIR)/${TOP}_xspice.nl.v -o $(XSPICE_DIR)/${TOP}.vp -l $(PDK_ROOT)/$(PDK)/libs.ref/sg13g2_stdcell/lef/sg13g2_stdcell.lef -v "VPWR,VPB" -g "VGND,VNB"
 	vlog2Spice $(XSPICE_DIR)/${TOP}.vp -l $(PDK_ROOT)/$(PDK)/libs.ref/sg13g2_stdcell/spice/sg13g2_stdcell.spice -o $(XSPICE_DIR)/${TOP}.spice
 	python3 $(SCRIPTS_DIR)/spi2xspice.py $(PDK_ROOT)/$(PDK)/libs.ref/sg13g2_stdcell/lib/sg13g2_stdcell_typ_1p50V_25C.lib -io_time=500p -time=50p -idelay=5p -odelay=50p -cload=250f $(XSPICE_DIR)/${TOP}.spice $(XSPICE_DIR)/${TOP}.xspice
-	python3 $(SCRIPTS_DIR)/reorder_xspice_pins.py $(SCH_DIR)/${TOP}.sym $(XSPICE_DIR)/${TOP}.xspice
+	python3 $(SCRIPTS_DIR)/reorder_xspice_pins.py $(XSCHEM_SCH_DIR)/${TOP}.sym $(XSPICE_DIR)/${TOP}.xspice
 	rm -f $(XSPICE_DIR)/${TOP}_xspice.nl.v $(XSPICE_DIR)/${TOP}.vp $(XSPICE_DIR)/${TOP}.spice
 .PHONY: generate-xspice
 # ================================================================================================

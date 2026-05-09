@@ -86,8 +86,9 @@
 │  ├─ counter.sv
 │  └─ counter_top.sv
 ├─ 📁 schematic/
-│  ├─ counter_top.sym
-│  └─ xschemrc
+│  └─ 📁 xschem/
+│     ├─ counter_top.sym
+│     └─ xschemrc
 ├─ 📁 scripts/
 │  ├─ lay2img.py
 │  ├─ reorder_xspice_pins.py
@@ -431,4 +432,5 @@ make generate-xspice
 > [!NOTE]
 > This command should not be run as part of `all`, since this XSPICE file is generated once with specific CPU settings for a more convenient simulation.
 > This method does not work with the `.pnl.v` file in `flow/final/`. The `.nl.v` file from the LibreLane step `yosys-synthesis` must be used.
+> Pin reordering uses the symbol file in `schematic/xschem/<TOP>.sym`.
 > Conversion pipeline: Copy gate-level Verilog (`.nl.v`) → Verilog with power pins (`.vp`) → SPICE (`.spice`) → XSPICE (`.xspice`) → Reorder pins in XSPICE file according to the Xschem symbol.
