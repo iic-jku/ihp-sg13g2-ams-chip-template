@@ -1,26 +1,22 @@
+#!/usr/bin/env python3
 # SPDX-FileCopyrightText: 2024 Tim Edwards, 2026 Simon Dorrer and Harald Pretl
 # SPDX-License-Identifier: Apache-2.0
-#!ENV_PATH python3
 #
 # spi2xspice.py
 #
 # Simple script to convert a standard-cell SPICE subcircuit (e.g., one created
 # by qflow) into a version replacing all the standard cells with XSPICE
-# primitives.  This works in conjunction with lib2xspice.py, which converts
+# primitives. This works in conjunction with lib2xspice.py, which converts
 # a liberty file for a standard cell set into a set of XSPICE models using
 # d_lut, d_genlut, d_dff, and d_dlatch.
 #
-# Written by Tim Edwards
-# efabless, inc. 2017
-# May 17, 2017
-# Updated Dec. 22, 2018 to accomodate in-lined standard cell subcircuits
-# (i.e., not from a .include statement) and corrected duplicate .end statement.
-# Updated Jan. 12, 2024 to fix port direction when inputs and outputs are not
-# buffered, and a subcircuit output signal is also fed back to other gates in
-# the subcircuit.
-#
-# This script is in the public domain
-#--------------------------------------------------------------------------
+# Originally written by Tim Edwards (efabless, inc. 2017-05-17).
+# 2018-12-22: accommodate in-lined standard cell subcircuits (i.e., not from
+#             a .include statement) and corrected duplicate .end statement.
+# 2024-01-12: fix port direction when inputs and outputs are not buffered, and
+#             a subcircuit output signal is also fed back to other gates in
+#             the subcircuit.
+# --------------------------------------------------------------------------
 
 import re
 import sys
@@ -34,10 +30,10 @@ def read_spice_lib(filein, celldefs, debug):
     with open(filein, 'r') as ifile:
         spitext = ifile.read()
 
-    increx = re.compile('^[^\*]*[ \t]*.include[ \t]+([^ \t]+).*$', re.IGNORECASE)
-    subrex  = re.compile('^[^\*]*[ \t]*.subckt[ \t]+([^ \t]+)(.*)$', re.IGNORECASE)
-    endsrex = re.compile('^[^\*]*[ \t]*.ends.*$', re.IGNORECASE)
-    comrex  = re.compile('^[\*]+.*$', re.IGNORECASE)
+    increx  = re.compile(r'^[^\*]*[ \t]*\.include[ \t]+([^ \t]+).*$', re.IGNORECASE)
+    subrex  = re.compile(r'^[^\*]*[ \t]*\.subckt[ \t]+([^ \t]+)(.*)$', re.IGNORECASE)
+    endsrex = re.compile(r'^[^\*]*[ \t]*\.ends.*$', re.IGNORECASE)
+    comrex  = re.compile(r'^[\*]+.*$', re.IGNORECASE)
 
     # Merge continuation lines in input
     spilines = spitext.replace('\n+', ' ').splitlines()
@@ -57,7 +53,7 @@ def read_spice_lib(filein, celldefs, debug):
             # Check if filename needs same prefix as current file
             if not os.path.exists(imatch.group(1)):
                 prefix = os.path.split(filein)[0]
-                incfile = prefix + '/' + imatch.group(1)
+                incfile = os.path.join(prefix, imatch.group(1))
             else:
                 incfile = imatch.group(1)
             read_spice_lib(incfile, celldefs, debug)
@@ -89,7 +85,7 @@ def read_spice_lib(filein, celldefs, debug):
                 # Read to the ".ends" statement.
                 insub = True
 
-def write_models(cellsused, celldefs, ofile, timing):
+def write_models(cellsused, celldefs, ofile, timing, debug=False):
     # Write the .model statement for all cells used
 
     io_time = timing[0]
@@ -98,8 +94,8 @@ def write_models(cellsused, celldefs, ofile, timing):
     odelay = timing[3]
     cload = timing[4]
 
-    imprex = re.compile('([10\)])[ \t]+([10\(])')
-    primerex = re.compile('([10\)])[ \t]*\'')
+    imprex = re.compile(r'([10\)])[ \t]+([10\(])')
+    primerex = re.compile(r"([10\)])[ \t]*'")
     for cellname in cellsused:
         cellrec = celldefs[cellname]
         if len(cellrec['function']) > 0:
@@ -154,7 +150,7 @@ def write_models(cellsused, celldefs, ofile, timing):
                     # overlapping matches.
 
                     while True:
-                        psubbed = imprex.sub('\g<1>&\g<2>', psubs)
+                        psubbed = imprex.sub(r'\g<1>&\g<2>', psubs)
                         if psubbed == psubs:
                             break
                         psubs = psubbed
@@ -212,7 +208,7 @@ def read_spice(filein, fileout, celldefs, debug, modelfile, timing):
     global vdd
 
     vddname = '{:g}'.format(vdd).replace('.', 'v')
-    if not 'v' in vddname:
+    if 'v' not in vddname:
         vddname += 'v'
 
     vddthigh = str(2 * vdd / 3)
@@ -229,13 +225,13 @@ def read_spice(filein, fileout, celldefs, debug, modelfile, timing):
     with open(filein, 'r') as ifile:
         spitext = ifile.read()
 
-    increx = re.compile('^[^\*]*[ \t]*.include[ \t]+([^ \t]+).*$', re.IGNORECASE)
-    subrex = re.compile('^[^\*]*[ \t]*.subckt[ \t]+([^ \t]+)(.*)$', re.IGNORECASE)
-    xrex   = re.compile('^[ \t]*X([^ \t]+)(.*)$', re.IGNORECASE)
-    comrex = re.compile('^[\*]+.*$', re.IGNORECASE)
-    specrex = re.compile('^[\*]+This file may contain array delimiters', re.IGNORECASE)
-    endsrex = re.compile('^[^\*]*[ \t]*.ends.*$', re.IGNORECASE)
-    endrex = re.compile('^[^\*]*[ \t]*.end.*$', re.IGNORECASE)
+    increx  = re.compile(r'^[^\*]*[ \t]*\.include[ \t]+([^ \t]+).*$', re.IGNORECASE)
+    subrex  = re.compile(r'^[^\*]*[ \t]*\.subckt[ \t]+([^ \t]+)(.*)$', re.IGNORECASE)
+    xrex    = re.compile(r'^[ \t]*X([^ \t]+)(.*)$', re.IGNORECASE)
+    comrex  = re.compile(r'^[\*]+.*$', re.IGNORECASE)
+    specrex = re.compile(r'^[\*]+This file may contain array delimiters', re.IGNORECASE)
+    endsrex = re.compile(r'^[^\*]*[ \t]*\.ends.*$', re.IGNORECASE)
+    endrex  = re.compile(r'^[^\*]*[ \t]*\.end.*$', re.IGNORECASE)
 
     # Merge continuation lines in input
     spilines = spitext.replace('\n+', ' ').splitlines()
@@ -297,8 +293,8 @@ def read_spice(filein, fileout, celldefs, debug, modelfile, timing):
             if xmatch:
                 # Replace subcircuit call with xspice call
                 instname = xmatch.group(1)
-                # NOTE:  Parsing for common CDLisms like '/' before cellname and
-		# parameter passing to the instance.
+                # NOTE: parses common CDL-isms such as a leading '/' before the
+                # cellname and parameter passing to the instance.
                 conns = list(item for item in xmatch.group(2).split() if '=' not in item and item != '/')
                 pins = conns[0:-1]
                 cellname = conns[-1]
@@ -318,13 +314,13 @@ def read_spice(filein, fileout, celldefs, debug, modelfile, timing):
                 # the list of input and output nets based on the XSPICE
                 # model's port order.
 
-                if not 'spicepins' in cellrec:
+                if 'spicepins' not in cellrec:
                     print('Cell ' + cellname + ' does not have SPICE pin order defined!')
                     if debug:
                         print('Cell record is: ' + str(cellrec))
                     continue
 
-                if not 'type' in cellrec:
+                if 'type' not in cellrec:
                     print('Cell ' + cellname + ' does not have a type defined!')
                     if debug:
                         print('Cell record is: ' + str(cellrec))
@@ -373,7 +369,7 @@ def read_spice(filein, fileout, celldefs, debug, modelfile, timing):
                             subpin = datapin
                         try:
                             i = cellrec['spicepins'].index(subpin)
-                        except:
+                        except ValueError:
                             ddata = 'ERROR'
                             print('Pin ' + subpin + ' of subckt ' + cellname + ' cannot be parsed.', file=sys.stderr)
                         if pins[i] in pindefs:
@@ -661,15 +657,15 @@ def read_spice(filein, fileout, celldefs, debug, modelfile, timing):
         # At the end, write all of the LUT-based digital models.
         if modelfile == '':
             print("", file=ofile)
-            write_models(cellsused, celldefs, ofile, timing)
-  
+            write_models(cellsused, celldefs, ofile, timing, debug)
+
         print(".end", file=ofile)
 
 def write_lib(fileout, celldefs, debug, timing):
     global vdd
 
     vddname = '{:g}'.format(vdd).replace('.', 'v')
-    if not 'v' in vddname:
+    if 'v' not in vddname:
         vddname += 'v'
 
     vddthigh = str(2 * vdd / 3)
@@ -711,41 +707,41 @@ def write_lib(fileout, celldefs, debug, timing):
 
         # At the end, write all of the LUT-based digital models.
         print("", file=ofile)
-        write_models(cellsused, celldefs, ofile, timing)
+        write_models(cellsused, celldefs, ofile, timing, debug)
         print(".end", file=ofile)
 
 def parse_pin(function):
     # Handle n' as way of expressing ~n or !n
-    primerex = re.compile('([^ \t]+)[ \t]*\'')
-    outparenrex = re.compile('^[ \t]*\([ \t]*(.+)[ \t]*\)[ \t]*$')
-    parenrex = re.compile('\([ \t]*([^ \t\)|&~^]+)[ \t]*\)')
+    primerex    = re.compile(r"([^ \t]+)[ \t]*'")
+    outparenrex = re.compile(r'^[ \t]*\([ \t]*(.+)[ \t]*\)[ \t]*$')
+    parenrex    = re.compile(r'\([ \t]*([^ \t\)|&~^]+)[ \t]*\)')
     pstring = function.strip().strip('"').strip()
     pstring = pstring.replace('*', '&').replace('+', '|').replace('!', '~')
-    pstring = outparenrex.sub('\g<1>', pstring)
-    pstring = parenrex.sub('\g<1>', pstring)
-    pstring = primerex.sub('~\g<1>', pstring)
+    pstring = outparenrex.sub(r'\g<1>', pstring)
+    pstring = parenrex.sub(r'\g<1>', pstring)
+    pstring = primerex.sub(r'~\g<1>', pstring)
     return pstring
 
 def read_liberty(filein, debug):
     global vdd
 
     celldefs = {}
-    voltrex  = re.compile('[ \t]*nom_voltage[ \t]*:[ \t]*([^;]+);')
-    cellrex  = re.compile('[ \t]*cell[ \t]*\(([^)]+)\)')
-    pinrex   = re.compile('[ \t]*pin[ \t]*\(([^)]+)\)')
-    busrex   = re.compile('[ \t]*bus[ \t]*\(([^)]+)\)')
-    lat1rex  = re.compile('[ \t]*latch[ \t]*\(([^)]+)\)')
-    lat2rex  = re.compile('[ \t]*latch[ \t]*\(([^, \t]+)[ \t]*,[ \t]*([^),]+)\)')
-    ff1rex   = re.compile('[ \t]*ff[ \t]*\(([^)]+)\)')
-    ff2rex   = re.compile('[ \t]*ff[ \t]*\(([^, \t]+)[ \t]*,[ \t]*([^),]+)\)')
-    staterex = re.compile('[ \t]*next_state[ \t]*:[ \t]*([^;]+);')
-    clockrex = re.compile('[ \t]*clocked_on[ \t]*:[ \t]*([^;]+);')
-    setrex   = re.compile('[ \t]*preset[ \t]*:[ \t]*([^;]+);')
-    resetrex = re.compile('[ \t]*clear[ \t]*:[ \t]*([^;]+);')
-    datarex  = re.compile('[ \t]*data_in[ \t]*:[ \t]*([^;]+);')
-    enarex   = re.compile('[ \t]*enable[ \t]*:[ \t]*([^;]+);')
-    trirex   = re.compile('[ \t]*three_state[ \t]*:[ \t]*([^;]+);')
-    funcrex  = re.compile('[ \t]*function[ \t]*:[ \t]*\"?[ \t]*([^"]+)[ \t]*\"?')
+    voltrex  = re.compile(r'[ \t]*nom_voltage[ \t]*:[ \t]*([^;]+);')
+    cellrex  = re.compile(r'[ \t]*cell[ \t]*\(([^)]+)\)')
+    pinrex   = re.compile(r'[ \t]*pin[ \t]*\(([^)]+)\)')
+    busrex   = re.compile(r'[ \t]*bus[ \t]*\(([^)]+)\)')
+    lat1rex  = re.compile(r'[ \t]*latch[ \t]*\(([^)]+)\)')
+    lat2rex  = re.compile(r'[ \t]*latch[ \t]*\(([^, \t]+)[ \t]*,[ \t]*([^),]+)\)')
+    ff1rex   = re.compile(r'[ \t]*ff[ \t]*\(([^)]+)\)')
+    ff2rex   = re.compile(r'[ \t]*ff[ \t]*\(([^, \t]+)[ \t]*,[ \t]*([^),]+)\)')
+    staterex = re.compile(r'[ \t]*next_state[ \t]*:[ \t]*([^;]+);')
+    clockrex = re.compile(r'[ \t]*clocked_on[ \t]*:[ \t]*([^;]+);')
+    setrex   = re.compile(r'[ \t]*preset[ \t]*:[ \t]*([^;]+);')
+    resetrex = re.compile(r'[ \t]*clear[ \t]*:[ \t]*([^;]+);')
+    datarex  = re.compile(r'[ \t]*data_in[ \t]*:[ \t]*([^;]+);')
+    enarex   = re.compile(r'[ \t]*enable[ \t]*:[ \t]*([^;]+);')
+    trirex   = re.compile(r'[ \t]*three_state[ \t]*:[ \t]*([^;]+);')
+    funcrex  = re.compile(r'[ \t]*function[ \t]*:[ \t]*"?[ \t]*([^"]+)[ \t]*"?')
     with open(filein, 'r') as ifile:
         lines = ifile.readlines()
         if debug:
@@ -924,45 +920,23 @@ if __name__ == '__main__':
     # specified, the defaults are as assigned below.
 
     io_time = '10n'
-    time = '1n'
-    idelay = '1n'
-    odelay = '50n'
-    cload = '1p'
+    time    = '1n'
+    idelay  = '1n'
+    odelay  = '50n'
+    cload   = '1p'
 
-    try:
-        iotimeopt = next(item for item in options if item.startswith('-io_time='))
-    except:
-        pass
-    else:
-        io_time = iotimeopt.split('=')[1]
+    def _opt_value(prefix, default):
+        # Return the part after '=' for the first option matching prefix, else default.
+        for item in options:
+            if item.startswith(prefix):
+                return item.split('=', 1)[1]
+        return default
 
-    try:
-        timeopt = next(item for item in options if item.startswith('-time='))
-    except:
-        pass
-    else:
-        time = timeopt.split('=')[1]
-
-    try:
-        idelayopt = next(item for item in options if item.startswith('-idelay='))
-    except:
-        pass
-    else:
-        idelay = idelayopt.split('=')[1]
-
-    try:
-        odelayopt = next(item for item in options if item.startswith('-odelay='))
-    except:
-        pass
-    else:
-        odelay = odelayopt.split('=')[1]
-
-    try:
-        cloadopt = next(item for item in options if item.startswith('-cload='))
-    except:
-        pass
-    else:
-        cload = cloadopt.split('=')[1]
+    io_time = _opt_value('-io_time=', io_time)
+    time    = _opt_value('-time=',    time)
+    idelay  = _opt_value('-idelay=',  idelay)
+    odelay  = _opt_value('-odelay=',  odelay)
+    cload   = _opt_value('-cload=',   cload)
 
     timing = [io_time, time, idelay, odelay, cload]
 
