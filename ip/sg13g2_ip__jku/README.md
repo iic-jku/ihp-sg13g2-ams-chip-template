@@ -35,14 +35,15 @@ make all
 
 ### Individual Targets
 
-| Target    | Description                                              |
-|-----------|----------------------------------------------------------|
-| `logo`    | Convert PNG to GDSII using `make_gds.py`                 |
-| `lef`     | Generate LEF macro (CLASS BLOCK, OBS on `$(LAYER_NAME)`) |
-| `lib`     | Generate Liberty timing stub (empty cell)                |
-| `verilog` | Generate Verilog blackbox stub (no ports)                |
-| `drc`     | Run IHP DRC checks using `run_drc.py`                    |
-| `clean`   | Remove all generated output directories                  |
+| Target        | Description                                              |
+|---------------|----------------------------------------------------------|
+| `logo`        | Convert PNG to GDSII using `make_gds.py`                 |
+| `lef`         | Generate LEF macro (CLASS BLOCK, OBS on `$(LAYER_NAME)`) |
+| `lib`         | Generate Liberty timing stub (empty cell)                |
+| `verilog`     | Generate Verilog blackbox stub (no ports)                |
+| `klayout-drc` | Run KLayout DRC using `run_drc.py`                       |
+| `magic-drc`   | Run Magic DRC using `sak-drc.sh`                         |
+| `clean`       | Remove all generated output directories                  |
 
 ### Parameters
 
@@ -51,7 +52,7 @@ The following Makefile variables can be overridden:
 | Variable      | Default  | Description                                                                           |
 |---------------|----------|---------------------------------------------------------------------------------------|
 | `IMG_SIZE_PX` | `750`    | Source image width/height in pixels                                                   |
-| `BLOCK_SIZE`  | `143.25` | Desired physical block size in µm                                                     |
+| `BLOCK_SIZE`  | `100`    | Desired physical block size in µm                                                     |
 | `PIXEL_SIZE`  | `0.50`   | Pixel size in µm (must be ≥ M5 min width of 0.21 µm to avoid DRC violations)          |
 | `LAYER`       | `Metal5` | Metal layer the logo is drawn on; one of `Metal1`..`Metal5`, `TopMetal1`, `TopMetal2` |
 

@@ -85,9 +85,9 @@ verilog: ## Generate a minimal Verilog wrapper for the bondpad
 # Build and Verify All Target
 all: ## Build and verify the bondpad
 	$(MAKE) clean
-	$(MAKE) bondpad 
+	$(MAKE) bondpad
+	$(MAKE) verilog
 	$(MAKE) klayout-drc
 	$(MAKE) magic-drc
-	$(MAKE) verilog
 .PHONY: all
 # ================================================================================================

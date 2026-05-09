@@ -36,7 +36,7 @@ Examples (single-line — copy-paste friendly):
 
 LEF output features:
     - MACRO with CLASS COVER (identifies the cell as a cover/pad macro)
-    - PIN PAD on TopMetal1 (the bondable pad opening layer)
+    - PIN ``pad`` exposed on Metal2 through TopMetal2 (multi-layer port)
     - OBS (obstructions) on every metal from ``bottom_metal`` up to TopMetal2,
       blocking the router from using those layers under the pad
     - Layer names matching the IHP SG13G2 tech.lef
@@ -64,14 +64,15 @@ def generate_bondpad_lef(size: float, shape: str, output: str,
 
     The generated LEF follows the same conventions as the hand-crafted reference:
     - PIN ``pad`` exposed on Metal2 through TopMetal2 (multi-layer port)
-    - OBS covering the full pad area on every metal from Metal1 to TopMetal2
+    - OBS covering the full pad area on every metal from ``bottom_metal``
+      (default Metal1) up to TopMetal2
     - SYMMETRY X Y R90 and SITE sg13g2_ioSite for padring placement
 
     :param size: Pad side length / diameter in microns.
     :param shape: Pad geometry ('square', 'octagon', or 'circle').
         Only affects the GDS; the LEF always uses full-size rectangles.
     :param output: Filesystem path for the LEF file to write.
-    :param bottom_metal: Lowest metal layer in the stack (1-7, default 1).
+    :param bottom_metal: Lowest metal layer in the stack (1-6, default 1).
     """
     cell_name = pathlib.Path(output).resolve().name.split('.')[0]
 
@@ -192,7 +193,7 @@ except NameError:
     lef_output = None  # pylint: disable=invalid-name
 
 if gds_output is None and lef_output is None:
-    print("Missing GDS or LEF output argument. Please define '-rd gds_output=<path-to-bondpad>'")
+    print("Missing GDS or LEF output argument. Please define at least one of:")
     print("  '-rd gds_output=<path-to-bondpad/bondpad.gds>'")
     print("or")
     print("  '-rd lef_output=<path-to-bondpad/bondpad.lef>'")

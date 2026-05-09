@@ -31,12 +31,13 @@ make all
 
 ### Individual Targets
 
-| Target    | Description                                  |
-| --------- | -------------------------------------------- |
-| `bondpad` | Generate GDS and LEF via `bondpad.py`        |
-| `verilog` | Generate Verilog blackbox stub (`inout pad`) |
-| `drc`     | Run IHP DRC checks using `run_drc.py`        |
-| `clean`   | Remove all generated output directories      |
+| Target        | Description                                  |
+| ------------- | -------------------------------------------- |
+| `bondpad`     | Generate GDS and LEF via `bondpad.py`        |
+| `verilog`     | Generate Verilog blackbox stub (`inout pad`) |
+| `klayout-drc` | Run KLayout DRC using `run_drc.py`           |
+| `magic-drc`   | Run Magic DRC using `sak-drc.sh`             |
+| `clean`       | Remove all generated output directories      |
 
 ### Parameters
 
@@ -47,7 +48,7 @@ The following Makefile variables can be overridden:
 | `DIAMETER` | `70.0`   | Bondpad diameter/side length in µm |
 | `SHAPE`    | `square` | Bondpad shape (`square`/`octagon`/`circle`)  |
 
-Example — generate a octagon 70 µm bondpad:
+Example — generate an octagonal 70 µm bondpad:
 
 ```bash
 make bondpad DIAMETER=70.0 SHAPE=octagon

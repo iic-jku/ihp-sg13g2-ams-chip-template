@@ -23,7 +23,8 @@ DRC_RPT_DIR := verification/drc
 IMG_FILE    := logo/jku_logo.png
 IMG_SIZE_PX ?= 750
 BLOCK_SIZE  ?= 100
-PIXEL_SIZE  ?= 0.50 	# Pixel size in microns. Must be >= minimum layer width to avoid DRC violations.
+# Pixel size in microns. Must be >= minimum layer width to avoid DRC violations.
+PIXEL_SIZE  ?= 0.50
 # scale = BLOCK_SIZE / (IMG_SIZE_PX * PIXEL_SIZE)
 SCALE       := $(shell python3 -c "print($(BLOCK_SIZE) / ($(IMG_SIZE_PX) * $(PIXEL_SIZE)))")
 
