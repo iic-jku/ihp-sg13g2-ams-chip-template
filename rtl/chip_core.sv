@@ -32,7 +32,7 @@ module chip_core #(
     // ======================================================
 	// Input Assignments
     // ======================================================
-    logic enable = input_in[0];
+    wire enable = input_in[0];
 
     // Inverter 1
     wire inv1_vin1 = bidir_in[0];
@@ -207,9 +207,8 @@ module chip_core #(
 	assign bidir_oe[3]  = input_in[0];
 
     // Analog Outputs
-    // Inverter 2
-    assign analog_padbare[0] = inv2_vout1;
-    assign analog_padbare[1] = inv2_vout2;
+    assign analog_padbare[2] = inv2_vout1;
+    assign analog_padbare[3] = inv2_vout2;
     // ======================================================
 endmodule
 
