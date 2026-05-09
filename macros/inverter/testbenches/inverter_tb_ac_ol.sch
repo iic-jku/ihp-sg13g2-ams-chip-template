@@ -74,7 +74,6 @@ value="
 .options savecurrents klu method=gear reltol=1e-4 abstol=1e-15 gmin=1e-15
 .control
 
-* optran 0 0 0 1u 1m 0
 save all
 
 set wr_vecnames

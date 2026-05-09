@@ -117,7 +117,6 @@ value="
 .options savecurrents klu method=gear reltol=1e-4 abstol=1e-15 gmin=1e-15
 .control
 
-* save vin vinp vinn voutp voutn vout
 save all
 
 * Operating Point Analysis
@@ -127,15 +126,12 @@ write @schname\\\\.raw
 set appendwrite
 
 * Transient Analysis
-* Sine Input
 tran 1u 5m
-* Pulse Input
-* tran 500n 1m
 write @schname\\\\.raw
 
 * Plotting
 plot vin vout1 vout2 vout3 vout4
-* plot i(VDD)
+plot i(VDD)
 
 * Measurements
 meas tran vin_peak MAX v(vin)
