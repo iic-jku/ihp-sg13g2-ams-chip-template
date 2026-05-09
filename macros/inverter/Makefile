@@ -26,11 +26,11 @@ EV_PRECISION ?= 5
 _GDS_EXT = $(if $(wildcard $(LAY_DIR)/$(TOP).gds)$(wildcard $(LAY_DIR)/$(CELL).gds),gds,klay.gds)
 
 # Folder structure
-SCH_DIR         := schematic
+XSCHEM_SCH_DIR  := schematic/xschem
+XSCHEM_TB_DIR   := testbenches/xschem
 LAY_DIR         := layout
 SCRIPTS_DIR     := scripts
 SIM_PLOT_DIR    := scripts/plot_simulations
-XSCHEM_TB_DIR   := testbenches
 GDS_DIR         := final/gds
 LEF_DIR         := final/lef
 LIB_DIR         := final/lib
@@ -215,7 +215,7 @@ render-gds: ## Render an image from the final GDS using lay2img.py
 # LVS Targets
 klayout-lvs-netlist: ## Export CDL schematic netlist from Xschem for KLayout LVS (usage: make klayout-lvs-netlist [CELL=<cellname>] [EV_PRECISION=<digits>])
 	mkdir -p $(NET_SCH_DIR)
-	xschem -s -r -x -q --rcfile $(SCH_DIR)/xschemrc --command ' \
+	xschem -s -r -x -q --rcfile $(XSCHEM_SCH_DIR)/xschemrc --command ' \
 		set spiceprefix 1; \
 		set lvs_netlist 1; \
 		set top_is_subckt 1; \
@@ -224,7 +224,7 @@ klayout-lvs-netlist: ## Export CDL schematic netlist from Xschem for KLayout LVS
 		set netlist_dir $(NET_SCH_DIR); \
 		xschem set netlist_name [file tail [file rootname [xschem get current_name]]]_klayout.cdl; \
 		xschem netlist \
-	' $(SCH_DIR)/$(CELL).sch
+	' $(XSCHEM_SCH_DIR)/$(CELL).sch
 .PHONY: klayout-lvs-netlist
 
 klayout-lvs: ## Run KLayout LVS of the CELL cell (usage: make klayout-lvs [CELL=<cellname>])
@@ -243,7 +243,7 @@ klayout-lvs: ## Run KLayout LVS of the CELL cell (usage: make klayout-lvs [CELL=
 
 magic-lvs-netlist: ## Export SPICE schematic netlist from Xschem for Magic + Netgen LVS (usage: make magic-lvs-netlist [CELL=<cellname>] [EV_PRECISION=<digits>])
 	mkdir -p $(NET_SCH_DIR)
-	xschem -s -r -x -q --rcfile $(SCH_DIR)/xschemrc --command ' \
+	xschem -s -r -x -q --rcfile $(XSCHEM_SCH_DIR)/xschemrc --command ' \
 		set spiceprefix 1; \
 		set lvs_netlist 0; \
 		set top_is_subckt 1; \
@@ -252,7 +252,7 @@ magic-lvs-netlist: ## Export SPICE schematic netlist from Xschem for Magic + Net
 		set netlist_dir $(NET_SCH_DIR); \
 		xschem set netlist_name [file tail [file rootname [xschem get current_name]]]_magic.spice; \
 		xschem netlist \
-	' $(SCH_DIR)/$(CELL).sch
+	' $(XSCHEM_SCH_DIR)/$(CELL).sch
 .PHONY: magic-lvs-netlist
 
 magic-lvs: ## Run Magic + Netgen LVS of the CELL cell (usage: make magic-lvs [CELL=<cellname>])
@@ -261,7 +261,7 @@ magic-lvs: ## Run Magic + Netgen LVS of the CELL cell (usage: make magic-lvs [CE
 	$(MAKE) magic-lvs-netlist CELL=$(CELL)
 	sak-lvs.sh -d -w $(LVS_RPT_DIR) -s $(NET_SCH_DIR)/$(CELL)_magic.spice -l $(LAY_DIR)/$(CELL).gds -c $(CELL)
 # 	Alternative using sak-lvs.sh for netlist export and LVS in one step (replaces magic-lvs-netlist target):
-#   sak-lvs.sh -d -w $(LVS_RPT_DIR) -s $(SCH_DIR)/$(CELL).sch -l $(LAY_DIR)/$(CELL).gds -c $(CELL)
+#   sak-lvs.sh -d -w $(LVS_RPT_DIR) -s $(XSCHEM_SCH_DIR)/$(CELL).sch -l $(LAY_DIR)/$(CELL).gds -c $(CELL)
 	mv $(LVS_RPT_DIR)/$(CELL).ext.spc $(NET_LAY_DIR)/$(CELL)_magic.ext.spc
 	rm -f $(LVS_RPT_DIR)/$(CELL).sch.spc
 	rm -f $(LVS_RPT_DIR)/ext_$(CELL).tcl
@@ -308,7 +308,7 @@ klayout-pex: ## Run Parasitic Extraction with KPEX of the CELL cell (usage: make
 	kpex \
 	--pdk $$PDK_UNDERSCORED \
 	--cell $(CELL) \
-	--schematic $(SCH_DIR)/$(CELL).sch \
+	--schematic $(XSCHEM_SCH_DIR)/$(CELL).sch \
 	--gds $(LAY_DIR)/$(CELL).$(_GDS_EXT) \
 	--magic \
 	--magic_mode $$KPEX_MODE \
@@ -319,11 +319,11 @@ klayout-pex: ## Run Parasitic Extraction with KPEX of the CELL cell (usage: make
 	sed -i 's/$(CELL)/$(CELL)_pex/g' $(NET_PEX_DIR)/$(CELL)_klayout_pex_$(EXT_MODE).spice
 	rm -rf $(NET_PEX_DIR)/$(CELL)__$(CELL)
 	rm -f $(CELL).nodes $(CELL).sim
-	@if [ -f $(SCH_DIR)/$(CELL)_pex.sym ]; then \
+	@if [ -f $(XSCHEM_SCH_DIR)/$(CELL)_pex.sym ]; then \
 		echo "Reordering pins in $(CELL)_klayout_pex_$(EXT_MODE).spice to match $(CELL)_pex.sym..."; \
-		python3 $(SCRIPTS_DIR)/reorder_spice_pins.py $(SCH_DIR)/$(CELL)_pex.sym $(NET_PEX_DIR)/$(CELL)_klayout_pex_$(EXT_MODE).spice; \
+		python3 $(SCRIPTS_DIR)/reorder_spice_pins.py $(XSCHEM_SCH_DIR)/$(CELL)_pex.sym $(NET_PEX_DIR)/$(CELL)_klayout_pex_$(EXT_MODE).spice; \
 	else \
-		echo "No symbol $(SCH_DIR)/$(CELL)_pex.sym found, skipping pin reorder."; \
+		echo "No symbol $(XSCHEM_SCH_DIR)/$(CELL)_pex.sym found, skipping pin reorder."; \
 	fi
 	sleep 4
 .PHONY: klayout-pex
@@ -334,11 +334,11 @@ magic-pex: ## Run Parasitic Extraction with Magic of the CELL cell (usage: make 
 	mv $(NET_PEX_DIR)/$(CELL).pex.spice $(NET_PEX_DIR)/$(CELL)_magic_pex_$(EXT_MODE).spice
 	sed -i 's/$(CELL)/$(CELL)_pex/g' $(NET_PEX_DIR)/$(CELL)_magic_pex_$(EXT_MODE).spice
 	rm -f $(NET_PEX_DIR)/pex_$(CELL).tcl $(NET_PEX_DIR)/$(CELL).ext $(NET_PEX_DIR)/$(CELL).res.ext
-	@if [ -f $(SCH_DIR)/$(CELL)_pex.sym ]; then \
+	@if [ -f $(XSCHEM_SCH_DIR)/$(CELL)_pex.sym ]; then \
 		echo "Reordering pins in $(CELL)_magic_pex_$(EXT_MODE).spice to match $(CELL)_pex.sym..."; \
-		python3 $(SCRIPTS_DIR)/reorder_spice_pins.py $(SCH_DIR)/$(CELL)_pex.sym $(NET_PEX_DIR)/$(CELL)_magic_pex_$(EXT_MODE).spice; \
+		python3 $(SCRIPTS_DIR)/reorder_spice_pins.py $(XSCHEM_SCH_DIR)/$(CELL)_pex.sym $(NET_PEX_DIR)/$(CELL)_magic_pex_$(EXT_MODE).spice; \
 	else \
-		echo "No symbol $(SCH_DIR)/$(CELL)_pex.sym found, skipping pin reorder."; \
+		echo "No symbol $(XSCHEM_SCH_DIR)/$(CELL)_pex.sym found, skipping pin reorder."; \
 	fi
 	sleep 4
 .PHONY: magic-pex

@@ -50,12 +50,13 @@
 │     ├─ inverter_top_black.png
 │     └─ inverter_top_white.png
 ├─ 📁 schematic/
-│  ├─ *.sch
-│  ├─ *.sym
-│  ├─ inverter_top.sch
-│  ├─ inverter_top.sym
-│  ├─ inverter_top_pex.sym
-│  └─ xschemrc
+│  └─ 📁 xschem/
+│     ├─ *.sch
+│     ├─ *.sym
+│     ├─ inverter_top.sch
+│     ├─ inverter_top.sym
+│     ├─ inverter_top_pex.sym
+│     └─ xschemrc
 ├─ 📁 scripts/
 │  ├─ 📁 plot_simulations/
 │  │  ├─ 📁 data/
@@ -71,12 +72,13 @@
 │  ├─ reorder_spice_pins.py
 │  └─ lay2img.py
 ├─ 📁 testbenches/
-│  ├─ *_tb_*.sch
-│  ├─ inverter_tb_ac_ol.sch
-│  ├─ inverter_tb_tran.sch
-│  ├─ inverter_tb_Vout.sch
-│  ├─ inverter_top_tb_tran.sch
-│  └─ xschemrc
+│  └─ 📁 xschem/
+│     ├─ *_tb_*.sch
+│     ├─ inverter_tb_ac_ol.sch
+│     ├─ inverter_tb_tran.sch
+│     ├─ inverter_tb_Vout.sch
+│     ├─ inverter_top_tb_tran.sch
+│     └─ xschemrc
 ├─ 📁 verification/
 │  ├─ 📁 cace/
 │  │  ├─ 📁 results/
@@ -136,7 +138,7 @@ The Makefile defines a `_GDS_EXT` variable that auto-selects the layout file ext
 
 ## Run Xschem Testbench Simulation
 
-Runs a single Xschem testbench in batch mode (no display): saves the schematic, exports the netlist to `testbenches/simulations/`, and runs the simulator. The testbench name **must** be specified via the `TB` variable:
+Runs a single Xschem testbench in batch mode (no display): saves the schematic, exports the netlist to `testbenches/xschem/simulations/`, and runs the simulator. The testbench name **must** be specified via the `TB` variable:
 
 ```sh
 make sim-xschem TB=<testbenchname>
@@ -151,7 +153,7 @@ make sim-xschem TB=inverter_tb_Vout
 make sim-xschem TB=inverter_top_tb_tran
 ```
 
-All available testbench schematics are located in `testbenches/`. Generated netlists are written to `testbenches/simulations/`.
+All available testbench schematics are located in `testbenches/xschem/`. Generated netlists are written to `testbenches/xschem/simulations/`.
 
 
 ## Plot Xschem Simulation Results
@@ -382,7 +384,7 @@ The `EXT_MODE` parameter selects the extraction mode:
 
 The `.subckt` name in the extracted SPICE file is automatically renamed from `<CELL>_flat` (kpex) or `<CELL>` (Magic) to `<CELL>_pex`.
 
-If a matching Xschem symbol (`schematic/<CELL>_pex.sym`) exists, the `.subckt` pin order in the extracted SPICE file is automatically reordered to match the symbol's pin positions. This ensures the PEX netlist can be used directly with the corresponding Xschem symbol for simulation regardless of the selected `EXT_MODE`.
+If a matching Xschem symbol (`schematic/xschem/<CELL>_pex.sym`) exists, the `.subckt` pin order in the extracted SPICE file is automatically reordered to match the symbol's pin positions. This ensures the PEX netlist can be used directly with the corresponding Xschem symbol for simulation regardless of the selected `EXT_MODE`.
 
 **KLayout PEX** uses `kpex` with the Magic extraction engine currently (2.5D engine is work in progress):
 
