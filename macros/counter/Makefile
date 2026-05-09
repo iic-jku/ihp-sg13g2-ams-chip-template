@@ -34,7 +34,7 @@ XSCHEM_SCH_DIR  := schematic/xschem
 SCRIPTS_DIR   	:= scripts
 SIM_PLOT_DIR  	:= scripts/plot_simulations
 RENDER_IMG_DIR 	:= render/img
-REPORT_DIR     	:= reports
+REPORT_DIR     	:= verification
 SRC_DIR 		:= rtl
 NET_NL_DIR    	:= netlist/nl
 NET_PNL_DIR  	:= netlist/pnl
@@ -259,7 +259,7 @@ build-top: ## Build macro (run LibreLane with KLayout & Magic DRC checks, copy r
 
 
 # LVS & DRC Verification Targets
-# The LibreLane flow already includes LVS and DRC checks with Magic and KLayout, and they are saved in the reports/ folder.
+# The LibreLane flow already includes LVS and DRC checks with Magic and KLayout, and they are saved in the verification/ folder.
 # ================================================================================================
 
 

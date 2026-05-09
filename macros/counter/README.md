@@ -108,7 +108,7 @@
 │  └─ 📁 xschem/
 │     ├─ counter_top_tb_tran.sch
 │     └─ xschemrc
-├─ 📁 reports/
+├─ 📁 verification/
 │  ├─ antenna_summary.rpt
 │  ├─ antenna_violations.rpt
 │  ├─ stapostpnr_summary.rpt
@@ -313,7 +313,7 @@ make librelane-klayout
 
 ## Copy Important Reports
 
-To copy the yosys synthesis checks, antenna reports, post-PnR timing summary, per-corner power reports, IR-drop report, Magic/KLayout DRC results, LVS report, and manufacturability report from the latest run into `reports/`, run:
+To copy the yosys synthesis checks, antenna reports, post-PnR timing summary, per-corner power reports, IR-drop report, Magic/KLayout DRC results, LVS report, and manufacturability report from the latest run into `verification/`, run:
 
 ```sh
 make copy-reports
@@ -402,7 +402,7 @@ make build-top
 
 ## Layout Versus Schematic (LVS) & Design Rule Check (DRC)
 
-The LibreLane flow already includes LVS and DRC checks with Magic and KLayout, and they are saved in the `reports/` folder.
+The LibreLane flow already includes LVS and DRC checks with Magic and KLayout, and they are saved in the `verification/` folder.
 
 
 ## Build and Verify All
