@@ -22,8 +22,8 @@ if {![info exists PDK]} {
 
 # Add current directory to xschem library path
 append XSCHEM_LIBRARY_PATH :[file dirname [info script]]
-append XSCHEM_LIBRARY_PATH :../testbenches/xschem
+append XSCHEM_LIBRARY_PATH :../../testbenches/xschem
 
 # Source project xschemrc
-source [file dirname [info script]]/../macros/inverter/schematic/xschemrc
-source [file dirname [info script]]/../macros/counter/schematic/xschemrc
+source [file dirname [info script]]/../../macros/inverter/schematic/xschem/xschemrc
+source [file dirname [info script]]/../../macros/counter/schematic/xschem/xschemrc
