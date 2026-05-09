@@ -20,6 +20,5 @@ if {![info exists PDK]} {
     source $env(PDK_ROOT)/$env(PDK)/libs.tech/xschem/xschemrc
 }
 
-# Add current directory to xschem library path
-append XSCHEM_LIBRARY_PATH :../../schematic/xschem
-append XSCHEM_LIBRARY_PATH :[file dirname [info script]]
+# Source top-level schematic xschemrc to pull in canonical library paths and macro libraries.
+source [file normalize [file join [file dirname [info script]] ../../schematic/xschem/xschemrc]]

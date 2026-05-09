@@ -20,6 +20,25 @@ if {![info exists PDK]} {
     source $env(PDK_ROOT)/$env(PDK)/libs.tech/xschem/xschemrc
 }
 
+# Append a library path only if not already present.
+if {![llength [info commands append_xschem_library_path_unique]]} {
+  proc append_xschem_library_path_unique {path} {
+    set normalized [file normalize $path]
+    if {![info exists ::XSCHEM_LIBRARY_PATH]} {
+      set ::XSCHEM_LIBRARY_PATH $normalized
+      return
+    }
+    set entries [split $::XSCHEM_LIBRARY_PATH :]
+    if {[lsearch -exact $entries $normalized] < 0} {
+      if {$::XSCHEM_LIBRARY_PATH eq ""} {
+        set ::XSCHEM_LIBRARY_PATH $normalized
+      } else {
+        append ::XSCHEM_LIBRARY_PATH :$normalized
+      }
+    }
+  }
+}
+
 # Add current directory to xschem library path
-append XSCHEM_LIBRARY_PATH :[file dirname [info script]]
-append XSCHEM_LIBRARY_PATH :../../testbenches/xschem
+append_xschem_library_path_unique [file dirname [info script]]
+append_xschem_library_path_unique [file join [file dirname [info script]] ../../testbenches/xschem]
