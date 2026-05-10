@@ -10172,7 +10172,7 @@
             "module": "$paramod$6198ff73a97ec62584bab938cf20bb6fe2fae627\\counter",
             "module_dynports": "00000000000000000000000000000001",
             "module_hdlname": "counter",
-            "module_src": "../rtl/counter.sv:9.1-43.10"
+            "module_src": "../rtl/counter.sv:9.1-42.10"
           },
           "port_directions": {
           },
@@ -10186,7 +10186,7 @@
           },
           "attributes": {
             "module_not_derived": "00000000000000000000000000000001",
-            "src": "../rtl/counter.sv:25.3-36.5|/foss/tools/yosys/bin/../share/yosys/ice40/ff_map.v:24.66-24.119"
+            "src": "../rtl/counter.sv:25.3-36.6|/foss/tools/yosys/bin/../share/yosys/ice40/ff_map.v:24.66-24.119"
           },
           "port_directions": {
             "C": "input",
@@ -10210,7 +10210,7 @@
           },
           "attributes": {
             "module_not_derived": "00000000000000000000000000000001",
-            "src": "../rtl/counter.sv:25.3-36.5|/foss/tools/yosys/bin/../share/yosys/ice40/ff_map.v:24.66-24.119"
+            "src": "../rtl/counter.sv:25.3-36.6|/foss/tools/yosys/bin/../share/yosys/ice40/ff_map.v:24.66-24.119"
           },
           "port_directions": {
             "C": "input",
@@ -10235,7 +10235,7 @@
           },
           "attributes": {
             "module_not_derived": "00000000000000000000000000000001",
-            "src": "../rtl/counter.sv:34.22-34.74|/foss/tools/yosys/bin/../share/yosys/ice40/arith_map.v:62.5-70.4|/foss/tools/yosys/bin/../share/yosys/ice40/cells_map.v:26.33-27.52"
+            "src": "../rtl/counter.sv:34.26-34.78|/foss/tools/yosys/bin/../share/yosys/ice40/arith_map.v:62.5-70.4|/foss/tools/yosys/bin/../share/yosys/ice40/cells_map.v:26.33-27.52"
           },
           "port_directions": {
             "I0": "input",
@@ -10258,7 +10258,7 @@
           "parameters": {
           },
           "attributes": {
-            "src": "../rtl/counter.sv:34.22-34.74|/foss/tools/yosys/bin/../share/yosys/ice40/arith_map.v:62.5-70.4"
+            "src": "../rtl/counter.sv:34.26-34.78|/foss/tools/yosys/bin/../share/yosys/ice40/arith_map.v:62.5-70.4"
           },
           "port_directions": {
             "CI": "input",
@@ -10280,7 +10280,7 @@
           },
           "attributes": {
             "module_not_derived": "00000000000000000000000000000001",
-            "src": "../rtl/counter.sv:25.3-36.5|/foss/tools/yosys/bin/../share/yosys/ice40/ff_map.v:24.66-24.119"
+            "src": "../rtl/counter.sv:25.3-36.6|/foss/tools/yosys/bin/../share/yosys/ice40/ff_map.v:24.66-24.119"
           },
           "port_directions": {
             "C": "input",
@@ -10305,7 +10305,7 @@
           },
           "attributes": {
             "module_not_derived": "00000000000000000000000000000001",
-            "src": "../rtl/counter.sv:34.22-34.74|/foss/tools/yosys/bin/../share/yosys/ice40/arith_map.v:62.5-70.4|/foss/tools/yosys/bin/../share/yosys/ice40/cells_map.v:26.33-27.52"
+            "src": "../rtl/counter.sv:34.26-34.78|/foss/tools/yosys/bin/../share/yosys/ice40/arith_map.v:62.5-70.4|/foss/tools/yosys/bin/../share/yosys/ice40/cells_map.v:26.33-27.52"
           },
           "port_directions": {
             "I0": "input",
@@ -10328,7 +10328,7 @@
           "parameters": {
           },
           "attributes": {
-            "src": "../rtl/counter.sv:34.22-34.74|/foss/tools/yosys/bin/../share/yosys/ice40/arith_map.v:62.5-70.4"
+            "src": "../rtl/counter.sv:34.26-34.78|/foss/tools/yosys/bin/../share/yosys/ice40/arith_map.v:62.5-70.4"
           },
           "port_directions": {
             "CI": "input",
@@ -10350,7 +10350,7 @@
           },
           "attributes": {
             "module_not_derived": "00000000000000000000000000000001",
-            "src": "../rtl/counter.sv:25.3-36.5|/foss/tools/yosys/bin/../share/yosys/ice40/ff_map.v:24.66-24.119"
+            "src": "../rtl/counter.sv:25.3-36.6|/foss/tools/yosys/bin/../share/yosys/ice40/ff_map.v:24.66-24.119"
           },
           "port_directions": {
             "C": "input",
@@ -10375,7 +10375,7 @@
           },
           "attributes": {
             "module_not_derived": "00000000000000000000000000000001",
-            "src": "../rtl/counter.sv:34.22-34.74|/foss/tools/yosys/bin/../share/yosys/ice40/arith_map.v:62.5-70.4|/foss/tools/yosys/bin/../share/yosys/ice40/cells_map.v:26.33-27.52"
+            "src": "../rtl/counter.sv:34.26-34.78|/foss/tools/yosys/bin/../share/yosys/ice40/arith_map.v:62.5-70.4|/foss/tools/yosys/bin/../share/yosys/ice40/cells_map.v:26.33-27.52"
           },
           "port_directions": {
             "I0": "input",
@@ -10398,7 +10398,7 @@
           "parameters": {
           },
           "attributes": {
-            "src": "../rtl/counter.sv:34.22-34.74|/foss/tools/yosys/bin/../share/yosys/ice40/arith_map.v:62.5-70.4"
+            "src": "../rtl/counter.sv:34.26-34.78|/foss/tools/yosys/bin/../share/yosys/ice40/arith_map.v:62.5-70.4"
           },
           "port_directions": {
             "CI": "input",
@@ -10420,7 +10420,7 @@
           },
           "attributes": {
             "module_not_derived": "00000000000000000000000000000001",
-            "src": "../rtl/counter.sv:25.3-36.5|/foss/tools/yosys/bin/../share/yosys/ice40/ff_map.v:24.66-24.119"
+            "src": "../rtl/counter.sv:25.3-36.6|/foss/tools/yosys/bin/../share/yosys/ice40/ff_map.v:24.66-24.119"
           },
           "port_directions": {
             "C": "input",
@@ -10445,7 +10445,7 @@
           },
           "attributes": {
             "module_not_derived": "00000000000000000000000000000001",
-            "src": "../rtl/counter.sv:34.22-34.74|/foss/tools/yosys/bin/../share/yosys/ice40/arith_map.v:62.5-70.4|/foss/tools/yosys/bin/../share/yosys/ice40/cells_map.v:26.33-27.52"
+            "src": "../rtl/counter.sv:34.26-34.78|/foss/tools/yosys/bin/../share/yosys/ice40/arith_map.v:62.5-70.4|/foss/tools/yosys/bin/../share/yosys/ice40/cells_map.v:26.33-27.52"
           },
           "port_directions": {
             "I0": "input",
@@ -10468,7 +10468,7 @@
           "parameters": {
           },
           "attributes": {
-            "src": "../rtl/counter.sv:34.22-34.74|/foss/tools/yosys/bin/../share/yosys/ice40/arith_map.v:62.5-70.4"
+            "src": "../rtl/counter.sv:34.26-34.78|/foss/tools/yosys/bin/../share/yosys/ice40/arith_map.v:62.5-70.4"
           },
           "port_directions": {
             "CI": "input",
@@ -10490,7 +10490,7 @@
           },
           "attributes": {
             "module_not_derived": "00000000000000000000000000000001",
-            "src": "../rtl/counter.sv:25.3-36.5|/foss/tools/yosys/bin/../share/yosys/ice40/ff_map.v:24.66-24.119"
+            "src": "../rtl/counter.sv:25.3-36.6|/foss/tools/yosys/bin/../share/yosys/ice40/ff_map.v:24.66-24.119"
           },
           "port_directions": {
             "C": "input",
@@ -10515,7 +10515,7 @@
           },
           "attributes": {
             "module_not_derived": "00000000000000000000000000000001",
-            "src": "../rtl/counter.sv:34.22-34.74|/foss/tools/yosys/bin/../share/yosys/ice40/arith_map.v:62.5-70.4|/foss/tools/yosys/bin/../share/yosys/ice40/cells_map.v:26.33-27.52"
+            "src": "../rtl/counter.sv:34.26-34.78|/foss/tools/yosys/bin/../share/yosys/ice40/arith_map.v:62.5-70.4|/foss/tools/yosys/bin/../share/yosys/ice40/cells_map.v:26.33-27.52"
           },
           "port_directions": {
             "I0": "input",
@@ -10538,7 +10538,7 @@
           "parameters": {
           },
           "attributes": {
-            "src": "../rtl/counter.sv:34.22-34.74|/foss/tools/yosys/bin/../share/yosys/ice40/arith_map.v:62.5-70.4"
+            "src": "../rtl/counter.sv:34.26-34.78|/foss/tools/yosys/bin/../share/yosys/ice40/arith_map.v:62.5-70.4"
           },
           "port_directions": {
             "CI": "input",
@@ -10560,7 +10560,7 @@
           },
           "attributes": {
             "module_not_derived": "00000000000000000000000000000001",
-            "src": "../rtl/counter.sv:25.3-36.5|/foss/tools/yosys/bin/../share/yosys/ice40/ff_map.v:24.66-24.119"
+            "src": "../rtl/counter.sv:25.3-36.6|/foss/tools/yosys/bin/../share/yosys/ice40/ff_map.v:24.66-24.119"
           },
           "port_directions": {
             "C": "input",
@@ -10585,7 +10585,7 @@
           },
           "attributes": {
             "module_not_derived": "00000000000000000000000000000001",
-            "src": "../rtl/counter.sv:34.22-34.74|/foss/tools/yosys/bin/../share/yosys/ice40/arith_map.v:62.5-70.4|/foss/tools/yosys/bin/../share/yosys/ice40/cells_map.v:26.33-27.52"
+            "src": "../rtl/counter.sv:34.26-34.78|/foss/tools/yosys/bin/../share/yosys/ice40/arith_map.v:62.5-70.4|/foss/tools/yosys/bin/../share/yosys/ice40/cells_map.v:26.33-27.52"
           },
           "port_directions": {
             "I0": "input",
@@ -10608,7 +10608,7 @@
           "parameters": {
           },
           "attributes": {
-            "src": "../rtl/counter.sv:34.22-34.74|/foss/tools/yosys/bin/../share/yosys/ice40/arith_map.v:62.5-70.4"
+            "src": "../rtl/counter.sv:34.26-34.78|/foss/tools/yosys/bin/../share/yosys/ice40/arith_map.v:62.5-70.4"
           },
           "port_directions": {
             "CI": "input",
@@ -10630,7 +10630,7 @@
           },
           "attributes": {
             "module_not_derived": "00000000000000000000000000000001",
-            "src": "../rtl/counter.sv:25.3-36.5|/foss/tools/yosys/bin/../share/yosys/ice40/ff_map.v:24.66-24.119"
+            "src": "../rtl/counter.sv:25.3-36.6|/foss/tools/yosys/bin/../share/yosys/ice40/ff_map.v:24.66-24.119"
           },
           "port_directions": {
             "C": "input",
@@ -10655,7 +10655,7 @@
           },
           "attributes": {
             "module_not_derived": "00000000000000000000000000000001",
-            "src": "../rtl/counter.sv:34.22-34.74|/foss/tools/yosys/bin/../share/yosys/ice40/arith_map.v:62.5-70.4|/foss/tools/yosys/bin/../share/yosys/ice40/cells_map.v:26.33-27.52"
+            "src": "../rtl/counter.sv:34.26-34.78|/foss/tools/yosys/bin/../share/yosys/ice40/arith_map.v:62.5-70.4|/foss/tools/yosys/bin/../share/yosys/ice40/cells_map.v:26.33-27.52"
           },
           "port_directions": {
             "I0": "input",
@@ -10761,7 +10761,7 @@
           "bits": [ 2 ],
           "attributes": {
             "hdlname": "counter_0 clock_i",
-            "src": "../rtl/counter.sv:13.14-13.21"
+            "src": "../rtl/counter.sv:13.15-13.22"
           }
         },
         "counter_0.counter_value": {
@@ -10783,7 +10783,7 @@
           "bits": [ 17 ],
           "attributes": {
             "abc9_carry": "00000000000000000000000000000001",
-            "src": "../rtl/counter.sv:34.22-34.74|/foss/tools/yosys/bin/../share/yosys/ice40/arith_map.v:62.5-70.4|/foss/tools/yosys/bin/../share/yosys/ice40/abc9_model.v:4.9-4.11"
+            "src": "../rtl/counter.sv:34.26-34.78|/foss/tools/yosys/bin/../share/yosys/ice40/arith_map.v:62.5-70.4|/foss/tools/yosys/bin/../share/yosys/ice40/abc9_model.v:4.9-4.11"
           }
         },
         "counter_0.counter_value_SB_DFFESR_Q_2_D": {
@@ -10797,7 +10797,7 @@
           "bits": [ 18 ],
           "attributes": {
             "abc9_carry": "00000000000000000000000000000001",
-            "src": "../rtl/counter.sv:34.22-34.74|/foss/tools/yosys/bin/../share/yosys/ice40/arith_map.v:62.5-70.4|/foss/tools/yosys/bin/../share/yosys/ice40/abc9_model.v:4.9-4.11"
+            "src": "../rtl/counter.sv:34.26-34.78|/foss/tools/yosys/bin/../share/yosys/ice40/arith_map.v:62.5-70.4|/foss/tools/yosys/bin/../share/yosys/ice40/abc9_model.v:4.9-4.11"
           }
         },
         "counter_0.counter_value_SB_DFFESR_Q_3_D": {
@@ -10811,7 +10811,7 @@
           "bits": [ 20 ],
           "attributes": {
             "abc9_carry": "00000000000000000000000000000001",
-            "src": "../rtl/counter.sv:34.22-34.74|/foss/tools/yosys/bin/../share/yosys/ice40/arith_map.v:62.5-70.4|/foss/tools/yosys/bin/../share/yosys/ice40/abc9_model.v:4.9-4.11"
+            "src": "../rtl/counter.sv:34.26-34.78|/foss/tools/yosys/bin/../share/yosys/ice40/arith_map.v:62.5-70.4|/foss/tools/yosys/bin/../share/yosys/ice40/abc9_model.v:4.9-4.11"
           }
         },
         "counter_0.counter_value_SB_DFFESR_Q_4_D": {
@@ -10825,7 +10825,7 @@
           "bits": [ 22 ],
           "attributes": {
             "abc9_carry": "00000000000000000000000000000001",
-            "src": "../rtl/counter.sv:34.22-34.74|/foss/tools/yosys/bin/../share/yosys/ice40/arith_map.v:62.5-70.4|/foss/tools/yosys/bin/../share/yosys/ice40/abc9_model.v:4.9-4.11"
+            "src": "../rtl/counter.sv:34.26-34.78|/foss/tools/yosys/bin/../share/yosys/ice40/arith_map.v:62.5-70.4|/foss/tools/yosys/bin/../share/yosys/ice40/abc9_model.v:4.9-4.11"
           }
         },
         "counter_0.counter_value_SB_DFFESR_Q_5_D": {
@@ -10839,7 +10839,7 @@
           "bits": [ 24 ],
           "attributes": {
             "abc9_carry": "00000000000000000000000000000001",
-            "src": "../rtl/counter.sv:34.22-34.74|/foss/tools/yosys/bin/../share/yosys/ice40/arith_map.v:62.5-70.4|/foss/tools/yosys/bin/../share/yosys/ice40/abc9_model.v:4.9-4.11"
+            "src": "../rtl/counter.sv:34.26-34.78|/foss/tools/yosys/bin/../share/yosys/ice40/arith_map.v:62.5-70.4|/foss/tools/yosys/bin/../share/yosys/ice40/abc9_model.v:4.9-4.11"
           }
         },
         "counter_0.counter_value_SB_DFFESR_Q_6_D": {
@@ -10853,7 +10853,7 @@
           "bits": [ 26 ],
           "attributes": {
             "abc9_carry": "00000000000000000000000000000001",
-            "src": "../rtl/counter.sv:34.22-34.74|/foss/tools/yosys/bin/../share/yosys/ice40/arith_map.v:62.5-70.4|/foss/tools/yosys/bin/../share/yosys/ice40/abc9_model.v:4.9-4.11"
+            "src": "../rtl/counter.sv:34.26-34.78|/foss/tools/yosys/bin/../share/yosys/ice40/arith_map.v:62.5-70.4|/foss/tools/yosys/bin/../share/yosys/ice40/abc9_model.v:4.9-4.11"
           }
         },
         "counter_0.counter_value_SB_DFFESR_Q_7_D": {
@@ -10881,7 +10881,7 @@
           "bits": [ 4 ],
           "attributes": {
             "hdlname": "counter_0 enable_i",
-            "src": "../rtl/counter.sv:15.14-15.22"
+            "src": "../rtl/counter.sv:15.15-15.23"
           }
         },
         "counter_value_o": {
