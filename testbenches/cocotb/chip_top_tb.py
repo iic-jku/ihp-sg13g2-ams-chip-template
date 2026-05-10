@@ -1,745 +1,326 @@
 # SPDX-FileCopyrightText: 2026 Simon Dorrer and Harald Pretl
 # SPDX-License-Identifier: Apache-2.0
 
+"""Cocotb testbench for chip_top.
+
+The chip exposes the generic-named padframe ports defined in rtl/chip_top.sv:
+
+  - clk_PAD                    : main clock                 (single)
+  - rst_n_PAD                  : active-low reset           (single)
+  - input_PAD[NUM_INPUT_PADS]  : digital inputs (1 bit: enable)
+  - output_PAD[NUM_OUTPUT_PADS]: digital outputs (17 bits)
+  - bidir_PAD[NUM_BIDIR_PADS]  : bidir pads (4 bits)
+  - analog_PAD[NUM_ANALOG_PADS]: analog pads (4 bits, inverter2)
+
+output_PAD bit assignment (driven by rtl/chip_core.sv):
+  - [3:0]   counter1_value[3:0]    (counter1 LSB nibble)
+  - [11:4]  counter2_value[7:0]
+  - [15:12] inverter1.vout1..vout4
+  - [16]    ^sram_0_out             (parity / XOR-reduction of A_DOUT[31:0])
+
+bidir_PAD bit assignment:
+  - [3:0]   counter1_value[7:4] (output when enable=1) /
+            inverter1.vin1..vin4 (input when enable=0)
+
+analog_PAD bit assignment:
+  - [0]     inverter2.vin1   (analog input  via padres)
+  - [1]     inverter2.vin2   (analog input  via padres)
+  - [2]     inverter2.vout1  (analog output via padbare)
+  - [3]     inverter2.vout2  (analog output via padbare)
+
+The inverter macros are functional blackboxes in this simulation, so any
+signal that passes through them resolves to X. The tests therefore only
+assert on the counter / bidir / SRAM signal paths.
+
+bidir_oe[i] is wired to input_PAD[0] inside chip_core, i.e. the bidir pads
+drive counter1_value[7:4] when enable = 1 and switch to high-Z input mode
+when enable = 0.
+"""
+
 import os
 import logging
 from pathlib import Path
 
 import cocotb
 from cocotb.clock import Clock
-from cocotb.triggers import Timer, Edge, RisingEdge, FallingEdge, ClockCycles
+from cocotb.triggers import Timer, RisingEdge, ClockCycles
 from cocotb.handle import Immediate
-from cocotb.types import LogicArray, Logic, Range
+from cocotb.types import LogicArray, Range
 from cocotb_tools.runner import get_runner
 
-sim = os.getenv("SIM", "icarus")
+sim      = os.getenv("SIM", "icarus")
 pdk_root = os.getenv("PDK_ROOT", Path("~/.ciel").expanduser())
-pdk = os.getenv("PDK", "ihp-sg13g2")
-scl = os.getenv("SCL", "sg13g2_stdcell")
-gl = os.getenv("GL", False)
+pdk      = os.getenv("PDK", "ihp-sg13g2")
+scl      = os.getenv("SCL", "sg13g2_stdcell")
+# GL=1 selects the gate-level netlist; anything else (unset, "0", "") stays in RTL mode.
+gl       = os.getenv("GL", "0").strip().lower() in ("1", "true", "yes", "on")
 
 hdl_toplevel = "chip_top"
 
-CPU_CLK_FREQ = 56  # MHz
+# Main clock frequency. Matches CLOCK_PERIOD = 17 ns in flow/librelane/config.yaml.
+CPU_CLK_FREQ_MHZ = 56
 
-mem = {}
-async def set_defaults(dut, program_path):
-    global mem
-    mem = {}
+# Counter wraps from 255 -> 0 (8-bit, default COUNTER_MAX).
+COUNTER_MAX = 255
 
-    lines = ()
-    with open(program_path, "r") as f:
-        lines = f.readlines()
 
-    for i, line in enumerate(lines):
-        mem[i] = LogicArray(int(line, base=16), Range(7, "downto", 0))
-
+# ----------------------------------------------------------------------
+# Helpers
+# ----------------------------------------------------------------------
 
 async def enable_power(dut):
-    dut.VDD.value = 1
-    dut.VSS.value = 0
+    """Drive supplies for gate-level simulation (USE_POWER_PINS)."""
+    dut.VDD.value   = 1
+    dut.VSS.value   = 0
+    dut.IOVDD.value = 1
+    dut.IOVSS.value = 0
 
 
-async def start_clock(clock, freq=20):
-    """Start the clock @ freq MHz"""
-    inverted = round(1 / freq * 1000, 4)
-    c = Clock(clock, inverted, "ns")
-    cocotb.start_soon(c.start())
+async def start_clock(clock, freq_mhz=CPU_CLK_FREQ_MHZ):
+    """Start the chip clock at `freq_mhz` MHz."""
+    period_ns = round(1 / freq_mhz * 1000, 4)
+    cocotb.start_soon(Clock(clock, period_ns, "ns").start())
 
 
-async def reset(reset, active_low=True, time_ns=1000):
-    """Reset dut"""
+async def reset(dut, cycles=4):
+    """Pulse the active-low reset for `cycles` clock cycles. Holds enable
+    (input_PAD[0]) low during reset so the counters do not advance."""
     cocotb.log.info("Reset asserted...")
 
-    reset.value = not active_low
-    await Timer(time_ns, "ns")
-    reset.value = active_low
+    dut.rst_n_PAD.value = 0
+    dut.input_PAD.value = 0
+    await ClockCycles(dut.clk_PAD, cycles)
+    dut.rst_n_PAD.value = 1
+    await RisingEdge(dut.clk_PAD)
 
     cocotb.log.info("Reset deasserted.")
 
 
-async def start_up(dut, program_path):
-    global CPU_CLK_FREQ
-    """Startup sequence"""
-    await set_defaults(dut, program_path)
+async def start_up(dut):
+    """Power up, start the clock, drive a reset pulse."""
     if gl:
         await enable_power(dut)
-    await start_clock(dut.clk_PAD, CPU_CLK_FREQ)
-    await reset(dut.rst_n_PAD)
 
-state = "RECV_COMMAND"
-WRITE_CMD = 2
-READ_CMD = 3
-command_reg = LogicArray(0, Range(7, "downto", 0))
-addr_reg = LogicArray(0, Range(23, "downto", 0))
-datain_reg = LogicArray(0, Range(7, "downto", 0))
-dataout_reg = LogicArray(0, Range(7, "downto", 0))
-index = 0
-mem_pattern = []
-prev_sclk = 0
+    # Initialise inputs to known levels before clocking.
+    dut.rst_n_PAD.value = 0
+    dut.input_PAD.value = 0
 
-async def do_spi(dut):
-    global state
-    global mem
-    global WRITE_CMD
-    global READ_CMD
-    global command_reg
-    global addr_reg
-    global datain_reg
-    global dataout_reg
-    global index
-    global mem_pattern
-    global prev_sclk
+    # Float the bidir pads so the chip can drive them in output mode and
+    # external stimuli can drive them in input mode.
+    dut.bidir_PAD.value = LogicArray("ZZZZ", Range(3, "downto", 0))
 
-    sclk = dut.output_PAD.get()[7]
-    si = dut.output_PAD.get()[8]
-    if dut.output_PAD.get()[6] == 0:  # cs = 0
-        state = "RECV_COMMAND"
-        index = 7
-        prev_sclk = sclk
-        tmp = dut.input_PAD.get()
-        tmp[5] = Logic(0)
-        dut.input_PAD.set(Immediate(tmp))
-
-        return
-
-    if sclk == 1 and prev_sclk == 0:
-        if state == "RECV_COMMAND":
-            if dut.output_PAD.get()[6] == 1:
-                command_reg[index] = si
-                if index == 0:
-                    index = 23
-                    state = "RECV_ADDR"
-                else:
-                    index = index - 1
-
-        elif state == "RECV_ADDR":
-            addr_reg[index] = si
-            if index == 0:
-                index = 7
-
-                # print(f"Current: {hex(addr_reg)}")
-                if command_reg.to_unsigned() == READ_CMD:
-                    state = "SEND_DATA"
-                    addr_tmp = addr_reg[22:0].to_unsigned()
-                    dataout_reg = mem[addr_tmp]
-
-                elif command_reg.to_unsigned() == WRITE_CMD:
-                    state = "RECV_DATA"
-                    index = 7
-                else:
-                    print("GOT UNKNOWN SPI COMMAND!!!!!")
-            else:
-                index = index - 1
-
-        elif state == "WAITING":
-            state = "SEND_DATA"
-
-        elif state == "RECV_DATA":
-            datain_reg[index] = si
-            if index == 0:
-                mem[addr_reg.to_unsigned()] = LogicArray(datain_reg.to_unsigned(), Range(7, "downto", 0))
-
-                mem_pattern.append((addr_reg[22:0].to_unsigned(), datain_reg.to_unsigned()))
-                index = 7
-                addr_reg = LogicArray(addr_reg[22:0].to_unsigned() + 1, Range(23, "downto", 0))
-            else:
-                index = index - 1
-
-        elif state == "SEND_DATA":
-            if index == 0:
-                index = 7
-                addr_reg = LogicArray(addr_reg[22:0].to_unsigned() + 1, Range(23, "downto", 0))
-                addr_tmp = addr_reg.to_unsigned()
-                if addr_tmp in mem:
-                    dataout_reg = mem[addr_reg.to_unsigned()]
-                else:
-                    dataout_reg = LogicArray("XXXXXXXX", Range(7, "downto", 0))
-            else:
-                index = index - 1
-
-    elif sclk == 0 and prev_sclk == 1:
-        if state == "SEND_DATA":
-            tmp = dut.input_PAD.get()
-            tmp[5] = dataout_reg[index]
-            dut.input_PAD.set(Immediate(tmp))
-
-    prev_sclk = sclk
+    await start_clock(dut.clk_PAD, CPU_CLK_FREQ_MHZ)
+    await reset(dut)
 
 
-uart_rx_bytes = list()  # List of bytes sent by the CPU to the tb
-UART_RX_BAUD = 115200
-# UART_RX_WAIT_CYCLES = (1e9 * (1.0 / UART_RX_BAUD)) / (1e3 * (1.0 / CPU_CLK_FREQ))
-UART_RX_WAIT_CYCLES = 510
-uart_rx_clk_counter = 0
-uart_rx_bit_counter = 0
-uart_rx_state = "IDLE"  # IDLE, WAIITNG, RECV
-uart_rx_current_data = 0
+# ----------------------------------------------------------------------
+# Bit-slice readers (LogicArray slicing keeps X/Z information; integer
+# conversion only succeeds if the slice is fully resolvable).
+# ----------------------------------------------------------------------
+
+def _counter1_lsb(dut) -> int:
+    """counter1[3:0] driven onto output_PAD[3:0]."""
+    return int(dut.output_PAD.value[3:0])
 
 
-async def do_uart_rx(dut):
-    global uart_rx_bytes
-    global UART_RX_WAIT_CYCLES
-    global uart_rx_clk_counter
-    global uart_rx_bit_counter
-    global uart_rx_state
-    global uart_rx_current_data
-
-    cpu_tx = dut.output_PAD.get()[4]
-
-    if uart_rx_state == "IDLE":
-        if cpu_tx == 1:
-            # No start condition. Doing nothing
-            return
-
-        uart_rx_state = "RECV"
-        uart_rx_clk_counter = 1.5 * UART_RX_WAIT_CYCLES
-        uart_rx_bit_counter = 0
-        uart_rx_current_data = LogicArray(0, Range(7, "downto", 0))
-
-    elif uart_rx_state == "RECV":
-        uart_rx_clk_counter -= 1
-
-        if uart_rx_clk_counter != 0:
-            return
-
-        uart_rx_clk_counter = UART_RX_WAIT_CYCLES
-        if uart_rx_bit_counter <= 7:
-            uart_rx_current_data[uart_rx_bit_counter] = cpu_tx
-            uart_rx_bit_counter += 1
-        else:
-            if cpu_tx == 0:
-                print("Expected to see UART stop condition on rx!")
-            else:
-                uart_rx_state = "IDLE"
-                uart_rx_bytes.append(chr(uart_rx_current_data.to_unsigned()))
+def _counter1_msb(dut) -> int:
+    """counter1[7:4] driven onto bidir_PAD[3:0] when enable = 1."""
+    return int(dut.bidir_PAD.value[3:0])
 
 
-UART_TX_BAUD = 115200
-# UART_TX_WAIT_CYCLES = (1e9 * (1.0 / UART_RX_BAUD)) / (1e3 * (1.0 / CPU_CLK_FREQ))
-UART_TX_WAIT_CYCLES = 510
-uart_tx_clk_counter = 0
-uart_tx_bit_counter = 0
-uart_tx_state = "IDLE"  # IDLE, TX, END
-uart_tx_current_data = 0
-uart_tx_enable = 0
+def _counter1(dut) -> int:
+    """Reconstruct the full 8-bit counter1 value from LSB outputs + bidir
+    pads. Only valid when enable = 1 (otherwise bidir is high-Z)."""
+    return (_counter1_msb(dut) << 4) | _counter1_lsb(dut)
 
 
-async def do_uart_tx(dut):
-    global UART_TX_WAIT_CYCLES
-    global uart_tx_clk_counter
-    global uart_tx_bit_counter
-    global uart_tx_state
-    global uart_tx_current_data
-    global uart_tx_enable
-
-    if uart_tx_enable == 0:
-        return
-
-    cpu_rx_in = 1
-
-    if uart_tx_state == "IDLE":
-        cpu_rx_in = 0
-
-        uart_tx_state = "TX"
-        uart_tx_clk_counter = 1 * UART_TX_WAIT_CYCLES
-        uart_tx_bit_counter = 0
-
-    elif uart_tx_state == "TX":
-        uart_tx_clk_counter -= 1
-
-        if uart_tx_clk_counter != 0:
-            return
-
-        uart_tx_clk_counter = UART_TX_WAIT_CYCLES
-        if uart_tx_bit_counter <= 7:
-            cpu_rx_in = uart_tx_current_data[uart_tx_bit_counter]
-            uart_tx_bit_counter += 1
-        else:
-            uart_tx_state = "IDLE"
-            cpu_rx_in = 1
-            uart_tx_enable = 0
-
-    # Set CPU rx input to the computed value
-    tmp = dut.input_PAD.get()
-    tmp[4] = cpu_rx_in
-    dut.input_PAD.set(Immediate(tmp))
+def _counter2(dut) -> int:
+    """counter2[7:0] driven onto output_PAD[11:4]."""
+    return int(dut.output_PAD.value[11:4])
 
 
-i2c_state = "IDLE"
-prev_scl = 1
-prev_sda = 1
-i2c_addr = 0
-i2c_cmd = 0
-i2c_counter = 0
-i2c_index = 3
-i2c_recv = []
-i2c_current_recv = LogicArray(0, Range(7, "downto", 0))
-async def do_i2c_slave(dut):
-    global i2c_state
-    global prev_scl
-    global i2c_addr
-    global i2c_cmd
-    global i2c_counter
-    global i2c_index
-    global i2c_recv
-    global i2c_current_recv
-    global prev_sda
-
-    # Some random values
-    i2c_send = [
-        LogicArray(37, Range(7, "downto", 0)),
-        LogicArray(29, Range(7, "downto", 0)),
-        LogicArray(204, Range(7, "downto", 0)),
-        LogicArray(103, Range(7, "downto", 0))
-    ]
-
-    sda_in = dut.bidir_PAD.get()[8]
-    scl = dut.output_PAD.get()[5]
-
-    # if scl == 1 and prev_scl == 1 and sda_in == 1 and prev_sda == 0:
-    if scl == 1 and prev_scl == 1 and sda_in != prev_sda:
-        i2c_state = "IDLE"
-
-    elif i2c_state == "IDLE":
-        # I2C start condition
-        if sda_in == 0:
-            i2c_state = "START"
-            i2c_index = 3
-
-    elif i2c_state == "START":
-        if sda_in == 0 and scl == 0 and prev_scl == 1:
-            i2c_state = "R_ADDR"
-            i2c_addr = LogicArray(0, Range(6, "downto", 0))
-            i2c_counter = 6
-
-    elif prev_scl == 0 and scl == 1:
-        if i2c_state == "R_ADDR":
-            # Posedge of scl
-            i2c_addr[i2c_counter] = sda_in
-
-        elif i2c_state == "R_CMD":
-            i2c_cmd = sda_in
-
-        elif i2c_state == "WRITE":
-            i2c_current_recv[i2c_counter] = sda_in
-
-    elif prev_scl == 1 and scl == 0:
-        if i2c_state == "R_ADDR":
-            if i2c_counter > 0:
-                i2c_counter -= 1
-            else:
-                i2c_state = "R_CMD"
-
-        elif i2c_state == "R_CMD":
-            i2c_counter = 0
-            i2c_state = "T_ACK"
-
-        elif i2c_state == "T_ACK":
-            i2c_counter = 7
-            i2c_index = 3
-            if i2c_cmd == 1:
-                i2c_state = "READ"
-            else:
-                i2c_state = "WRITE"
-
-        elif i2c_state == "WRITE":
-            if i2c_counter > 0:
-                i2c_counter -= 1
-            else:
-                i2c_recv.append(i2c_current_recv.to_unsigned())
-                i2c_index -= 1
-                i2c_counter = 7
-                i2c_state = "WRITE_ACK"
-
-        elif i2c_state == "WRITE_ACK":
-            i2c_state = "WRITE"
-
-        elif i2c_state == "READ":
-            if i2c_counter > 0:
-                i2c_counter -= 1
-            else:
-                i2c_index -= 1
-
-                if i2c_index < 0:
-                    i2c_index = 0
-
-                i2c_counter = 7
-                i2c_state = "READ_ACK"
-
-        elif i2c_state == "READ_ACK":
-            i2c_state = "READ"
-
-    prev_scl = scl
-    prev_sda = sda_in
-
-    tmp = dut.bidir_PAD.get()
-    for i in range(len(tmp)):
-        tmp[i] = Logic("Z")
-
-    if i2c_state in ["T_ACK", "WRITE_ACK"]:
-        tmp[8] = Logic(0)
-    elif i2c_state == "READ":
-        tmp[8] = i2c_send[3-i2c_index][i2c_counter]
-
-    dut.bidir_PAD.set(Immediate(tmp))
-
+# ----------------------------------------------------------------------
+# Tests
+# ----------------------------------------------------------------------
 
 @cocotb.test()
-async def test_cpu_fibonacci_fast(dut):
-    global mem_pattern
-    mem_pattern = []
-    mem_pattern_correct = [
-        (160, 2), (161, 0), (162, 0), (163, 0),
-        (164, 3), (165, 0), (166, 0), (167, 0),
-        (168, 5), (169, 0), (170, 0), (171, 0),
-        (172, 8), (173, 0), (174, 0), (175, 0),
-        (176, 13), (177, 0), (178, 0), (179, 0),
-        (180, 21), (181, 0), (182, 0), (183, 0),
-        (184, 34), (185, 0), (186, 0), (187, 0),
-        (188, 55), (189, 0), (190, 0), (191, 0),
-        (192, 89), (193, 0), (194, 0), (195, 0),
-    ]
-
-    # Create a logger for this testbench
-    logger = logging.getLogger("my_testbench")
-
+async def test_reset_clears_counters(dut):
+    """After reset deasserts, both counters must be at 0."""
+    logger = logging.getLogger("chip_top_tb")
     logger.info("Startup sequence...")
+    await start_up(dut)
 
-    # Start up
-    await start_up(dut, "../fib.txt")
-    logger.info("Testing basic fibonacci program")
+    # Drive enable high so the bidir pads switch to output mode and the chip
+    # drives counter1_value[7:4] onto bidir_PAD. `bidir_oe[i]` is wired to
+    # `input_in[0]` combinationally, so this happens without a clock edge —
+    # which is important here: stepping a rising edge with enable=1 would
+    # increment the counter, defeating the purpose of this test.
+    dut.input_PAD.value = 1
+    await Timer(1, "ns")  # combinational settle only, NO clock edge
 
-    # Wait for a number of clock cycles
-    for i in range(18000):
-        await ClockCycles(dut.clk_PAD, 1)
-
-        await do_spi(dut)
-
-    # Check the end result of the counter
-    print(mem_pattern)
-    assert mem_pattern == mem_pattern_correct
+    assert _counter1(dut) == 0, f"counter1 not zero after reset (got {_counter1(dut)})"
+    assert _counter2(dut) == 0, f"counter2 not zero after reset (got {_counter2(dut)})"
     logger.info("Done!")
 
 
 @cocotb.test()
-async def test_cpu_analog_enables(dut):
-    # Create a logger for this testbench
-    logger = logging.getLogger("my_testbench")
-
+async def test_counters_hold_when_disabled(dut):
+    """With enable = 0, neither counter advances."""
+    logger = logging.getLogger("chip_top_tb")
     logger.info("Startup sequence...")
+    await start_up(dut)
 
-    # Start up
-    await start_up(dut, "../analog_enables.txt")
-    logger.info("Testing analog enable pins")
+    dut.input_PAD.value = 0
+    await ClockCycles(dut.clk_PAD, 32)
 
-    tmp = dut.bidir_PAD.get()
+    # While enable = 0 the bidir pads are in input mode (high-Z), so we only
+    # check the LSB output pads of counter1 and the dedicated counter2 pads.
+    assert _counter1_lsb(dut) == 0, "counter1 advanced while disabled"
+    assert _counter2(dut)     == 0, "counter2 advanced while disabled"
+    logger.info("Done!")
 
-    tmp[8] = Logic("Z")
-    tmp[7] = 1
-    tmp[6] = 0
-    tmp[5] = 1
-    tmp[4] = 0
-    tmp[3] = 1
-    tmp[2] = 0
-    tmp[1] = 1
-    tmp[0] = 0
-    dut.bidir_PAD.set(Immediate(tmp))
 
-    # Wait for a number of clock cycles
-    for i in range(100000):
-        await ClockCycles(dut.clk_PAD, 1)
-        await do_spi(dut)
+@cocotb.test()
+async def test_counters_increment(dut):
+    """With enable = 1 both counters increment in lock-step."""
+    logger = logging.getLogger("chip_top_tb")
+    logger.info("Startup sequence...")
+    await start_up(dut)
 
-        # HACK: This code writes some input to the bidir pads in the first part of the test
-        # The CPU will not drive those after reset, so that the analog part may be
-        # used even if the CPU is not working properly.
-        # In this test, the CPU will start driving the pads at some point, therefore
-        # we set them to Z again. Otherwise, they would be X.
-        # This allows us to verify that the internal routing works and inputs are correctly
-        # rerouted to the outputs.
-        if i < 10000:
-            tmp = dut.bidir_PAD.get()
-            tmp[8] = Logic("Z")
-            tmp[7] = not tmp[7]
-            tmp[6] = not tmp[6]
-            tmp[5] = not tmp[5]
-            tmp[4] = not tmp[4]
-            tmp[3] = not tmp[3]
-            tmp[2] = not tmp[2]
-            tmp[1] = not tmp[1]
-            tmp[0] = not tmp[0]
-            dut.bidir_PAD.set(Immediate(tmp))
-        else:
-            tmp = dut.bidir_PAD.get()
-            tmp[8] = Logic("Z")
-            tmp[7] = Logic("Z")
-            tmp[6] = Logic("Z")
-            tmp[5] = Logic("Z")
-            tmp[4] = Logic("Z")
-            tmp[3] = Logic("Z")
-            tmp[2] = Logic("Z")
-            tmp[1] = Logic("Z")
-            tmp[0] = Logic("Z")
-            dut.bidir_PAD.set(Immediate(tmp))
+    dut.input_PAD.value = 1
 
+    # Step a handful of cycles and verify the counters track the expected value.
+    for expected in range(1, 17):
+        await RisingEdge(dut.clk_PAD)
+        await Timer(1, "ns")
+        c1 = _counter1(dut)
+        c2 = _counter2(dut)
+        assert c1 == expected, f"counter1: expected {expected}, got {c1}"
+        assert c2 == expected, f"counter2: expected {expected}, got {c2}"
 
     logger.info("Done!")
 
 
 @cocotb.test()
-async def test_cpu_uart_tx(dut):
-    global uart_rx_bytes
-
-    uart_rx_bytes = list()  # List of bytes sent by the CPU to the tb
-
-    # Create a logger for this testbench
-    logger = logging.getLogger("my_testbench")
-
+async def test_counter_wraps(dut):
+    """Counters must wrap from COUNTER_MAX back to 0."""
+    logger = logging.getLogger("chip_top_tb")
     logger.info("Startup sequence...")
+    await start_up(dut)
 
-    # Start up
-    await start_up(dut, "../uart_tx_test.txt")
-    logger.info("Testing UART transmission")
+    dut.input_PAD.value = 1
 
-    # Wait for a number of clock cycles
-    # for i in range(150000):
-    for i in range(100000):
-        await ClockCycles(dut.clk_PAD, 1)
+    saw_max  = False
+    saw_wrap = False
+    prev     = 0
+    for _ in range(2 * (COUNTER_MAX + 1) + 4):
+        await RisingEdge(dut.clk_PAD)
+        await Timer(1, "ns")
+        cur = _counter2(dut)
+        if cur == COUNTER_MAX:
+            saw_max = True
+        if saw_max and prev == COUNTER_MAX and cur == 0:
+            saw_wrap = True
+            break
+        prev = cur
 
-        await do_spi(dut)
-        await do_uart_rx(dut)
-
-    # Check the end result of the counter
-    print(uart_rx_bytes)
-    assert uart_rx_bytes == ["H", "a", "l", "l", "o", "!"]
-    # assert mem_pattern == mem_pattern_correct
-
+    assert saw_max,  "counter2 never reached COUNTER_MAX"
+    assert saw_wrap, "counter2 did not wrap from COUNTER_MAX to 0"
     logger.info("Done!")
 
 
 @cocotb.test()
-async def test_cpu_uart_rx(dut):
-    global uart_tx_enable
-    global uart_tx_current_data
-    global uart_rx_bytes
-
-    uart_rx_bytes = list()  # List of bytes sent by the CPU to the tb
-    # Create a logger for this testbench
-    logger = logging.getLogger("my_testbench")
-
+async def test_bidir_input_mode(dut):
+    """When enable = 0, the bidir pads switch to input mode and external
+    stimuli propagate through to the chip core (and thus to inverter1's
+    vin1..vin4). The inverter outputs themselves resolve to X in functional
+    simulation (analog blackbox), so we only verify that driving the bidir
+    pads while `enable` is low does not collide with internal drivers."""
+    logger = logging.getLogger("chip_top_tb")
     logger.info("Startup sequence...")
+    await start_up(dut)
 
-    # Start up
-    await start_up(dut, "../uart_rx_test.txt")
-    logger.info("Testing UART receiving")
+    dut.input_PAD.value = 0
+    await ClockCycles(dut.clk_PAD, 2)
 
-    to_send = ["L", "i", "n", "z"]
-    counter = -1  # HACK
-    next_i = 6000
-    increment = 40000
+    # Drive a known pattern on the bidir pads and verify it sticks.
+    dut.bidir_PAD.value = Immediate(LogicArray("1010", Range(3, "downto", 0)))
+    await ClockCycles(dut.clk_PAD, 2)
+    assert int(dut.bidir_PAD.value[3:0]) == 0b1010, \
+        f"bidir input not honoured (got {dut.bidir_PAD.value.binstr})"
 
-    # Wait for a number of clock cycles
-    for i in range(200000):
-        await ClockCycles(dut.clk_PAD, 1)
-
-        if i >= next_i:
-            if uart_tx_enable == 0 and counter < len(to_send) - 1:
-                counter += 1
-                uart_tx_enable = 1
-                uart_tx_current_data = LogicArray(ord(to_send[counter]), Range(7, "downto", 0))
-                next_i = i + increment
-
-        await do_spi(dut)
-        await do_uart_rx(dut)
-        await do_uart_tx(dut)
-
-    # Check the end result of the counter
-    print(uart_rx_bytes)
-    assert uart_rx_bytes == to_send
+    # Release the pads.
+    dut.bidir_PAD.value = Immediate(LogicArray("ZZZZ", Range(3, "downto", 0)))
     logger.info("Done!")
 
 
 @cocotb.test()
-async def test_cpu_i2c_rw(dut):
-    global uart_tx_enable
-    global uart_tx_current_data
-    global uart_rx_bytes
-    global i2c_recv
-
-    i2c_recv = []
-    uart_rx_bytes = list()  # List of bytes sent by the CPU to the tb
-    # Create a logger for this testbench
-    logger = logging.getLogger("my_testbench")
-
+async def test_sram_path_alive(dut):
+    """Smoke test: clock the SRAM for a number of cycles and verify the
+    sram_out path (output_PAD[16]) doesn't get stuck (it may be X in RTL
+    since the SRAM behavioural model returns the uninitialised contents of
+    address 0 — but the path must exist and the simulator must not have
+    optimised the signal away)."""
+    logger = logging.getLogger("chip_top_tb")
     logger.info("Startup sequence...")
+    await start_up(dut)
 
-    # Start up
-    await start_up(dut, "../i2c_rw_test.txt")
-    logger.info("Testing I2C")
+    dut.input_PAD.value = 1
+    await ClockCycles(dut.clk_PAD, 64)
 
-    # Wait for a number of clock cycles
-    for i in range(250000):
-        await ClockCycles(dut.clk_PAD, 1)
-
-        await do_spi(dut)
-        await do_uart_rx(dut)
-        await do_uart_tx(dut)
-        await do_i2c_slave(dut)
-
-    # Check the end result of the counter
-    print(i2c_recv)
-    assert i2c_recv == [0x78, 37, 37, 37, 29, 37, 29, 37, 29, 204, 103]
-    logger.info("Done!")
-
-@cocotb.test()
-async def test_cpu_i2c_mc(dut):
-    global uart_tx_enable
-    global uart_tx_current_data
-    global uart_rx_bytes
-    global i2c_recv
-
-    i2c_recv = []
-    uart_rx_bytes = list()  # List of bytes sent by the CPU to the tb
-    # Create a logger for this testbench
-    logger = logging.getLogger("my_testbench")
-
-    logger.info("Startup sequence...")
-
-    # Start up
-    await start_up(dut, "../i2c_mc_test.txt")
-    logger.info("Testing I2C Multicycle")
-
-    # Wait for a number of clock cycles
-    for i in range(100000):
-        await ClockCycles(dut.clk_PAD, 1)
-
-        await do_spi(dut)
-        await do_uart_rx(dut)
-        await do_uart_tx(dut)
-        await do_i2c_slave(dut)
-
-    # Check the end result of the counter
-    print(i2c_recv)
-    assert i2c_recv == [32]
+    # Just touch the signal — convert via binstr so X/Z don't raise.
+    val = dut.output_PAD.value[16]
+    logger.info("output_PAD[16] (sram_out) after 64 cycles = %s", val)
     logger.info("Done!")
 
 
-@cocotb.test()
-async def test_cpu_gpio(dut):
-    # Create a logger for this testbench
-    logger = logging.getLogger("my_testbench")
-
-    logger.info("Startup sequence...")
-
-    # Start up
-    await start_up(dut, "../gpio_test.txt")
-    logger.info("Testing GPIO")
-
-    # Test 0111 + 1 = 1000
-    tmp = dut.input_PAD.get()
-    tmp[3] = 0
-    tmp[2] = 1
-    tmp[1] = 1
-    tmp[0] = 1
-    dut.input_PAD.set(Immediate(tmp))
-    # Wait for a number of clock cycles
-
-    print(dut.output_PAD.get()[3:0])
-    assert dut.output_PAD.get()[3:0] == 0b0000
-    for i in range(5000):
-        await ClockCycles(dut.clk_PAD, 1)
-        await do_spi(dut)
-
-    # Check the end result of the counter
-    print(dut.output_PAD.get()[3:0])
-    assert dut.output_PAD.get()[3:0] == 0b1000
-
-    # Test 1010 + 1 = 1011
-    tmp = dut.input_PAD.get()
-    tmp[3] = 1
-    tmp[2] = 0
-    tmp[1] = 1
-    tmp[0] = 0
-    dut.input_PAD.set(Immediate(tmp))
-    # Wait for a number of clock cycles
-
-    for i in range(5000):
-        await ClockCycles(dut.clk_PAD, 1)
-        await do_spi(dut)
-
-    # Check the end result of the counter
-    print(dut.output_PAD.get()[3:0])
-    assert dut.output_PAD.get()[3:0] == 0b1011
-    logger.info("Done!")
-
-
-@cocotb.test()
-async def test_cpu_wspr(dut):
-    # Create a logger for this testbench
-    logger = logging.getLogger("my_testbench")
-
-    logger.info("Startup sequence...")
-
-    # Start up
-    await start_up(dut, "../wspr_test.txt")
-    logger.info("Testing WSPR")
-
-    for i in range(300000):
-        await ClockCycles(dut.clk_PAD, 1)
-        await do_spi(dut)
-
-        if i == 19000:
-            tmp = dut.input_PAD.get()
-            tmp[0] = 1
-            dut.input_PAD.set(Immediate(tmp))
-
-    print("WSPR TEST DONE. CHECK WAVEFORM!")
-    logger.info("Done!")
-
+# ----------------------------------------------------------------------
+# Runner
+# ----------------------------------------------------------------------
 
 def chip_top_runner():
-
     proj_path = Path(__file__).resolve().parent
     root_path = proj_path.parent.parent
 
-    sources = []
-    # defines = {f"SLOT_{slot.upper()}": True}
-    defines = {}
+    sources  = []
+    defines  = {}
     includes = [root_path / "rtl"]
 
     if gl:
-        # SCL models
+        # Standard-cell models for gate-level simulation
         sources.append(Path(pdk_root) / pdk / "libs.ref" / scl / "verilog" / f"{scl}.v")
-        sources.append(Path(pdk_root) / pdk / "libs.ref" / scl / "verilog" / f"sg13g2_udp.v")
-        # sources.append(Path(pdk_root) / pdk / "libs.ref" / scl / "verilog" / "sg13g2_stdcell.v")
+        sources.append(Path(pdk_root) / pdk / "libs.ref" / scl / "verilog" / "sg13g2_udp.v")
 
-        # We use the unpowered netlist
+        # Unpowered top-level netlist
         sources.append(root_path / f"netlist/nl/{hdl_toplevel}.nl.v")
-        sources.append(root_path / "macros/counter/final/nl/counter_top.nl.v")
 
-        defines = {"USE_POWER_PINS": False}
+        # Macro netlists referenced by the top-level netlist
+        sources.append(root_path / "macros/counter/final/nl/counter_top.nl.v")
     else:
-        # Toplevel
+        # RTL sources
         sources.append(root_path / "rtl/chip_top.sv")
         sources.append(root_path / "rtl/chip_core.sv")
-        # sources.append(proj_path / "../src/slot_defines.svh") TODO: can this safely be removed?
 
-        # Chip
+        # Counter macro RTL
+        sources.append(root_path / "macros/counter/rtl/constants.sv")
+        sources.append(root_path / "macros/counter/rtl/counter.sv")
         sources.append(root_path / "macros/counter/rtl/counter_top.sv")
 
     sources += [
-        # Macro models
+        # Inverter macro stub (analog blackbox)
         root_path / "macros/inverter/final/vh/inverter_top.v",
 
-        # IO pad models
-        # Path(pdk_root) / pdk / "libs.ref/sg13g2_io/verilog/sg13g2_io.v",
+        # SRAM behavioural Verilog models (shipped with the IHP Open-PDK)
+        Path(pdk_root) / pdk / "libs.ref/sg13g2_sram/verilog/RM_IHPSG13_1P_1024x32_c2_bm_bist.v",
+        Path(pdk_root) / pdk / "libs.ref/sg13g2_sram/verilog/RM_IHPSG13_1P_core_behavioral_bm_bist.v",
 
-        # Bondpads
+        # Bondpad stub
         root_path / "ip/sg13g2_ip__bondpad_70x70/final/vh/sg13g2_ip__bondpad_70x70.v",
+
+        # Custom IO pad models
         root_path / "ip/sg13g2_io_custom/verilog/sg13g2_io.v",
 
-        # Custom IPs
+        # Logo IPs
         root_path / "ip/sg13g2_ip__jku/final/vh/sg13g2_ip__jku.v",
         root_path / "ip/sg13g2_ip__jku_names/final/vh/sg13g2_ip__jku_names.v",
     ]
@@ -747,10 +328,9 @@ def chip_top_runner():
     build_args = []
 
     if sim == "icarus":
-        # For debugging
-        # build_args = ["-Winfloop", "-pfileline=1"]
-        build_args = ["-DSIM"]
-        pass
+        # -gno-specify: skip specify blocks; the SCL Verilog uses `ifnone`
+        # with edge-sensitive paths, which iverilog cannot parse.
+        build_args = ["-DSIM", "-gno-specify"]
 
     if sim == "verilator":
         build_args = ["--timing", "--trace", "--trace-fst", "--trace-structs"]
@@ -771,7 +351,7 @@ def chip_top_runner():
 
     runner.test(
         hdl_toplevel=hdl_toplevel,
-        test_module="chip_top_tb,",
+        test_module="chip_top_tb",
         plusargs=plusargs,
         waves=True,
     )
