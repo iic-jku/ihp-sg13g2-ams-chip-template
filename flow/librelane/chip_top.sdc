@@ -85,7 +85,3 @@ if { [info exists ::env(OPENLANE_SDC_IDEAL_CLOCKS)] && $::env(OPENLANE_SDC_IDEAL
 } else {
     set_propagated_clock [all_clocks]
 }
-
-# Execute the custom RF routing constraints
-# [file dirname [info script]] ensures it looks in the same folder as the SDC file
-# source [file dirname [info script]]/rf_traces.tcl
