@@ -67,14 +67,38 @@ MACRO inverter_top
     USE GROUND ;
     PORT
       LAYER Metal5 ;
-        RECT 1.830 79.720 52.350 81.920 ;
+        RECT 0.000 0.000 54.180 2.200 ;
+    END
+    PORT
+      LAYER Metal5 ;
+        RECT 0.000 79.720 54.180 81.920 ;
+    END
+    PORT
+      LAYER TopMetal1 ;
+        RECT 0.000 0.000 2.200 81.920 ;
+    END
+    PORT
+      LAYER TopMetal1 ;
+        RECT 51.980 0.000 54.180 81.920 ;
     END
   END VSS
   PIN VDD
     USE POWER ;
     PORT
       LAYER Metal5 ;
-        RECT 6.030 75.520 48.150 77.720 ;
+        RECT 4.200 4.200 49.980 6.400 ;
+    END
+    PORT
+      LAYER Metal5 ;
+        RECT 4.200 75.520 49.980 77.720 ;
+    END
+    PORT
+      LAYER TopMetal1 ;
+        RECT 47.780 4.200 49.980 77.720 ;
+    END
+    PORT
+      LAYER TopMetal1 ;
+        RECT 4.200 4.200 6.400 77.720 ;
     END
   END VDD
   OBS
@@ -105,17 +129,7 @@ MACRO inverter_top
       LAYER Metal4 ;
         RECT 0.750 10.845 53.430 71.075 ;
       LAYER Metal5 ;
-        RECT 0.000 81.550 1.830 81.920 ;
-        RECT 0.000 80.090 1.620 81.550 ;
-        RECT 0.000 79.720 1.830 80.090 ;
-        RECT 0.000 79.510 1.620 79.720 ;
-        RECT 52.560 79.510 54.180 81.920 ;
-        RECT 0.000 77.930 54.180 79.510 ;
-        RECT 0.000 75.310 5.820 77.930 ;
-        RECT 48.360 75.310 54.180 77.930 ;
-        RECT 0.000 0.000 54.180 75.310 ;
-      LAYER TopMetal1 ;
-        RECT 0.000 0.000 54.180 81.920 ;
+        RECT 0.750 10.840 53.430 71.080 ;
   END
 END inverter_top
 END LIBRARY
