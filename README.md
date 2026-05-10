@@ -37,9 +37,9 @@ The repository is the starting point for your own custom silicon and provides a 
 
 A designer-oriented description of this chip lives in [doc/](doc/):
 
-- **[doc/specifications.md](doc/specifications.md)** — top-level specifications (technology, supplies, clock, macro inventory, functional behaviour).
-- **[doc/pinout.md](doc/pinout.md)** — full 32-pad bondpad table per side, with the `chip_top` port and the role each pad carries inside `chip_core`.
-- **[doc/floorplan.md](doc/floorplan.md)** — die / core geometry, hard-macro placement coordinates, PDN strategy and the floorplan diagram.
+- **[doc/specifications.md](doc/specifications.md)**: top-level specifications (technology, supplies, clock, macro inventory, functional behaviour).
+- **[doc/pinout.md](doc/pinout.md)**: full 32-pad bondpad table per side, with the `chip_top` port and the role each pad carries inside `chip_core`.
+- **[doc/floorplan.md](doc/floorplan.md)**: die / core geometry, hard-macro placement coordinates, PDN strategy and the floorplan diagram.
 
 
 ## Tutorial
