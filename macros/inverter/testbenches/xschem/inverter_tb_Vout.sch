@@ -105,7 +105,7 @@ print Vgsp_at_Vcm
 unset appendwrite
 set wr_vecnames
 set wr_singlescale
-wrdata ../../scripts/plot_simulations/data/@schname\\\\.txt v(vin) v(vout)
+wrdata ../../../scripts/plot_simulations/data/@schname\\\\.txt v(vin) v(vout)
 
 *quit
 .endc

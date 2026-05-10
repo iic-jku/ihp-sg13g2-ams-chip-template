@@ -1,4 +1,4 @@
-** sch_path: /foss/designs/ihp-sg13g2-ams-chip-template/macros/inverter/schematic/inverter_top.sch
+** sch_path: /foss/designs/ihp-sg13g2-ams-chip-template/macros/inverter/schematic/xschem/inverter_top.sch
 .subckt inverter_top VDD vin4 vout4 VSS vin3 vout3 vin2 vout2 vout1 vin1
 *.PININFO vin4:I VDD:B VSS:B vout4:B vin3:I vin2:I vin1:I vout3:B vout2:B vout1:B
 x1 nwell1 psub VDD vin1 vout1 VSS inverter
@@ -8,8 +8,8 @@ x4 nwell2 psub VDD vin4 vout4 VSS inverter
 .ends
 
 * expanding   symbol:  inverter.sym # of pins=6
-** sym_path: schematic/inverter.sym
-** sch_path: /foss/designs/ihp-sg13g2-ams-chip-template/macros/inverter/schematic/inverter.sch
+** sym_path: /foss/designs/ihp-sg13g2-ams-chip-template/macros/inverter/schematic/xschem/inverter.sym
+** sch_path: /foss/designs/ihp-sg13g2-ams-chip-template/macros/inverter/schematic/xschem/inverter.sch
 .subckt inverter nwell psub VDD vin vout VSS
 *.PININFO vin:I VDD:B VSS:B vout:B nwell:B psub:B
 MMdummy1 VSS VSS VSS psub sg13_lv_nmos w=2.0u l=1.0u ng=2

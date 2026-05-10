@@ -107,7 +107,7 @@ N 1160 -940 1320 -940 {lab=vout4}
 C {devices/code_shown.sym} 60 -1410 0 0 {name=NGSPICE
 only_toplevel=true 
 value="
-.include ../../netlist/pex/inverter_top_magic_pex_3.spice
+.include ../../../netlist/pex/inverter_top_magic_pex_3.spice
 .param VDD=1.5
 .csparam VDD=VDD
 .param Vcm=VDD/2
@@ -150,7 +150,7 @@ print vout_pp
 unset appendwrite
 set wr_vecnames
 set wr_singlescale
-wrdata ../../scripts/plot_simulations/data/@schname\\\\.txt
+wrdata ../../../scripts/plot_simulations/data/@schname\\\\.txt
 + v(vin) v(vout1) v(vout2) v(vout3) v(vout4)
 
 *quit
@@ -252,5 +252,4 @@ m=1
 spice_ignore=true}
 C {devices/gnd.sym} 1320 -840 0 0 {name=l16 lab=GND}
 C {devices/gnd.sym} 1440 -840 0 0 {name=l17 lab=GND}
-C {inverter_top_pex.sym} 1000 -520 0 0 {name=x1
-}
+C {inverter_top.sym} 1000 -520 0 0 {name=x1}

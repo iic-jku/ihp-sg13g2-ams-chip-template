@@ -1,10 +1,10 @@
-* Extracted by KLayout with SG13G2 LVS runset on : 06/05/2026 18:35
+* Extracted by KLayout with SG13G2 LVS runset on : 10/05/2026 23:54
 
 .SUBCKT inverter_top vin1 vin2 vin3 vin4 vout1 vout2 vout3 vout4 VSS VDD
-X$1 \$13 VSS VDD vout1 vin1 \$10 inverter
-X$2 \$13 VSS VDD vout2 vin2 \$10 inverter
-X$3 \$13 VSS VDD vout3 vin3 \$9 inverter
-X$4 \$13 VSS VDD vout4 vin4 \$9 inverter
+X$1 \$19 VSS VDD vout1 vin1 \$10 inverter
+X$2 \$19 VSS VDD vout2 vin2 \$10 inverter
+X$3 \$19 VSS VDD vout3 vin3 \$9 inverter
+X$4 \$19 VSS VDD vout4 vin4 \$9 inverter
 .ENDS inverter_top
 
 .SUBCKT inverter \$1 VSS VDD vout vin \$I103

@@ -127,7 +127,7 @@ print PM
 unset appendwrite
 set wr_vecnames
 set wr_singlescale
-wrdata ../../scripts/plot_simulations/data/@schname\\\\.txt v(Aol_dB) v(Aol_arg)
+wrdata ../../../scripts/plot_simulations/data/@schname\\\\.txt v(Aol_dB) v(Aol_arg)
 
 *quit
 .endc

@@ -16,7 +16,7 @@ authorship:
 
 paths:
   root:             ..
-  schematic:        ../schematic
+  schematic:        ../schematic/xschem
   netlist:          cace/netlist
   documentation:    cace/_docs
   runs:             cace/_runs
