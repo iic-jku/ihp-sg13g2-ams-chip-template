@@ -26,10 +26,6 @@ TOP = chip_top
 
 .DEFAULT_GOAL := help
 
-# Version for release target
-# Override with: make <target> VERSION=<version>
-VERSION ?= 1.0.0
-
 # Cell name for verification targets (default: top-level cell)
 # Override with: make <target> CELL=<cellname>
 CELL ?= $(TOP)
@@ -38,7 +34,7 @@ CELL ?= $(TOP)
 # Override with: make <target> EXT_MODE=<1|2|3>
 EXT_MODE ?= 3
 
-# Floating-point precision (significant digits) for xschem's ev function
+# Floating-point precision (significant digits) for Xschem's ev function
 # Override with: make <target> EV_PRECISION=<digits>
 EV_PRECISION ?= 5
 
@@ -46,47 +42,52 @@ EV_PRECISION ?= 5
 # Override with: make <target> WAVEFORM_VIEWER=<gtkwave|surfer>
 WAVEFORM_VIEWER ?= gtkwave
 
+# Version for release target
+# Override with: make <target> VERSION=<version>
+VERSION ?= 1.0.0
+
 # Folder structure
-SCH_DIR     		 	:= schematic
-LAY_DIR     		 	:= layout
-SCRIPTS_DIR     	 	:= scripts
-SRC_DIR 			    := rtl
-IP_DIR 			    	:= ip
-MACROS_DIR 		    	:= macros
-RELEASE_DIR		 		:= release
-RENDER_IMG_DIR  	 	:= render/img
-COCOTB_DIR      	 	:= testbenches/cocotb
-XSCHEM_TB_DIR         	:= testbenches/xschem
-NET_SCH_DIR 		 	:= netlist/schematic
-NET_LAY_DIR 		 	:= netlist/layout
-NET_PEX_DIR 		 	:= netlist/pex
-NET_PNL_DIR			 	:= netlist/pnl
-NET_NL_DIR			 	:= netlist/nl
-NET_SPICE_DIR		 	:= netlist/spice
-LVS_RPT_DIR 		 	:= verification/lvs
-DRC_RPT_DIR 		 	:= verification/drc
-LIBRELANE_DIR   	 	:= flow/librelane
-FLOW_REPORT_DIR 	 	:= flow/reports
-FLOW_FINAL_DIR 		 	:= flow/final
-FLOW_FINAL_GDS_DIR 	 	:= flow/final/gds
-FLOW_FINAL_PNL_DIR 	 	:= flow/final/pnl
-FLOW_FINAL_NL_DIR 	 	:= flow/final/nl
-FLOW_FINAL_SPICE_DIR 	:= flow/final/spice
-FLOW_FINAL_RENDER_DIR	:= flow/final/render
+XSCHEM_SCH_DIR  := schematic/xschem
+XSCHEM_TB_DIR   := testbenches/xschem
+COCOTB_DIR      := testbenches/cocotb
+LAY_DIR         := layout
+SCRIPTS_DIR     := scripts
+RENDER_IMG_DIR  := render/img
+SRC_DIR         := rtl
+IP_DIR          := ip
+MACROS_DIR      := macros
+RELEASE_DIR     := release
+NET_SCH_DIR     := netlist/schematic
+NET_LAY_DIR     := netlist/layout
+NET_PEX_DIR     := netlist/pex
+NET_PNL_DIR     := netlist/pnl
+NET_NL_DIR      := netlist/nl
+NET_SPICE_DIR   := netlist/spice
+LVS_RPT_DIR     := verification/lvs
+DRC_RPT_DIR     := verification/drc
+REPORT_DIR      := verification/reports
+LIBRELANE_DIR   := flow/librelane
+FLOW_FINAL_DIR  := flow/final
 
 
 # Help Target
 help: ## Show this help message
-	@echo 'Usage: make [target]'
+	@echo 'Usage: make <target> [CELL=<cellname>] [EXT_MODE=<1|2|3>] [EV_PRECISION=<digits>] [WAVEFORM_VIEWER=<gtkwave|surfer>] [VERSION=<version>]'
 	@echo ''
 	@echo 'Available targets:'
-	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "  %-20s %s\n", $$1, $$2}'
+	@grep -E '^[a-zA-Z0-9_.-]+:.*## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*## "}; {printf "  %-20s %s\n", $$1, $$2}'
+	@echo ''
+	@echo 'CELL defaults to $(TOP). Override to verify subcells.'
+	@echo 'EXT_MODE defaults to 3 (full-RC). 1=C-decoupled, 2=C-coupled.'
+	@echo 'EV_PRECISION defaults to 5 significant digits for Xschem ev function.'
+	@echo 'WAVEFORM_VIEWER defaults to gtkwave. Use surfer to launch Surfer instead.'
+	@echo 'VERSION defaults to $(VERSION). Used by the release target.'
 .PHONY: help
 # ================================================================================================
 
 
-# GIT Submodule Target
-init-submodules: ## Initialize and update git submodules (e.g. ihp130/artistic)
+# Git Submodule Target
+init-submodules: ## Initialize and update git submodules (e.g. flow/artistic)
 	git -C $(MAKEFILE_DIR) submodule update --init
 .PHONY: init-submodules
 # ================================================================================================
@@ -94,11 +95,11 @@ init-submodules: ## Initialize and update git submodules (e.g. ihp130/artistic)
 
 # Simulation Targets
 sim-rtl-cocotb: ## Run RTL simulation of CELL cell with cocotb (usage: make sim-rtl-cocotb [CELL=<cellname>])
-	cd $(COCOTB_DIR); python3 $(CELL)_tb.py
+	cd $(COCOTB_DIR) && python3 $(CELL)_tb.py
 .PHONY: sim-rtl-cocotb
 
 sim-gl-cocotb: ## Run gate-level simulation of CELL cell with cocotb (usage: make sim-gl-cocotb [CELL=<cellname>])
-	cd $(COCOTB_DIR); GL=1 python3 $(CELL)_tb.py
+	cd $(COCOTB_DIR) && GL=1 python3 $(CELL)_tb.py
 .PHONY: sim-gl-cocotb
 
 sim-view-cocotb: ## View CELL cell cocotb simulation waveforms (usage: make sim-view-cocotb [CELL=<cellname>] [WAVEFORM_VIEWER=<gtkwave|surfer>])
@@ -112,7 +113,7 @@ sim-view-cocotb: ## View CELL cell cocotb simulation waveforms (usage: make sim-
 .PHONY: sim-view-cocotb
 
 sim-gl-xschem: ## Run gate-level simulation of CELL cell with Xschem (usage: make sim-gl-xschem [CELL=<cellname>])
-	cd $(XSCHEM_TB_DIR); xschem -s -r -x -q --rcfile xschemrc --command ' \
+	cd $(XSCHEM_TB_DIR) && xschem -s -r -x -q --rcfile xschemrc --command ' \
 		set netlist_dir $(abspath $(XSCHEM_TB_DIR)/simulations); \
 		xschem save; \
 		xschem netlist; \
@@ -120,9 +121,11 @@ sim-gl-xschem: ## Run gate-level simulation of CELL cell with Xschem (usage: mak
 	' $(CELL)_tb_tran.sch
 .PHONY: sim-gl-xschem
 
-sim-all: ## Simulate the top-level
+sim-all: ## Simulate the chip (RTL/GL cocotb + GL Xschem)
 	$(MAKE) sim-rtl-cocotb
+#	$(MAKE) sim-view-cocotb
 	$(MAKE) sim-gl-cocotb
+#	$(MAKE) sim-view-cocotb
 	$(MAKE) sim-gl-xschem
 .PHONY: sim-all
 # ================================================================================================
@@ -156,70 +159,78 @@ librelane-klayout: ## Open the last LibreLane run in KLayout
 
 
 # Copy Targets
-# TODO: Antenna and DRC reports are temporarily commented out until IHP fixes the `metal1_pin_offgrid` errors.
-# For now, `make librelane-nodrc` must be used.
+# TODO: KLayout antenna and DRC reports are temporarily commented out until
+# IHP fixes the `metal1_pin_offgrid` errors. For now, `make librelane-nodrc` must be used.
 # https://github.com/IHP-GmbH/IHP-Open-PDK/issues/683#issuecomment-4065791975
-copy-reports: ## Copy yosys, antenna violations, hold & setup timing, DRC, LVS and manufacturability reports
-	rm -rf $(FLOW_REPORT_DIR)/
-	mkdir -p $(FLOW_REPORT_DIR)/
+copy-reports: ## Copy yosys, antenna, hold & setup timing, LVS and manufacturability reports from the last LibreLane run to verification/reports/
+	rm -rf $(REPORT_DIR)/
+	mkdir -p $(REPORT_DIR)/
 	# Using * wildcard to ignore step numbers
-	cp $(LIBRELANE_DIR)/runs/${RUN_TAG}/*-yosys-synthesis/reports/pre_synth_chk.rpt $(FLOW_REPORT_DIR)/yosys_synth_check.rpt
-	cp $(LIBRELANE_DIR)/runs/${RUN_TAG}/*-yosys-synthesis/reports/pre_techmap.rpt $(FLOW_REPORT_DIR)/yosys_pre_techmap.rpt
-	cp $(LIBRELANE_DIR)/runs/${RUN_TAG}/*-yosys-synthesis/reports/post_dff.rpt $(FLOW_REPORT_DIR)/yosys_post_dff.rpt
-	cp $(LIBRELANE_DIR)/runs/${RUN_TAG}/*-yosys-synthesis/reports/stat.rpt $(FLOW_REPORT_DIR)/stat.rpt
-	cp $(LIBRELANE_DIR)/runs/${RUN_TAG}/*-openroad-checkantennas-1/reports/antenna.rpt $(FLOW_REPORT_DIR)/antenna_violations.rpt
-	cp $(LIBRELANE_DIR)/runs/${RUN_TAG}/*-openroad-checkantennas-1/reports/antenna_summary.rpt $(FLOW_REPORT_DIR)/antenna_summary.rpt
-	cp $(LIBRELANE_DIR)/runs/${RUN_TAG}/*-openroad-stapostpnr/summary.rpt $(FLOW_REPORT_DIR)/hold_setup_timing.rpt
-# 	cp $(LIBRELANE_DIR)/runs/${RUN_TAG}/*-klayout-antenna/reports/antenna.klayout.json $(FLOW_REPORT_DIR)/antenna.klayout.json
-# 	cp $(LIBRELANE_DIR)/runs/${RUN_TAG}/*-magic-drc/reports/drc.magic.rpt $(FLOW_REPORT_DIR)/drc.magic.rpt
-# 	cp $(LIBRELANE_DIR)/runs/${RUN_TAG}/*-klayout-drc/reports/drc.klayout.json $(FLOW_REPORT_DIR)/drc.klayout.json
-	cp $(LIBRELANE_DIR)/runs/${RUN_TAG}/*-netgen-lvs/reports/lvs.netgen.rpt $(FLOW_REPORT_DIR)/lvs.netgen.rpt
-	cp $(LIBRELANE_DIR)/runs/${RUN_TAG}/*-misc-reportmanufacturability/manufacturability.rpt $(FLOW_REPORT_DIR)/manufacturability.rpt
+	cp $(LIBRELANE_DIR)/runs/${RUN_TAG}/*-yosys-synthesis/reports/pre_synth_chk.rpt $(REPORT_DIR)/yosys_synth_check.rpt
+	cp $(LIBRELANE_DIR)/runs/${RUN_TAG}/*-yosys-synthesis/reports/pre_techmap.rpt $(REPORT_DIR)/yosys_pre_techmap.rpt
+	cp $(LIBRELANE_DIR)/runs/${RUN_TAG}/*-yosys-synthesis/reports/post_dff.rpt $(REPORT_DIR)/yosys_post_dff.rpt
+	cp $(LIBRELANE_DIR)/runs/${RUN_TAG}/*-yosys-synthesis/reports/stat.rpt $(REPORT_DIR)/stat.rpt
+	cp $(LIBRELANE_DIR)/runs/${RUN_TAG}/*-openroad-checkantennas-1/reports/antenna.rpt $(REPORT_DIR)/antenna_violations.rpt
+	cp $(LIBRELANE_DIR)/runs/${RUN_TAG}/*-openroad-checkantennas-1/reports/antenna_summary.rpt $(REPORT_DIR)/antenna_summary.rpt
+	cp $(LIBRELANE_DIR)/runs/${RUN_TAG}/*-openroad-stapostpnr/summary.rpt $(REPORT_DIR)/hold_setup_timing.rpt
+	cp $(LIBRELANE_DIR)/runs/${RUN_TAG}/*-openroad-stapostpnr/summary.rpt $(REPORT_DIR)/stapostpnr_summary.rpt
+	cp $(LIBRELANE_DIR)/runs/${RUN_TAG}/*-openroad-stapostpnr/nom_fast_1p32V_m40C/power.rpt $(REPORT_DIR)/stapostpnr_nom_fast_1p32V_m40C_power.rpt
+	cp $(LIBRELANE_DIR)/runs/${RUN_TAG}/*-openroad-stapostpnr/nom_fast_1p65V_m40C/power.rpt $(REPORT_DIR)/stapostpnr_nom_fast_1p65V_m40C_power.rpt
+	cp $(LIBRELANE_DIR)/runs/${RUN_TAG}/*-openroad-stapostpnr/nom_slow_1p08V_125C/power.rpt $(REPORT_DIR)/stapostpnr_nom_slow_1p08V_125C_power.rpt
+	cp $(LIBRELANE_DIR)/runs/${RUN_TAG}/*-openroad-stapostpnr/nom_slow_1p35V_125C/power.rpt $(REPORT_DIR)/stapostpnr_nom_slow_1p35V_125C_power.rpt
+	cp $(LIBRELANE_DIR)/runs/${RUN_TAG}/*-openroad-stapostpnr/nom_typ_1p20V_25C/power.rpt $(REPORT_DIR)/stapostpnr_nom_typ_1p20V_25C_power.rpt
+	cp $(LIBRELANE_DIR)/runs/${RUN_TAG}/*-openroad-stapostpnr/nom_typ_1p50V_25C/power.rpt $(REPORT_DIR)/stapostpnr_nom_typ_1p50V_25C_power.rpt
+	cp $(LIBRELANE_DIR)/runs/${RUN_TAG}/*-openroad-irdropreport/irdrop.rpt $(REPORT_DIR)/irdrop.rpt
+# 	cp $(LIBRELANE_DIR)/runs/${RUN_TAG}/*-magic-drc/reports/drc.magic.rpt $(REPORT_DIR)/drc.magic.rpt
+# 	cp $(LIBRELANE_DIR)/runs/${RUN_TAG}/*-klayout-drc/reports/drc.klayout.json $(REPORT_DIR)/drc.klayout.json
+	cp $(LIBRELANE_DIR)/runs/${RUN_TAG}/*-netgen-lvs/reports/lvs.netgen.rpt $(REPORT_DIR)/lvs.netgen.rpt
+	cp $(LIBRELANE_DIR)/runs/${RUN_TAG}/*-misc-reportmanufacturability/manufacturability.rpt $(REPORT_DIR)/manufacturability.rpt
 .PHONY: copy-reports
 
-copy-gds: ## Copy and compress final output GDS from the last LibreLane run (no logo & fillers) to the layout/ directory
-	rm -f $(LAY_DIR)/${TOP}.gds.gz
+copy-gds: ## Copy and compress final GDS from the last LibreLane run to layout/ (no logo & filler)
+	rm -f $(LAY_DIR)/$(TOP).gds.gz
 	mkdir -p $(LAY_DIR)/
-	cp -r $(FLOW_FINAL_GDS_DIR)/${TOP}.gds $(LAY_DIR)/${TOP}.gds
-	gzip $(LAY_DIR)/${TOP}.gds
+	cp -r $(FLOW_FINAL_DIR)/gds/$(TOP).gds $(LAY_DIR)/$(TOP).gds
+	gzip $(LAY_DIR)/$(TOP).gds
 .PHONY: copy-gds
 
-copy-netlist: ## Copy final output spice, pnl and nl netlists from the last LibreLane run to the netlist/ directory
+copy-netlist: ## Copy final spice, pnl and nl netlists from the last LibreLane run to netlist/
 	rm -rf $(NET_SPICE_DIR)/
 	mkdir -p $(NET_SPICE_DIR)/
-	cp -r $(FLOW_FINAL_SPICE_DIR)/${TOP}.spice $(NET_SPICE_DIR)/${TOP}.spice
+	cp -r $(FLOW_FINAL_DIR)/spice/$(TOP).spice $(NET_SPICE_DIR)/$(TOP).spice
+
 	rm -rf $(NET_PNL_DIR)/
 	mkdir -p $(NET_PNL_DIR)/
-	cp -r $(FLOW_FINAL_PNL_DIR)/${TOP}.pnl.v $(NET_PNL_DIR)/${TOP}.pnl.v
+	cp -r $(FLOW_FINAL_DIR)/pnl/$(TOP).pnl.v $(NET_PNL_DIR)/$(TOP).pnl.v
+
+	rm -rf $(NET_NL_DIR)/
 	mkdir -p $(NET_NL_DIR)/
-	cp -r $(FLOW_FINAL_NL_DIR)/${TOP}.nl.v $(NET_NL_DIR)/${TOP}.nl.v
+	cp -r $(FLOW_FINAL_DIR)/nl/$(TOP).nl.v $(NET_NL_DIR)/$(TOP).nl.v
 .PHONY: copy-netlist
 
-copy-render: ## Copy chip render from the last LibreLane run (no logo & fillers) to the render/img/ directory
+copy-render: ## Copy chip render from the last LibreLane run (no logo & fillers) to render/img/
 	mkdir -p $(RENDER_IMG_DIR)/
-	cp -r $(FLOW_FINAL_RENDER_DIR)/${TOP}.png $(RENDER_IMG_DIR)/${TOP}_librelane.png
+	cp -r $(FLOW_FINAL_DIR)/render/$(TOP).png $(RENDER_IMG_DIR)/$(TOP)_librelane.png
 .PHONY: copy-render
 # ================================================================================================
 
 
 # Render Target
-render-gds: ## Render an image from the final GDS with logo and fillers using lay2img.py
+render-gds: ## Render an image from the final GDS (with logo and filler) using lay2img.py
 	mkdir -p $(RENDER_IMG_DIR)/
-	python3 $(SCRIPTS_DIR)/lay2img.py $(LAY_DIR)/${TOP}_logo_fill.gds.gz $(RENDER_IMG_DIR)/${TOP}.png --width 2048 --oversampling 4
+	python3 $(SCRIPTS_DIR)/lay2img.py $(LAY_DIR)/$(TOP)_logo_fill.gds.gz $(RENDER_IMG_DIR)/$(TOP).png --width 2048 --oversampling 4
 .PHONY: render-gds
 # ================================================================================================
 
 
 # Build Targets
-build-bondpad: ## Build the bondpad
+build-bondpad: ## Build the bondpad in ip/sg13g2_ip__bondpad_70x70/
 	@$(MAKE) -C $(IP_DIR)/sg13g2_ip__bondpad_70x70 all
 .PHONY: build-bondpad
 
-build-logos: ## Build the logos
+build-logos: ## Build the logos in ip/sg13g2_ip__jku/ and ip/sg13g2_ip__jku_names/
 	@$(MAKE) -C $(IP_DIR)/sg13g2_ip__jku all
 	@$(MAKE) -C $(IP_DIR)/sg13g2_ip__jku_names all
-	@$(MAKE) -C $(IP_DIR)/sg13g2_ip__ce all
-	@$(MAKE) -C $(IP_DIR)/sg13g2_ip__ce_names all
 .PHONY: build-logos
 
 build-counter: ## Build the counter macro
@@ -230,22 +241,20 @@ build-inverter: ## Build the inverter macro
 	@$(MAKE) -C $(MACROS_DIR)/inverter all
 .PHONY: build-inverter
 
-build-macros: build-counter build-inverter ## Build macros (counter and inverter)
+build-macros: ## Build all enabled macros (counter and inverter)
+	$(MAKE) build-counter
+	$(MAKE) build-inverter
 .PHONY: build-macros
 
-# This target adds the Chip logo and fill structures on all layers.
+# Adds the chip logo and fill structures to the final GDS.
 # TODO: This step is temporary and will be replaced by a custom LibreLane step in the future.
-add-logo-fill: ## Call add_logo_fill.sh to add the Chip logo and fill structures
+add-logo-fill: ## Run scripts/add_logo_fill.sh to add the chip logo and fill structures
 	cd $(SCRIPTS_DIR) && ./add_logo_fill.sh
 .PHONY: add-logo-fill
 
-# TODO: See above, `make librelane-nodrc` must be used for now until IHP fixes the `metal1_pin_offgrid` errors. Once fixed, `make librelane` can be used again.
-# TODO: Add `make build-macros`. For now, this is not possible. counter is built with nix-shell. Top-Level is built with `next` release of IIC-OSIC-TOOLS due to https://github.com/FPGA-Research/heichips25-tapeout/blob/8944926f1f49e382616fbdd150e356bbdcf23b8c/nix/disable_auto_taper.patch#L4.
-build-all: ## Build the whole chip (build bondpad, build logos, build macros, run LibreLane, copy reports, copy GDS, copy netlist, render gds, open GDS in OpenROAD GUI)
-	$(MAKE) init-submodules
-	$(MAKE) build-bondpad
-	$(MAKE) build-logos
-# 	$(MAKE) build-macros
+# TODO: `make librelane-nodrc` is used for now until IHP fixes the `metal1_pin_offgrid` errors.
+# Once fixed, switch back to `make librelane`.
+build-top: ## Build the chip (LibreLane, copy reports/GDS/netlist/render, add logo & filler, render final GDS)
 	$(MAKE) librelane-nodrc
 	$(MAKE) copy-reports
 	$(MAKE) copy-gds
@@ -253,7 +262,15 @@ build-all: ## Build the whole chip (build bondpad, build logos, build macros, ru
 	$(MAKE) copy-render
 	$(MAKE) add-logo-fill
 	$(MAKE) render-gds
-	$(MAKE) librelane-openroad
+#	$(MAKE) librelane-openroad
+.PHONY: build-top
+
+build-all: ## Build the bondpad, logos, macros and the chip top-level
+	$(MAKE) init-submodules
+	$(MAKE) build-bondpad
+	$(MAKE) build-logos
+	$(MAKE) build-macros
+	$(MAKE) build-top
 .PHONY: build-all
 # ================================================================================================
 
@@ -261,7 +278,7 @@ build-all: ## Build the whole chip (build bondpad, build logos, build macros, ru
 # LVS Targets
 klayout-lvs-netlist: ## Export CDL schematic netlist from Xschem for KLayout LVS (usage: make klayout-lvs-netlist [CELL=<cellname>] [EV_PRECISION=<digits>])
 	mkdir -p $(NET_SCH_DIR)
-	xschem -s -r -x -q --rcfile $(SCH_DIR)/xschemrc --command ' \
+	xschem -s -r -x -q --rcfile $(XSCHEM_SCH_DIR)/xschemrc --command ' \
 		set spiceprefix 1; \
 		set lvs_netlist 1; \
 		set top_is_subckt 1; \
@@ -270,7 +287,7 @@ klayout-lvs-netlist: ## Export CDL schematic netlist from Xschem for KLayout LVS
 		set netlist_dir $(NET_SCH_DIR); \
 		xschem set netlist_name [file tail [file rootname [xschem get current_name]]]_klayout.cdl; \
 		xschem netlist \
-	' $(SCH_DIR)/$(CELL).sch
+	' $(XSCHEM_SCH_DIR)/$(CELL).sch
 .PHONY: klayout-lvs-netlist
 
 klayout-lvs: ## Run KLayout LVS of the CELL cell (usage: make klayout-lvs [CELL=<cellname>])
@@ -289,7 +306,7 @@ klayout-lvs: ## Run KLayout LVS of the CELL cell (usage: make klayout-lvs [CELL=
 
 magic-lvs-netlist: ## Export SPICE schematic netlist from Xschem for Magic + Netgen LVS (usage: make magic-lvs-netlist [CELL=<cellname>] [EV_PRECISION=<digits>])
 	mkdir -p $(NET_SCH_DIR)
-	xschem -s -r -x -q --rcfile $(SCH_DIR)/xschemrc --command ' \
+	xschem -s -r -x -q --rcfile $(XSCHEM_SCH_DIR)/xschemrc --command ' \
 		set spiceprefix 1; \
 		set lvs_netlist 0; \
 		set top_is_subckt 1; \
@@ -298,7 +315,7 @@ magic-lvs-netlist: ## Export SPICE schematic netlist from Xschem for Magic + Net
 		set netlist_dir $(NET_SCH_DIR); \
 		xschem set netlist_name [file tail [file rootname [xschem get current_name]]]_magic.spice; \
 		xschem netlist \
-	' $(SCH_DIR)/$(CELL).sch
+	' $(XSCHEM_SCH_DIR)/$(CELL).sch
 .PHONY: magic-lvs-netlist
 
 magic-lvs: ## Run Magic + Netgen LVS of the CELL cell (usage: make magic-lvs [CELL=<cellname>])
@@ -307,7 +324,7 @@ magic-lvs: ## Run Magic + Netgen LVS of the CELL cell (usage: make magic-lvs [CE
 	$(MAKE) magic-lvs-netlist CELL=$(CELL)
 	sak-lvs.sh -d -w $(LVS_RPT_DIR) -s $(NET_SCH_DIR)/$(CELL)_magic.spice -l $(LAY_DIR)/$(CELL).gds.gz -c $(CELL)
 # 	Alternative using sak-lvs.sh for netlist export and LVS in one step (replaces magic-lvs-netlist target):
-#   sak-lvs.sh -d -w $(LVS_RPT_DIR) -s $(SCH_DIR)/$(CELL).sch -l $(LAY_DIR)/$(CELL).gds.gz -c $(CELL)
+#   sak-lvs.sh -d -w $(LVS_RPT_DIR) -s $(XSCHEM_SCH_DIR)/$(CELL).sch -l $(LAY_DIR)/$(CELL).gds.gz -c $(CELL)
 	mv $(LVS_RPT_DIR)/$(CELL).ext.spc $(NET_LAY_DIR)/$(CELL)_magic.ext.spc
 	rm -f $(LVS_RPT_DIR)/$(CELL).sch.spc
 	rm -f $(LVS_RPT_DIR)/ext_$(CELL).tcl
@@ -318,11 +335,11 @@ magic-lvs: ## Run Magic + Netgen LVS of the CELL cell (usage: make magic-lvs [CE
 
 
 # DRC Targets
-klayout-drc-minimum: ## Run Minimum pre-check Klayout DRC of the TOP cell with logo and fillers (usage: make klayout-drc-minimum)
+klayout-drc-minimum: ## Run minimum pre-check KLayout DRC of the TOP cell with logo and filler
 	mkdir -p $(DRC_RPT_DIR)
 	python3 $(PDK_ROOT)/$(PDK)/libs.tech/klayout/tech/drc/run_drc.py \
-		--path=$(LAY_DIR)/${TOP}_logo_fill.gds.gz \
-		--topcell=${TOP} \
+		--path=$(LAY_DIR)/$(TOP)_logo_fill.gds.gz \
+		--topcell=$(TOP) \
 		--run_dir=$(DRC_RPT_DIR) \
 		--precheck_drc \
 		--mp=32 \
@@ -334,11 +351,11 @@ klayout-drc-minimum: ## Run Minimum pre-check Klayout DRC of the TOP cell with l
 	sleep 4
 .PHONY: klayout-drc-minimum
 
-klayout-drc-regular: ## Run Regular Klayout DRC of the TOP cell with logo and fillers (usage: make klayout-drc-regular)
+klayout-drc-regular: ## Run regular KLayout DRC of the TOP cell with logo and filler
 	mkdir -p $(DRC_RPT_DIR)
 	python3 $(PDK_ROOT)/$(PDK)/libs.tech/klayout/tech/drc/run_drc.py \
-		--path=$(LAY_DIR)/${TOP}_logo_fill.gds.gz \
-		--topcell=${TOP} \
+		--path=$(LAY_DIR)/$(TOP)_logo_fill.gds.gz \
+		--topcell=$(TOP) \
 		--run_dir=$(DRC_RPT_DIR) \
 		--mp=32 \
 		--density_thr=32
@@ -381,7 +398,7 @@ klayout-pex: ## Run Parasitic Extraction with KPEX of the CELL cell (usage: make
 	kpex \
 	--pdk $$PDK_UNDERSCORED \
 	--cell $(CELL) \
-	--schematic $(SCH_DIR)/$(CELL).sch \
+	--schematic $(XSCHEM_SCH_DIR)/$(CELL).sch \
 	--gds $(LAY_DIR)/$(CELL).gds.gz \
 	--magic \
 	--magic_mode $$KPEX_MODE \
@@ -392,11 +409,11 @@ klayout-pex: ## Run Parasitic Extraction with KPEX of the CELL cell (usage: make
 	sed -i 's/$(CELL)_flat/$(CELL)_pex/g' $(NET_PEX_DIR)/$(CELL)_klayout_pex_$(EXT_MODE).spice
 	rm -rf $(NET_PEX_DIR)/$(CELL)__$(CELL)
 	rm -f $(CELL)_flat.nodes $(CELL)_flat.sim
-	@if [ -f $(SCH_DIR)/$(CELL)_pex.sym ]; then \
+	@if [ -f $(XSCHEM_SCH_DIR)/$(CELL)_pex.sym ]; then \
 		echo "Reordering pins in $(CELL)_klayout_pex_$(EXT_MODE).spice to match $(CELL)_pex.sym..."; \
-		python3 $(NET_PEX_DIR)/reorder_spice_pins.py $(SCH_DIR)/$(CELL)_pex.sym $(NET_PEX_DIR)/$(CELL)_klayout_pex_$(EXT_MODE).spice; \
+		python3 $(NET_PEX_DIR)/reorder_spice_pins.py $(XSCHEM_SCH_DIR)/$(CELL)_pex.sym $(NET_PEX_DIR)/$(CELL)_klayout_pex_$(EXT_MODE).spice; \
 	else \
-		echo "No symbol $(SCH_DIR)/$(CELL)_pex.sym found, skipping pin reorder."; \
+		echo "No symbol $(XSCHEM_SCH_DIR)/$(CELL)_pex.sym found, skipping pin reorder."; \
 	fi
 	sleep 4
 .PHONY: klayout-pex
@@ -407,11 +424,11 @@ magic-pex: ## Run Parasitic Extraction with Magic of the CELL cell (usage: make 
 	mv $(NET_PEX_DIR)/$(CELL).pex.spice $(NET_PEX_DIR)/$(CELL)_magic_pex_$(EXT_MODE).spice
 	sed -i 's/$(CELL)/$(CELL)_pex/g' $(NET_PEX_DIR)/$(CELL)_magic_pex_$(EXT_MODE).spice
 	rm -f $(NET_PEX_DIR)/pex_$(CELL).tcl $(NET_PEX_DIR)/$(CELL).ext $(NET_PEX_DIR)/$(CELL)_flat.ext $(NET_PEX_DIR)/$(CELL)_flat.res.ext
-	@if [ -f $(SCH_DIR)/$(CELL)_pex.sym ]; then \
+	@if [ -f $(XSCHEM_SCH_DIR)/$(CELL)_pex.sym ]; then \
 		echo "Reordering pins in $(CELL)_magic_pex_$(EXT_MODE).spice to match $(CELL)_pex.sym..."; \
-		python3 $(NET_PEX_DIR)/reorder_spice_pins.py $(SCH_DIR)/$(CELL)_pex.sym $(NET_PEX_DIR)/$(CELL)_magic_pex_$(EXT_MODE).spice; \
+		python3 $(NET_PEX_DIR)/reorder_spice_pins.py $(XSCHEM_SCH_DIR)/$(CELL)_pex.sym $(NET_PEX_DIR)/$(CELL)_magic_pex_$(EXT_MODE).spice; \
 	else \
-		echo "No symbol $(SCH_DIR)/$(CELL)_pex.sym found, skipping pin reorder."; \
+		echo "No symbol $(XSCHEM_SCH_DIR)/$(CELL)_pex.sym found, skipping pin reorder."; \
 	fi
 	sleep 4
 .PHONY: magic-pex
@@ -434,7 +451,7 @@ magic-verify: ## Verify CELL cell with Magic (usage: make magic-verify [CELL=<ce
 
 
 # Simulate, Build and Verify All Target
-all: ## Simulate, build and verify the whole chip
+all: ## Simulate, build and verify the chip
 	$(MAKE) sim-all
 	$(MAKE) build-all
 	$(MAKE) magic-drc CELL=$(TOP)
@@ -446,7 +463,7 @@ all: ## Simulate, build and verify the whole chip
 
 
 # Release Target
-release: ## Copy the gds, netlist files and chip renders to the release folder (usage: make release VERSION=<version>)
+release: ## Copy GDS, netlists and chip renders to release/v.<VERSION>/ (usage: make release [VERSION=<version>])
 	mkdir -p $(RELEASE_DIR)/v.$(VERSION)/gds
 	mkdir -p $(RELEASE_DIR)/v.$(VERSION)/netlist
 	mkdir -p $(RELEASE_DIR)/v.$(VERSION)/img
