@@ -1,39 +1,41 @@
-﻿94. Printing statistics.
+94. Printing statistics.
 
 === chip_top ===
 
         +----------Local Count, excluding submodules.
         |        +-Local Area, excluding submodules.
         |        | 
-       39        - wires
-       97        - wire bits
-       39        - public wires
-       97        - public wire bits
+       57        - wires
+      146        - wire bits
+       27        - public wires
+      116        - public wire bits
         6        - ports
-       34        - port bits
-       62   806400 cells
-        1        -   inverter_top
-        1        -   counter_top
-        8   115200   sg13g2_IOPadAnalog
-        3    43200   sg13g2_IOPadIOVdd
-        3    43200   sg13g2_IOPadIOVss
-        8   115200   sg13g2_IOPadIn
-        9   129600   sg13g2_IOPadInOut30mA
-        9   129600   sg13g2_IOPadOut30mA
-        7   100800   sg13g2_IOPadVdd
-        9   129600   sg13g2_IOPadVss
-        1        -   sg13g2_ip__ce
-        1        -   sg13g2_ip__ce_names
+       28        - port bits
+       70   460800 cells
+       10        -   $_XNOR_
+       21        -   $_XOR_
+        1        -   RM_IHPSG13_1P_1024x32_c2_bm_bist
+        2        -   counter_top
+        2        -   inverter_top
+        4    57600   sg13g2_IOPadAnalog
+        1    14400   sg13g2_IOPadIOVdd
+        1    14400   sg13g2_IOPadIOVss
+        3    43200   sg13g2_IOPadIn
+        4    57600   sg13g2_IOPadInOut30mA
+       17   244800   sg13g2_IOPadOut30mA
+        1    14400   sg13g2_IOPadVdd
+        1    14400   sg13g2_IOPadVss
         1        -   sg13g2_ip__jku
         1        -   sg13g2_ip__jku_names
 
+   Area for cell type $_XNOR_ is unknown!
+   Area for cell type $_XOR_ is unknown!
+   Area for cell type \RM_IHPSG13_1P_1024x32_c2_bm_bist is unknown!
    Area for cell type \inverter_top is unknown!
-   Area for cell type \sg13g2_ip__ce is unknown!
-   Area for cell type \sg13g2_ip__ce_names is unknown!
    Area for cell type \sg13g2_ip__jku is unknown!
    Area for cell type \sg13g2_ip__jku_names is unknown!
    Area for cell type \counter_top is unknown!
 
-   Chip area for module '\chip_top': 806400.000000
+   Chip area for module '\chip_top': 460800.000000
      of which used for sequential elements: 0.000000 (0.00%)
 
