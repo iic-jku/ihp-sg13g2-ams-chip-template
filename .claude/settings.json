@@ -1,0 +1,15 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(gh api *)",
+      "PowerShell(gh api repos/iic-jku/TinyWhisper/contents/ihp130 2>&1)",
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "WebFetch(domain:api.github.com)",
+      "Bash(awk -F: '{print \"- `\" $1 \"`\"}')",
+      "Bash(python3 -m py_compile testbenches/cocotb/chip_top_tb.py)",
+      "Bash(where python *)",
+      "Bash(C:/Users/si150/AppData/Local/Python/bin/python.exe --version)",
+      "Bash(C:/Users/si150/AppData/Local/Python/bin/python.exe -m py_compile testbenches/cocotb/chip_top_tb.py)"
+    ]
+  }
+}
