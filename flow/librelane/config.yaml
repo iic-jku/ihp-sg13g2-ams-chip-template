@@ -143,8 +143,8 @@ CLOCK_PERIOD: 20 # in ns == ~50 MHz
 
 # Floorplanning
 FP_SIZING: absolute
-DIE_AREA:  [0, 0, 1500, 1500]
-CORE_AREA: [365, 365, 1135, 1135]
+DIE_AREA:  [0, 0, 2000, 2000]
+CORE_AREA: [365, 365, 1635, 1635]
 
 # Increase for more logic on your die
 PL_TARGET_DENSITY_PCT: 10
@@ -286,13 +286,13 @@ MACROS:
       nom_typ_1p20V_25C:   dir::../../macros/counter/final/lib/nom_typ_1p20V_25C/counter_top__nom_typ_1p20V_25C.lib
       nom_typ_1p50V_25C:   dir::../../macros/counter/final/lib/nom_typ_1p50V_25C/counter_top__nom_typ_1p50V_25C.lib
     instances:
-      # counter1 — upper west position (drives north pads counter1[7:0])
+      # counter1 — upper west position (drives output_PAD[3:0] / bidir_PAD[3:0])
       i_chip_core.counter1:
-        location: ["expr::365 + 70", "expr::365 + 70 + 800"]
+        location: ["expr::365 + 70", "expr::365 + 70 + 865"]
         orientation: N
-      # counter2 — lower west position (drives south pads counter2[7:0])
+      # counter2 — lower west position (drives output_PAD[11:4] = south pads)
       i_chip_core.counter2:
-        location: ["expr::365 + 70", "expr::365 + 70 + 600"]
+        location: ["expr::365 + 70", "expr::365 + 70 + 715"]
         orientation: N
 
   # ----------------------------------------------------------------
@@ -307,12 +307,22 @@ MACROS:
       - pdk_dir::libs.ref/sg13g2_sram/verilog/RM_IHPSG13_1P_1024x32_c2_bm_bist.v
       - pdk_dir::libs.ref/sg13g2_sram/verilog/RM_IHPSG13_1P_core_behavioral_bm_bist.v
     lib:
-      "*_typ_1p20V_25C":
-        - pdk_dir::libs.ref/sg13g2_sram/lib/RM_IHPSG13_1P_1024x32_c2_bm_bist_typ_1p20V_25C.lib
+      # The IHP SRAM macros are not specified for all corners, especially for >1.32V,
+      # so we use the same corner's lib "RM_IHPSG13_1P_1024x32_c2_bm_bist_fast_1p32V_m55C" 
+      # for multiple corners. This is not ideal but it allows us to proceed with the tapeout 
+      # without waiting for IHP to characterize more corners.
       "*_fast_1p32V_m40C":
+        - pdk_dir::libs.ref/sg13g2_sram/lib/RM_IHPSG13_1P_1024x32_c2_bm_bist_fast_1p32V_m55C.lib
+      "*_fast_1p65V_m40C":
         - pdk_dir::libs.ref/sg13g2_sram/lib/RM_IHPSG13_1P_1024x32_c2_bm_bist_fast_1p32V_m55C.lib
       "*_slow_1p08V_125C":
         - pdk_dir::libs.ref/sg13g2_sram/lib/RM_IHPSG13_1P_1024x32_c2_bm_bist_slow_1p08V_125C.lib
+      "*_slow_1p35V_125C":
+        - pdk_dir::libs.ref/sg13g2_sram/lib/RM_IHPSG13_1P_1024x32_c2_bm_bist_fast_1p32V_m55C.lib
+      "*_typ_1p20V_25C":
+        - pdk_dir::libs.ref/sg13g2_sram/lib/RM_IHPSG13_1P_1024x32_c2_bm_bist_typ_1p20V_25C.lib
+      "*_typ_1p50V_25C":
+        - pdk_dir::libs.ref/sg13g2_sram/lib/RM_IHPSG13_1P_1024x32_c2_bm_bist_fast_1p32V_m55C.lib
     instances:
       i_chip_core.sram_0:
         location: ["expr::365 + 70", "expr::365 + 70"]
@@ -332,14 +342,13 @@ MACROS:
 #     "*":
 #       - dir::../../macros/inverter/final/lib/inverter_top.lib
     instances:
-      # X / Y must be multiples of the Metal3 pitches: 0.48 um (X), 0.42 um (Y).
       # inverter1 — upper east position (digital outputs to east pads)
       i_chip_core.inverter1:
-        location: [expr::(0.48 * 1500), expr::(0.42 * 1500)]   # x = 720.00, y = 630.00
+        location: [expr::(0.48 * 3000), expr::(0.42 * 3000)]   # x = 1440.00, y = 1260.00
         orientation: N
       # inverter2 — lower east position (analog channels to east pads)
       i_chip_core.inverter2:
-        location: [expr::(0.48 * 1500), expr::(0.42 * 1000)]   # x = 720.00, y = 420.00
+        location: [expr::(0.48 * 3000), expr::(0.42 * 1500)]   # x = 1440.00, y = 630.00
         orientation: N
 
   # ----------------------------------------------------------------
