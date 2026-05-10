@@ -92,14 +92,14 @@ module chip_core #(
         .VDD  (VDD),
         .VSS  (VSS),
         `endif
-        .din1 (inv1_din1),
-        .din2 (inv1_din2),
-        .din3 (inv1_din3),
-        .din4 (inv1_din4),
-        .dout1(inv1_dout1),
-        .dout2(inv1_dout2),
-        .dout3(inv1_dout3),
-        .dout4(inv1_dout4)
+        .vin1 (inv1_din1),
+        .vin2 (inv1_din2),
+        .vin3 (inv1_din3),
+        .vin4 (inv1_din4),
+        .vout1(inv1_dout1),
+        .vout2(inv1_dout2),
+        .vout3(inv1_dout3),
+        .vout4(inv1_dout4)
     );
     // ======================================================
 
