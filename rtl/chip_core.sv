@@ -35,10 +35,10 @@ module chip_core #(
     wire enable = input_in[0];
 
     // Inverter 1
-    wire inv1_vin1 = bidir_in[0];
-    wire inv1_vin2 = bidir_in[1];
-    wire inv1_vin3 = bidir_in[2];
-    wire inv1_vin4 = bidir_in[3];
+    wire inv1_din1 = bidir_in[0];
+    wire inv1_din2 = bidir_in[1];
+    wire inv1_din3 = bidir_in[2];
+    wire inv1_din4 = bidir_in[3];
 
     // Inverter 2
     wire inv2_vin1 = analog_padres[0];
@@ -82,24 +82,24 @@ module chip_core #(
     // ======================================================
     // Inverter 1 (analog macro, used as digital inverter)
     // ======================================================
-    wire inv1_vout1;
-    wire inv1_vout2;
-    wire inv1_vout3;
-    wire inv1_vout4;
+    wire inv1_dout1;
+    wire inv1_dout2;
+    wire inv1_dout3;
+    wire inv1_dout4;
 
     inverter_top inverter1 (
         `ifdef USE_POWER_PINS
         .VDD  (VDD),
         .VSS  (VSS),
         `endif
-        .vin1 (inv1_vin1),
-        .vin2 (inv1_vin2),
-        .vin3 (inv1_vin3),
-        .vin4 (inv1_vin4),
-        .vout1(inv1_vout1),
-        .vout2(inv1_vout2),
-        .vout3(inv1_vout3),
-        .vout4(inv1_vout4)
+        .din1 (inv1_din1),
+        .din2 (inv1_din2),
+        .din3 (inv1_din3),
+        .din4 (inv1_din4),
+        .dout1(inv1_dout1),
+        .dout2(inv1_dout2),
+        .dout3(inv1_dout3),
+        .dout4(inv1_dout4)
     );
     // ======================================================
 
@@ -180,10 +180,10 @@ module chip_core #(
     assign output_out[11] = counter2_value[7];
 
     // Inverter 1
-    assign output_out[12] = inv1_vout1;
-    assign output_out[13] = inv1_vout2;
-    assign output_out[14] = inv1_vout3;
-    assign output_out[15] = inv1_vout4;
+    assign output_out[12] = inv1_dout1;
+    assign output_out[13] = inv1_dout2;
+    assign output_out[14] = inv1_dout3;
+    assign output_out[15] = inv1_dout4;
 
     // SRAM
     // Reduce the 32-bit SRAM output bits to a single bit by computing the parity bit.
