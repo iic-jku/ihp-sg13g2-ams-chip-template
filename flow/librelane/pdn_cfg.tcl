@@ -194,14 +194,14 @@ add_pdn_connect \
     -layers "$::env(PDN_VERTICAL_LAYER) $::env(PDN_HORIZONTAL_LAYER)"
 
 
-# Custom connect for inverter
+# Custom connect for the inverter macros (inverter1, inverter2).
 # The top-level power ring is on TM1 (horizontal) and TM2 (vertical).
-# inverter has its own power ring on M5 (horizontal) and TM1 (vertical).
-# Hence, the connection between the top-level power ring and the inverter power ring are crossing nicely.
-# Note that within the inverter power ring no top-level TM1 or TM2 power rails are routed.
+# Each inverter has its own power ring on M5 (horizontal) and TM1 (vertical),
+# so the connection between the top-level power ring and the inverter power rings crosses cleanly. 
+# Note: within an inverter's power ring no top-level TM1 or TM2 power rails are routed.
 define_pdn_grid \
     -macro \
-    -instance i_chip_core.inverter_top \
+    -instances "i_chip_core.inverter1 i_chip_core.inverter2" \
     -name inverter_top \
     -starts_with POWER \
     -halo "$::env(PDN_HORIZONTAL_HALO) $::env(PDN_VERTICAL_HALO)"
@@ -213,3 +213,45 @@ add_pdn_connect \
 add_pdn_connect \
     -grid inverter_top \
     -layers "$::env(PDN_VERTICAL_LAYER) Metal5"
+
+
+# Custom connect for the SRAM macro (sram_0).
+# The SRAM exposes its supply pins on Metal4 / Metal5, so a dedicated stripe
+# pattern on Metal5 is added and bridged up to TopMetal1 (the top-level
+# horizontal PDN layer) and down to Metal4 to reach the macro pins.
+# Use the "NS" pattern below for instances at orientation N or S.
+define_pdn_grid \
+    -macro \
+    -instances "i_chip_core.sram_0" \
+    -name sram_NS \
+    -starts_with POWER
+
+add_pdn_stripe \
+    -grid sram_NS \
+    -layer Metal5 \
+    -width 2.81 \
+    -pitch 11.24 \
+    -offset 2.81 \
+    -spacing 2.81 \
+    -nets "VSS VDD" \
+    -starts_with POWER
+
+add_pdn_connect \
+    -grid sram_NS \
+    -layers "Metal4 Metal5"
+
+add_pdn_connect \
+    -grid sram_NS \
+    -layers "Metal5 TopMetal1"
+
+# For orientation E or W, swap to a Metal4 -> TopMetal1 connect only.
+# define_pdn_grid \
+#     -macro \
+#     -instances "\
+#     i_chip_core.sram_0" \
+#     -name sram_WE \
+#     -starts_with POWER
+
+# add_pdn_connect \
+#     -grid sram_WE \
+#     -layers "Metal4 TopMetal1"
