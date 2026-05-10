@@ -12,25 +12,34 @@ Institute for Integrated Circuits and Quantum Computing, Johannes Kepler Univers
 
 <p align="center">
   <a href="render/img/chip_top_black.png">
-    <img src="render/img/chip_top_black.png" alt="Chip render of the ihp-sg13g2 analog-mixed signal template chip (TODOmm x TODOmm)" width=70%>
+    <img src="render/img/chip_top_black.png" alt="Chip render of the ihp-sg13g2 analog-mixed signal template chip (2 mm x 2 mm)" width=70%>
   </a>
   <br>
-  <em>Chip render of the ihp-sg13g2 analog-mixed signal template chip (TODOmm x TODOmm).</em>
+  <em>Chip render of the ihp-sg13g2 analog-mixed signal template chip (2 mm x 2 mm).</em>
 </p>
 
 
 ## Overview
 
-This shell-script-driven repository uses OpenROAD Flow-Scripts (ORFS) to synthesize a digital macro and demonstrates gate-level simulation with Ngspice in Xschem for use in analog mixed-signal designs. Looking for something more powerful? A newer template repository ([ihp-sg13g2-ams-chip-template](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template)) simulates, builds, and fully verifies (LVS, DRC, PEX) a complete analog mixed-signal chip, including padframe generation and top-level assembly. It uses:
+This Makefile-driven repository simulates, builds, and fully verifies (LVS, DRC, PEX) a complete analog mixed-signal chip for the ihp-sg13g2 130nm Open-PDK, including padframe generation and top-level assembly. It uses:
 
-- **LibreLane Flow** for digital macro hardening, padframe generation and top-level assembly
+- **LibreLane** for digital macro hardening, padframe generation and top-level assembly
 - **Xschem** for schematic entry
 - **Ngspice**, **VACASK** and **CACE** for analog simulation
 - **KLayout** for viewing and routing of the layout
-- **Magic+Netgen** and **KLayout** for LVS, DRC and PEX verification
-- **Verilog**, **cocotb**, **GTKWave** and **Surfer** for digital simulation
+- **Magic + Netgen** and **KLayout** for LVS, DRC and PEX verification
+- **SystemVerilog**, **cocotb**, **GTKWave** and **Surfer** for digital simulation
 
-This template repository is Makefile-driven and provides a universal design flow solution: Just clone the repo, run `make all`, and get a tapeout-ready analog-mixed signal chip. This is the starting point for your own custom silicon. Focus on your design and do not care about the tools and the design flow!
+The repository is the starting point for your own custom silicon and provides a universal design flow solution: Just clone the repo, enter the IIC-OSIC-TOOLS container, and run `make all` to get a tapeout-ready analog-mixed signal chip. Focus on your design and do not care about the tools and the design flow!
+
+
+## Chip Documentation
+
+A designer-oriented description of this chip lives in [doc/](doc/):
+
+- **[doc/specifications.md](doc/specifications.md)** — top-level specifications (technology, supplies, clock, macro inventory, functional behaviour).
+- **[doc/pinout.md](doc/pinout.md)** — full 32-pad bondpad table per side, with the `chip_top` port and the role each pad carries inside `chip_core`.
+- **[doc/floorplan.md](doc/floorplan.md)** — die / core geometry, hard-macro placement coordinates, PDN strategy and the floorplan diagram.
 
 
 ## Tutorial
@@ -50,43 +59,26 @@ Examples based on this template are:
 ```text
 📁 ihp-sg13g2-ams-chip-template/
 ├─ 📁 doc/
-│  └─ pinout.md
+│  ├─ 📁 ihp-sg13g2-Open-PDK/
+│  ├─ 📁 ihp-structure-proposals/
+│  ├─ 📁 klayout/
+│  ├─ 📁 librelane/
+│  ├─ 📁 sizing/
+│  ├─ floorplan.md
+│  ├─ pinout.md
+│  └─ specifications.md
 ├─ 📁 flow/
 │  ├─ 📁 artistic/
 │  ├─ 📁 librelane/
+│  │  ├─ chip_top.sdc
 │  │  ├─ config.yaml
-│  │  ├─ pdn_cfg.tcl
-│  │  └─ chip_top.sdc
-│  ├─ 📁 logo/
-│  │  └─ chip_logo_mono.png
-│  └─ 📁 reports/
-│     ├─ antenna_summary.rpt
-│     ├─ antenna_violations.rpt
-│     ├─ hold_setup_timing.rpt
-│     ├─ lvs.netgen.rpt
-│     ├─ manufacturability.rpt
-│     ├─ stat.rpt
-│     ├─ yosys_post_dff.rpt
-│     ├─ yosys_pre_techmap.rpt
-│     └─ yosys_synth_check.rpt
+│  │  └─ pdn_cfg.tcl
+│  └─ 📁 logo/
+│     └─ chip_logo_mono.png
 ├─ 📁 ip/
 │  ├─ 📁 sg13g2_io_custom/
 │  ├─ 📁 sg13g2_ip__bondpad_70x70/
 │  │  ├─ 📁 final/
-│  │  ├─ 📁 script/
-│  │  ├─ 📁 verification/
-│  │  ├─ Makefile
-│  │  └─ README.md
-│  ├─ 📁 sg13g2_ip__ce/
-│  │  ├─ 📁 final/
-│  │  ├─ 📁 logo/
-│  │  ├─ 📁 script/
-│  │  ├─ 📁 verification/
-│  │  ├─ Makefile
-│  │  └─ README.md
-│  ├─ 📁 sg13g2_ip__ce_names/
-│  │  ├─ 📁 final/
-│  │  ├─ 📁 logo/
 │  │  ├─ 📁 script/
 │  │  ├─ 📁 verification/
 │  │  ├─ Makefile
@@ -109,72 +101,56 @@ Examples based on this template are:
 │  ├─ chip_top.gds.gz
 │  └─ chip_top_logo_fill.gds.gz
 ├─ 📁 macros/
-│  ├─ 📁 coupled_resonator_lc_bpf/
-│  │  ├─ 📁 schematic/
-│  │  ├─ 📁 scripts/
-│  │  └─ 📁 testbenches/
-│  ├─ 📁 inverter/
+│  ├─ 📁 counter/
 │  │  ├─ 📁 final/
-│  │  ├─ 📁 layout/
+│  │  ├─ 📁 flow/
+│  │  ├─ 📁 fpga/
 │  │  ├─ 📁 netlist/
 │  │  ├─ 📁 render/
+│  │  ├─ 📁 rtl/
 │  │  ├─ 📁 schematic/
 │  │  ├─ 📁 scripts/
 │  │  ├─ 📁 testbenches/
 │  │  ├─ 📁 verification/
 │  │  ├─ Makefile
 │  │  └─ README.md
-│  └─ 📁 counter/
+│  └─ 📁 inverter/
 │     ├─ 📁 final/
-│     ├─ 📁 flow/
-│     ├─ 📁 fpga/
+│     ├─ 📁 layout/
 │     ├─ 📁 netlist/
 │     ├─ 📁 render/
-│     ├─ 📁 rtl/
 │     ├─ 📁 schematic/
 │     ├─ 📁 scripts/
 │     ├─ 📁 testbenches/
+│     ├─ 📁 verification/
 │     ├─ Makefile
 │     └─ README.md
 ├─ 📁 netlist/
 │  ├─ 📁 layout/
-│  │  └─ chip_top.spice
 │  ├─ 📁 nl/
-│  │  └─ chip_top.nl.v
 │  ├─ 📁 pex/
-│  │  ├─ reorder_spice_pins.py
-│  │  ├─ chip_top_klayout_pex_*.spice
-│  │  └─ chip_top_magic_pex_*.spice
 │  ├─ 📁 pnl/
-│  │  └─ chip_top.pnl.v
 │  └─ 📁 spice/
-│     └─ chip_top.spice
 ├─ 📁 release/
-│  ├─ 📁 v.1.0.0/
-│  │  ├─ 📁 doc/
-│  │  ├─ 📁 gds/
-│  │  ├─ 📁 img/
-│  │  └─ ReleaseNote.md
-│  └─ 📁 v.2.0.0/
+│  └─ 📁 v.1.0.0/
 │     ├─ 📁 gds/
-│     └─ 📁 netlist/
+│     ├─ 📁 img/
+│     ├─ 📁 netlist/
+│     └─ README.md
 ├─ 📁 render/
 │  ├─ 📁 blender/
 │  └─ 📁 img/
-│     ├─ chip_top_black.png
-│     ├─ chip_top_librelane.png
-│     └─ chip_top_white.png
 ├─ 📁 rtl/
 │  ├─ chip_core.sv
 │  └─ chip_top.sv
 ├─ 📁 schematic/
-│  ├─ chip.sch
-│  ├─ chip.sym
-│  ├─ chip_top.sch
-│  ├─ chip_top.sym
-│  ├─ chip_top_pex.sym
-│  └─ xschemrc
+│  └─ 📁 xschem/
+│     ├─ chip_top.sch
+│     ├─ chip_top.sym
+│     ├─ chip_top_pex.sym
+│     └─ xschemrc
 ├─ 📁 scripts/
+│  ├─ 📁 plot_simulations/
 │  ├─ add_logo_fill.sh
 │  ├─ add_rectangle.py
 │  ├─ gds_xor.py
@@ -182,20 +158,37 @@ Examples based on this template are:
 ├─ 📁 testbenches/
 │  ├─ 📁 cocotb/
 │  │  ├─ chip_top_tb.gtkw
-│  │  ├─ chip_top_tb.surf.ron
-│  │  └─ chip_top_tb.py
+│  │  ├─ chip_top_tb.py
+│  │  └─ chip_top_tb.surf.ron
 │  └─ 📁 xschem/
-│     ├─ chip_tb_tran.sch
 │     ├─ chip_top_tb_tran.sch
 │     └─ xschemrc
+├─ 📁 tutorial/
+│  ├─ 📁 fig/
+│  ├─ _quarto.yml
+│  ├─ index.qmd
+│  ├─ Makefile
+│  └─ requirements.txt
 ├─ 📁 verification/
 │  ├─ 📁 drc/
-│  │  ├─ chip_top.magic.drc.rpt
-│  │  └─ chip_top_logo_fill.magic.drc.rpt
-│  └─ 📁 lvs/
-│     └─ chip_top.lvs.out
+│  ├─ 📁 lvs/
+│  └─ 📁 reports/
+│     ├─ antenna_summary.rpt
+│     ├─ antenna_violations.rpt
+│     ├─ hold_setup_timing.rpt
+│     ├─ irdrop.rpt
+│     ├─ lvs.netgen.rpt
+│     ├─ manufacturability.rpt
+│     ├─ stapostpnr_*.rpt
+│     ├─ stat.rpt
+│     ├─ yosys_post_dff.rpt
+│     ├─ yosys_pre_techmap.rpt
+│     └─ yosys_synth_check.rpt
+├─ CITATION.cff
+├─ LICENSE
 ├─ Makefile
-└─ README.md
+├─ README.md
+└─ ToDo.md
 ```
 
 
@@ -304,13 +297,18 @@ These commands are also available for the digital macros.
 
 ## Copy Important Reports
 
-To copy the yosys, antenna-violation, DRC errors, hold & setup violation, timing, LVS, and manufacturability reports from the latest run into `flow/reports/`, run:
+To copy the Yosys synthesis checks, antenna-violation reports, post-PnR hold & setup timing summary, LVS report, and manufacturability report from the latest LibreLane run into `verification/reports/`, run:
 
 ```sh
 make copy-reports
 ```
 
 This only works if the latest run completed without errors. This command is also available for the digital macros.
+
+> [!NOTE]
+> The Magic and KLayout DRC reports are temporarily not copied because IHP's
+> `metal1_pin_offgrid` rule trips on the pad ring. Once it is fixed upstream
+> the corresponding `cp` lines in `Makefile :: copy-reports` will be re-enabled.
 
 
 ## Copy the Final GDS
@@ -389,7 +387,7 @@ The following command builds the `counter` digital macro:
 make build-counter
 ```
 
-For each digital macro the following commands are executed: `make librelane`, `make copy-reports`, and `make render-gds`.
+For each digital macro this dispatches to its in-tree `make all`, which lints, simulates, runs LibreLane, copies the reports, and renders the final GDS.
 
 > [!TIP]
 > Each macro has its own `Makefile` and `README.md` with additional targets, such as linting, simulation, and verification.
@@ -397,7 +395,7 @@ For each digital macro the following commands are executed: `make librelane`, `m
 
 ### Build Analog Macros
 
-Each analog macro has its own `klayout-verify` and `magic-verify` targets that runs LVS, DRC, and PEX for the top level cell.
+Each analog macro has its own `klayout-verify` and `magic-verify` targets that run LVS, DRC, and PEX for the top-level cell.
 
 To build the inverter macro:
 
@@ -408,19 +406,40 @@ make build-inverter
 All analog macros are included in `build-macros` alongside the digital macros.
 
 
+## Build Top
+
+To run LibreLane for the top-level chip and copy the resulting reports, GDS, netlist, and chip render back into the source tree, then add the logo + fill structures and render the final GDS, run:
+
+```sh
+make build-top
+```
+
+Internally this executes (in order): `librelane-nodrc` → `copy-reports` → `copy-gds` → `copy-netlist` → `copy-render` → `add-logo-fill` → `render-gds`.
+
+
 ## Build All
 
-To build the bondpad, logos and macros, run LibreLane for the top-level chip, copy the reports, GDS, netlist, and LibreLane render, add the logo and fill structures, render the final GDS, and open it in the OpenROAD GUI, run:
+To initialise submodules, build the bondpad, build the logos, build the macros, and run the full `build-top` flow, run:
 
 ```sh
 make build-all
 ```
 
-> [!NOTE]
-> The `make build-all` target does **not** currently build the digital macros (e.g., counter, inverter).
-> To build specific macros, use `make build-counter`, `make build-inverter`, or `make build-macros` to build all enabled macros separately.
-
 This is useful if you want to rebuild the chip from scratch. Clone the repository, enter the IIC-OSIC-TOOLS environment, and run `make build-all`.
+
+
+## Add Logo and Fill
+
+To add the chip logo (PNG → GDS) and the fill structures on top of the LibreLane output (so the final GDS in `layout/` includes the artwork), run:
+
+```sh
+make add-logo-fill
+```
+
+This calls `scripts/add_logo_fill.sh` and writes `layout/chip_top_logo_fill.gds.gz`. The step is also called from `make build-top`.
+
+> [!NOTE]
+> In the future, it is planned to replace this script and Makefile target with a custom librelane step.
 
 
 ## Export Schematic Netlist for LVS
@@ -511,7 +530,8 @@ The `EXT_MODE` parameter selects the extraction mode:
 - `2` = C-coupled
 - `3` = full-RC (default)
 
-> **Note:** For `klayout-pex`, `EXT_MODE=1` (C-decoupled) is not yet supported by kpex and automatically falls back to `EXT_MODE=2` (CC) with a warning.
+> [!NOTE]
+> For `klayout-pex`, `EXT_MODE=1` (C-decoupled) is not yet supported by kpex and automatically falls back to `EXT_MODE=2` (CC) with a warning.
 
 The `.subckt` name in the extracted SPICE file is automatically renamed from `<CELL>_flat` (kpex) or `<CELL>` (Magic) to `<CELL>_pex`.
 
