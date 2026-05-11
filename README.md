@@ -1,7 +1,7 @@
 ﻿# An Open-Source Analog-Mixed Signal Chip Design Template for the ihp-sg13g2 Open-PDK
 
 [![Quarto Publish](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/actions/workflows/quarto-publish.yml/badge.svg?branch=main)](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/actions/workflows/quarto-publish.yml)
-[![DOI](https://zenodo.org/badge/DOI/10.1234/zenodo.12345678.svg)](https://doi.org/10.1234/zenodo.12345678)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.20129233.svg)](https://doi.org/10.5281/zenodo.20129233)
 
 (c) 2026 Simon Dorrer and Harald Pretl
 
@@ -632,7 +632,7 @@ make release VERSION=2.1.0
     year = {2026},
 	title = {{GitHub Repository of an Open-Source Analog-Mixed Signal Chip Design Template for the ihp-sg13g2 Open-PDK}},
 	url = {https://github.com/iic-jku/ihp-sg13g2-ams-chip-template},
-	doi = {10.1234/zenodo.12345678}
+	doi = {10.5281/zenodo.20129233}
 }
 ```
 
