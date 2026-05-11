@@ -195,16 +195,16 @@ module chip_core #(
     // Bidir output enable: drive when `enable` is high (counter visible),
     // float as input when low (so external stimuli can drive inverter1).
     assign bidir_out[0] = counter1_value[4];
-	assign bidir_oe[0]  = input_in[0];
+	assign bidir_oe[0]  = enable;
 
     assign bidir_out[1] = counter1_value[5];
-	assign bidir_oe[1]  = input_in[0];
+	assign bidir_oe[1]  = enable;
 
     assign bidir_out[2] = counter1_value[6];
-	assign bidir_oe[2]  = input_in[0];
+	assign bidir_oe[2]  = enable;
 
     assign bidir_out[3] = counter1_value[7];
-	assign bidir_oe[3]  = input_in[0];
+	assign bidir_oe[3]  = enable;
 
     // Analog Outputs
     assign analog_padbare[2] = inv2_vout1;
