@@ -32,7 +32,9 @@ This repository requires the [IIC-OSIC-TOOLS](https://github.com/iic-jku/IIC-OSI
 
 ## Overview
 
-ToDo
+This tutorial walks through the complete open-source AMS chip flow for the `ihp-sg13g2` Open-PDK, from RTL and macro generation through padframe integration, physical implementation, verification, and final views.
+
+The example design combines two digital counter macros, two inverter macros, an SRAM macro, analog and digital pad connectivity, and the top-level chip.
 
 ## Acknowledgements
 

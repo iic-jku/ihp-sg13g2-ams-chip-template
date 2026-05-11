@@ -19,7 +19,7 @@ module chip_top #(
     parameter NUM_IOVSS_PADS = 1,
     
     // Signal pads
-    parameter NUM_INPUT_PADS  = 1,  // exluding clock and reset pads
+    parameter NUM_INPUT_PADS  = 1,  // excluding clock and reset pads
     parameter NUM_OUTPUT_PADS = 17,
     parameter NUM_BIDIR_PADS  = 4,
     parameter NUM_ANALOG_PADS = 4
