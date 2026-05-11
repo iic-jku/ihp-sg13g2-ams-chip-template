@@ -1,4 +1,4 @@
-﻿v {xschem version=3.4.8RC file_version=1.3}
+v {xschem version=3.4.8RC file_version=1.3}
 G {}
 K {}
 V {}
@@ -6,523 +6,390 @@ S {}
 F {}
 E {}
 L 4 0 0 65 0 {}
-L 4 2860 -160 2860 0 {}
-L 4 2860 -160 4180 -160 {}
-L 4 2860 -80 4180 -80 {}
-L 4 3490 -80 3490 0 {}
-L 4 3490 -160 3490 -80 {}
-L 4 3200 -80 3200 0 {}
-L 4 -0 -4460 0 0 {}
-L 4 4180 -4460 4180 0 {}
-L 4 380 0 4180 0 {}
-L 4 -0 -4460 4180 -4460 {}
+L 4 1640 -160 1640 0 {}
+L 4 1640 -160 2960 -160 {}
+L 4 1640 -80 2960 -80 {}
+L 4 2270 -80 2270 0 {}
+L 4 2270 -160 2270 -80 {}
+L 4 1980 -80 1980 0 {}
+L 4 2960 -3420 2960 0 {}
+L 4 0 -3420 2960 -3420 {}
+L 4 380 0 2960 0 {}
+L 4 -0 -3420 0 -0 {}
 P 5 38 140 -15 135 -10 125 0 135 10 147.5 22.5 155 30 147.5 30 140 30 135 30 130 25 125 20 115 10 105 20 100 25 95 30 90 30 82.5 30 75 30 82.5 22.5 95 10 105 0 95 -10 82.5 -22.5 75 -30 82.5 -30 90 -30 95 -30 100 -25 105 -20 115 -10 125 -20 130 -25 135 -30 140 -30 147.5 -30 155 -30 147.5 -22.5 140 -15 {fill=true
 bezier=1}
-T {Chip Top Assembly / Padframe} 1390 -4440 0 0 1.5 1.5 {}
-T {2026-03-02 19:23:44} 3500 -60 0 0 0.8 0.8 {}
-T {Simon Dorrer} 2870 -140 0 0 0.8 0.8 {}
-T {Page 1 of 1} 2870 -60 0 0 0.8 0.8 {}
-T {chip_top} 3500 -120 0 0 0.8 0.8 {vcenter=true}
-T {Rev. 1} 3210 -60 0 0 0.8 0.8 {}
+T {Chip Top Assembly / Padframe} 880 -3380 0 0 1.5 1.5 {}
+T {2026-03-02 19:23:44} 2280 -60 0 0 0.8 0.8 {}
+T {Simon Dorrer} 1650 -140 0 0 0.8 0.8 {}
+T {Page 1 of 1} 1650 -60 0 0 0.8 0.8 {}
+T {chip_top} 2280 -120 0 0 0.8 0.8 {vcenter=true}
+T {Rev. 1} 1990 -60 0 0 0.8 0.8 {}
 T {SCHEM} 155 -25 0 0 1 1 {}
-T {Note: On-chip decoupling is done by LibreLane Flow!} 40 -200 0 0 1 1 {}
-N 510 -3850 510 -690 {lab=IOVDD}
-N 510 -3850 3670 -3850 {lab=IOVDD}
-N 3670 -3850 3670 -690 {lab=IOVDD}
-N 510 -690 3670 -690 {lab=IOVDD}
-N 520 -3840 520 -700 {lab=VSS}
-N 520 -3840 3660 -3840 {lab=VSS}
-N 3660 -3840 3660 -700 {lab=VSS}
-N 520 -700 3660 -700 {lab=VSS}
-N 530 -3830 530 -710 {lab=VDD}
-N 530 -3830 3650 -3830 {lab=VDD}
-N 3650 -3830 3650 -710 {lab=VDD}
-N 530 -710 3650 -710 {lab=VDD}
-N 540 -3820 540 -720 {lab=VSS}
-N 3640 -3820 3640 -720 {lab=VSS}
-N 540 -720 3640 -720 {lab=VSS}
-N 540 -3820 3640 -3820 {lab=VSS}
-N 1470 -3810 1470 -3000 {lab=#net1}
-N 1680 -3810 1680 -2960 {lab=#net2}
-N 1890 -3810 1890 -2920 {lab=#net3}
-N 2100 -3810 2100 -2880 {lab=#net4}
-N 1660 -1560 1660 -730 {lab=#net5}
-N 1870 -1600 1870 -730 {lab=#net6}
-N 2080 -1640 2080 -730 {lab=#net7}
-N 2290 -1680 2290 -730 {lab=#net8}
-N 600 -2160 600 -1440 {lab=#net9}
-N 680 -3540 680 -2660 {lab=#net10}
-N 660 -3330 660 -2600 {lab=#net11}
-N 660 -1940 660 -1020 {lab=#net12}
-N 680 -1900 680 -810 {lab=#net13}
-N 640 -2080 640 -1230 {lab=#net14}
-N 620 -2120 620 -1450 {lab=#net15}
-N 620 -2910 620 -2420 {lab=#net16}
-N 600 -2700 600 -2380 {lab=#net17}
-N 580 -2490 580 -2340 {lab=#net18}
-N 1640 -2800 1640 -2780 {lab=VDD}
-N 3600 -2370 3630 -2370 {lab=#net19}
-N 3880 -910 4000 -910 {lab=analog_PAD[0]}
-N 3880 -1120 4000 -1120 {lab=analog_PAD[1]}
-N 3880 -1960 4000 -1960 {lab=analog_PAD[2]}
-N 3880 -2170 4000 -2170 {lab=analog_PAD[3]}
-N 3880 -2380 4000 -2380 {lab=analog_PAD[4]}
-N 3880 -2590 4000 -2590 {lab=analog_PAD[5]}
-N 3880 -3430 4000 -3430 {lab=analog_PAD[6]}
-N 3880 -3640 4000 -3640 {lab=analog_PAD[7]}
-N 180 -1320 300 -1320 {lab=output_PAD[5]}
-N 180 -900 300 -900 {lab=output_PAD[4]}
-N 180 -3000 300 -3000 {lab=output_PAD[8]}
-N 180 -2790 300 -2790 {lab=output_PAD[7]}
-N 180 -2580 300 -2580 {lab=output_PAD[6]}
-N 1570 -480 1570 -360 {lab=output_PAD[0]}
-N 1780 -480 1780 -360 {lab=output_PAD[1]}
-N 1990 -480 1990 -360 {lab=output_PAD[2]}
-N 2200 -480 2200 -360 {lab=output_PAD[3]}
-N 2820 -4180 2820 -4060 {lab=bidir_PAD[0]}
-N 3030 -4180 3030 -4060 {lab=bidir_PAD[1]}
-N 3240 -4180 3240 -4060 {lab=bidir_PAD[2]}
-N 3450 -4180 3450 -4060 {lab=bidir_PAD[3]}
-N 2830 -480 2830 -360 {lab=bidir_PAD[4]}
-N 3040 -480 3040 -360 {lab=bidir_PAD[5]}
-N 3250 -480 3250 -360 {lab=bidir_PAD[6]}
-N 3460 -480 3460 -360 {lab=bidir_PAD[7]}
-N 2610 -3740 2920 -3740 {lab=#net20}
-N 2650 -3680 3130 -3680 {lab=#net21}
-N 2710 -3620 3340 -3620 {lab=#net22}
-N 2750 -3560 3550 -3560 {lab=#net23}
-N 2770 -1020 3550 -1020 {lab=#net24}
-N 3330 -980 3540 -980 {lab=#net25}
-N 3600 -1210 3630 -1210 {lab=#net26}
-N 3580 -1000 3630 -1000 {lab=#net27}
-N 3580 -3730 3630 -3730 {lab=#net28}
-N 3600 -3520 3630 -3520 {lab=#net29}
-N 180 -3630 300 -3630 {lab=clk_PAD}
-N 180 -3420 300 -3420 {lab=rst_n_PAD}
-N 180 -3210 300 -3210 {lab=input_PAD[5]}
-N 180 -2370 300 -2370 {lab=IOVDD}
-N 180 -2160 300 -2160 {lab=VSS}
-N 180 -1950 300 -1950 {lab=VDD}
-N 180 -1740 300 -1740 {lab=VSS}
-N 180 -1530 300 -1530 {lab=bidir_PAD[8]}
-N 180 -1110 300 -1110 {lab=input_PAD[4]}
-N 1360 -480 1360 -360 {lab=VSS}
-N 1150 -480 1150 -360 {lab=VDD}
-N 940 -480 940 -360 {lab=VSS}
-N 730 -480 730 -360 {lab=IOVDD}
-N 2620 -480 2620 -360 {lab=VSS}
-N 2410 -480 2410 -360 {lab=VDD}
-N 3880 -1330 4000 -1330 {lab=VSS}
-N 3880 -1540 4000 -1540 {lab=VDD}
-N 3880 -1750 4000 -1750 {lab=VSS}
-N 3880 -2800 4000 -2800 {lab=VSS}
-N 3880 -3010 4000 -3010 {lab=VDD}
-N 3880 -3220 4000 -3220 {lab=VSS}
-N 1350 -4180 1350 -4060 {lab=VSS}
-N 1140 -4180 1140 -4060 {lab=VDD}
-N 930 -4180 930 -4060 {lab=VSS}
-N 720 -4180 720 -4060 {lab=IOVDD}
-N 2190 -4180 2190 -4060 {lab=input_PAD[3]}
-N 1980 -4180 1980 -4060 {lab=input_PAD[2]}
-N 1770 -4180 1770 -4060 {lab=input_PAD[1]}
-N 1560 -4180 1560 -4060 {lab=input_PAD[0]}
-N 2610 -4180 2610 -4060 {lab=VSS}
-N 2400 -4180 2400 -4060 {lab=VDD}
-N 2920 -3800 2920 -3740 {lab=#net20}
-N 2630 -3720 2730 -3720 {lab=#net30}
-N 2590 -3700 2740 -3700 {lab=#net31}
-N 2740 -3700 2950 -3700 {lab=#net31}
-N 3130 -3800 3130 -3680 {lab=#net21}
-N 2670 -3660 2940 -3660 {lab=#net32}
-N 2690 -3580 3160 -3580 {lab=#net33}
-N 3160 -3580 3370 -3580 {lab=#net33}
-N 3550 -3800 3550 -3560 {lab=#net23}
-N 2770 -3540 3360 -3540 {lab=#net34}
-N 3340 -3800 3340 -3620 {lab=#net22}
-N 2730 -3600 3150 -3600 {lab=#net35}
-N 2910 -860 2910 -740 {lab=#net36}
-N 2910 -860 3120 -860 {lab=#net36}
-N 3120 -860 3120 -740 {lab=#net36}
-N 2590 -860 2910 -860 {lab=#net36}
-N 3330 -980 3330 -740 {lab=#net25}
-N 2690 -980 3330 -980 {lab=#net25}
-N 3540 -980 3540 -740 {lab=#net25}
-N 2610 -820 2730 -820 {lab=#net37}
-N 2730 -820 2730 -740 {lab=#net37}
-N 2650 -880 2940 -880 {lab=#net38}
-N 2940 -880 2940 -740 {lab=#net38}
-N 2630 -840 2920 -840 {lab=#net39}
-N 2920 -840 2920 -730 {lab=#net39}
-N 3130 -900 3130 -730 {lab=#net40}
-N 2670 -900 3130 -900 {lab=#net40}
-N 3150 -940 3150 -740 {lab=#net41}
-N 2710 -940 3150 -940 {lab=#net41}
-N 3360 -1000 3360 -740 {lab=#net42}
-N 2750 -1000 3360 -1000 {lab=#net42}
-N 3340 -960 3340 -730 {lab=#net43}
-N 2730 -960 3340 -960 {lab=#net43}
-N 3550 -1020 3550 -730 {lab=#net24}
-N 580 -2200 580 -1630 {lab=#net44}
-N 2730 -3810 2730 -3720 {lab=#net30}
-N 2740 -3800 2740 -3700 {lab=#net31}
-N 2940 -3810 2940 -3660 {lab=#net32}
-N 2950 -3800 2950 -3700 {lab=#net31}
-N 3150 -3810 3150 -3600 {lab=#net35}
-N 3160 -3800 3160 -3580 {lab=#net33}
-N 3360 -3810 3360 -3540 {lab=#net34}
-N 3370 -3800 3370 -3580 {lab=#net33}
-N 3620 -3630 3630 -3630 {lab=#net45}
-N 3620 -3420 3630 -3420 {lab=#net46}
-N 3620 -2680 3630 -2680 {lab=#net47}
-N 3620 -2470 3630 -2470 {lab=#net48}
-N 3620 -2260 3630 -2260 {lab=#net49}
-N 3620 -2050 3630 -2050 {lab=#net50}
-N 3620 -1110 3630 -1110 {lab=#net51}
-N 3620 -900 3630 -900 {lab=#net52}
-N 1280 -2880 1280 -2780 {lab=#net4}
-N 1220 -2920 1220 -2780 {lab=#net3}
-N 1160 -2960 1160 -2780 {lab=#net2}
-N 1100 -3000 1100 -2780 {lab=#net1}
-N 1640 -1780 1640 -1760 {lab=VSS}
-N 1280 -1780 1280 -1680 {lab=#net8}
-N 1220 -1780 1220 -1640 {lab=#net7}
-N 1160 -1780 1160 -1600 {lab=#net6}
-N 1100 -1780 1100 -1560 {lab=#net5}
-N 550 -2490 580 -2490 {lab=#net18}
-N 550 -2700 600 -2700 {lab=#net17}
-N 550 -2910 620 -2910 {lab=#net16}
-N 550 -3120 640 -3120 {lab=#net53}
-N 640 -3120 640 -2460 {lab=#net53}
-N 550 -3330 660 -3330 {lab=#net11}
-N 550 -3540 680 -3540 {lab=#net10}
-N 560 -1630 580 -1630 {lab=#net44}
-N 550 -1440 600 -1440 {lab=#net9}
-N 560 -1450 620 -1450 {lab=#net15}
-N 550 -1230 640 -1230 {lab=#net14}
-N 550 -1020 660 -1020 {lab=#net12}
-N 550 -810 680 -810 {lab=#net13}
-N 680 -2660 700 -2660 {lab=#net10}
-N 660 -2600 700 -2600 {lab=#net11}
-N 640 -2460 700 -2460 {lab=#net53}
-N 620 -2420 700 -2420 {lab=#net16}
-N 600 -2380 700 -2380 {lab=#net17}
-N 580 -2340 700 -2340 {lab=#net18}
-N 580 -2200 700 -2200 {lab=#net44}
-N 600 -2160 700 -2160 {lab=#net9}
-N 620 -2120 700 -2120 {lab=#net15}
-N 640 -2080 700 -2080 {lab=#net14}
-N 660 -1940 700 -1940 {lab=#net12}
-N 680 -1900 700 -1900 {lab=#net13}
-N 1100 -3000 1470 -3000 {lab=#net1}
-N 1160 -2960 1680 -2960 {lab=#net2}
-N 1220 -2920 1890 -2920 {lab=#net3}
-N 1280 -2880 2100 -2880 {lab=#net4}
-N 1100 -1560 1660 -1560 {lab=#net5}
-N 1160 -1600 1870 -1600 {lab=#net6}
-N 1220 -1640 2080 -1640 {lab=#net7}
-N 1280 -1680 2290 -1680 {lab=#net8}
-N 3250 -1780 3250 -1760 {lab=VSS}
-N 3250 -2800 3250 -2780 {lab=VDD}
-N 2580 -2660 2590 -2660 {lab=#net31}
-N 2590 -3700 2590 -2660 {lab=#net31}
-N 2580 -2620 2610 -2620 {lab=#net20}
-N 2610 -3740 2610 -2620 {lab=#net20}
-N 2580 -2580 2630 -2580 {lab=#net30}
-N 2630 -2620 2630 -2580 {lab=#net30}
-N 2580 -2540 2650 -2540 {lab=#net21}
-N 2650 -3680 2650 -2540 {lab=#net21}
-N 2580 -2500 2670 -2500 {lab=#net32}
-N 2580 -2460 2690 -2460 {lab=#net33}
-N 2690 -3580 2690 -2460 {lab=#net33}
-N 2580 -2420 2710 -2420 {lab=#net22}
-N 2710 -3620 2710 -2420 {lab=#net22}
-N 2580 -2380 2730 -2380 {lab=#net35}
-N 2730 -3600 2730 -2380 {lab=#net35}
-N 2580 -2340 2750 -2340 {lab=#net23}
-N 2750 -3560 2750 -2340 {lab=#net23}
-N 2580 -2300 2770 -2300 {lab=#net34}
-N 2770 -3540 2770 -2300 {lab=#net34}
-N 2580 -1900 2590 -1900 {lab=#net36}
-N 2590 -1900 2590 -860 {lab=#net36}
-N 2580 -1940 2610 -1940 {lab=#net37}
-N 2610 -1940 2610 -820 {lab=#net37}
-N 2580 -1980 2630 -1980 {lab=#net39}
-N 2580 -2020 2650 -2020 {lab=#net38}
-N 2650 -2020 2650 -880 {lab=#net38}
-N 2580 -2060 2670 -2060 {lab=#net40}
-N 2580 -2100 2690 -2100 {lab=#net25}
-N 2690 -2100 2690 -980 {lab=#net25}
-N 2580 -2140 2710 -2140 {lab=#net41}
-N 2710 -2140 2710 -940 {lab=#net41}
-N 2580 -2180 2730 -2180 {lab=#net43}
-N 2730 -2180 2730 -960 {lab=#net43}
-N 2580 -2220 2750 -2220 {lab=#net42}
-N 2750 -2220 2750 -1000 {lab=#net42}
-N 2580 -2260 2770 -2260 {lab=#net24}
-N 2770 -2260 2770 -1020 {lab=#net24}
-N 2580 -2700 2910 -2700 {lab=#net54}
-N 3580 -3730 3580 -3420 {lab=#net28}
-N 2630 -3720 2630 -2620 {lab=#net30}
-N 2670 -3660 2670 -2500 {lab=#net32}
-N 2580 -1860 2910 -1860 {lab=#net55}
-N 2630 -1940 2630 -840 {lab=#net39}
-N 2670 -2060 2670 -900 {lab=#net40}
-N 2770 -2300 2910 -2300 {lab=#net34}
-N 3590 -2600 3610 -2600 {lab=#net56}
-N 3610 -2600 3610 -2580 {lab=#net56}
-N 3610 -2580 3630 -2580 {lab=#net56}
-N 3590 -2540 3600 -2540 {lab=#net19}
-N 3600 -2540 3600 -2370 {lab=#net19}
-N 3590 -1960 3610 -1960 {lab=#net57}
-N 3610 -1960 3610 -1950 {lab=#net57}
-N 3610 -1950 3630 -1950 {lab=#net57}
-N 3600 -2160 3630 -2160 {lab=#net58}
-N 3600 -2160 3600 -2020 {lab=#net58}
-N 3590 -2020 3600 -2020 {lab=#net58}
-N 2770 -2260 2910 -2260 {lab=#net24}
-N 2730 -2180 2910 -2180 {lab=#net43}
-N 2730 -2380 2910 -2380 {lab=#net35}
-N 2670 -2480 2910 -2480 {lab=#net32}
-N 2670 -2500 2670 -2480 {lab=#net32}
-N 2630 -2620 2910 -2620 {lab=#net30}
-N 2790 -3420 3580 -3420 {lab=#net28}
-N 2790 -3420 2790 -2660 {lab=#net28}
-N 2790 -2660 2910 -2660 {lab=#net28}
-N 2810 -3400 3600 -3400 {lab=#net29}
-N 3600 -3520 3600 -3400 {lab=#net29}
-N 2810 -3400 2810 -2520 {lab=#net29}
-N 2810 -2520 2910 -2520 {lab=#net29}
-N 2790 -1900 2910 -1900 {lab=#net27}
-N 3580 -1310 3580 -1000 {lab=#net27}
-N 2790 -1310 3580 -1310 {lab=#net27}
-N 2790 -1900 2790 -1310 {lab=#net27}
-N 3600 -1330 3600 -1210 {lab=#net26}
-N 2810 -1330 3600 -1330 {lab=#net26}
-N 2810 -2040 2810 -1330 {lab=#net26}
-N 2810 -2040 2910 -2040 {lab=#net26}
-N 2630 -1940 2910 -1940 {lab=#net39}
-N 2630 -1980 2630 -1940 {lab=#net39}
-N 2670 -2080 2910 -2080 {lab=#net40}
-N 2670 -2080 2670 -2060 {lab=#net40}
-N 2500 -2800 2500 -2780 {lab=#net59}
-N 2500 -2800 2990 -2800 {lab=#net59}
-N 2990 -2800 2990 -2780 {lab=#net59}
-N 3840 -420 3840 -400 {lab=VSS}
-N 3840 -500 3840 -480 {lab=sub!}
-C {sg13g2_io/sg13g2_IOPadIn.sym} 200 -3740 1 0 {name=x1}
-C {sg13g2_io/sg13g2_IOPadIn.sym} 200 -3530 1 0 {name=x2}
-C {sg13g2_io/sg13g2_IOPadIn.sym} 200 -3320 1 0 {name=x3}
-C {sg13g2_io/sg13g2_IOPadOut30mA.sym} 200 -3110 1 0 {name=x4}
-C {sg13g2_io/sg13g2_IOPadOut30mA.sym} 200 -2900 1 0 {name=x5}
-C {sg13g2_io/sg13g2_IOPadOut30mA.sym} 200 -2690 1 0 {name=x6}
-C {sg13g2_io/sg13g2_IOPadIOVdd.sym} 200 -2480 1 0 {name=x7}
-C {sg13g2_io/sg13g2_IOPadIOVss.sym} 200 -2270 1 0 {name=x8}
-C {sg13g2_io/sg13g2_IOPadVdd.sym} 200 -2060 1 0 {name=x9}
-C {sg13g2_io/sg13g2_IOPadVss.sym} 200 -1850 1 0 {name=x10}
-C {sg13g2_io/sg13g2_IOPadOut30mA.sym} 200 -1430 1 0 {name=x12}
-C {sg13g2_io/sg13g2_IOPadIn.sym} 200 -1220 1 0 {name=x13}
-C {sg13g2_io/sg13g2_IOPadOut30mA.sym} 200 -1010 1 0 {name=x14}
-C {sg13g2_io/sg13g2_IOPadIOVdd.sym} 620 -380 0 0 {name=x15}
-C {sg13g2_io/sg13g2_IOPadIOVss.sym} 830 -380 0 0 {name=x16}
-C {sg13g2_io/sg13g2_IOPadVdd.sym} 1040 -380 0 0 {name=x17}
-C {sg13g2_io/sg13g2_IOPadVss.sym} 1250 -380 0 0 {name=x18}
-C {sg13g2_io/sg13g2_IOPadOut30mA.sym} 1460 -380 0 0 {name=x19}
-C {sg13g2_io/sg13g2_IOPadOut30mA.sym} 1670 -380 0 0 {name=x20}
-C {sg13g2_io/sg13g2_IOPadOut30mA.sym} 1880 -380 0 0 {name=x21}
-C {sg13g2_io/sg13g2_IOPadOut30mA.sym} 2090 -380 0 0 {name=x22}
-C {sg13g2_io/sg13g2_IOPadVdd.sym} 2300 -380 0 0 {name=x23}
-C {sg13g2_io/sg13g2_IOPadVss.sym} 2510 -380 0 0 {name=x24}
-C {sg13g2_io/sg13g2_IOPadAnalog.sym} 3980 -800 3 0 {name=x29}
-C {sg13g2_io/sg13g2_IOPadAnalog.sym} 3980 -1010 3 0 {name=x30}
-C {sg13g2_io/sg13g2_IOPadVss.sym} 3980 -1220 3 0 {name=x31}
-C {sg13g2_io/sg13g2_IOPadVdd.sym} 3980 -1430 3 0 {name=x32}
-C {sg13g2_io/sg13g2_IOPadVss.sym} 3980 -1640 3 0 {name=x33}
-C {sg13g2_io/sg13g2_IOPadAnalog.sym} 3980 -2060 3 0 {name=x35}
-C {sg13g2_io/sg13g2_IOPadAnalog.sym} 3980 -2270 3 0 {name=x36}
-C {sg13g2_io/sg13g2_IOPadAnalog.sym} 3980 -2480 3 0 {name=x37}
-C {sg13g2_io/sg13g2_IOPadVss.sym} 3980 -2690 3 0 {name=x38}
-C {sg13g2_io/sg13g2_IOPadVdd.sym} 3980 -2900 3 0 {name=x39}
-C {sg13g2_io/sg13g2_IOPadVss.sym} 3980 -3110 3 0 {name=x40}
-C {sg13g2_io/sg13g2_IOPadVdd.sym} 2510 -4160 2 0 {name=x48}
-C {sg13g2_io/sg13g2_IOPadVss.sym} 2720 -4160 2 0 {name=x47}
-C {sg13g2_io/sg13g2_IOPadAnalog.sym} 3980 -3320 3 0 {name=x41}
-C {sg13g2_io/sg13g2_IOPadAnalog.sym} 3980 -3530 3 0 {name=x42}
-C {sg13g2_io/sg13g2_IOPadIn.sym} 2300 -4160 2 0 {name=x49}
-C {sg13g2_io/sg13g2_IOPadIn.sym} 2090 -4160 2 0 {name=x50}
-C {sg13g2_io/sg13g2_IOPadIn.sym} 1880 -4160 2 0 {name=x51}
-C {sg13g2_io/sg13g2_IOPadIn.sym} 1670 -4160 2 0 {name=x52}
-C {sg13g2_io/sg13g2_IOPadIOVdd.sym} 830 -4160 2 0 {name=x56}
-C {sg13g2_io/sg13g2_IOPadIOVss.sym} 1040 -4160 2 0 {name=x55}
-C {sg13g2_io/sg13g2_IOPadVdd.sym} 1250 -4160 2 0 {name=x54}
-C {sg13g2_io/sg13g2_IOPadVss.sym} 1460 -4160 2 0 {name=x53}
-C {devices/iopin.sym} 720 -4180 1 1 {name=p8 lab=IOVDD}
-C {devices/iopin.sym} 930 -4180 1 1 {name=p9 lab=VSS}
-C {devices/iopin.sym} 1140 -4180 1 1 {name=p10 lab=VDD}
-C {devices/iopin.sym} 1350 -4180 1 1 {name=p11 lab=VSS}
-C {devices/iopin.sym} 2410 -360 1 0 {name=p16 lab=VDD}
-C {devices/iopin.sym} 2620 -360 1 0 {name=p17 lab=VSS}
-C {devices/iopin.sym} 4000 -1540 0 0 {name=p23 lab=VDD}
-C {devices/iopin.sym} 4000 -1750 0 0 {name=p24 lab=VSS}
-C {devices/iopin.sym} 4000 -1330 0 0 {name=p25 lab=VSS}
-C {devices/ipin.sym} 180 -3630 2 1 {name=p1 lab=clk_PAD}
-C {devices/ipin.sym} 180 -3420 0 0 {name=p2 lab=rst_n_PAD}
-C {devices/ipin.sym} 180 -3210 2 1 {name=p3 lab=input_PAD[5]}
-C {devices/ipin.sym} 180 -1110 0 0 {name=p27 lab=input_PAD[4]
+T {Note: On-chip decoupling is done by LibreLane Flow!} 40 -250 0 0 0.9 0.9 {}
+T {Note: SRAM macro is not included (no spice file provided by IHP)!} 40 -160 0 0 0.9 0.9 {}
+N 2640 -1010 2760 -1010 {lab=analog_PAD[0]}
+N 2640 -1430 2760 -1430 {lab=analog_PAD[2]}
+N 200 -1000 320 -1000 {lab=output_PAD[16]}
+N 200 -2470 320 -2470 {lab=clk_PAD}
+N 200 -2260 320 -2260 {lab=rst_n_PAD}
+N 200 -2050 320 -2050 {lab=input_PAD[0]}
+N 200 -1840 320 -1840 {lab=IOVDD}
+N 200 -1630 320 -1630 {lab=VSS}
+N 200 -1420 320 -1420 {lab=VDD}
+N 200 -1210 320 -1210 {lab=VSS}
+N 1580 -3020 1580 -2900 {lab=bidir_PAD[0]}
+N 2380 -1000 2390 -1000 {lab=analog_PAD[0]}
+N 2580 -480 2580 -460 {lab=VSS}
+N 2580 -560 2580 -540 {lab=sub!}
+N 750 -580 750 -460 {lab=output_PAD[4]}
+N 960 -580 960 -460 {lab=output_PAD[5]}
+N 1170 -580 1170 -460 {lab=output_PAD[6]}
+N 1380 -580 1380 -460 {lab=output_PAD[7]}
+N 1590 -580 1590 -460 {lab=output_PAD[8]}
+N 1800 -580 1800 -460 {lab=output_PAD[9]}
+N 2010 -580 2010 -460 {lab=output_PAD[10]}
+N 2220 -580 2220 -460 {lab=output_PAD[11]}
+N 2640 -1220 2760 -1220 {lab=analog_PAD[1]}
+N 2640 -1640 2760 -1640 {lab=analog_PAD[3]}
+N 2380 -1210 2390 -1210 {lab=analog_PAD[1]}
+N 2640 -1850 2760 -1850 {lab=output_PAD[12]}
+N 2640 -2060 2760 -2060 {lab=output_PAD[13]}
+N 2640 -2270 2760 -2270 {lab=output_PAD[14]}
+N 2640 -2480 2760 -2480 {lab=output_PAD[15]}
+N 1370 -3020 1370 -2900 {lab=output_PAD[3]}
+N 1160 -3020 1160 -2900 {lab=output_PAD[2]}
+N 950 -3020 950 -2900 {lab=output_PAD[1]}
+N 740 -3020 740 -2900 {lab=output_PAD[0]}
+N 1790 -3020 1790 -2900 {lab=bidir_PAD[1]}
+N 2000 -3020 2000 -2900 {lab=bidir_PAD[2]}
+N 2210 -3020 2210 -2900 {lab=bidir_PAD[3]}
+N 2380 -1520 2390 -1520 {lab=#net1}
+N 2380 -1730 2390 -1730 {lab=#net2}
+N 530 -2690 2430 -2690 {lab=IOVDD}
+N 2430 -2690 2430 -790 {lab=IOVDD}
+N 530 -790 2430 -790 {lab=IOVDD}
+N 530 -2690 530 -790 {lab=IOVDD}
+N 540 -2680 2420 -2680 {lab=VSS}
+N 2420 -2680 2420 -800 {lab=VSS}
+N 540 -800 2420 -800 {lab=VSS}
+N 540 -2680 540 -800 {lab=VSS}
+N 550 -2670 2410 -2670 {lab=VDD}
+N 2410 -2670 2410 -810 {lab=VDD}
+N 550 -810 2410 -810 {lab=VDD}
+N 550 -2670 550 -810 {lab=VDD}
+N 2400 -2660 2400 -820 {lab=VSS}
+N 560 -2660 560 -820 {lab=VSS}
+N 560 -820 2400 -820 {lab=VSS}
+N 560 -2660 2400 -2660 {lab=VSS}
+N 860 -1220 1060 -1220 {lab=#net3}
+N 860 -2140 860 -1220 {lab=#net3}
+N 860 -2140 1060 -2140 {lab=#net3}
+N 570 -2170 860 -2170 {lab=#net3}
+N 860 -2170 860 -2140 {lab=#net3}
+N 570 -1960 900 -1960 {lab=#net4}
+N 900 -2200 1060 -2200 {lab=#net4}
+N 900 -1280 1060 -1280 {lab=#net4}
+N 900 -1960 900 -1280 {lab=#net4}
+N 900 -2200 900 -1960 {lab=#net4}
+N 1160 -1180 1160 -1160 {lab=VSS}
+N 1900 -1180 1900 -1160 {lab=VSS}
+N 1160 -2100 1160 -2080 {lab=VSS}
+N 1960 -2020 1960 -2000 {lab=VSS}
+N 1160 -2320 1160 -2300 {lab=VDD}
+N 1960 -2320 1960 -2300 {lab=VDD}
+N 1900 -1480 1900 -1460 {lab=VDD}
+N 1160 -1400 1160 -1380 {lab=VDD}
+N 940 -1340 1060 -1340 {lab=#net5}
+N 940 -2260 940 -1340 {lab=#net5}
+N 940 -2260 1060 -2260 {lab=#net5}
+N 570 -2380 940 -2380 {lab=#net5}
+N 940 -2380 940 -2260 {lab=#net5}
+N 1680 -2100 1840 -2100 {lab=#net6}
+N 1680 -2640 1680 -2100 {lab=#net6}
+N 900 -2580 900 -2200 {lab=#net4}
+N 1920 -2580 2130 -2580 {lab=#net4}
+N 2130 -2640 2130 -2580 {lab=#net4}
+N 1920 -2640 1920 -2580 {lab=#net4}
+N 1710 -2580 1920 -2580 {lab=#net4}
+N 1710 -2640 1710 -2580 {lab=#net4}
+N 1500 -2580 1710 -2580 {lab=#net4}
+N 1500 -2640 1500 -2580 {lab=#net4}
+N 900 -2580 1500 -2580 {lab=#net4}
+N 1720 -2540 1720 -2140 {lab=#net7}
+N 1720 -2540 1890 -2540 {lab=#net7}
+N 1890 -2640 1890 -2540 {lab=#net7}
+N 1760 -2500 1760 -2180 {lab=#net8}
+N 1760 -2500 2100 -2500 {lab=#net8}
+N 2100 -2640 2100 -2500 {lab=#net8}
+N 1800 -2460 1800 -2220 {lab=#net9}
+N 1800 -2460 2310 -2460 {lab=#net9}
+N 2310 -2640 2310 -2460 {lab=#net9}
+N 1800 -2220 1840 -2220 {lab=#net9}
+N 1720 -2140 1840 -2140 {lab=#net7}
+N 1760 -2180 1840 -2180 {lab=#net8}
+N 2350 -2570 2390 -2570 {lab=#net10}
+N 2350 -2570 2350 -2420 {lab=#net10}
+N 2120 -2420 2350 -2420 {lab=#net10}
+N 2120 -2420 2120 -2220 {lab=#net10}
+N 2080 -2220 2120 -2220 {lab=#net10}
+N 2080 -2180 2160 -2180 {lab=#net11}
+N 2160 -2360 2160 -2180 {lab=#net11}
+N 2160 -2360 2390 -2360 {lab=#net11}
+N 2080 -2140 2360 -2140 {lab=#net12}
+N 2360 -2150 2360 -2140 {lab=#net12}
+N 2360 -2150 2390 -2150 {lab=#net12}
+N 2120 -1940 2390 -1940 {lab=#net13}
+N 2120 -2100 2120 -1940 {lab=#net13}
+N 2080 -2100 2120 -2100 {lab=#net13}
+N 1740 -1100 2390 -1100 {lab=#net14}
+N 1740 -1260 1740 -1100 {lab=#net14}
+N 1740 -1260 1780 -1260 {lab=#net14}
+N 1700 -1300 1780 -1300 {lab=#net15}
+N 1700 -1300 1700 -1060 {lab=#net15}
+N 1700 -1060 2320 -1060 {lab=#net15}
+N 2320 -1310 2320 -1060 {lab=#net15}
+N 2320 -1310 2390 -1310 {lab=#net15}
+N 2020 -1260 2280 -1260 {lab=analog_PAD[2]}
+N 2280 -1420 2280 -1260 {lab=analog_PAD[2]}
+N 2280 -1420 2390 -1420 {lab=analog_PAD[2]}
+N 2020 -1300 2240 -1300 {lab=analog_PAD[3]}
+N 2240 -1630 2240 -1300 {lab=analog_PAD[3]}
+N 2240 -1630 2390 -1630 {lab=analog_PAD[3]}
+N 2020 -1340 2040 -1340 {lab=VSS}
+N 2020 -1380 2040 -1380 {lab=VSS}
+N 1760 -1380 1780 -1380 {lab=VSS}
+N 1760 -1340 1780 -1340 {lab=VSS}
+N 840 -1100 840 -830 {lab=counter2_value0}
+N 840 -1100 1300 -1100 {lab=counter2_value0}
+N 1050 -1060 1050 -830 {lab=counter2_value1}
+N 1050 -1060 1340 -1060 {lab=counter2_value1}
+N 1260 -1020 1260 -830 {lab=counter2_value2}
+N 1260 -1020 1380 -1020 {lab=counter2_value2}
+N 650 -2650 650 -2400 {lab=counter1_value0}
+N 650 -2400 1300 -2400 {lab=counter1_value0}
+N 860 -2650 860 -2440 {lab=counter1_value1}
+N 860 -2440 1340 -2440 {lab=counter1_value1}
+N 1070 -2650 1070 -2480 {lab=counter1_value2}
+N 1070 -2480 1380 -2480 {lab=counter1_value2}
+N 1380 -2480 1380 -2210 {lab=counter1_value2}
+N 1280 -2650 1280 -2520 {lab=counter1_value3}
+N 1280 -2520 1420 -2520 {lab=counter1_value3}
+N 1420 -2520 1420 -2210 {lab=counter1_value3}
+N 1490 -2650 1490 -2620 {lab=counter1_value4}
+N 1460 -2620 1460 -2210 {lab=counter1_value4}
+N 1700 -2650 1700 -2620 {lab=counter1_value5}
+N 1540 -2620 1700 -2620 {lab=counter1_value5}
+N 1540 -2620 1540 -2520 {lab=counter1_value5}
+N 1500 -2520 1540 -2520 {lab=counter1_value5}
+N 1500 -2520 1500 -2210 {lab=counter1_value5}
+N 1460 -2620 1490 -2620 {lab=counter1_value4}
+N 1910 -2650 1910 -2600 {lab=counter1_value6}
+N 1580 -2600 1910 -2600 {lab=counter1_value6}
+N 1580 -2600 1580 -2480 {lab=counter1_value6}
+N 1540 -2480 1580 -2480 {lab=counter1_value6}
+N 1540 -2480 1540 -2210 {lab=counter1_value6}
+N 2120 -2650 2120 -2560 {lab=counter1_value7}
+N 1620 -2560 2120 -2560 {lab=counter1_value7}
+N 1580 -2440 1620 -2440 {lab=counter1_value7}
+N 1620 -2560 1620 -2440 {lab=counter1_value7}
+N 1580 -2440 1580 -2210 {lab=counter1_value7}
+N 1470 -860 1470 -830 {lab=counter2_value3}
+N 1420 -860 1470 -860 {lab=counter2_value3}
+N 1460 -900 1680 -900 {lab=counter2_value4}
+N 1680 -900 1680 -830 {lab=counter2_value4}
+N 1500 -940 1890 -940 {lab=counter2_value5}
+N 1890 -940 1890 -830 {lab=counter2_value5}
+N 1540 -980 2100 -980 {lab=counter2_value6}
+N 2100 -980 2100 -830 {lab=counter2_value6}
+N 1580 -1020 2310 -1020 {lab=counter2_value7}
+N 2310 -1020 2310 -830 {lab=counter2_value7}
+N 1300 -2400 1300 -2210 {lab=counter1_value0}
+N 1340 -2440 1340 -2210 {lab=counter1_value1}
+N 1260 -2200 1600 -2200 {lab=counter1_value[0..7] bus=true
 }
-C {devices/opin.sym} 180 -900 0 1 {name=p28 lab=output_PAD[4]
+N 1260 -1280 1600 -1280 {lab=counter2_value[0..7] bus=true
 }
-C {devices/opin.sym} 180 -3000 2 0 {name=p29 lab=output_PAD[8]
+N 1300 -1270 1300 -1100 {lab=counter2_value0}
+N 1340 -1270 1340 -1060 {lab=counter2_value1}
+N 1380 -1270 1380 -1020 {lab=counter2_value2}
+N 1420 -1270 1420 -860 {lab=counter2_value3}
+N 1460 -1270 1460 -900 {lab=counter2_value4}
+N 1500 -1270 1500 -940 {lab=counter2_value5}
+N 1540 -1270 1540 -980 {lab=counter2_value6}
+N 1580 -1270 1580 -1020 {lab=counter2_value7}
+N 570 -910 600 -910 {lab=#net16}
+N 660 -910 680 -910 {lab=VSS}
+N 680 -910 680 -880 {lab=VSS}
+C {sg13g2_io/sg13g2_IOPadIn.sym} 220 -2580 1 0 {name=x1}
+C {sg13g2_io/sg13g2_IOPadIn.sym} 220 -2370 1 0 {name=x2}
+C {sg13g2_io/sg13g2_IOPadIn.sym} 220 -2160 1 0 {name=x3}
+C {sg13g2_io/sg13g2_IOPadOut30mA.sym} 220 -1110 1 0 {name=x4}
+C {sg13g2_io/sg13g2_IOPadIOVdd.sym} 220 -1950 1 0 {name=x7}
+C {sg13g2_io/sg13g2_IOPadIOVss.sym} 220 -1740 1 0 {name=x8}
+C {sg13g2_io/sg13g2_IOPadVdd.sym} 220 -1530 1 0 {name=x9}
+C {sg13g2_io/sg13g2_IOPadVss.sym} 220 -1320 1 0 {name=x10}
+C {sg13g2_io/sg13g2_IOPadAnalog.sym} 2740 -900 3 0 {name=x29}
+C {sg13g2_io/sg13g2_IOPadAnalog.sym} 2740 -1320 3 0 {name=x35}
+C {devices/ipin.sym} 200 -2470 2 1 {name=p1 lab=clk_PAD}
+C {devices/ipin.sym} 200 -2260 0 0 {name=p2 lab=rst_n_PAD}
+C {devices/ipin.sym} 200 -2050 2 1 {name=p3 lab=input_PAD[0]}
+C {devices/opin.sym} 200 -1000 2 0 {name=p29 lab=output_PAD[16]
 }
-C {devices/opin.sym} 180 -2790 2 0 {name=p30 lab=output_PAD[7]
+C {devices/iopin.sym} 2760 -1430 0 0 {name=p46 lab=analog_PAD[2]}
+C {devices/iopin.sym} 2760 -1010 0 0 {name=p59 lab=analog_PAD[0]}
+C {devices/iopin.sym} 200 -1840 2 0 {name=p20 lab=IOVDD}
+C {devices/iopin.sym} 200 -1630 2 0 {name=p21 lab=VSS}
+C {devices/iopin.sym} 200 -1420 2 0 {name=p22 lab=VDD}
+C {devices/iopin.sym} 200 -1210 2 0 {name=p81 lab=VSS}
+C {devices/iopin.sym} 1580 -3020 3 0 {name=p12 lab=bidir_PAD[0]
 }
-C {devices/opin.sym} 180 -2580 2 0 {name=p31 lab=output_PAD[6]
-}
-C {devices/opin.sym} 180 -1320 2 0 {name=p34 lab=output_PAD[5]
-}
-C {devices/ipin.sym} 2190 -4180 1 0 {name=p35 lab=input_PAD[3]
-}
-C {devices/ipin.sym} 1980 -4180 1 0 {name=p36 lab=input_PAD[2]
-}
-C {devices/ipin.sym} 1770 -4180 1 0 {name=p37 lab=input_PAD[1]
-}
-C {devices/ipin.sym} 1560 -4180 1 0 {name=p38 lab=input_PAD[0]
-}
-C {devices/opin.sym} 2200 -360 1 0 {name=p39 lab=output_PAD[3]
-}
-C {devices/opin.sym} 1990 -360 1 0 {name=p40 lab=output_PAD[2]
-}
-C {devices/opin.sym} 1780 -360 1 0 {name=p41 lab=output_PAD[1]
-}
-C {devices/opin.sym} 1570 -360 1 0 {name=p42 lab=output_PAD[0]
-}
-C {devices/iopin.sym} 4000 -2590 0 0 {name=p43 lab=analog_PAD[5]}
-C {devices/iopin.sym} 4000 -2380 0 0 {name=p44 lab=analog_PAD[4]}
-C {devices/iopin.sym} 4000 -1960 0 0 {name=p45 lab=analog_PAD[2]}
-C {devices/iopin.sym} 4000 -2170 0 0 {name=p46 lab=analog_PAD[3]}
-C {devices/iopin.sym} 4000 -3640 0 0 {name=p57 lab=analog_PAD[7]}
-C {devices/iopin.sym} 4000 -3430 0 0 {name=p58 lab=analog_PAD[6]}
-C {devices/iopin.sym} 4000 -910 0 0 {name=p59 lab=analog_PAD[0]}
-C {devices/iopin.sym} 4000 -1120 0 0 {name=p60 lab=analog_PAD[1]}
-C {lab_pin.sym} 1640 -1760 3 0 {name=p52 sig_type=std_logic lab=VSS}
-C {lab_pin.sym} 1640 -2800 1 0 {name=p53 sig_type=std_logic lab=VDD}
-C {devices/iopin.sym} 4000 -3010 0 0 {name=p78 lab=VDD}
-C {devices/iopin.sym} 4000 -3220 0 0 {name=p79 lab=VSS}
-C {devices/iopin.sym} 4000 -2800 0 0 {name=p80 lab=VSS}
-C {devices/iopin.sym} 180 -2370 2 0 {name=p20 lab=IOVDD}
-C {devices/iopin.sym} 180 -2160 2 0 {name=p21 lab=VSS}
-C {devices/iopin.sym} 180 -1950 2 0 {name=p22 lab=VDD}
-C {devices/iopin.sym} 180 -1740 2 0 {name=p81 lab=VSS}
-C {devices/iopin.sym} 730 -360 1 0 {name=p4 lab=IOVDD}
-C {devices/iopin.sym} 940 -360 1 0 {name=p5 lab=VSS}
-C {devices/iopin.sym} 1150 -360 1 0 {name=p6 lab=VDD}
-C {devices/iopin.sym} 1360 -360 1 0 {name=p7 lab=VSS}
-C {devices/iopin.sym} 180 -1530 2 0 {name=p12 lab=bidir_PAD[8]
-}
-C {devices/iopin.sym} 2400 -4180 1 1 {name=p13 lab=VDD}
-C {devices/iopin.sym} 2610 -4180 1 1 {name=p14 lab=VSS}
-C {devices/iopin.sym} 2830 -360 1 0 {name=p15 lab=bidir_PAD[4]
-}
-C {devices/iopin.sym} 3040 -360 1 0 {name=p18 lab=bidir_PAD[5]
-}
-C {devices/iopin.sym} 3460 -360 1 0 {name=p19 lab=bidir_PAD[7]
-}
-C {devices/iopin.sym} 3250 -360 1 0 {name=p82 lab=bidir_PAD[6]
-}
-C {devices/iopin.sym} 2820 -4180 3 0 {name=p83 lab=bidir_PAD[0]
-}
-C {devices/iopin.sym} 3030 -4180 3 0 {name=p84 lab=bidir_PAD[1]
-}
-C {devices/iopin.sym} 3450 -4180 3 0 {name=p85 lab=bidir_PAD[3]
-}
-C {devices/iopin.sym} 3240 -4180 3 0 {name=p86 lab=bidir_PAD[2]
-}
-C {sg13g2_io/sg13g2_IOPadInOut30mA.sym} 200 -1640 1 0 {name=x11}
-C {sg13g2_io/sg13g2_IOPadInOut30mA.sym} 2720 -380 0 0 {name=x25}
-C {sg13g2_io/sg13g2_IOPadInOut30mA.sym} 2930 -380 0 0 {name=x26}
-C {sg13g2_io/sg13g2_IOPadInOut30mA.sym} 3140 -380 0 0 {name=x27}
-C {sg13g2_io/sg13g2_IOPadInOut30mA.sym} 3350 -380 0 0 {name=x28}
-C {sg13g2_io/sg13g2_IOPadInOut30mA.sym} 3560 -4160 2 0 {name=x43}
-C {sg13g2_io/sg13g2_IOPadInOut30mA.sym} 3350 -4160 2 0 {name=x44}
-C {sg13g2_io/sg13g2_IOPadInOut30mA.sym} 3140 -4160 2 0 {name=x45}
-C {sg13g2_io/sg13g2_IOPadInOut30mA.sym} 2930 -4160 2 0 {name=x46}
-C {sg13g2_io/sg13g2_IOPadAnalog.sym} 3980 -1850 3 0 {name=x34}
-C {noconn.sym} 3620 -3630 0 0 {name=l1}
-C {noconn.sym} 3620 -3420 0 0 {name=l2}
-C {noconn.sym} 3620 -2680 0 0 {name=l3}
-C {noconn.sym} 3620 -2470 0 0 {name=l4}
-C {noconn.sym} 3620 -2260 0 0 {name=l5}
-C {noconn.sym} 3620 -2050 0 0 {name=l6}
-C {noconn.sym} 3620 -1110 0 0 {name=l7}
-C {noconn.sym} 3620 -900 0 0 {name=l8}
-C {ngspice_probe.sym} 510 -3850 0 0 {name=r2}
-C {ngspice_probe.sym} 520 -3840 0 0 {name=r3}
-C {ngspice_probe.sym} 530 -3830 0 0 {name=r4}
-C {ngspice_probe.sym} 540 -3820 0 0 {name=r5}
-C {ngspice_probe.sym} 1640 -1760 0 0 {name=r6}
-C {ngspice_probe.sym} 1640 -2780 0 0 {name=r7}
-C {ngspice_probe.sym} 550 -3540 0 0 {name=r13}
-C {ngspice_probe.sym} 550 -3330 0 0 {name=r14}
-C {ngspice_probe.sym} 550 -3120 0 0 {name=r15}
-C {ngspice_probe.sym} 550 -2910 0 0 {name=r16}
-C {ngspice_probe.sym} 550 -2700 0 0 {name=r17}
-C {ngspice_probe.sym} 550 -2490 0 0 {name=r18}
-C {ngspice_probe.sym} 560 -1630 0 0 {name=r19}
-C {ngspice_probe.sym} 560 -1450 0 0 {name=r20}
-C {ngspice_probe.sym} 550 -1440 0 0 {name=r21}
-C {ngspice_probe.sym} 550 -1230 0 0 {name=r22}
-C {ngspice_probe.sym} 550 -1020 0 0 {name=r23}
-C {ngspice_probe.sym} 550 -810 0 0 {name=r24}
-C {ngspice_probe.sym} 1470 -3810 0 0 {name=r9}
-C {ngspice_probe.sym} 1680 -3810 0 0 {name=r10}
-C {ngspice_probe.sym} 1890 -3810 0 0 {name=r11}
-C {ngspice_probe.sym} 2100 -3810 0 0 {name=r12}
-C {ngspice_probe.sym} 2730 -3810 0 0 {name=r25}
-C {ngspice_probe.sym} 2740 -3800 0 0 {name=r26}
-C {ngspice_probe.sym} 2920 -3800 0 0 {name=r27}
-C {ngspice_probe.sym} 2940 -3810 0 0 {name=r28}
-C {ngspice_probe.sym} 2950 -3800 0 0 {name=r29}
-C {ngspice_probe.sym} 3130 -3800 0 0 {name=r30}
-C {ngspice_probe.sym} 3150 -3810 0 0 {name=r31}
-C {ngspice_probe.sym} 3160 -3800 0 0 {name=r32}
-C {ngspice_probe.sym} 3340 -3800 0 0 {name=r33}
-C {ngspice_probe.sym} 3360 -3810 0 0 {name=r34}
-C {ngspice_probe.sym} 3370 -3800 0 0 {name=r35}
-C {ngspice_probe.sym} 3550 -3800 0 0 {name=r36}
-C {ngspice_probe.sym} 3630 -3730 0 0 {name=r37}
-C {ngspice_probe.sym} 3630 -3520 0 0 {name=r38}
-C {ngspice_probe.sym} 3630 -2580 0 0 {name=r39}
-C {ngspice_probe.sym} 3630 -2370 0 0 {name=r40}
-C {ngspice_probe.sym} 3630 -2160 0 0 {name=r41}
-C {ngspice_probe.sym} 3630 -1950 0 0 {name=r42}
-C {ngspice_probe.sym} 3630 -1210 0 0 {name=r43}
-C {ngspice_probe.sym} 3630 -1000 0 0 {name=r44}
-C {ngspice_probe.sym} 3550 -730 0 0 {name=r45}
-C {ngspice_probe.sym} 3540 -740 0 0 {name=r46}
-C {ngspice_probe.sym} 3360 -740 0 0 {name=r47}
-C {ngspice_probe.sym} 3340 -730 0 0 {name=r48}
-C {ngspice_probe.sym} 3330 -740 0 0 {name=r49}
-C {ngspice_probe.sym} 3150 -740 0 0 {name=r50}
-C {ngspice_probe.sym} 3130 -730 0 0 {name=r51}
-C {ngspice_probe.sym} 3120 -740 0 0 {name=r52}
-C {ngspice_probe.sym} 2940 -740 0 0 {name=r53}
-C {ngspice_probe.sym} 2920 -730 0 0 {name=r54}
-C {ngspice_probe.sym} 2910 -740 0 0 {name=r55}
-C {ngspice_probe.sym} 2730 -740 0 0 {name=r56}
-C {ngspice_probe.sym} 2290 -730 0 0 {name=r57}
-C {ngspice_probe.sym} 2080 -730 0 0 {name=r58}
-C {ngspice_probe.sym} 1870 -730 0 0 {name=r59}
-C {ngspice_probe.sym} 1660 -730 0 0 {name=r60}
-C {counter_top.sym} 1640 -2280 0 0 {name=xcounter}
-C {lab_pin.sym} 3250 -1760 3 0 {name=p26 sig_type=std_logic lab=VSS}
-C {inverter_top.sym} 3250 -2280 0 0 {name=xinverter
-lvs_ignore=true}
-C {lab_pin.sym} 3250 -2800 1 0 {name=p33 sig_type=std_logic lab=VDD}
-C {ngspice_probe.sym} 3250 -2780 0 0 {name=r62}
-C {sg13g2_pr/ptap1.sym} 3840 -450 2 1 {name=R1
+C {sg13g2_io/sg13g2_IOPadInOut30mA.sym} 1690 -3000 2 0 {name=x11}
+C {noconn.sym} 2380 -1000 0 0 {name=l8}
+C {ngspice_probe.sym} 570 -2380 0 0 {name=r13}
+C {ngspice_probe.sym} 570 -2170 0 0 {name=r14}
+C {ngspice_probe.sym} 570 -1960 0 0 {name=r15}
+C {ngspice_probe.sym} 570 -910 0 0 {name=r16}
+C {ngspice_probe.sym} 1680 -2640 1 0 {name=r19}
+C {ngspice_probe.sym} 1500 -2640 1 0 {name=r20}
+C {ngspice_probe.sym} 1490 -2650 1 0 {name=r21}
+C {ngspice_probe.sym} 2390 -1420 0 0 {name=r41}
+C {ngspice_probe.sym} 2390 -1100 0 0 {name=r44}
+C {sg13g2_pr/ptap1.sym} 2580 -510 2 1 {name=R1
 model=ptap1
 spiceprefix=X
 w=0.78e-6
 l=0.78e-6
 lvs_ignore=short}
-C {lab_pin.sym} 3840 -400 3 0 {name=p32 sig_type=std_logic lab=VSS}
-C {lab_pin.sym} 3840 -500 0 0 {name=p47 sig_type=std_logic lab="tcleval([expr \{$lvs_ignore ? \{VSS\} : \{sub!\}\}])"}
+C {lab_pin.sym} 2580 -460 3 0 {name=p32 sig_type=std_logic lab=VSS}
+C {lab_pin.sym} 2580 -560 0 0 {name=p47 sig_type=std_logic lab="tcleval([expr \{$lvs_ignore ? \{VSS\} : \{sub!\}\}])"}
+C {sg13g2_io/sg13g2_IOPadOut30mA.sym} 640 -480 0 0 {name=x5}
+C {devices/opin.sym} 750 -460 1 0 {name=p4 lab=output_PAD[4]
+}
+C {ngspice_probe.sym} 840 -830 3 0 {name=r2}
+C {sg13g2_io/sg13g2_IOPadOut30mA.sym} 850 -480 0 0 {name=x6}
+C {devices/opin.sym} 960 -460 1 0 {name=p5 lab=output_PAD[5]
+}
+C {ngspice_probe.sym} 1050 -830 3 0 {name=r3}
+C {sg13g2_io/sg13g2_IOPadOut30mA.sym} 1060 -480 0 0 {name=x12}
+C {devices/opin.sym} 1170 -460 1 0 {name=p6 lab=output_PAD[6]
+}
+C {ngspice_probe.sym} 1260 -830 3 0 {name=r4}
+C {sg13g2_io/sg13g2_IOPadOut30mA.sym} 1270 -480 0 0 {name=x13}
+C {devices/opin.sym} 1380 -460 1 0 {name=p7 lab=output_PAD[7]
+}
+C {ngspice_probe.sym} 1470 -830 3 0 {name=r5}
+C {sg13g2_io/sg13g2_IOPadOut30mA.sym} 1480 -480 0 0 {name=x14}
+C {devices/opin.sym} 1590 -460 1 0 {name=p8 lab=output_PAD[8]
+}
+C {ngspice_probe.sym} 1680 -830 3 0 {name=r6}
+C {sg13g2_io/sg13g2_IOPadOut30mA.sym} 1690 -480 0 0 {name=x15}
+C {devices/opin.sym} 1800 -460 1 0 {name=p9 lab=output_PAD[9]
+}
+C {ngspice_probe.sym} 1890 -830 3 0 {name=r7}
+C {sg13g2_io/sg13g2_IOPadOut30mA.sym} 1900 -480 0 0 {name=x16}
+C {devices/opin.sym} 2010 -460 1 0 {name=p10 lab=output_PAD[10]
+}
+C {ngspice_probe.sym} 2100 -830 3 0 {name=r8}
+C {sg13g2_io/sg13g2_IOPadOut30mA.sym} 2110 -480 0 0 {name=x17}
+C {devices/opin.sym} 2220 -460 1 0 {name=p11 lab=output_PAD[11]
+}
+C {ngspice_probe.sym} 2310 -830 3 0 {name=r9}
+C {sg13g2_io/sg13g2_IOPadAnalog.sym} 2740 -1110 3 0 {name=x18}
+C {sg13g2_io/sg13g2_IOPadAnalog.sym} 2740 -1530 3 0 {name=x19}
+C {devices/iopin.sym} 2760 -1640 0 0 {name=p13 lab=analog_PAD[3]}
+C {devices/iopin.sym} 2760 -1220 0 0 {name=p14 lab=analog_PAD[1]}
+C {noconn.sym} 2380 -1210 0 0 {name=l1}
+C {ngspice_probe.sym} 2390 -1630 0 0 {name=r10}
+C {ngspice_probe.sym} 2390 -1310 0 0 {name=r11}
+C {sg13g2_io/sg13g2_IOPadOut30mA.sym} 2740 -1740 3 0 {name=x20}
+C {devices/opin.sym} 2760 -1850 0 0 {name=p15 lab=output_PAD[12]
+}
+C {ngspice_probe.sym} 2390 -1940 2 0 {name=r12}
+C {sg13g2_io/sg13g2_IOPadOut30mA.sym} 2740 -1950 3 0 {name=x21}
+C {devices/opin.sym} 2760 -2060 0 0 {name=p16 lab=output_PAD[13]
+}
+C {ngspice_probe.sym} 2390 -2150 2 0 {name=r17}
+C {sg13g2_io/sg13g2_IOPadOut30mA.sym} 2740 -2160 3 0 {name=x22}
+C {devices/opin.sym} 2760 -2270 0 0 {name=p17 lab=output_PAD[14]
+}
+C {ngspice_probe.sym} 2390 -2360 2 0 {name=r18}
+C {sg13g2_io/sg13g2_IOPadOut30mA.sym} 2740 -2370 3 0 {name=x23}
+C {devices/opin.sym} 2760 -2480 0 0 {name=p18 lab=output_PAD[15]
+}
+C {ngspice_probe.sym} 2390 -2570 2 0 {name=r22}
+C {sg13g2_io/sg13g2_IOPadOut30mA.sym} 1480 -3000 2 0 {name=x24}
+C {devices/opin.sym} 1370 -3020 3 0 {name=p19 lab=output_PAD[3]
+}
+C {ngspice_probe.sym} 1280 -2650 1 0 {name=r23}
+C {sg13g2_io/sg13g2_IOPadOut30mA.sym} 1270 -3000 2 0 {name=x25}
+C {devices/opin.sym} 1160 -3020 3 0 {name=p23 lab=output_PAD[2]
+}
+C {ngspice_probe.sym} 1070 -2650 1 0 {name=r24}
+C {sg13g2_io/sg13g2_IOPadOut30mA.sym} 1060 -3000 2 0 {name=x26}
+C {devices/opin.sym} 950 -3020 3 0 {name=p24 lab=output_PAD[1]
+}
+C {ngspice_probe.sym} 860 -2650 1 0 {name=r25}
+C {sg13g2_io/sg13g2_IOPadOut30mA.sym} 850 -3000 2 0 {name=x27}
+C {devices/opin.sym} 740 -3020 3 0 {name=p25 lab=output_PAD[0]
+}
+C {ngspice_probe.sym} 650 -2650 1 0 {name=r26}
+C {devices/iopin.sym} 1790 -3020 3 0 {name=p26 lab=bidir_PAD[1]
+}
+C {sg13g2_io/sg13g2_IOPadInOut30mA.sym} 1900 -3000 2 0 {name=x28}
+C {ngspice_probe.sym} 1890 -2640 1 0 {name=r27}
+C {ngspice_probe.sym} 1710 -2640 1 0 {name=r28}
+C {ngspice_probe.sym} 1700 -2650 1 0 {name=r29}
+C {devices/iopin.sym} 2000 -3020 3 0 {name=p27 lab=bidir_PAD[2]
+}
+C {sg13g2_io/sg13g2_IOPadInOut30mA.sym} 2110 -3000 2 0 {name=x30}
+C {ngspice_probe.sym} 2100 -2640 1 0 {name=r30}
+C {ngspice_probe.sym} 1920 -2640 1 0 {name=r31}
+C {ngspice_probe.sym} 1910 -2650 1 0 {name=r32}
+C {devices/iopin.sym} 2210 -3020 3 0 {name=p28 lab=bidir_PAD[3]
+}
+C {sg13g2_io/sg13g2_IOPadInOut30mA.sym} 2320 -3000 2 0 {name=x31}
+C {ngspice_probe.sym} 2310 -2640 1 0 {name=r33}
+C {ngspice_probe.sym} 2130 -2640 1 0 {name=r34}
+C {ngspice_probe.sym} 2120 -2650 1 0 {name=r35}
+C {noconn.sym} 2380 -1520 0 0 {name=l2}
+C {noconn.sym} 2380 -1730 0 0 {name=l3}
+C {counter_top.sym} 1160 -2200 0 0 {name=x32}
+C {counter_top.sym} 1160 -1280 0 0 {name=x33}
+C {inverter_top.sym} 1960 -2160 0 0 {name=x34}
+C {inverter_top.sym} 1900 -1320 0 0 {name=x36}
+C {lab_pin.sym} 1160 -1160 3 0 {name=p30 sig_type=std_logic lab=VSS}
+C {lab_pin.sym} 1900 -1160 3 0 {name=p31 sig_type=std_logic lab=VSS}
+C {lab_pin.sym} 1160 -2080 3 0 {name=p33 sig_type=std_logic lab=VSS}
+C {lab_pin.sym} 1960 -2000 3 0 {name=p34 sig_type=std_logic lab=VSS}
+C {lab_pin.sym} 1160 -2320 1 0 {name=p35 sig_type=std_logic lab=VDD}
+C {lab_pin.sym} 1960 -2320 1 0 {name=p36 sig_type=std_logic lab=VDD}
+C {lab_pin.sym} 1900 -1480 1 0 {name=p37 sig_type=std_logic lab=VDD}
+C {lab_pin.sym} 1160 -1400 1 0 {name=p38 sig_type=std_logic lab=VDD}
+C {lab_pin.sym} 2040 -1340 2 0 {name=p39 sig_type=std_logic lab=VSS}
+C {lab_pin.sym} 2040 -1380 2 0 {name=p40 sig_type=std_logic lab=VSS}
+C {lab_pin.sym} 1760 -1380 0 0 {name=p41 sig_type=std_logic lab=VSS}
+C {lab_pin.sym} 1760 -1340 0 0 {name=p42 sig_type=std_logic lab=VSS}
+C {devices/lab_wire.sym} 1600 -2200 2 1 {name=p43 sig_type=std_logic lab=counter1_value[0..7]}
+C {bus_tap.sym} 1290 -2200 0 0 {name=l4 lab=0}
+C {bus_tap.sym} 1330 -2200 0 0 {name=l5 lab=1}
+C {bus_tap.sym} 1370 -2200 0 0 {name=l6 lab=2}
+C {bus_tap.sym} 1410 -2200 0 0 {name=l7 lab=3}
+C {bus_tap.sym} 1450 -2200 0 0 {name=l9 lab=4}
+C {bus_tap.sym} 1490 -2200 0 0 {name=l10 lab=5}
+C {bus_tap.sym} 1530 -2200 0 0 {name=l11 lab=6}
+C {bus_tap.sym} 1570 -2200 0 0 {name=l12 lab=7}
+C {devices/lab_wire.sym} 1600 -1280 0 0 {name=p44 sig_type=std_logic lab=counter2_value[0..7]}
+C {bus_tap.sym} 1290 -1280 2 1 {name=l13 lab=0}
+C {bus_tap.sym} 1330 -1280 2 1 {name=l14 lab=1}
+C {bus_tap.sym} 1370 -1280 2 1 {name=l15 lab=2}
+C {bus_tap.sym} 1410 -1280 2 1 {name=l16 lab=3}
+C {bus_tap.sym} 1450 -1280 2 1 {name=l17 lab=4}
+C {bus_tap.sym} 1490 -1280 2 1 {name=l18 lab=5}
+C {bus_tap.sym} 1530 -1280 2 1 {name=l19 lab=6}
+C {bus_tap.sym} 1570 -1280 2 1 {name=l20 lab=7}
+C {lab_pin.sym} 680 -880 3 0 {name=p45 sig_type=std_logic lab=VSS}
+C {res.sym} 630 -910 3 1 {name=R36
+value=100k
+footprint=1206
+device=resistor
+m=1}
