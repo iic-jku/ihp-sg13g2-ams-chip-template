@@ -78,7 +78,6 @@ module counter_top (clock_i,
  wire net31;
  wire net32;
  wire net33;
- wire net34;
 
  sg13g2_decap_8 FILLER_0_0 (.VDD(VDD),
     .VSS(VSS));
@@ -170,9 +169,7 @@ module counter_top (clock_i,
     .VSS(VSS));
  sg13g2_decap_8 FILLER_0_378 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_fill_2 FILLER_0_385 (.VDD(VDD),
-    .VSS(VSS));
- sg13g2_fill_1 FILLER_0_387 (.VDD(VDD),
+ sg13g2_decap_8 FILLER_0_385 (.VDD(VDD),
     .VSS(VSS));
  sg13g2_decap_8 FILLER_0_42 (.VDD(VDD),
     .VSS(VSS));
@@ -262,17 +259,29 @@ module counter_top (clock_i,
     .VSS(VSS));
  sg13g2_decap_8 FILLER_10_308 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_decap_4 FILLER_10_315 (.VDD(VDD),
+ sg13g2_decap_8 FILLER_10_315 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_fill_2 FILLER_10_319 (.VDD(VDD),
+ sg13g2_decap_8 FILLER_10_322 (.VDD(VDD),
+    .VSS(VSS));
+ sg13g2_decap_8 FILLER_10_329 (.VDD(VDD),
+    .VSS(VSS));
+ sg13g2_decap_8 FILLER_10_336 (.VDD(VDD),
+    .VSS(VSS));
+ sg13g2_decap_8 FILLER_10_343 (.VDD(VDD),
     .VSS(VSS));
  sg13g2_decap_8 FILLER_10_35 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_decap_8 FILLER_10_375 (.VDD(VDD),
+ sg13g2_decap_8 FILLER_10_350 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_decap_4 FILLER_10_382 (.VDD(VDD),
+ sg13g2_decap_8 FILLER_10_357 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_fill_2 FILLER_10_386 (.VDD(VDD),
+ sg13g2_decap_8 FILLER_10_364 (.VDD(VDD),
+    .VSS(VSS));
+ sg13g2_decap_8 FILLER_10_371 (.VDD(VDD),
+    .VSS(VSS));
+ sg13g2_decap_8 FILLER_10_378 (.VDD(VDD),
+    .VSS(VSS));
+ sg13g2_decap_8 FILLER_10_385 (.VDD(VDD),
     .VSS(VSS));
  sg13g2_decap_8 FILLER_10_42 (.VDD(VDD),
     .VSS(VSS));
@@ -364,21 +373,27 @@ module counter_top (clock_i,
     .VSS(VSS));
  sg13g2_decap_8 FILLER_11_315 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_decap_4 FILLER_11_322 (.VDD(VDD),
+ sg13g2_decap_8 FILLER_11_322 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_decap_8 FILLER_11_330 (.VDD(VDD),
+ sg13g2_decap_8 FILLER_11_329 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_decap_8 FILLER_11_337 (.VDD(VDD),
+ sg13g2_decap_8 FILLER_11_336 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_decap_4 FILLER_11_344 (.VDD(VDD),
+ sg13g2_decap_8 FILLER_11_343 (.VDD(VDD),
     .VSS(VSS));
  sg13g2_decap_8 FILLER_11_35 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_fill_2 FILLER_11_355 (.VDD(VDD),
+ sg13g2_decap_8 FILLER_11_350 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_fill_2 FILLER_11_389 (.VDD(VDD),
+ sg13g2_decap_8 FILLER_11_357 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_fill_1 FILLER_11_391 (.VDD(VDD),
+ sg13g2_decap_8 FILLER_11_364 (.VDD(VDD),
+    .VSS(VSS));
+ sg13g2_decap_8 FILLER_11_371 (.VDD(VDD),
+    .VSS(VSS));
+ sg13g2_decap_8 FILLER_11_378 (.VDD(VDD),
+    .VSS(VSS));
+ sg13g2_decap_8 FILLER_11_385 (.VDD(VDD),
     .VSS(VSS));
  sg13g2_decap_8 FILLER_11_42 (.VDD(VDD),
     .VSS(VSS));
@@ -470,25 +485,27 @@ module counter_top (clock_i,
     .VSS(VSS));
  sg13g2_decap_8 FILLER_12_315 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_decap_4 FILLER_12_322 (.VDD(VDD),
+ sg13g2_decap_8 FILLER_12_322 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_fill_2 FILLER_12_326 (.VDD(VDD),
+ sg13g2_decap_8 FILLER_12_329 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_decap_8 FILLER_12_331 (.VDD(VDD),
+ sg13g2_decap_8 FILLER_12_336 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_decap_8 FILLER_12_338 (.VDD(VDD),
-    .VSS(VSS));
- sg13g2_decap_8 FILLER_12_345 (.VDD(VDD),
+ sg13g2_decap_8 FILLER_12_343 (.VDD(VDD),
     .VSS(VSS));
  sg13g2_decap_8 FILLER_12_35 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_fill_1 FILLER_12_352 (.VDD(VDD),
+ sg13g2_decap_8 FILLER_12_350 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_fill_1 FILLER_12_376 (.VDD(VDD),
+ sg13g2_decap_8 FILLER_12_357 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_decap_4 FILLER_12_386 (.VDD(VDD),
+ sg13g2_decap_8 FILLER_12_364 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_fill_2 FILLER_12_390 (.VDD(VDD),
+ sg13g2_decap_8 FILLER_12_371 (.VDD(VDD),
+    .VSS(VSS));
+ sg13g2_decap_8 FILLER_12_378 (.VDD(VDD),
+    .VSS(VSS));
+ sg13g2_decap_8 FILLER_12_385 (.VDD(VDD),
     .VSS(VSS));
  sg13g2_decap_8 FILLER_12_42 (.VDD(VDD),
     .VSS(VSS));
@@ -512,87 +529,91 @@ module counter_top (clock_i,
     .VSS(VSS));
  sg13g2_decap_8 FILLER_13_0 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_decap_8 FILLER_13_105 (.VDD(VDD),
+ sg13g2_decap_8 FILLER_13_102 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_decap_8 FILLER_13_112 (.VDD(VDD),
+ sg13g2_decap_8 FILLER_13_109 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_decap_8 FILLER_13_119 (.VDD(VDD),
+ sg13g2_decap_8 FILLER_13_116 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_decap_8 FILLER_13_126 (.VDD(VDD),
+ sg13g2_decap_8 FILLER_13_123 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_decap_8 FILLER_13_133 (.VDD(VDD),
+ sg13g2_decap_8 FILLER_13_130 (.VDD(VDD),
+    .VSS(VSS));
+ sg13g2_decap_8 FILLER_13_137 (.VDD(VDD),
     .VSS(VSS));
  sg13g2_decap_8 FILLER_13_14 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_decap_8 FILLER_13_140 (.VDD(VDD),
+ sg13g2_decap_8 FILLER_13_144 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_decap_8 FILLER_13_147 (.VDD(VDD),
+ sg13g2_decap_8 FILLER_13_151 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_decap_8 FILLER_13_154 (.VDD(VDD),
+ sg13g2_decap_4 FILLER_13_158 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_decap_8 FILLER_13_161 (.VDD(VDD),
+ sg13g2_decap_8 FILLER_13_169 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_decap_8 FILLER_13_168 (.VDD(VDD),
+ sg13g2_decap_8 FILLER_13_176 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_decap_8 FILLER_13_175 (.VDD(VDD),
+ sg13g2_decap_8 FILLER_13_183 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_decap_8 FILLER_13_182 (.VDD(VDD),
+ sg13g2_decap_4 FILLER_13_190 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_decap_8 FILLER_13_189 (.VDD(VDD),
+ sg13g2_decap_8 FILLER_13_197 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_decap_8 FILLER_13_196 (.VDD(VDD),
-    .VSS(VSS));
- sg13g2_decap_8 FILLER_13_203 (.VDD(VDD),
+ sg13g2_fill_1 FILLER_13_204 (.VDD(VDD),
     .VSS(VSS));
  sg13g2_decap_8 FILLER_13_21 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_decap_8 FILLER_13_210 (.VDD(VDD),
-    .VSS(VSS));
- sg13g2_decap_8 FILLER_13_217 (.VDD(VDD),
-    .VSS(VSS));
  sg13g2_decap_8 FILLER_13_224 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_decap_8 FILLER_13_231 (.VDD(VDD),
+ sg13g2_decap_4 FILLER_13_231 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_decap_8 FILLER_13_238 (.VDD(VDD),
+ sg13g2_fill_1 FILLER_13_235 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_decap_8 FILLER_13_245 (.VDD(VDD),
+ sg13g2_decap_8 FILLER_13_249 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_decap_8 FILLER_13_252 (.VDD(VDD),
+ sg13g2_decap_8 FILLER_13_256 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_decap_8 FILLER_13_259 (.VDD(VDD),
+ sg13g2_decap_8 FILLER_13_263 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_decap_8 FILLER_13_266 (.VDD(VDD),
+ sg13g2_decap_8 FILLER_13_270 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_decap_8 FILLER_13_273 (.VDD(VDD),
+ sg13g2_decap_8 FILLER_13_277 (.VDD(VDD),
     .VSS(VSS));
  sg13g2_decap_8 FILLER_13_28 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_decap_8 FILLER_13_280 (.VDD(VDD),
+ sg13g2_decap_8 FILLER_13_284 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_decap_8 FILLER_13_287 (.VDD(VDD),
+ sg13g2_decap_8 FILLER_13_291 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_decap_8 FILLER_13_294 (.VDD(VDD),
+ sg13g2_decap_8 FILLER_13_298 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_decap_8 FILLER_13_301 (.VDD(VDD),
+ sg13g2_decap_8 FILLER_13_305 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_decap_8 FILLER_13_308 (.VDD(VDD),
+ sg13g2_decap_8 FILLER_13_312 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_decap_8 FILLER_13_315 (.VDD(VDD),
+ sg13g2_decap_8 FILLER_13_319 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_decap_8 FILLER_13_322 (.VDD(VDD),
+ sg13g2_decap_8 FILLER_13_326 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_decap_8 FILLER_13_329 (.VDD(VDD),
+ sg13g2_decap_8 FILLER_13_333 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_decap_8 FILLER_13_336 (.VDD(VDD),
+ sg13g2_decap_8 FILLER_13_340 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_decap_8 FILLER_13_343 (.VDD(VDD),
+ sg13g2_decap_8 FILLER_13_347 (.VDD(VDD),
     .VSS(VSS));
  sg13g2_decap_8 FILLER_13_35 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_decap_8 FILLER_13_380 (.VDD(VDD),
+ sg13g2_decap_8 FILLER_13_354 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_decap_4 FILLER_13_387 (.VDD(VDD),
+ sg13g2_decap_8 FILLER_13_361 (.VDD(VDD),
+    .VSS(VSS));
+ sg13g2_decap_8 FILLER_13_368 (.VDD(VDD),
+    .VSS(VSS));
+ sg13g2_decap_8 FILLER_13_375 (.VDD(VDD),
+    .VSS(VSS));
+ sg13g2_decap_8 FILLER_13_382 (.VDD(VDD),
+    .VSS(VSS));
+ sg13g2_fill_2 FILLER_13_389 (.VDD(VDD),
     .VSS(VSS));
  sg13g2_fill_1 FILLER_13_391 (.VDD(VDD),
     .VSS(VSS));
@@ -602,69 +623,43 @@ module counter_top (clock_i,
     .VSS(VSS));
  sg13g2_decap_8 FILLER_13_56 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_decap_8 FILLER_13_63 (.VDD(VDD),
+ sg13g2_decap_8 FILLER_13_67 (.VDD(VDD),
     .VSS(VSS));
  sg13g2_decap_8 FILLER_13_7 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_decap_8 FILLER_13_70 (.VDD(VDD),
+ sg13g2_decap_8 FILLER_13_74 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_decap_8 FILLER_13_77 (.VDD(VDD),
+ sg13g2_decap_8 FILLER_13_81 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_decap_8 FILLER_13_84 (.VDD(VDD),
+ sg13g2_decap_8 FILLER_13_88 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_decap_8 FILLER_13_91 (.VDD(VDD),
-    .VSS(VSS));
- sg13g2_decap_8 FILLER_13_98 (.VDD(VDD),
+ sg13g2_decap_8 FILLER_13_95 (.VDD(VDD),
     .VSS(VSS));
  sg13g2_decap_8 FILLER_14_0 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_decap_8 FILLER_14_105 (.VDD(VDD),
-    .VSS(VSS));
- sg13g2_decap_8 FILLER_14_112 (.VDD(VDD),
-    .VSS(VSS));
- sg13g2_decap_8 FILLER_14_119 (.VDD(VDD),
-    .VSS(VSS));
- sg13g2_decap_8 FILLER_14_126 (.VDD(VDD),
-    .VSS(VSS));
- sg13g2_decap_8 FILLER_14_133 (.VDD(VDD),
+ sg13g2_fill_1 FILLER_14_105 (.VDD(VDD),
     .VSS(VSS));
  sg13g2_decap_8 FILLER_14_14 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_decap_8 FILLER_14_140 (.VDD(VDD),
+ sg13g2_decap_8 FILLER_14_141 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_decap_8 FILLER_14_147 (.VDD(VDD),
+ sg13g2_decap_8 FILLER_14_148 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_decap_8 FILLER_14_154 (.VDD(VDD),
+ sg13g2_decap_4 FILLER_14_155 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_decap_8 FILLER_14_161 (.VDD(VDD),
+ sg13g2_fill_2 FILLER_14_159 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_decap_8 FILLER_14_168 (.VDD(VDD),
+ sg13g2_decap_8 FILLER_14_186 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_decap_8 FILLER_14_175 (.VDD(VDD),
-    .VSS(VSS));
- sg13g2_decap_8 FILLER_14_182 (.VDD(VDD),
-    .VSS(VSS));
- sg13g2_decap_8 FILLER_14_189 (.VDD(VDD),
-    .VSS(VSS));
- sg13g2_decap_8 FILLER_14_196 (.VDD(VDD),
-    .VSS(VSS));
- sg13g2_decap_8 FILLER_14_203 (.VDD(VDD),
+ sg13g2_decap_4 FILLER_14_193 (.VDD(VDD),
     .VSS(VSS));
  sg13g2_decap_8 FILLER_14_21 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_decap_8 FILLER_14_210 (.VDD(VDD),
+ sg13g2_fill_2 FILLER_14_211 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_decap_8 FILLER_14_217 (.VDD(VDD),
+ sg13g2_fill_1 FILLER_14_213 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_decap_8 FILLER_14_224 (.VDD(VDD),
-    .VSS(VSS));
- sg13g2_decap_8 FILLER_14_231 (.VDD(VDD),
-    .VSS(VSS));
- sg13g2_decap_8 FILLER_14_238 (.VDD(VDD),
-    .VSS(VSS));
- sg13g2_decap_8 FILLER_14_245 (.VDD(VDD),
-    .VSS(VSS));
- sg13g2_decap_8 FILLER_14_252 (.VDD(VDD),
+ sg13g2_fill_2 FILLER_14_230 (.VDD(VDD),
     .VSS(VSS));
  sg13g2_decap_8 FILLER_14_259 (.VDD(VDD),
     .VSS(VSS));
@@ -688,117 +683,93 @@ module counter_top (clock_i,
     .VSS(VSS));
  sg13g2_decap_8 FILLER_14_322 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_decap_8 FILLER_14_338 (.VDD(VDD),
+ sg13g2_decap_8 FILLER_14_329 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_fill_1 FILLER_14_345 (.VDD(VDD),
+ sg13g2_decap_8 FILLER_14_336 (.VDD(VDD),
+    .VSS(VSS));
+ sg13g2_decap_8 FILLER_14_343 (.VDD(VDD),
     .VSS(VSS));
  sg13g2_decap_8 FILLER_14_35 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_fill_1 FILLER_14_358 (.VDD(VDD),
+ sg13g2_decap_8 FILLER_14_350 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_decap_4 FILLER_14_384 (.VDD(VDD),
+ sg13g2_decap_8 FILLER_14_357 (.VDD(VDD),
+    .VSS(VSS));
+ sg13g2_decap_8 FILLER_14_364 (.VDD(VDD),
+    .VSS(VSS));
+ sg13g2_decap_8 FILLER_14_371 (.VDD(VDD),
+    .VSS(VSS));
+ sg13g2_decap_8 FILLER_14_378 (.VDD(VDD),
+    .VSS(VSS));
+ sg13g2_decap_8 FILLER_14_385 (.VDD(VDD),
     .VSS(VSS));
  sg13g2_decap_8 FILLER_14_42 (.VDD(VDD),
     .VSS(VSS));
  sg13g2_decap_8 FILLER_14_49 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_decap_8 FILLER_14_56 (.VDD(VDD),
-    .VSS(VSS));
- sg13g2_decap_8 FILLER_14_63 (.VDD(VDD),
+ sg13g2_fill_2 FILLER_14_56 (.VDD(VDD),
     .VSS(VSS));
  sg13g2_decap_8 FILLER_14_7 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_decap_8 FILLER_14_70 (.VDD(VDD),
+ sg13g2_decap_8 FILLER_14_85 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_decap_8 FILLER_14_77 (.VDD(VDD),
-    .VSS(VSS));
- sg13g2_decap_8 FILLER_14_84 (.VDD(VDD),
-    .VSS(VSS));
- sg13g2_decap_8 FILLER_14_91 (.VDD(VDD),
+ sg13g2_fill_1 FILLER_14_92 (.VDD(VDD),
     .VSS(VSS));
  sg13g2_decap_8 FILLER_14_98 (.VDD(VDD),
     .VSS(VSS));
  sg13g2_decap_8 FILLER_15_0 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_decap_8 FILLER_15_105 (.VDD(VDD),
-    .VSS(VSS));
- sg13g2_decap_8 FILLER_15_112 (.VDD(VDD),
-    .VSS(VSS));
- sg13g2_decap_8 FILLER_15_119 (.VDD(VDD),
-    .VSS(VSS));
- sg13g2_decap_8 FILLER_15_126 (.VDD(VDD),
-    .VSS(VSS));
- sg13g2_decap_8 FILLER_15_133 (.VDD(VDD),
-    .VSS(VSS));
  sg13g2_decap_8 FILLER_15_14 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_decap_8 FILLER_15_140 (.VDD(VDD),
+ sg13g2_fill_1 FILLER_15_150 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_decap_8 FILLER_15_147 (.VDD(VDD),
+ sg13g2_decap_8 FILLER_15_183 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_decap_8 FILLER_15_154 (.VDD(VDD),
-    .VSS(VSS));
- sg13g2_decap_8 FILLER_15_161 (.VDD(VDD),
-    .VSS(VSS));
- sg13g2_decap_8 FILLER_15_168 (.VDD(VDD),
-    .VSS(VSS));
- sg13g2_decap_8 FILLER_15_175 (.VDD(VDD),
-    .VSS(VSS));
- sg13g2_decap_8 FILLER_15_182 (.VDD(VDD),
-    .VSS(VSS));
- sg13g2_decap_8 FILLER_15_189 (.VDD(VDD),
-    .VSS(VSS));
- sg13g2_decap_8 FILLER_15_196 (.VDD(VDD),
-    .VSS(VSS));
- sg13g2_decap_8 FILLER_15_203 (.VDD(VDD),
+ sg13g2_decap_8 FILLER_15_190 (.VDD(VDD),
     .VSS(VSS));
  sg13g2_decap_8 FILLER_15_21 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_decap_8 FILLER_15_210 (.VDD(VDD),
+ sg13g2_fill_2 FILLER_15_225 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_decap_8 FILLER_15_217 (.VDD(VDD),
+ sg13g2_decap_8 FILLER_15_263 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_decap_8 FILLER_15_224 (.VDD(VDD),
+ sg13g2_decap_8 FILLER_15_270 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_decap_8 FILLER_15_231 (.VDD(VDD),
-    .VSS(VSS));
- sg13g2_decap_8 FILLER_15_238 (.VDD(VDD),
-    .VSS(VSS));
- sg13g2_decap_8 FILLER_15_245 (.VDD(VDD),
-    .VSS(VSS));
- sg13g2_decap_8 FILLER_15_252 (.VDD(VDD),
-    .VSS(VSS));
- sg13g2_decap_8 FILLER_15_259 (.VDD(VDD),
-    .VSS(VSS));
- sg13g2_decap_8 FILLER_15_266 (.VDD(VDD),
-    .VSS(VSS));
- sg13g2_decap_8 FILLER_15_273 (.VDD(VDD),
+ sg13g2_decap_8 FILLER_15_277 (.VDD(VDD),
     .VSS(VSS));
  sg13g2_decap_8 FILLER_15_28 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_decap_8 FILLER_15_280 (.VDD(VDD),
+ sg13g2_decap_8 FILLER_15_284 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_decap_8 FILLER_15_287 (.VDD(VDD),
+ sg13g2_decap_8 FILLER_15_291 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_decap_8 FILLER_15_294 (.VDD(VDD),
+ sg13g2_decap_8 FILLER_15_298 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_decap_8 FILLER_15_301 (.VDD(VDD),
+ sg13g2_decap_8 FILLER_15_305 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_decap_8 FILLER_15_308 (.VDD(VDD),
+ sg13g2_decap_8 FILLER_15_312 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_decap_8 FILLER_15_315 (.VDD(VDD),
+ sg13g2_decap_8 FILLER_15_319 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_decap_8 FILLER_15_322 (.VDD(VDD),
+ sg13g2_decap_8 FILLER_15_326 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_decap_8 FILLER_15_339 (.VDD(VDD),
+ sg13g2_decap_8 FILLER_15_333 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_fill_2 FILLER_15_346 (.VDD(VDD),
+ sg13g2_decap_8 FILLER_15_340 (.VDD(VDD),
+    .VSS(VSS));
+ sg13g2_decap_8 FILLER_15_347 (.VDD(VDD),
     .VSS(VSS));
  sg13g2_decap_8 FILLER_15_35 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_decap_4 FILLER_15_357 (.VDD(VDD),
+ sg13g2_decap_8 FILLER_15_354 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_fill_1 FILLER_15_361 (.VDD(VDD),
+ sg13g2_decap_8 FILLER_15_361 (.VDD(VDD),
+    .VSS(VSS));
+ sg13g2_decap_8 FILLER_15_368 (.VDD(VDD),
+    .VSS(VSS));
+ sg13g2_decap_8 FILLER_15_375 (.VDD(VDD),
+    .VSS(VSS));
+ sg13g2_decap_8 FILLER_15_382 (.VDD(VDD),
     .VSS(VSS));
  sg13g2_fill_2 FILLER_15_389 (.VDD(VDD),
     .VSS(VSS));
@@ -806,153 +777,115 @@ module counter_top (clock_i,
     .VSS(VSS));
  sg13g2_decap_8 FILLER_15_42 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_decap_8 FILLER_15_49 (.VDD(VDD),
-    .VSS(VSS));
- sg13g2_decap_8 FILLER_15_56 (.VDD(VDD),
-    .VSS(VSS));
- sg13g2_decap_8 FILLER_15_63 (.VDD(VDD),
+ sg13g2_fill_2 FILLER_15_61 (.VDD(VDD),
     .VSS(VSS));
  sg13g2_decap_8 FILLER_15_7 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_decap_8 FILLER_15_70 (.VDD(VDD),
-    .VSS(VSS));
- sg13g2_decap_8 FILLER_15_77 (.VDD(VDD),
-    .VSS(VSS));
- sg13g2_decap_8 FILLER_15_84 (.VDD(VDD),
-    .VSS(VSS));
- sg13g2_decap_8 FILLER_15_91 (.VDD(VDD),
-    .VSS(VSS));
- sg13g2_decap_8 FILLER_15_98 (.VDD(VDD),
+ sg13g2_fill_2 FILLER_15_90 (.VDD(VDD),
     .VSS(VSS));
  sg13g2_decap_8 FILLER_16_0 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_decap_8 FILLER_16_105 (.VDD(VDD),
+ sg13g2_fill_2 FILLER_16_103 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_decap_8 FILLER_16_112 (.VDD(VDD),
+ sg13g2_fill_1 FILLER_16_105 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_decap_8 FILLER_16_119 (.VDD(VDD),
-    .VSS(VSS));
- sg13g2_decap_8 FILLER_16_126 (.VDD(VDD),
-    .VSS(VSS));
- sg13g2_decap_8 FILLER_16_133 (.VDD(VDD),
+ sg13g2_fill_1 FILLER_16_123 (.VDD(VDD),
     .VSS(VSS));
  sg13g2_decap_8 FILLER_16_14 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_decap_8 FILLER_16_140 (.VDD(VDD),
+ sg13g2_fill_1 FILLER_16_149 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_decap_8 FILLER_16_147 (.VDD(VDD),
+ sg13g2_decap_4 FILLER_16_182 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_decap_8 FILLER_16_154 (.VDD(VDD),
-    .VSS(VSS));
- sg13g2_decap_8 FILLER_16_161 (.VDD(VDD),
-    .VSS(VSS));
- sg13g2_decap_8 FILLER_16_168 (.VDD(VDD),
-    .VSS(VSS));
- sg13g2_decap_8 FILLER_16_175 (.VDD(VDD),
-    .VSS(VSS));
- sg13g2_decap_8 FILLER_16_182 (.VDD(VDD),
-    .VSS(VSS));
- sg13g2_decap_8 FILLER_16_189 (.VDD(VDD),
-    .VSS(VSS));
- sg13g2_decap_8 FILLER_16_196 (.VDD(VDD),
-    .VSS(VSS));
- sg13g2_decap_8 FILLER_16_203 (.VDD(VDD),
+ sg13g2_fill_1 FILLER_16_197 (.VDD(VDD),
     .VSS(VSS));
  sg13g2_decap_8 FILLER_16_21 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_decap_8 FILLER_16_210 (.VDD(VDD),
+ sg13g2_decap_4 FILLER_16_210 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_decap_8 FILLER_16_217 (.VDD(VDD),
+ sg13g2_fill_2 FILLER_16_232 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_decap_8 FILLER_16_224 (.VDD(VDD),
+ sg13g2_fill_1 FILLER_16_234 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_decap_8 FILLER_16_231 (.VDD(VDD),
+ sg13g2_decap_8 FILLER_16_262 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_decap_8 FILLER_16_238 (.VDD(VDD),
+ sg13g2_decap_8 FILLER_16_269 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_decap_8 FILLER_16_245 (.VDD(VDD),
-    .VSS(VSS));
- sg13g2_decap_8 FILLER_16_252 (.VDD(VDD),
-    .VSS(VSS));
- sg13g2_decap_8 FILLER_16_259 (.VDD(VDD),
-    .VSS(VSS));
- sg13g2_decap_8 FILLER_16_266 (.VDD(VDD),
-    .VSS(VSS));
- sg13g2_decap_8 FILLER_16_273 (.VDD(VDD),
+ sg13g2_decap_8 FILLER_16_276 (.VDD(VDD),
     .VSS(VSS));
  sg13g2_decap_8 FILLER_16_28 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_decap_8 FILLER_16_280 (.VDD(VDD),
+ sg13g2_decap_8 FILLER_16_283 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_decap_8 FILLER_16_287 (.VDD(VDD),
+ sg13g2_decap_8 FILLER_16_290 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_decap_8 FILLER_16_294 (.VDD(VDD),
+ sg13g2_decap_8 FILLER_16_297 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_decap_8 FILLER_16_301 (.VDD(VDD),
+ sg13g2_decap_8 FILLER_16_304 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_decap_8 FILLER_16_308 (.VDD(VDD),
+ sg13g2_decap_8 FILLER_16_311 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_decap_8 FILLER_16_315 (.VDD(VDD),
+ sg13g2_decap_8 FILLER_16_318 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_decap_8 FILLER_16_322 (.VDD(VDD),
+ sg13g2_decap_8 FILLER_16_325 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_fill_2 FILLER_16_329 (.VDD(VDD),
+ sg13g2_decap_8 FILLER_16_332 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_fill_1 FILLER_16_331 (.VDD(VDD),
+ sg13g2_decap_8 FILLER_16_339 (.VDD(VDD),
+    .VSS(VSS));
+ sg13g2_decap_8 FILLER_16_346 (.VDD(VDD),
     .VSS(VSS));
  sg13g2_decap_8 FILLER_16_35 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_decap_4 FILLER_16_372 (.VDD(VDD),
+ sg13g2_decap_8 FILLER_16_353 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_fill_2 FILLER_16_376 (.VDD(VDD),
+ sg13g2_decap_8 FILLER_16_360 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_decap_4 FILLER_16_387 (.VDD(VDD),
+ sg13g2_decap_8 FILLER_16_367 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_fill_1 FILLER_16_391 (.VDD(VDD),
+ sg13g2_decap_8 FILLER_16_374 (.VDD(VDD),
+    .VSS(VSS));
+ sg13g2_decap_8 FILLER_16_381 (.VDD(VDD),
+    .VSS(VSS));
+ sg13g2_decap_4 FILLER_16_388 (.VDD(VDD),
     .VSS(VSS));
  sg13g2_decap_8 FILLER_16_42 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_decap_8 FILLER_16_49 (.VDD(VDD),
-    .VSS(VSS));
- sg13g2_decap_8 FILLER_16_56 (.VDD(VDD),
-    .VSS(VSS));
- sg13g2_decap_8 FILLER_16_63 (.VDD(VDD),
+ sg13g2_fill_1 FILLER_16_49 (.VDD(VDD),
     .VSS(VSS));
  sg13g2_decap_8 FILLER_16_7 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_decap_8 FILLER_16_70 (.VDD(VDD),
+ sg13g2_decap_8 FILLER_16_89 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_decap_8 FILLER_16_77 (.VDD(VDD),
-    .VSS(VSS));
- sg13g2_decap_8 FILLER_16_84 (.VDD(VDD),
-    .VSS(VSS));
- sg13g2_decap_8 FILLER_16_91 (.VDD(VDD),
-    .VSS(VSS));
- sg13g2_decap_8 FILLER_16_98 (.VDD(VDD),
+ sg13g2_decap_8 FILLER_16_96 (.VDD(VDD),
     .VSS(VSS));
  sg13g2_decap_8 FILLER_17_0 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_decap_8 FILLER_17_105 (.VDD(VDD),
+ sg13g2_decap_8 FILLER_17_100 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_decap_8 FILLER_17_112 (.VDD(VDD),
+ sg13g2_decap_8 FILLER_17_107 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_decap_8 FILLER_17_119 (.VDD(VDD),
+ sg13g2_fill_2 FILLER_17_11 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_decap_8 FILLER_17_126 (.VDD(VDD),
+ sg13g2_fill_1 FILLER_17_114 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_decap_8 FILLER_17_133 (.VDD(VDD),
+ sg13g2_decap_4 FILLER_17_123 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_decap_8 FILLER_17_14 (.VDD(VDD),
+ sg13g2_fill_1 FILLER_17_127 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_decap_8 FILLER_17_140 (.VDD(VDD),
+ sg13g2_decap_8 FILLER_17_141 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_decap_8 FILLER_17_147 (.VDD(VDD),
+ sg13g2_decap_8 FILLER_17_148 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_decap_8 FILLER_17_154 (.VDD(VDD),
+ sg13g2_fill_2 FILLER_17_155 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_decap_8 FILLER_17_161 (.VDD(VDD),
+ sg13g2_fill_1 FILLER_17_157 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_decap_8 FILLER_17_168 (.VDD(VDD),
+ sg13g2_decap_4 FILLER_17_162 (.VDD(VDD),
+    .VSS(VSS));
+ sg13g2_fill_1 FILLER_17_166 (.VDD(VDD),
+    .VSS(VSS));
+ sg13g2_decap_8 FILLER_17_17 (.VDD(VDD),
     .VSS(VSS));
  sg13g2_decap_8 FILLER_17_175 (.VDD(VDD),
     .VSS(VSS));
@@ -960,21 +893,17 @@ module counter_top (clock_i,
     .VSS(VSS));
  sg13g2_decap_8 FILLER_17_189 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_decap_8 FILLER_17_196 (.VDD(VDD),
+ sg13g2_fill_2 FILLER_17_196 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_decap_8 FILLER_17_203 (.VDD(VDD),
+ sg13g2_fill_1 FILLER_17_198 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_decap_8 FILLER_17_21 (.VDD(VDD),
+ sg13g2_fill_1 FILLER_17_204 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_decap_8 FILLER_17_210 (.VDD(VDD),
+ sg13g2_decap_4 FILLER_17_214 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_decap_8 FILLER_17_217 (.VDD(VDD),
+ sg13g2_fill_1 FILLER_17_218 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_decap_8 FILLER_17_224 (.VDD(VDD),
-    .VSS(VSS));
- sg13g2_decap_8 FILLER_17_231 (.VDD(VDD),
-    .VSS(VSS));
- sg13g2_decap_8 FILLER_17_238 (.VDD(VDD),
+ sg13g2_decap_8 FILLER_17_24 (.VDD(VDD),
     .VSS(VSS));
  sg13g2_decap_8 FILLER_17_245 (.VDD(VDD),
     .VSS(VSS));
@@ -984,61 +913,61 @@ module counter_top (clock_i,
     .VSS(VSS));
  sg13g2_decap_8 FILLER_17_266 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_decap_8 FILLER_17_273 (.VDD(VDD),
+ sg13g2_decap_8 FILLER_17_277 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_decap_8 FILLER_17_28 (.VDD(VDD),
+ sg13g2_decap_8 FILLER_17_284 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_decap_8 FILLER_17_280 (.VDD(VDD),
+ sg13g2_decap_8 FILLER_17_291 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_decap_8 FILLER_17_287 (.VDD(VDD),
+ sg13g2_decap_8 FILLER_17_298 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_decap_8 FILLER_17_294 (.VDD(VDD),
+ sg13g2_decap_8 FILLER_17_305 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_decap_8 FILLER_17_301 (.VDD(VDD),
+ sg13g2_decap_8 FILLER_17_31 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_decap_8 FILLER_17_308 (.VDD(VDD),
+ sg13g2_decap_8 FILLER_17_312 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_decap_8 FILLER_17_315 (.VDD(VDD),
+ sg13g2_decap_4 FILLER_17_319 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_decap_8 FILLER_17_322 (.VDD(VDD),
+ sg13g2_fill_2 FILLER_17_323 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_fill_2 FILLER_17_329 (.VDD(VDD),
+ sg13g2_decap_8 FILLER_17_329 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_decap_8 FILLER_17_344 (.VDD(VDD),
+ sg13g2_decap_8 FILLER_17_336 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_decap_8 FILLER_17_35 (.VDD(VDD),
+ sg13g2_decap_8 FILLER_17_343 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_decap_8 FILLER_17_351 (.VDD(VDD),
+ sg13g2_decap_8 FILLER_17_350 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_decap_8 FILLER_17_358 (.VDD(VDD),
+ sg13g2_decap_8 FILLER_17_357 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_decap_8 FILLER_17_365 (.VDD(VDD),
+ sg13g2_decap_8 FILLER_17_364 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_decap_8 FILLER_17_372 (.VDD(VDD),
+ sg13g2_decap_4 FILLER_17_371 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_decap_4 FILLER_17_379 (.VDD(VDD),
+ sg13g2_fill_2 FILLER_17_375 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_fill_1 FILLER_17_383 (.VDD(VDD),
+ sg13g2_decap_8 FILLER_17_38 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_decap_8 FILLER_17_42 (.VDD(VDD),
+ sg13g2_decap_8 FILLER_17_381 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_decap_8 FILLER_17_49 (.VDD(VDD),
+ sg13g2_decap_4 FILLER_17_388 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_decap_8 FILLER_17_56 (.VDD(VDD),
+ sg13g2_decap_8 FILLER_17_45 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_decap_8 FILLER_17_63 (.VDD(VDD),
+ sg13g2_decap_8 FILLER_17_52 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_decap_8 FILLER_17_7 (.VDD(VDD),
+ sg13g2_fill_1 FILLER_17_59 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_decap_8 FILLER_17_70 (.VDD(VDD),
+ sg13g2_decap_4 FILLER_17_7 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_decap_8 FILLER_17_77 (.VDD(VDD),
+ sg13g2_decap_8 FILLER_17_72 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_decap_8 FILLER_17_84 (.VDD(VDD),
+ sg13g2_decap_8 FILLER_17_79 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_decap_8 FILLER_17_91 (.VDD(VDD),
+ sg13g2_decap_8 FILLER_17_86 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_decap_8 FILLER_17_98 (.VDD(VDD),
+ sg13g2_decap_8 FILLER_17_93 (.VDD(VDD),
     .VSS(VSS));
  sg13g2_decap_8 FILLER_1_102 (.VDD(VDD),
     .VSS(VSS));
@@ -1112,23 +1041,29 @@ module counter_top (clock_i,
     .VSS(VSS));
  sg13g2_decap_8 FILLER_1_32 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_fill_2 FILLER_1_326 (.VDD(VDD),
+ sg13g2_decap_8 FILLER_1_326 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_fill_1 FILLER_1_328 (.VDD(VDD),
+ sg13g2_decap_8 FILLER_1_333 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_decap_8 FILLER_1_341 (.VDD(VDD),
+ sg13g2_decap_8 FILLER_1_340 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_fill_1 FILLER_1_348 (.VDD(VDD),
+ sg13g2_decap_8 FILLER_1_347 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_decap_8 FILLER_1_366 (.VDD(VDD),
+ sg13g2_decap_8 FILLER_1_354 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_fill_1 FILLER_1_373 (.VDD(VDD),
+ sg13g2_decap_8 FILLER_1_361 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_decap_4 FILLER_1_383 (.VDD(VDD),
+ sg13g2_decap_8 FILLER_1_368 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_fill_1 FILLER_1_387 (.VDD(VDD),
+ sg13g2_decap_8 FILLER_1_375 (.VDD(VDD),
+    .VSS(VSS));
+ sg13g2_decap_8 FILLER_1_382 (.VDD(VDD),
+    .VSS(VSS));
+ sg13g2_fill_2 FILLER_1_389 (.VDD(VDD),
     .VSS(VSS));
  sg13g2_decap_8 FILLER_1_39 (.VDD(VDD),
+    .VSS(VSS));
+ sg13g2_fill_1 FILLER_1_391 (.VDD(VDD),
     .VSS(VSS));
  sg13g2_decap_8 FILLER_1_4 (.VDD(VDD),
     .VSS(VSS));
@@ -1216,15 +1151,29 @@ module counter_top (clock_i,
     .VSS(VSS));
  sg13g2_decap_8 FILLER_2_308 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_decap_4 FILLER_2_315 (.VDD(VDD),
+ sg13g2_decap_8 FILLER_2_315 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_fill_2 FILLER_2_319 (.VDD(VDD),
+ sg13g2_decap_8 FILLER_2_322 (.VDD(VDD),
+    .VSS(VSS));
+ sg13g2_decap_8 FILLER_2_329 (.VDD(VDD),
+    .VSS(VSS));
+ sg13g2_decap_8 FILLER_2_336 (.VDD(VDD),
+    .VSS(VSS));
+ sg13g2_decap_8 FILLER_2_343 (.VDD(VDD),
     .VSS(VSS));
  sg13g2_decap_8 FILLER_2_35 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_decap_4 FILLER_2_357 (.VDD(VDD),
+ sg13g2_decap_8 FILLER_2_350 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_decap_4 FILLER_2_388 (.VDD(VDD),
+ sg13g2_decap_8 FILLER_2_357 (.VDD(VDD),
+    .VSS(VSS));
+ sg13g2_decap_8 FILLER_2_364 (.VDD(VDD),
+    .VSS(VSS));
+ sg13g2_decap_8 FILLER_2_371 (.VDD(VDD),
+    .VSS(VSS));
+ sg13g2_decap_8 FILLER_2_378 (.VDD(VDD),
+    .VSS(VSS));
+ sg13g2_decap_8 FILLER_2_385 (.VDD(VDD),
     .VSS(VSS));
  sg13g2_decap_8 FILLER_2_42 (.VDD(VDD),
     .VSS(VSS));
@@ -1316,25 +1265,27 @@ module counter_top (clock_i,
     .VSS(VSS));
  sg13g2_decap_8 FILLER_3_315 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_decap_4 FILLER_3_322 (.VDD(VDD),
+ sg13g2_decap_8 FILLER_3_322 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_decap_8 FILLER_3_330 (.VDD(VDD),
+ sg13g2_decap_8 FILLER_3_329 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_decap_8 FILLER_3_337 (.VDD(VDD),
+ sg13g2_decap_8 FILLER_3_336 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_decap_8 FILLER_3_344 (.VDD(VDD),
+ sg13g2_decap_8 FILLER_3_343 (.VDD(VDD),
     .VSS(VSS));
  sg13g2_decap_8 FILLER_3_35 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_fill_2 FILLER_3_351 (.VDD(VDD),
+ sg13g2_decap_8 FILLER_3_350 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_decap_8 FILLER_3_370 (.VDD(VDD),
+ sg13g2_decap_8 FILLER_3_357 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_decap_8 FILLER_3_377 (.VDD(VDD),
+ sg13g2_decap_8 FILLER_3_364 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_decap_8 FILLER_3_384 (.VDD(VDD),
+ sg13g2_decap_8 FILLER_3_371 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_fill_1 FILLER_3_391 (.VDD(VDD),
+ sg13g2_decap_8 FILLER_3_378 (.VDD(VDD),
+    .VSS(VSS));
+ sg13g2_decap_8 FILLER_3_385 (.VDD(VDD),
     .VSS(VSS));
  sg13g2_decap_8 FILLER_3_42 (.VDD(VDD),
     .VSS(VSS));
@@ -1436,15 +1387,17 @@ module counter_top (clock_i,
     .VSS(VSS));
  sg13g2_decap_8 FILLER_4_35 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_decap_4 FILLER_4_350 (.VDD(VDD),
+ sg13g2_decap_8 FILLER_4_350 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_fill_1 FILLER_4_354 (.VDD(VDD),
+ sg13g2_decap_8 FILLER_4_357 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_decap_8 FILLER_4_377 (.VDD(VDD),
+ sg13g2_decap_8 FILLER_4_364 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_decap_8 FILLER_4_384 (.VDD(VDD),
+ sg13g2_decap_8 FILLER_4_371 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_fill_1 FILLER_4_391 (.VDD(VDD),
+ sg13g2_decap_8 FILLER_4_378 (.VDD(VDD),
+    .VSS(VSS));
+ sg13g2_decap_8 FILLER_4_385 (.VDD(VDD),
     .VSS(VSS));
  sg13g2_decap_8 FILLER_4_42 (.VDD(VDD),
     .VSS(VSS));
@@ -1542,17 +1495,21 @@ module counter_top (clock_i,
     .VSS(VSS));
  sg13g2_decap_8 FILLER_5_336 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_decap_4 FILLER_5_343 (.VDD(VDD),
+ sg13g2_decap_8 FILLER_5_343 (.VDD(VDD),
     .VSS(VSS));
  sg13g2_decap_8 FILLER_5_35 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_decap_4 FILLER_5_355 (.VDD(VDD),
+ sg13g2_decap_8 FILLER_5_350 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_fill_1 FILLER_5_359 (.VDD(VDD),
+ sg13g2_decap_8 FILLER_5_357 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_fill_2 FILLER_5_385 (.VDD(VDD),
+ sg13g2_decap_8 FILLER_5_364 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_fill_1 FILLER_5_387 (.VDD(VDD),
+ sg13g2_decap_8 FILLER_5_371 (.VDD(VDD),
+    .VSS(VSS));
+ sg13g2_decap_8 FILLER_5_378 (.VDD(VDD),
+    .VSS(VSS));
+ sg13g2_decap_8 FILLER_5_385 (.VDD(VDD),
     .VSS(VSS));
  sg13g2_decap_8 FILLER_5_42 (.VDD(VDD),
     .VSS(VSS));
@@ -1648,13 +1605,23 @@ module counter_top (clock_i,
     .VSS(VSS));
  sg13g2_decap_8 FILLER_6_329 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_fill_2 FILLER_6_336 (.VDD(VDD),
+ sg13g2_decap_8 FILLER_6_336 (.VDD(VDD),
+    .VSS(VSS));
+ sg13g2_decap_8 FILLER_6_343 (.VDD(VDD),
     .VSS(VSS));
  sg13g2_decap_8 FILLER_6_35 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_decap_4 FILLER_6_378 (.VDD(VDD),
+ sg13g2_decap_8 FILLER_6_350 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_fill_1 FILLER_6_391 (.VDD(VDD),
+ sg13g2_decap_8 FILLER_6_357 (.VDD(VDD),
+    .VSS(VSS));
+ sg13g2_decap_8 FILLER_6_364 (.VDD(VDD),
+    .VSS(VSS));
+ sg13g2_decap_8 FILLER_6_371 (.VDD(VDD),
+    .VSS(VSS));
+ sg13g2_decap_8 FILLER_6_378 (.VDD(VDD),
+    .VSS(VSS));
+ sg13g2_decap_8 FILLER_6_385 (.VDD(VDD),
     .VSS(VSS));
  sg13g2_decap_8 FILLER_6_42 (.VDD(VDD),
     .VSS(VSS));
@@ -1752,15 +1719,21 @@ module counter_top (clock_i,
     .VSS(VSS));
  sg13g2_decap_8 FILLER_7_336 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_decap_4 FILLER_7_343 (.VDD(VDD),
+ sg13g2_decap_8 FILLER_7_343 (.VDD(VDD),
     .VSS(VSS));
  sg13g2_decap_8 FILLER_7_35 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_decap_8 FILLER_7_351 (.VDD(VDD),
+ sg13g2_decap_8 FILLER_7_350 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_fill_2 FILLER_7_389 (.VDD(VDD),
+ sg13g2_decap_8 FILLER_7_357 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_fill_1 FILLER_7_391 (.VDD(VDD),
+ sg13g2_decap_8 FILLER_7_364 (.VDD(VDD),
+    .VSS(VSS));
+ sg13g2_decap_8 FILLER_7_371 (.VDD(VDD),
+    .VSS(VSS));
+ sg13g2_decap_8 FILLER_7_378 (.VDD(VDD),
+    .VSS(VSS));
+ sg13g2_decap_8 FILLER_7_385 (.VDD(VDD),
     .VSS(VSS));
  sg13g2_decap_8 FILLER_7_42 (.VDD(VDD),
     .VSS(VSS));
@@ -1856,21 +1829,23 @@ module counter_top (clock_i,
     .VSS(VSS));
  sg13g2_decap_8 FILLER_8_329 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_fill_2 FILLER_8_336 (.VDD(VDD),
+ sg13g2_decap_8 FILLER_8_336 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_fill_1 FILLER_8_343 (.VDD(VDD),
-    .VSS(VSS));
- sg13g2_decap_8 FILLER_8_349 (.VDD(VDD),
+ sg13g2_decap_8 FILLER_8_343 (.VDD(VDD),
     .VSS(VSS));
  sg13g2_decap_8 FILLER_8_35 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_decap_4 FILLER_8_356 (.VDD(VDD),
+ sg13g2_decap_8 FILLER_8_350 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_fill_1 FILLER_8_360 (.VDD(VDD),
+ sg13g2_decap_8 FILLER_8_357 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_decap_8 FILLER_8_374 (.VDD(VDD),
+ sg13g2_decap_8 FILLER_8_364 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_decap_8 FILLER_8_381 (.VDD(VDD),
+ sg13g2_decap_8 FILLER_8_371 (.VDD(VDD),
+    .VSS(VSS));
+ sg13g2_decap_8 FILLER_8_378 (.VDD(VDD),
+    .VSS(VSS));
+ sg13g2_decap_8 FILLER_8_385 (.VDD(VDD),
     .VSS(VSS));
  sg13g2_decap_8 FILLER_8_42 (.VDD(VDD),
     .VSS(VSS));
@@ -1964,19 +1939,29 @@ module counter_top (clock_i,
     .VSS(VSS));
  sg13g2_decap_8 FILLER_9_32 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_decap_4 FILLER_9_326 (.VDD(VDD),
+ sg13g2_decap_8 FILLER_9_326 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_fill_1 FILLER_9_330 (.VDD(VDD),
+ sg13g2_decap_8 FILLER_9_333 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_fill_2 FILLER_9_340 (.VDD(VDD),
+ sg13g2_decap_8 FILLER_9_340 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_fill_1 FILLER_9_342 (.VDD(VDD),
+ sg13g2_decap_8 FILLER_9_347 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_decap_8 FILLER_9_381 (.VDD(VDD),
+ sg13g2_decap_8 FILLER_9_354 (.VDD(VDD),
     .VSS(VSS));
- sg13g2_decap_4 FILLER_9_388 (.VDD(VDD),
+ sg13g2_decap_8 FILLER_9_361 (.VDD(VDD),
+    .VSS(VSS));
+ sg13g2_decap_8 FILLER_9_368 (.VDD(VDD),
+    .VSS(VSS));
+ sg13g2_decap_8 FILLER_9_375 (.VDD(VDD),
+    .VSS(VSS));
+ sg13g2_decap_8 FILLER_9_382 (.VDD(VDD),
+    .VSS(VSS));
+ sg13g2_fill_2 FILLER_9_389 (.VDD(VDD),
     .VSS(VSS));
  sg13g2_decap_8 FILLER_9_39 (.VDD(VDD),
+    .VSS(VSS));
+ sg13g2_fill_1 FILLER_9_391 (.VDD(VDD),
     .VSS(VSS));
  sg13g2_decap_8 FILLER_9_4 (.VDD(VDD),
     .VSS(VSS));
@@ -2006,20 +1991,20 @@ module counter_top (clock_i,
     .A(_08_),
     .VDD(VDD),
     .VSS(VSS));
- sg13g2_nand4_1 _40_ (.B(net24),
+ sg13g2_nand4_1 _40_ (.B(net21),
     .C(net30),
     .A(net18),
     .Y(_10_),
     .VDD(VDD),
     .VSS(VSS),
-    .D(net5));
- sg13g2_o21ai_1 _41_ (.B1(net21),
+    .D(net32));
+ sg13g2_o21ai_1 _41_ (.B1(net24),
     .VDD(VDD),
     .Y(_11_),
     .VSS(VSS),
     .A1(_09_),
     .A2(_10_));
- sg13g2_or3_1 _42_ (.A(net21),
+ sg13g2_or3_1 _42_ (.A(net24),
     .B(_09_),
     .C(_10_),
     .X(_12_),
@@ -2031,23 +2016,23 @@ module counter_top (clock_i,
     .VSS(VSS));
  sg13g2_a21oi_1 _44_ (.VSS(VSS),
     .VDD(VDD),
-    .A1(net22),
+    .A1(net25),
     .A2(_12_),
     .Y(_00_),
     .B1(_13_));
- sg13g2_and2_1 _45_ (.A(net32),
+ sg13g2_and2_1 _45_ (.A(net33),
     .B(net2),
     .X(_14_),
     .VDD(VDD),
     .VSS(VSS));
- sg13g2_nor2_1 _46_ (.A(net32),
+ sg13g2_nor2_1 _46_ (.A(net33),
     .B(_13_),
     .Y(_15_),
     .VDD(VDD),
     .VSS(VSS));
  sg13g2_inv_1 _47_ (.VDD(VDD),
     .Y(_16_),
-    .A(net21),
+    .A(net24),
     .VSS(VSS));
  sg13g2_nor3_2 _48_ (.A(_16_),
     .B(_09_),
@@ -2087,7 +2072,7 @@ module counter_top (clock_i,
     .VDD(VDD),
     .VSS(VSS));
  sg13g2_xor2_1 _55_ (.B(_09_),
-    .A(net34),
+    .A(net32),
     .X(_21_),
     .VDD(VDD),
     .VSS(VSS));
@@ -2118,13 +2103,13 @@ module counter_top (clock_i,
     .B(net5),
     .VDD(VDD),
     .VSS(VSS));
- sg13g2_o21ai_1 _61_ (.B1(net24),
+ sg13g2_o21ai_1 _61_ (.B1(net21),
     .VDD(VDD),
     .Y(_25_),
     .VSS(VSS),
     .A1(_09_),
     .A2(_24_));
- sg13g2_or3_1 _62_ (.A(net24),
+ sg13g2_or3_1 _62_ (.A(net21),
     .B(_09_),
     .C(_24_),
     .X(_26_),
@@ -2132,7 +2117,7 @@ module counter_top (clock_i,
     .VSS(VSS));
  sg13g2_a21oi_1 _63_ (.VSS(VSS),
     .VDD(VDD),
-    .A1(net25),
+    .A1(net22),
     .A2(_26_),
     .Y(_06_),
     .B1(_13_));
@@ -2199,7 +2184,7 @@ module counter_top (clock_i,
  sg13g2_dfrbpq_1 _72_ (.RESET_B(net16),
     .VSS(VSS),
     .VDD(VDD),
-    .D(net26),
+    .D(net23),
     .Q(net7),
     .CLK(clknet_1_1__leaf_clock_i));
  sg13g2_tiehi _72__17 (.VDD(VDD),
@@ -2217,7 +2202,7 @@ module counter_top (clock_i,
  sg13g2_dfrbpq_1 _74_ (.RESET_B(net14),
     .VSS(VSS),
     .VDD(VDD),
-    .D(net23),
+    .D(net26),
     .Q(net9),
     .CLK(clknet_1_1__leaf_clock_i));
  sg13g2_tiehi _74__15 (.VDD(VDD),
@@ -2226,7 +2211,7 @@ module counter_top (clock_i,
  sg13g2_dfrbpq_1 _75_ (.RESET_B(net13),
     .VSS(VSS),
     .VDD(VDD),
-    .D(net33),
+    .D(_01_),
     .Q(net10),
     .CLK(clknet_1_1__leaf_clock_i));
  sg13g2_tiehi _75__14 (.VDD(VDD),
@@ -2256,27 +2241,27 @@ module counter_top (clock_i,
     .VDD(VDD),
     .VSS(VSS),
     .X(net20));
- sg13g2_dlygate4sd3_1 hold22 (.A(net9),
+ sg13g2_dlygate4sd3_1 hold22 (.A(net7),
     .VDD(VDD),
     .VSS(VSS),
     .X(net21));
- sg13g2_dlygate4sd3_1 hold23 (.A(_11_),
+ sg13g2_dlygate4sd3_1 hold23 (.A(_25_),
     .VDD(VDD),
     .VSS(VSS),
     .X(net22));
- sg13g2_dlygate4sd3_1 hold24 (.A(_00_),
+ sg13g2_dlygate4sd3_1 hold24 (.A(_06_),
     .VDD(VDD),
     .VSS(VSS),
     .X(net23));
- sg13g2_dlygate4sd3_1 hold25 (.A(net7),
+ sg13g2_dlygate4sd3_1 hold25 (.A(net9),
     .VDD(VDD),
     .VSS(VSS),
     .X(net24));
- sg13g2_dlygate4sd3_1 hold26 (.A(_25_),
+ sg13g2_dlygate4sd3_1 hold26 (.A(_11_),
     .VDD(VDD),
     .VSS(VSS),
     .X(net25));
- sg13g2_dlygate4sd3_1 hold27 (.A(_06_),
+ sg13g2_dlygate4sd3_1 hold27 (.A(_00_),
     .VDD(VDD),
     .VSS(VSS),
     .X(net26));
@@ -2300,18 +2285,14 @@ module counter_top (clock_i,
     .VDD(VDD),
     .VSS(VSS),
     .X(net31));
- sg13g2_dlygate4sd3_1 hold33 (.A(net10),
+ sg13g2_dlygate4sd3_1 hold33 (.A(net5),
     .VDD(VDD),
     .VSS(VSS),
     .X(net32));
- sg13g2_dlygate4sd3_1 hold34 (.A(_01_),
+ sg13g2_dlygate4sd3_1 hold34 (.A(net10),
     .VDD(VDD),
     .VSS(VSS),
     .X(net33));
- sg13g2_dlygate4sd3_1 hold35 (.A(net5),
-    .VDD(VDD),
-    .VSS(VSS),
-    .X(net34));
  sg13g2_buf_1 input1 (.A(enable_i),
     .X(net1),
     .VDD(VDD),

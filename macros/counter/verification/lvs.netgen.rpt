@@ -11,32 +11,6 @@ VSS                                        |VSS
 Cell pin lists are equivalent.
 Device classes sg13g2_decap_8 and sg13g2_decap_8 are equivalent.
 
-Cell sg13g2_fill_1 (0) disconnected node: VDD
-Cell sg13g2_fill_1 (0) disconnected node: VSS
-Cell sg13g2_fill_1 (1) disconnected node: VDD
-Cell sg13g2_fill_1 (1) disconnected node: VSS
-
-Subcircuit pins:
-Circuit 1: sg13g2_fill_1                   |Circuit 2: sg13g2_fill_1                   
--------------------------------------------|-------------------------------------------
-VDD                                        |VDD                                        
-VSS                                        |VSS                                        
----------------------------------------------------------------------------------------
-Cell pin lists are equivalent.
-Device classes sg13g2_fill_1 and sg13g2_fill_1 are equivalent.
-
-Cell sg13g2_decap_4 (0) disconnected node: VDD
-Cell sg13g2_decap_4 (0) disconnected node: VSS
-
-Subcircuit pins:
-Circuit 1: sg13g2_decap_4                  |Circuit 2: sg13g2_decap_4                  
--------------------------------------------|-------------------------------------------
-VDD                                        |VDD                                        
-VSS                                        |VSS                                        
----------------------------------------------------------------------------------------
-Cell pin lists are equivalent.
-Device classes sg13g2_decap_4 and sg13g2_decap_4 are equivalent.
-
 Cell sg13g2_or3_1 (0) disconnected node: X
 Cell sg13g2_or3_1 (0) disconnected node: A
 Cell sg13g2_or3_1 (0) disconnected node: B
@@ -109,6 +83,20 @@ VSS                                        |VSS
 Cell pin lists are equivalent.
 Device classes sg13g2_buf_1 and sg13g2_buf_1 are equivalent.
 
+Cell sg13g2_fill_1 (0) disconnected node: VDD
+Cell sg13g2_fill_1 (0) disconnected node: VSS
+Cell sg13g2_fill_1 (1) disconnected node: VDD
+Cell sg13g2_fill_1 (1) disconnected node: VSS
+
+Subcircuit pins:
+Circuit 1: sg13g2_fill_1                   |Circuit 2: sg13g2_fill_1                   
+-------------------------------------------|-------------------------------------------
+VDD                                        |VDD                                        
+VSS                                        |VSS                                        
+---------------------------------------------------------------------------------------
+Cell pin lists are equivalent.
+Device classes sg13g2_fill_1 and sg13g2_fill_1 are equivalent.
+
 Cell sg13g2_tiehi (0) disconnected node: L_HI
 Cell sg13g2_tiehi (0) disconnected node: VDD
 Cell sg13g2_tiehi (0) disconnected node: VSS
@@ -163,20 +151,6 @@ VSS                                        |VSS
 Cell pin lists are equivalent.
 Device classes sg13g2_nor3_2 and sg13g2_nor3_2 are equivalent.
 
-Cell sg13g2_fill_2 (0) disconnected node: VDD
-Cell sg13g2_fill_2 (0) disconnected node: VSS
-Cell sg13g2_fill_2 (1) disconnected node: VDD
-Cell sg13g2_fill_2 (1) disconnected node: VSS
-
-Subcircuit pins:
-Circuit 1: sg13g2_fill_2                   |Circuit 2: sg13g2_fill_2                   
--------------------------------------------|-------------------------------------------
-VDD                                        |VDD                                        
-VSS                                        |VSS                                        
----------------------------------------------------------------------------------------
-Cell pin lists are equivalent.
-Device classes sg13g2_fill_2 and sg13g2_fill_2 are equivalent.
-
 Cell sg13g2_nand3_1 (0) disconnected node: Y
 Cell sg13g2_nand3_1 (0) disconnected node: A
 Cell sg13g2_nand3_1 (0) disconnected node: B
@@ -197,6 +171,20 @@ VSS                                        |VSS
 Cell pin lists are equivalent.
 Device classes sg13g2_nand3_1 and sg13g2_nand3_1 are equivalent.
 
+Cell sg13g2_fill_2 (0) disconnected node: VDD
+Cell sg13g2_fill_2 (0) disconnected node: VSS
+Cell sg13g2_fill_2 (1) disconnected node: VDD
+Cell sg13g2_fill_2 (1) disconnected node: VSS
+
+Subcircuit pins:
+Circuit 1: sg13g2_fill_2                   |Circuit 2: sg13g2_fill_2                   
+-------------------------------------------|-------------------------------------------
+VDD                                        |VDD                                        
+VSS                                        |VSS                                        
+---------------------------------------------------------------------------------------
+Cell pin lists are equivalent.
+Device classes sg13g2_fill_2 and sg13g2_fill_2 are equivalent.
+
 Cell sg13g2_inv_1 (0) disconnected node: Y
 Cell sg13g2_inv_1 (0) disconnected node: A
 Cell sg13g2_inv_1 (0) disconnected node: VDD
@@ -212,6 +200,18 @@ VSS                                        |VSS
 ---------------------------------------------------------------------------------------
 Cell pin lists are equivalent.
 Device classes sg13g2_inv_1 and sg13g2_inv_1 are equivalent.
+
+Cell sg13g2_decap_4 (0) disconnected node: VDD
+Cell sg13g2_decap_4 (0) disconnected node: VSS
+
+Subcircuit pins:
+Circuit 1: sg13g2_decap_4                  |Circuit 2: sg13g2_decap_4                  
+-------------------------------------------|-------------------------------------------
+VDD                                        |VDD                                        
+VSS                                        |VSS                                        
+---------------------------------------------------------------------------------------
+Cell pin lists are equivalent.
+Device classes sg13g2_decap_4 and sg13g2_decap_4 are equivalent.
 
 Cell sg13g2_a21oi_1 (0) disconnected node: Y
 Cell sg13g2_a21oi_1 (0) disconnected node: A1
@@ -397,24 +397,24 @@ VSS                                        |VSS
 Cell pin lists are equivalent.
 Device classes sg13g2_xnor2_1 and sg13g2_xnor2_1 are equivalent.
 
-Class counter_top (0):  Merged 954 parallel devices.
-Class counter_top (1):  Merged 954 parallel devices.
+Class counter_top (0):  Merged 947 parallel devices.
+Class counter_top (1):  Merged 947 parallel devices.
 Subcircuit summary:
 Circuit 1: counter_top                     |Circuit 2: counter_top                     
 -------------------------------------------|-------------------------------------------
-sg13g2_decap_8 (886->1)                    |sg13g2_decap_8 (886->1)                    
-sg13g2_fill_1 (27->1)                      |sg13g2_fill_1 (27->1)                      
-sg13g2_decap_4 (25->1)                     |sg13g2_decap_4 (25->1)                     
+sg13g2_decap_8 (894->1)                    |sg13g2_decap_8 (894->1)                    
 sg13g2_or3_1 (3)                           |sg13g2_or3_1 (3)                           
 sg13g2_mux2_1 (1)                          |sg13g2_mux2_1 (1)                          
-sg13g2_dlygate4sd3_1 (17)                  |sg13g2_dlygate4sd3_1 (17)                  
+sg13g2_dlygate4sd3_1 (16)                  |sg13g2_dlygate4sd3_1 (16)                  
 sg13g2_buf_1 (10)                          |sg13g2_buf_1 (10)                          
+sg13g2_fill_1 (24->1)                      |sg13g2_fill_1 (24->1)                      
 sg13g2_tiehi (8)                           |sg13g2_tiehi (8)                           
 sg13g2_o21ai_1 (3)                         |sg13g2_o21ai_1 (3)                         
 sg13g2_nor3_2 (1)                          |sg13g2_nor3_2 (1)                          
-sg13g2_fill_2 (20->1)                      |sg13g2_fill_2 (20->1)                      
 sg13g2_nand3_1 (2)                         |sg13g2_nand3_1 (2)                         
+sg13g2_fill_2 (18->1)                      |sg13g2_fill_2 (18->1)                      
 sg13g2_inv_1 (2)                           |sg13g2_inv_1 (2)                           
+sg13g2_decap_4 (15->1)                     |sg13g2_decap_4 (15->1)                     
 sg13g2_a21oi_1 (3)                         |sg13g2_a21oi_1 (3)                         
 sg13g2_nor2_1 (5)                          |sg13g2_nor2_1 (5)                          
 sg13g2_and2_1 (1)                          |sg13g2_and2_1 (1)                          
@@ -425,8 +425,8 @@ sg13g2_dfrbpq_1 (8)                        |sg13g2_dfrbpq_1 (8)
 sg13g2_xor2_1 (3)                          |sg13g2_xor2_1 (3)                          
 sg13g2_buf_4 (1)                           |sg13g2_buf_4 (1)                           
 sg13g2_xnor2_1 (1)                         |sg13g2_xnor2_1 (1)                         
-Number of devices: 80                      |Number of devices: 80                      
-Number of nets: 81                         |Number of nets: 81                         
+Number of devices: 79                      |Number of devices: 79                      
+Number of nets: 80                         |Number of nets: 80                         
 ---------------------------------------------------------------------------------------
 Netlists match uniquely.
 
