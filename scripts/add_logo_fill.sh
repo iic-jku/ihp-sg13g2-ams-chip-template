@@ -20,9 +20,33 @@ GDS_OUT="${GDS_DIR}/${DESIGN}_logo.gds.gz"
 GDS_OUT_FILL="${GDS_DIR}/${DESIGN}_logo_fill.gds.gz"
 LOGO_IMG="${IMG_DIR}/chip_logo_mono.png"
 
+# ─── Logo sizing guide ────────────────────────────────────────────────────────
+# meerkat.py maps each image pixel to one GDS pixel of size PIXSZ = 2 µm.
+# The logo image must therefore satisfy:
+#
+#   img_width  [px] = logo_width  [µm] / 2   ≤  (die_width  - margin_left)   / 2
+#   img_height [px] = logo_height [µm] / 2   ≤  (die_height - margin_bottom) / 2
+#
+# For this chip (die = 2000×2000 µm, -m left=250, bottom=475):
+#
+#   max img_width  = (2000 - 250) / 2 = 875 px   → logo spans up to x = 2000 µm
+#   max img_height = (2000 - 475) / 2 = 762 px   → logo spans up to y = 2000 µm
+#
+# Current logo (chip_logo_mono.png): 750×550 px → 1500×1100 µm on-chip
+#   placed at bottom-left corner (250, 475) µm, top-right corner (1750, 1575) µm
+# ─────────────────────────────────────────────────────────────────────────────
+
 echo "[INFO] Adding logo and fill to ${GDS_IN}"
 
 # Export top metal layer TM2
+# meerkat_interface.py arguments:
+#   -i  Input GDS (vanilla chip without logo)
+#   -m  Output top-metal-only GDS used as mask for logo placement
+#   -g  Output logo GDS (will be written by meerkat.py)
+#   -o  Merged output GDS (chip + logo)
+#   -w  Work directory for the generated meerkat_design.py interface file
+#   -l  Logo layer number (TM2 = 134)
+#   -n  Name of the new merged top-level cell in the output GDS
 python3 "${SCRIPTS_DIR}/meerkat_interface.py" \
     -i "$GDS_IN" \
     -m "$GDS_TM2" \
@@ -30,10 +54,18 @@ python3 "${SCRIPTS_DIR}/meerkat_interface.py" \
     -o "$GDS_OUT" \
     -w "$PWD" \
     -l "$TOP_METAL_LAYER" \
+    -n "${DESIGN}_logo_fill" \
     > /dev/null
 klayout -zz -rm "${SCRIPTS_DIR}/export_top_metal.py"
 
 # Transform logo to GDS
+# meerkat.py arguments:
+#   -m  Logo placement margins from bottom-left corner in um: left,bottom
+#   -i  Input logo image (monochrome PNG, 1-bit b/w)
+#   -g  Top-metal GDS used as mask (existing metal is excluded from logo)
+#   -l  Target layer number for the logo geometry
+#   -n  Name of the logo cell written into the output GDS
+#   -o  Output logo GDS file
 python3 "${SCRIPTS_DIR}/meerkat.py" \
     -m 250,475 \
     -i "$LOGO_IMG" \
