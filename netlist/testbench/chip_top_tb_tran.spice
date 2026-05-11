@@ -1,0 +1,232 @@
+** sch_path: /foss/designs/ihp-sg13g2-ams-chip-template/testbenches/xschem/chip_top_tb_tran.sch
+**.subckt chip_top_tb_tran
+VDD VDD GND {VDD}
+vclk clock GND pulse(0 {IOVDD} 0 100p 100p {0.5/fclk} {1/fclk})
+vrst reset_n GND pulse({IOVDD} 0 {2/fclk} 100p 100p {2/fclk} 1 1)
+VIO VIO GND {IOVDD}
+x1 counter1_value5_inv1_din2 counter1_value4_inv1_din1 counter1_value7_inv1_din4 counter1_value6_inv1_din3 clock reset_n enable
++ inv2_vout2 inv2_vout1 inv2_vin2 inv2_vin1 counter1_value0 counter1_value1 counter1_value2 counter1_value3 GND VIO VDD sram_0_out
++ counter2_value0 counter2_value1 counter2_value2 counter2_value3 counter2_value4 counter2_value5 counter2_value6 counter2_value7 inv1_dout1
++ inv1_dout2 inv1_dout3 inv1_dout4 chip_top
+Venable enable GND pulse({IOVDD} 0 {200/fclk} 100p 100p {400/fclk} 1 1)
+vsine1 inv2_vin1 GND sin({Vcm} 10m 100k)
+vsine2 inv2_vin2 GND sin({Vcm} 10m 400k)
+**** begin user architecture code
+
+
+*.include ../../verification/pex/chip_top_pex.spice
+.include ../../macros/counter/netlist/xspice/counter_top.xspice
+.param IOVDD=3.3
+.param VDD=1.5
+.param Vcm=0.75
+.param temp=27
+.param Cload=10p
+.param Rload=1k
+.param fclk=50e6
+.csparam fclk=fclk
+.options klu method=gear reltol=5e-3 abstol=1e-11 gmin=1e-11 rshunt=1e11
+.control
+
+set num_threads=32
+
+* save all
+
+* User Constants
+let tstart = 0
+let tstop = 20u
+let tstep = 100n
+
+* Transient Operating Point Analysis
+*optran 0 0 0 $&tstep $&tstart 0
+op
+remzerovec
+write chip_top_tb_tran.raw
+set appendwrite
+
+* Transient Analysis
+tran $&tstep $&tstop $&tstart
+write chip_top_tb_tran.raw
+
+* Plotting
+plot clock reset_n enable sram_0_vout
+plot inv2_vin1 inv2_vout1
+plot inv1_dout1 inv1_dout2 inv1_dout3 inv1_dout4
+plot counter2_value0 counter2_value1 counter2_value2 counter2_value3 counter2_value4 counter2_value5 counter2_value6 counter2_value7
+plot counter1_value4_inv1_din1 counter1_value5_inv1_din2
+
+* Write Data
+unset appendwrite
+set wr_vecnames
+set wr_singlescale
+wrdata ../../scripts/plot_simulations/data/chip_top_tb_tran.txt
++ v(clock) v(reset_n) v(enable) v(sram_0_vout) v(inv2_vin1) v(inv2_vout1)
++ v(inv1_dout1) v(inv1_dout2) v(inv1_dout3) v(inv1_dout4)
++ v(counter2_value0) v(counter2_value1) v(counter2_value2) v(counter2_value3)
++ v(counter2_value4) v(counter2_value5) v(counter2_value6) v(counter2_value7)
++ v(counter1_value4_inv1_din1) v(counter1_value5_inv1_din2)
+
+*quit
+*rusage all
+.endc
+
+
+
+.lib cornerMOSlv.lib mos_tt
+.lib cornerMOShv.lib mos_tt
+.lib cornerHBT.lib hbt_typ
+.lib cornerRES.lib res_typ
+.lib cornerCAP.lib cap_typ
+.lib cornerDIO.lib dio_tt
+
+
+
+.include /foss/pdks/ihp-sg13g2/libs.ref/sg13g2_io/spice/sg13g2_io.spi
+
+
+**** end user architecture code
+**.ends
+
+* expanding   symbol:  chip_top.sym # of pins=32
+** sym_path: /foss/designs/ihp-sg13g2-ams-chip-template/schematic/xschem/chip_top.sym
+** sch_path: /foss/designs/ihp-sg13g2-ams-chip-template/schematic/xschem/chip_top.sch
+.subckt chip_top bidir_PAD[1] bidir_PAD[0] bidir_PAD[3] bidir_PAD[2] clk_PAD rst_n_PAD input_PAD[0] analog_PAD[3] analog_PAD[2]
++ analog_PAD[1] analog_PAD[0] output_PAD[0] output_PAD[1] output_PAD[2] output_PAD[3] VSS IOVDD VDD output_PAD[16] output_PAD[4] output_PAD[5]
++ output_PAD[6] output_PAD[7] output_PAD[8] output_PAD[9] output_PAD[10] output_PAD[11] output_PAD[12] output_PAD[13] output_PAD[14]
++ output_PAD[15]
+*.ipin clk_PAD
+*.ipin rst_n_PAD
+*.ipin input_PAD[0]
+*.opin output_PAD[16]
+*.iopin analog_PAD[2]
+*.iopin analog_PAD[0]
+*.iopin IOVDD
+*.iopin VSS
+*.iopin VDD
+*.iopin VSS
+*.iopin bidir_PAD[0]
+*.opin output_PAD[4]
+*.opin output_PAD[5]
+*.opin output_PAD[6]
+*.opin output_PAD[7]
+*.opin output_PAD[8]
+*.opin output_PAD[9]
+*.opin output_PAD[10]
+*.opin output_PAD[11]
+*.iopin analog_PAD[3]
+*.iopin analog_PAD[1]
+*.opin output_PAD[12]
+*.opin output_PAD[13]
+*.opin output_PAD[14]
+*.opin output_PAD[15]
+*.opin output_PAD[3]
+*.opin output_PAD[2]
+*.opin output_PAD[1]
+*.opin output_PAD[0]
+*.iopin bidir_PAD[1]
+*.iopin bidir_PAD[2]
+*.iopin bidir_PAD[3]
+x1 VSS VDD VSS IOVDD net5 clk_PAD sg13g2_IOPadIn
+x2 VSS VDD VSS IOVDD net3 rst_n_PAD sg13g2_IOPadIn
+x3 VSS VDD VSS IOVDD net4 input_PAD[0] sg13g2_IOPadIn
+x4 VSS VDD VSS IOVDD net16 output_PAD[16] sg13g2_IOPadOut30mA
+x7 VSS VDD VSS IOVDD sg13g2_IOPadIOVdd
+x8 VSS VDD VSS IOVDD sg13g2_IOPadIOVss
+x9 VSS VDD VSS IOVDD sg13g2_IOPadVdd
+x10 VSS VDD VSS IOVDD sg13g2_IOPadVss
+x29 VSS VDD VSS IOVDD analog_PAD[0] net14 sg13g2_IOPadAnalog
+x35 VSS VDD VSS IOVDD analog_PAD[2] net1 sg13g2_IOPadAnalog
+x11 VSS VDD VSS IOVDD net6 counter1_value4 net4 bidir_PAD[0] sg13g2_IOPadInOut30mA
+* noconn analog_PAD[0]
+XR1 VSS sub! ptap1 R=262.8473 w=0.78e-6 l=0.78e-6
+x5 VSS VDD VSS IOVDD counter2_value0 output_PAD[4] sg13g2_IOPadOut30mA
+x6 VSS VDD VSS IOVDD counter2_value1 output_PAD[5] sg13g2_IOPadOut30mA
+x12 VSS VDD VSS IOVDD counter2_value2 output_PAD[6] sg13g2_IOPadOut30mA
+x13 VSS VDD VSS IOVDD counter2_value3 output_PAD[7] sg13g2_IOPadOut30mA
+x14 VSS VDD VSS IOVDD counter2_value4 output_PAD[8] sg13g2_IOPadOut30mA
+x15 VSS VDD VSS IOVDD counter2_value5 output_PAD[9] sg13g2_IOPadOut30mA
+x16 VSS VDD VSS IOVDD counter2_value6 output_PAD[10] sg13g2_IOPadOut30mA
+x17 VSS VDD VSS IOVDD counter2_value7 output_PAD[11] sg13g2_IOPadOut30mA
+x18 VSS VDD VSS IOVDD analog_PAD[1] net15 sg13g2_IOPadAnalog
+x19 VSS VDD VSS IOVDD analog_PAD[3] net2 sg13g2_IOPadAnalog
+* noconn analog_PAD[1]
+x20 VSS VDD VSS IOVDD net13 output_PAD[12] sg13g2_IOPadOut30mA
+x21 VSS VDD VSS IOVDD net12 output_PAD[13] sg13g2_IOPadOut30mA
+x22 VSS VDD VSS IOVDD net11 output_PAD[14] sg13g2_IOPadOut30mA
+x23 VSS VDD VSS IOVDD net10 output_PAD[15] sg13g2_IOPadOut30mA
+x24 VSS VDD VSS IOVDD counter1_value3 output_PAD[3] sg13g2_IOPadOut30mA
+x25 VSS VDD VSS IOVDD counter1_value2 output_PAD[2] sg13g2_IOPadOut30mA
+x26 VSS VDD VSS IOVDD counter1_value1 output_PAD[1] sg13g2_IOPadOut30mA
+x27 VSS VDD VSS IOVDD counter1_value0 output_PAD[0] sg13g2_IOPadOut30mA
+x28 VSS VDD VSS IOVDD net7 counter1_value5 net4 bidir_PAD[1] sg13g2_IOPadInOut30mA
+x30 VSS VDD VSS IOVDD net8 counter1_value6 net4 bidir_PAD[2] sg13g2_IOPadInOut30mA
+x31 VSS VDD VSS IOVDD net9 counter1_value7 net4 bidir_PAD[3] sg13g2_IOPadInOut30mA
+* noconn #net1
+* noconn #net2
+x32 VDD VSS net5 net3 net4 counter1_value0 counter1_value1 counter1_value2 counter1_value3 counter1_value4 counter1_value5
++ counter1_value6 counter1_value7 counter_top
+x33 VDD VSS net5 net3 net4 counter2_value0 counter2_value1 counter2_value2 counter2_value3 counter2_value4 counter2_value5
++ counter2_value6 counter2_value7 counter_top
+x34 VDD net9 net10 VSS net8 net11 net7 net12 net13 net6 inverter_top
+x36 VDD VSS VSS VSS VSS VSS net15 analog_PAD[3] analog_PAD[2] net14 inverter_top
+* tap: counter1_value[0..7] --> counter1_value0
+* tap: counter1_value[0..7] --> counter1_value1
+* tap: counter1_value[0..7] --> counter1_value2
+* tap: counter1_value[0..7] --> counter1_value3
+* tap: counter1_value[0..7] --> counter1_value4
+* tap: counter1_value[0..7] --> counter1_value5
+* tap: counter1_value[0..7] --> counter1_value6
+* tap: counter1_value[0..7] --> counter1_value7
+* tap: counter2_value[0..7] --> counter2_value0
+* tap: counter2_value[0..7] --> counter2_value1
+* tap: counter2_value[0..7] --> counter2_value2
+* tap: counter2_value[0..7] --> counter2_value3
+* tap: counter2_value[0..7] --> counter2_value4
+* tap: counter2_value[0..7] --> counter2_value5
+* tap: counter2_value[0..7] --> counter2_value6
+* tap: counter2_value[0..7] --> counter2_value7
+R36 net16 VSS 100k
+.ends
+
+
+* expanding   symbol:  inverter_top.sym # of pins=10
+** sym_path: /foss/designs/ihp-sg13g2-ams-chip-template/macros/inverter/schematic/xschem/inverter_top.sym
+** sch_path: /foss/designs/ihp-sg13g2-ams-chip-template/macros/inverter/schematic/xschem/inverter_top.sch
+.subckt inverter_top VDD vin4 vout4 VSS vin3 vout3 vin2 vout2 vout1 vin1
+*.ipin vin4
+*.iopin VDD
+*.iopin VSS
+*.iopin vout4
+*.ipin vin3
+*.ipin vin2
+*.ipin vin1
+*.iopin vout3
+*.iopin vout2
+*.iopin vout1
+x1 nwell1 psub VDD vin1 vout1 VSS inverter
+x2 nwell1 psub VDD vin2 vout2 VSS inverter
+x3 nwell2 psub VDD vin3 vout3 VSS inverter
+x4 nwell2 psub VDD vin4 vout4 VSS inverter
+.ends
+
+
+* expanding   symbol:  inverter.sym # of pins=6
+** sym_path: /foss/designs/ihp-sg13g2-ams-chip-template/macros/inverter/schematic/xschem/inverter.sym
+** sch_path: /foss/designs/ihp-sg13g2-ams-chip-template/macros/inverter/schematic/xschem/inverter.sch
+.subckt inverter nwell psub VDD vin vout VSS
+*.ipin vin
+*.iopin VDD
+*.iopin VSS
+*.iopin vout
+*.iopin nwell
+*.iopin psub
+XMdummy1 VSS VSS VSS psub sg13_lv_nmos w=2.0u l=1.0u ng=2
+XMdummy2 VDD VDD VDD nwell sg13_lv_pmos w=12.0u l=1.0u ng=2
+XM1 vout vin VSS psub sg13_lv_nmos w=20.0u l=1.0u ng=20
+XM2 vout vin VDD nwell sg13_lv_pmos w=120.0u l=1.0u ng=20
+XR1 VDD nwell ntap1 R=2.842 w=32.68e-6 l=8.02e-6
+XR2 VSS psub ptap1 R=3.214 w=32.68e-6 l=3.38e-6
+.ends
+
+.GLOBAL GND
+.GLOBAL VDD
+.end
