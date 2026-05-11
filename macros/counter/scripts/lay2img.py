@@ -61,6 +61,7 @@ def main(input_layout, output_image, width, height, oversampling, pdk_root, pdk)
         (126, 0),    # TopMetal1
         (133, 0),    # TopVia2
         (134, 0),    # TopMetal2
+        # (134, 22), # TopMetal2 Filler
         (9, 0),      # Passiv
     ]
     for lyp in lv.each_layer():
