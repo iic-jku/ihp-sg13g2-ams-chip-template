@@ -19,15 +19,15 @@ Top-level RTL:
 | Parameter           | Value                                                                                                            |
 | ------------------- | ---------------------------------------------------------------------------------------------------------------- |
 | Technology          | IHP SG13G2 (130 nm CMOS, Open-PDK)                                                                               |
-| Die area            | 2.0 mm × 2.0 mm (4 mm²) — `DIE_AREA: [0, 0, 2000, 2000]`                                                          |
-| Core area           | 1.27 mm × 1.27 mm — `CORE_AREA: [365, 365, 1635, 1635]`                                                           |
+| Die area            | 1.6 mm × 1.6 mm (2.56 mm²) — `DIE_AREA: [0, 0, 1600, 1600]`                                                       |
+| Core area           | 0.87 mm × 0.87 mm — `CORE_AREA: [365, 365, 1235, 1235]`                                                           |
 | Clock frequency     | ≈ 50 MHz (`CLOCK_PERIOD: 20` ns in `flow/librelane/config.yaml`)                                                  |
 | Core supply         | 1.5 V                                                                                                            |
 | I/O supply          | 3.3 V                                                                                                            |
 | Total bondpads      | 32 (8 per side) — see [pinout.md](pinout.md)                                                                     |
 | Packaging           | QFN-48 (target package; spare pins available for additional ground bonding)                                       |
 | Temperature range   | -40 °C to +125 °C                                                                                                |
-| STA corners         | nom_fast_1p32V_m40C · nom_fast_1p65V_m40C · nom_slow_1p35V_125C · nom_typ_1p20V_25C · nom_typ_1p50V_25C           |
+| STA corners         | nom_fast_1p32V_m40C · nom_fast_1p65V_m40C · nom_slow_1p08V_125C · nom_slow_1p35V_125C · nom_typ_1p20V_25C · nom_typ_1p50V_25C |
 | Default STA corner  | `nom_typ_1p50V_25C`                                                                                              |
 
 
@@ -51,9 +51,9 @@ Full per-pad breakdown including pad-cell instance names is in
 
 | Macro     | Cell name                            | Count | Location                       | Role                                                                                                           |
 | --------- | ------------------------------------ | ----- | ------------------------------ | -------------------------------------------------------------------------------------------------------------- |
-| Counter   | `counter_top`                        | 2     | West, stacked above the SRAM    | `counter1` drives north pads (LSB + bidir MSB); `counter2` drives all south pads. 8-bit synchronous up-counter. |
-| Inverter  | `inverter_top`                       | 2     | East, stacked                  | `inverter1` used as 4-channel CMOS digital inverter; `inverter2` used as 2-channel analog inverter.            |
-| SRAM      | `RM_IHPSG13_1P_1024x32_c2_bm_bist`   | 1     | Bottom-left corner of the core | 1024 × 32-bit single-port SRAM (with bit-mask + BIST). Read-only sweep clocked from the main clock.            |
+| Counter   | `counter_top`                        | 2     | Mid-right core (counter1 above counter2) | `counter1` drives north pads (LSB + bidir MSB); `counter2` drives all south pads. 8-bit synchronous up-counter. |
+| Inverter  | `inverter_top`                       | 2     | Right side, stacked vertically | `inverter1` used as 4-channel CMOS digital inverter; `inverter2` used as 2-channel analog inverter.            |
+| SRAM      | `RM_IHPSG13_1P_1024x32_c2_bm_bist`   | 1     | Left-lower region of the core  | 1024 × 32-bit single-port SRAM (with bit-mask + BIST). Read-only sweep clocked from the main clock.            |
 
 Exact coordinates, the floorplan diagram and overlap rules are in
 [floorplan.md](floorplan.md).

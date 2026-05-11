@@ -13,8 +13,8 @@ Related documents:
 
 | Parameter                | Value                                                |
 | ------------------------ | ---------------------------------------------------- |
-| `DIE_AREA`               | `[0, 0, 2000, 2000]` µm  (2 mm × 2 mm)               |
-| `CORE_AREA`              | `[365, 365, 1635, 1635]` µm  (1270 µm × 1270 µm)     |
+| `DIE_AREA`               | `[0, 0, 1600, 1600]` µm  (1.6 mm × 1.6 mm)           |
+| `CORE_AREA`              | `[365, 365, 1235, 1235]` µm  (870 µm × 870 µm)       |
 | Padframe margin per side | 365 µm (between die edge and core)                   |
 | `FP_SIZING`              | `absolute`                                           |
 | Clock period             | 20 ns (≈ 50 MHz)                                     |
@@ -33,11 +33,11 @@ Five hard macros are placed inside the core:
 
 | Macro instance              | Cell                                  | Size (W × H)     | Lower-left (x, y) | Upper-right (x, y) | Orientation |
 | --------------------------- | ------------------------------------- | ---------------- | ----------------- | ------------------ | ----------- |
-| `i_chip_core.sram_0`        | `RM_IHPSG13_1P_1024x32_c2_bm_bist`    | ≈ 471 × 691 µm   | (435, 435)        | ≈ (906, 1126)      | N           |
-| `i_chip_core.counter1`      | `counter_top`                         | 200 × 100 µm     | (435, 1300)       | (635, 1400)        | N           |
-| `i_chip_core.counter2`      | `counter_top`                         | 200 × 100 µm     | (435, 1150)       | (635, 1250)        | N           |
-| `i_chip_core.inverter1`     | `inverter_top`                        | 54.18 × 81.92 µm | (1440, 1260)      | (1494.18, 1341.92) | N           |
-| `i_chip_core.inverter2`     | `inverter_top`                        | 54.18 × 81.92 µm | (1440, 630)       | (1494.18, 711.92)  | N           |
+| `i_chip_core.sram_0`        | `RM_IHPSG13_1P_1024x32_c2_bm_bist`    | ≈ 471 × 691 µm   | (435, 495)        | ≈ (906, 1186)      | N           |
+| `i_chip_core.counter1`      | `counter_top`                         | 200 × 100 µm     | (935, 995)        | (1135, 1095)       | N           |
+| `i_chip_core.counter2`      | `counter_top`                         | 200 × 100 µm     | (935, 495)        | (1135, 595)        | FS          |
+| `i_chip_core.inverter1`     | `inverter_top`                        | 54.18 × 81.92 µm | (1080.00, 850.08) | (1134.18, 932.00)  | N           |
+| `i_chip_core.inverter2`     | `inverter_top`                        | 54.18 × 81.92 µm | (1080.00, 658.14) | (1134.18, 740.06)  | N           |
 
 The values are kept in the `instances:` blocks of
 `flow/librelane/config.yaml`. The `inverter_top` coordinates are tied to the
@@ -53,40 +53,31 @@ Metal3 routing grid (`X` is a multiple of 0.48 µm, `Y` a multiple of 0.42 µm).
 
 ## Macro placement (top view)
 
-The macros divide the core into three columns: the south-west column holds
-the SRAM, the west column (above the SRAM) holds the two counters stacked
-vertically, and the east column holds the two inverters stacked vertically.
+With the current `CORE_AREA` `[365,365,1235,1235]`, the macros occupy the
+right-hand side of the core: SRAM and `counter2` in the lower half,
+`counter1` and both inverter instances in the upper half.
 
 ```text
-y=1635 ┌─────────────────────────────────────────────────┐ NE
-        │                                                 │
-        │                                                 │
-        │ ┌─counter1──────┐                               │
-   1400 │ │ 200 x 100 µm  │                ┌─inverter1─┐  │
-        │ │ (435,1300)─►  │                │ 54 x 82   │  │
-        │ │   (635,1400)  │                │(1440,1260)│  │
-   1300 │ └───────────────┘                │   (1494,  │  │
-        │                                  │     1342) │  │
-        │ ┌─counter2──────┐                └───────────┘  │
-   1250 │ │ 200 x 100 µm  │                               │
-        │ │ (435,1150)─►  │                               │
-        │ │   (635,1250)  │                               │
-   1150 │ └───────────────┘                               │
-        │                                                 │
-   1126 │ ┌─sram_0─────────────────────┐                  │
-        │ │ ≈ 471 x 691 µm             │                  │
-        │ │ (435,435) ─► ≈ (906,1126)  │                  │
-        │ │                            │  ┌─inverter2─┐   │
-        │ │                            │  │ 54 x 82   │   │
-    712 │ │                            │  │(1440,630) │   │
-        │ │                            │  │   (1494,  │   │
-        │ │                            │  │      712) │   │
-    630 │ │                            │  └───────────┘   │
-        │ │                            │                  │
-    435 │ └────────────────────────────┘                  │
-        │                                                 │
-y= 365  └─────────────────────────────────────────────────┘ SE
-        x=365            906          1440        1635
+y=1235 ┌───────────────────────────────────────────────┐
+       │                                               │
+       │                   ┌─counter1──────┐          │
+ 1095  │                   │(935,995)      │          │
+       │                   └───────────────┘          │
+  932  │                                   ┌inv1────┐ │
+       │                                   │(1080,  │ │
+       │                                   │ 850.08)│ │
+  740  │                                   └inv2────┘ │
+       │                                   ┌────────┐ │
+       │                                   │(1080,  │ │
+  658  │                                   │ 658.14)│ │
+       │ ┌─sram_0──────────────────────┐   └────────┘ │
+       │ │ (435,495) → ≈ (906,1186)    │              │
+  595  │ │                              │ ┌counter2──┐ │
+       │ │                              │ │(935,495) │ │
+  495  │ └──────────────────────────────┘ └──────────┘ │
+       │                                               │
+y= 365 └───────────────────────────────────────────────┘
+       x=365         906       935          1080   1235
 ```
 
 Pad order on each side (see [pinout.md](pinout.md) for the full per-pad
@@ -121,13 +112,13 @@ both pin sets to the chip-level `VDD` / `VSS` nets.
 
 ## Logos
 
-Two decorative IPs sit in the bottom-left and top-left corners of the die
+Two decorative IPs sit in the upper corners of the die
 (outside the core, between the core ring and the bondpad ring):
 
 | Instance     | Cell                  | Location (lower-left)                                                  |
 | ------------ | --------------------- | ---------------------------------------------------------------------- |
-| `jku_logo`   | `sg13g2_ip__jku`      | `($DIE_AREA[0] + 36.4 + 20.4, $DIE_AREA[3] - 36.4 - 120.4)` = (56.8, 1843.2) |
-| `jku_names`  | `sg13g2_ip__jku_names`| `($DIE_AREA[2] - 36.4 - 120.4, $DIE_AREA[3] - 36.4 - 120.4)`                |
+| `jku_logo`   | `sg13g2_ip__jku`      | `($DIE_AREA[0] + 36.4 + 20.4, $DIE_AREA[3] - 36.4 - 120.4)` = (56.8, 1443.2) |
+| `jku_names`  | `sg13g2_ip__jku_names`| `($DIE_AREA[2] - 36.4 - 120.4, $DIE_AREA[3] - 36.4 - 120.4)` = (1443.2, 1443.2) |
 
 Both logos are listed in `IGNORE_DISCONNECTED_MODULES` so LibreLane does not
 flag them as floating logic.
@@ -137,7 +128,7 @@ flag them as floating logic.
 
 For every macro `M` placed at `(X, Y)` with size `W × H`:
 
-1. **Inside the core:** `X ≥ 365`, `Y ≥ 365`, `X + W ≤ 1635`, `Y + H ≤ 1635`.
+1. **Inside the core:** `X ≥ 365`, `Y ≥ 365`, `X + W ≤ 1235`, `Y + H ≤ 1235`.
 2. **No overlap** with any other macro rectangle (RePlAce will diverge with
    `[GPL-0305]` otherwise).
 3. **Aligned to the row grid:** the `inverter_top` macro additionally
