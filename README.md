@@ -12,10 +12,18 @@ Institute for Integrated Circuits and Quantum Computing, Johannes Kepler Univers
 
 <p align="center">
   <a href="render/img/chip_top_black.png">
-    <img src="render/img/chip_top_black.png" alt="Chip render of the ihp-sg13g2 analog-mixed signal template chip (2 mm x 2 mm)" width=70%>
+    <img src="render/img/chip_top_black.png" alt="Chip render of the ihp-sg13g2 analog-mixed signal template chip (1.6 mm x 1.6 mm)" width=70%>
   </a>
   <br>
-  <em>Chip render of the ihp-sg13g2 analog-mixed signal template chip (2 mm x 2 mm).</em>
+  <em>Chip render of the ihp-sg13g2 analog-mixed signal template chip (1.6 mm x 1.6 mm).</em>
+</p>
+
+<p align="center">
+  <a href="render/img/chip_top_black_TM2.png">
+    <img src="render/img/chip_top_black_TM2.png" alt="Render of the TopMetal2 AMS Chip logo, generated with the tool ArtistIC" width=70%>
+  </a>
+  <br>
+  <em>Render of the TopMetal2 AMS Chip logo, generated with the tool ArtistIC.</em>
 </p>
 
 
