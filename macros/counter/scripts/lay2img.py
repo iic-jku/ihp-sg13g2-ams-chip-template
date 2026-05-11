@@ -39,29 +39,29 @@ def main(input_layout, output_image, width, height, oversampling, pdk_root, pdk)
 
     # Disable some layers
     enabled_layers = [
-        (1, 0),      # Activ        (gf180: COMP 22/0)
-        (31, 0),     # NWell        (gf180: Nwell 21/0)
-        (32, 0),     # nBuLay       (gf180: LVPWELL 204/0)
-        (44, 0),     # ThickGateOx  (gf180: Dualgate 55/0)
-        (5, 0),      # GatPoly      (gf180: Poly2 30/0)
-        (7, 0),      # nSD          (gf180: Nplus 32/0)
-        (14, 0),     # pSD          (gf180: Pplus 31/0)
-        (28, 0),     # SalBlock     (gf180: SAB 49/0)
-        (6, 0),      # Cont         (gf180: Contact 33/0)
-        (8, 0),      # Metal1       (gf180: Metal1 34/0)
-        (19, 0),     # Via1         (gf180: Via1 35/0)
-        (10, 0),     # Metal2       (gf180: Metal2 36/0)
-        (29, 0),     # Via2         (gf180: Via2 38/0)
-        (30, 0),     # Metal3       (gf180: Metal3 42/0)
-        (49, 0),     # Via3         (gf180: Via3 40/0)
-        (50, 0),     # Metal4       (gf180: Metal4 46/0)
-        (66, 0),     # Via4         (gf180: Via4 41/0)
-        (67, 0),     # Metal5       (gf180: Metal5 81/0)
+        (1, 0),      # Activ
+        (31, 0),     # NWell
+        (32, 0),     # nBuLay
+        (44, 0),     # ThickGateOx
+        (5, 0),      # GatPoly
+        (7, 0),      # nSD
+        (14, 0),     # pSD
+        (28, 0),     # SalBlock
+        (6, 0),      # Cont
+        (8, 0),      # Metal1
+        (19, 0),     # Via1
+        (10, 0),     # Metal2
+        (29, 0),     # Via2
+        (30, 0),     # Metal3
+        (49, 0),     # Via3
+        (50, 0),     # Metal4
+        (66, 0),     # Via4
+        (67, 0),     # Metal5
         (125, 0),    # TopVia1
         (126, 0),    # TopMetal1
         (133, 0),    # TopVia2
         (134, 0),    # TopMetal2
-        (9, 0),      # Passiv       (gf180: Pad 37/0)
+        (9, 0),      # Passiv
     ]
     for lyp in lv.each_layer():
         layer_datatype = (lyp.source_layer, lyp.source_datatype)
