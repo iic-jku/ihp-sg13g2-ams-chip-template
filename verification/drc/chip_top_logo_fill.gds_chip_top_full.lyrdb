@@ -1,0 +1,998 @@
+<?xml version='1.0' encoding='utf-8'?>
+<report-database>
+ <description>Main DRC Run Report at</description>
+ <original-file />
+ <generator>drc: script='/foss/pdks/ihp-sg13g2/libs.tech/klayout/tech/drc/ihp-sg13g2.drc'</generator>
+ <top-cell>chip_top</top-cell>
+ <tags>
+ </tags>
+ <categories>
+ <category>
+   <name>TV1.a</name>
+   <description>5.21. TV1.a : Min. and max. TopVia1 width: 0.42 µm</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>TV1.b</name>
+   <description>5.21. TV1.b : Min. TopVia1 space: 0.42 µm</description>
+   <categories>
+   </categories>
+  </category>
+ <category>
+   <name>Pad.m</name>
+   <description>6.9. Pad.m : SBumpPad and CuPillarPad in same layout not allowed</description>
+   <categories>
+   </categories>
+  </category>
+ <category>
+   <name>TGO.f</name>
+   <description>5.7. TGO.f : Min. ThickGateOx width: 0.86 µm</description>
+   <categories>
+   </categories>
+  </category>
+ <category>
+   <name>Pas.a</name>
+   <description>5.27. Pas.a:Min. Passiv width: 2.1 µm</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>Pas.b</name>
+   <description>5.27. Pas.b: Min. Passiv space or notch: 3.5 µm</description>
+   <categories>
+   </categories>
+  </category>
+ <category>
+   <name>TV2.a</name>
+   <description>5.24. TV2.a : Min. and max. TopVia2 width: 0.9 µm</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>TV2.b</name>
+   <description>5.24. TV2.b : Min. TopVia2 space: 1.06 µm</description>
+   <categories>
+   </categories>
+  </category>
+ <category>
+   <name>TM1.a</name>
+   <description>5.22. TM1.a: Min. TopMetal1 width: 1.64 μm.</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>TM1.b</name>
+   <description>5.22. TM1.b: Min. TopMetal1 (drawing + filler) space or notch: 1.64 μm.</description>
+   <categories>
+   </categories>
+  </category>
+ <category>
+   <name>TM1Fil.c</name>
+   <description>5.23. TM1Fil.c : Min. TopMetal1:filler space to TopMetal1 is 3.0 um</description>
+   <categories>
+   </categories>
+  </category>
+ <category>
+   <name>TM2Fil.c</name>
+   <description>5.26. TM2Fil.c : Min. TopMetal2:filler space to TopMetal2 is 3.0 um</description>
+   <categories>
+   </categories>
+  </category>
+ <category>
+   <name>Padc.a</name>
+   <description>6.9. Padc.a : CuPillarPad size is 35.0 um</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>Padc.b</name>
+   <description>6.9. Padc.b : Min. CuPillarPad space is 40.0 um</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>Padc.c</name>
+   <description>6.9. Padc.c : Min. TopMetal2 (within dfpad) enclosure of CuPillarPad is 7.5 um</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>padc.f</name>
+   <description>6.9.2. Padc.f: Allowed passivation opening shape Circle</description>
+   <categories>
+   </categories>
+  </category>
+ <category>
+   <name>Padb.a</name>
+   <description>6.9. Padb.a : SBumpPad size is 60.0 um</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>Padb.b</name>
+   <description>6.9. Padb.b : Min. SBumpPad space is 70.0 um</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>Padb.c</name>
+   <description>6.9. Padb.c : Min. TopMetal2 (within dfpad) enclosure of SBumpPad is 10.0 um</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>padb.f</name>
+   <description>6.9. Padb.f: Allowed passivation opening shape Octagon , Circle</description>
+   <categories>
+   </categories>
+  </category>
+ <category>
+   <name>TM2.a</name>
+   <description>5.25. TM2.a: Min. TopMetal2 width: 2.0 μm.</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>TM2.b</name>
+   <description>5.25. TM2.b: Min. TopMetal2 (drawing + filler) space or notch: 2.0 μm.</description>
+   <categories>
+   </categories>
+  </category>
+ <category>
+   <name>Act.a</name>
+   <description>5.5. Act.a : Min. Activ width : 0.15 µm</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>Act.b</name>
+   <description>5.5. Act.b : Min. Activ (drawing + filler) space or notch: 0.21 µm.</description>
+   <categories>
+   </categories>
+  </category>
+ <category>
+   <name>V2.a</name>
+   <description>5.20. V2.a : Min. and max. Via2 width: 0.19 µm</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>V2.b</name>
+   <description>5.20. V2.b : Min. Via2 space: 0.22 µm</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>V3.a</name>
+   <description>5.20. V3.a : Min. and max. Via3 width: 0.19 µm</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>V3.b</name>
+   <description>5.20. V3.b : Min. Via3 space: 0.22 µm</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>V4.a</name>
+   <description>5.20. V4.a : Min. and max. Via4 width: 0.19 µm</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>V4.b</name>
+   <description>5.20. V4.b : Min. Via4 space: 0.22 µm</description>
+   <categories>
+   </categories>
+  </category>
+ <category>
+   <name>M2.a</name>
+   <description>5.17. M2.a: Min. Metal2 width: 0.2 μm.</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>M2.b</name>
+   <description>5.17. M2.b: Min. Metal2 (drawing + filler) space or notch: 0.21 μm.</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>M3.a</name>
+   <description>5.17. M3.a: Min. Metal3 width: 0.2 μm.</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>M3.b</name>
+   <description>5.17. M3.b: Min. Metal3 (drawing + filler) space or notch: 0.21 μm.</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>M4.a</name>
+   <description>5.17. M4.a: Min. Metal4 width: 0.2 μm.</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>M4.b</name>
+   <description>5.17. M4.b: Min. Metal4 (drawing + filler) space or notch: 0.21 μm.</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>M5.a</name>
+   <description>5.17. M5.a: Min. Metal5 width: 0.2 μm.</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>M5.b</name>
+   <description>5.17. M5.b: Min. Metal5 (drawing + filler) space or notch: 0.21 μm.</description>
+   <categories>
+   </categories>
+  </category>
+ <category>
+   <name>V1.a</name>
+   <description>5.19. V1.a : Min. and max. Via1 width: 0.19 µm</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>V1.b</name>
+   <description>5.19. V1.b : Min. Via1 space: 0.22 µm</description>
+   <categories>
+   </categories>
+  </category>
+ <category>
+   <name>AFil.c1</name>
+   <description>5.6. AFil.c1 Min. Activ:filler space to Activ is 0.42 um</description>
+   <categories>
+   </categories>
+  </category>
+ <category>
+   <name>Gat.a</name>
+   <description>5.8. Gat.a : Min. GatPoly width: 0.13 µm</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>Gat.b</name>
+   <description>5.8. Gat.b : Min. GatPoly (drawing + filler) space or notch: 0.18 µm.</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>Gat.d</name>
+   <description>5.8. Gat.d :Min. GatPoly space to Activ: 0.07 µm.</description>
+   <categories>
+   </categories>
+  </category>
+ <category>
+   <name>forbidden.biwind</name>
+   <description>forbidden.biwind : 3.2. biwind is forbidden in designs submitted for all 0.13 um techs.</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>forbidden.pemwind</name>
+   <description>forbidden.pemwind : 3.2. pemwind is forbidden in designs submitted for all 0.13 um techs.</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>forbidden.baspoly</name>
+   <description>forbidden.baspoly : 3.2. baspoly is forbidden in designs submitted for all 0.13 um techs.</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>forbidden.deepco</name>
+   <description>forbidden.deepco : 3.2. deepco is forbidden in designs submitted for all 0.13 um techs.</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>forbidden.pempoly</name>
+   <description>forbidden.pempoly : 3.2. pempoly is forbidden in designs submitted for all 0.13 um techs.</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>forbidden.empoly</name>
+   <description>forbidden.empoly : 3.2. empoly is forbidden in designs submitted for all 0.13 um techs.</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>forbidden.ldmos</name>
+   <description>forbidden.ldmos : 3.2. ldmos is forbidden in designs submitted for all 0.13 um techs.</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>forbidden.pbiwind</name>
+   <description>forbidden.pbiwind : 3.2. pbiwind is forbidden in designs submitted for all 0.13 um techs.</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>forbidden.nodrc</name>
+   <description>forbidden.nodrc : 3.2. nodrc is forbidden in designs submitted for all 0.13 um techs.</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>forbidden.flash</name>
+   <description>forbidden.flash : 3.2. flash is forbidden in designs submitted for all 0.13 um techs.</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>forbidden.colwind</name>
+   <description>forbidden.colwind : 3.2. colwind is forbidden in designs submitted for all 0.13 um techs.</description>
+   <categories>
+   </categories>
+  </category>
+ <category>
+   <name>M1Fil.c</name>
+   <description>5.18. M1Fil.c : Min. Metal1:filler space to Metal1 is 0.42 um</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>M2Fil.c</name>
+   <description>5.18. M2Fil.c : Min. Metal2:filler space to Metal2 is 0.42 um</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>M3Fil.c</name>
+   <description>5.18. M3Fil.c : Min. Metal3:filler space to Metal3 is 0.42 um</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>M4Fil.c</name>
+   <description>5.18. M4Fil.c : Min. Metal4:filler space to Metal4 is 0.42 um</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>M5Fil.c</name>
+   <description>5.18. M5Fil.c : Min. Metal5:filler space to Metal5 is 0.42 um</description>
+   <categories>
+   </categories>
+  </category>
+ <category>
+   <name>LBE.a</name>
+   <description>9.1. LBE.a: Min. LBE width: 100.0 µm</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>LBE.b</name>
+   <description>9.1. LBE.b: Max. LBE width: 1500.0 µm.</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>LBE.b1</name>
+   <description>9.1. LBE.b1: Max. LBE area (µm²): 250000.0 .um</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>LBE.c</name>
+   <description>9.1. LBE.c: Min. LBE space or notch: 100.0 µm</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>LBE.d</name>
+   <description>9.1. LBE.d: Min. LBE space to inner edge of EdgeSeal: 150.0 µm</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>LBE.h</name>
+   <description>9.1. LBE.h: No LBE ring allowed.</description>
+   <categories>
+   </categories>
+  </category>
+ <category>
+   <name>Pin.a</name>
+   <description>Pin.a : 7.4. Pin.a: Min. activ enclosure of activ:pin = 0um</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>Pin.b</name>
+   <description>Pin.b : 7.4. Pin.b: Min. gatpoly enclosure of gatpoly:pin = 0um</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>Pin.e</name>
+   <description>Pin.e : 7.4. Pin.e: Min. metal1 enclosure of metal1:pin = 0um</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>Pin.f_M2</name>
+   <description>Pin.f_M2 : 7.4. Pin.f_M2: Min. metal2 enclosure of metal2:pin = 0um</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>Pin.f_M3</name>
+   <description>Pin.f_M3 : 7.4. Pin.f_M3: Min. metal3 enclosure of metal3:pin = 0um</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>Pin.f_M4</name>
+   <description>Pin.f_M4 : 7.4. Pin.f_M4: Min. metal4 enclosure of metal4:pin = 0um</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>Pin.f_M5</name>
+   <description>Pin.f_M5 : 7.4. Pin.f_M5: Min. metal5 enclosure of metal5:pin = 0um</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>Pin.g</name>
+   <description>Pin.g : 7.4. Pin.g: Min. topmetal1 enclosure of topmetal1:pin = 0um</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>Pin.h</name>
+   <description>Pin.h : 7.4. Pin.h: Min. topmetal2 enclosure of topmetal2:pin = 0um</description>
+   <categories>
+   </categories>
+  </category>
+ <category>
+   <name>GFil.d</name>
+   <description>5.9. GFil.d : Min. GatPoly:filler space to Activ, GatPoly, Cont, pSD, nSD:block, SalBlock is 1.1 um</description>
+   <categories>
+   </categories>
+  </category>
+ <category>
+   <name>M1.a</name>
+   <description>5.16. M1.a: Min. Metal1 width: 0.16 μm.</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>M1.b</name>
+   <description>5.16. M1.b: Min. Metal1 (drawing + filler) space or notch: 0.18 μm.</description>
+   <categories>
+   </categories>
+  </category>
+ <category>
+   <name>Cnt.a</name>
+   <description>5.14. Cnt.a : Min. and max. Cont width: 0.16 µm</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>Cnt.b</name>
+   <description>5.14. Cnt.b : Min. Cont space: 0.18 µm</description>
+   <categories>
+   </categories>
+  </category>
+ <category>
+   <name>CntB.a</name>
+   <description>5.15. CntB.a Min. and max. ContBar width is 0.16 um</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>CntB.a1</name>
+   <description>5.15. CntB.a1 Min. ContBar length is 0.34 um</description>
+   <categories>
+   </categories>
+  </category>
+ <category>
+   <name>Seal.l</name>
+   <description>6.10. Seal.l : No structures outside sealring boundary allowed</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>Seal.n</name>
+   <description>6.10. seal.n : Sealring must be enclosed by an unbroken Passiv ring</description>
+   <categories>
+   </categories>
+  </category>
+ <category>
+   <name>AFil.g1</name>
+   <description>5.6. AFil.g1: Max. global Activ density [%]: 55.00.</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>M1.k</name>
+   <description>5.16. M1.k: Max. global Metal1 density [%]: 60.00.</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>M2.k</name>
+   <description>5.17. M2.k: Max. global Metal2 density [%]: 60.00.</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>M3.k</name>
+   <description>5.17. M3.k: Max. global Metal3 density [%]: 60.00.</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>M4.k</name>
+   <description>5.17. M4.k: Max. global Metal4 density [%]: 60.00.</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>M5.k</name>
+   <description>5.17. M5.k: Max. global Metal5 density [%]: 60.00.</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>M2Fil.h</name>
+   <description>5.18. M2Fil.h: Min. Metal2 and Metal2:filler coverage ratio for any 800.0 x 800.0 µm2 chip area [%]: 25.00</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>M3Fil.h</name>
+   <description>5.18. M3Fil.h: Min. Metal3 and Metal3:filler coverage ratio for any 800.0 x 800.0 µm2 chip area [%]: 25.00</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>M4Fil.h</name>
+   <description>5.18. M4Fil.h: Min. Metal4 and Metal4:filler coverage ratio for any 800.0 x 800.0 µm2 chip area [%]: 25.00</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>M5Fil.h</name>
+   <description>5.18. M5Fil.h: Min. Metal5 and Metal5:filler coverage ratio for any 800.0 x 800.0 µm2 chip area [%]: 25.00</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>TM1.d</name>
+   <description>5.22. TM1.d: Max. global TopMetal1 density [%]: 70.00</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>TM2.d</name>
+   <description>5.25. TM2.d: Max. global TopMetal2 density [%]: 70.00.</description>
+   <categories>
+   </categories>
+  </category>
+ </categories>
+ <cells>
+  <cell>
+   <name>chip_top</name>
+   <variant />
+   <layout-name />
+   <references>
+   </references>
+  </cell>
+ </cells>
+ <items>
+ <item>
+   <tags />
+   <category>'AFil.g1'</category>
+   <cell>chip_top</cell>
+   <visited>false</visited>
+   <multiplicity>1</multiplicity>
+   <comment />
+   <image />
+   <values>
+    <value>polygon: (56.8,658.14;56.8,1543.2;1543.2,1543.2;1543.2,658.14)</value>
+    <value>text: 'Global Density Violation'</value>
+    <value>text: 'chip_bbox_um      : (56.800,658.140) - (1543.200,1543.200)'</value>
+    <value>text: 'chip_area_um2     : 28876.851'</value>
+    <value>text: 'layer_area_um2    : 786889.839'</value>
+    <value>text: 'ratio_percent     : 2724.985'</value>
+    <value>text: 'limit_percent     : 55.000 (max)'</value>
+    <value>text: 'gap_percent       : 2669.985 (above limit)'</value>
+    <value>text: 'area_gap_um2      : 771007.571'</value>
+   </values>
+  </item>
+  <item>
+   <tags />
+   <category>'M1.k'</category>
+   <cell>chip_top</cell>
+   <visited>false</visited>
+   <multiplicity>1</multiplicity>
+   <comment />
+   <image />
+   <values>
+    <value>polygon: (56.8,658.14;56.8,1543.2;1543.2,1543.2;1543.2,658.14)</value>
+    <value>text: 'Global Density Violation'</value>
+    <value>text: 'chip_bbox_um      : (56.800,658.140) - (1543.200,1543.200)'</value>
+    <value>text: 'chip_area_um2     : 28876.851'</value>
+    <value>text: 'layer_area_um2    : 803646.758'</value>
+    <value>text: 'ratio_percent     : 2783.014'</value>
+    <value>text: 'limit_percent     : 60.000 (max)'</value>
+    <value>text: 'gap_percent       : 2723.014 (above limit)'</value>
+    <value>text: 'area_gap_um2      : 786320.647'</value>
+   </values>
+  </item>
+  <item>
+   <tags />
+   <category>'M2.k'</category>
+   <cell>chip_top</cell>
+   <visited>false</visited>
+   <multiplicity>1</multiplicity>
+   <comment />
+   <image />
+   <values>
+    <value>polygon: (56.8,658.14;56.8,1543.2;1543.2,1543.2;1543.2,658.14)</value>
+    <value>text: 'Global Density Violation'</value>
+    <value>text: 'chip_bbox_um      : (56.800,658.140) - (1543.200,1543.200)'</value>
+    <value>text: 'chip_area_um2     : 28876.851'</value>
+    <value>text: 'layer_area_um2    : 142639.682'</value>
+    <value>text: 'ratio_percent     : 493.959'</value>
+    <value>text: 'limit_percent     : 60.000 (max)'</value>
+    <value>text: 'gap_percent       : 433.959 (above limit)'</value>
+    <value>text: 'area_gap_um2      : 125313.572'</value>
+   </values>
+  </item>
+  <item>
+   <tags />
+   <category>'M3.k'</category>
+   <cell>chip_top</cell>
+   <visited>false</visited>
+   <multiplicity>1</multiplicity>
+   <comment />
+   <image />
+   <values>
+    <value>polygon: (56.8,658.14;56.8,1543.2;1543.2,1543.2;1543.2,658.14)</value>
+    <value>text: 'Global Density Violation'</value>
+    <value>text: 'chip_bbox_um      : (56.800,658.140) - (1543.200,1543.200)'</value>
+    <value>text: 'chip_area_um2     : 28876.851'</value>
+    <value>text: 'layer_area_um2    : 786686.196'</value>
+    <value>text: 'ratio_percent     : 2724.280'</value>
+    <value>text: 'limit_percent     : 60.000 (max)'</value>
+    <value>text: 'gap_percent       : 2664.280 (above limit)'</value>
+    <value>text: 'area_gap_um2      : 769360.086'</value>
+   </values>
+  </item>
+  <item>
+   <tags />
+   <category>'M4.k'</category>
+   <cell>chip_top</cell>
+   <visited>false</visited>
+   <multiplicity>1</multiplicity>
+   <comment />
+   <image />
+   <values>
+    <value>polygon: (56.8,658.14;56.8,1543.2;1543.2,1543.2;1543.2,658.14)</value>
+    <value>text: 'Global Density Violation'</value>
+    <value>text: 'chip_bbox_um      : (56.800,658.140) - (1543.200,1543.200)'</value>
+    <value>text: 'chip_area_um2     : 28876.851'</value>
+    <value>text: 'layer_area_um2    : 783818.897'</value>
+    <value>text: 'ratio_percent     : 2714.350'</value>
+    <value>text: 'limit_percent     : 60.000 (max)'</value>
+    <value>text: 'gap_percent       : 2654.350 (above limit)'</value>
+    <value>text: 'area_gap_um2      : 766492.786'</value>
+   </values>
+  </item>
+  <item>
+   <tags />
+   <category>'M5.k'</category>
+   <cell>chip_top</cell>
+   <visited>false</visited>
+   <multiplicity>1</multiplicity>
+   <comment />
+   <image />
+   <values>
+    <value>polygon: (56.8,658.14;56.8,1543.2;1543.2,1543.2;1543.2,658.14)</value>
+    <value>text: 'Global Density Violation'</value>
+    <value>text: 'chip_bbox_um      : (56.800,658.140) - (1543.200,1543.200)'</value>
+    <value>text: 'chip_area_um2     : 28876.851'</value>
+    <value>text: 'layer_area_um2    : 795527.477'</value>
+    <value>text: 'ratio_percent     : 2754.897'</value>
+    <value>text: 'limit_percent     : 60.000 (max)'</value>
+    <value>text: 'gap_percent       : 2694.897 (above limit)'</value>
+    <value>text: 'area_gap_um2      : 778201.366'</value>
+   </values>
+  </item>
+  <item>
+   <tags />
+   <category>'M2Fil.h'</category>
+   <cell>chip_top</cell>
+   <visited>false</visited>
+   <multiplicity>1</multiplicity>
+   <comment />
+   <image />
+   <values>
+    <value>polygon: (456.8,658.14;456.8,1458.14;1256.8,1458.14;1256.8,658.14)</value>
+    <value>text: 'Local Density Window Violation'</value>
+    <value>text: 'window_bbox_um    : (456.800,658.140) - (1256.800,1458.140)'</value>
+    <value>text: 'window_area_um2   : 8876.851'</value>
+    <value>text: 'layer_area_um2    : 2408.041'</value>
+    <value>text: 'ratio_percent     : 27.127'</value>
+    <value>text: 'limit_percent     : 25.000 (min)'</value>
+    <value>text: 'gap_percent       : 0.000 (below limit)'</value>
+    <value>text: 'area_gap_um2      : 0.000'</value>
+   </values>
+  </item>
+  <item>
+   <tags />
+   <category>'M2Fil.h'</category>
+   <cell>chip_top</cell>
+   <visited>false</visited>
+   <multiplicity>1</multiplicity>
+   <comment />
+   <image />
+   <values>
+    <value>polygon: (56.8,658.14;56.8,1458.14;856.8,1458.14;856.8,658.14)</value>
+    <value>text: 'Local Density Window Violation'</value>
+    <value>text: 'window_bbox_um    : (56.800,658.140) - (856.800,1458.140)'</value>
+    <value>text: 'window_area_um2   : 1494.000'</value>
+    <value>text: 'layer_area_um2    : 0.000'</value>
+    <value>text: 'ratio_percent     : 0.000'</value>
+    <value>text: 'limit_percent     : 25.000 (min)'</value>
+    <value>text: 'gap_percent       : 25.000 (below limit)'</value>
+    <value>text: 'area_gap_um2      : 373.500'</value>
+   </values>
+  </item>
+  <item>
+   <tags />
+   <category>'M2Fil.h'</category>
+   <cell>chip_top</cell>
+   <visited>false</visited>
+   <multiplicity>1</multiplicity>
+   <comment />
+   <image />
+   <values>
+    <value>polygon: (56.8,743.2;56.8,1543.2;856.8,1543.2;856.8,743.2)</value>
+    <value>text: 'Local Density Window Violation'</value>
+    <value>text: 'window_bbox_um    : (56.800,743.200) - (856.800,1543.200)'</value>
+    <value>text: 'window_area_um2   : 10000.000'</value>
+    <value>text: 'layer_area_um2    : 0.000'</value>
+    <value>text: 'ratio_percent     : 0.000'</value>
+    <value>text: 'limit_percent     : 25.000 (min)'</value>
+    <value>text: 'gap_percent       : 25.000 (below limit)'</value>
+    <value>text: 'area_gap_um2      : 2500.000'</value>
+   </values>
+  </item>
+  <item>
+   <tags />
+   <category>'M2Fil.h'</category>
+   <cell>chip_top</cell>
+   <visited>false</visited>
+   <multiplicity>1</multiplicity>
+   <comment />
+   <image />
+   <values>
+    <value>polygon: (743.2,658.14;743.2,1458.14;1543.2,1458.14;1543.2,658.14)</value>
+    <value>text: 'Local Density Window Violation'</value>
+    <value>text: 'window_bbox_um    : (743.200,658.140) - (1543.200,1458.140)'</value>
+    <value>text: 'window_area_um2   : 10370.851'</value>
+    <value>text: 'layer_area_um2    : 2408.041'</value>
+    <value>text: 'ratio_percent     : 23.219'</value>
+    <value>text: 'limit_percent     : 25.000 (min)'</value>
+    <value>text: 'gap_percent       : 1.781 (below limit)'</value>
+    <value>text: 'area_gap_um2      : 184.672'</value>
+   </values>
+  </item>
+  <item>
+   <tags />
+   <category>'M2Fil.h'</category>
+   <cell>chip_top</cell>
+   <visited>false</visited>
+   <multiplicity>1</multiplicity>
+   <comment />
+   <image />
+   <values>
+    <value>polygon: (456.8,743.2;456.8,1543.2;1256.8,1543.2;1256.8,743.2)</value>
+    <value>text: 'Local Density Window Violation'</value>
+    <value>text: 'window_bbox_um    : (456.800,743.200) - (1256.800,1543.200)'</value>
+    <value>text: 'window_area_um2   : 4438.426'</value>
+    <value>text: 'layer_area_um2    : 1198.987'</value>
+    <value>text: 'ratio_percent     : 27.014'</value>
+    <value>text: 'limit_percent     : 25.000 (min)'</value>
+    <value>text: 'gap_percent       : 0.000 (below limit)'</value>
+    <value>text: 'area_gap_um2      : 0.000'</value>
+   </values>
+  </item>
+  <item>
+   <tags />
+   <category>'M2Fil.h'</category>
+   <cell>chip_top</cell>
+   <visited>false</visited>
+   <multiplicity>1</multiplicity>
+   <comment />
+   <image />
+   <values>
+    <value>polygon: (743.2,743.2;743.2,1543.2;1543.2,1543.2;1543.2,743.2)</value>
+    <value>text: 'Local Density Window Violation'</value>
+    <value>text: 'window_bbox_um    : (743.200,743.200) - (1543.200,1543.200)'</value>
+    <value>text: 'window_area_um2   : 14438.426'</value>
+    <value>text: 'layer_area_um2    : 1198.987'</value>
+    <value>text: 'ratio_percent     : 8.304'</value>
+    <value>text: 'limit_percent     : 25.000 (min)'</value>
+    <value>text: 'gap_percent       : 16.696 (below limit)'</value>
+    <value>text: 'area_gap_um2      : 2410.619'</value>
+   </values>
+  </item>
+  <item>
+   <tags />
+   <category>'M3Fil.h'</category>
+   <cell>chip_top</cell>
+   <visited>false</visited>
+   <multiplicity>1</multiplicity>
+   <comment />
+   <image />
+   <values>
+    <value>polygon: (456.8,658.14;456.8,1458.14;1256.8,1458.14;1256.8,658.14)</value>
+    <value>text: 'Local Density Window Violation'</value>
+    <value>text: 'window_bbox_um    : (456.800,658.140) - (1256.800,1458.140)'</value>
+    <value>text: 'window_area_um2   : 8876.851'</value>
+    <value>text: 'layer_area_um2    : 2368.895'</value>
+    <value>text: 'ratio_percent     : 26.686'</value>
+    <value>text: 'limit_percent     : 25.000 (min)'</value>
+    <value>text: 'gap_percent       : 0.000 (below limit)'</value>
+    <value>text: 'area_gap_um2      : 0.000'</value>
+   </values>
+  </item>
+  <item>
+   <tags />
+   <category>'M3Fil.h'</category>
+   <cell>chip_top</cell>
+   <visited>false</visited>
+   <multiplicity>1</multiplicity>
+   <comment />
+   <image />
+   <values>
+    <value>polygon: (456.8,743.2;456.8,1543.2;1256.8,1543.2;1256.8,743.2)</value>
+    <value>text: 'Local Density Window Violation'</value>
+    <value>text: 'window_bbox_um    : (456.800,743.200) - (1256.800,1543.200)'</value>
+    <value>text: 'window_area_um2   : 4438.426'</value>
+    <value>text: 'layer_area_um2    : 1183.020'</value>
+    <value>text: 'ratio_percent     : 26.654'</value>
+    <value>text: 'limit_percent     : 25.000 (min)'</value>
+    <value>text: 'gap_percent       : 0.000 (below limit)'</value>
+    <value>text: 'area_gap_um2      : 0.000'</value>
+   </values>
+  </item>
+  <item>
+   <tags />
+   <category>'M4Fil.h'</category>
+   <cell>chip_top</cell>
+   <visited>false</visited>
+   <multiplicity>1</multiplicity>
+   <comment />
+   <image />
+   <values>
+    <value>polygon: (456.8,658.14;456.8,1458.14;1256.8,1458.14;1256.8,658.14)</value>
+    <value>text: 'Local Density Window Violation'</value>
+    <value>text: 'window_bbox_um    : (456.800,658.140) - (1256.800,1458.140)'</value>
+    <value>text: 'window_area_um2   : 8876.851'</value>
+    <value>text: 'layer_area_um2    : 14.542'</value>
+    <value>text: 'ratio_percent     : 0.164'</value>
+    <value>text: 'limit_percent     : 25.000 (min)'</value>
+    <value>text: 'gap_percent       : 24.836 (below limit)'</value>
+    <value>text: 'area_gap_um2      : 2204.670'</value>
+   </values>
+  </item>
+  <item>
+   <tags />
+   <category>'M4Fil.h'</category>
+   <cell>chip_top</cell>
+   <visited>false</visited>
+   <multiplicity>1</multiplicity>
+   <comment />
+   <image />
+   <values>
+    <value>polygon: (456.8,743.2;456.8,1543.2;1256.8,1543.2;1256.8,743.2)</value>
+    <value>text: 'Local Density Window Violation'</value>
+    <value>text: 'window_bbox_um    : (456.800,743.200) - (1256.800,1543.200)'</value>
+    <value>text: 'window_area_um2   : 4438.426'</value>
+    <value>text: 'layer_area_um2    : 7.271'</value>
+    <value>text: 'ratio_percent     : 0.164'</value>
+    <value>text: 'limit_percent     : 25.000 (min)'</value>
+    <value>text: 'gap_percent       : 24.836 (below limit)'</value>
+    <value>text: 'area_gap_um2      : 1102.335'</value>
+   </values>
+  </item>
+  <item>
+   <tags />
+   <category>'M5Fil.h'</category>
+   <cell>chip_top</cell>
+   <visited>false</visited>
+   <multiplicity>1</multiplicity>
+   <comment />
+   <image />
+   <values>
+    <value>polygon: (456.8,658.14;456.8,1458.14;1256.8,1458.14;1256.8,658.14)</value>
+    <value>text: 'Local Density Window Violation'</value>
+    <value>text: 'window_bbox_um    : (456.800,658.140) - (1256.800,1458.140)'</value>
+    <value>text: 'window_area_um2   : 8876.851'</value>
+    <value>text: 'layer_area_um2    : 894.429'</value>
+    <value>text: 'ratio_percent     : 10.076'</value>
+    <value>text: 'limit_percent     : 25.000 (min)'</value>
+    <value>text: 'gap_percent       : 14.924 (below limit)'</value>
+    <value>text: 'area_gap_um2      : 1324.784'</value>
+   </values>
+  </item>
+  <item>
+   <tags />
+   <category>'M5Fil.h'</category>
+   <cell>chip_top</cell>
+   <visited>false</visited>
+   <multiplicity>1</multiplicity>
+   <comment />
+   <image />
+   <values>
+    <value>polygon: (456.8,743.2;456.8,1543.2;1256.8,1543.2;1256.8,743.2)</value>
+    <value>text: 'Local Density Window Violation'</value>
+    <value>text: 'window_bbox_um    : (456.800,743.200) - (1256.800,1543.200)'</value>
+    <value>text: 'window_area_um2   : 4438.426'</value>
+    <value>text: 'layer_area_um2    : 447.214'</value>
+    <value>text: 'ratio_percent     : 10.076'</value>
+    <value>text: 'limit_percent     : 25.000 (min)'</value>
+    <value>text: 'gap_percent       : 14.924 (below limit)'</value>
+    <value>text: 'area_gap_um2      : 662.392'</value>
+   </values>
+  </item>
+  <item>
+   <tags />
+   <category>'TM1.d'</category>
+   <cell>chip_top</cell>
+   <visited>false</visited>
+   <multiplicity>1</multiplicity>
+   <comment />
+   <image />
+   <values>
+    <value>polygon: (56.8,658.14;56.8,1543.2;1543.2,1543.2;1543.2,658.14)</value>
+    <value>text: 'Global Density Violation'</value>
+    <value>text: 'chip_bbox_um      : (56.800,658.140) - (1543.200,1543.200)'</value>
+    <value>text: 'chip_area_um2     : 28876.851'</value>
+    <value>text: 'layer_area_um2    : 828711.943'</value>
+    <value>text: 'ratio_percent     : 2869.814'</value>
+    <value>text: 'limit_percent     : 70.000 (max)'</value>
+    <value>text: 'gap_percent       : 2799.814 (above limit)'</value>
+    <value>text: 'area_gap_um2      : 808498.147'</value>
+   </values>
+  </item>
+  <item>
+   <tags />
+   <category>'TM2.d'</category>
+   <cell>chip_top</cell>
+   <visited>false</visited>
+   <multiplicity>1</multiplicity>
+   <comment />
+   <image />
+   <values>
+    <value>polygon: (56.8,658.14;56.8,1543.2;1543.2,1543.2;1543.2,658.14)</value>
+    <value>text: 'Global Density Violation'</value>
+    <value>text: 'chip_bbox_um      : (56.800,658.140) - (1543.200,1543.200)'</value>
+    <value>text: 'chip_area_um2     : 28876.851'</value>
+    <value>text: 'layer_area_um2    : 755726.561'</value>
+    <value>text: 'ratio_percent     : 2617.067'</value>
+    <value>text: 'limit_percent     : 70.000 (max)'</value>
+    <value>text: 'gap_percent       : 2547.067 (above limit)'</value>
+    <value>text: 'area_gap_um2      : 735512.765'</value>
+   </values>
+  </item>
+ </items>
+</report-database>
