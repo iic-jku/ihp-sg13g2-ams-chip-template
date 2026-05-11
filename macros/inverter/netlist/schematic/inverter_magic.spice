@@ -1,8 +1,0 @@
-** sch_path: /foss/designs/ihp-sg13g2-ams-chip-template/macros/inverter/schematic/xschem/inverter.sch
-.subckt inverter VDD VSS vin vout
-*.PININFO vin:I VDD:B VSS:B vout:B VDD:B VSS:B
-XMdummy1 VSS VSS VSS VSS sg13_lv_nmos w=2.0u l=1.0u ng=2
-XMdummy2 VDD VDD VDD VDD sg13_lv_pmos w=12.0u l=1.0u ng=2
-XM1 vout vin VSS VSS sg13_lv_nmos w=20.0u l=1.0u ng=20
-XM2 vout vin VDD VDD sg13_lv_pmos w=120.0u l=1.0u ng=20
-.ends

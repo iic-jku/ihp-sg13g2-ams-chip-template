@@ -1,0 +1,23 @@
+[
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "A Tutorial on Open-Source Analog-Mixed Signal Chip Design with the ihp-sg13g2 Open-PDK",
+    "section": "",
+    "text": "Warning\n\n\n\nThis documentation is a Work in Progress."
+  },
+  {
+    "objectID": "index.html#overview",
+    "href": "index.html#overview",
+    "title": "A Tutorial on Open-Source Analog-Mixed Signal Chip Design with the ihp-sg13g2 Open-PDK",
+    "section": "1 Overview",
+    "text": "1 Overview\nThis tutorial walks through the complete open-source AMS chip flow for the ihp-sg13g2 Open-PDK, from RTL and macro generation through padframe integration, physical implementation, verification, and final views.\nThe example design combines two digital counter macros, two inverter macros, an SRAM macro, analog and digital pad connectivity, and the top-level chip."
+  },
+  {
+    "objectID": "index.html#acknowledgements",
+    "href": "index.html#acknowledgements",
+    "title": "A Tutorial on Open-Source Analog-Mixed Signal Chip Design with the ihp-sg13g2 Open-PDK",
+    "section": "2 Acknowledgements",
+    "text": "2 Acknowledgements\nThis project is funded by the JKU/SAL IWS Lab, a collaboration of Johannes Kepler University and Silicon Austria Labs."
+  }
+]
