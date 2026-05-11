@@ -19,6 +19,16 @@ Bus pins in the symbol use the xschem range syntax ``name[A..B]`` and
 are expanded into individual indexed pins (``name[A]``, ``name[A+1]``,
 ..., ``name[B]``) before matching.
 
+Pin ordering from the symbol supports two modes:
+
+  - ``sim_pinnumber`` mode: if *every* B 5 pin line (or bus group) in
+    the .sym file carries a ``sim_pinnumber=<n>`` property, the entries
+    are sorted by that number before positional matching against the
+    XSPICE pins. Expanded bus pins keep their intra-bus order.
+  - Appearance-order mode (default): if no pin (or only some pins) carry
+    ``sim_pinnumber``, the order of appearance in the .sym file is used,
+    matching the original behaviour.
+
 Usage:
     python reorder_xspice_pins.py <sym_file> <xspice_file> [-o <output_file>]
 
@@ -36,28 +46,40 @@ XSPICE_POWER = set(POWER_MAP.values())
 def parse_sym_pins(sym_path: str) -> list[str]:
     """Extract pin names from .sym file in order of appearance.
 
-    Pins are defined as: B 5 ... {name=<pin_name> dir=<dir>}
+    Pins are defined as: B 5 ... {name=<pin_name> dir=<dir> [sim_pinnumber=<n>]}
     A bus pin written as ``name[A..B]`` is expanded into individual
     indexed pins. ``A`` and ``B`` may be in either order.
+    If every pin (or bus group) carries a ``sim_pinnumber`` property, the
+    entries are sorted by that number instead of by order of appearance;
+    expanded bus pins keep their intra-bus order.
     """
-    pins = []
-    pin_pattern = re.compile(r'^B\s+5\s+.*\{name=(\S+)\s+dir=\w+\}')
+    pin_pattern = re.compile(r'^B\s+5\s+.*\{name=(\S+)\s+dir=\w+[^}]*\}')
     bus_range_pattern = re.compile(r'^(.+)\[(\d+)\.\.(\d+)\]$')
+    sim_num_pattern = re.compile(r'sim_pinnumber=(\d+)')
+    raw = []  # list of (sim_pinnumber | None, [expanded pin names])
     with open(sym_path, 'r') as f:
         for line in f:
-            m = pin_pattern.match(line.strip())
+            stripped = line.strip()
+            m = pin_pattern.match(stripped)
             if not m:
                 continue
             name = m.group(1)
+            sn = sim_num_pattern.search(stripped)
+            sim_num = int(sn.group(1)) if sn else None
             bm = bus_range_pattern.match(name)
             if bm:
                 base = bm.group(1)
                 a, b = int(bm.group(2)), int(bm.group(3))
                 step = 1 if a <= b else -1
-                for i in range(a, b + step, step):
-                    pins.append(f'{base}[{i}]')
+                expanded = [f'{base}[{i}]' for i in range(a, b + step, step)]
             else:
-                pins.append(name)
+                expanded = [name]
+            raw.append((sim_num, expanded))
+    if raw and all(n is not None for n, _ in raw):
+        raw.sort(key=lambda x: x[0])
+    pins = []
+    for _, expanded in raw:
+        pins.extend(expanded)
     return pins
 
 
