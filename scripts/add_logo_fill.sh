@@ -24,16 +24,16 @@ LOGO_IMG="${IMG_DIR}/chip_logo_mono.png"
 # meerkat.py maps each image pixel to one GDS pixel of size PIXSZ = 2 µm.
 # The logo image must therefore satisfy:
 #
-#   img_width  [px] = logo_width  [µm] / 2   ≤  (die_width  - margin_left)   / 2
-#   img_height [px] = logo_height [µm] / 2   ≤  (die_height - margin_bottom) / 2
+#   img_width  [px] = logo_width  [µm] / 2 ≤ (die_width  - margin_left)   / 2
+#   img_height [px] = logo_height [µm] / 2 ≤ (die_height - margin_bottom) / 2
 #
-# For this chip (die = 2000×2000 µm, -m left=250, bottom=475):
+# For this chip (die = 1600×1600 µm, -m left=250, bottom=475):
 #
-#   max img_width  = (2000 - 250) / 2 = 875 px   → logo spans up to x = 2000 µm
-#   max img_height = (2000 - 475) / 2 = 762 px   → logo spans up to y = 2000 µm
+#   max img_width  = (1600 - 250) / 2 = 675 px → logo spans up to x = 1600 µm
+#   max img_height = (1600 - 475) / 2 = 562 px → logo spans up to y = 1600 µm
 #
-# Current logo (chip_logo_mono.png): 750×550 px → 1500×1100 µm on-chip
-#   placed at bottom-left corner (250, 475) µm, top-right corner (1750, 1575) µm
+# Current logo (chip_logo_mono.png): 675×495 px → 1350×990 µm on-chip
+#   placed at bottom-left corner (250, 475) µm, top-right corner (1600, 1465) µm
 # ─────────────────────────────────────────────────────────────────────────────
 
 echo "[INFO] Adding logo and fill to ${GDS_IN}"
