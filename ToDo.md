@@ -1,5 +1,6 @@
 ﻿# ToDo List
 
+- [ ] adjust fill density on top-level
 - [ ] send top-level testbench to dwarning
 - [ ] update `.designinit` with 2026.05. (remove `XSCHEM_USER_LIBRARY_PATH`)
 - [ ] finish ToDos in main Makefile
