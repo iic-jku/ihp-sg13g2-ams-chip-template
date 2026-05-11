@@ -1,13 +1,22 @@
+#!/usr/bin/env python3
 # SPDX-FileCopyrightText: 2026 Simon Dorrer and Harald Pretl
 # SPDX-License-Identifier: Apache-2.0
 
-#!/usr/bin/env python3
 """
 Reorder the .subckt pin list in a PEX SPICE file to match the pin order
 of an Xschem .sym symbol file.
 
 Pin names are identical in both files.  The order is taken from the
-B 5 (pin) lines in the .sym file, in order of appearance.
+B 5 (pin) lines in the .sym file.  Two ordering modes are supported:
+
+  - ``sim_pinnumber`` mode: if *every* B 5 pin line carries a
+    ``sim_pinnumber=<n>`` property, the pins are sorted by that number.
+    This is useful when the physical layout of pins in the symbol file
+    does not reflect the intended electrical pin order (e.g. the IHP
+    bipolar symbols).
+  - Appearance-order mode (default): if no pin (or only some pins) carry
+    ``sim_pinnumber``, the order of appearance in the .sym file is used,
+    matching the original behaviour.
 
 Usage:
     python reorder_spice_pins.py <sym_file> <spice_file> [-o <output_file>]
@@ -22,16 +31,25 @@ import re
 def parse_sym_pins(sym_path: str) -> list[str]:
     """Extract pin names from .sym file in order of appearance.
 
-    Pins are defined as: B 5 ... {name=<pin_name> dir=<dir>}
+    Pins are defined as: B 5 ... {name=<pin_name> dir=<dir> [sim_pinnumber=<n>]}
+    If every pin carries a ``sim_pinnumber`` property, the list is sorted
+    by that number instead of by order of appearance.
     """
-    pins = []
-    pattern = re.compile(r'^B\s+5\s+.*\{name=(\S+)\s+dir=\w+\}')
+    pin_pattern = re.compile(r'^B\s+5\s+.*\{name=(\S+)\s+dir=\w+[^}]*\}')
+    sim_num_pattern = re.compile(r'sim_pinnumber=(\d+)')
+    raw = []  # list of (sim_pinnumber | None, name)
     with open(sym_path, 'r') as f:
         for line in f:
-            m = pattern.match(line.strip())
-            if m:
-                pins.append(m.group(1))
-    return pins
+            stripped = line.strip()
+            m = pin_pattern.match(stripped)
+            if not m:
+                continue
+            name = m.group(1)
+            sn = sim_num_pattern.search(stripped)
+            raw.append((int(sn.group(1)) if sn else None, name))
+    if raw and all(n is not None for n, _ in raw):
+        raw.sort(key=lambda x: x[0])
+    return [name for _, name in raw]
 
 
 def parse_spice_subckt(spice_path: str) -> tuple[str, list[str], int, int]:
@@ -137,4 +155,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-    
