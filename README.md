@@ -251,6 +251,20 @@ make sim-gl-xschem
 > `sim-gl-xschem` is available and converges, but it may take a long time depending on the hardware used.
 > It is therefore **not** included in `sim-all` and must be called manually.
 
+To plot the Xschem simulation results using the Python script in `scripts/plot_simulations/`, use:
+
+```sh
+make sim-view-xschem
+make sim-view-xschem CELL=chip_top
+```
+
+The target runs `python3 scripts/plot_simulations/plot_<CELL>.py`. `CELL` defaults to `chip_top`.
+
+> [!NOTE]
+> `sim-view-xschem` is intentionally **not** called by `sim-all`.
+> It opens the generated Python figures, which blocks the shell until the window is closed.
+> It is designed for interactive use and must be called manually after the simulation has completed.
+
 The cocotb simulations generate a waveform file under `testbenches/cocotb/sim_build/chip_top.fst`.
 You can view it with a waveform viewer such as [GTKWave](https://gtkwave.github.io/gtkwave/) or [Surfer](https://surfer-project.org/).
 The waveform viewer can be changed with `WAVEFORM_VIEWER=<gtkwave|surfer>` (default: `gtkwave`).
@@ -275,8 +289,8 @@ make sim-all
 > It is designed for interactive use and must be called manually after the simulation has completed.
 
 > [!NOTE]
-> `sim-gl-xschem` is also **not** included in `sim-all` because it may take a long time depending on the hardware used.
-> Run it manually with `make sim-gl-xschem` when needed.
+> `sim-gl-xschem` and `sim-view-xschem` are also **not** included in `sim-all` because `sim-gl-xschem` may take a long time depending on the hardware used.
+> Run them manually with `make sim-gl-xschem` followed by `make sim-view-xschem` when needed.
 
 
 ## LibreLane Flow

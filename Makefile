@@ -52,6 +52,7 @@ XSCHEM_TB_DIR   := testbenches/xschem
 COCOTB_DIR      := testbenches/cocotb
 LAY_DIR         := layout
 SCRIPTS_DIR     := scripts
+SIM_PLOT_DIR    := scripts/plot_simulations
 RENDER_IMG_DIR  := render/img
 SRC_DIR         := rtl
 IP_DIR          := ip
@@ -121,12 +122,17 @@ sim-gl-xschem: ## Run gate-level simulation of CELL cell with Xschem (usage: mak
 	' $(CELL)_tb_tran.sch
 .PHONY: sim-gl-xschem
 
+sim-view-xschem: ## Plot Xschem simulation results (usage: make sim-view-xschem CELL=<cellname>)
+	python3 $(SIM_PLOT_DIR)/plot_$(CELL).py
+.PHONY: sim-view-xschem
+
 sim-all: ## Simulate the chip (RTL/GL cocotb + GL Xschem)
 	$(MAKE) sim-rtl-cocotb
 #	$(MAKE) sim-view-cocotb
 	$(MAKE) sim-gl-cocotb
 #	$(MAKE) sim-view-cocotb
 #	$(MAKE) sim-gl-xschem
+#	$(MAKE) sim-view-xschem
 .PHONY: sim-all
 # ================================================================================================
 
