@@ -33,11 +33,13 @@ meta:
     # density cannot be met using KLayout.
     #KLayout.Filler: Magic.Filler
 
-    # Disable KLayout filler (all layers)
-    # TODO: add custom LibreLane step for filler insertion after ArtistIC added logo.
-    KLayout.Filler: null
-
-    # TODO: Add GDSFill
+    # Replace the built-in KLayout filler with the custom logo+fill step.
+    # ChipFinish.LogoAndFill (defined in librelane_plugin_chip_finish.py):
+    #   1. adds the design logo to the TM2 layer via the ArtistIC meerkat tool chain
+    #   2. runs the PDK KLayout filler on all layers
+    # The step is registered as a LibreLane plugin; PYTHONPATH must include
+    # flow/librelane/ when invoking LibreLane (see Makefile librelane targets).
+    KLayout.Filler: "ChipFinish.LogoAndFill"
 
     # Disable setup-violation errors
     #Checker.SetupViolations: null
@@ -52,6 +54,30 @@ meta:
 #    buffer: sg13g2_buf_4
 
 DESIGN_NAME: chip_top
+
+# ================================================================
+# ChipFinish.LogoAndFill step configuration
+# ================================================================
+# Path to the ArtistIC (meerkat) scripts used by ChipFinish.LogoAndFill.
+ARTISTIC_SCRIPTS_DIR: dir::../../flow/artistic/scripts
+
+# Monochrome PNG logo written to the TM2 layer.
+LOGO_IMAGE: dir::../../flow/logo/chip_logo_mono.png
+
+# GDS layer number for the top metal layer (TM2 = 134 in IHP SG13G2).
+TOP_METAL_LAYER: 134
+
+# Logo placement margins from the die origin (layout origin, not core origin).
+# Computed as: CORE_LLX/LLY + LOGO_CORE_MARGIN_LEFT/BOTTOM
+#   CORE_LLX=365, LOGO_CORE_MARGIN_LEFT=35  → LOGO_MARGIN_LEFT=400
+#   CORE_LLY=365, LOGO_CORE_MARGIN_BOTTOM=165 → LOGO_MARGIN_BOTTOM=530
+LOGO_MARGIN_LEFT:   400
+LOGO_MARGIN_BOTTOM: 530
+
+# Bounding rectangles drawn around the logo (one per entry).
+LOGO_RECT_LAYERS:   ["134/23", "126/23"]
+LOGO_RECT_MARGINS:  [20, 0]
+
 VERILOG_FILES:
 - dir::../../rtl/chip_top.sv
 - dir::../../rtl/chip_core.sv

@@ -138,20 +138,26 @@ sim-all: ## Simulate the chip (RTL/GL cocotb + GL Xschem)
 
 
 # LibreLane Targets
-librelane: ## Run LibreLane with Magic and KLayout DRC checks
+# PYTHONPATH is extended with the LibreLane config directory so that the
+# librelane_plugin_chip_finish.py plugin is discoverable by LibreLane
+# (plugin modules must be importable and have a "librelane_plugin_" prefix).
+LIBRELANE_RUN = PYTHONPATH="$(MAKEFILE_DIR)/$(LIBRELANE_DIR)$${PYTHONPATH:+:$$PYTHONPATH}" \
 	librelane $(LIBRELANE_DIR)/config.yaml --pdk ${PDK} --pdk-root ${PDK_ROOT} --manual-pdk --save-views-to $(FLOW_FINAL_DIR)/
+
+librelane: ## Run LibreLane with Magic and KLayout DRC checks
+	$(LIBRELANE_RUN)
 .PHONY: librelane
 
 librelane-nodrc: ## Run LibreLane without DRC checks
-	librelane $(LIBRELANE_DIR)/config.yaml --pdk ${PDK} --pdk-root ${PDK_ROOT} --manual-pdk --save-views-to $(FLOW_FINAL_DIR)/ --skip KLayout.DRC --skip Magic.DRC --skip KLayout.Antenna --skip KLayout.Density
+	$(LIBRELANE_RUN) --skip KLayout.DRC --skip Magic.DRC --skip KLayout.Antenna --skip KLayout.Density
 .PHONY: librelane-nodrc
 
 librelane-magicdrc: ## Run LibreLane with only Magic DRC checks
-	librelane $(LIBRELANE_DIR)/config.yaml --pdk ${PDK} --pdk-root ${PDK_ROOT} --manual-pdk --save-views-to $(FLOW_FINAL_DIR)/ --skip KLayout.DRC
+	$(LIBRELANE_RUN) --skip KLayout.DRC
 .PHONY: librelane-magicdrc
 
 librelane-klayoutdrc: ## Run LibreLane with only KLayout DRC checks
-	librelane $(LIBRELANE_DIR)/config.yaml --pdk ${PDK} --pdk-root ${PDK_ROOT} --manual-pdk --save-views-to $(FLOW_FINAL_DIR)/ --skip Magic.DRC
+	$(LIBRELANE_RUN) --skip Magic.DRC
 .PHONY: librelane-klayoutdrc
 
 librelane-openroad: ## Open the last LibreLane run in OpenROAD GUI
