@@ -13,8 +13,8 @@ ypos2=2.5028612
 divy=5
 subdivy=1
 unity=1
-x1=0
-x2=1e-05
+x1=-3.4217016e-05
+x2=-2.4217016e-05
 divx=5
 subdivx=1
 xlabmag=1.0
@@ -43,8 +43,8 @@ ypos2=2.1
 divy=5
 subdivy=1
 unity=1
-x1=0
-x2=1e-05
+x1=-3.4217016e-05
+x2=-2.4217016e-05
 divx=5
 subdivx=1
 xlabmag=1.0
@@ -73,8 +73,8 @@ ypos2=2
 divy=5
 subdivy=1
 unity=1
-x1=0
-x2=1e-05
+x1=-3.4217016e-05
+x2=-2.4217016e-05
 divx=5
 subdivx=1
 xlabmag=1.0
@@ -97,8 +97,8 @@ ypos2=2
 divy=5
 subdivy=1
 unity=1
-x1=0
-x2=1e-05
+x1=-3.4217016e-05
+x2=-2.4217016e-05
 divx=5
 subdivx=1
 xlabmag=1.0
@@ -120,8 +120,8 @@ ypos2=2
 divy=5
 subdivy=1
 unity=1
-x1=0
-x2=1e-05
+x1=-3.4217016e-05
+x2=-2.4217016e-05
 divx=5
 subdivx=1
 xlabmag=1.0
@@ -143,8 +143,8 @@ ypos2=2
 divy=5
 subdivy=1
 unity=1
-x1=0
-x2=1e-05
+x1=-3.4217016e-05
+x2=-2.4217016e-05
 divx=5
 subdivx=1
 xlabmag=1.0
@@ -166,8 +166,8 @@ ypos2=2.1
 divy=5
 subdivy=1
 unity=1
-x1=0
-x2=1e-05
+x1=-3.4217016e-05
+x2=-2.4217016e-05
 divx=5
 subdivx=1
 xlabmag=1.0
@@ -192,8 +192,8 @@ ypos2=2.4015049
 divy=5
 subdivy=1
 unity=1
-x1=0
-x2=1e-05
+x1=-3.4217016e-05
+x2=-2.4217016e-05
 divx=5
 subdivx=1
 xlabmag=1.0
@@ -303,7 +303,7 @@ write @schname\\\\.raw
 
 * Plotting
 plot clock reset_n enable sram_0_out
-plot inv2_vin1 inv2_vout1
+plot inv2_vin1 inv2_vout1 inv2_vin2 inv2_vout2
 plot inv1_dout1 inv1_dout2 inv1_dout3 inv1_dout4
 plot counter2_value0 counter2_value1 counter2_value2 counter2_value3 counter2_value4 counter2_value5 counter2_value6 counter2_value7
 plot counter1_value4_inv1_din1 counter1_value5_inv1_din2
@@ -313,7 +313,8 @@ unset appendwrite
 set wr_vecnames
 set wr_singlescale
 wrdata ../../../scripts/plot_simulations/data/chip_top_tb_tran.txt
-+ v(clock) v(reset_n) v(enable) v(sram_0_out) v(inv2_vin1) v(inv2_vout1)
++ v(clock) v(reset_n) v(enable) v(sram_0_out)
++ v(inv2_vin1) v(inv2_vout1) v(inv2_vin2) v(inv2_vout2)
 + v(inv1_dout1) v(inv1_dout2) v(inv1_dout3) v(inv1_dout4)
 + v(counter2_value0) v(counter2_value1) v(counter2_value2) v(counter2_value3)
 + v(counter2_value4) v(counter2_value5) v(counter2_value6) v(counter2_value7)
