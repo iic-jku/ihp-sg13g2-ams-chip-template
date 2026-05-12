@@ -247,6 +247,10 @@ To run the gate-level simulation with Xschem, use:
 make sim-gl-xschem
 ```
 
+> [!NOTE]
+> `sim-gl-xschem` is available and converges, but it may take a long time depending on the hardware used.
+> It is therefore **not** included in `sim-all` and must be called manually.
+
 The cocotb simulations generate a waveform file under `testbenches/cocotb/sim_build/chip_top.fst`.
 You can view it with a waveform viewer such as [GTKWave](https://gtkwave.github.io/gtkwave/) or [Surfer](https://surfer-project.org/).
 The waveform viewer can be changed with `WAVEFORM_VIEWER=<gtkwave|surfer>` (default: `gtkwave`).
@@ -259,7 +263,7 @@ make sim-view-cocotb WAVEFORM_VIEWER=surfer                   # use Surfer inste
 Each cocotb simulation folder contains a pre-configured waveform layout file (`<CELL>_tb.gtkw` for GTKWave, `<CELL>_tb.surf.ron` for Surfer).
 The view target loads it automatically together with the current `.fst`, so signal formatting is preserved across runs.
 
-To run all non-interactive simulation targets in sequence (RTL cocotb, GL cocotb, and GL Xschem), use:
+To run all non-interactive simulation targets in sequence (RTL cocotb and GL cocotb), use:
 
 ```sh
 make sim-all
@@ -269,6 +273,10 @@ make sim-all
 > `sim-view-cocotb` is intentionally **not** called by `sim-all`.
 > It opens a waveform viewer GUI (GTKWave or Surfer), which blocks the shell until the window is closed.
 > It is designed for interactive use and must be called manually after the simulation has completed.
+
+> [!NOTE]
+> `sim-gl-xschem` is also **not** included in `sim-all` because it may take a long time depending on the hardware used.
+> Run it manually with `make sim-gl-xschem` when needed.
 
 
 ## LibreLane Flow

@@ -126,7 +126,7 @@ sim-all: ## Simulate the chip (RTL/GL cocotb + GL Xschem)
 #	$(MAKE) sim-view-cocotb
 	$(MAKE) sim-gl-cocotb
 #	$(MAKE) sim-view-cocotb
-#	$(MAKE) sim-gl-xschem 		# TODO: I/O cell convergence is still not good
+#	$(MAKE) sim-gl-xschem
 .PHONY: sim-all
 # ================================================================================================
 
