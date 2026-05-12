@@ -374,7 +374,7 @@ C {devices/gnd.sym} 620 -2060 0 0 {name=l2 lab=GND
 value=\{IOVDD\}}
 C {devices/lab_wire.sym} 620 -2200 3 1 {name=p26 sig_type=std_logic lab=VIO}
 C {chip_top.sym} 790 -790 0 0 {name=x1
-spice_ignore=true}
+}
 C {devices/lab_wire.sym} 640 -1200 3 1 {name=p4 sig_type=std_logic lab=counter1_value1}
 C {devices/lab_wire.sym} 700 -1200 3 1 {name=p5 sig_type=std_logic lab=counter1_value2}
 C {devices/lab_wire.sym} 760 -1200 3 1 {name=p6 sig_type=std_logic lab=counter1_value3}
