@@ -1,0 +1,65 @@
+*#######################################################################
+*
+* Copyright 2025 IHP PDK Authors
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*    https://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*
+*#######################################################################
+*
+* Project-local diode corner deck.
+* Mirrors upstream cornerDIO.lib but replaces diodes.lib with the
+* project-local diodes_custom.lib (convergence-tuned antenna diode models).
+*
+* Because diodes_custom.lib fully replaces upstream diodes.lib, the upstream
+* file is never loaded alongside it — zero redefinition warnings.
+*
+* sg13g2_esd.lib and sg13g2_dschottky_nbl1_mod.lib are loaded unmodified from
+* the PDK model directory (found via the ngspice search path).
+*
+
+* Typical / mean
+.LIB dio_tt
+  .param schottky_nbl1_is = 1.28
+  .param schottky_nbl1_kf = 1.0000
+  .include "diodes_custom.lib"
+  .include "sg13g2_esd.lib"
+  .include "sg13g2_dschottky_nbl1_mod.lib"
+.ENDL dio_tt
+
+* Statistical (typical mean + spread)
+.LIB dio_tt_stat
+  .param schottky_nbl1_is_norm = 1.28
+  .param schottky_nbl1_kf_norm = 1.0000
+  .include "diodes_custom.lib"
+  .include "sg13g2_esd.lib"
+  .include "sg13g2_dschottky_nbl1_stat.lib"
+  .include "sg13g2_dschottky_nbl1_mod.lib"
+.ENDL dio_tt_stat
+
+* Slow corner (-3 sigma)
+.LIB dio_ss
+  .param schottky_nbl1_is = 0.85
+  .param schottky_nbl1_kf = 0.4
+  .include "diodes_custom.lib"
+  .include "sg13g2_esd.lib"
+  .include "sg13g2_dschottky_nbl1_mod.lib"
+.ENDL dio_ss
+
+* Fast corner (+3 sigma)
+.LIB dio_ff
+  .param schottky_nbl1_is = 1.92
+  .param schottky_nbl1_kf = 1.61
+  .include "diodes_custom.lib"
+  .include "sg13g2_esd.lib"
+  .include "sg13g2_dschottky_nbl1_mod.lib"
+.ENDL dio_ff

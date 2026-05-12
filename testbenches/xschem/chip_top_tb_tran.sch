@@ -13,8 +13,8 @@ ypos2=2.5028612
 divy=5
 subdivy=1
 unity=1
-x1=-5.1787916e-05
-x2=-3.1787916e-05
+x1=0
+x2=1e-05
 divx=5
 subdivx=1
 xlabmag=1.0
@@ -43,8 +43,8 @@ ypos2=2.1
 divy=5
 subdivy=1
 unity=1
-x1=-5.1787916e-05
-x2=-3.1787916e-05
+x1=0
+x2=1e-05
 divx=5
 subdivx=1
 xlabmag=1.0
@@ -73,8 +73,8 @@ ypos2=2
 divy=5
 subdivy=1
 unity=1
-x1=-5.1787916e-05
-x2=-3.1787916e-05
+x1=0
+x2=1e-05
 divx=5
 subdivx=1
 xlabmag=1.0
@@ -97,8 +97,8 @@ ypos2=2
 divy=5
 subdivy=1
 unity=1
-x1=-5.1787916e-05
-x2=-3.1787916e-05
+x1=0
+x2=1e-05
 divx=5
 subdivx=1
 xlabmag=1.0
@@ -120,8 +120,8 @@ ypos2=2
 divy=5
 subdivy=1
 unity=1
-x1=-5.1787916e-05
-x2=-3.1787916e-05
+x1=0
+x2=1e-05
 divx=5
 subdivx=1
 xlabmag=1.0
@@ -143,8 +143,8 @@ ypos2=2
 divy=5
 subdivy=1
 unity=1
-x1=-5.1787916e-05
-x2=-3.1787916e-05
+x1=0
+x2=1e-05
 divx=5
 subdivx=1
 xlabmag=1.0
@@ -166,8 +166,8 @@ ypos2=2.1
 divy=5
 subdivy=1
 unity=1
-x1=-5.1787916e-05
-x2=-3.1787916e-05
+x1=0
+x2=1e-05
 divx=5
 subdivx=1
 xlabmag=1.0
@@ -192,8 +192,8 @@ ypos2=2.4015049
 divy=5
 subdivy=1
 unity=1
-x1=-5.1787916e-05
-x2=-3.1787916e-05
+x1=0
+x2=1e-05
 divx=5
 subdivx=1
 xlabmag=1.0
@@ -278,7 +278,7 @@ value="
 .param Rload=1k
 .param fclk=50e6
 .csparam fclk=fclk
-.options klu method=gear reltol=5e-3 abstol=1e-11 gmin=1e-11 rshunt=1e11
+.options klu method=gear reltol=3e-3 vntol=1e-5 abstol=1e-11 chgtol=1e-11 cshunt=100f
 .control
 
 set num_threads=32
@@ -287,7 +287,7 @@ set num_threads=32
 
 * User Constants
 let tstart = 0
-let tstop = 20u
+let tstop = 10u
 let tstep = 100n
 
 * Transient Operating Point Analysis
@@ -343,7 +343,7 @@ value="
 .lib cornerHBT.lib hbt_typ
 .lib cornerRES.lib res_typ
 .lib cornerCAP.lib cap_typ
-.lib cornerDIO.lib dio_tt
+.lib ../models/cornerDIO_custom.lib dio_tt
 "}
 C {devices/vsource.sym} 420 -2130 0 0 {name=VDD value=\{VDD\}}
 C {devices/gnd.sym} 420 -2060 0 0 {name=l3 lab=GND}
@@ -374,7 +374,7 @@ C {devices/gnd.sym} 620 -2060 0 0 {name=l2 lab=GND
 value=\{IOVDD\}}
 C {devices/lab_wire.sym} 620 -2200 3 1 {name=p26 sig_type=std_logic lab=VIO}
 C {chip_top.sym} 790 -790 0 0 {name=x1
-}
+spice_ignore=true}
 C {devices/lab_wire.sym} 640 -1200 3 1 {name=p4 sig_type=std_logic lab=counter1_value1}
 C {devices/lab_wire.sym} 700 -1200 3 1 {name=p5 sig_type=std_logic lab=counter1_value2}
 C {devices/lab_wire.sym} 760 -1200 3 1 {name=p6 sig_type=std_logic lab=counter1_value3}
@@ -409,7 +409,7 @@ C {chip_top.sym} 3810 -330 0 0 {name=x2
 spice_ignore=true}
 C {chip_top_pex.sym} 3810 -990 0 0 {name=x3
 spice_ignore=true}
-C {devices/vsource.sym} 1120 -470 0 0 {name=vsine1 spice_ignore=False value="sin(\{Vcm\} 10m 100k)"
+C {devices/vsource.sym} 1120 -470 0 0 {name=vsine1 spice_ignore=False value="sin(\{Vcm\} 10m 200k)"
 }
 C {devices/gnd.sym} 1120 -380 0 1 {name=l26 lab=GND}
 C {devices/vsource.sym} 1300 -470 0 0 {name=vsine2 spice_ignore=False value="sin(\{Vcm\} 10m 400k)"
