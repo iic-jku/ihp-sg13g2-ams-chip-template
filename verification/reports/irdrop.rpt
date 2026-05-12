@@ -1,4 +1,4 @@
-+ analyze_power_grid -net VDD -voltage_file /foss/designs/ihp-sg13g2-ams-chip-template/flow/librelane/runs/RUN_2026-05-11_20-40-19/55-openroad-irdropreport/net-VDD.csv
++ analyze_power_grid -net VDD -voltage_file /foss/designs/ihp-sg13g2-ams-chip-template/flow/librelane/runs/RUN_2026-05-12_01-32-29/55-openroad-irdropreport/net-VDD.csv
 [INFO PSM-0040] All shapes on net VDD are connected.
 ########## IR report #################
 Net              : VDD
@@ -11,7 +11,7 @@ Average IR drop  : 4.57e-04 V
 Worstcase IR drop: 7.62e-04 V
 Percentage drop  : 0.05 %
 ######################################
-+ analyze_power_grid -net VSS -voltage_file /foss/designs/ihp-sg13g2-ams-chip-template/flow/librelane/runs/RUN_2026-05-11_20-40-19/55-openroad-irdropreport/net-VSS.csv
++ analyze_power_grid -net VSS -voltage_file /foss/designs/ihp-sg13g2-ams-chip-template/flow/librelane/runs/RUN_2026-05-12_01-32-29/55-openroad-irdropreport/net-VSS.csv
 [INFO PSM-0040] All shapes on net VSS are connected.
 ########## IR report #################
 Net              : VSS
