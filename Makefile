@@ -32,7 +32,7 @@ CELL ?= $(TOP)
 
 # PEX mode (1 = C-decoupled, 2 = C-coupled, 3 = full-RC)
 # Override with: make <target> EXT_MODE=<1|2|3>
-EXT_MODE ?= 3
+EXT_MODE ?= 1
 
 # Floating-point precision (significant digits) for Xschem's ev function
 # Override with: make <target> EV_PRECISION=<digits>

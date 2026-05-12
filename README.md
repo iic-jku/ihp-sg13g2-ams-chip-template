@@ -536,9 +536,9 @@ The extracted SPICE filenames include the selected extraction mode:
 - `magic-pex` writes `netlist/pex/<CELL>_magic_pex_<EXT_MODE>.spice`
 
 The `EXT_MODE` parameter selects the extraction mode:
-- `1` = C-decoupled
+- `1` = C-decoupled (default)
 - `2` = C-coupled
-- `3` = full-RC (default)
+- `3` = full-RC
 
 > [!NOTE]
 > For `klayout-pex`, `EXT_MODE=1` (C-decoupled) is not yet supported by kpex and automatically falls back to `EXT_MODE=2` (CC) with a warning.
