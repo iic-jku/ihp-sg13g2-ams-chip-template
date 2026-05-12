@@ -31,12 +31,12 @@ Institute for Integrated Circuits and Quantum Computing, Johannes Kepler Univers
 
 This Makefile-driven repository simulates, builds, and fully verifies (LVS, DRC, PEX) a complete analog mixed-signal chip for the ihp-sg13g2 130nm Open-PDK, including padframe generation and top-level assembly. It uses:
 
-- **LibreLane** for digital macro hardening, padframe generation and top-level assembly
-- **Xschem** for schematic entry
-- **Ngspice**, **VACASK** and **CACE** for analog simulation
-- **KLayout** for viewing and routing of the layout
-- **Magic + Netgen** and **KLayout** for LVS, DRC and PEX verification
-- **SystemVerilog**, **cocotb**, **GTKWave** and **Surfer** for digital simulation
+- [**LibreLane**](https://github.com/librelane/librelane) for digital macro hardening, padframe generation and top-level assembly
+- [**Xschem**](https://github.com/StefanSchippers/xschem) for schematic entry
+- [**Ngspice**](https://github.com/danchitnis/ngspice-sf-mirror), [**VACASK**](https://codeberg.org/arpadbuermen/VACASK) and [**CACE**](https://github.com/fossi-foundation/cace) for analog simulation
+- [**KLayout**](https://github.com/KLayout/klayout) for viewing and routing of the layout
+- [**Magic**](https://github.com/rtimothyedwards/magic) + [**Netgen**](https://github.com/rtimothyedwards/netgen) and [**KLayout**](https://github.com/KLayout/klayout) for LVS, DRC and PEX verification
+- **SystemVerilog**, [**cocotb**](https://github.com/cocotb/cocotb), [**GTKWave**](https://github.com/gtkwave/gtkwave) and [**Surfer**](https://gitlab.com/surfer-project/surfer) for digital simulation
 
 The repository is the starting point for your own custom silicon and provides a universal design flow solution: Just clone the repo, enter the IIC-OSIC-TOOLS container, and run `make all` to get a tapeout-ready analog-mixed signal chip. Focus on your design and do not care about the tools and the design flow!
 
