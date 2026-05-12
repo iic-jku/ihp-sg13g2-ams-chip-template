@@ -26,6 +26,41 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
@@ -51,6 +86,9 @@ ul.task-list li input[type="checkbox"] {
 <link href="site_libs/bootstrap/bootstrap-91544e611bd0e83221240cde35fa504f.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
 <link href="site_libs/bootstrap/bootstrap-dark-8fe479874ca0985b39699dca03e940ea.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
 <link href="site_libs/bootstrap/bootstrap-91544e611bd0e83221240cde35fa504f.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<script src="site_libs/quarto-contrib/glightbox/glightbox.min.js"></script>
+<link href="site_libs/quarto-contrib/glightbox/glightbox.min.css" rel="stylesheet">
+<link href="site_libs/quarto-contrib/glightbox/lightbox.css" rel="stylesheet">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -296,7 +334,82 @@ ul.task-list li input[type="checkbox"] {
    
   <ul>
   <li><a href="#overview" id="toc-overview" class="nav-link active" data-scroll-target="#overview"><span class="header-section-number">1</span> Overview</a></li>
-  <li><a href="#acknowledgements" id="toc-acknowledgements" class="nav-link" data-scroll-target="#acknowledgements"><span class="header-section-number">2</span> Acknowledgements</a></li>
+  <li><a href="#sec-tools" id="toc-sec-tools" class="nav-link" data-scroll-target="#sec-tools"><span class="header-section-number">2</span> Tools, the IIC-OSIC-TOOLS Container</a>
+  <ul class="collapse">
+  <li><a href="#installation" id="toc-installation" class="nav-link" data-scroll-target="#installation"><span class="header-section-number">2.1</span> Installation</a></li>
+  <li><a href="#selecting-the-ihp-sg13g2-pdk" id="toc-selecting-the-ihp-sg13g2-pdk" class="nav-link" data-scroll-target="#selecting-the-ihp-sg13g2-pdk"><span class="header-section-number">2.2</span> Selecting the IHP SG13G2 PDK</a></li>
+  </ul></li>
+  <li><a href="#sec-repo" id="toc-sec-repo" class="nav-link" data-scroll-target="#sec-repo"><span class="header-section-number">3</span> Repository Overview</a>
+  <ul class="collapse">
+  <li><a href="#purpose" id="toc-purpose" class="nav-link" data-scroll-target="#purpose"><span class="header-section-number">3.1</span> Purpose</a></li>
+  <li><a href="#directory-structure" id="toc-directory-structure" class="nav-link" data-scroll-target="#directory-structure"><span class="header-section-number">3.2</span> Directory Structure</a></li>
+  <li><a href="#workflow-in-a-nutshell" id="toc-workflow-in-a-nutshell" class="nav-link" data-scroll-target="#workflow-in-a-nutshell"><span class="header-section-number">3.3</span> Workflow in a Nutshell</a>
+  <ul class="collapse">
+  <li><a href="#most-important-top-level-targets" id="toc-most-important-top-level-targets" class="nav-link" data-scroll-target="#most-important-top-level-targets"><span class="header-section-number">3.3.1</span> Most important top-level targets</a></li>
+  <li><a href="#most-important-counter-makefile-targets" id="toc-most-important-counter-makefile-targets" class="nav-link" data-scroll-target="#most-important-counter-makefile-targets"><span class="header-section-number">3.3.2</span> Most important counter Makefile targets</a></li>
+  <li><a href="#most-important-inverter-makefile-targets" id="toc-most-important-inverter-makefile-targets" class="nav-link" data-scroll-target="#most-important-inverter-makefile-targets"><span class="header-section-number">3.3.3</span> Most important inverter Makefile targets</a></li>
+  </ul></li>
+  </ul></li>
+  <li><a href="#sec-counter" id="toc-sec-counter" class="nav-link" data-scroll-target="#sec-counter"><span class="header-section-number">4</span> Counter Macro Implementation</a>
+  <ul class="collapse">
+  <li><a href="#folder-structure-of-the-counter-macro" id="toc-folder-structure-of-the-counter-macro" class="nav-link" data-scroll-target="#folder-structure-of-the-counter-macro"><span class="header-section-number">4.1</span> Folder Structure of the Counter Macro</a></li>
+  <li><a href="#reading-the-rtl" id="toc-reading-the-rtl" class="nav-link" data-scroll-target="#reading-the-rtl"><span class="header-section-number">4.2</span> Reading the RTL</a>
+  <ul class="collapse">
+  <li><a href="#counter.sv" id="toc-counter.sv" class="nav-link" data-scroll-target="#counter.sv"><span class="header-section-number">4.2.1</span> <code>counter.sv</code></a></li>
+  <li><a href="#counter_top.sv" id="toc-counter_top.sv" class="nav-link" data-scroll-target="#counter_top.sv"><span class="header-section-number">4.2.2</span> <code>counter_top.sv</code></a></li>
+  </ul></li>
+  <li><a href="#linting" id="toc-linting" class="nav-link" data-scroll-target="#linting"><span class="header-section-number">4.3</span> Linting</a></li>
+  <li><a href="#simulation" id="toc-simulation" class="nav-link" data-scroll-target="#simulation"><span class="header-section-number">4.4</span> Simulation</a>
+  <ul class="collapse">
+  <li><a href="#rtl-with-systemverilog-testbench-icarus-verilog" id="toc-rtl-with-systemverilog-testbench-icarus-verilog" class="nav-link" data-scroll-target="#rtl-with-systemverilog-testbench-icarus-verilog"><span class="header-section-number">4.4.1</span> RTL with SystemVerilog testbench (Icarus Verilog)</a></li>
+  <li><a href="#rtl-and-gate-level-with-cocotb" id="toc-rtl-and-gate-level-with-cocotb" class="nav-link" data-scroll-target="#rtl-and-gate-level-with-cocotb"><span class="header-section-number">4.4.2</span> RTL and gate-level with cocotb</a></li>
+  </ul></li>
+  <li><a href="#librelane-hardening" id="toc-librelane-hardening" class="nav-link" data-scroll-target="#librelane-hardening"><span class="header-section-number">4.5</span> LibreLane Hardening</a></li>
+  <li><a href="#viewing-the-macro" id="toc-viewing-the-macro" class="nav-link" data-scroll-target="#viewing-the-macro"><span class="header-section-number">4.6</span> Viewing the Macro</a></li>
+  <li><a href="#gate-level-mixed-signal-simulation-with-xschem" id="toc-gate-level-mixed-signal-simulation-with-xschem" class="nav-link" data-scroll-target="#gate-level-mixed-signal-simulation-with-xschem"><span class="header-section-number">4.7</span> Gate-Level Mixed-Signal Simulation with Xschem</a></li>
+  <li><a href="#build-and-verify-everything" id="toc-build-and-verify-everything" class="nav-link" data-scroll-target="#build-and-verify-everything"><span class="header-section-number">4.8</span> Build and Verify Everything</a></li>
+  </ul></li>
+  <li><a href="#sec-inverter" id="toc-sec-inverter" class="nav-link" data-scroll-target="#sec-inverter"><span class="header-section-number">5</span> Inverter Macro Implementation</a>
+  <ul class="collapse">
+  <li><a href="#folder-structure-of-the-inverter-macro" id="toc-folder-structure-of-the-inverter-macro" class="nav-link" data-scroll-target="#folder-structure-of-the-inverter-macro"><span class="header-section-number">5.1</span> Folder Structure of the Inverter Macro</a></li>
+  <li><a href="#schematic-level-simulation" id="toc-schematic-level-simulation" class="nav-link" data-scroll-target="#schematic-level-simulation"><span class="header-section-number">5.2</span> Schematic-Level Simulation</a></li>
+  <li><a href="#inspect-edit-the-layout" id="toc-inspect-edit-the-layout" class="nav-link" data-scroll-target="#inspect-edit-the-layout"><span class="header-section-number">5.3</span> Inspect / Edit the Layout</a></li>
+  <li><a href="#process-variation-and-mismatch-cace" id="toc-process-variation-and-mismatch-cace" class="nav-link" data-scroll-target="#process-variation-and-mismatch-cace"><span class="header-section-number">5.4</span> Process Variation and Mismatch (CACE)</a></li>
+  <li><a href="#drc-lvs-and-pex" id="toc-drc-lvs-and-pex" class="nav-link" data-scroll-target="#drc-lvs-and-pex"><span class="header-section-number">5.5</span> DRC, LVS, and PEX</a>
+  <ul class="collapse">
+  <li><a href="#design-rule-check" id="toc-design-rule-check" class="nav-link" data-scroll-target="#design-rule-check"><span class="header-section-number">5.5.1</span> Design Rule Check</a></li>
+  <li><a href="#layout-versus-schematic" id="toc-layout-versus-schematic" class="nav-link" data-scroll-target="#layout-versus-schematic"><span class="header-section-number">5.5.2</span> Layout-Versus-Schematic</a></li>
+  <li><a href="#parasitic-extraction" id="toc-parasitic-extraction" class="nav-link" data-scroll-target="#parasitic-extraction"><span class="header-section-number">5.5.3</span> Parasitic Extraction</a></li>
+  <li><a href="#run-everything-at-once" id="toc-run-everything-at-once" class="nav-link" data-scroll-target="#run-everything-at-once"><span class="header-section-number">5.5.4</span> Run Everything at Once</a></li>
+  </ul></li>
+  <li><a href="#build-deliverables-for-top-level-integration" id="toc-build-deliverables-for-top-level-integration" class="nav-link" data-scroll-target="#build-deliverables-for-top-level-integration"><span class="header-section-number">5.6</span> Build Deliverables for Top-Level Integration</a></li>
+  <li><a href="#full-macro-pass" id="toc-full-macro-pass" class="nav-link" data-scroll-target="#full-macro-pass"><span class="header-section-number">5.7</span> Full Macro Pass</a></li>
+  </ul></li>
+  <li><a href="#sec-top" id="toc-sec-top" class="nav-link" data-scroll-target="#sec-top"><span class="header-section-number">6</span> Top-Level Implementation</a>
+  <ul class="collapse">
+  <li><a href="#understanding-chip_top.sv" id="toc-understanding-chip_top.sv" class="nav-link" data-scroll-target="#understanding-chip_top.sv"><span class="header-section-number">6.1</span> Understanding <code>chip_top.sv</code></a></li>
+  <li><a href="#understanding-chip_core.sv" id="toc-understanding-chip_core.sv" class="nav-link" data-scroll-target="#understanding-chip_core.sv"><span class="header-section-number">6.2</span> Understanding <code>chip_core.sv</code></a></li>
+  <li><a href="#understanding-config.yaml" id="toc-understanding-config.yaml" class="nav-link" data-scroll-target="#understanding-config.yaml"><span class="header-section-number">6.3</span> Understanding <code>config.yaml</code></a></li>
+  <li><a href="#understanding-pdn_cfg.tcl" id="toc-understanding-pdn_cfg.tcl" class="nav-link" data-scroll-target="#understanding-pdn_cfg.tcl"><span class="header-section-number">6.4</span> Understanding <code>pdn_cfg.tcl</code></a></li>
+  <li><a href="#top-level-simulation" id="toc-top-level-simulation" class="nav-link" data-scroll-target="#top-level-simulation"><span class="header-section-number">6.5</span> Top-Level Simulation</a></li>
+  <li><a href="#building-the-chip" id="toc-building-the-chip" class="nav-link" data-scroll-target="#building-the-chip"><span class="header-section-number">6.6</span> Building the Chip</a></li>
+  <li><a href="#viewing-the-chip" id="toc-viewing-the-chip" class="nav-link" data-scroll-target="#viewing-the-chip"><span class="header-section-number">6.7</span> Viewing the Chip</a></li>
+  <li><a href="#chip-level-verification" id="toc-chip-level-verification" class="nav-link" data-scroll-target="#chip-level-verification"><span class="header-section-number">6.8</span> Chip-Level Verification</a>
+  <ul class="collapse">
+  <li><a href="#drc" id="toc-drc" class="nav-link" data-scroll-target="#drc"><span class="header-section-number">6.8.1</span> DRC</a></li>
+  <li><a href="#pex" id="toc-pex" class="nav-link" data-scroll-target="#pex"><span class="header-section-number">6.8.2</span> PEX</a></li>
+  <li><a href="#lvs" id="toc-lvs" class="nav-link" data-scroll-target="#lvs"><span class="header-section-number">6.8.3</span> LVS</a></li>
+  </ul></li>
+  <li><a href="#full-pass" id="toc-full-pass" class="nav-link" data-scroll-target="#full-pass"><span class="header-section-number">6.9</span> Full Pass</a></li>
+  <li><a href="#releasing-for-tapeout" id="toc-releasing-for-tapeout" class="nav-link" data-scroll-target="#releasing-for-tapeout"><span class="header-section-number">6.10</span> Releasing for Tapeout</a></li>
+  </ul></li>
+  <li><a href="#sec-exercises" id="toc-sec-exercises" class="nav-link" data-scroll-target="#sec-exercises"><span class="header-section-number">7</span> Additional Exercises</a>
+  <ul class="collapse">
+  <li><a href="#exercise-1-from-8-bit-up-counter-to-16-bit-down-counter" id="toc-exercise-1-from-8-bit-up-counter-to-16-bit-down-counter" class="nav-link" data-scroll-target="#exercise-1-from-8-bit-up-counter-to-16-bit-down-counter"><span class="header-section-number">7.1</span> Exercise 1, From 8-bit Up-Counter to 16-bit Down-Counter</a></li>
+  <li><a href="#exercise-2-inverter-to-three-stage-ring-oscillator" id="toc-exercise-2-inverter-to-three-stage-ring-oscillator" class="nav-link" data-scroll-target="#exercise-2-inverter-to-three-stage-ring-oscillator"><span class="header-section-number">7.2</span> Exercise 2, Inverter to Three-Stage Ring Oscillator</a></li>
+  <li><a href="#exercise-3-update-pinout-and-floorplan-of-the-top-level" id="toc-exercise-3-update-pinout-and-floorplan-of-the-top-level" class="nav-link" data-scroll-target="#exercise-3-update-pinout-and-floorplan-of-the-top-level"><span class="header-section-number">7.3</span> Exercise 3, Update Pinout and Floorplan of the Top-Level</a></li>
+  </ul></li>
+  <li><a href="#acknowledgements" id="toc-acknowledgements" class="nav-link" data-scroll-target="#acknowledgements"><span class="header-section-number">8</span> Acknowledgements</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="{{< meta var.url-repo >}}/edit/main/index.qmd" class="toc-action"><i class="bi bi-git"></i>Edit this page</a></li><li><a href="{{< meta var.url-repo >}}/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div><div class="quarto-alternate-formats"><h2>Other Formats</h2><ul><li><a href="index.pdf"><i class="bi bi-file-pdf"></i>PDF</a></li></ul></div></nav>
     </div>
@@ -359,16 +472,1131 @@ Important
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>This repository requires the <a href="https://github.com/iic-jku/IIC-OSIC-TOOLS">IIC-OSIC-TOOLS</a> container with tag <code>2026.05</code> or later.</p>
+<p>This tutorial and the underlying template repository requires the <a href="https://github.com/iic-jku/IIC-OSIC-TOOLS">IIC-OSIC-TOOLS</a> container with tag <code>2026.05</code> or later. All commands below assume that the container has been entered and that the working directory is the cloned repository root.</p>
 </div>
 </div>
-<section id="overview" class="level2" data-number="1">
-<h2 data-number="1" class="anchored" data-anchor-id="overview"><span class="header-section-number">1</span> Overview</h2>
-<p>This tutorial walks through the complete open-source AMS chip flow for the <code>ihp-sg13g2</code> Open-PDK, from RTL and macro generation through padframe integration, physical implementation, verification, and final views.</p>
-<p>The example design combines two digital counter macros, two inverter macros, an SRAM macro, analog and digital pad connectivity, and the top-level chip.</p>
+<section id="overview" class="level1" data-number="1">
+<h1 data-number="1"><span class="header-section-number">1</span> Overview</h1>
+<p>This tutorial is a step-by-step walk-through of the open-source analog-mixed signal (AMS) chip flow based on the <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template"><code>ihp-sg13g2-ams-chip-template</code></a> repository for the IHP SG13G2 130-nm Open-PDK. It covers the tool installation, the RTL and analog macro design, and the chip-level assembly with padframe, logos, and fill structures.</p>
+<p>The example design used throughout the tutorial contains:</p>
+<ul>
+<li>Two digital <code>counter_top</code> macros (8-bit synchronous up-counters),</li>
+<li>Two <code>inverter_top</code> macros, one used as a 4-channel CMOS digital inverter, one as a 2-channel analog inverter,</li>
+<li>One <code>RM_IHPSG13_1P_1024x32_c2_bm_bist</code> single-port SRAM macro,</li>
+<li>A 32-pad padframe (8 pads per side) with I/O, power, analog, and bidirectional pads,</li>
+<li>The top-level chip assembly with PDN, JKU logos, and KLayout fill.</li>
+</ul>
+<p>The tutorial ends with a set of exercises that apply the same flow to a modified counter, a modified inverter, and a modified top-level floorplan.</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Tip
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The tutorial can be used both for self-study and as the basis for a workshop. Each section can be followed independently.</p>
+</div>
+</div>
 </section>
-<section id="acknowledgements" class="level2" data-number="2">
-<h2 data-number="2" class="anchored" data-anchor-id="acknowledgements"><span class="header-section-number">2</span> Acknowledgements</h2>
+<section id="sec-tools" class="level1" data-number="2">
+<h1 data-number="2"><span class="header-section-number">2</span> Tools, the IIC-OSIC-TOOLS Container</h1>
+<p>The open-source AMS flow used here relies on several tools, namely Xschem, Magic, KLayout, ngspice, CACE, LibreLane, Yosys, OpenROAD, Verilator, cocotb, GTKWave, and Surfer. To make installation and version handling easier, they are all bundled into the <a href="https://github.com/iic-jku/IIC-OSIC-TOOLS"><strong>IIC-OSIC-TOOLS</strong></a> Docker container maintained by the IIC at JKU Linz. The container also ships the IHP SG13G2 Open-PDK used by this template.</p>
+<div id="fig-tools-overview" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-tools-overview-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="fig/tools_overview/tools_overview.svg" class="lightbox" data-gallery="quarto-lightbox-gallery-1" title="Figure&nbsp;1: Overview of the open-source tools shipped with the IIC-OSIC-TOOLS container."><img src="fig/tools_overview/tools_overview.svg" class="img-fluid figure-img"></a>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-tools-overview-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;1: Overview of the open-source tools shipped with the IIC-OSIC-TOOLS container.
+</figcaption>
+</figure>
+</div>
+<section id="installation" class="level2" data-number="2.1">
+<h2 data-number="2.1" class="anchored" data-anchor-id="installation"><span class="header-section-number">2.1</span> Installation</h2>
+<p>The container runs on Linux, macOS, and Windows. The installation instructions are kept in the <a href="https://github.com/iic-jku/IIC-OSIC-TOOLS"><code>iic-jku/IIC-OSIC-TOOLS</code></a> GitHub repository. Video walk-throughs are available for Linux and Windows.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Ubuntu / Linux installation
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-4" class="callout-4-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<ul>
+<li><a href="https://www.youtube.com/watch?v=l8kZUocmY5k">IIC-OSIC-TOOLS installation on Ubuntu (Part 1)</a></li>
+<li><a href="https://www.youtube.com/watch?v=CpKEOVRHT7o&amp;t=51s">IIC-OSIC-TOOLS installation on Ubuntu (Part 2)</a></li>
+</ul>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-5-contents" aria-controls="callout-5" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Windows installation
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-5" class="callout-5-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<ul>
+<li><a href="https://www.youtube.com/watch?v=AiFTwKdS2V4">IIC-OSIC-TOOLS installation on Windows (from 37:20 to 45:15)</a></li>
+</ul>
+</div>
+</div>
+</div>
+<p>On macOS the same Docker-based instructions apply. See the container’s <code>README.md</code> for OS-specific notes.</p>
+</section>
+<section id="selecting-the-ihp-sg13g2-pdk" class="level2" data-number="2.2">
+<h2 data-number="2.2" class="anchored" data-anchor-id="selecting-the-ihp-sg13g2-pdk"><span class="header-section-number">2.2</span> Selecting the IHP SG13G2 PDK</h2>
+<p>The container can host several Open-PDKs (SkyWater 130, GlobalFoundries 180, IHP SG13G2). The active PDK is selected per <code>designs/</code> folder via a marker file called <code>.designinit</code>. Two options exist.</p>
+<ol type="1">
+<li><p><strong>Per-design marker file.</strong> Copy a <code>.designinit</code> file referencing the IHP SG13G2 PDK into your <code>designs/</code> directory and restart the container. The PDK is then picked automatically every time the container is launched in that directory.</p></li>
+<li><p><strong>On-the-fly switch.</strong> Run</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">sak-pdk</span> ihp-sg13g2</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>inside the container. This switches the active PDK for the current session without modifying any file.</p></li>
+</ol>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Tip
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>By default the container is already configured for <code>ihp-sg13g2</code>, so both options above are only needed when switching between PDKs.</p>
+</div>
+</div>
+</section>
+</section>
+<section id="sec-repo" class="level1" data-number="3">
+<h1 data-number="3"><span class="header-section-number">3</span> Repository Overview</h1>
+<section id="purpose" class="level2" data-number="3.1">
+<h2 data-number="3.1" class="anchored" data-anchor-id="purpose"><span class="header-section-number">3.1</span> Purpose</h2>
+<p>This <a href="../README.md">Makefile-driven repository</a> simulates, builds, and verifies (LVS, DRC, PEX) an analog mixed-signal chip for the ihp-sg13g2 130-nm Open-PDK, including padframe generation and top-level assembly. It uses:</p>
+<ul>
+<li><a href="https://github.com/librelane/librelane"><strong>LibreLane</strong></a> for digital macro hardening, padframe generation, and top-level assembly,</li>
+<li><a href="https://github.com/StefanSchippers/xschem"><strong>Xschem</strong></a> for schematic entry,</li>
+<li><a href="https://github.com/danchitnis/ngspice-sf-mirror"><strong>Ngspice</strong></a>, <a href="https://codeberg.org/arpadbuermen/VACASK"><strong>VACASK</strong></a>, and <a href="https://github.com/fossi-foundation/cace"><strong>CACE</strong></a> for analog simulation,</li>
+<li><a href="https://github.com/KLayout/klayout"><strong>KLayout</strong></a> for viewing and routing of the layout,</li>
+<li><a href="https://github.com/rtimothyedwards/magic"><strong>Magic</strong></a> + <a href="https://github.com/rtimothyedwards/netgen"><strong>Netgen</strong></a> and <a href="https://github.com/KLayout/klayout"><strong>KLayout</strong></a> for LVS, DRC, and PEX,</li>
+<li><strong>SystemVerilog</strong>, <a href="https://github.com/cocotb/cocotb"><strong>cocotb</strong></a>, <a href="https://github.com/gtkwave/gtkwave"><strong>GTKWave</strong></a>, and <a href="https://gitlab.com/surfer-project/surfer"><strong>Surfer</strong></a> for digital simulation.</li>
+</ul>
+<p>The repository is the right starting point for custom silicon. Just clone it, enter the IIC-OSIC-TOOLS container, run <code>make all</code>, and the result is a tapeout-ready analog-mixed signal chip. It also acts as a regression test for the open-source tools on the IHP SG13G2 Open-PDK.</p>
+</section>
+<section id="directory-structure" class="level2" data-number="3.2">
+<h2 data-number="3.2" class="anchored" data-anchor-id="directory-structure"><span class="header-section-number">3.2</span> Directory Structure</h2>
+<p>The repository is organised into the following top-level folders. The full listing is in the <a href="../README.md">main README.md</a>.</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Folder</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><a href="../doc/"><code>doc/</code></a></td>
+<td>Designer documentation (<a href="../doc/specifications.md">specifications</a>, <a href="../doc/pinout.md">pinout</a>, <a href="../doc/floorplan.md">floorplan</a>) and <a href="../doc/librelane/librelane_cheatsheet.md">PDK / tool cheatsheets</a>.</td>
+</tr>
+<tr class="even">
+<td><a href="../flow/"><code>flow/</code></a></td>
+<td>LibreLane top-level configuration (<a href="../flow/librelane/config.yaml"><code>config.yaml</code></a>, <a href="../flow/librelane/pdn_cfg.tcl"><code>pdn_cfg.tcl</code></a>, <code>chip_top.sdc</code>) and the ArtistIC logo flow.</td>
+</tr>
+<tr class="odd">
+<td><a href="../ip/"><code>ip/</code></a></td>
+<td>External IP cells (bondpads, custom IO cells, JKU logos).</td>
+</tr>
+<tr class="even">
+<td><a href="../layout/"><code>layout/</code></a></td>
+<td>Compressed GDS streams of the top-level chip (<code>chip_top.gds.gz</code> and <code>chip_top_logo_fill.gds.gz</code>).</td>
+</tr>
+<tr class="odd">
+<td><a href="../macros/"><code>macros/</code></a></td>
+<td>In-tree macros (<a href="../macros/counter/"><code>counter/</code></a> and <a href="../macros/inverter/"><code>inverter/</code></a>), each with its own Makefile and README.</td>
+</tr>
+<tr class="even">
+<td><a href="../netlist/"><code>netlist/</code></a></td>
+<td>Synthesis, layout, and PEX netlists used for LVS and simulation.</td>
+</tr>
+<tr class="odd">
+<td><a href="../release/"><code>release/</code></a></td>
+<td>Tapeout submission artifacts, versioned (<code>v.1.0.0/</code>, …).</td>
+</tr>
+<tr class="even">
+<td><a href="../render/"><code>render/</code></a></td>
+<td>Chip and macro renders for documentation.</td>
+</tr>
+<tr class="odd">
+<td><a href="../rtl/"><code>rtl/</code></a></td>
+<td>Top-level RTL (<a href="../rtl/chip_top.sv"><code>chip_top.sv</code></a>, <a href="../rtl/chip_core.sv"><code>chip_core.sv</code></a>).</td>
+</tr>
+<tr class="even">
+<td><a href="../schematic/"><code>schematic/</code></a></td>
+<td>Xschem schematics and symbols for the chip top.</td>
+</tr>
+<tr class="odd">
+<td><a href="../scripts/"><code>scripts/</code></a></td>
+<td>Helper Python and shell scripts (rendering, logo placement, plotting).</td>
+</tr>
+<tr class="even">
+<td><a href="../testbenches/"><code>testbenches/</code></a></td>
+<td>Cocotb and Xschem testbenches for the top-level chip.</td>
+</tr>
+<tr class="odd">
+<td><a href="../tutorial/"><code>tutorial/</code></a></td>
+<td>This Quarto tutorial.</td>
+</tr>
+<tr class="even">
+<td><a href="../verification/"><code>verification/</code></a></td>
+<td>DRC / LVS / signoff reports.</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="workflow-in-a-nutshell" class="level2" data-number="3.3">
+<h2 data-number="3.3" class="anchored" data-anchor-id="workflow-in-a-nutshell"><span class="header-section-number">3.3</span> Workflow in a Nutshell</h2>
+<p>The flow is driven by Makefiles. After cloning the repository and entering the IIC-OSIC-TOOLS container, every step is invoked via a <code>make</code> target. The default goal of every <code>Makefile</code> is <code>help</code>, so <code>make</code> (without arguments) prints the list of available targets.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> clone https://github.com/iic-jku/ihp-sg13g2-ams-chip-template.git</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> ihp-sg13g2-ams-chip-template</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> help              <span class="co"># show available targets at the chip top level</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Each macro under <a href="../macros/"><code>macros/</code></a> has its own <code>Makefile</code> and <code>README.md</code> with macro-local targets. They are called by the top-level build targets, but can also be invoked directly from inside the macro folder.</p>
+<section id="most-important-top-level-targets" class="level3" data-number="3.3.1">
+<h3 data-number="3.3.1" class="anchored" data-anchor-id="most-important-top-level-targets"><span class="header-section-number">3.3.1</span> Most important top-level targets</h3>
+<p>The full list is in the <a href="../Makefile">top-level Makefile</a>. The relevant subset is summarised below.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 15%">
+<col style="width: 84%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Target</th>
+<th>What it does</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>make help</code></td>
+<td>Print the help banner and list every target with its description.</td>
+</tr>
+<tr class="even">
+<td><code>make init-submodules</code></td>
+<td>Initialise and update git submodules (for example the ArtistIC logo flow).</td>
+</tr>
+<tr class="odd">
+<td><code>make sim-rtl-cocotb</code> / <code>sim-gl-cocotb</code></td>
+<td>Run the RTL / gate-level cocotb testbench for the chip top.</td>
+</tr>
+<tr class="even">
+<td><code>make sim-gl-xschem</code></td>
+<td>Run the gate-level Xschem testbench. Converges, but it may take a long time depending on the hardware used — not included in <code>sim-all</code>.</td>
+</tr>
+<tr class="odd">
+<td><code>make sim-view-cocotb</code></td>
+<td>Open the latest cocotb waveform in GTKWave (or Surfer with <code>WAVEFORM_VIEWER=surfer</code>).</td>
+</tr>
+<tr class="even">
+<td><code>make librelane</code> / <code>librelane-nodrc</code></td>
+<td>Run the LibreLane flow for the chip top (with / without DRC steps).</td>
+</tr>
+<tr class="odd">
+<td><code>make copy-reports</code> / <code>copy-gds</code> / <code>copy-netlist</code> / <code>copy-render</code></td>
+<td>Copy the latest LibreLane artifacts back into the source tree.</td>
+</tr>
+<tr class="even">
+<td><code>make build-bondpad</code> / <code>build-logos</code></td>
+<td>Build the bondpad and the JKU logos under <code>ip/</code>.</td>
+</tr>
+<tr class="odd">
+<td><code>make build-counter</code> / <code>build-inverter</code> / <code>make build-macros</code></td>
+<td>Build the digital and analog macros individually or together.</td>
+</tr>
+<tr class="even">
+<td><code>make build-top</code></td>
+<td>Run LibreLane on the chip top, copy back all artifacts, add logo and fill, render the final GDS.</td>
+</tr>
+<tr class="odd">
+<td><code>make build-all</code></td>
+<td>Init submodules, build bondpad, build logos, build macros, and <code>build-top</code>.</td>
+</tr>
+<tr class="even">
+<td><code>make klayout-verify</code> / <code>magic-verify</code></td>
+<td>Run LVS, DRC, and PEX for a given cell with KLayout or Magic.</td>
+</tr>
+<tr class="odd">
+<td><code>make all</code></td>
+<td>Full simulation, build, and DRC pass.</td>
+</tr>
+<tr class="even">
+<td><code>make release VERSION=2.1.0</code></td>
+<td>Copy GDS, netlists, and renders into <code>release/v.&lt;VERSION&gt;/</code> for tapeout submission.</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="most-important-counter-makefile-targets" class="level3" data-number="3.3.2">
+<h3 data-number="3.3.2" class="anchored" data-anchor-id="most-important-counter-makefile-targets"><span class="header-section-number">3.3.2</span> Most important counter Makefile targets</h3>
+<p>The <a href="../macros/counter/Makefile">counter Makefile</a> provides:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 39%">
+<col style="width: 60%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Target</th>
+<th>What it does</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>make lint-verilog</code> / <code>make lint-verilog-all</code></td>
+<td>Lint a single cell or the full counter design with Verilator.</td>
+</tr>
+<tr class="even">
+<td><code>make sim-rtl-verilog</code></td>
+<td>Run the SystemVerilog testbench with Icarus Verilog.</td>
+</tr>
+<tr class="odd">
+<td><code>make sim-rtl-cocotb</code> / <code>sim-gl-cocotb</code></td>
+<td>Run the cocotb RTL / gate-level simulation.</td>
+</tr>
+<tr class="even">
+<td><code>make sim-view-verilog</code> / <code>sim-view-cocotb</code></td>
+<td>Open the latest waveform in GTKWave or Surfer.</td>
+</tr>
+<tr class="odd">
+<td><code>make sim-gl-xschem</code> / <code>sim-view-xschem</code></td>
+<td>Run the mixed-signal XSPICE simulation in Xschem and plot the results.</td>
+</tr>
+<tr class="even">
+<td><code>make librelane</code> (and <code>-nodrc</code>, <code>-magicdrc</code>, …)</td>
+<td>Run the LibreLane flow for the counter macro.</td>
+</tr>
+<tr class="odd">
+<td><code>make generate-xspice</code></td>
+<td>Convert the post-synthesis netlist into an XSPICE model for Xschem.</td>
+</tr>
+<tr class="even">
+<td><code>make build-fpga</code> / <code>make build-top</code> / <code>make all</code></td>
+<td>FPGA bitstream, full ASIC build, or both plus simulation in one call.</td>
+</tr>
+</tbody>
+</table>
+<p>See the <a href="../macros/counter/README.md">counter README</a> for details.</p>
+</section>
+<section id="most-important-inverter-makefile-targets" class="level3" data-number="3.3.3">
+<h3 data-number="3.3.3" class="anchored" data-anchor-id="most-important-inverter-makefile-targets"><span class="header-section-number">3.3.3</span> Most important inverter Makefile targets</h3>
+<p>The <a href="../macros/inverter/Makefile">inverter Makefile</a> provides:</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Target</th>
+<th>What it does</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>make sim-xschem TB=&lt;tb&gt;</code> / <code>make sim-view-xschem</code></td>
+<td>Run a specific Xschem testbench and plot its results with Python.</td>
+</tr>
+<tr class="even">
+<td><code>make sim-cace</code></td>
+<td>Run <a href="https://github.com/fossi-foundation/cace">CACE</a> Monte-Carlo / mismatch characterisations.</td>
+</tr>
+<tr class="odd">
+<td><code>make klayout-lvs</code> / <code>magic-lvs</code></td>
+<td>Run LVS using KLayout or Magic + Netgen.</td>
+</tr>
+<tr class="even">
+<td><code>make klayout-drc</code> / <code>magic-drc</code></td>
+<td>Run DRC using KLayout or Magic.</td>
+</tr>
+<tr class="odd">
+<td><code>make klayout-pex</code> / <code>magic-pex</code> (<code>EXT_MODE=&lt;1|2|3&gt;</code>)</td>
+<td>Run parasitic extraction in C, CC, or full-RC mode.</td>
+</tr>
+<tr class="even">
+<td><code>make klayout-verify</code> / <code>magic-verify</code></td>
+<td>Run LVS + DRC + PEX for a given cell.</td>
+</tr>
+<tr class="odd">
+<td><code>make lef</code> / <code>make lib</code> / <code>make verilog</code></td>
+<td>Generate the LEF, the Liberty stub, and the Verilog stub for integration.</td>
+</tr>
+<tr class="even">
+<td><code>make build-top</code> / <code>make all</code></td>
+<td>Build deliverables, or run simulation, verification, and build together.</td>
+</tr>
+</tbody>
+</table>
+<p>See the <a href="../macros/inverter/README.md">inverter README</a> for details.</p>
+</section>
+</section>
+</section>
+<section id="sec-counter" class="level1" data-number="4">
+<h1 data-number="4"><span class="header-section-number">4</span> Counter Macro Implementation</h1>
+<p>The <a href="../macros/counter/"><code>counter</code></a> macro is the digital reference macro of the template. It is a parameterisable synchronous up-counter with synchronous active-high reset, where the wrapper converts the chip’s active-low reset internally. The default width is 8 bits, so the counter wraps from 255 back to 0.</p>
+<section id="folder-structure-of-the-counter-macro" class="level2" data-number="4.1">
+<h2 data-number="4.1" class="anchored" data-anchor-id="folder-structure-of-the-counter-macro"><span class="header-section-number">4.1</span> Folder Structure of the Counter Macro</h2>
+<p>In <a href="../macros/counter/"><code>macros/counter/</code></a>, the relevant folders are:</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Folder</th>
+<th>Content</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><a href="../macros/counter/rtl/"><code>rtl/</code></a></td>
+<td>SystemVerilog sources: <a href="../macros/counter/rtl/constants.sv"><code>constants.sv</code></a>, <a href="../macros/counter/rtl/counter.sv"><code>counter.sv</code></a>, <a href="../macros/counter/rtl/counter_top.sv"><code>counter_top.sv</code></a>.</td>
+</tr>
+<tr class="even">
+<td><a href="../macros/counter/testbenches/"><code>testbenches/</code></a></td>
+<td><code>verilog/</code>, <code>cocotb/</code>, and <code>xschem/</code> testbenches with pre-configured GTKWave and Surfer view files.</td>
+</tr>
+<tr class="odd">
+<td><a href="../macros/counter/flow/"><code>flow/</code></a></td>
+<td>LibreLane configuration (<code>config.yaml</code>, <code>pin_order.cfg</code>, <code>impl.sdc</code>, <code>signoff.sdc</code>).</td>
+</tr>
+<tr class="even">
+<td><a href="../macros/counter/final/"><code>final/</code></a></td>
+<td>Final views copied from the latest LibreLane run (GDS, LEF, LIB per corner, NL, PNL, SPEF, VH).</td>
+</tr>
+<tr class="odd">
+<td><a href="../macros/counter/fpga/"><code>fpga/</code></a></td>
+<td>Optional FPGA flow for the <a href="https://pico-ice.tinyvision.ai/">pico-ice</a> board.</td>
+</tr>
+<tr class="even">
+<td><a href="../macros/counter/netlist/"><code>netlist/</code></a></td>
+<td>Gate-level netlists (<code>nl/</code>, <code>pnl/</code>, <code>spice/</code>, <code>xspice/</code>).</td>
+</tr>
+<tr class="odd">
+<td><a href="../macros/counter/schematic/"><code>schematic/</code></a></td>
+<td>Xschem symbol of the macro for mixed-signal usage.</td>
+</tr>
+<tr class="even">
+<td><a href="../macros/counter/scripts/"><code>scripts/</code></a></td>
+<td>Helper scripts (XSPICE conversion, plotting, layout rendering).</td>
+</tr>
+<tr class="odd">
+<td><a href="../macros/counter/verification/"><code>verification/</code></a></td>
+<td>Yosys, antenna, STA, IR-drop, DRC, LVS, and manufacturability reports.</td>
+</tr>
+<tr class="even">
+<td><a href="../macros/counter/render/"><code>render/</code></a></td>
+<td>Macro renders for documentation.</td>
+</tr>
+</tbody>
+</table>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Tip
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Read the <a href="../macros/counter/README.md">counter README</a> first to get familiar with the folder layout and the available Makefile targets. Most of the commands below are documented there as well.</p>
+</div>
+</div>
+</section>
+<section id="reading-the-rtl" class="level2" data-number="4.2">
+<h2 data-number="4.2" class="anchored" data-anchor-id="reading-the-rtl"><span class="header-section-number">4.2</span> Reading the RTL</h2>
+<p>The macro is split into a parameterised counter and a thin top-level wrapper that converts the chip’s active-low reset to the internal active-high reset of the counter.</p>
+<section id="counter.sv" class="level3" data-number="4.2.1">
+<h3 data-number="4.2.1" class="anchored" data-anchor-id="counter.sv"><span class="header-section-number">4.2.1</span> <code>counter.sv</code></h3>
+<p>The arithmetic is implemented in <a href="../macros/counter/rtl/counter.sv"><code>counter.sv</code></a>. It is an N-bit synchronous up-counter with reset, enable, and wrap at <code>COUNTER_MAX</code>.</p>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>macros/counter/rtl/counter.sv</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3" data-filename="macros/counter/rtl/counter.sv"><pre class="sourceCode systemverilog code-with-copy"><code class="sourceCode systemverilog"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">module</span> counter #(</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="kw">parameter</span> COUNTER_BITWIDTH = <span class="dv">8</span>,</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="kw">parameter</span> COUNTER_MAX      = <span class="dv">255</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>)(</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  <span class="kw">input</span>  <span class="kw">wire</span> clock_i,</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  <span class="kw">input</span>  <span class="kw">wire</span> reset_i,</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>  <span class="kw">input</span>  <span class="kw">wire</span> enable_i,</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>  <span class="kw">output</span> <span class="kw">wire</span> [COUNTER_BITWIDTH<span class="dv">-1</span>:<span class="dv">0</span>] counter_value_o</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>);</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>  <span class="kw">reg</span> [COUNTER_BITWIDTH<span class="dv">-1</span>:<span class="dv">0</span>] counter_value;</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>  <span class="kw">always</span> @(<span class="kw">posedge</span> clock_i) <span class="kw">begin</span></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>    <span class="kw">if</span> (reset_i == <span class="bn">1'b1</span>) <span class="kw">begin</span></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>      counter_value &lt;= {COUNTER_BITWIDTH{<span class="bn">1'b0</span>}};</span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>    <span class="kw">end</span> <span class="kw">else</span> <span class="kw">if</span> (enable_i == <span class="bn">1'b1</span>) <span class="kw">begin</span></span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>      <span class="kw">if</span> (counter_value == COUNTER_MAX[COUNTER_BITWIDTH<span class="dv">-1</span>:<span class="dv">0</span>])</span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>        counter_value &lt;= {COUNTER_BITWIDTH{<span class="bn">1'b0</span>}};</span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>      <span class="kw">else</span></span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>        counter_value &lt;= counter_value</span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>                       + {{(COUNTER_BITWIDTH<span class="dv">-1</span>){<span class="bn">1'b0</span>}}, <span class="bn">1'b1</span>};</span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>    <span class="kw">end</span></span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>  <span class="kw">end</span></span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a>  <span class="kw">assign</span> counter_value_o = counter_value;</span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a><span class="kw">endmodule</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="counter_top.sv" class="level3" data-number="4.2.2">
+<h3 data-number="4.2.2" class="anchored" data-anchor-id="counter_top.sv"><span class="header-section-number">4.2.2</span> <code>counter_top.sv</code></h3>
+<p><a href="../macros/counter/rtl/counter_top.sv"><code>counter_top.sv</code></a> wraps the counter and converts the active-low reset (<code>reset_n_i</code>) to an active-high signal.</p>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>macros/counter/rtl/counter_top.sv</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4" data-filename="macros/counter/rtl/counter_top.sv"><pre class="sourceCode systemverilog code-with-copy"><code class="sourceCode systemverilog"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">module</span> counter_top #(</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="kw">parameter</span>  <span class="kw">int</span> COUNTER_MAX      = <span class="ot">`COUNTER_MAX_DEFAULT</span>,</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="kw">localparam</span> <span class="kw">int</span> COUNTER_BITWIDTH = <span class="kw">$clog2</span>(COUNTER_MAX + <span class="dv">1</span>)</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>)(</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  <span class="kw">input</span>  <span class="kw">wire</span> clock_i,</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  <span class="kw">input</span>  <span class="kw">wire</span> reset_n_i,   <span class="co">// active-low</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>  <span class="kw">input</span>  <span class="kw">wire</span> enable_i,</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>  <span class="kw">output</span> <span class="kw">wire</span> [COUNTER_BITWIDTH<span class="dv">-1</span>:<span class="dv">0</span>] counter_value_o</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>);</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>  <span class="kw">wire</span> reset;</span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>  <span class="kw">assign</span> reset = ~reset_n_i;</span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>  counter #(</span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>    .COUNTER_BITWIDTH(COUNTER_BITWIDTH),</span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>    .COUNTER_MAX(COUNTER_MAX)</span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>  ) counter_0 (</span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>    .clock_i(clock_i),</span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>    .reset_i(reset),</span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>    .enable_i(enable_i),</span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>    .counter_value_o(counter_value_o)</span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a>  );</span>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a><span class="kw">endmodule</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Shared defaults like the bit-width and the clock frequency are defined in <a href="../macros/counter/rtl/constants.sv"><code>constants.sv</code></a>. They are exposed as <code>`define</code> macros instead of a SystemVerilog <code>package</code>, because Yosys 0.64 cannot parse <code>import pkg::*</code> in a module header.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Open the three RTL files and follow the counter through reset, hold, increment, and wrap-around. Check why the constants are <code>`define</code>-style macros and not <code>package</code> parameters.</p>
+</div>
+</div>
+</section>
+</section>
+<section id="linting" class="level2" data-number="4.3">
+<h2 data-number="4.3" class="anchored" data-anchor-id="linting"><span class="header-section-number">4.3</span> Linting</h2>
+<p>Linting is done with <a href="https://www.veripool.org/verilator/">Verilator</a>.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> macros/counter</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> lint-verilog                <span class="co"># lint the full counter_top design</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> lint-verilog CELL=counter   <span class="co"># lint only the standalone counter</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> lint-verilog-all            <span class="co"># lint counter and counter_top in sequence</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><code>make lint-verilog-all</code> is also the lint step called by <code>make all</code>.</p>
+</section>
+<section id="simulation" class="level2" data-number="4.4">
+<h2 data-number="4.4" class="anchored" data-anchor-id="simulation"><span class="header-section-number">4.4</span> Simulation</h2>
+<section id="rtl-with-systemverilog-testbench-icarus-verilog" class="level3" data-number="4.4.1">
+<h3 data-number="4.4.1" class="anchored" data-anchor-id="rtl-with-systemverilog-testbench-icarus-verilog"><span class="header-section-number">4.4.1</span> RTL with SystemVerilog testbench (Icarus Verilog)</h3>
+<p>A SystemVerilog testbench (<a href="../macros/counter/testbenches/verilog/counter_top_tb.sv"><code>counter_top_tb.sv</code></a>) checks reset, hold, increment, and wrap-around. Run it with the following commands.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> sim-rtl-verilog</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> sim-view-verilog                      <span class="co"># open in GTKWave (default)</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> sim-view-verilog WAVEFORM_VIEWER=surfer</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="callout callout-style-simple callout-note">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-body-container">
+<p><strong>Figure placeholder. RTL Verilog waveform of <code>counter_top</code> in GTKWave or Surfer.</strong></p>
+</div>
+</div>
+</div>
+</section>
+<section id="rtl-and-gate-level-with-cocotb" class="level3" data-number="4.4.2">
+<h3 data-number="4.4.2" class="anchored" data-anchor-id="rtl-and-gate-level-with-cocotb"><span class="header-section-number">4.4.2</span> RTL and gate-level with cocotb</h3>
+<p>The <a href="https://www.cocotb.org/">cocotb</a> testbench (<a href="../macros/counter/testbenches/cocotb/counter_top_tb.py"><code>counter_top_tb.py</code></a>) covers the same four behaviours from Python, and is the one called by <code>make all</code>.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> sim-rtl-cocotb                <span class="co"># RTL simulation</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> sim-gl-cocotb                 <span class="co"># post-synthesis gate-level simulation</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> sim-view-cocotb               <span class="co"># view in GTKWave</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> sim-view-cocotb WAVEFORM_VIEWER=surfer</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>The gate-level cocotb run uses the post-synthesis netlist <a href="../macros/counter/netlist/nl/"><code>netlist/nl/counter_top.nl.v</code></a>, which is copied from the latest LibreLane run by <code>make copy-netlist</code>.</p>
+<div class="callout callout-style-simple callout-note">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-body-container">
+<p><strong>Figure placeholder. Cocotb gate-level waveform of <code>counter_top</code>.</strong></p>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="librelane-hardening" class="level2" data-number="4.5">
+<h2 data-number="4.5" class="anchored" data-anchor-id="librelane-hardening"><span class="header-section-number">4.5</span> LibreLane Hardening</h2>
+<p>The LibreLane flow synthesises, places, and routes the macro, runs the sign-off steps, and writes its final views to <code>flow/final/</code>. The wrapper target <code>make build-top</code> runs the flow, copies the reports, final folders, netlists, and the render back into the source tree, and renders the final GDS.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> build-top</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Tip
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The macro can also be built as an FPGA bitstream (<a href="../macros/counter/fpga/"><code>fpga/</code></a>) for a pico-ice board with <code>make build-fpga</code>. The FPGA path is not used in this tutorial and is listed here for reference.</p>
+</div>
+</div>
+</section>
+<section id="viewing-the-macro" class="level2" data-number="4.6">
+<h2 data-number="4.6" class="anchored" data-anchor-id="viewing-the-macro"><span class="header-section-number">4.6</span> Viewing the Macro</h2>
+<p>After the flow finishes, the macro layout can be inspected with KLayout. The container provides the <code>ke</code> alias for <code>klayout -e</code> (edit mode).</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="ex">ke</span> macros/counter/final/gds/counter_top.gds</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>The LibreLane render is copied to <a href="../macros/counter/render/img/"><code>macros/counter/render/img/counter_top_librelane.png</code></a>, and the high-resolution render from <code>lay2img.py</code> is saved as <code>counter_top.png</code> in the same folder. The sign-off reports are written to <a href="../macros/counter/verification/"><code>macros/counter/verification/</code></a>.</p>
+<div class="callout callout-style-simple callout-note">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-body-container">
+<p><strong>Figure placeholder. <code>counter_top</code> layout in KLayout.</strong></p>
+</div>
+</div>
+</div>
+</section>
+<section id="gate-level-mixed-signal-simulation-with-xschem" class="level2" data-number="4.7">
+<h2 data-number="4.7" class="anchored" data-anchor-id="gate-level-mixed-signal-simulation-with-xschem"><span class="header-section-number">4.7</span> Gate-Level Mixed-Signal Simulation with Xschem</h2>
+<p>A more accurate sign-off step is the gate-level mixed-signal simulation in Xschem with the ngspice XSPICE event-driven engine. The post-synthesis Verilog netlist (<code>yosys-synthesis/&lt;TOP&gt;.nl.v</code>) is converted into an XSPICE model with the following command.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> generate-xspice</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>The conversion pipeline is <code>.nl.v → .vp → .spice → .xspice</code>, followed by a pin-reorder pass to match the Xschem symbol (<a href="../macros/counter/schematic/xschem/"><code>schematic/xschem/counter_top.sym</code></a>).</p>
+<p>The Xschem testbench (<a href="../macros/counter/testbenches/xschem/"><code>counter_top_tb_tran.sch</code></a>) can be opened and simulated interactively.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> macros/counter/testbenches/xschem</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="ex">xschem</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>In Xschem, hold <strong><code>Shift</code></strong> and press the simulation key in the schematic to launch the simulator. The same simulation can also be run non-interactively from the Makefile, and the result can be plotted from Python.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> sim-gl-xschem</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> sim-view-xschem</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="callout callout-style-simple callout-note">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-body-container">
+<p><strong>Figure placeholder. Xschem mixed-signal testbench <code>counter_top_tb_tran</code>.</strong></p>
+</div>
+</div>
+</div>
+<div class="callout callout-style-simple callout-note">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-body-container">
+<p><strong>Figure placeholder. Plotted Xschem simulation results from <code>scripts/plot_simulations/plot_counter_top.py</code>.</strong></p>
+</div>
+</div>
+</div>
+</section>
+<section id="build-and-verify-everything" class="level2" data-number="4.8">
+<h2 data-number="4.8" class="anchored" data-anchor-id="build-and-verify-everything"><span class="header-section-number">4.8</span> Build and Verify Everything</h2>
+<p>The full lint, simulation, and build chain is run with the following command.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> all</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>This calls <code>lint-verilog-all</code>, <code>sim-all</code>, <code>build-fpga</code>, and <code>build-top</code> in sequence. LVS and DRC are already covered by the LibreLane sign-off steps, so no extra verification target is needed for the counter.</p>
+</section>
+</section>
+<section id="sec-inverter" class="level1" data-number="5">
+<h1 data-number="5"><span class="header-section-number">5</span> Inverter Macro Implementation</h1>
+<p>The <a href="../macros/inverter/"><code>inverter</code></a> macro is the analog reference macro of the template. It is a four-channel CMOS inverter, drawn at transistor level, and verified with the comprehensive AMS sign-off chain (LVS, DRC, PEX, Monte-Carlo and mismatch with CACE). Two instances are used in the chip core. One is used as a 4-channel digital inverter (<code>inverter1</code>), the other as a 2-channel analog inverter (<code>inverter2</code>). See the <a href="../doc/specifications.md">chip specifications</a> for the full picture.</p>
+<section id="folder-structure-of-the-inverter-macro" class="level2" data-number="5.1">
+<h2 data-number="5.1" class="anchored" data-anchor-id="folder-structure-of-the-inverter-macro"><span class="header-section-number">5.1</span> Folder Structure of the Inverter Macro</h2>
+<p>In <a href="../macros/inverter/"><code>macros/inverter/</code></a>, the relevant folders are:</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Folder</th>
+<th>Content</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><a href="../macros/inverter/schematic/xschem/"><code>schematic/xschem/</code></a></td>
+<td>Xschem schematics and symbols (<code>inverter.sch</code>, <code>inverter.sym</code>, <code>inverter_top.sch</code>, <code>inverter_top.sym</code>, <code>inverter_top_pex.sym</code>).</td>
+</tr>
+<tr class="even">
+<td><a href="../macros/inverter/layout/"><code>layout/</code></a></td>
+<td>KLayout-edited GDS streams (<code>*.klay.gds</code>) and the exported <code>inverter_top.gds</code>.</td>
+</tr>
+<tr class="odd">
+<td><a href="../macros/inverter/testbenches/xschem/"><code>testbenches/xschem/</code></a></td>
+<td>Transient, AC open-loop, output-DC, and top-level transient testbenches.</td>
+</tr>
+<tr class="even">
+<td><a href="../macros/inverter/netlist/"><code>netlist/</code></a></td>
+<td><code>schematic/</code> (CDL / SPICE for LVS), <code>layout/</code> (extracted), <code>pex/</code> (PEX SPICE).</td>
+</tr>
+<tr class="odd">
+<td><a href="../macros/inverter/scripts/"><code>scripts/</code></a></td>
+<td>Python plotters, sizing notebooks, layout rendering, PEX pin reordering.</td>
+</tr>
+<tr class="even">
+<td><a href="../macros/inverter/verification/"><code>verification/</code></a></td>
+<td><code>drc/</code>, <code>lvs/</code>, and <code>cace/</code> (process, mismatch, supply sweeps).</td>
+</tr>
+<tr class="odd">
+<td><a href="../macros/inverter/final/"><code>final/</code></a></td>
+<td>Build deliverables for the top-level integration (LEF, LIB, Verilog stub, GDS).</td>
+</tr>
+<tr class="even">
+<td><a href="../macros/inverter/render/"><code>render/</code></a></td>
+<td>Macro renders for documentation.</td>
+</tr>
+</tbody>
+</table>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Tip
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Read the <a href="../macros/inverter/README.md">inverter README</a> first to get familiar with the folder layout and the available Makefile targets. Most of the commands below are documented there as well.</p>
+</div>
+</div>
+</section>
+<section id="schematic-level-simulation" class="level2" data-number="5.2">
+<h2 data-number="5.2" class="anchored" data-anchor-id="schematic-level-simulation"><span class="header-section-number">5.2</span> Schematic-Level Simulation</h2>
+<p>Go to the Xschem testbench folder and start Xschem.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb14"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> macros/inverter/testbenches/xschem</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="ex">xschem</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Four testbenches are available in <a href="../macros/inverter/testbenches/xschem/"><code>testbenches/xschem/</code></a>.</p>
+<ul>
+<li><a href="../macros/inverter/testbenches/xschem/inverter_tb_tran.sch"><code>inverter_tb_tran.sch</code></a>, single-channel transient response,</li>
+<li><a href="../macros/inverter/testbenches/xschem/inverter_tb_ac_ol.sch"><code>inverter_tb_ac_ol.sch</code></a>, open-loop AC characterisation,</li>
+<li><a href="../macros/inverter/testbenches/xschem/inverter_tb_Vout.sch"><code>inverter_tb_Vout.sch</code></a>, DC output sweep,</li>
+<li><a href="../macros/inverter/testbenches/xschem/inverter_top_tb_tran.sch"><code>inverter_top_tb_tran.sch</code></a>, top-level transient on <code>inverter_top</code>.</li>
+</ul>
+<p>Load a testbench in Xschem, then hold <strong><code>Shift</code></strong> and press the simulation key (the lightning-bolt button) in the schematic to launch the simulator manually.</p>
+<div class="callout callout-style-simple callout-note">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-body-container">
+<p><strong>Figure placeholder. Xschem <code>inverter_tb_tran</code> simulation result.</strong></p>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Useful Xschem keybindings
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li>Mark a symbol and press <strong><code>E</code></strong> to descend into the underlying circuit, then <strong><code>Shift</code> + <code>E</code></strong> to go back up.</li>
+<li>Mark a symbol and press <strong><code>I</code></strong> to descend into the symbol drawing, then <strong><code>Shift</code> + <code>I</code></strong> to go back up.</li>
+</ul>
+<p>This is the recommended way to inspect or modify the underlying circuit and the graphical symbol of any device.</p>
+</div>
+</div>
+<p>Non-interactive runs and post-processing are also available through the Makefile.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb15"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> macros/inverter</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> sim-xschem TB=inverter_tb_tran</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> sim-view-xschem CELL=inverter        <span class="co"># plot results with Python</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>The full simulation suite (all four testbenches plus the CACE flow) is triggered with <code>make sim-all</code>.</p>
+</section>
+<section id="inspect-edit-the-layout" class="level2" data-number="5.3">
+<h2 data-number="5.3" class="anchored" data-anchor-id="inspect-edit-the-layout"><span class="header-section-number">5.3</span> Inspect / Edit the Layout</h2>
+<p>The layout is created and edited in KLayout. The container alias <code>ke</code> opens KLayout in edit mode.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb16"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> macros/inverter/layout</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="ex">ke</span> inverter_top.klay.gds</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>After modifying the layout, export a clean <code>.gds</code> file (for example <code>inverter_top.gds</code>). The Magic-based flows always work on <code>.gds</code>, while the KLayout-based flows accept either <code>.gds</code> or <code>.klay.gds</code>.</p>
+<div class="callout callout-style-simple callout-note">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-body-container">
+<p><strong>Figure placeholder. <code>inverter_top</code> layout in KLayout.</strong></p>
+</div>
+</div>
+</div>
+</section>
+<section id="process-variation-and-mismatch-cace" class="level2" data-number="5.4">
+<h2 data-number="5.4" class="anchored" data-anchor-id="process-variation-and-mismatch-cace"><span class="header-section-number">5.4</span> Process Variation and Mismatch (CACE)</h2>
+<p><a href="https://github.com/fossi-foundation/cace">CACE</a> drives ngspice via a characterisation YAML file (<a href="../macros/inverter/verification/cace/inverter.yaml"><code>verification/cace/inverter.yaml</code></a>) and produces Monte-Carlo, mismatch, and supply-sweep plots.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb17"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> sim-cace</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Plots are written to <a href="../macros/inverter/verification/cace/"><code>verification/cace/results/inverter/</code></a>. This step is mainly relevant for advanced designers that want to characterise the macro across PVT corners.</p>
+</section>
+<section id="drc-lvs-and-pex" class="level2" data-number="5.5">
+<h2 data-number="5.5" class="anchored" data-anchor-id="drc-lvs-and-pex"><span class="header-section-number">5.5</span> DRC, LVS, and PEX</h2>
+<p>The inverter macro can be verified with two sign-off paths, KLayout and Magic + Netgen. Each path covers DRC, LVS, and PEX.</p>
+<section id="design-rule-check" class="level3" data-number="5.5.1">
+<h3 data-number="5.5.1" class="anchored" data-anchor-id="design-rule-check"><span class="header-section-number">5.5.1</span> Design Rule Check</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb18"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> klayout-drc          <span class="co"># KLayout DRC (FEOL, density, extra rules disabled)</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> magic-drc            <span class="co"># Magic DRC via sak-drc.sh</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Reports are saved to <a href="../macros/inverter/verification/drc/"><code>verification/drc/</code></a>.</p>
+</section>
+<section id="layout-versus-schematic" class="level3" data-number="5.5.2">
+<h3 data-number="5.5.2" class="anchored" data-anchor-id="layout-versus-schematic"><span class="header-section-number">5.5.2</span> Layout-Versus-Schematic</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb19"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> klayout-lvs          <span class="co"># uses CDL netlist exported from Xschem</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> magic-lvs            <span class="co"># uses SPICE netlist exported from Xschem</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>The schematic netlist is exported automatically by the matching <code>*-lvs-netlist</code> sub-target. Reports are saved to <a href="../macros/inverter/verification/lvs/"><code>verification/lvs/</code></a>, and the extracted layout netlist is moved to <a href="../macros/inverter/netlist/layout/"><code>netlist/layout/</code></a>.</p>
+</section>
+<section id="parasitic-extraction" class="level3" data-number="5.5.3">
+<h3 data-number="5.5.3" class="anchored" data-anchor-id="parasitic-extraction"><span class="header-section-number">5.5.3</span> Parasitic Extraction</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb20"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> klayout-pex                    <span class="co"># default EXT_MODE=3 (full-RC)</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> magic-pex EXT_MODE=2           <span class="co"># CC mode</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>PEX writes a SPICE netlist into <a href="../macros/inverter/netlist/pex/"><code>netlist/pex/</code></a>. The subcircuit name is renamed to <code>&lt;CELL&gt;_pex</code>, and the pin order is rearranged to match the Xschem PEX symbol (<a href="../macros/inverter/schematic/xschem/inverter_top_pex.sym"><code>inverter_top_pex.sym</code></a>).</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Post-layout simulation
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Open one of the Xschem testbenches and swap the original symbol with the PEX symbol to use the extracted netlist in the same testbench. This is the recommended way to compare schematic-only and post-layout simulation results.</p>
+</div>
+</div>
+</section>
+<section id="run-everything-at-once" class="level3" data-number="5.5.4">
+<h3 data-number="5.5.4" class="anchored" data-anchor-id="run-everything-at-once"><span class="header-section-number">5.5.4</span> Run Everything at Once</h3>
+<p>The verify targets bundle LVS, DRC, and PEX in one command.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb21"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> klayout-verify         <span class="co"># CELL defaults to inverter_top</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> magic-verify</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+</section>
+<section id="build-deliverables-for-top-level-integration" class="level2" data-number="5.6">
+<h2 data-number="5.6" class="anchored" data-anchor-id="build-deliverables-for-top-level-integration"><span class="header-section-number">5.6</span> Build Deliverables for Top-Level Integration</h2>
+<p>For the inverter to be picked up by the chip-level LibreLane flow, it must expose a <strong>LEF</strong> (abstract pin / blockage view), a <strong>Liberty timing library</strong> stub, and a <strong>Verilog stub</strong>. They are built individually or via <code>build-top</code>.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb22"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> lef          <span class="co"># final/lef/inverter_top.lef</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> lib          <span class="co"># final/lib/inverter_top.lib (Liberty stub)</span></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> verilog      <span class="co"># final/vh/inverter_top.v (pin classification from PEX)</span></span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> build-top    <span class="co"># the three steps above plus copy-gds and render-gds</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><code>make build-top</code> also copies the GDS to <a href="../macros/inverter/final/gds/"><code>final/gds/</code></a> and renders the macro to <a href="../macros/inverter/render/img/"><code>render/img/inverter_top.png</code></a>.</p>
+</section>
+<section id="full-macro-pass" class="level2" data-number="5.7">
+<h2 data-number="5.7" class="anchored" data-anchor-id="full-macro-pass"><span class="header-section-number">5.7</span> Full Macro Pass</h2>
+<p>The full simulation, verification, and build chain is run with the following command.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb23"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> all</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>This calls <code>sim-all</code> (Xschem + CACE), <code>klayout-verify-all</code>, <code>magic-verify-all</code>, and <code>build-top</code> in sequence. Depending on the host hardware, a full pass can take a few minutes.</p>
+</section>
+</section>
+<section id="sec-top" class="level1" data-number="6">
+<h1 data-number="6"><span class="header-section-number">6</span> Top-Level Implementation</h1>
+<p>This section covers the chip-level assembly. The top-level files that need to be understood (and, if needed, modified for a new chip) are:</p>
+<ul>
+<li><a href="../rtl/chip_top.sv"><code>rtl/chip_top.sv</code></a>, the padframe wrapper. It instantiates one I/O cell per pad and exposes the global <code>clk_PAD</code>, <code>rst_n_PAD</code>, <code>input_PAD</code>, <code>output_PAD</code>, <code>bidir_PAD</code>, and <code>analog_PAD</code> buses.</li>
+<li><a href="../rtl/chip_core.sv"><code>rtl/chip_core.sv</code></a>, the core logic. It instantiates the digital and analog macros (<code>counter1</code>, <code>counter2</code>, <code>inverter1</code>, <code>inverter2</code>, <code>sram_0</code>) and wires them to the I/O bus.</li>
+<li><a href="../flow/librelane/config.yaml"><code>flow/librelane/config.yaml</code></a>, the top-level LibreLane configuration. It defines the padframe order (<code>PAD_WEST</code>, <code>PAD_NORTH</code>, <code>PAD_SOUTH</code>, <code>PAD_EAST</code>), <code>DIE_AREA</code>, <code>CORE_AREA</code>, <code>CLOCK_PERIOD</code>, the macro list (<code>MACROS:</code>), non-default routing rules, PDN parameters, and STA corners.</li>
+<li><a href="../flow/librelane/pdn_cfg.tcl"><code>flow/librelane/pdn_cfg.tcl</code></a>, the Tcl callback that builds the OpenROAD PDN. The bottom of the file contains the custom PDN connects for <code>inverter1</code>, <code>inverter2</code>, and <code>sram_0</code>. This is the part that has to be touched when adding new macros.</li>
+<li><a href="../flow/librelane/chip_top.sdc"><code>flow/librelane/chip_top.sdc</code></a>, timing constraints (clock period, input/output delays).</li>
+<li>Reference documentation, <a href="../doc/specifications.md">specifications.md</a>, <a href="../doc/pinout.md">pinout.md</a>, and <a href="../doc/floorplan.md">floorplan.md</a>.</li>
+</ul>
+<section id="understanding-chip_top.sv" class="level2" data-number="6.1">
+<h2 data-number="6.1" class="anchored" data-anchor-id="understanding-chip_top.sv"><span class="header-section-number">6.1</span> Understanding <code>chip_top.sv</code></h2>
+<p>The padframe wrapper <a href="../rtl/chip_top.sv"><code>chip_top.sv</code></a> declares the chip’s parameters and ports. The parameter block at the top of the module controls the number of pads of each type, and is the place to change when the pinout changes.</p>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>rtl/chip_top.sv (excerpt)</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb24" data-filename="rtl/chip_top.sv (excerpt)"><pre class="sourceCode systemverilog code-with-copy"><code class="sourceCode systemverilog"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="kw">module</span> chip_top #(</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Power / ground pads for digital core / analog front-end</span></span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>    <span class="kw">parameter</span> NUM_VDD_PADS    = <span class="dv">1</span>,</span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>    <span class="kw">parameter</span> NUM_VSS_PADS    = <span class="dv">1</span>,</span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Power/ground pads for I/O</span></span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>    <span class="kw">parameter</span> NUM_IOVDD_PADS  = <span class="dv">1</span>,</span>
+<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a>    <span class="kw">parameter</span> NUM_IOVSS_PADS  = <span class="dv">1</span>,</span>
+<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Signal pads</span></span>
+<span id="cb24-11"><a href="#cb24-11" aria-hidden="true" tabindex="-1"></a>    <span class="kw">parameter</span> NUM_INPUT_PADS  = <span class="dv">1</span>,  <span class="co">// excluding clock and reset pads</span></span>
+<span id="cb24-12"><a href="#cb24-12" aria-hidden="true" tabindex="-1"></a>    <span class="kw">parameter</span> NUM_OUTPUT_PADS = <span class="dv">17</span>,</span>
+<span id="cb24-13"><a href="#cb24-13" aria-hidden="true" tabindex="-1"></a>    <span class="kw">parameter</span> NUM_BIDIR_PADS  = <span class="dv">4</span>,</span>
+<span id="cb24-14"><a href="#cb24-14" aria-hidden="true" tabindex="-1"></a>    <span class="kw">parameter</span> NUM_ANALOG_PADS = <span class="dv">4</span></span>
+<span id="cb24-15"><a href="#cb24-15" aria-hidden="true" tabindex="-1"></a>)( ... );</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>The body of the module is mostly mechanical. One <code>generate</code> block per pad type (<code>vdd_pads</code>, <code>vss_pads</code>, <code>iovdd_pads</code>, <code>iovss_pads</code>, <code>inputs</code>, <code>outputs</code>, <code>bidirs</code>, <code>analogs</code>) instantiates the matching IHP I/O cell, plus single instances for the clock and reset pads. Normally only the parameter counts need to be edited here.</p>
+</section>
+<section id="understanding-chip_core.sv" class="level2" data-number="6.2">
+<h2 data-number="6.2" class="anchored" data-anchor-id="understanding-chip_core.sv"><span class="header-section-number">6.2</span> Understanding <code>chip_core.sv</code></h2>
+<p>The core <a href="../rtl/chip_core.sv"><code>chip_core.sv</code></a> is where the macros are instantiated and wired to the chip’s I/O. The <code>enable</code> signal is mapped to <code>input_PAD[0]</code>, the two <code>counter_top</code> instances share the clock and reset, the two <code>inverter_top</code> instances are wired up (one digital, one analog), and the SRAM output is XOR-reduced to a single bit on <code>output_PAD[16]</code>. The output assignments at the bottom of the file are naturally the bit-to-role mapping documented in <a href="../doc/pinout.md">pinout.md</a>.</p>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>rtl/chip_core.sv (excerpt)</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb25" data-filename="rtl/chip_core.sv (excerpt)"><pre class="sourceCode systemverilog code-with-copy"><code class="sourceCode systemverilog"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Counter 1</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="kw">assign</span> output_out[<span class="dv">0</span>]  = counter1_value[<span class="dv">0</span>];</span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a><span class="kw">assign</span> output_out[<span class="dv">1</span>]  = counter1_value[<span class="dv">1</span>];</span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a><span class="kw">assign</span> output_out[<span class="dv">2</span>]  = counter1_value[<span class="dv">2</span>];</span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a><span class="kw">assign</span> output_out[<span class="dv">3</span>]  = counter1_value[<span class="dv">3</span>];</span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a><span class="co">// Counter 2</span></span>
+<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a><span class="kw">assign</span> output_out[<span class="dv">4</span>]  = counter2_value[<span class="dv">0</span>];</span>
+<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a><span class="co">// ...</span></span>
+<span id="cb25-10"><a href="#cb25-10" aria-hidden="true" tabindex="-1"></a><span class="kw">assign</span> output_out[<span class="dv">11</span>] = counter2_value[<span class="dv">7</span>];</span>
+<span id="cb25-11"><a href="#cb25-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-12"><a href="#cb25-12" aria-hidden="true" tabindex="-1"></a><span class="co">// Inverter 1 (digital)</span></span>
+<span id="cb25-13"><a href="#cb25-13" aria-hidden="true" tabindex="-1"></a><span class="kw">assign</span> output_out[<span class="dv">12</span>] = inv1_dout1;</span>
+<span id="cb25-14"><a href="#cb25-14" aria-hidden="true" tabindex="-1"></a><span class="co">// ...</span></span>
+<span id="cb25-15"><a href="#cb25-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-16"><a href="#cb25-16" aria-hidden="true" tabindex="-1"></a><span class="co">// SRAM parity</span></span>
+<span id="cb25-17"><a href="#cb25-17" aria-hidden="true" tabindex="-1"></a><span class="kw">assign</span> output_out[<span class="dv">16</span>] = ^sram_0_out;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="understanding-config.yaml" class="level2" data-number="6.3">
+<h2 data-number="6.3" class="anchored" data-anchor-id="understanding-config.yaml"><span class="header-section-number">6.3</span> Understanding <code>config.yaml</code></h2>
+<p>The chip-level LibreLane configuration <a href="../flow/librelane/config.yaml"><code>config.yaml</code></a> covers four sections.</p>
+<ol type="1">
+<li><strong>Padframe layout.</strong> The <code>PAD_WEST</code>, <code>PAD_NORTH</code>, <code>PAD_SOUTH</code>, and <code>PAD_EAST</code> lists, in the order documented in <a href="../doc/pinout.md"><code>doc/pinout.md</code></a>.</li>
+<li><strong>Floorplan and timing.</strong> <code>DIE_AREA</code>, <code>CORE_AREA</code>, <code>CLOCK_PERIOD</code>, <code>FP_SIZING</code>, <code>PL_TARGET_DENSITY_PCT</code>.</li>
+<li><strong><code>MACROS:</code> block.</strong> For every macro, the GDS, LEF, Liberty libraries, power-pin connections, and placement coordinates (<code>location</code>, <code>orientation</code>).</li>
+<li><strong>PDN parameters.</strong> <code>PDN_CORE_RING</code>, ring widths and spacings, <code>PDN_MACRO_CONNECTIONS</code>, and the path to <code>pdn_cfg.tcl</code>.</li>
+</ol>
+<p>For floorplan changes (moving macros, changing the die size, adding new macros), the <code>MACROS:</code> section is the one to edit. The rectangular constraints documented in <a href="../doc/floorplan.md"><code>doc/floorplan.md</code></a> apply. Stay inside the core, respect the M3 routing grid for inverters, and never overlap with another macro rectangle.</p>
+</section>
+<section id="understanding-pdn_cfg.tcl" class="level2" data-number="6.4">
+<h2 data-number="6.4" class="anchored" data-anchor-id="understanding-pdn_cfg.tcl"><span class="header-section-number">6.4</span> Understanding <code>pdn_cfg.tcl</code></h2>
+<p><a href="../flow/librelane/pdn_cfg.tcl"><code>pdn_cfg.tcl</code></a> is the OpenROAD callback that builds the power-distribution network. Most of the file is generic boilerplate from LibreLane and OpenLane.</p>
+<p>For macro changes, the bottom of the file is the relevant part. It defines per-instance PDN grids and macro connects. The current chip provides the following.</p>
+<ul>
+<li>A default macro grid (TM2 to TM1) used by the two counters.</li>
+<li>A custom grid for <code>inverter1</code> and <code>inverter2</code> (TM2 to TM1 and TM2 to Metal5, because each inverter macro has its own internal M5 / TM1 ring).</li>
+<li>A custom grid for <code>sram_0</code> (Metal5 stripes bridged to Metal4 and TopMetal1, because the SRAM exposes its supplies on M4 and M5).</li>
+</ul>
+<p>When new macros are added, the matching <code>define_pdn_grid</code> plus <code>add_pdn_connect</code> block at the bottom has to be extended (or the default grid is used if the macro layers line up with the chip-level grid).</p>
+</section>
+<section id="top-level-simulation" class="level2" data-number="6.5">
+<h2 data-number="6.5" class="anchored" data-anchor-id="top-level-simulation"><span class="header-section-number">6.5</span> Top-Level Simulation</h2>
+<p>The same RTL and gate-level cocotb flow as in <a href="#sec-counter" class="quarto-xref">Section&nbsp;4</a> is available at chip level.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb26"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> sim-rtl-cocotb</span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> sim-gl-cocotb</span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> sim-view-cocotb                                <span class="co"># GTKWave</span></span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> sim-view-cocotb WAVEFORM_VIEWER=surfer         <span class="co"># Surfer</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>The cocotb testbench at chip level is <a href="../testbenches/cocotb/chip_top_tb.py"><code>testbenches/cocotb/chip_top_tb.py</code></a>, and it covers the global enable, reset, counters, and bidir behaviour documented in <a href="../doc/specifications.md">specifications.md</a>.</p>
+<div class="callout callout-style-simple callout-note">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-body-container">
+<p><strong>Figure placeholder. <code>chip_top</code> cocotb waveform.</strong></p>
+</div>
+</div>
+</div>
+<p>For mixed-signal sign-off, the <a href="../testbenches/xschem/"><code>testbenches/xschem/chip_top_tb_tran.sch</code></a> testbench exists and can be opened in Xschem the same way as for the counter or the inverter.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb27"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> testbenches/xschem</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="ex">xschem</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The top-level Xschem testbench converges, but it may take a long time depending on the hardware used. <code>make sim-gl-xschem</code> is therefore not part of <code>sim-all</code> and must be called manually when needed.</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Tip
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Inspect the Xschem symbol of <code>chip_top</code> to see the connections defined in <a href="../rtl/chip_core.sv"><code>chip_core.sv</code></a> visually. Use <strong><code>E</code> / <code>Shift + E</code></strong> and <strong><code>I</code> / <code>Shift + I</code></strong> to descend into and back out of subcircuits and symbols.</p>
+<p>Note that the SRAM is not in the schematic. IHP does not ship a SPICE model or an Xschem symbol for the <code>RM_IHPSG13_1P_1024x32_c2_bm_bist</code> macro, so it is excluded from the schematic-level simulation.</p>
+</div>
+</div>
+</section>
+<section id="building-the-chip" class="level2" data-number="6.6">
+<h2 data-number="6.6" class="anchored" data-anchor-id="building-the-chip"><span class="header-section-number">6.6</span> Building the Chip</h2>
+<p>When the floorplan and pinout are settled, the chip can be built from scratch with the following command.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb28"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> build-all</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>This runs the steps in order, <code>init-submodules</code>, <code>build-bondpad</code>, <code>build-logos</code>, <code>build-macros</code>, and <code>build-top</code>. It is the right starting point on a fresh machine after cloning the repository and entering the IIC-OSIC-TOOLS container.</p>
+<p>To re-run only the top-level flow (for example after a change in <a href="../flow/librelane/config.yaml"><code>config.yaml</code></a> or <a href="../rtl/chip_core.sv"><code>chip_core.sv</code></a>), without rebuilding the bondpad, logos, or macros, run the following command.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb29"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> build-top</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Internally, <code>build-top</code> chains <code>librelane-nodrc</code>, <code>copy-reports</code>, <code>copy-gds</code>, <code>copy-netlist</code>, <code>copy-render</code>, <code>add-logo-fill</code>, and <code>render-gds</code>. The final GDS is written to <a href="../layout/"><code>layout/chip_top_logo_fill.gds.gz</code></a>.</p>
+</section>
+<section id="viewing-the-chip" class="level2" data-number="6.7">
+<h2 data-number="6.7" class="anchored" data-anchor-id="viewing-the-chip"><span class="header-section-number">6.7</span> Viewing the Chip</h2>
+<p>After a successful build, the chip can be opened with KLayout.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb30"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="ex">ke</span> layout/chip_top_logo_fill.gds.gz   <span class="co"># KLayout edit mode</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>The render generated by <code>lay2img.py</code> is in <a href="../render/img/"><code>render/img/</code></a>. The sign-off reports (Yosys, antenna, STA, IR-drop, LVS, manufacturability) are in <a href="../verification/reports/"><code>verification/reports/</code></a>.</p>
+<div class="callout callout-style-simple callout-note">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-body-container">
+<p><strong>Figure placeholder. <code>chip_top_logo_fill</code> layout in KLayout.</strong></p>
+</div>
+</div>
+</div>
+</section>
+<section id="chip-level-verification" class="level2" data-number="6.8">
+<h2 data-number="6.8" class="anchored" data-anchor-id="chip-level-verification"><span class="header-section-number">6.8</span> Chip-Level Verification</h2>
+<p>DRC, LVS, and PEX are also available at chip level.</p>
+<section id="drc" class="level3" data-number="6.8.1">
+<h3 data-number="6.8.1" class="anchored" data-anchor-id="drc"><span class="header-section-number">6.8.1</span> DRC</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb31"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> magic-drc CELL=chip_top              <span class="co"># Magic DRC on the bare chip</span></span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> magic-drc CELL=chip_top_logo_fill    <span class="co"># Magic DRC including logo + filler</span></span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> klayout-drc-minimum                  <span class="co"># fast pre-check KLayout DRC</span></span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> klayout-drc-regular                  <span class="co"># full KLayout DRC (slower)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><code>klayout-drc-minimum</code> is a quick pre-check on the final top-level layout including the logo and the fill structures. <code>klayout-drc-regular</code> does the full check, but takes longer.</p>
+</section>
+<section id="pex" class="level3" data-number="6.8.2">
+<h3 data-number="6.8.2" class="anchored" data-anchor-id="pex"><span class="header-section-number">6.8.2</span> PEX</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb32"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> magic-pex CELL=chip_top              <span class="co"># only chip_top, default EXT_MODE=1</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Tip
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>At chip level, PEX is only run on <code>chip_top</code> (without logo and filler), and the default <code>EXT_MODE=1</code> (C-decoupled) keeps the runtime manageable.</p>
+</div>
+</div>
+</section>
+<section id="lvs" class="level3" data-number="6.8.3">
+<h3 data-number="6.8.3" class="anchored" data-anchor-id="lvs"><span class="header-section-number">6.8.3</span> LVS</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb33"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> magic-lvs                            <span class="co"># top-level Magic + Netgen LVS</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Warning
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The top-level LVS is currently under construction. The infrastructure is in place, but a fully clean run cannot be expected yet.</p>
+</div>
+</div>
+</section>
+</section>
+<section id="full-pass" class="level2" data-number="6.9">
+<h2 data-number="6.9" class="anchored" data-anchor-id="full-pass"><span class="header-section-number">6.9</span> Full Pass</h2>
+<p>The comprehensive simulation, build, and DRC pass for the complete chip is run with the following command.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb34"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> all</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>This calls <code>sim-all</code> (RTL/GL cocotb, GL Xschem when available), then <code>build-all</code>, then Magic DRC on both <code>chip_top</code> and <code>chip_top_logo_fill</code>. Depending on the host hardware, this can take a while.</p>
+</section>
+<section id="releasing-for-tapeout" class="level2" data-number="6.10">
+<h2 data-number="6.10" class="anchored" data-anchor-id="releasing-for-tapeout"><span class="header-section-number">6.10</span> Releasing for Tapeout</h2>
+<p>When the chip is clean, the <code>release</code> target copies the GDS, the netlists, and the renders into a versioned folder for tapeout submission.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb35"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> release VERSION=2.1.0</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>The artifacts are written to <a href="../release/"><code>release/v.2.1.0/</code></a> (<code>gds/</code>, <code>netlist/{layout,pnl,spice}/</code>, <code>img/</code>).</p>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Important
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Run <code>make all</code> before <code>make release</code>. The release target only copies files, it does not rebuild or re-verify the chip.</p>
+</div>
+</div>
+</section>
+</section>
+<section id="sec-exercises" class="level1" data-number="7">
+<h1 data-number="7"><span class="header-section-number">7</span> Additional Exercises</h1>
+<p>The following exercises repeat the corresponding sections of this tutorial with a modification of the design.</p>
+<section id="exercise-1-from-8-bit-up-counter-to-16-bit-down-counter" class="level2" data-number="7.1">
+<h2 data-number="7.1" class="anchored" data-anchor-id="exercise-1-from-8-bit-up-counter-to-16-bit-down-counter"><span class="header-section-number">7.1</span> Exercise 1, From 8-bit Up-Counter to 16-bit Down-Counter</h2>
+<p>Repeat <a href="#sec-counter" class="quarto-xref">Section&nbsp;4</a> for a 16-bit synchronous down-counter that wraps from 0 back to <code>2^16 - 1</code>. The recommended steps are:</p>
+<ol type="1">
+<li>Update the RTL (<a href="../macros/counter/rtl/counter.sv"><code>counter.sv</code></a>, <a href="../macros/counter/rtl/counter_top.sv"><code>counter_top.sv</code></a>, <a href="../macros/counter/rtl/constants.sv"><code>constants.sv</code></a>). Change the bit-width and turn the increment block into a decrement, with wrap-around from 0 to <code>COUNTER_MAX</code>.</li>
+<li>Update the testbenches in <a href="../macros/counter/testbenches/verilog/"><code>testbenches/verilog/</code></a>, <a href="../macros/counter/testbenches/cocotb/"><code>testbenches/cocotb/</code></a>, and <a href="../macros/counter/testbenches/xschem/"><code>testbenches/xschem/</code></a> to cover the new behaviour. Adjust the bus width in the waveform view files (<code>*.gtkw</code>, <code>*.surf.ron</code>) as well.</li>
+<li>Run <code>make sim-all</code> to validate the new RTL.</li>
+<li>Re-run the LibreLane flow with <code>make build-top</code>. Check the timing reports, a 16-bit counter at 50 MHz must still close timing.</li>
+<li>Regenerate the XSPICE model with <code>make generate-xspice</code>, and re-run the gate-level Xschem simulation.</li>
+</ol>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Bonus for advanced designers
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Replace the binary counter with a 16-bit Gray counter (only one bit toggles per transition). The same testbench infrastructure can be reused with small changes to the self-check expectations.</p>
+</div>
+</div>
+</section>
+<section id="exercise-2-inverter-to-three-stage-ring-oscillator" class="level2" data-number="7.2">
+<h2 data-number="7.2" class="anchored" data-anchor-id="exercise-2-inverter-to-three-stage-ring-oscillator"><span class="header-section-number">7.2</span> Exercise 2, Inverter to Three-Stage Ring Oscillator</h2>
+<p>Repeat <a href="#sec-inverter" class="quarto-xref">Section&nbsp;5</a> for a three-stage ring oscillator with an output buffer, derived from the existing quad inverter. The recommended steps are:</p>
+<ol type="1">
+<li>Copy the <a href="../macros/inverter/">inverter</a> macro folder to a new location (for example <code>macros/ringosc/</code>), and adapt the Makefile names.</li>
+<li>Update the schematic in Xschem. Connect three inverters in a ring, and tap the output of the last stage through a buffer. The fourth inverter of the quad inverter can naturally be used as the buffer.</li>
+<li>Update the symbol of the macro (<a href="../macros/inverter/schematic/xschem/inverter_top.sym"><code>schematic/xschem/inverter_top.sym</code></a>) and the PEX symbol (<a href="../macros/inverter/schematic/xschem/inverter_top_pex.sym"><code>schematic/xschem/inverter_top_pex.sym</code></a>) to expose a single output net, instead of <code>vin1..vin4</code> and <code>vout1..vout4</code>.</li>
+<li>Update the transient testbench (<a href="../macros/inverter/testbenches/xschem/inverter_top_tb_tran.sch"><code>testbenches/xschem/inverter_top_tb_tran.sch</code></a>) to measure the oscillation frequency. Delete the AC, DC, and standalone transient testbenches that are no longer relevant.</li>
+<li>Optional (advanced), adapt the CACE <a href="../macros/inverter/verification/cace/inverter.yaml"><code>inverter.yaml</code></a> to characterise the oscillation frequency across PVT.</li>
+<li>Re-run the verification chain, <code>make klayout-verify</code>, <code>make magic-verify</code>, and <code>make build-top</code>.</li>
+</ol>
+</section>
+<section id="exercise-3-update-pinout-and-floorplan-of-the-top-level" class="level2" data-number="7.3">
+<h2 data-number="7.3" class="anchored" data-anchor-id="exercise-3-update-pinout-and-floorplan-of-the-top-level"><span class="header-section-number">7.3</span> Exercise 3, Update Pinout and Floorplan of the Top-Level</h2>
+<p>Building on Exercises 1 and 2, swap <code>inverter2</code> for the ring oscillator, delete <code>counter2</code>, and connect the now 16-bit <code>counter1</code> to the freed-up south-side pads. The recommended steps are:</p>
+<ol type="1">
+<li>Replace <code>inverter2</code> with the ring oscillator macro in <a href="../rtl/chip_core.sv"><code>chip_core.sv</code></a>.</li>
+<li>Replace three of the four analog pads with VSS pads, and connect the ring oscillator’s output to the fourth analog pad.</li>
+<li>Delete <code>counter2</code> and rewire all eight south-side pads to the new 16-bit <code>counter1</code> value.</li>
+<li>Update the parameters of <a href="../rtl/chip_top.sv"><code>chip_top.sv</code></a> so that <code>NUM_OUTPUT_PADS</code>, <code>NUM_BIDIR_PADS</code>, <code>NUM_ANALOG_PADS</code>, and <code>NUM_VSS_PADS</code> match the new pin count (see <a href="#sec-top" class="quarto-xref">Section&nbsp;6</a>).</li>
+<li>Update the macro instantiation and wiring in <a href="../rtl/chip_core.sv"><code>chip_core.sv</code></a>.</li>
+<li>Update the placement coordinates in the <code>MACROS:</code> block of <a href="../flow/librelane/config.yaml"><code>config.yaml</code></a>. Keep the <a href="../doc/floorplan.md"><code>doc/floorplan.md</code></a> constraints in mind, namely stay in the core, no overlaps, and respect the M3 grid for inverter-like macros.</li>
+<li>Update the PAD lists (<code>PAD_WEST</code>, <code>PAD_NORTH</code>, <code>PAD_SOUTH</code>, <code>PAD_EAST</code>) in <code>config.yaml</code> to match the new pinout.</li>
+<li>Update <a href="../flow/librelane/pdn_cfg.tcl"><code>pdn_cfg.tcl</code></a> so that the new macros are covered by the correct PDN grid (default for digital, <code>inverter_top</code>-style for analog).</li>
+<li>Rebuild the chip from scratch with <code>make build-all</code>, then verify with <code>make magic-drc CELL=chip_top</code> and <code>make klayout-drc-minimum</code>.</li>
+</ol>
+</section>
+</section>
+<section id="acknowledgements" class="level1" data-number="8">
+<h1 data-number="8"><span class="header-section-number">8</span> Acknowledgements</h1>
 <p>This project is funded by the JKU/SAL <a href="https://research.jku.at/de/projects/jku-lit-sal-intelligent-wireless-systems-lab-iws-lab/">IWS Lab</a>, a collaboration of <a href="https://jku.at">Johannes Kepler University</a> and <a href="https://silicon-austria-labs.com">Silicon Austria Labs</a>.</p>
 <table width="100%">
 <tbody><tr>
@@ -812,6 +2040,38 @@ Important
 </div>
   </div>
 </footer>
+<script>var lightboxQuarto = GLightbox({"closeEffect":"zoom","descPosition":"bottom","loop":false,"openEffect":"zoom","selector":".lightbox"});
+(function() {
+  let previousOnload = window.onload;
+  window.onload = () => {
+    if (previousOnload) {
+      previousOnload();
+    }
+    lightboxQuarto.on('slide_before_load', (data) => {
+      const { slideIndex, slideNode, slideConfig, player, trigger } = data;
+      const href = trigger.getAttribute('href');
+      if (href !== null) {
+        const imgEl = window.document.querySelector(`a[href="${href}"] img`);
+        if (imgEl !== null) {
+          const srcAttr = imgEl.getAttribute("src");
+          if (srcAttr && srcAttr.startsWith("data:")) {
+            slideConfig.href = srcAttr;
+          }
+        }
+      } 
+    });
+  
+    lightboxQuarto.on('slide_after_load', (data) => {
+      const { slideIndex, slideNode, slideConfig, player, trigger } = data;
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(slideNode);
+      }
+    });
+  
+  };
+  
+})();
+          </script>
 
 
 
