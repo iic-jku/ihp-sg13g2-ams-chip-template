@@ -302,7 +302,7 @@ tran $&tstep $&tstop $&tstart
 write @schname\\\\.raw
 
 * Plotting
-plot clock reset_n enable sram_0_vout
+plot clock reset_n enable sram_0_out
 plot inv2_vin1 inv2_vout1
 plot inv1_dout1 inv1_dout2 inv1_dout3 inv1_dout4
 plot counter2_value0 counter2_value1 counter2_value2 counter2_value3 counter2_value4 counter2_value5 counter2_value6 counter2_value7
@@ -313,7 +313,7 @@ unset appendwrite
 set wr_vecnames
 set wr_singlescale
 wrdata ../../../scripts/plot_simulations/data/chip_top_tb_tran.txt
-+ v(clock) v(reset_n) v(enable) v(sram_0_vout) v(inv2_vin1) v(inv2_vout1)
++ v(clock) v(reset_n) v(enable) v(sram_0_out) v(inv2_vin1) v(inv2_vout1)
 + v(inv1_dout1) v(inv1_dout2) v(inv1_dout3) v(inv1_dout4)
 + v(counter2_value0) v(counter2_value1) v(counter2_value2) v(counter2_value3)
 + v(counter2_value4) v(counter2_value5) v(counter2_value6) v(counter2_value7)
