@@ -159,3 +159,7 @@ C {devices/vsource.sym} 960 -810 0 0 {name=Vgsp value=0
 }
 C {inverter.sym} 1080 -860 0 0 {name=x1
 }
+C {devices/code_shown.sym} 1660 -1430 0 0 {name=SAVE only_toplevel=true
+format="tcleval( @value )"
+value=".include [file rootname [xschem get schname]].save
+"}

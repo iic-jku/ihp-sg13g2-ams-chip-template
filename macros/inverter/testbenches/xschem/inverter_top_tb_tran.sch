@@ -253,3 +253,7 @@ spice_ignore=true}
 C {devices/gnd.sym} 1320 -840 0 0 {name=l16 lab=GND}
 C {devices/gnd.sym} 1440 -840 0 0 {name=l17 lab=GND}
 C {inverter_top.sym} 1000 -520 0 0 {name=x1}
+C {devices/code_shown.sym} 1650 -1430 0 0 {name=SAVE only_toplevel=true
+format="tcleval( @value )"
+value=".include [file rootname [xschem get schname]].save
+"}
