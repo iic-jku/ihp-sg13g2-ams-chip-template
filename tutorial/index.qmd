@@ -848,7 +848,7 @@ counter or the inverter.
 
 ```sh
 cd testbenches/xschem
-xschem
+xschem chip_top_tb_tran.sch
 ```
 
 ::: {.callout-note}
@@ -858,8 +858,8 @@ The top-level Xschem testbench converges, but it may take a long time depending 
 
 ::: {.callout-tip}
 Inspect the Xschem symbol of `chip_top` to see the connections defined
-in [`chip_core.sv`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/rtl/chip_core.sv) visually. Use **`E` / `Shift +
-E`** and **`I` / `Shift + I`** to descend into and back out of
+in [`chip_core.sv`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/rtl/chip_core.sv) visually. Use **`e` / `Ctrl +
+e`** and **`i` / `Ctrl + e`** to descend into and back out of
 subcircuits and symbols.
 
 Note that the SRAM is not in the schematic. IHP does not ship a SPICE
