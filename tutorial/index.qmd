@@ -489,8 +489,7 @@ steps, so no extra verification target is needed for the counter.
 The [`inverter`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/inverter/) macro is the analog reference
 macro of the template. It is a four-channel CMOS inverter, drawn at
 transistor level, and verified with the comprehensive AMS sign-off
-chain (LVS, DRC, PEX, Monte-Carlo and mismatch with CACE). Two
-instances are used in the chip core. One is used as a 4-channel digital
+chain ([LVS](https://en.wikipedia.org/wiki/Layout_versus_schematic), [DRC](https://en.wikipedia.org/wiki/Design_rule_checking), [PEX](https://en.wikipedia.org/wiki/Parasitic_extraction), [Monte-Carlo](https://en.wikipedia.org/wiki/Monte_Carlo_method) simulation for process variations and mismatch with CACE). Two instances are used in the chip core. One is used as a 4-channel digital
 inverter (`inverter1`), the other as a 2-channel analog inverter
 (`inverter2`). See the [chip specifications](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/doc/specifications.md)
 for the full picture.
