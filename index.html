@@ -402,8 +402,8 @@ window.Quarto = {
   <ul class="collapse">
   <li><a href="#folder-structure-of-the-inverter-macro" id="toc-folder-structure-of-the-inverter-macro" class="nav-link" data-scroll-target="#folder-structure-of-the-inverter-macro"><span class="header-section-number">5.1</span> Folder Structure of the Inverter Macro</a></li>
   <li><a href="#schematic-level-simulation" id="toc-schematic-level-simulation" class="nav-link" data-scroll-target="#schematic-level-simulation"><span class="header-section-number">5.2</span> Schematic-Level Simulation</a></li>
-  <li><a href="#inspect-edit-the-layout" id="toc-inspect-edit-the-layout" class="nav-link" data-scroll-target="#inspect-edit-the-layout"><span class="header-section-number">5.3</span> Inspect / Edit the Layout</a></li>
-  <li><a href="#process-variation-and-mismatch-cace" id="toc-process-variation-and-mismatch-cace" class="nav-link" data-scroll-target="#process-variation-and-mismatch-cace"><span class="header-section-number">5.4</span> Process Variation and Mismatch (CACE)</a></li>
+  <li><a href="#process-variation-and-mismatch-cace" id="toc-process-variation-and-mismatch-cace" class="nav-link" data-scroll-target="#process-variation-and-mismatch-cace"><span class="header-section-number">5.3</span> Process Variation and Mismatch (CACE)</a></li>
+  <li><a href="#inspect-edit-the-layout" id="toc-inspect-edit-the-layout" class="nav-link" data-scroll-target="#inspect-edit-the-layout"><span class="header-section-number">5.4</span> Inspect / Edit the Layout</a></li>
   <li><a href="#drc-lvs-and-pex" id="toc-drc-lvs-and-pex" class="nav-link" data-scroll-target="#drc-lvs-and-pex"><span class="header-section-number">5.5</span> DRC, LVS, and PEX</a>
   <ul class="collapse">
   <li><a href="#design-rule-check" id="toc-design-rule-check" class="nav-link" data-scroll-target="#design-rule-check"><span class="header-section-number">5.5.1</span> Design Rule Check</a></li>
@@ -1208,7 +1208,7 @@ Note
 </section>
 <section id="sec-inverter" class="level1" data-number="5">
 <h1 data-number="5"><span class="header-section-number">5</span> Inverter Macro Implementation</h1>
-<p>The <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/inverter/"><code>inverter</code></a> macro is the analog reference macro of the template. It is a four-channel CMOS inverter, drawn at transistor level, and verified with the comprehensive AMS sign-off chain (LVS, DRC, PEX, Monte-Carlo and mismatch with CACE). Two instances are used in the chip core. One is used as a 4-channel digital inverter (<code>inverter1</code>), the other as a 2-channel analog inverter (<code>inverter2</code>). See the <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/doc/specifications.md">chip specifications</a> for the full picture.</p>
+<p>The <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/inverter/"><code>inverter</code></a> macro is the analog reference macro of the template. It is a four-channel CMOS inverter, drawn at transistor level, and verified with the comprehensive AMS sign-off chain (<a href="https://en.wikipedia.org/wiki/Layout_versus_schematic">LVS</a>, <a href="https://en.wikipedia.org/wiki/Design_rule_checking">DRC</a>, <a href="https://en.wikipedia.org/wiki/Parasitic_extraction">PEX</a>, <a href="https://en.wikipedia.org/wiki/Monte_Carlo_method">Monte-Carlo</a> simulation for process variations and mismatch with CACE). Two instances are used in the chip core. One is used as a 4-channel digital inverter (<code>inverter1</code>), the other as a 2-channel analog inverter (<code>inverter2</code>). See the <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/doc/specifications.md">chip specifications</a> for the full picture.</p>
 <section id="folder-structure-of-the-inverter-macro" class="level2" data-number="5.1">
 <h2 data-number="5.1" class="anchored" data-anchor-id="folder-structure-of-the-inverter-macro"><span class="header-section-number">5.1</span> Folder Structure of the Inverter Macro</h2>
 <p>In <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/inverter/"><code>macros/inverter/</code></a>, the relevant folders are:</p>
@@ -1314,11 +1314,17 @@ Tip
 <span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> sim-view-xschem CELL=inverter        <span class="co"># plot results with Python</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>The full simulation suite (all four testbenches plus the CACE flow) is triggered with <code>make sim-all</code>.</p>
 </section>
-<section id="inspect-edit-the-layout" class="level2" data-number="5.3">
-<h2 data-number="5.3" class="anchored" data-anchor-id="inspect-edit-the-layout"><span class="header-section-number">5.3</span> Inspect / Edit the Layout</h2>
+<section id="process-variation-and-mismatch-cace" class="level2" data-number="5.3">
+<h2 data-number="5.3" class="anchored" data-anchor-id="process-variation-and-mismatch-cace"><span class="header-section-number">5.3</span> Process Variation and Mismatch (CACE)</h2>
+<p><a href="https://github.com/fossi-foundation/cace">CACE</a> drives ngspice via a characterisation YAML file (<a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/inverter/verification/cace/inverter.yaml"><code>verification/cace/inverter.yaml</code></a>) and produces Monte-Carlo, mismatch, and supply-sweep plots.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb16"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> sim-cace</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Plots are written to <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/inverter/verification/cace/"><code>verification/cace/results/inverter/</code></a>. This step is mainly relevant for advanced designers that want to characterise the macro across PVT corners.</p>
+</section>
+<section id="inspect-edit-the-layout" class="level2" data-number="5.4">
+<h2 data-number="5.4" class="anchored" data-anchor-id="inspect-edit-the-layout"><span class="header-section-number">5.4</span> Inspect / Edit the Layout</h2>
 <p>The layout is created and edited in KLayout. The container alias <code>ke</code> opens KLayout in edit mode.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb16"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> macros/inverter/layout</span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="ex">ke</span> inverter_top.klay.gds</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb17"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> macros/inverter/layout</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="ex">ke</span> inverter_top.klay.gds</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>After modifying the layout, export a clean <code>.gds</code> file (for example <code>inverter_top.gds</code>). The Magic-based flows always work on <code>.gds</code>, while the KLayout-based flows accept either <code>.gds</code> or <code>.klay.gds</code>.</p>
 <div class="callout callout-style-simple callout-note">
 <div class="callout-body d-flex">
@@ -1330,12 +1336,6 @@ Tip
 </div>
 </div>
 </div>
-</section>
-<section id="process-variation-and-mismatch-cace" class="level2" data-number="5.4">
-<h2 data-number="5.4" class="anchored" data-anchor-id="process-variation-and-mismatch-cace"><span class="header-section-number">5.4</span> Process Variation and Mismatch (CACE)</h2>
-<p><a href="https://github.com/fossi-foundation/cace">CACE</a> drives ngspice via a characterisation YAML file (<a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/inverter/verification/cace/inverter.yaml"><code>verification/cace/inverter.yaml</code></a>) and produces Monte-Carlo, mismatch, and supply-sweep plots.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb17"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> sim-cace</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>Plots are written to <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/inverter/verification/cace/"><code>verification/cace/results/inverter/</code></a>. This step is mainly relevant for advanced designers that want to characterise the macro across PVT corners.</p>
 </section>
 <section id="drc-lvs-and-pex" class="level2" data-number="5.5">
 <h2 data-number="5.5" class="anchored" data-anchor-id="drc-lvs-and-pex"><span class="header-section-number">5.5</span> DRC, LVS, and PEX</h2>

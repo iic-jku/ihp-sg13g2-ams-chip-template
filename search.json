@@ -112,18 +112,18 @@
     "text": "5.2 Schematic-Level Simulation\nGo to the Xschem testbench folder and start Xschem.\ncd macros/inverter/testbenches/xschem\nxschem\nFour testbenches are available in testbenches/xschem/.\n\ninverter_tb_tran.sch, single-channel transient response,\ninverter_tb_ac_ol.sch, open-loop AC characterisation,\ninverter_tb_Vout.sch, DC input sweep,\ninverter_top_tb_tran.sch, top-level transient on inverter_top.\n\nLoad a testbench in Xschem, then hold Ctrl and press the Simulate arrow in the schematic to launch the simulator manually.\n\n\n\n\n\n\nFigure placeholder. Xschem inverter_tb_tran simulation result.\n\n\n\n\n\n\n\n\n\nTipUseful Xschem keybindings\n\n\n\n\nMark a symbol and press e to descend into the underlying circuit, then Ctrl + e to go back up.\nMark a symbol and press i to descend into the symbol drawing, then Ctrl + e to go back up.\n\nThis is the recommended way to inspect or modify the underlying circuit and the graphical symbol of any device.\n\n\nNon-interactive runs and post-processing are also available through the Makefile.\ncd macros/inverter\nmake sim-xschem TB=inverter_tb_tran\nmake sim-view-xschem CELL=inverter        # plot results with Python\nThe full simulation suite (all four testbenches plus the CACE flow) is triggered with make sim-all."
   },
   {
-    "objectID": "index.html#inspect-edit-the-layout",
-    "href": "index.html#inspect-edit-the-layout",
-    "title": "A Tutorial on Open-Source Analog-Mixed Signal Chip Design with the ihp-sg13g2 Open-PDK",
-    "section": "5.3 Inspect / Edit the Layout",
-    "text": "5.3 Inspect / Edit the Layout\nThe layout is created and edited in KLayout. The container alias ke opens KLayout in edit mode.\ncd macros/inverter/layout\nke inverter_top.klay.gds\nAfter modifying the layout, export a clean .gds file (for example inverter_top.gds). The Magic-based flows always work on .gds, while the KLayout-based flows accept either .gds or .klay.gds.\n\n\n\n\n\n\nFigure placeholder. inverter_top layout in KLayout."
-  },
-  {
     "objectID": "index.html#process-variation-and-mismatch-cace",
     "href": "index.html#process-variation-and-mismatch-cace",
     "title": "A Tutorial on Open-Source Analog-Mixed Signal Chip Design with the ihp-sg13g2 Open-PDK",
-    "section": "5.4 Process Variation and Mismatch (CACE)",
-    "text": "5.4 Process Variation and Mismatch (CACE)\nCACE drives ngspice via a characterisation YAML file (verification/cace/inverter.yaml) and produces Monte-Carlo, mismatch, and supply-sweep plots.\nmake sim-cace\nPlots are written to verification/cace/results/inverter/. This step is mainly relevant for advanced designers that want to characterise the macro across PVT corners."
+    "section": "5.3 Process Variation and Mismatch (CACE)",
+    "text": "5.3 Process Variation and Mismatch (CACE)\nCACE drives ngspice via a characterisation YAML file (verification/cace/inverter.yaml) and produces Monte-Carlo, mismatch, and supply-sweep plots.\nmake sim-cace\nPlots are written to verification/cace/results/inverter/. This step is mainly relevant for advanced designers that want to characterise the macro across PVT corners."
+  },
+  {
+    "objectID": "index.html#inspect-edit-the-layout",
+    "href": "index.html#inspect-edit-the-layout",
+    "title": "A Tutorial on Open-Source Analog-Mixed Signal Chip Design with the ihp-sg13g2 Open-PDK",
+    "section": "5.4 Inspect / Edit the Layout",
+    "text": "5.4 Inspect / Edit the Layout\nThe layout is created and edited in KLayout. The container alias ke opens KLayout in edit mode.\ncd macros/inverter/layout\nke inverter_top.klay.gds\nAfter modifying the layout, export a clean .gds file (for example inverter_top.gds). The Magic-based flows always work on .gds, while the KLayout-based flows accept either .gds or .klay.gds.\n\n\n\n\n\n\nFigure placeholder. inverter_top layout in KLayout."
   },
   {
     "objectID": "index.html#drc-lvs-and-pex",
