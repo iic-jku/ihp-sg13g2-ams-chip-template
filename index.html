@@ -1414,19 +1414,19 @@ Tip
 </div>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb24" data-filename="rtl/chip_top.sv (excerpt)"><pre class="sourceCode systemverilog code-with-copy"><code class="sourceCode systemverilog"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="kw">module</span> chip_top #(</span>
 <span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Power / ground pads for digital core / analog front-end</span></span>
-<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>    <span class="kw">parameter</span> NUM_VDD_PADS    = <span class="dv">1</span>,</span>
-<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>    <span class="kw">parameter</span> NUM_VSS_PADS    = <span class="dv">1</span>,</span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>    <span class="kw">parameter</span> <span class="kw">int</span> <span class="kw">unsigned</span> NUM_VDD_PADS    = <span class="dv">1</span>,</span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>    <span class="kw">parameter</span> <span class="kw">int</span> <span class="kw">unsigned</span> NUM_VSS_PADS    = <span class="dv">1</span>,</span>
 <span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Power/ground pads for I/O</span></span>
-<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>    <span class="kw">parameter</span> NUM_IOVDD_PADS  = <span class="dv">1</span>,</span>
-<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a>    <span class="kw">parameter</span> NUM_IOVSS_PADS  = <span class="dv">1</span>,</span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Power / ground pads for I/O</span></span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>    <span class="kw">parameter</span> <span class="kw">int</span> <span class="kw">unsigned</span> NUM_IOVDD_PADS  = <span class="dv">1</span>,</span>
+<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a>    <span class="kw">parameter</span> <span class="kw">int</span> <span class="kw">unsigned</span> NUM_IOVSS_PADS  = <span class="dv">1</span>,</span>
 <span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Signal pads</span></span>
-<span id="cb24-11"><a href="#cb24-11" aria-hidden="true" tabindex="-1"></a>    <span class="kw">parameter</span> NUM_INPUT_PADS  = <span class="dv">1</span>,  <span class="co">// excluding clock and reset pads</span></span>
-<span id="cb24-12"><a href="#cb24-12" aria-hidden="true" tabindex="-1"></a>    <span class="kw">parameter</span> NUM_OUTPUT_PADS = <span class="dv">17</span>,</span>
-<span id="cb24-13"><a href="#cb24-13" aria-hidden="true" tabindex="-1"></a>    <span class="kw">parameter</span> NUM_BIDIR_PADS  = <span class="dv">4</span>,</span>
-<span id="cb24-14"><a href="#cb24-14" aria-hidden="true" tabindex="-1"></a>    <span class="kw">parameter</span> NUM_ANALOG_PADS = <span class="dv">4</span></span>
-<span id="cb24-15"><a href="#cb24-15" aria-hidden="true" tabindex="-1"></a>)( ... );</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb24-11"><a href="#cb24-11" aria-hidden="true" tabindex="-1"></a>    <span class="kw">parameter</span> <span class="kw">int</span> <span class="kw">unsigned</span> NUM_INPUT_PADS  = <span class="dv">1</span>,  <span class="co">// excluding clock and reset pads</span></span>
+<span id="cb24-12"><a href="#cb24-12" aria-hidden="true" tabindex="-1"></a>    <span class="kw">parameter</span> <span class="kw">int</span> <span class="kw">unsigned</span> NUM_OUTPUT_PADS = <span class="dv">17</span>,</span>
+<span id="cb24-13"><a href="#cb24-13" aria-hidden="true" tabindex="-1"></a>    <span class="kw">parameter</span> <span class="kw">int</span> <span class="kw">unsigned</span> NUM_BIDIR_PADS  = <span class="dv">4</span>,</span>
+<span id="cb24-14"><a href="#cb24-14" aria-hidden="true" tabindex="-1"></a>    <span class="kw">parameter</span> <span class="kw">int</span> <span class="kw">unsigned</span> NUM_ANALOG_PADS = <span class="dv">4</span></span>
+<span id="cb24-15"><a href="#cb24-15" aria-hidden="true" tabindex="-1"></a>) ( ... );</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>The body of the module is mostly mechanical. One <code>generate</code> block per pad type (<code>vdd_pads</code>, <code>vss_pads</code>, <code>iovdd_pads</code>, <code>iovss_pads</code>, <code>inputs</code>, <code>outputs</code>, <code>bidirs</code>, <code>analogs</code>) instantiates the matching IHP I/O cell, plus single instances for the clock and reset pads. Normally only the parameter counts need to be edited here.</p>
 </section>
@@ -1438,22 +1438,17 @@ Tip
 <pre><strong>rtl/chip_core.sv (excerpt)</strong></pre>
 </div>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb25" data-filename="rtl/chip_core.sv (excerpt)"><pre class="sourceCode systemverilog code-with-copy"><code class="sourceCode systemverilog"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Counter 1</span></span>
-<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="kw">assign</span> output_out[<span class="dv">0</span>]  = counter1_value[<span class="dv">0</span>];</span>
-<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a><span class="kw">assign</span> output_out[<span class="dv">1</span>]  = counter1_value[<span class="dv">1</span>];</span>
-<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a><span class="kw">assign</span> output_out[<span class="dv">2</span>]  = counter1_value[<span class="dv">2</span>];</span>
-<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a><span class="kw">assign</span> output_out[<span class="dv">3</span>]  = counter1_value[<span class="dv">3</span>];</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="kw">assign</span> output_out[<span class="dv">3</span>:<span class="dv">0</span>]  = counter1_value[<span class="dv">3</span>:<span class="dv">0</span>];</span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a><span class="co">// Counter 2</span></span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a><span class="kw">assign</span> output_out[<span class="dv">11</span>:<span class="dv">4</span>] = counter2_value;</span>
 <span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a><span class="co">// Counter 2</span></span>
-<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a><span class="kw">assign</span> output_out[<span class="dv">4</span>]  = counter2_value[<span class="dv">0</span>];</span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a><span class="co">// Inverter 1 (digital)</span></span>
+<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a><span class="kw">assign</span> output_out[<span class="dv">12</span>]   = inv1_dout1;</span>
 <span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a><span class="co">// ...</span></span>
-<span id="cb25-10"><a href="#cb25-10" aria-hidden="true" tabindex="-1"></a><span class="kw">assign</span> output_out[<span class="dv">11</span>] = counter2_value[<span class="dv">7</span>];</span>
-<span id="cb25-11"><a href="#cb25-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb25-12"><a href="#cb25-12" aria-hidden="true" tabindex="-1"></a><span class="co">// Inverter 1 (digital)</span></span>
-<span id="cb25-13"><a href="#cb25-13" aria-hidden="true" tabindex="-1"></a><span class="kw">assign</span> output_out[<span class="dv">12</span>] = inv1_dout1;</span>
-<span id="cb25-14"><a href="#cb25-14" aria-hidden="true" tabindex="-1"></a><span class="co">// ...</span></span>
-<span id="cb25-15"><a href="#cb25-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb25-16"><a href="#cb25-16" aria-hidden="true" tabindex="-1"></a><span class="co">// SRAM parity</span></span>
-<span id="cb25-17"><a href="#cb25-17" aria-hidden="true" tabindex="-1"></a><span class="kw">assign</span> output_out[<span class="dv">16</span>] = ^sram_0_out;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb25-10"><a href="#cb25-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-11"><a href="#cb25-11" aria-hidden="true" tabindex="-1"></a><span class="co">// SRAM parity</span></span>
+<span id="cb25-12"><a href="#cb25-12" aria-hidden="true" tabindex="-1"></a><span class="kw">assign</span> output_out[<span class="dv">16</span>]   = ^sram_0_out;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
 <section id="understanding-config.yaml" class="level2" data-number="6.3">
