@@ -921,37 +921,50 @@ Tip
 <p>The macro is split into a parameterised counter and a thin top-level wrapper that converts the chip’s active-low reset to the internal active-high reset of the counter.</p>
 <section id="counter.sv" class="level3" data-number="4.2.1">
 <h3 data-number="4.2.1" class="anchored" data-anchor-id="counter.sv"><span class="header-section-number">4.2.1</span> <code>counter.sv</code></h3>
-<p>The arithmetic is implemented in <a href="../macros/counter/rtl/counter.sv"><code>counter.sv</code></a>. It is an N-bit synchronous up-counter with reset, enable, and wrap at <code>COUNTER_MAX</code>.</p>
+<p>The arithmetic is implemented in <a href="../macros/counter/rtl/counter.sv"><code>counter.sv</code></a>. It is an N-bit synchronous up-counter with reset, enable, and wrap at <code>CTR_MAX</code>.</p>
 <div class="code-with-filename">
 <div class="code-with-filename-file">
 <pre><strong>macros/counter/rtl/counter.sv</strong></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3" data-filename="macros/counter/rtl/counter.sv"><pre class="sourceCode systemverilog code-with-copy"><code class="sourceCode systemverilog"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">module</span> counter #(</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="kw">parameter</span> COUNTER_BITWIDTH = <span class="dv">8</span>,</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="kw">parameter</span> COUNTER_MAX      = <span class="dv">255</span></span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>)(</span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  <span class="kw">input</span>  <span class="kw">wire</span> clock_i,</span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  <span class="kw">input</span>  <span class="kw">wire</span> reset_i,</span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>  <span class="kw">input</span>  <span class="kw">wire</span> enable_i,</span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>  <span class="kw">output</span> <span class="kw">wire</span> [COUNTER_BITWIDTH<span class="dv">-1</span>:<span class="dv">0</span>] counter_value_o</span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>);</span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>  <span class="kw">reg</span> [COUNTER_BITWIDTH<span class="dv">-1</span>:<span class="dv">0</span>] counter_value;</span>
-<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>  <span class="kw">always</span> @(<span class="kw">posedge</span> clock_i) <span class="kw">begin</span></span>
-<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>    <span class="kw">if</span> (reset_i == <span class="bn">1'b1</span>) <span class="kw">begin</span></span>
-<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>      counter_value &lt;= {COUNTER_BITWIDTH{<span class="bn">1'b0</span>}};</span>
-<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>    <span class="kw">end</span> <span class="kw">else</span> <span class="kw">if</span> (enable_i == <span class="bn">1'b1</span>) <span class="kw">begin</span></span>
-<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>      <span class="kw">if</span> (counter_value == COUNTER_MAX[COUNTER_BITWIDTH<span class="dv">-1</span>:<span class="dv">0</span>])</span>
-<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>        counter_value &lt;= {COUNTER_BITWIDTH{<span class="bn">1'b0</span>}};</span>
-<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>      <span class="kw">else</span></span>
-<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>        counter_value &lt;= counter_value</span>
-<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>                       + {{(COUNTER_BITWIDTH<span class="dv">-1</span>){<span class="bn">1'b0</span>}}, <span class="bn">1'b1</span>};</span>
-<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>    <span class="kw">end</span></span>
-<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>  <span class="kw">end</span></span>
-<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a>  <span class="kw">assign</span> counter_value_o = counter_value;</span>
-<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a><span class="kw">endmodule</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3" data-filename="macros/counter/rtl/counter.sv"><pre class="sourceCode systemverilog code-with-copy"><code class="sourceCode systemverilog"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co">// </span><span class="an">SPDX-FileCopyrightText:</span><span class="co"> 2026 Simon Dorrer and Harald Pretl</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="co">// </span><span class="an">SPDX-License-Identifier:</span><span class="co"> Apache-2.0</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="co">// Description: This file implements an N-bit up counter with</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co">// synchronous reset &amp; enable in SystemVerilog.</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="ot">`default_nettype</span> none</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="ot">`ifndef</span> __COUNTER__</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="ot">`define</span> __COUNTER__</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="kw">module</span> counter #(</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>  <span class="kw">parameter</span> <span class="kw">int</span> <span class="kw">unsigned</span>       CTR_BW  = <span class="dv">8</span>,</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>  <span class="kw">parameter</span> <span class="kw">logic</span> [CTR_BW<span class="dv">-1</span>:<span class="dv">0</span>] CTR_MAX = <span class="dv">2</span>**CTR_BW - <span class="dv">1</span></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>)(</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>  <span class="kw">input</span> <span class="kw">logic</span>               clock_i,</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>  <span class="kw">input</span> <span class="kw">logic</span>               reset_i,</span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>  <span class="kw">input</span> <span class="kw">logic</span>               enable_i,</span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>  <span class="kw">output</span> <span class="kw">logic</span> [CTR_BW<span class="dv">-1</span>:<span class="dv">0</span>] counter_value_o</span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>);</span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>  <span class="co">// Counter implementation</span></span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>  <span class="kw">always_ff</span> @(<span class="kw">posedge</span> clock_i) <span class="kw">begin</span></span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>    <span class="kw">if</span> (reset_i) <span class="kw">begin</span></span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>      <span class="co">// Synchronous reset clears the counter value</span></span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a>      counter_value_o &lt;= '<span class="dv">0</span>;</span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a>    <span class="kw">end</span> <span class="kw">else</span> <span class="kw">if</span> (enable_i) <span class="kw">begin</span></span>
+<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a>      <span class="co">// Increment the counter value by 1, wrap around at CTR_MAX</span></span>
+<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a>      <span class="kw">if</span> (counter_value_o == CTR_MAX) <span class="kw">begin</span></span>
+<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a>        counter_value_o &lt;= '<span class="dv">0</span>;</span>
+<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a>      <span class="kw">end</span> <span class="kw">else</span> <span class="kw">begin</span></span>
+<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a>        counter_value_o &lt;= counter_value_o + <span class="dv">1</span>;</span>
+<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a>      <span class="kw">end</span></span>
+<span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a>    <span class="kw">end</span></span>
+<span id="cb3-34"><a href="#cb3-34" aria-hidden="true" tabindex="-1"></a>  <span class="kw">end</span></span>
+<span id="cb3-35"><a href="#cb3-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-36"><a href="#cb3-36" aria-hidden="true" tabindex="-1"></a><span class="kw">endmodule</span> <span class="co">// counter</span></span>
+<span id="cb3-37"><a href="#cb3-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-38"><a href="#cb3-38" aria-hidden="true" tabindex="-1"></a><span class="ot">`endif</span></span>
+<span id="cb3-39"><a href="#cb3-39" aria-hidden="true" tabindex="-1"></a><span class="ot">`default_nettype</span> <span class="kw">wire</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
 <section id="counter_top.sv" class="level3" data-number="4.2.2">
@@ -961,29 +974,44 @@ Tip
 <div class="code-with-filename-file">
 <pre><strong>macros/counter/rtl/counter_top.sv</strong></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4" data-filename="macros/counter/rtl/counter_top.sv"><pre class="sourceCode systemverilog code-with-copy"><code class="sourceCode systemverilog"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">module</span> counter_top #(</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="kw">parameter</span>  <span class="kw">int</span> COUNTER_MAX      = <span class="ot">`COUNTER_MAX_DEFAULT</span>,</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="kw">localparam</span> <span class="kw">int</span> COUNTER_BITWIDTH = <span class="kw">$clog2</span>(COUNTER_MAX + <span class="dv">1</span>)</span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>)(</span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  <span class="kw">input</span>  <span class="kw">wire</span> clock_i,</span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  <span class="kw">input</span>  <span class="kw">wire</span> reset_n_i,   <span class="co">// active-low</span></span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>  <span class="kw">input</span>  <span class="kw">wire</span> enable_i,</span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>  <span class="kw">output</span> <span class="kw">wire</span> [COUNTER_BITWIDTH<span class="dv">-1</span>:<span class="dv">0</span>] counter_value_o</span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>);</span>
-<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>  <span class="kw">wire</span> reset;</span>
-<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>  <span class="kw">assign</span> reset = ~reset_n_i;</span>
-<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>  counter #(</span>
-<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>    .COUNTER_BITWIDTH(COUNTER_BITWIDTH),</span>
-<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>    .COUNTER_MAX(COUNTER_MAX)</span>
-<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>  ) counter_0 (</span>
-<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>    .clock_i(clock_i),</span>
-<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>    .reset_i(reset),</span>
-<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>    .enable_i(enable_i),</span>
-<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>    .counter_value_o(counter_value_o)</span>
-<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a>  );</span>
-<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a><span class="kw">endmodule</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4" data-filename="macros/counter/rtl/counter_top.sv"><pre class="sourceCode systemverilog code-with-copy"><code class="sourceCode systemverilog"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co">// </span><span class="an">SPDX-FileCopyrightText:</span><span class="co"> 2026 Simon Dorrer and Harald Pretl</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="co">// </span><span class="an">SPDX-License-Identifier:</span><span class="co"> Apache-2.0</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="co">// Description: This file implements the top-level wrapper module</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="co">// of the counter macro in SystemVerilog.</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="ot">`default_nettype</span> none</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="ot">`ifndef</span> __COUNTER_TOP__</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="ot">`define</span> __COUNTER_TOP__</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a><span class="kw">module</span> counter_top #(</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>  <span class="kw">parameter</span>  <span class="kw">int</span> <span class="kw">unsigned</span> CTR_MAX = <span class="ot">`COUNTER_MAX_DEFAULT</span>,</span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>  <span class="kw">localparam</span> <span class="kw">int</span> <span class="kw">unsigned</span> CTR_BW  = <span class="kw">$clog2</span>(CTR_MAX + <span class="dv">1</span>)</span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>)(</span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>  <span class="kw">input</span> <span class="kw">logic</span>               clock_i,</span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>  <span class="kw">input</span> <span class="kw">logic</span>               reset_n_i,</span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>  <span class="kw">input</span> <span class="kw">logic</span>               enable_i,</span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>  <span class="kw">output</span> <span class="kw">logic</span> [CTR_BW<span class="dv">-1</span>:<span class="dv">0</span>] counter_value_o</span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>);</span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>  <span class="co">// Internal active-high reset (wrapper handles polarity conversion)</span></span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a>  <span class="kw">logic</span> reset;</span>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a>  <span class="kw">assign</span> reset = ~reset_n_i;</span>
+<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a>  <span class="co">// Embed Counter</span></span>
+<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a>  counter #(</span>
+<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a>    .CTR_BW(CTR_BW),</span>
+<span id="cb4-28"><a href="#cb4-28" aria-hidden="true" tabindex="-1"></a>    .CTR_MAX(CTR_MAX)</span>
+<span id="cb4-29"><a href="#cb4-29" aria-hidden="true" tabindex="-1"></a>  ) counter_0 (</span>
+<span id="cb4-30"><a href="#cb4-30" aria-hidden="true" tabindex="-1"></a>    .clock_i(clock_i),</span>
+<span id="cb4-31"><a href="#cb4-31" aria-hidden="true" tabindex="-1"></a>    .reset_i(reset),</span>
+<span id="cb4-32"><a href="#cb4-32" aria-hidden="true" tabindex="-1"></a>    .enable_i(enable_i),</span>
+<span id="cb4-33"><a href="#cb4-33" aria-hidden="true" tabindex="-1"></a>    .counter_value_o(counter_value_o)</span>
+<span id="cb4-34"><a href="#cb4-34" aria-hidden="true" tabindex="-1"></a>  );</span>
+<span id="cb4-35"><a href="#cb4-35" aria-hidden="true" tabindex="-1"></a><span class="kw">endmodule</span> <span class="co">// counter_top</span></span>
+<span id="cb4-36"><a href="#cb4-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-37"><a href="#cb4-37" aria-hidden="true" tabindex="-1"></a><span class="ot">`endif</span></span>
+<span id="cb4-38"><a href="#cb4-38" aria-hidden="true" tabindex="-1"></a><span class="ot">`default_nettype</span> <span class="kw">wire</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Shared defaults like the bit-width and the clock frequency are defined in <a href="../macros/counter/rtl/constants.sv"><code>constants.sv</code></a>. They are exposed as <code>`define</code> macros instead of a SystemVerilog <code>package</code>, because Yosys 0.64 cannot parse <code>import pkg::*</code> in a module header.</p>
 <div class="callout callout-style-default callout-note callout-titled">
@@ -996,7 +1024,7 @@ Note
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>Open the three RTL files and follow the counter through reset, hold, increment, and wrap-around. Check why the constants are <code>`define</code>-style macros and not <code>package</code> parameters.</p>
+<p>Open the three RTL files (using <code>gedit</code> or <code>vim</code>) and follow the counter through reset, hold, increment, and wrap-around. Check why the constants are <code>`define</code>-style macros and not <code>package</code> parameters.</p>
 </div>
 </div>
 </section>
@@ -1547,7 +1575,7 @@ Important
 <h2 data-number="7.1" class="anchored" data-anchor-id="exercise-1-from-8-bit-up-counter-to-16-bit-down-counter"><span class="header-section-number">7.1</span> Exercise 1, From 8-bit Up-Counter to 16-bit Down-Counter</h2>
 <p>Repeat <a href="#sec-counter" class="quarto-xref">Section&nbsp;4</a> for a 16-bit synchronous down-counter that wraps from 0 back to <code>2^16 - 1</code>. The recommended steps are:</p>
 <ol type="1">
-<li>Update the RTL (<a href="../macros/counter/rtl/counter.sv"><code>counter.sv</code></a>, <a href="../macros/counter/rtl/counter_top.sv"><code>counter_top.sv</code></a>, <a href="../macros/counter/rtl/constants.sv"><code>constants.sv</code></a>). Change the bit-width and turn the increment block into a decrement, with wrap-around from 0 to <code>COUNTER_MAX</code>.</li>
+<li>Update the RTL (<a href="../macros/counter/rtl/counter.sv"><code>counter.sv</code></a>, <a href="../macros/counter/rtl/counter_top.sv"><code>counter_top.sv</code></a>, <a href="../macros/counter/rtl/constants.sv"><code>constants.sv</code></a>). Change the bit-width and turn the increment block into a decrement, with wrap-around from 0 to <code>CTR_MAX</code>.</li>
 <li>Update the testbenches in <a href="../macros/counter/testbenches/verilog/"><code>testbenches/verilog/</code></a>, <a href="../macros/counter/testbenches/cocotb/"><code>testbenches/cocotb/</code></a>, and <a href="../macros/counter/testbenches/xschem/"><code>testbenches/xschem/</code></a> to cover the new behaviour. Adjust the bus width in the waveform view files (<code>*.gtkw</code>, <code>*.surf.ron</code>) as well.</li>
 <li>Run <code>make sim-all</code> to validate the new RTL.</li>
 <li>Re-run the LibreLane flow with <code>make build-top</code>. Check the timing reports, a 16-bit counter at 50 MHz must still close timing.</li>
