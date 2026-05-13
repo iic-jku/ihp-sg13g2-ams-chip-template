@@ -129,7 +129,7 @@ both options above are only needed when switching between PDKs.
 
 ## Purpose
 
-This [Makefile-driven repository](../README.md) simulates, builds, and
+This [Makefile-driven repository](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/README.md) simulates, builds, and
 verifies (LVS, DRC, PEX) an analog mixed-signal chip for the
 ihp-sg13g2 130-nm Open-PDK, including padframe generation and top-level
 assembly. It uses:
@@ -161,24 +161,24 @@ regression test for the open-source tools on the IHP SG13G2 Open-PDK.
 ## Directory Structure
 
 The repository is organised into the following top-level folders. The
-full listing is in the [main README.md](../README.md).
+full listing is in the [main README.md](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/README.md).
 
 | Folder            | Purpose                                                            |
 | ----------------- | ------------------------------------------------------------------ |
-| [`doc/`](../doc/) | Designer documentation ([specifications](../doc/specifications.md), [pinout](../doc/pinout.md), [floorplan](../doc/floorplan.md)) and [PDK / tool cheatsheets](../doc/librelane/librelane_cheatsheet.md). |
-| [`flow/`](../flow/) | LibreLane top-level configuration ([`config.yaml`](../flow/librelane/config.yaml), [`pdn_cfg.tcl`](../flow/librelane/pdn_cfg.tcl), `chip_top.sdc`) and the ArtistIC logo flow. |
-| [`ip/`](../ip/)   | External IP cells (bondpads, custom IO cells, JKU logos). |
-| [`layout/`](../layout/) | Compressed GDS streams of the top-level chip (`chip_top.gds.gz` and `chip_top_logo_fill.gds.gz`). |
-| [`macros/`](../macros/) | In-tree macros ([`counter/`](../macros/counter/) and [`inverter/`](../macros/inverter/)), each with its own Makefile and README. |
-| [`netlist/`](../netlist/) | Synthesis, layout, and PEX netlists used for LVS and simulation. |
-| [`release/`](../release/) | Tapeout submission artifacts, versioned (`v.1.0.0/`, …). |
-| [`render/`](../render/) | Chip and macro renders for documentation. |
-| [`rtl/`](../rtl/) | Top-level RTL ([`chip_top.sv`](../rtl/chip_top.sv), [`chip_core.sv`](../rtl/chip_core.sv)). |
-| [`schematic/`](../schematic/) | Xschem schematics and symbols for the chip top. |
-| [`scripts/`](../scripts/) | Helper Python and shell scripts (rendering, logo placement, plotting). |
-| [`testbenches/`](../testbenches/) | Cocotb and Xschem testbenches for the top-level chip. |
-| [`tutorial/`](../tutorial/) | This Quarto tutorial. |
-| [`verification/`](../verification/) | DRC / LVS / signoff reports. |
+| [`doc/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/doc/) | Designer documentation ([specifications](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/doc/specifications.md), [pinout](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/doc/pinout.md), [floorplan](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/doc/floorplan.md)) and [PDK / tool cheatsheets](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/doc/librelane/librelane_cheatsheet.md). |
+| [`flow/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/flow/) | LibreLane top-level configuration ([`config.yaml`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/flow/librelane/config.yaml), [`pdn_cfg.tcl`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/flow/librelane/pdn_cfg.tcl), `chip_top.sdc`) and the ArtistIC logo flow. |
+| [`ip/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/ip/)   | External IP cells (bondpads, custom IO cells, JKU logos). |
+| [`layout/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/layout/) | Compressed GDS streams of the top-level chip (`chip_top.gds.gz` and `chip_top_logo_fill.gds.gz`). |
+| [`macros/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/) | In-tree macros ([`counter/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/counter/) and [`inverter/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/inverter/)), each with its own Makefile and README. |
+| [`netlist/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/netlist/) | Synthesis, layout, and PEX netlists used for LVS and simulation. |
+| [`release/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/release/) | Tapeout submission artifacts, versioned (`v.1.0.0/`, …). |
+| [`render/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/render/) | Chip and macro renders for documentation. |
+| [`rtl/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/rtl/) | Top-level RTL ([`chip_top.sv`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/rtl/chip_top.sv), [`chip_core.sv`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/rtl/chip_core.sv)). |
+| [`schematic/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/schematic/) | Xschem schematics and symbols for the chip top. |
+| [`scripts/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/scripts/) | Helper Python and shell scripts (rendering, logo placement, plotting). |
+| [`testbenches/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/testbenches/) | Cocotb and Xschem testbenches for the top-level chip. |
+| [`tutorial/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/tutorial/) | This Quarto tutorial. |
+| [`verification/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/verification/) | DRC / LVS / signoff reports. |
 
 ## Workflow in a Nutshell
 
@@ -193,14 +193,14 @@ cd ihp-sg13g2-ams-chip-template
 make help              # show available targets at the chip top level
 ```
 
-Each macro under [`macros/`](../macros/) has its own `Makefile` and
+Each macro under [`macros/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/) has its own `Makefile` and
 `README.md` with macro-local targets. They are called by the top-level
 build targets, but can also be invoked directly from inside the macro
 folder.
 
 ### Most important top-level targets
 
-The full list is in the [top-level Makefile](../Makefile). The relevant
+The full list is in the [top-level Makefile](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/Makefile). The relevant
 subset is summarised below.
 
 | Target              | What it does                                                                                          |
@@ -222,7 +222,7 @@ subset is summarised below.
 
 ### Most important counter Makefile targets
 
-The [counter Makefile](../macros/counter/Makefile) provides:
+The [counter Makefile](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/counter/Makefile) provides:
 
 | Target                                            | What it does                                                                |
 | ------------------------------------------------- | --------------------------------------------------------------------------- |
@@ -235,11 +235,11 @@ The [counter Makefile](../macros/counter/Makefile) provides:
 | `make generate-xspice`                            | Convert the post-synthesis netlist into an XSPICE model for Xschem.         |
 | `make build-fpga` / `make build-top` / `make all` | FPGA bitstream, full ASIC build, or both plus simulation in one call.       |
 
-See the [counter README](../macros/counter/README.md) for details.
+See the [counter README](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/counter/README.md) for details.
 
 ### Most important inverter Makefile targets
 
-The [inverter Makefile](../macros/inverter/Makefile) provides:
+The [inverter Makefile](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/inverter/Makefile) provides:
 
 | Target                                            | What it does                                                                |
 | ------------------------------------------------- | --------------------------------------------------------------------------- |
@@ -252,12 +252,12 @@ The [inverter Makefile](../macros/inverter/Makefile) provides:
 | `make lef` / `make lib` / `make verilog`          | Generate the LEF, the Liberty stub, and the Verilog stub for integration.   |
 | `make build-top` / `make all`                     | Build deliverables, or run simulation, verification, and build together.    |
 
-See the [inverter README](../macros/inverter/README.md) for details.
+See the [inverter README](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/inverter/README.md) for details.
 
 
 # Counter Macro Implementation {#sec-counter}
 
-The [`counter`](../macros/counter/) macro is the digital reference macro
+The [`counter`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/counter/) macro is the digital reference macro
 of the template. It is a parameterisable synchronous up-counter with
 synchronous active-high reset, where the wrapper converts the chip's
 active-low reset internally. The default width is 8 bits, so the
@@ -265,23 +265,23 @@ counter wraps from 255 back to 0.
 
 ## Folder Structure of the Counter Macro
 
-In [`macros/counter/`](../macros/counter/), the relevant folders are:
+In [`macros/counter/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/counter/), the relevant folders are:
 
 | Folder                                       | Content                                                                                  |
 | -------------------------------------------- | ---------------------------------------------------------------------------------------- |
-| [`rtl/`](../macros/counter/rtl/)             | SystemVerilog sources: [`constants.sv`](../macros/counter/rtl/constants.sv), [`counter.sv`](../macros/counter/rtl/counter.sv), [`counter_top.sv`](../macros/counter/rtl/counter_top.sv). |
-| [`testbenches/`](../macros/counter/testbenches/) | `verilog/`, `cocotb/`, and `xschem/` testbenches with pre-configured GTKWave and Surfer view files. |
-| [`flow/`](../macros/counter/flow/)           | LibreLane configuration (`config.yaml`, `pin_order.cfg`, `impl.sdc`, `signoff.sdc`). |
-| [`final/`](../macros/counter/final/)         | Final views copied from the latest LibreLane run (GDS, LEF, LIB per corner, NL, PNL, SPEF, VH). |
-| [`fpga/`](../macros/counter/fpga/)           | Optional FPGA flow for the [pico-ice](https://pico-ice.tinyvision.ai/) board.    |
-| [`netlist/`](../macros/counter/netlist/)     | Gate-level netlists (`nl/`, `pnl/`, `spice/`, `xspice/`).                              |
-| [`schematic/`](../macros/counter/schematic/) | Xschem symbol of the macro for mixed-signal usage.                                     |
-| [`scripts/`](../macros/counter/scripts/)     | Helper scripts (XSPICE conversion, plotting, layout rendering).                        |
-| [`verification/`](../macros/counter/verification/) | Yosys, antenna, STA, IR-drop, DRC, LVS, and manufacturability reports.            |
-| [`render/`](../macros/counter/render/)       | Macro renders for documentation.                                                       |
+| [`rtl/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/counter/rtl/)             | SystemVerilog sources: [`constants.sv`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/counter/rtl/constants.sv), [`counter.sv`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/counter/rtl/counter.sv), [`counter_top.sv`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/counter/rtl/counter_top.sv). |
+| [`testbenches/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/counter/testbenches/) | `verilog/`, `cocotb/`, and `xschem/` testbenches with pre-configured GTKWave and Surfer view files. |
+| [`flow/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/counter/flow/)           | LibreLane configuration (`config.yaml`, `pin_order.cfg`, `impl.sdc`, `signoff.sdc`). |
+| [`final/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/counter/final/)         | Final views copied from the latest LibreLane run (GDS, LEF, LIB per corner, NL, PNL, SPEF, VH). |
+| [`fpga/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/counter/fpga/)           | Optional FPGA flow for the [pico-ice](https://pico-ice.tinyvision.ai/) board.    |
+| [`netlist/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/counter/netlist/)     | Gate-level netlists (`nl/`, `pnl/`, `spice/`, `xspice/`).                              |
+| [`schematic/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/counter/schematic/) | Xschem symbol of the macro for mixed-signal usage.                                     |
+| [`scripts/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/counter/scripts/)     | Helper scripts (XSPICE conversion, plotting, layout rendering).                        |
+| [`verification/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/counter/verification/) | Yosys, antenna, STA, IR-drop, DRC, LVS, and manufacturability reports.            |
+| [`render/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/counter/render/)       | Macro renders for documentation.                                                       |
 
 ::: {.callout-tip}
-Read the [counter README](../macros/counter/README.md) first to get
+Read the [counter README](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/counter/README.md) first to get
 familiar with the folder layout and the available Makefile targets. Most
 of the commands below are documented there as well.
 :::
@@ -295,7 +295,7 @@ active-high reset of the counter.
 ### `counter.sv`
 
 The arithmetic is implemented in
-[`counter.sv`](../macros/counter/rtl/counter.sv). It is an N-bit
+[`counter.sv`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/counter/rtl/counter.sv). It is an N-bit
 synchronous up-counter with reset, enable, and wrap at `CTR_MAX`.
 
 ```{.systemverilog filename="macros/counter/rtl/counter.sv"}
@@ -304,7 +304,7 @@ synchronous up-counter with reset, enable, and wrap at `CTR_MAX`.
 
 ### `counter_top.sv`
 
-[`counter_top.sv`](../macros/counter/rtl/counter_top.sv) wraps the
+[`counter_top.sv`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/counter/rtl/counter_top.sv) wraps the
 counter and converts the active-low reset (`reset_n_i`) to an
 active-high signal.
 
@@ -313,7 +313,7 @@ active-high signal.
 ```
 
 Shared defaults like the bit-width and the clock frequency are defined
-in [`constants.sv`](../macros/counter/rtl/constants.sv). They are
+in [`constants.sv`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/counter/rtl/constants.sv). They are
 exposed as `` `define `` macros instead of a SystemVerilog `package`,
 because Yosys 0.64 cannot parse `import pkg::*` in a module header.
 
@@ -341,7 +341,7 @@ make lint-verilog-all            # lint counter and counter_top in sequence
 ### RTL with SystemVerilog testbench (Icarus Verilog)
 
 A SystemVerilog testbench
-([`counter_top_tb.sv`](../macros/counter/testbenches/verilog/counter_top_tb.sv))
+([`counter_top_tb.sv`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/counter/testbenches/verilog/counter_top_tb.sv))
 checks reset, hold, increment, and wrap-around. Run it with the
 following commands.
 
@@ -359,7 +359,7 @@ or Surfer.**
 ### RTL and gate-level with cocotb
 
 The [cocotb](https://www.cocotb.org/) testbench
-([`counter_top_tb.py`](../macros/counter/testbenches/cocotb/counter_top_tb.py))
+([`counter_top_tb.py`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/counter/testbenches/cocotb/counter_top_tb.py))
 covers the same four behaviours from Python, and is the one called by
 `make all`.
 
@@ -371,7 +371,7 @@ make sim-view-cocotb WAVEFORM_VIEWER=surfer
 ```
 
 The gate-level cocotb run uses the post-synthesis netlist
-[`netlist/nl/counter_top.nl.v`](../macros/counter/netlist/nl/), which is
+[`netlist/nl/counter_top.nl.v`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/counter/netlist/nl/), which is
 copied from the latest LibreLane run by `make copy-netlist`.
 
 ::: {.callout-note appearance="simple"}
@@ -392,7 +392,7 @@ make build-top
 
 ::: {.callout-tip}
 The macro can also be built as an FPGA bitstream
-([`fpga/`](../macros/counter/fpga/)) for a pico-ice board with `make
+([`fpga/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/counter/fpga/)) for a pico-ice board with `make
 build-fpga`. The FPGA path is not used in this tutorial and is listed
 here for reference.
 :::
@@ -408,10 +408,10 @@ ke macros/counter/final/gds/counter_top.gds
 ```
 
 The LibreLane render is copied to
-[`macros/counter/render/img/counter_top_librelane.png`](../macros/counter/render/img/),
+[`macros/counter/render/img/counter_top_librelane.png`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/counter/render/img/),
 and the high-resolution render from `lay2img.py` is saved as
 `counter_top.png` in the same folder. The sign-off reports are written
-to [`macros/counter/verification/`](../macros/counter/verification/).
+to [`macros/counter/verification/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/counter/verification/).
 
 ::: {.callout-note appearance="simple"}
 **Figure placeholder. `counter_top` layout in KLayout.**
@@ -430,10 +430,10 @@ make generate-xspice
 
 The conversion pipeline is `.nl.v → .vp → .spice → .xspice`, followed
 by a pin-reorder pass to match the Xschem symbol
-([`schematic/xschem/counter_top.sym`](../macros/counter/schematic/xschem/)).
+([`schematic/xschem/counter_top.sym`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/counter/schematic/xschem/)).
 
 The Xschem testbench
-([`counter_top_tb_tran.sch`](../macros/counter/testbenches/xschem/))
+([`counter_top_tb_tran.sch`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/counter/testbenches/xschem/))
 can be opened and simulated interactively.
 
 ```sh
@@ -477,32 +477,32 @@ steps, so no extra verification target is needed for the counter.
 
 # Inverter Macro Implementation {#sec-inverter}
 
-The [`inverter`](../macros/inverter/) macro is the analog reference
+The [`inverter`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/inverter/) macro is the analog reference
 macro of the template. It is a four-channel CMOS inverter, drawn at
 transistor level, and verified with the comprehensive AMS sign-off
 chain (LVS, DRC, PEX, Monte-Carlo and mismatch with CACE). Two
 instances are used in the chip core. One is used as a 4-channel digital
 inverter (`inverter1`), the other as a 2-channel analog inverter
-(`inverter2`). See the [chip specifications](../doc/specifications.md)
+(`inverter2`). See the [chip specifications](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/doc/specifications.md)
 for the full picture.
 
 ## Folder Structure of the Inverter Macro
 
-In [`macros/inverter/`](../macros/inverter/), the relevant folders are:
+In [`macros/inverter/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/inverter/), the relevant folders are:
 
 | Folder                                          | Content                                                                                  |
 | ----------------------------------------------- | ---------------------------------------------------------------------------------------- |
-| [`schematic/xschem/`](../macros/inverter/schematic/xschem/) | Xschem schematics and symbols (`inverter.sch`, `inverter.sym`, `inverter_top.sch`, `inverter_top.sym`, `inverter_top_pex.sym`). |
-| [`layout/`](../macros/inverter/layout/)         | KLayout-edited GDS streams (`*.klay.gds`) and the exported `inverter_top.gds`.           |
-| [`testbenches/xschem/`](../macros/inverter/testbenches/xschem/) | Transient, AC open-loop, output-DC, and top-level transient testbenches.      |
-| [`netlist/`](../macros/inverter/netlist/)       | `schematic/` (CDL / SPICE for LVS), `layout/` (extracted), `pex/` (PEX SPICE).           |
-| [`scripts/`](../macros/inverter/scripts/)       | Python plotters, sizing notebooks, layout rendering, PEX pin reordering.                 |
-| [`verification/`](../macros/inverter/verification/) | `drc/`, `lvs/`, and `cace/` (process, mismatch, supply sweeps).                       |
-| [`final/`](../macros/inverter/final/)           | Build deliverables for the top-level integration (LEF, LIB, Verilog stub, GDS).          |
-| [`render/`](../macros/inverter/render/)         | Macro renders for documentation.                                                         |
+| [`schematic/xschem/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/inverter/schematic/xschem/) | Xschem schematics and symbols (`inverter.sch`, `inverter.sym`, `inverter_top.sch`, `inverter_top.sym`, `inverter_top_pex.sym`). |
+| [`layout/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/inverter/layout/)         | KLayout-edited GDS streams (`*.klay.gds`) and the exported `inverter_top.gds`.           |
+| [`testbenches/xschem/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/inverter/testbenches/xschem/) | Transient, AC open-loop, output-DC, and top-level transient testbenches.      |
+| [`netlist/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/inverter/netlist/)       | `schematic/` (CDL / SPICE for LVS), `layout/` (extracted), `pex/` (PEX SPICE).           |
+| [`scripts/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/inverter/scripts/)       | Python plotters, sizing notebooks, layout rendering, PEX pin reordering.                 |
+| [`verification/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/inverter/verification/) | `drc/`, `lvs/`, and `cace/` (process, mismatch, supply sweeps).                       |
+| [`final/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/inverter/final/)           | Build deliverables for the top-level integration (LEF, LIB, Verilog stub, GDS).          |
+| [`render/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/inverter/render/)         | Macro renders for documentation.                                                         |
 
 ::: {.callout-tip}
-Read the [inverter README](../macros/inverter/README.md) first to get
+Read the [inverter README](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/inverter/README.md) first to get
 familiar with the folder layout and the available Makefile targets.
 Most of the commands below are documented there as well.
 :::
@@ -517,12 +517,12 @@ xschem
 ```
 
 Four testbenches are available in
-[`testbenches/xschem/`](../macros/inverter/testbenches/xschem/).
+[`testbenches/xschem/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/inverter/testbenches/xschem/).
 
-- [`inverter_tb_tran.sch`](../macros/inverter/testbenches/xschem/inverter_tb_tran.sch), single-channel transient response,
-- [`inverter_tb_ac_ol.sch`](../macros/inverter/testbenches/xschem/inverter_tb_ac_ol.sch), open-loop AC characterisation,
-- [`inverter_tb_Vout.sch`](../macros/inverter/testbenches/xschem/inverter_tb_Vout.sch), DC output sweep,
-- [`inverter_top_tb_tran.sch`](../macros/inverter/testbenches/xschem/inverter_top_tb_tran.sch), top-level transient on `inverter_top`.
+- [`inverter_tb_tran.sch`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/inverter/testbenches/xschem/inverter_tb_tran.sch), single-channel transient response,
+- [`inverter_tb_ac_ol.sch`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/inverter/testbenches/xschem/inverter_tb_ac_ol.sch), open-loop AC characterisation,
+- [`inverter_tb_Vout.sch`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/inverter/testbenches/xschem/inverter_tb_Vout.sch), DC output sweep,
+- [`inverter_top_tb_tran.sch`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/inverter/testbenches/xschem/inverter_top_tb_tran.sch), top-level transient on `inverter_top`.
 
 Load a testbench in Xschem, then hold **`Shift`** and press the
 simulation key (the lightning-bolt button) in the schematic to launch
@@ -578,7 +578,7 @@ the KLayout-based flows accept either `.gds` or `.klay.gds`.
 
 [CACE](https://github.com/fossi-foundation/cace) drives ngspice via a
 characterisation YAML file
-([`verification/cace/inverter.yaml`](../macros/inverter/verification/cace/inverter.yaml))
+([`verification/cace/inverter.yaml`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/inverter/verification/cace/inverter.yaml))
 and produces Monte-Carlo, mismatch, and supply-sweep plots.
 
 ```sh
@@ -586,7 +586,7 @@ make sim-cace
 ```
 
 Plots are written to
-[`verification/cace/results/inverter/`](../macros/inverter/verification/cace/).
+[`verification/cace/results/inverter/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/inverter/verification/cace/).
 This step is mainly relevant for advanced designers that want to
 characterise the macro across PVT corners.
 
@@ -603,7 +603,7 @@ make magic-drc            # Magic DRC via sak-drc.sh
 ```
 
 Reports are saved to
-[`verification/drc/`](../macros/inverter/verification/drc/).
+[`verification/drc/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/inverter/verification/drc/).
 
 ### Layout-Versus-Schematic
 
@@ -614,9 +614,9 @@ make magic-lvs            # uses SPICE netlist exported from Xschem
 
 The schematic netlist is exported automatically by the matching
 `*-lvs-netlist` sub-target. Reports are saved to
-[`verification/lvs/`](../macros/inverter/verification/lvs/), and the
+[`verification/lvs/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/inverter/verification/lvs/), and the
 extracted layout netlist is moved to
-[`netlist/layout/`](../macros/inverter/netlist/layout/).
+[`netlist/layout/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/inverter/netlist/layout/).
 
 ### Parasitic Extraction
 
@@ -626,10 +626,10 @@ make magic-pex EXT_MODE=2           # CC mode
 ```
 
 PEX writes a SPICE netlist into
-[`netlist/pex/`](../macros/inverter/netlist/pex/). The subcircuit name
+[`netlist/pex/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/inverter/netlist/pex/). The subcircuit name
 is renamed to `<CELL>_pex`, and the pin order is rearranged to match
 the Xschem PEX symbol
-([`inverter_top_pex.sym`](../macros/inverter/schematic/xschem/inverter_top_pex.sym)).
+([`inverter_top_pex.sym`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/inverter/schematic/xschem/inverter_top_pex.sym)).
 
 ::: {.callout-tip}
 ## Post-layout simulation
@@ -664,8 +664,8 @@ make build-top    # the three steps above plus copy-gds and render-gds
 ```
 
 `make build-top` also copies the GDS to
-[`final/gds/`](../macros/inverter/final/gds/) and renders the macro to
-[`render/img/inverter_top.png`](../macros/inverter/render/img/).
+[`final/gds/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/inverter/final/gds/) and renders the macro to
+[`render/img/inverter_top.png`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/inverter/render/img/).
 
 ## Full Macro Pass
 
@@ -686,33 +686,33 @@ hardware, a full pass can take a few minutes.
 This section covers the chip-level assembly. The top-level files that
 need to be understood (and, if needed, modified for a new chip) are:
 
-- [`rtl/chip_top.sv`](../rtl/chip_top.sv), the padframe wrapper. It
+- [`rtl/chip_top.sv`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/rtl/chip_top.sv), the padframe wrapper. It
   instantiates one I/O cell per pad and exposes the global `clk_PAD`,
   `rst_n_PAD`, `input_PAD`, `output_PAD`, `bidir_PAD`, and `analog_PAD`
   buses.
-- [`rtl/chip_core.sv`](../rtl/chip_core.sv), the core logic. It
+- [`rtl/chip_core.sv`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/rtl/chip_core.sv), the core logic. It
   instantiates the digital and analog macros (`counter1`, `counter2`,
   `inverter1`, `inverter2`, `sram_0`) and wires them to the I/O bus.
-- [`flow/librelane/config.yaml`](../flow/librelane/config.yaml), the
+- [`flow/librelane/config.yaml`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/flow/librelane/config.yaml), the
   top-level LibreLane configuration. It defines the padframe order
   (`PAD_WEST`, `PAD_NORTH`, `PAD_SOUTH`, `PAD_EAST`), `DIE_AREA`,
   `CORE_AREA`, `CLOCK_PERIOD`, the macro list (`MACROS:`), non-default
   routing rules, PDN parameters, and STA corners.
-- [`flow/librelane/pdn_cfg.tcl`](../flow/librelane/pdn_cfg.tcl), the
+- [`flow/librelane/pdn_cfg.tcl`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/flow/librelane/pdn_cfg.tcl), the
   Tcl callback that builds the OpenROAD PDN. The bottom of the file
   contains the custom PDN connects for `inverter1`, `inverter2`, and
   `sram_0`. This is the part that has to be touched when adding new
   macros.
-- [`flow/librelane/chip_top.sdc`](../flow/librelane/chip_top.sdc),
+- [`flow/librelane/chip_top.sdc`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/flow/librelane/chip_top.sdc),
   timing constraints (clock period, input/output delays).
 - Reference documentation,
-  [specifications.md](../doc/specifications.md),
-  [pinout.md](../doc/pinout.md), and
-  [floorplan.md](../doc/floorplan.md).
+  [specifications.md](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/doc/specifications.md),
+  [pinout.md](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/doc/pinout.md), and
+  [floorplan.md](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/doc/floorplan.md).
 
 ## Understanding `chip_top.sv`
 
-The padframe wrapper [`chip_top.sv`](../rtl/chip_top.sv) declares the
+The padframe wrapper [`chip_top.sv`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/rtl/chip_top.sv) declares the
 chip's parameters and ports. The parameter block at the top of the
 module controls the number of pads of each type, and is the place to
 change when the pinout changes.
@@ -743,14 +743,14 @@ parameter counts need to be edited here.
 
 ## Understanding `chip_core.sv`
 
-The core [`chip_core.sv`](../rtl/chip_core.sv) is where the macros are
+The core [`chip_core.sv`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/rtl/chip_core.sv) is where the macros are
 instantiated and wired to the chip's I/O. The `enable` signal is
 mapped to `input_PAD[0]`, the two `counter_top` instances share the
 clock and reset, the two `inverter_top` instances are wired up (one
 digital, one analog), and the SRAM output is XOR-reduced to a single
 bit on `output_PAD[16]`. The output assignments at the bottom of the
 file are naturally the bit-to-role mapping documented in
-[pinout.md](../doc/pinout.md).
+[pinout.md](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/doc/pinout.md).
 
 ```{.systemverilog filename="rtl/chip_core.sv (excerpt)"}
 // Counter 1
@@ -775,11 +775,11 @@ assign output_out[16] = ^sram_0_out;
 ## Understanding `config.yaml`
 
 The chip-level LibreLane configuration
-[`config.yaml`](../flow/librelane/config.yaml) covers four sections.
+[`config.yaml`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/flow/librelane/config.yaml) covers four sections.
 
 1. **Padframe layout.** The `PAD_WEST`, `PAD_NORTH`, `PAD_SOUTH`, and
    `PAD_EAST` lists, in the order documented in
-   [`doc/pinout.md`](../doc/pinout.md).
+   [`doc/pinout.md`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/doc/pinout.md).
 2. **Floorplan and timing.** `DIE_AREA`, `CORE_AREA`, `CLOCK_PERIOD`,
    `FP_SIZING`, `PL_TARGET_DENSITY_PCT`.
 3. **`MACROS:` block.** For every macro, the GDS, LEF, Liberty
@@ -791,13 +791,13 @@ The chip-level LibreLane configuration
 For floorplan changes (moving macros, changing the die size, adding
 new macros), the `MACROS:` section is the one to edit. The rectangular
 constraints documented in
-[`doc/floorplan.md`](../doc/floorplan.md) apply. Stay inside the core,
+[`doc/floorplan.md`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/doc/floorplan.md) apply. Stay inside the core,
 respect the M3 routing grid for inverters, and never overlap with
 another macro rectangle.
 
 ## Understanding `pdn_cfg.tcl`
 
-[`pdn_cfg.tcl`](../flow/librelane/pdn_cfg.tcl) is the OpenROAD callback
+[`pdn_cfg.tcl`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/flow/librelane/pdn_cfg.tcl) is the OpenROAD callback
 that builds the power-distribution network. Most of the file is
 generic boilerplate from LibreLane and OpenLane.
 
@@ -830,16 +830,16 @@ make sim-view-cocotb WAVEFORM_VIEWER=surfer         # Surfer
 ```
 
 The cocotb testbench at chip level is
-[`testbenches/cocotb/chip_top_tb.py`](../testbenches/cocotb/chip_top_tb.py),
+[`testbenches/cocotb/chip_top_tb.py`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/testbenches/cocotb/chip_top_tb.py),
 and it covers the global enable, reset, counters, and bidir behaviour
-documented in [specifications.md](../doc/specifications.md).
+documented in [specifications.md](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/doc/specifications.md).
 
 ::: {.callout-note appearance="simple"}
 **Figure placeholder. `chip_top` cocotb waveform.**
 :::
 
 For mixed-signal sign-off, the
-[`testbenches/xschem/chip_top_tb_tran.sch`](../testbenches/xschem/)
+[`testbenches/xschem/chip_top_tb_tran.sch`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/testbenches/xschem/)
 testbench exists and can be opened in Xschem the same way as for the
 counter or the inverter.
 
@@ -855,7 +855,7 @@ The top-level Xschem testbench converges, but it may take a long time depending 
 
 ::: {.callout-tip}
 Inspect the Xschem symbol of `chip_top` to see the connections defined
-in [`chip_core.sv`](../rtl/chip_core.sv) visually. Use **`E` / `Shift +
+in [`chip_core.sv`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/rtl/chip_core.sv) visually. Use **`E` / `Shift +
 E`** and **`I` / `Shift + I`** to descend into and back out of
 subcircuits and symbols.
 
@@ -879,8 +879,8 @@ starting point on a fresh machine after cloning the repository and
 entering the IIC-OSIC-TOOLS container.
 
 To re-run only the top-level flow (for example after a change in
-[`config.yaml`](../flow/librelane/config.yaml) or
-[`chip_core.sv`](../rtl/chip_core.sv)), without rebuilding the
+[`config.yaml`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/flow/librelane/config.yaml) or
+[`chip_core.sv`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/rtl/chip_core.sv)), without rebuilding the
 bondpad, logos, or macros, run the following command.
 
 ```sh
@@ -890,7 +890,7 @@ make build-top
 Internally, `build-top` chains `librelane-nodrc`, `copy-reports`,
 `copy-gds`, `copy-netlist`, `copy-render`, `add-logo-fill`, and
 `render-gds`. The final GDS is written to
-[`layout/chip_top_logo_fill.gds.gz`](../layout/).
+[`layout/chip_top_logo_fill.gds.gz`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/layout/).
 
 ## Viewing the Chip
 
@@ -901,9 +901,9 @@ ke layout/chip_top_logo_fill.gds.gz   # KLayout edit mode
 ```
 
 The render generated by `lay2img.py` is in
-[`render/img/`](../render/img/). The sign-off reports (Yosys, antenna,
+[`render/img/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/render/img/). The sign-off reports (Yosys, antenna,
 STA, IR-drop, LVS, manufacturability) are in
-[`verification/reports/`](../verification/reports/).
+[`verification/reports/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/verification/reports/).
 
 ::: {.callout-note appearance="simple"}
 **Figure placeholder. `chip_top_logo_fill` layout in KLayout.**
@@ -974,7 +974,7 @@ make release VERSION=2.1.0
 ```
 
 The artifacts are written to
-[`release/v.2.1.0/`](../release/) (`gds/`,
+[`release/v.2.1.0/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/release/) (`gds/`,
 `netlist/{layout,pnl,spice}/`, `img/`).
 
 ::: {.callout-important}
@@ -993,15 +993,15 @@ tutorial with a modification of the design.
 Repeat @sec-counter for a 16-bit synchronous down-counter that wraps
 from 0 back to `2^16 - 1`. The recommended steps are:
 
-1. Update the RTL ([`counter.sv`](../macros/counter/rtl/counter.sv),
-   [`counter_top.sv`](../macros/counter/rtl/counter_top.sv),
-   [`constants.sv`](../macros/counter/rtl/constants.sv)). Change the
+1. Update the RTL ([`counter.sv`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/counter/rtl/counter.sv),
+   [`counter_top.sv`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/counter/rtl/counter_top.sv),
+   [`constants.sv`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/counter/rtl/constants.sv)). Change the
    bit-width and turn the increment block into a decrement, with
    wrap-around from 0 to `CTR_MAX`.
 2. Update the testbenches in
-   [`testbenches/verilog/`](../macros/counter/testbenches/verilog/),
-   [`testbenches/cocotb/`](../macros/counter/testbenches/cocotb/), and
-   [`testbenches/xschem/`](../macros/counter/testbenches/xschem/) to
+   [`testbenches/verilog/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/counter/testbenches/verilog/),
+   [`testbenches/cocotb/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/counter/testbenches/cocotb/), and
+   [`testbenches/xschem/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/counter/testbenches/xschem/) to
    cover the new behaviour. Adjust the bus width in the waveform view
    files (`*.gtkw`, `*.surf.ron`) as well.
 3. Run `make sim-all` to validate the new RTL.
@@ -1024,24 +1024,24 @@ Repeat @sec-inverter for a three-stage ring oscillator with an output
 buffer, derived from the existing quad inverter. The recommended steps
 are:
 
-1. Copy the [inverter](../macros/inverter/) macro folder to a new
+1. Copy the [inverter](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/inverter/) macro folder to a new
    location (for example `macros/ringosc/`), and adapt the Makefile
    names.
 2. Update the schematic in Xschem. Connect three inverters in a ring,
    and tap the output of the last stage through a buffer. The fourth
    inverter of the quad inverter can naturally be used as the buffer.
 3. Update the symbol of the macro
-   ([`schematic/xschem/inverter_top.sym`](../macros/inverter/schematic/xschem/inverter_top.sym))
+   ([`schematic/xschem/inverter_top.sym`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/inverter/schematic/xschem/inverter_top.sym))
    and the PEX symbol
-   ([`schematic/xschem/inverter_top_pex.sym`](../macros/inverter/schematic/xschem/inverter_top_pex.sym))
+   ([`schematic/xschem/inverter_top_pex.sym`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/inverter/schematic/xschem/inverter_top_pex.sym))
    to expose a single output net, instead of `vin1..vin4` and
    `vout1..vout4`.
 4. Update the transient testbench
-   ([`testbenches/xschem/inverter_top_tb_tran.sch`](../macros/inverter/testbenches/xschem/inverter_top_tb_tran.sch))
+   ([`testbenches/xschem/inverter_top_tb_tran.sch`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/inverter/testbenches/xschem/inverter_top_tb_tran.sch))
    to measure the oscillation frequency. Delete the AC, DC, and
    standalone transient testbenches that are no longer relevant.
 5. Optional (advanced), adapt the CACE
-   [`inverter.yaml`](../macros/inverter/verification/cace/inverter.yaml)
+   [`inverter.yaml`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/inverter/verification/cace/inverter.yaml)
    to characterise the oscillation frequency across PVT.
 6. Re-run the verification chain, `make klayout-verify`, `make
    magic-verify`, and `make build-top`.
@@ -1053,24 +1053,24 @@ oscillator, delete `counter2`, and connect the now 16-bit `counter1`
 to the freed-up south-side pads. The recommended steps are:
 
 1. Replace `inverter2` with the ring oscillator macro in
-   [`chip_core.sv`](../rtl/chip_core.sv).
+   [`chip_core.sv`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/rtl/chip_core.sv).
 2. Replace three of the four analog pads with VSS pads, and connect
    the ring oscillator's output to the fourth analog pad.
 3. Delete `counter2` and rewire all eight south-side pads to the new
    16-bit `counter1` value.
-4. Update the parameters of [`chip_top.sv`](../rtl/chip_top.sv) so that
+4. Update the parameters of [`chip_top.sv`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/rtl/chip_top.sv) so that
    `NUM_OUTPUT_PADS`, `NUM_BIDIR_PADS`, `NUM_ANALOG_PADS`, and
    `NUM_VSS_PADS` match the new pin count (see @sec-top).
 5. Update the macro instantiation and wiring in
-   [`chip_core.sv`](../rtl/chip_core.sv).
+   [`chip_core.sv`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/rtl/chip_core.sv).
 6. Update the placement coordinates in the `MACROS:` block of
-   [`config.yaml`](../flow/librelane/config.yaml). Keep the
-   [`doc/floorplan.md`](../doc/floorplan.md) constraints in mind,
+   [`config.yaml`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/flow/librelane/config.yaml). Keep the
+   [`doc/floorplan.md`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/doc/floorplan.md) constraints in mind,
    namely stay in the core, no overlaps, and respect the M3 grid for
    inverter-like macros.
 7. Update the PAD lists (`PAD_WEST`, `PAD_NORTH`, `PAD_SOUTH`,
    `PAD_EAST`) in `config.yaml` to match the new pinout.
-8. Update [`pdn_cfg.tcl`](../flow/librelane/pdn_cfg.tcl) so that the
+8. Update [`pdn_cfg.tcl`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/flow/librelane/pdn_cfg.tcl) so that the
    new macros are covered by the correct PDN grid (default for
    digital, `inverter_top`-style for analog).
 9. Rebuild the chip from scratch with `make build-all`, then verify
