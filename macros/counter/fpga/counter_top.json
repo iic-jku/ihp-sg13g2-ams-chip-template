@@ -1,5 +1,5 @@
 {
-  "creator": "Yosys 0.64 (git sha1 6d2c445ae, g++ 13.3.0-6ubuntu2~24.04.1 -fPIC -O3)",
+  "creator": "Yosys 0.65 (git sha1 b85cad634, g++ 13.3.0-6ubuntu2~24.04.1 -fPIC -O3)",
   "modules": {
     "$__ABC9_DELAY": {
       "attributes": {
@@ -23,7 +23,7 @@
         }
       },
       "cells": {
-        "$specify$731": {
+        "$specify$722": {
           "hide_name": 1,
           "type": "$specify2",
           "parameters": {
@@ -359,7 +359,7 @@
         }
       },
       "cells": {
-        "$specify$731": {
+        "$specify$722": {
           "hide_name": 1,
           "type": "$specify2",
           "parameters": {
@@ -430,7 +430,7 @@
         }
       },
       "cells": {
-        "$specify$731": {
+        "$specify$722": {
           "hide_name": 1,
           "type": "$specify2",
           "parameters": {
@@ -1059,9 +1059,9 @@
           },
           "port_directions": {
             "DST": "input",
-            "DST_EN": "output",
+            "DST_EN": "input",
             "SRC": "input",
-            "SRC_EN": "output"
+            "SRC_EN": "input"
           },
           "connections": {
             "DST": [ 2 ],
@@ -1093,9 +1093,9 @@
           },
           "port_directions": {
             "DST": "input",
-            "DST_EN": "output",
+            "DST_EN": "input",
             "SRC": "input",
-            "SRC_EN": "output"
+            "SRC_EN": "input"
           },
           "connections": {
             "DST": [ 2 ],
@@ -1127,9 +1127,9 @@
           },
           "port_directions": {
             "DST": "input",
-            "DST_EN": "output",
+            "DST_EN": "input",
             "SRC": "input",
-            "SRC_EN": "output"
+            "SRC_EN": "input"
           },
           "connections": {
             "DST": [ 2 ],
@@ -1161,9 +1161,9 @@
           },
           "port_directions": {
             "DST": "input",
-            "DST_EN": "output",
+            "DST_EN": "input",
             "SRC": "input",
-            "SRC_EN": "output"
+            "SRC_EN": "input"
           },
           "connections": {
             "DST": [ 2 ],
@@ -1195,9 +1195,9 @@
           },
           "port_directions": {
             "DST": "input",
-            "DST_EN": "output",
+            "DST_EN": "input",
             "SRC": "input",
-            "SRC_EN": "output"
+            "SRC_EN": "input"
           },
           "connections": {
             "DST": [ 3 ],
@@ -1229,9 +1229,9 @@
           },
           "port_directions": {
             "DST": "input",
-            "DST_EN": "output",
+            "DST_EN": "input",
             "SRC": "input",
-            "SRC_EN": "output"
+            "SRC_EN": "input"
           },
           "connections": {
             "DST": [ 3 ],
@@ -1263,9 +1263,9 @@
           },
           "port_directions": {
             "DST": "input",
-            "DST_EN": "output",
+            "DST_EN": "input",
             "SRC": "input",
-            "SRC_EN": "output"
+            "SRC_EN": "input"
           },
           "connections": {
             "DST": [ 3 ],
@@ -1297,9 +1297,9 @@
           },
           "port_directions": {
             "DST": "input",
-            "DST_EN": "output",
+            "DST_EN": "input",
             "SRC": "input",
-            "SRC_EN": "output"
+            "SRC_EN": "input"
           },
           "connections": {
             "DST": [ 3 ],
@@ -1331,9 +1331,9 @@
           },
           "port_directions": {
             "DST": "input",
-            "DST_EN": "output",
+            "DST_EN": "input",
             "SRC": "input",
-            "SRC_EN": "output"
+            "SRC_EN": "input"
           },
           "connections": {
             "DST": [ 4 ],
@@ -1365,9 +1365,9 @@
           },
           "port_directions": {
             "DST": "input",
-            "DST_EN": "output",
+            "DST_EN": "input",
             "SRC": "input",
-            "SRC_EN": "output"
+            "SRC_EN": "input"
           },
           "connections": {
             "DST": [ 4 ],
@@ -1399,9 +1399,9 @@
           },
           "port_directions": {
             "DST": "input",
-            "DST_EN": "output",
+            "DST_EN": "input",
             "SRC": "input",
-            "SRC_EN": "output"
+            "SRC_EN": "input"
           },
           "connections": {
             "DST": [ 4 ],
@@ -1433,9 +1433,9 @@
           },
           "port_directions": {
             "DST": "input",
-            "DST_EN": "output",
+            "DST_EN": "input",
             "SRC": "input",
-            "SRC_EN": "output"
+            "SRC_EN": "input"
           },
           "connections": {
             "DST": [ 4 ],
@@ -1467,9 +1467,9 @@
           },
           "port_directions": {
             "DST": "input",
-            "DST_EN": "output",
+            "DST_EN": "input",
             "SRC": "input",
-            "SRC_EN": "output"
+            "SRC_EN": "input"
           },
           "connections": {
             "DST": [ 5 ],
@@ -1501,9 +1501,9 @@
           },
           "port_directions": {
             "DST": "input",
-            "DST_EN": "output",
+            "DST_EN": "input",
             "SRC": "input",
-            "SRC_EN": "output"
+            "SRC_EN": "input"
           },
           "connections": {
             "DST": [ 5 ],
@@ -1535,9 +1535,9 @@
           },
           "port_directions": {
             "DST": "input",
-            "DST_EN": "output",
+            "DST_EN": "input",
             "SRC": "input",
-            "SRC_EN": "output"
+            "SRC_EN": "input"
           },
           "connections": {
             "DST": [ 5 ],
@@ -1569,9 +1569,9 @@
           },
           "port_directions": {
             "DST": "input",
-            "DST_EN": "output",
+            "DST_EN": "input",
             "SRC": "input",
-            "SRC_EN": "output"
+            "SRC_EN": "input"
           },
           "connections": {
             "DST": [ 5 ],
@@ -1603,9 +1603,9 @@
           },
           "port_directions": {
             "DST": "input",
-            "DST_EN": "output",
+            "DST_EN": "input",
             "SRC": "input",
-            "SRC_EN": "output"
+            "SRC_EN": "input"
           },
           "connections": {
             "DST": [ 8 ],
@@ -1637,9 +1637,9 @@
           },
           "port_directions": {
             "DST": "input",
-            "DST_EN": "output",
+            "DST_EN": "input",
             "SRC": "input",
-            "SRC_EN": "output"
+            "SRC_EN": "input"
           },
           "connections": {
             "DST": [ 8 ],
@@ -1671,9 +1671,9 @@
           },
           "port_directions": {
             "DST": "input",
-            "DST_EN": "output",
+            "DST_EN": "input",
             "SRC": "input",
-            "SRC_EN": "output"
+            "SRC_EN": "input"
           },
           "connections": {
             "DST": [ 9 ],
@@ -1705,9 +1705,9 @@
           },
           "port_directions": {
             "DST": "input",
-            "DST_EN": "output",
+            "DST_EN": "input",
             "SRC": "input",
-            "SRC_EN": "output"
+            "SRC_EN": "input"
           },
           "connections": {
             "DST": [ 9 ],
@@ -1739,9 +1739,9 @@
           },
           "port_directions": {
             "DST": "input",
-            "DST_EN": "output",
+            "DST_EN": "input",
             "SRC": "input",
-            "SRC_EN": "output"
+            "SRC_EN": "input"
           },
           "connections": {
             "DST": [ 9 ],
@@ -1773,9 +1773,9 @@
           },
           "port_directions": {
             "DST": "input",
-            "DST_EN": "output",
+            "DST_EN": "input",
             "SRC": "input",
-            "SRC_EN": "output"
+            "SRC_EN": "input"
           },
           "connections": {
             "DST": [ 9 ],
@@ -7028,9 +7028,9 @@
           },
           "port_directions": {
             "DST": "input",
-            "DST_EN": "output",
+            "DST_EN": "input",
             "SRC": "input",
-            "SRC_EN": "output"
+            "SRC_EN": "input"
           },
           "connections": {
             "DST": [ 32 ],
@@ -7062,9 +7062,9 @@
           },
           "port_directions": {
             "DST": "input",
-            "DST_EN": "output",
+            "DST_EN": "input",
             "SRC": "input",
-            "SRC_EN": "output"
+            "SRC_EN": "input"
           },
           "connections": {
             "DST": [ 18 ],
@@ -7096,9 +7096,9 @@
           },
           "port_directions": {
             "DST": "input",
-            "DST_EN": "output",
+            "DST_EN": "input",
             "SRC": "input",
-            "SRC_EN": "output"
+            "SRC_EN": "input"
           },
           "connections": {
             "DST": [ 18 ],
@@ -7130,9 +7130,9 @@
           },
           "port_directions": {
             "DST": "input",
-            "DST_EN": "output",
+            "DST_EN": "input",
             "SRC": "input",
-            "SRC_EN": "output"
+            "SRC_EN": "input"
           },
           "connections": {
             "DST": [ 18 ],
@@ -7164,9 +7164,9 @@
           },
           "port_directions": {
             "DST": "input",
-            "DST_EN": "output",
+            "DST_EN": "input",
             "SRC": "input",
-            "SRC_EN": "output"
+            "SRC_EN": "input"
           },
           "connections": {
             "DST": [ 32 ],
@@ -7198,9 +7198,9 @@
           },
           "port_directions": {
             "DST": "input",
-            "DST_EN": "output",
+            "DST_EN": "input",
             "SRC": "input",
-            "SRC_EN": "output"
+            "SRC_EN": "input"
           },
           "connections": {
             "DST": [ 32 ],
@@ -7232,9 +7232,9 @@
           },
           "port_directions": {
             "DST": "input",
-            "DST_EN": "output",
+            "DST_EN": "input",
             "SRC": "input",
-            "SRC_EN": "output"
+            "SRC_EN": "input"
           },
           "connections": {
             "DST": [ 32 ],
@@ -7266,9 +7266,9 @@
           },
           "port_directions": {
             "DST": "input",
-            "DST_EN": "output",
+            "DST_EN": "input",
             "SRC": "input",
-            "SRC_EN": "output"
+            "SRC_EN": "input"
           },
           "connections": {
             "DST": [ 32 ],
@@ -7620,9 +7620,9 @@
           },
           "port_directions": {
             "DST": "input",
-            "DST_EN": "output",
+            "DST_EN": "input",
             "SRC": "input",
-            "SRC_EN": "output"
+            "SRC_EN": "input"
           },
           "connections": {
             "DST": [ 18 ],
@@ -7654,9 +7654,9 @@
           },
           "port_directions": {
             "DST": "input",
-            "DST_EN": "output",
+            "DST_EN": "input",
             "SRC": "input",
-            "SRC_EN": "output"
+            "SRC_EN": "input"
           },
           "connections": {
             "DST": [ 18 ],
@@ -7688,9 +7688,9 @@
           },
           "port_directions": {
             "DST": "input",
-            "DST_EN": "output",
+            "DST_EN": "input",
             "SRC": "input",
-            "SRC_EN": "output"
+            "SRC_EN": "input"
           },
           "connections": {
             "DST": [ 18 ],
@@ -7722,9 +7722,9 @@
           },
           "port_directions": {
             "DST": "input",
-            "DST_EN": "output",
+            "DST_EN": "input",
             "SRC": "input",
-            "SRC_EN": "output"
+            "SRC_EN": "input"
           },
           "connections": {
             "DST": [ 32 ],
@@ -7756,9 +7756,9 @@
           },
           "port_directions": {
             "DST": "input",
-            "DST_EN": "output",
+            "DST_EN": "input",
             "SRC": "input",
-            "SRC_EN": "output"
+            "SRC_EN": "input"
           },
           "connections": {
             "DST": [ 32 ],
@@ -7790,9 +7790,9 @@
           },
           "port_directions": {
             "DST": "input",
-            "DST_EN": "output",
+            "DST_EN": "input",
             "SRC": "input",
-            "SRC_EN": "output"
+            "SRC_EN": "input"
           },
           "connections": {
             "DST": [ 32 ],
@@ -7824,9 +7824,9 @@
           },
           "port_directions": {
             "DST": "input",
-            "DST_EN": "output",
+            "DST_EN": "input",
             "SRC": "input",
-            "SRC_EN": "output"
+            "SRC_EN": "input"
           },
           "connections": {
             "DST": [ 32 ],
@@ -7894,9 +7894,9 @@
           },
           "port_directions": {
             "DST": "input",
-            "DST_EN": "output",
+            "DST_EN": "input",
             "SRC": "input",
-            "SRC_EN": "output"
+            "SRC_EN": "input"
           },
           "connections": {
             "DST": [ 32 ],
@@ -8212,9 +8212,9 @@
           },
           "port_directions": {
             "DST": "input",
-            "DST_EN": "output",
+            "DST_EN": "input",
             "SRC": "input",
-            "SRC_EN": "output"
+            "SRC_EN": "input"
           },
           "connections": {
             "DST": [ 32 ],
@@ -8246,9 +8246,9 @@
           },
           "port_directions": {
             "DST": "input",
-            "DST_EN": "output",
+            "DST_EN": "input",
             "SRC": "input",
-            "SRC_EN": "output"
+            "SRC_EN": "input"
           },
           "connections": {
             "DST": [ 18 ],
@@ -8280,9 +8280,9 @@
           },
           "port_directions": {
             "DST": "input",
-            "DST_EN": "output",
+            "DST_EN": "input",
             "SRC": "input",
-            "SRC_EN": "output"
+            "SRC_EN": "input"
           },
           "connections": {
             "DST": [ 18 ],
@@ -8314,9 +8314,9 @@
           },
           "port_directions": {
             "DST": "input",
-            "DST_EN": "output",
+            "DST_EN": "input",
             "SRC": "input",
-            "SRC_EN": "output"
+            "SRC_EN": "input"
           },
           "connections": {
             "DST": [ 18 ],
@@ -8348,9 +8348,9 @@
           },
           "port_directions": {
             "DST": "input",
-            "DST_EN": "output",
+            "DST_EN": "input",
             "SRC": "input",
-            "SRC_EN": "output"
+            "SRC_EN": "input"
           },
           "connections": {
             "DST": [ 32 ],
@@ -8382,9 +8382,9 @@
           },
           "port_directions": {
             "DST": "input",
-            "DST_EN": "output",
+            "DST_EN": "input",
             "SRC": "input",
-            "SRC_EN": "output"
+            "SRC_EN": "input"
           },
           "connections": {
             "DST": [ 32 ],
@@ -8416,9 +8416,9 @@
           },
           "port_directions": {
             "DST": "input",
-            "DST_EN": "output",
+            "DST_EN": "input",
             "SRC": "input",
-            "SRC_EN": "output"
+            "SRC_EN": "input"
           },
           "connections": {
             "DST": [ 32 ],
@@ -8450,9 +8450,9 @@
           },
           "port_directions": {
             "DST": "input",
-            "DST_EN": "output",
+            "DST_EN": "input",
             "SRC": "input",
-            "SRC_EN": "output"
+            "SRC_EN": "input"
           },
           "connections": {
             "DST": [ 32 ],
@@ -8804,9 +8804,9 @@
           },
           "port_directions": {
             "DST": "input",
-            "DST_EN": "output",
+            "DST_EN": "input",
             "SRC": "input",
-            "SRC_EN": "output"
+            "SRC_EN": "input"
           },
           "connections": {
             "DST": [ 32 ],
@@ -8838,9 +8838,9 @@
           },
           "port_directions": {
             "DST": "input",
-            "DST_EN": "output",
+            "DST_EN": "input",
             "SRC": "input",
-            "SRC_EN": "output"
+            "SRC_EN": "input"
           },
           "connections": {
             "DST": [ 18 ],
@@ -8872,9 +8872,9 @@
           },
           "port_directions": {
             "DST": "input",
-            "DST_EN": "output",
+            "DST_EN": "input",
             "SRC": "input",
-            "SRC_EN": "output"
+            "SRC_EN": "input"
           },
           "connections": {
             "DST": [ 18 ],
@@ -8906,9 +8906,9 @@
           },
           "port_directions": {
             "DST": "input",
-            "DST_EN": "output",
+            "DST_EN": "input",
             "SRC": "input",
-            "SRC_EN": "output"
+            "SRC_EN": "input"
           },
           "connections": {
             "DST": [ 18 ],
@@ -8940,9 +8940,9 @@
           },
           "port_directions": {
             "DST": "input",
-            "DST_EN": "output",
+            "DST_EN": "input",
             "SRC": "input",
-            "SRC_EN": "output"
+            "SRC_EN": "input"
           },
           "connections": {
             "DST": [ 32 ],
@@ -8974,9 +8974,9 @@
           },
           "port_directions": {
             "DST": "input",
-            "DST_EN": "output",
+            "DST_EN": "input",
             "SRC": "input",
-            "SRC_EN": "output"
+            "SRC_EN": "input"
           },
           "connections": {
             "DST": [ 32 ],
@@ -9008,9 +9008,9 @@
           },
           "port_directions": {
             "DST": "input",
-            "DST_EN": "output",
+            "DST_EN": "input",
             "SRC": "input",
-            "SRC_EN": "output"
+            "SRC_EN": "input"
           },
           "connections": {
             "DST": [ 32 ],
@@ -9042,9 +9042,9 @@
           },
           "port_directions": {
             "DST": "input",
-            "DST_EN": "output",
+            "DST_EN": "input",
             "SRC": "input",
-            "SRC_EN": "output"
+            "SRC_EN": "input"
           },
           "connections": {
             "DST": [ 32 ],
@@ -10136,10 +10136,10 @@
         "hdlname": "counter_top",
         "dynports": "00000000000000000000000000000001",
         "top": "00000000000000000000000000000001",
-        "src": "../rtl/counter_top.sv:9.1-35.10"
+        "src": "../rtl/counter_top.sv:10.1-35.10"
       },
       "parameter_default_values": {
-        "COUNTER_MAX": "00000000000000000000000011111111"
+        "CTR_MAX": "00000000000000000000000011111111"
       },
       "ports": {
         "clock_i": {
@@ -10168,25 +10168,26 @@
           },
           "attributes": {
             "cell_module_not_derived": "00000000000000000000000000000001",
-            "cell_src": "../rtl/counter_top.sv:28.5-33.4",
-            "module": "$paramod$6198ff73a97ec62584bab938cf20bb6fe2fae627\\counter",
+            "cell_src": "../rtl/counter_top.sv:29.5-34.4",
+            "module": "$paramod$3bf63b4490b25288eb49dd70c7d29040d69e0ded\\counter",
             "module_dynports": "00000000000000000000000000000001",
             "module_hdlname": "counter",
-            "module_src": "../rtl/counter.sv:9.1-42.10"
+            "module_src": "../rtl/counter.sv:10.1-36.10"
           },
           "port_directions": {
           },
           "connections": {
           }
         },
-        "counter_0.counter_value_SB_DFFESR_Q": {
+        "counter_0.counter_value_o_SB_DFFESR_Q": {
           "hide_name": 0,
           "type": "SB_DFFESR",
           "parameters": {
           },
           "attributes": {
+            "always_ff": "00000000000000000000000000000001",
             "module_not_derived": "00000000000000000000000000000001",
-            "src": "../rtl/counter.sv:25.3-36.6|/foss/tools/yosys/bin/../share/yosys/ice40/ff_map.v:24.66-24.119"
+            "src": "../rtl/counter.sv:22.3-34.6|/foss/tools/yosys/bin/../share/yosys/ice40/ff_map.v:24.66-24.119"
           },
           "port_directions": {
             "C": "input",
@@ -10203,14 +10204,15 @@
             "R": [ 15 ]
           }
         },
-        "counter_0.counter_value_SB_DFFESR_Q_1": {
+        "counter_0.counter_value_o_SB_DFFESR_Q_1": {
           "hide_name": 0,
           "type": "SB_DFFESR",
           "parameters": {
           },
           "attributes": {
+            "always_ff": "00000000000000000000000000000001",
             "module_not_derived": "00000000000000000000000000000001",
-            "src": "../rtl/counter.sv:25.3-36.6|/foss/tools/yosys/bin/../share/yosys/ice40/ff_map.v:24.66-24.119"
+            "src": "../rtl/counter.sv:22.3-34.6|/foss/tools/yosys/bin/../share/yosys/ice40/ff_map.v:24.66-24.119"
           },
           "port_directions": {
             "C": "input",
@@ -10227,7 +10229,7 @@
             "R": [ 15 ]
           }
         },
-        "counter_0.counter_value_SB_DFFESR_Q_1_D_SB_LUT4_O": {
+        "counter_0.counter_value_o_SB_DFFESR_Q_1_D_SB_LUT4_O": {
           "hide_name": 0,
           "type": "SB_LUT4",
           "parameters": {
@@ -10235,7 +10237,7 @@
           },
           "attributes": {
             "module_not_derived": "00000000000000000000000000000001",
-            "src": "../rtl/counter.sv:34.26-34.78|/foss/tools/yosys/bin/../share/yosys/ice40/arith_map.v:62.5-70.4|/foss/tools/yosys/bin/../share/yosys/ice40/cells_map.v:26.33-27.52"
+            "src": "../rtl/counter.sv:31.28-31.47|/foss/tools/yosys/bin/../share/yosys/ice40/arith_map.v:62.5-70.4|/foss/tools/yosys/bin/../share/yosys/ice40/cells_map.v:26.33-27.52"
           },
           "port_directions": {
             "I0": "input",
@@ -10252,13 +10254,13 @@
             "O": [ 16 ]
           }
         },
-        "counter_0.counter_value_SB_DFFESR_Q_1_D_SB_LUT4_O_I3_SB_CARRY_CO": {
+        "counter_0.counter_value_o_SB_DFFESR_Q_1_D_SB_LUT4_O_I3_SB_CARRY_CO": {
           "hide_name": 0,
           "type": "SB_CARRY",
           "parameters": {
           },
           "attributes": {
-            "src": "../rtl/counter.sv:34.26-34.78|/foss/tools/yosys/bin/../share/yosys/ice40/arith_map.v:62.5-70.4"
+            "src": "../rtl/counter.sv:31.28-31.47|/foss/tools/yosys/bin/../share/yosys/ice40/arith_map.v:62.5-70.4"
           },
           "port_directions": {
             "CI": "input",
@@ -10273,14 +10275,15 @@
             "I1": [ 11 ]
           }
         },
-        "counter_0.counter_value_SB_DFFESR_Q_2": {
+        "counter_0.counter_value_o_SB_DFFESR_Q_2": {
           "hide_name": 0,
           "type": "SB_DFFESR",
           "parameters": {
           },
           "attributes": {
+            "always_ff": "00000000000000000000000000000001",
             "module_not_derived": "00000000000000000000000000000001",
-            "src": "../rtl/counter.sv:25.3-36.6|/foss/tools/yosys/bin/../share/yosys/ice40/ff_map.v:24.66-24.119"
+            "src": "../rtl/counter.sv:22.3-34.6|/foss/tools/yosys/bin/../share/yosys/ice40/ff_map.v:24.66-24.119"
           },
           "port_directions": {
             "C": "input",
@@ -10297,7 +10300,7 @@
             "R": [ 15 ]
           }
         },
-        "counter_0.counter_value_SB_DFFESR_Q_2_D_SB_LUT4_O": {
+        "counter_0.counter_value_o_SB_DFFESR_Q_2_D_SB_LUT4_O": {
           "hide_name": 0,
           "type": "SB_LUT4",
           "parameters": {
@@ -10305,7 +10308,7 @@
           },
           "attributes": {
             "module_not_derived": "00000000000000000000000000000001",
-            "src": "../rtl/counter.sv:34.26-34.78|/foss/tools/yosys/bin/../share/yosys/ice40/arith_map.v:62.5-70.4|/foss/tools/yosys/bin/../share/yosys/ice40/cells_map.v:26.33-27.52"
+            "src": "../rtl/counter.sv:31.28-31.47|/foss/tools/yosys/bin/../share/yosys/ice40/arith_map.v:62.5-70.4|/foss/tools/yosys/bin/../share/yosys/ice40/cells_map.v:26.33-27.52"
           },
           "port_directions": {
             "I0": "input",
@@ -10322,13 +10325,13 @@
             "O": [ 19 ]
           }
         },
-        "counter_0.counter_value_SB_DFFESR_Q_2_D_SB_LUT4_O_I3_SB_CARRY_CO": {
+        "counter_0.counter_value_o_SB_DFFESR_Q_2_D_SB_LUT4_O_I3_SB_CARRY_CO": {
           "hide_name": 0,
           "type": "SB_CARRY",
           "parameters": {
           },
           "attributes": {
-            "src": "../rtl/counter.sv:34.26-34.78|/foss/tools/yosys/bin/../share/yosys/ice40/arith_map.v:62.5-70.4"
+            "src": "../rtl/counter.sv:31.28-31.47|/foss/tools/yosys/bin/../share/yosys/ice40/arith_map.v:62.5-70.4"
           },
           "port_directions": {
             "CI": "input",
@@ -10343,14 +10346,15 @@
             "I1": [ 10 ]
           }
         },
-        "counter_0.counter_value_SB_DFFESR_Q_3": {
+        "counter_0.counter_value_o_SB_DFFESR_Q_3": {
           "hide_name": 0,
           "type": "SB_DFFESR",
           "parameters": {
           },
           "attributes": {
+            "always_ff": "00000000000000000000000000000001",
             "module_not_derived": "00000000000000000000000000000001",
-            "src": "../rtl/counter.sv:25.3-36.6|/foss/tools/yosys/bin/../share/yosys/ice40/ff_map.v:24.66-24.119"
+            "src": "../rtl/counter.sv:22.3-34.6|/foss/tools/yosys/bin/../share/yosys/ice40/ff_map.v:24.66-24.119"
           },
           "port_directions": {
             "C": "input",
@@ -10367,7 +10371,7 @@
             "R": [ 15 ]
           }
         },
-        "counter_0.counter_value_SB_DFFESR_Q_3_D_SB_LUT4_O": {
+        "counter_0.counter_value_o_SB_DFFESR_Q_3_D_SB_LUT4_O": {
           "hide_name": 0,
           "type": "SB_LUT4",
           "parameters": {
@@ -10375,7 +10379,7 @@
           },
           "attributes": {
             "module_not_derived": "00000000000000000000000000000001",
-            "src": "../rtl/counter.sv:34.26-34.78|/foss/tools/yosys/bin/../share/yosys/ice40/arith_map.v:62.5-70.4|/foss/tools/yosys/bin/../share/yosys/ice40/cells_map.v:26.33-27.52"
+            "src": "../rtl/counter.sv:31.28-31.47|/foss/tools/yosys/bin/../share/yosys/ice40/arith_map.v:62.5-70.4|/foss/tools/yosys/bin/../share/yosys/ice40/cells_map.v:26.33-27.52"
           },
           "port_directions": {
             "I0": "input",
@@ -10392,13 +10396,13 @@
             "O": [ 21 ]
           }
         },
-        "counter_0.counter_value_SB_DFFESR_Q_3_D_SB_LUT4_O_I3_SB_CARRY_CO": {
+        "counter_0.counter_value_o_SB_DFFESR_Q_3_D_SB_LUT4_O_I3_SB_CARRY_CO": {
           "hide_name": 0,
           "type": "SB_CARRY",
           "parameters": {
           },
           "attributes": {
-            "src": "../rtl/counter.sv:34.26-34.78|/foss/tools/yosys/bin/../share/yosys/ice40/arith_map.v:62.5-70.4"
+            "src": "../rtl/counter.sv:31.28-31.47|/foss/tools/yosys/bin/../share/yosys/ice40/arith_map.v:62.5-70.4"
           },
           "port_directions": {
             "CI": "input",
@@ -10413,14 +10417,15 @@
             "I1": [ 9 ]
           }
         },
-        "counter_0.counter_value_SB_DFFESR_Q_4": {
+        "counter_0.counter_value_o_SB_DFFESR_Q_4": {
           "hide_name": 0,
           "type": "SB_DFFESR",
           "parameters": {
           },
           "attributes": {
+            "always_ff": "00000000000000000000000000000001",
             "module_not_derived": "00000000000000000000000000000001",
-            "src": "../rtl/counter.sv:25.3-36.6|/foss/tools/yosys/bin/../share/yosys/ice40/ff_map.v:24.66-24.119"
+            "src": "../rtl/counter.sv:22.3-34.6|/foss/tools/yosys/bin/../share/yosys/ice40/ff_map.v:24.66-24.119"
           },
           "port_directions": {
             "C": "input",
@@ -10437,7 +10442,7 @@
             "R": [ 15 ]
           }
         },
-        "counter_0.counter_value_SB_DFFESR_Q_4_D_SB_LUT4_O": {
+        "counter_0.counter_value_o_SB_DFFESR_Q_4_D_SB_LUT4_O": {
           "hide_name": 0,
           "type": "SB_LUT4",
           "parameters": {
@@ -10445,7 +10450,7 @@
           },
           "attributes": {
             "module_not_derived": "00000000000000000000000000000001",
-            "src": "../rtl/counter.sv:34.26-34.78|/foss/tools/yosys/bin/../share/yosys/ice40/arith_map.v:62.5-70.4|/foss/tools/yosys/bin/../share/yosys/ice40/cells_map.v:26.33-27.52"
+            "src": "../rtl/counter.sv:31.28-31.47|/foss/tools/yosys/bin/../share/yosys/ice40/arith_map.v:62.5-70.4|/foss/tools/yosys/bin/../share/yosys/ice40/cells_map.v:26.33-27.52"
           },
           "port_directions": {
             "I0": "input",
@@ -10462,13 +10467,13 @@
             "O": [ 23 ]
           }
         },
-        "counter_0.counter_value_SB_DFFESR_Q_4_D_SB_LUT4_O_I3_SB_CARRY_CO": {
+        "counter_0.counter_value_o_SB_DFFESR_Q_4_D_SB_LUT4_O_I3_SB_CARRY_CO": {
           "hide_name": 0,
           "type": "SB_CARRY",
           "parameters": {
           },
           "attributes": {
-            "src": "../rtl/counter.sv:34.26-34.78|/foss/tools/yosys/bin/../share/yosys/ice40/arith_map.v:62.5-70.4"
+            "src": "../rtl/counter.sv:31.28-31.47|/foss/tools/yosys/bin/../share/yosys/ice40/arith_map.v:62.5-70.4"
           },
           "port_directions": {
             "CI": "input",
@@ -10483,14 +10488,15 @@
             "I1": [ 8 ]
           }
         },
-        "counter_0.counter_value_SB_DFFESR_Q_5": {
+        "counter_0.counter_value_o_SB_DFFESR_Q_5": {
           "hide_name": 0,
           "type": "SB_DFFESR",
           "parameters": {
           },
           "attributes": {
+            "always_ff": "00000000000000000000000000000001",
             "module_not_derived": "00000000000000000000000000000001",
-            "src": "../rtl/counter.sv:25.3-36.6|/foss/tools/yosys/bin/../share/yosys/ice40/ff_map.v:24.66-24.119"
+            "src": "../rtl/counter.sv:22.3-34.6|/foss/tools/yosys/bin/../share/yosys/ice40/ff_map.v:24.66-24.119"
           },
           "port_directions": {
             "C": "input",
@@ -10507,7 +10513,7 @@
             "R": [ 15 ]
           }
         },
-        "counter_0.counter_value_SB_DFFESR_Q_5_D_SB_LUT4_O": {
+        "counter_0.counter_value_o_SB_DFFESR_Q_5_D_SB_LUT4_O": {
           "hide_name": 0,
           "type": "SB_LUT4",
           "parameters": {
@@ -10515,7 +10521,7 @@
           },
           "attributes": {
             "module_not_derived": "00000000000000000000000000000001",
-            "src": "../rtl/counter.sv:34.26-34.78|/foss/tools/yosys/bin/../share/yosys/ice40/arith_map.v:62.5-70.4|/foss/tools/yosys/bin/../share/yosys/ice40/cells_map.v:26.33-27.52"
+            "src": "../rtl/counter.sv:31.28-31.47|/foss/tools/yosys/bin/../share/yosys/ice40/arith_map.v:62.5-70.4|/foss/tools/yosys/bin/../share/yosys/ice40/cells_map.v:26.33-27.52"
           },
           "port_directions": {
             "I0": "input",
@@ -10532,13 +10538,13 @@
             "O": [ 25 ]
           }
         },
-        "counter_0.counter_value_SB_DFFESR_Q_5_D_SB_LUT4_O_I3_SB_CARRY_CO": {
+        "counter_0.counter_value_o_SB_DFFESR_Q_5_D_SB_LUT4_O_I3_SB_CARRY_CO": {
           "hide_name": 0,
           "type": "SB_CARRY",
           "parameters": {
           },
           "attributes": {
-            "src": "../rtl/counter.sv:34.26-34.78|/foss/tools/yosys/bin/../share/yosys/ice40/arith_map.v:62.5-70.4"
+            "src": "../rtl/counter.sv:31.28-31.47|/foss/tools/yosys/bin/../share/yosys/ice40/arith_map.v:62.5-70.4"
           },
           "port_directions": {
             "CI": "input",
@@ -10553,14 +10559,15 @@
             "I1": [ 7 ]
           }
         },
-        "counter_0.counter_value_SB_DFFESR_Q_6": {
+        "counter_0.counter_value_o_SB_DFFESR_Q_6": {
           "hide_name": 0,
           "type": "SB_DFFESR",
           "parameters": {
           },
           "attributes": {
+            "always_ff": "00000000000000000000000000000001",
             "module_not_derived": "00000000000000000000000000000001",
-            "src": "../rtl/counter.sv:25.3-36.6|/foss/tools/yosys/bin/../share/yosys/ice40/ff_map.v:24.66-24.119"
+            "src": "../rtl/counter.sv:22.3-34.6|/foss/tools/yosys/bin/../share/yosys/ice40/ff_map.v:24.66-24.119"
           },
           "port_directions": {
             "C": "input",
@@ -10577,7 +10584,7 @@
             "R": [ 15 ]
           }
         },
-        "counter_0.counter_value_SB_DFFESR_Q_6_D_SB_LUT4_O": {
+        "counter_0.counter_value_o_SB_DFFESR_Q_6_D_SB_LUT4_O": {
           "hide_name": 0,
           "type": "SB_LUT4",
           "parameters": {
@@ -10585,7 +10592,7 @@
           },
           "attributes": {
             "module_not_derived": "00000000000000000000000000000001",
-            "src": "../rtl/counter.sv:34.26-34.78|/foss/tools/yosys/bin/../share/yosys/ice40/arith_map.v:62.5-70.4|/foss/tools/yosys/bin/../share/yosys/ice40/cells_map.v:26.33-27.52"
+            "src": "../rtl/counter.sv:31.28-31.47|/foss/tools/yosys/bin/../share/yosys/ice40/arith_map.v:62.5-70.4|/foss/tools/yosys/bin/../share/yosys/ice40/cells_map.v:26.33-27.52"
           },
           "port_directions": {
             "I0": "input",
@@ -10602,13 +10609,13 @@
             "O": [ 27 ]
           }
         },
-        "counter_0.counter_value_SB_DFFESR_Q_6_D_SB_LUT4_O_I3_SB_CARRY_CO": {
+        "counter_0.counter_value_o_SB_DFFESR_Q_6_D_SB_LUT4_O_I3_SB_CARRY_CO": {
           "hide_name": 0,
           "type": "SB_CARRY",
           "parameters": {
           },
           "attributes": {
-            "src": "../rtl/counter.sv:34.26-34.78|/foss/tools/yosys/bin/../share/yosys/ice40/arith_map.v:62.5-70.4"
+            "src": "../rtl/counter.sv:31.28-31.47|/foss/tools/yosys/bin/../share/yosys/ice40/arith_map.v:62.5-70.4"
           },
           "port_directions": {
             "CI": "input",
@@ -10623,14 +10630,15 @@
             "I1": [ 6 ]
           }
         },
-        "counter_0.counter_value_SB_DFFESR_Q_7": {
+        "counter_0.counter_value_o_SB_DFFESR_Q_7": {
           "hide_name": 0,
           "type": "SB_DFFESR",
           "parameters": {
           },
           "attributes": {
+            "always_ff": "00000000000000000000000000000001",
             "module_not_derived": "00000000000000000000000000000001",
-            "src": "../rtl/counter.sv:25.3-36.6|/foss/tools/yosys/bin/../share/yosys/ice40/ff_map.v:24.66-24.119"
+            "src": "../rtl/counter.sv:22.3-34.6|/foss/tools/yosys/bin/../share/yosys/ice40/ff_map.v:24.66-24.119"
           },
           "port_directions": {
             "C": "input",
@@ -10647,7 +10655,7 @@
             "R": [ 15 ]
           }
         },
-        "counter_0.counter_value_SB_DFFESR_Q_7_D_SB_LUT4_O": {
+        "counter_0.counter_value_o_SB_DFFESR_Q_7_D_SB_LUT4_O": {
           "hide_name": 0,
           "type": "SB_LUT4",
           "parameters": {
@@ -10655,7 +10663,7 @@
           },
           "attributes": {
             "module_not_derived": "00000000000000000000000000000001",
-            "src": "../rtl/counter.sv:34.26-34.78|/foss/tools/yosys/bin/../share/yosys/ice40/arith_map.v:62.5-70.4|/foss/tools/yosys/bin/../share/yosys/ice40/cells_map.v:26.33-27.52"
+            "src": "../rtl/counter.sv:31.28-31.47|/foss/tools/yosys/bin/../share/yosys/ice40/arith_map.v:62.5-70.4|/foss/tools/yosys/bin/../share/yosys/ice40/cells_map.v:26.33-27.52"
           },
           "port_directions": {
             "I0": "input",
@@ -10672,7 +10680,7 @@
             "O": [ 28 ]
           }
         },
-        "counter_0.counter_value_SB_DFFESR_Q_D_SB_LUT4_O": {
+        "counter_0.counter_value_o_SB_DFFESR_Q_D_SB_LUT4_O": {
           "hide_name": 0,
           "type": "SB_LUT4",
           "parameters": {
@@ -10753,7 +10761,7 @@
           "hide_name": 0,
           "bits": [ 2 ],
           "attributes": {
-            "src": "../rtl/counter_top.sv:13.15-13.22"
+            "src": "../rtl/counter_top.sv:14.29-14.36"
           }
         },
         "counter_0.clock_i": {
@@ -10761,111 +10769,7 @@
           "bits": [ 2 ],
           "attributes": {
             "hdlname": "counter_0 clock_i",
-            "src": "../rtl/counter.sv:13.15-13.22"
-          }
-        },
-        "counter_0.counter_value": {
-          "hide_name": 0,
-          "bits": [ 5, 6, 7, 8, 9, 10, 11, 12 ],
-          "attributes": {
-            "hdlname": "counter_0 counter_value",
-            "src": "../rtl/counter.sv:21.30-21.43"
-          }
-        },
-        "counter_0.counter_value_SB_DFFESR_Q_1_D": {
-          "hide_name": 0,
-          "bits": [ 16 ],
-          "attributes": {
-          }
-        },
-        "counter_0.counter_value_SB_DFFESR_Q_1_D_SB_LUT4_O_I3": {
-          "hide_name": 0,
-          "bits": [ 17 ],
-          "attributes": {
-            "abc9_carry": "00000000000000000000000000000001",
-            "src": "../rtl/counter.sv:34.26-34.78|/foss/tools/yosys/bin/../share/yosys/ice40/arith_map.v:62.5-70.4|/foss/tools/yosys/bin/../share/yosys/ice40/abc9_model.v:4.9-4.11"
-          }
-        },
-        "counter_0.counter_value_SB_DFFESR_Q_2_D": {
-          "hide_name": 0,
-          "bits": [ 19 ],
-          "attributes": {
-          }
-        },
-        "counter_0.counter_value_SB_DFFESR_Q_2_D_SB_LUT4_O_I3": {
-          "hide_name": 0,
-          "bits": [ 18 ],
-          "attributes": {
-            "abc9_carry": "00000000000000000000000000000001",
-            "src": "../rtl/counter.sv:34.26-34.78|/foss/tools/yosys/bin/../share/yosys/ice40/arith_map.v:62.5-70.4|/foss/tools/yosys/bin/../share/yosys/ice40/abc9_model.v:4.9-4.11"
-          }
-        },
-        "counter_0.counter_value_SB_DFFESR_Q_3_D": {
-          "hide_name": 0,
-          "bits": [ 21 ],
-          "attributes": {
-          }
-        },
-        "counter_0.counter_value_SB_DFFESR_Q_3_D_SB_LUT4_O_I3": {
-          "hide_name": 0,
-          "bits": [ 20 ],
-          "attributes": {
-            "abc9_carry": "00000000000000000000000000000001",
-            "src": "../rtl/counter.sv:34.26-34.78|/foss/tools/yosys/bin/../share/yosys/ice40/arith_map.v:62.5-70.4|/foss/tools/yosys/bin/../share/yosys/ice40/abc9_model.v:4.9-4.11"
-          }
-        },
-        "counter_0.counter_value_SB_DFFESR_Q_4_D": {
-          "hide_name": 0,
-          "bits": [ 23 ],
-          "attributes": {
-          }
-        },
-        "counter_0.counter_value_SB_DFFESR_Q_4_D_SB_LUT4_O_I3": {
-          "hide_name": 0,
-          "bits": [ 22 ],
-          "attributes": {
-            "abc9_carry": "00000000000000000000000000000001",
-            "src": "../rtl/counter.sv:34.26-34.78|/foss/tools/yosys/bin/../share/yosys/ice40/arith_map.v:62.5-70.4|/foss/tools/yosys/bin/../share/yosys/ice40/abc9_model.v:4.9-4.11"
-          }
-        },
-        "counter_0.counter_value_SB_DFFESR_Q_5_D": {
-          "hide_name": 0,
-          "bits": [ 25 ],
-          "attributes": {
-          }
-        },
-        "counter_0.counter_value_SB_DFFESR_Q_5_D_SB_LUT4_O_I3": {
-          "hide_name": 0,
-          "bits": [ 24 ],
-          "attributes": {
-            "abc9_carry": "00000000000000000000000000000001",
-            "src": "../rtl/counter.sv:34.26-34.78|/foss/tools/yosys/bin/../share/yosys/ice40/arith_map.v:62.5-70.4|/foss/tools/yosys/bin/../share/yosys/ice40/abc9_model.v:4.9-4.11"
-          }
-        },
-        "counter_0.counter_value_SB_DFFESR_Q_6_D": {
-          "hide_name": 0,
-          "bits": [ 27 ],
-          "attributes": {
-          }
-        },
-        "counter_0.counter_value_SB_DFFESR_Q_6_D_SB_LUT4_O_I3": {
-          "hide_name": 0,
-          "bits": [ 26 ],
-          "attributes": {
-            "abc9_carry": "00000000000000000000000000000001",
-            "src": "../rtl/counter.sv:34.26-34.78|/foss/tools/yosys/bin/../share/yosys/ice40/arith_map.v:62.5-70.4|/foss/tools/yosys/bin/../share/yosys/ice40/abc9_model.v:4.9-4.11"
-          }
-        },
-        "counter_0.counter_value_SB_DFFESR_Q_7_D": {
-          "hide_name": 0,
-          "bits": [ 28 ],
-          "attributes": {
-          }
-        },
-        "counter_0.counter_value_SB_DFFESR_Q_D": {
-          "hide_name": 0,
-          "bits": [ 13 ],
-          "attributes": {
+            "src": "../rtl/counter.sv:14.29-14.36"
           }
         },
         "counter_0.counter_value_o": {
@@ -10873,7 +10777,103 @@
           "bits": [ 5, 6, 7, 8, 9, 10, 11, 12 ],
           "attributes": {
             "hdlname": "counter_0 counter_value_o",
-            "src": "../rtl/counter.sv:17.38-17.53"
+            "src": "../rtl/counter.sv:18.29-18.44"
+          }
+        },
+        "counter_0.counter_value_o_SB_DFFESR_Q_1_D": {
+          "hide_name": 0,
+          "bits": [ 16 ],
+          "attributes": {
+          }
+        },
+        "counter_0.counter_value_o_SB_DFFESR_Q_1_D_SB_LUT4_O_I3": {
+          "hide_name": 0,
+          "bits": [ 17 ],
+          "attributes": {
+            "abc9_carry": "00000000000000000000000000000001",
+            "src": "../rtl/counter.sv:31.28-31.47|/foss/tools/yosys/bin/../share/yosys/ice40/arith_map.v:62.5-70.4|/foss/tools/yosys/bin/../share/yosys/ice40/abc9_model.v:4.9-4.11"
+          }
+        },
+        "counter_0.counter_value_o_SB_DFFESR_Q_2_D": {
+          "hide_name": 0,
+          "bits": [ 19 ],
+          "attributes": {
+          }
+        },
+        "counter_0.counter_value_o_SB_DFFESR_Q_2_D_SB_LUT4_O_I3": {
+          "hide_name": 0,
+          "bits": [ 18 ],
+          "attributes": {
+            "abc9_carry": "00000000000000000000000000000001",
+            "src": "../rtl/counter.sv:31.28-31.47|/foss/tools/yosys/bin/../share/yosys/ice40/arith_map.v:62.5-70.4|/foss/tools/yosys/bin/../share/yosys/ice40/abc9_model.v:4.9-4.11"
+          }
+        },
+        "counter_0.counter_value_o_SB_DFFESR_Q_3_D": {
+          "hide_name": 0,
+          "bits": [ 21 ],
+          "attributes": {
+          }
+        },
+        "counter_0.counter_value_o_SB_DFFESR_Q_3_D_SB_LUT4_O_I3": {
+          "hide_name": 0,
+          "bits": [ 20 ],
+          "attributes": {
+            "abc9_carry": "00000000000000000000000000000001",
+            "src": "../rtl/counter.sv:31.28-31.47|/foss/tools/yosys/bin/../share/yosys/ice40/arith_map.v:62.5-70.4|/foss/tools/yosys/bin/../share/yosys/ice40/abc9_model.v:4.9-4.11"
+          }
+        },
+        "counter_0.counter_value_o_SB_DFFESR_Q_4_D": {
+          "hide_name": 0,
+          "bits": [ 23 ],
+          "attributes": {
+          }
+        },
+        "counter_0.counter_value_o_SB_DFFESR_Q_4_D_SB_LUT4_O_I3": {
+          "hide_name": 0,
+          "bits": [ 22 ],
+          "attributes": {
+            "abc9_carry": "00000000000000000000000000000001",
+            "src": "../rtl/counter.sv:31.28-31.47|/foss/tools/yosys/bin/../share/yosys/ice40/arith_map.v:62.5-70.4|/foss/tools/yosys/bin/../share/yosys/ice40/abc9_model.v:4.9-4.11"
+          }
+        },
+        "counter_0.counter_value_o_SB_DFFESR_Q_5_D": {
+          "hide_name": 0,
+          "bits": [ 25 ],
+          "attributes": {
+          }
+        },
+        "counter_0.counter_value_o_SB_DFFESR_Q_5_D_SB_LUT4_O_I3": {
+          "hide_name": 0,
+          "bits": [ 24 ],
+          "attributes": {
+            "abc9_carry": "00000000000000000000000000000001",
+            "src": "../rtl/counter.sv:31.28-31.47|/foss/tools/yosys/bin/../share/yosys/ice40/arith_map.v:62.5-70.4|/foss/tools/yosys/bin/../share/yosys/ice40/abc9_model.v:4.9-4.11"
+          }
+        },
+        "counter_0.counter_value_o_SB_DFFESR_Q_6_D": {
+          "hide_name": 0,
+          "bits": [ 27 ],
+          "attributes": {
+          }
+        },
+        "counter_0.counter_value_o_SB_DFFESR_Q_6_D_SB_LUT4_O_I3": {
+          "hide_name": 0,
+          "bits": [ 26 ],
+          "attributes": {
+            "abc9_carry": "00000000000000000000000000000001",
+            "src": "../rtl/counter.sv:31.28-31.47|/foss/tools/yosys/bin/../share/yosys/ice40/arith_map.v:62.5-70.4|/foss/tools/yosys/bin/../share/yosys/ice40/abc9_model.v:4.9-4.11"
+          }
+        },
+        "counter_0.counter_value_o_SB_DFFESR_Q_7_D": {
+          "hide_name": 0,
+          "bits": [ 28 ],
+          "attributes": {
+          }
+        },
+        "counter_0.counter_value_o_SB_DFFESR_Q_D": {
+          "hide_name": 0,
+          "bits": [ 13 ],
+          "attributes": {
           }
         },
         "counter_0.enable_i": {
@@ -10881,21 +10881,21 @@
           "bits": [ 4 ],
           "attributes": {
             "hdlname": "counter_0 enable_i",
-            "src": "../rtl/counter.sv:15.15-15.23"
+            "src": "../rtl/counter.sv:16.29-16.37"
           }
         },
         "counter_value_o": {
           "hide_name": 0,
           "bits": [ 5, 6, 7, 8, 9, 10, 11, 12 ],
           "attributes": {
-            "src": "../rtl/counter_top.sv:17.38-17.53"
+            "src": "../rtl/counter_top.sv:18.29-18.44"
           }
         },
         "enable_i": {
           "hide_name": 0,
           "bits": [ 4 ],
           "attributes": {
-            "src": "../rtl/counter_top.sv:15.15-15.23"
+            "src": "../rtl/counter_top.sv:16.29-16.37"
           }
         },
         "enable_i_SB_LUT4_I2_O": {
@@ -10908,7 +10908,7 @@
           "hide_name": 0,
           "bits": [ 3 ],
           "attributes": {
-            "src": "../rtl/counter_top.sv:14.15-14.24"
+            "src": "../rtl/counter_top.sv:15.29-15.38"
           }
         },
         "reset_n_i_SB_LUT4_I3_O": {
