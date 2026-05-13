@@ -565,6 +565,22 @@ make sim-view-xschem CELL=inverter        # plot results with Python
 The full simulation suite (all four testbenches plus the CACE flow) is
 triggered with `make sim-all`.
 
+## Process Variation and Mismatch (CACE)
+
+[CACE](https://github.com/fossi-foundation/cace) drives ngspice via a
+characterisation YAML file
+([`verification/cace/inverter.yaml`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/inverter/verification/cace/inverter.yaml))
+and produces Monte-Carlo, mismatch, and supply-sweep plots.
+
+```sh
+make sim-cace
+```
+
+Plots are written to
+[`verification/cace/results/inverter/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/inverter/verification/cace/).
+This step is mainly relevant for advanced designers that want to
+characterise the macro across PVT corners.
+
 ## Inspect / Edit the Layout
 
 The layout is created and edited in KLayout. The container alias `ke`
@@ -582,22 +598,6 @@ the KLayout-based flows accept either `.gds` or `.klay.gds`.
 ::: {.callout-note appearance="simple"}
 **Figure placeholder. `inverter_top` layout in KLayout.**
 :::
-
-## Process Variation and Mismatch (CACE)
-
-[CACE](https://github.com/fossi-foundation/cace) drives ngspice via a
-characterisation YAML file
-([`verification/cace/inverter.yaml`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/inverter/verification/cace/inverter.yaml))
-and produces Monte-Carlo, mismatch, and supply-sweep plots.
-
-```sh
-make sim-cace
-```
-
-Plots are written to
-[`verification/cace/results/inverter/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/inverter/verification/cace/).
-This step is mainly relevant for advanced designers that want to
-characterise the macro across PVT corners.
 
 ## DRC, LVS, and PEX
 
