@@ -434,9 +434,9 @@ window.Quarto = {
   </ul></li>
   <li><a href="#sec-exercises" id="toc-sec-exercises" class="nav-link" data-scroll-target="#sec-exercises"><span class="header-section-number">7</span> Additional Exercises</a>
   <ul class="collapse">
-  <li><a href="#exercise-1-from-8-bit-up-counter-to-16-bit-down-counter" id="toc-exercise-1-from-8-bit-up-counter-to-16-bit-down-counter" class="nav-link" data-scroll-target="#exercise-1-from-8-bit-up-counter-to-16-bit-down-counter"><span class="header-section-number">7.1</span> Exercise 1: From 8-bit Up-Counter to 16-bit Down-Counter</a></li>
-  <li><a href="#exercise-2-inverter-to-three-stage-ring-oscillator" id="toc-exercise-2-inverter-to-three-stage-ring-oscillator" class="nav-link" data-scroll-target="#exercise-2-inverter-to-three-stage-ring-oscillator"><span class="header-section-number">7.2</span> Exercise 2: Inverter to Three-Stage Ring Oscillator</a></li>
-  <li><a href="#exercise-3-update-pinout-and-floorplan-of-the-top-level" id="toc-exercise-3-update-pinout-and-floorplan-of-the-top-level" class="nav-link" data-scroll-target="#exercise-3-update-pinout-and-floorplan-of-the-top-level"><span class="header-section-number">7.3</span> Exercise 3: Update Pinout and Floorplan of the Top-Level</a></li>
+  <li><a href="#sec-exercise1" id="toc-sec-exercise1" class="nav-link" data-scroll-target="#sec-exercise1"><span class="header-section-number">7.1</span> Exercise 1: From 8-bit Up-Counter to 16-bit Down-Counter</a></li>
+  <li><a href="#sec-exercise2" id="toc-sec-exercise2" class="nav-link" data-scroll-target="#sec-exercise2"><span class="header-section-number">7.2</span> Exercise 2: Inverter to Three-Stage Ring Oscillator</a></li>
+  <li><a href="#sec-exercise3" id="toc-sec-exercise3" class="nav-link" data-scroll-target="#sec-exercise3"><span class="header-section-number">7.3</span> Exercise 3: Update Pinout and Floorplan of the Top-Level</a></li>
   </ul></li>
   <li><a href="#acknowledgements" id="toc-acknowledgements" class="nav-link" data-scroll-target="#acknowledgements"><span class="header-section-number">8</span> Acknowledgements</a></li>
   </ul>
@@ -1493,7 +1493,7 @@ Tip
 </div>
 <p>For mixed-signal sign-off, the <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/testbenches/xschem/"><code>testbenches/xschem/chip_top_tb_tran.sch</code></a> testbench exists and can be opened in Xschem the same way as for the counter or the inverter.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb27"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> testbenches/xschem</span>
-<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="ex">xschem</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="ex">xschem</span> chip_top_tb_tran.sch</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -1517,7 +1517,7 @@ Tip
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>Inspect the Xschem symbol of <code>chip_top</code> to see the connections defined in <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/rtl/chip_core.sv"><code>chip_core.sv</code></a> visually. Use <strong><code>E</code> / <code>Shift + E</code></strong> and <strong><code>I</code> / <code>Shift + I</code></strong> to descend into and back out of subcircuits and symbols.</p>
+<p>Inspect the Xschem symbol of <code>chip_top</code> to see the connections defined in <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/rtl/chip_core.sv"><code>chip_core.sv</code></a> visually. Use <strong><code>e</code> / <code>Ctrl + e</code></strong> and <strong><code>i</code> / <code>Ctrl + e</code></strong> to descend into and back out of subcircuits and symbols.</p>
 <p>Note that the SRAM is not in the schematic. IHP does not ship a SPICE model or an Xschem symbol for the <code>RM_IHPSG13_1P_1024x32_c2_bm_bist</code> macro, so it is excluded from the schematic-level simulation.</p>
 </div>
 </div>
@@ -1622,8 +1622,8 @@ Important
 <section id="sec-exercises" class="level1" data-number="7">
 <h1 data-number="7"><span class="header-section-number">7</span> Additional Exercises</h1>
 <p>The following exercises repeat the corresponding sections of this tutorial with a modification of the design.</p>
-<section id="exercise-1-from-8-bit-up-counter-to-16-bit-down-counter" class="level2" data-number="7.1">
-<h2 data-number="7.1" class="anchored" data-anchor-id="exercise-1-from-8-bit-up-counter-to-16-bit-down-counter"><span class="header-section-number">7.1</span> Exercise 1: From 8-bit Up-Counter to 16-bit Down-Counter</h2>
+<section id="sec-exercise1" class="level2" data-number="7.1">
+<h2 data-number="7.1" class="anchored" data-anchor-id="sec-exercise1"><span class="header-section-number">7.1</span> Exercise 1: From 8-bit Up-Counter to 16-bit Down-Counter</h2>
 <p>Repeat <a href="#sec-counter" class="quarto-xref">Section&nbsp;4</a> for a 16-bit synchronous down-counter that wraps from 0 back to <span class="math inline">\(2^{16} - 1\)</span>. The recommended steps are:</p>
 <ol type="1">
 <li>Update the RTL (<a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/counter/rtl/counter.sv"><code>counter.sv</code></a>, <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/counter/rtl/counter_top.sv"><code>counter_top.sv</code></a>, <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/counter/rtl/constants.sv"><code>constants.sv</code></a>). Change the bit-width and turn the increment block into a decrement, with wrap-around from 0 to <code>CTR_MAX</code>.</li>
@@ -1646,8 +1646,8 @@ Important
 </div>
 </div>
 </section>
-<section id="exercise-2-inverter-to-three-stage-ring-oscillator" class="level2" data-number="7.2">
-<h2 data-number="7.2" class="anchored" data-anchor-id="exercise-2-inverter-to-three-stage-ring-oscillator"><span class="header-section-number">7.2</span> Exercise 2: Inverter to Three-Stage Ring Oscillator</h2>
+<section id="sec-exercise2" class="level2" data-number="7.2">
+<h2 data-number="7.2" class="anchored" data-anchor-id="sec-exercise2"><span class="header-section-number">7.2</span> Exercise 2: Inverter to Three-Stage Ring Oscillator</h2>
 <p>Repeat <a href="#sec-inverter" class="quarto-xref">Section&nbsp;5</a> for a three-stage ring oscillator with an output buffer, derived from the existing quad inverter. The recommended steps are:</p>
 <ol type="1">
 <li>Copy the <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/inverter/">inverter</a> macro folder to a new location (for example <code>macros/ringosc/</code>), and adapt the Makefile names.</li>
@@ -1655,12 +1655,13 @@ Important
 <li>Update the symbol of the macro (<a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/inverter/schematic/xschem/inverter_top.sym"><code>schematic/xschem/inverter_top.sym</code></a>) and the PEX symbol (<a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/inverter/schematic/xschem/inverter_top_pex.sym"><code>schematic/xschem/inverter_top_pex.sym</code></a>) to expose a single output net, instead of <code>vin1..vin4</code> and <code>vout1..vout4</code>.</li>
 <li>Update the transient testbench (<a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/inverter/testbenches/xschem/inverter_top_tb_tran.sch"><code>testbenches/xschem/inverter_top_tb_tran.sch</code></a>) to measure the oscillation frequency. Delete the AC, DC, and standalone transient testbenches that are no longer relevant.</li>
 <li>Optionally (advanced), adapt the CACE <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/inverter/verification/cace/inverter.yaml"><code>inverter.yaml</code></a> to characterise the oscillation frequency across PVT.</li>
+<li>Update the layout in KLayout. The existing <code>inverter_top.klay.gds</code> can be used as a starting point, but the internal routing has to be modified to form the ring and the buffer stage. After editing, export a clean <code>ringosc_top.gds</code>.</li>
 <li>Re-run the verification chain, <code>make klayout-verify</code>, <code>make magic-verify</code>, and <code>make build-top</code>.</li>
 </ol>
 </section>
-<section id="exercise-3-update-pinout-and-floorplan-of-the-top-level" class="level2" data-number="7.3">
-<h2 data-number="7.3" class="anchored" data-anchor-id="exercise-3-update-pinout-and-floorplan-of-the-top-level"><span class="header-section-number">7.3</span> Exercise 3: Update Pinout and Floorplan of the Top-Level</h2>
-<p>Building on Exercises 1 and 2, swap <code>inverter2</code> for the ring oscillator, delete <code>counter2</code>, and connect the now 16-bit <code>counter1</code> to the freed-up south-side pads. The recommended steps are:</p>
+<section id="sec-exercise3" class="level2" data-number="7.3">
+<h2 data-number="7.3" class="anchored" data-anchor-id="sec-exercise3"><span class="header-section-number">7.3</span> Exercise 3: Update Pinout and Floorplan of the Top-Level</h2>
+<p>Building on <a href="#sec-exercise1" class="quarto-xref">Section&nbsp;7.1</a> and <a href="#sec-exercise2" class="quarto-xref">Section&nbsp;7.2</a>, swap <code>inverter2</code> for the ring oscillator, delete <code>counter2</code>, and connect the now 16-bit <code>counter1</code> to the freed-up south-side pads. The recommended steps are:</p>
 <ol type="1">
 <li>Replace <code>inverter2</code> with the ring oscillator macro in <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/rtl/chip_core.sv"><code>chip_core.sv</code></a>.</li>
 <li>Replace three of the four analog pads with VSS pads, and connect the ring oscillator’s output to the fourth analog pad.</li>
