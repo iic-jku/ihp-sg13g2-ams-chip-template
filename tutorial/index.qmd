@@ -27,7 +27,7 @@ This documentation is a Work in Progress.
 :::
 
 ::: {.callout-important}
-This tutorial and the underlying template repository requires the
+This tutorial and the underlying template repository require the
 [IIC-OSIC-TOOLS](https://github.com/iic-jku/IIC-OSIC-TOOLS) container with tag
 `2026.05` or later. All commands below assume that the container has been
 entered and that the working directory is the cloned repository root.
@@ -96,7 +96,7 @@ Windows.
 - [IIC-OSIC-TOOLS installation on Windows (from 37:20 to 45:15)](https://www.youtube.com/watch?v=AiFTwKdS2V4)
 :::
 
-On macOS the same Docker-based instructions apply. See the container's
+On macOS, the same Docker-based instructions apply. See the container's
 `README.md` for OS-specific notes.
 
 ## Selecting the IHP SG13G2 PDK
@@ -104,7 +104,7 @@ On macOS the same Docker-based instructions apply. See the container's
 The container can host several Open-PDKs (SkyWater 130,
 GlobalFoundries 180, IHP SG13G2). The active PDK is selected per
 `designs/` folder via a marker file called `.designinit`. Two options
-exist.
+are available.
 
 1. **Per-design marker file.** Copy a `.designinit` file referencing the
    IHP SG13G2 PDK into your `designs/` directory and restart the
@@ -259,9 +259,9 @@ See the [inverter README](https://github.com/iic-jku/ihp-sg13g2-ams-chip-templat
 
 The [`counter`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/counter/) macro is the digital reference macro
 of the template. It is a parameterisable synchronous up-counter with
-synchronous active-high reset, where the wrapper converts the chip's
-active-low reset internally. The default width is 8 bits, so the
-counter wraps from 255 back to 0.
+synchronous active-high reset; the top-level wrapper converts the chip's
+active-low reset to an active-high signal. The default width is 8 bits,
+so the counter wraps from 255 back to 0.
 
 ## Folder Structure of the Counter Macro
 
@@ -449,7 +449,7 @@ In Xschem, hold **`Shift`** and click the **Simulate** button in the
 schematic to launch the simulator. You can also hold **`Ctrl`** and click the **Simulate** arrow, followed by a **`Ctrl`**-click on the **Load waves** arrow to load the simulation results into the integrated waveform viewer.
 
 ::: {.callout-note}
-These arrows in Xschem are called "launchers" and are essentially a series of Tcl commands. Xschem can be completely controlled via Tcl, so repetitive tasks can be easily automated this way. Just select a launcher and press `q` (for properties) to see the underlying commands and modify them as needed.
+These arrows in Xschem are called "launchers" and are essentially a series of Tcl commands. Since Xschem is fully scriptable via Tcl, repetitive tasks can be easily automated. Select a launcher and press `q` (Properties) to inspect or modify its underlying Tcl commands.
 :::
 
 The same simulation can also be run
@@ -483,16 +483,6 @@ make all
 This calls `lint-verilog-all`, `sim-all`, `build-fpga`, and `build-top`
 in sequence. LVS and DRC are already covered by the LibreLane sign-off
 steps, so no extra verification target is needed for the counter.
-
-## Exercise: Modify the Counter
-
-Now it is time to get your hands dirty. Try to modify the counter design, for example, change the bitwidth, make a reverse counter, or add a count direction input to create an up/down counter. Change the reset behaviour to be asynchronous instead of synchronous (which is a popular way to implement a reset). Run the simulations and the flow again, and check the results.
-
-Try to make small steps and re-check the results after each change. Do not forget to lint your SystemVerilog code with `make lint-verilog` after every change, and to run the testbenches to check if the behaviour is still correct. If you change the interface of the counter (for example by adding a count direction input), make sure to update the testbenches accordingly.
-
-::: {.callout-note}
-Our SystemVerilog examples largely follow the this [coding style](https://github.com/lowRISC/style-guides/blob/master/VerilogCodingStyle.md). The digital example is kept very simple on purpose, but feel free to apply more advanced techniques and constructs as you see fit. Just make sure to lint your code and check the testbenches after every change.
-:::
 
 # Inverter Macro Implementation {#sec-inverter}
 
@@ -1007,10 +997,10 @@ files, it does not rebuild or re-verify the chip.
 The following exercises repeat the corresponding sections of this
 tutorial with a modification of the design.
 
-## Exercise 1, From 8-bit Up-Counter to 16-bit Down-Counter
+## Exercise 1: From 8-bit Up-Counter to 16-bit Down-Counter
 
 Repeat @sec-counter for a 16-bit synchronous down-counter that wraps
-from 0 back to `2^16 - 1`. The recommended steps are:
+from 0 back to $2^{16} - 1$. The recommended steps are:
 
 1. Update the RTL ([`counter.sv`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/counter/rtl/counter.sv),
    [`counter_top.sv`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/counter/rtl/counter_top.sv),
@@ -1037,7 +1027,7 @@ toggles per transition). The same testbench infrastructure can be
 reused with small changes to the self-check expectations.
 :::
 
-## Exercise 2, Inverter to Three-Stage Ring Oscillator
+## Exercise 2: Inverter to Three-Stage Ring Oscillator
 
 Repeat @sec-inverter for a three-stage ring oscillator with an output
 buffer, derived from the existing quad inverter. The recommended steps
@@ -1059,13 +1049,13 @@ are:
    ([`testbenches/xschem/inverter_top_tb_tran.sch`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/inverter/testbenches/xschem/inverter_top_tb_tran.sch))
    to measure the oscillation frequency. Delete the AC, DC, and
    standalone transient testbenches that are no longer relevant.
-5. Optional (advanced), adapt the CACE
+5. Optionally (advanced), adapt the CACE
    [`inverter.yaml`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/inverter/verification/cace/inverter.yaml)
    to characterise the oscillation frequency across PVT.
 6. Re-run the verification chain, `make klayout-verify`, `make
    magic-verify`, and `make build-top`.
 
-## Exercise 3, Update Pinout and Floorplan of the Top-Level
+## Exercise 3: Update Pinout and Floorplan of the Top-Level
 
 Building on Exercises 1 and 2, swap `inverter2` for the ring
 oscillator, delete `counter2`, and connect the now 16-bit `counter1`
