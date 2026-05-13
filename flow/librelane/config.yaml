@@ -73,56 +73,56 @@ PRIMARY_GDSII_STREAMOUT_TOOL: klayout
 #   - PAD_NORTH : left   to right
 #   - PAD_SOUTH : left   to right
 # Pad-cell instance names follow the generate-block hierarchy in
-# rtl/chip_top.sv (e.g. "outputs[16].output_pad"). 
+# rtl/chip_top.sv (e.g. "g_outputs[16].output_pad"). 
 # See doc/pinout.md for the full pin table.
 # ================================================================
 
 # West (bottom to top): SRAM_out, GND, VDD, IOGND, IOVDD, enable, rst_n, clk
 PAD_WEST: [
-    "outputs\\[16\\].output_pad",       # output_PAD[16] = sram_0_out
-    "vss_pads\\[0\\].vss_pad",          # VSS  (core ground)
-    "vdd_pads\\[0\\].vdd_pad",          # VDD  (1.5 V core supply)
-    "iovss_pads\\[0\\].iovss_pad",      # IOVSS (3.3 V I/O ground)
-    "iovdd_pads\\[0\\].iovdd_pad",      # IOVDD (3.3 V I/O supply)
-    "inputs\\[0\\].input_pad",          # input_PAD[0]   = enable
+    "g_outputs\\[16\\].output_pad",     # output_PAD[16] = sram_0_out
+    "g_vss_pads\\[0\\].vss_pad",        # VSS  (core ground)
+    "g_vdd_pads\\[0\\].vdd_pad",        # VDD  (1.5 V core supply)
+    "g_iovss_pads\\[0\\].iovss_pad",    # IOVSS (3.3 V I/O ground)
+    "g_iovdd_pads\\[0\\].iovdd_pad",    # IOVDD (3.3 V I/O supply)
+    "g_inputs\\[0\\].input_pad",        # input_PAD[0]   = enable
     rst_n_pad,                          # rst_n
     clk_pad                             # clk
 ]
 
 # North (left to right): counter1_value[3:0], counter1_value[7:4] / inv1.vin bidir
 PAD_NORTH: [
-    "outputs\\[0\\].output_pad",        # output_PAD[0]  = counter1_value[0] (LSB)
-    "outputs\\[1\\].output_pad",        # output_PAD[1]  = counter1_value[1]
-    "outputs\\[2\\].output_pad",        # output_PAD[2]  = counter1_value[2]
-    "outputs\\[3\\].output_pad",        # output_PAD[3]  = counter1_value[3]
-    "bidirs\\[0\\].bidir_pad",          # bidir_PAD[0]   = counter1_value[4] / inv1_din1
-    "bidirs\\[1\\].bidir_pad",          # bidir_PAD[1]   = counter1_value[5] / inv1_din2
-    "bidirs\\[2\\].bidir_pad",          # bidir_PAD[2]   = counter1_value[6] / inv1_din3
-    "bidirs\\[3\\].bidir_pad"           # bidir_PAD[3]   = counter1_value[7] / inv1_din4
+    "g_outputs\\[0\\].output_pad",      # output_PAD[0]  = counter1_value[0] (LSB)
+    "g_outputs\\[1\\].output_pad",      # output_PAD[1]  = counter1_value[1]
+    "g_outputs\\[2\\].output_pad",      # output_PAD[2]  = counter1_value[2]
+    "g_outputs\\[3\\].output_pad",      # output_PAD[3]  = counter1_value[3]
+    "g_bidirs\\[0\\].bidir_pad",        # bidir_PAD[0]   = counter1_value[4] / inv1_din1
+    "g_bidirs\\[1\\].bidir_pad",        # bidir_PAD[1]   = counter1_value[5] / inv1_din2
+    "g_bidirs\\[2\\].bidir_pad",        # bidir_PAD[2]   = counter1_value[6] / inv1_din3
+    "g_bidirs\\[3\\].bidir_pad"         # bidir_PAD[3]   = counter1_value[7] / inv1_din4
 ]
 
 # South (left to right): counter2_value[7:0]
 PAD_SOUTH: [
-    "outputs\\[4\\].output_pad",        # output_PAD[4]  = counter2_value[0] (LSB)
-    "outputs\\[5\\].output_pad",        # output_PAD[5]  = counter2_value[1]
-    "outputs\\[6\\].output_pad",        # output_PAD[6]  = counter2_value[2]
-    "outputs\\[7\\].output_pad",        # output_PAD[7]  = counter2_value[3]
-    "outputs\\[8\\].output_pad",        # output_PAD[8]  = counter2_value[4]
-    "outputs\\[9\\].output_pad",        # output_PAD[9]  = counter2_value[5]
-    "outputs\\[10\\].output_pad",       # output_PAD[10] = counter2_value[6]
-    "outputs\\[11\\].output_pad"        # output_PAD[11] = counter2_value[7]
+    "g_outputs\\[4\\].output_pad",      # output_PAD[4]  = counter2_value[0] (LSB)
+    "g_outputs\\[5\\].output_pad",      # output_PAD[5]  = counter2_value[1]
+    "g_outputs\\[6\\].output_pad",      # output_PAD[6]  = counter2_value[2]
+    "g_outputs\\[7\\].output_pad",      # output_PAD[7]  = counter2_value[3]
+    "g_outputs\\[8\\].output_pad",      # output_PAD[8]  = counter2_value[4]
+    "g_outputs\\[9\\].output_pad",      # output_PAD[9]  = counter2_value[5]
+    "g_outputs\\[10\\].output_pad",     # output_PAD[10] = counter2_value[6]
+    "g_outputs\\[11\\].output_pad"      # output_PAD[11] = counter2_value[7]
 ]
 
 # East (bottom to top): inverter2 analog ch1/ch2 (4 pads), inverter1 digital out (4 pads)
 PAD_EAST: [
-    "analogs\\[0\\].analog_pad",        # analog_PAD[0]  = inv2_vin1  (via padres)
-    "analogs\\[1\\].analog_pad",        # analog_PAD[1]  = inv2_vin2  (via padres)
-    "analogs\\[2\\].analog_pad",        # analog_PAD[2]  = inv2_vout1 (via padbare)
-    "analogs\\[3\\].analog_pad",        # analog_PAD[3]  = inv2_vout2 (via padbare)
-    "outputs\\[12\\].output_pad",       # output_PAD[12] = inv1_dout1
-    "outputs\\[13\\].output_pad",       # output_PAD[13] = inv1_dout2
-    "outputs\\[14\\].output_pad",       # output_PAD[14] = inv1_dout3
-    "outputs\\[15\\].output_pad"        # output_PAD[15] = inv1_dout4
+    "g_analogs\\[0\\].analog_pad",      # analog_PAD[0]  = inv2_vin1  (via padres)
+    "g_analogs\\[1\\].analog_pad",      # analog_PAD[1]  = inv2_vin2  (via padres)
+    "g_analogs\\[2\\].analog_pad",      # analog_PAD[2]  = inv2_vout1 (via padbare)
+    "g_analogs\\[3\\].analog_pad",      # analog_PAD[3]  = inv2_vout2 (via padbare)
+    "g_outputs\\[12\\].output_pad",     # output_PAD[12] = inv1_dout1
+    "g_outputs\\[13\\].output_pad",     # output_PAD[13] = inv1_dout2
+    "g_outputs\\[14\\].output_pad",     # output_PAD[14] = inv1_dout3
+    "g_outputs\\[15\\].output_pad"      # output_PAD[15] = inv1_dout4
 ]
 
 # SDC files
