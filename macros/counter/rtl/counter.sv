@@ -11,20 +11,20 @@ module counter #(
   parameter int unsigned       CTR_BW  = 8,
   parameter logic [CTR_BW-1:0] CTR_MAX = 2**CTR_BW - 1
 )(
-  input  logic clock_i,
-  input  logic reset_i,
-  input  logic enable_i,
+  input logic               clock_i,
+  input logic               reset_i,
+  input logic               enable_i,
 
   output logic [CTR_BW-1:0] counter_value_o
 );
 
-  // Counter Implementation
+  // Counter implementation
   always_ff @(posedge clock_i) begin
     if (reset_i) begin
-      // synchronous reset clears the counter value
+      // Synchronous reset clears the counter value
       counter_value_o <= '0;
     end else if (enable_i) begin
-      // increment the counter value by 1, wrap around at CTR_MAX
+      // Increment the counter value by 1, wrap around at CTR_MAX
       if (counter_value_o == CTR_MAX) begin
         counter_value_o <= '0;
       end else begin
