@@ -530,11 +530,11 @@ Four testbenches are available in
 
 - [`inverter_tb_tran.sch`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/inverter/testbenches/xschem/inverter_tb_tran.sch), single-channel transient response,
 - [`inverter_tb_ac_ol.sch`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/inverter/testbenches/xschem/inverter_tb_ac_ol.sch), open-loop AC characterisation,
-- [`inverter_tb_Vout.sch`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/inverter/testbenches/xschem/inverter_tb_Vout.sch), DC output sweep,
+- [`inverter_tb_Vout.sch`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/inverter/testbenches/xschem/inverter_tb_Vout.sch), DC input sweep,
 - [`inverter_top_tb_tran.sch`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/inverter/testbenches/xschem/inverter_top_tb_tran.sch), top-level transient on `inverter_top`.
 
-Load a testbench in Xschem, then hold **`Shift`** and press the
-simulation key (the lightning-bolt button) in the schematic to launch
+Load a testbench in Xschem, then hold **`Ctrl`** and press the
+**Simulate** arrow in the schematic to launch
 the simulator manually.
 
 ::: {.callout-note appearance="simple"}
@@ -544,10 +544,10 @@ the simulator manually.
 ::: {.callout-tip}
 ## Useful Xschem keybindings
 
-- Mark a symbol and press **`E`** to descend into the underlying
-  circuit, then **`Shift` + `E`** to go back up.
-- Mark a symbol and press **`I`** to descend into the symbol drawing,
-  then **`Shift` + `I`** to go back up.
+- Mark a symbol and press **`e`** to descend into the underlying
+  circuit, then **`Ctrl` + `e`** to go back up.
+- Mark a symbol and press **`i`** to descend into the symbol drawing,
+  then **`Ctrl` + `e`** to go back up.
 
 This is the recommended way to inspect or modify the underlying
 circuit and the graphical symbol of any device.
