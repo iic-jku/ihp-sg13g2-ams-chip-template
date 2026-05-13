@@ -35,12 +35,11 @@ module chip_core #(
     logic enable;
     assign enable = input_in[0];
 
-    // Inverter 1
-    logic inv1_din1, inv1_din2, inv1_din3, inv1_din4;
-    assign inv1_din1 = bidir_in[0];
-    assign inv1_din2 = bidir_in[1];
-    assign inv1_din3 = bidir_in[2];
-    assign inv1_din4 = bidir_in[3];
+    // Inverter 1 (vin* are inout ports on inverter_top -> must be wire)
+    wire inv1_din1 = bidir_in[0];
+    wire inv1_din2 = bidir_in[1];
+    wire inv1_din3 = bidir_in[2];
+    wire inv1_din4 = bidir_in[3];
 
     // Inverter 2 (analog inputs tapped from the pad ring)
     wire inv2_vin1 = analog_padres[0];

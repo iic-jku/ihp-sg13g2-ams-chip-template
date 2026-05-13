@@ -728,19 +728,19 @@ change when the pinout changes.
 ```{.systemverilog filename="rtl/chip_top.sv (excerpt)"}
 module chip_top #(
     // Power / ground pads for digital core / analog front-end
-    parameter NUM_VDD_PADS    = 1,
-    parameter NUM_VSS_PADS    = 1,
+    parameter int unsigned NUM_VDD_PADS    = 1,
+    parameter int unsigned NUM_VSS_PADS    = 1,
 
-    // Power/ground pads for I/O
-    parameter NUM_IOVDD_PADS  = 1,
-    parameter NUM_IOVSS_PADS  = 1,
+    // Power / ground pads for I/O
+    parameter int unsigned NUM_IOVDD_PADS  = 1,
+    parameter int unsigned NUM_IOVSS_PADS  = 1,
 
     // Signal pads
-    parameter NUM_INPUT_PADS  = 1,  // excluding clock and reset pads
-    parameter NUM_OUTPUT_PADS = 17,
-    parameter NUM_BIDIR_PADS  = 4,
-    parameter NUM_ANALOG_PADS = 4
-)( ... );
+    parameter int unsigned NUM_INPUT_PADS  = 1,  // excluding clock and reset pads
+    parameter int unsigned NUM_OUTPUT_PADS = 17,
+    parameter int unsigned NUM_BIDIR_PADS  = 4,
+    parameter int unsigned NUM_ANALOG_PADS = 4
+) ( ... );
 ```
 
 The body of the module is mostly mechanical. One `generate` block per
@@ -762,22 +762,17 @@ file are naturally the bit-to-role mapping documented in
 
 ```{.systemverilog filename="rtl/chip_core.sv (excerpt)"}
 // Counter 1
-assign output_out[0]  = counter1_value[0];
-assign output_out[1]  = counter1_value[1];
-assign output_out[2]  = counter1_value[2];
-assign output_out[3]  = counter1_value[3];
+assign output_out[3:0]  = counter1_value[3:0];
 
 // Counter 2
-assign output_out[4]  = counter2_value[0];
-// ...
-assign output_out[11] = counter2_value[7];
+assign output_out[11:4] = counter2_value;
 
 // Inverter 1 (digital)
-assign output_out[12] = inv1_dout1;
+assign output_out[12]   = inv1_dout1;
 // ...
 
 // SRAM parity
-assign output_out[16] = ^sram_0_out;
+assign output_out[16]   = ^sram_0_out;
 ```
 
 ## Understanding `config.yaml`
