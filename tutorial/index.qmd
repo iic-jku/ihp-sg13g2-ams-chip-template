@@ -991,7 +991,7 @@ files, it does not rebuild or re-verify the chip.
 The following exercises repeat the corresponding sections of this
 tutorial with a modification of the design.
 
-## Exercise 1: From 8-bit Up-Counter to 16-bit Down-Counter
+## Exercise 1: From 8-bit Up-Counter to 16-bit Down-Counter {#sec-exercise1}
 
 Repeat @sec-counter for a 16-bit synchronous down-counter that wraps
 from 0 back to $2^{16} - 1$. The recommended steps are:
@@ -1021,7 +1021,7 @@ toggles per transition). The same testbench infrastructure can be
 reused with small changes to the self-check expectations.
 :::
 
-## Exercise 2: Inverter to Three-Stage Ring Oscillator
+## Exercise 2: Inverter to Three-Stage Ring Oscillator {#sec-exercise2}
 
 Repeat @sec-inverter for a three-stage ring oscillator with an output
 buffer, derived from the existing quad inverter. The recommended steps
@@ -1049,9 +1049,9 @@ are:
 6. Re-run the verification chain, `make klayout-verify`, `make
    magic-verify`, and `make build-top`.
 
-## Exercise 3: Update Pinout and Floorplan of the Top-Level
+## Exercise 3: Update Pinout and Floorplan of the Top-Level {#sec-exercise3}
 
-Building on Exercises 1 and 2, swap `inverter2` for the ring
+Building on @sec-exercise1 and @sec-exercise2, swap `inverter2` for the ring
 oscillator, delete `counter2`, and connect the now 16-bit `counter1`
 to the freed-up south-side pads. The recommended steps are:
 
