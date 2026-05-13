@@ -318,7 +318,7 @@ exposed as `` `define `` macros instead of a SystemVerilog `package`,
 because Yosys 0.64 cannot parse `import pkg::*` in a module header.
 
 ::: {.callout-note}
-Open the three RTL files and follow the counter through reset, hold,
+Open the three RTL files (using `gedit` or `vim`) and follow the counter through reset, hold,
 increment, and wrap-around. Check why the constants are
 `` `define ``-style macros and not `package` parameters.
 :::
