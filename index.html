@@ -117,6 +117,35 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   }
 }</script>
 
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 </head>
 
@@ -368,6 +397,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#viewing-the-macro" id="toc-viewing-the-macro" class="nav-link" data-scroll-target="#viewing-the-macro"><span class="header-section-number">4.6</span> Viewing the Macro</a></li>
   <li><a href="#gate-level-mixed-signal-simulation-with-xschem" id="toc-gate-level-mixed-signal-simulation-with-xschem" class="nav-link" data-scroll-target="#gate-level-mixed-signal-simulation-with-xschem"><span class="header-section-number">4.7</span> Gate-Level Mixed-Signal Simulation with Xschem</a></li>
   <li><a href="#build-and-verify-everything" id="toc-build-and-verify-everything" class="nav-link" data-scroll-target="#build-and-verify-everything"><span class="header-section-number">4.8</span> Build and Verify Everything</a></li>
+  <li><a href="#exercise-modify-the-counter" id="toc-exercise-modify-the-counter" class="nav-link" data-scroll-target="#exercise-modify-the-counter"><span class="header-section-number">4.9</span> Exercise: Modify the Counter</a></li>
   </ul></li>
   <li><a href="#sec-inverter" id="toc-sec-inverter" class="nav-link" data-scroll-target="#sec-inverter"><span class="header-section-number">5</span> Inverter Macro Implementation</a>
   <ul class="collapse">
@@ -921,7 +951,7 @@ Tip
 <p>The macro is split into a parameterised counter and a thin top-level wrapper that converts the chip’s active-low reset to the internal active-high reset of the counter.</p>
 <section id="counter.sv" class="level3" data-number="4.2.1">
 <h3 data-number="4.2.1" class="anchored" data-anchor-id="counter.sv"><span class="header-section-number">4.2.1</span> <code>counter.sv</code></h3>
-<p>The arithmetic is implemented in <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/counter/rtl/counter.sv"><code>counter.sv</code></a>. It is an N-bit synchronous up-counter with reset, enable, and wrap at <code>CTR_MAX</code>.</p>
+<p>The arithmetic is implemented in <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/counter/rtl/counter.sv"><code>counter.sv</code></a>. It is an <span class="math inline">\(N\)</span>-bit synchronous up-counter with reset, enable, and wrap at <code>CTR_MAX</code>.</p>
 <div class="code-with-filename">
 <div class="code-with-filename-file">
 <pre><strong>macros/counter/rtl/counter.sv</strong></pre>
@@ -1031,7 +1061,7 @@ Note
 </section>
 <section id="linting" class="level2" data-number="4.3">
 <h2 data-number="4.3" class="anchored" data-anchor-id="linting"><span class="header-section-number">4.3</span> Linting</h2>
-<p>Linting is done with <a href="https://www.veripool.org/verilator/">Verilator</a>.</p>
+<p><a href="https://en.wikipedia.org/wiki/Lint_(software)">Linting</a> is done with <a href="https://www.veripool.org/verilator/">Verilator</a>.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> macros/counter</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> lint-verilog                <span class="co"># lint the full counter_top design</span></span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> lint-verilog CELL=counter   <span class="co"># lint only the standalone counter</span></span>
@@ -1046,6 +1076,19 @@ Note
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> sim-rtl-verilog</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> sim-view-verilog                      <span class="co"># open in GTKWave (default)</span></span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> sim-view-verilog WAVEFORM_VIEWER=surfer</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Important
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Surfer is currently not working on macOS, and might not work on Windows/WSL. If you want to use Surfer, please run the container on Linux.</p>
+</div>
+</div>
 <div class="callout callout-style-simple callout-note">
 <div class="callout-body d-flex">
 <div class="callout-icon-container">
@@ -1118,8 +1161,22 @@ Tip
 <p>The conversion pipeline is <code>.nl.v → .vp → .spice → .xspice</code>, followed by a pin-reorder pass to match the Xschem symbol (<a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/counter/schematic/xschem/"><code>schematic/xschem/counter_top.sym</code></a>).</p>
 <p>The Xschem testbench (<a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/counter/testbenches/xschem/"><code>counter_top_tb_tran.sch</code></a>) can be opened and simulated interactively.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> macros/counter/testbenches/xschem</span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="ex">xschem</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>In Xschem, hold <strong><code>Shift</code></strong> and press the simulation key in the schematic to launch the simulator. The same simulation can also be run non-interactively from the Makefile, and the result can be plotted from Python.</p>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="ex">xschem</span> counter_top_tb_tran.sch</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>In Xschem, hold <strong><code>Shift</code></strong> and click the <strong>Simulate</strong> button in the schematic to launch the simulator. You can also hold <strong><code>Ctrl</code></strong> and click the <strong>Simulate</strong> arrow, followed by a <strong><code>Ctrl</code></strong>-click on the <strong>Load waves</strong> arrow to load the simulation results into the integrated waveform viewer.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>These arrows in Xschem are called “launchers” and are essentially a series of Tcl commands. Xschem can be completely controlled via Tcl, so repetitive tasks can be easily automated this way. Just select a launcher and press <code>q</code> (for properties) to see the underlying commands and modify them as needed.</p>
+</div>
+</div>
+<p>The same simulation can also be run non-interactively from the Makefile, and the result can be plotted from Python.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> sim-gl-xschem</span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> sim-view-xschem</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="callout callout-style-simple callout-note">
@@ -1148,6 +1205,24 @@ Tip
 <p>The full lint, simulation, and build chain is run with the following command.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> all</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>This calls <code>lint-verilog-all</code>, <code>sim-all</code>, <code>build-fpga</code>, and <code>build-top</code> in sequence. LVS and DRC are already covered by the LibreLane sign-off steps, so no extra verification target is needed for the counter.</p>
+</section>
+<section id="exercise-modify-the-counter" class="level2" data-number="4.9">
+<h2 data-number="4.9" class="anchored" data-anchor-id="exercise-modify-the-counter"><span class="header-section-number">4.9</span> Exercise: Modify the Counter</h2>
+<p>Now it is time to get your hands dirty. Try to modify the counter design, for example, change the bitwidth, make a reverse counter, or add a count direction input to create an up/down counter. Change the reset behaviour to be asynchronous instead of synchronous (which is a popular way to implement a reset). Run the simulations and the flow again, and check the results.</p>
+<p>Try to make small steps and re-check the results after each change. Do not forget to lint your SystemVerilog code with <code>make lint-verilog</code> after every change, and to run the testbenches to check if the behaviour is still correct. If you change the interface of the counter (for example by adding a count direction input), make sure to update the testbenches accordingly.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Our SystemVerilog examples largely follow the this <a href="https://github.com/lowRISC/style-guides/blob/master/VerilogCodingStyle.md">coding style</a>. The digital example is kept very simple on purpose, but feel free to apply more advanced techniques and constructs as you see fit. Just make sure to lint your code and check the testbenches after every change.</p>
+</div>
+</div>
 </section>
 </section>
 <section id="sec-inverter" class="level1" data-number="5">
