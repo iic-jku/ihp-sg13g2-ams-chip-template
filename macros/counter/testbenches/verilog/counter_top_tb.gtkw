@@ -45,8 +45,8 @@
 @200
 -CONSTANTS
 @24
-counter_top_tb.dut_counter.COUNTER_MAX
-counter_top_tb.dut_counter.COUNTER_BITWIDTH
+counter_top_tb.dut_counter.CTR_MAX
+counter_top_tb.dut_counter.CTR_BW
 @200
 -INPUTS
 @28

@@ -77,13 +77,13 @@ chip-wide enable signal. It gates:
 ### Counters
 
 `counter1` and `counter2` are two instances of the `counter_top` macro
-(8-bit, default `COUNTER_MAX = 255`). They share `clk_PAD`, `rst_n_PAD` and
+(8-bit, default `CTR_MAX = 255`). They share `clk_PAD`, `rst_n_PAD` and
 `input_PAD[0]`:
 
 - `rst_n = 0` → both counters reset synchronously to 0.
 - `enable = 0` → both counters hold their current value.
 - `enable = 1` → both counters increment by one on every rising clock edge.
-- On reaching `COUNTER_MAX`, the next clock edge wraps the counter back to 0.
+- On reaching `CTR_MAX`, the next clock edge wraps the counter back to 0.
 
 `counter1_value[3:0]` drives `output_PAD[3:0]` (north LSB nibble).
 `counter1_value[7:4]` drives `bidir_PAD[3:0]` (north MSB nibble, in output

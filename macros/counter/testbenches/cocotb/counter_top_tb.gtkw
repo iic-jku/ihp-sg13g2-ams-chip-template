@@ -44,8 +44,8 @@
 @201
 -CONSTANTS
 @24
-counter_top.COUNTER_MAX
-counter_top.COUNTER_BITWIDTH
+counter_top.CTR_MAX
+counter_top.CTR_BW
 @200
 -INPUTS
 @28

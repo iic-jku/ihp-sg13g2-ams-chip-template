@@ -33,10 +33,10 @@ def _read_define(name: str) -> str:
     return m.group(1)
 
 
-COUNTER_MAX      = int(_read_define("COUNTER_MAX_DEFAULT"))
+CTR_MAX      = int(_read_define("COUNTER_MAX_DEFAULT"))
 CLK_FREQ_HZ      = float(_read_define("CLK_FREQ_DEFAULT"))
 CLK_FREQ_MHZ     = int(CLK_FREQ_HZ / 1e6)
-COUNTER_BITWIDTH = (COUNTER_MAX + 1).bit_length() if COUNTER_MAX > 0 else 1
+CTR_BW = (CTR_MAX + 1).bit_length() if CTR_MAX > 0 else 1
 
 
 async def start_clock(clock, freq=CLK_FREQ_MHZ):
@@ -108,7 +108,7 @@ async def test_increments_when_enabled(dut):
 
     # Sample on a few subsequent clock edges and verify monotonic +1
     expected = 1
-    for _ in range(min(8, COUNTER_MAX + 1)):
+    for _ in range(min(8, CTR_MAX + 1)):
         await RisingEdge(dut.clock_i)
         await Timer(1, "ns")  # let combinational settle past edge
         got = int(dut.counter_value_o.value)
@@ -120,7 +120,7 @@ async def test_increments_when_enabled(dut):
 
 @cocotb.test()
 async def test_wraps_at_max(dut):
-    """Counter must wrap from COUNTER_MAX back to 0."""
+    """Counter must wrap from CTR_MAX back to 0."""
     logger = logging.getLogger("counter_tb")
 
     logger.info("Startup sequence...")
@@ -128,23 +128,23 @@ async def test_wraps_at_max(dut):
 
     dut.enable_i.value = 1
 
-    # Run long enough to hit COUNTER_MAX and wrap
+    # Run long enough to hit CTR_MAX and wrap
     saw_max  = False
     saw_wrap = False
     prev     = 0
-    for _ in range(2 * (COUNTER_MAX + 1) + 4):
+    for _ in range(2 * (CTR_MAX + 1) + 4):
         await RisingEdge(dut.clock_i)
         await Timer(1, "ns")
         cur = int(dut.counter_value_o.value)
-        if cur == COUNTER_MAX:
+        if cur == CTR_MAX:
             saw_max = True
-        if saw_max and prev == COUNTER_MAX and cur == 0:
+        if saw_max and prev == CTR_MAX and cur == 0:
             saw_wrap = True
             break
         prev = cur
 
-    assert saw_max,  "counter never reached COUNTER_MAX"
-    assert saw_wrap, "counter did not wrap from COUNTER_MAX to 0"
+    assert saw_max,  "counter never reached CTR_MAX"
+    assert saw_wrap, "counter did not wrap from CTR_MAX to 0"
 
     logger.info("Done!")
 

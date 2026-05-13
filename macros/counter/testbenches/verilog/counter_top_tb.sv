@@ -7,8 +7,8 @@
 module counter_top_tb;
   // Constants
   parameter real CLK_FREQ         = `CLK_FREQ_DEFAULT;
-  parameter int  COUNTER_MAX      = `COUNTER_MAX_DEFAULT;
-  parameter int  COUNTER_BITWIDTH = $clog2(COUNTER_MAX + 1);
+  parameter int  CTR_MAX = `COUNTER_MAX_DEFAULT;
+  parameter int  CTR_BW  = $clog2(CTR_MAX + 1);
 
   // Inputs
   reg clock   = 0;
@@ -16,11 +16,11 @@ module counter_top_tb;
   reg enable  = 0;
 
   // Outputs
-  wire [COUNTER_BITWIDTH-1:0] counter_value;
+  wire [CTR_BW-1:0] counter_value;
 
   // DUT
   counter_top #(
-    .COUNTER_MAX(COUNTER_MAX)
+    .CTR_MAX(CTR_MAX)
   ) dut_counter (
     .clock_i(clock),
     .reset_n_i(reset_n),
@@ -47,21 +47,21 @@ module counter_top_tb;
     reset_n = 1;
     #(1e9 / CLK_FREQ);
 
-    if (counter_value !== {COUNTER_BITWIDTH{1'b0}}) begin
+    if (counter_value !== {CTR_BW{1'b0}}) begin
       $display("FAIL: counter not zero after reset (got %0d)", counter_value);
       $fatal;
     end
 
     // Hold disabled for a few cycles, value must not change
     #(5 * (1e9 / CLK_FREQ));
-    if (counter_value !== {COUNTER_BITWIDTH{1'b0}}) begin
+    if (counter_value !== {CTR_BW{1'b0}}) begin
       $display("FAIL: counter changed while disabled (got %0d)", counter_value);
       $fatal;
     end
 
     // Enable counter, run for one full wrap + a few extra cycles
     enable = 1;
-    #((COUNTER_MAX + 5) * (1e9 / CLK_FREQ));
+    #((CTR_MAX + 5) * (1e9 / CLK_FREQ));
     enable = 0;
 
     // Disabled hold check

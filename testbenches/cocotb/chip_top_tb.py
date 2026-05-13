@@ -60,8 +60,8 @@ hdl_toplevel = "chip_top"
 # Main clock frequency. Matches CLOCK_PERIOD = 17 ns in flow/librelane/config.yaml.
 CPU_CLK_FREQ_MHZ = 56
 
-# Counter wraps from 255 -> 0 (8-bit, default COUNTER_MAX).
-COUNTER_MAX = 255
+# Counter wraps from 255 -> 0 (8-bit, default CTR_MAX).
+CTR_MAX = 255
 
 
 # ----------------------------------------------------------------------
@@ -203,7 +203,7 @@ async def test_counters_increment(dut):
 
 @cocotb.test()
 async def test_counter_wraps(dut):
-    """Counters must wrap from COUNTER_MAX back to 0."""
+    """Counters must wrap from CTR_MAX back to 0."""
     logger = logging.getLogger("chip_top_tb")
     logger.info("Startup sequence...")
     await start_up(dut)
@@ -213,19 +213,19 @@ async def test_counter_wraps(dut):
     saw_max  = False
     saw_wrap = False
     prev     = 0
-    for _ in range(2 * (COUNTER_MAX + 1) + 4):
+    for _ in range(2 * (CTR_MAX + 1) + 4):
         await RisingEdge(dut.clk_PAD)
         await Timer(1, "ns")
         cur = _counter2(dut)
-        if cur == COUNTER_MAX:
+        if cur == CTR_MAX:
             saw_max = True
-        if saw_max and prev == COUNTER_MAX and cur == 0:
+        if saw_max and prev == CTR_MAX and cur == 0:
             saw_wrap = True
             break
         prev = cur
 
-    assert saw_max,  "counter2 never reached COUNTER_MAX"
-    assert saw_wrap, "counter2 did not wrap from COUNTER_MAX to 0"
+    assert saw_max,  "counter2 never reached CTR_MAX"
+    assert saw_wrap, "counter2 did not wrap from CTR_MAX to 0"
     logger.info("Done!")
 
 

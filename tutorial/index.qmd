@@ -296,7 +296,7 @@ active-high reset of the counter.
 
 The arithmetic is implemented in
 [`counter.sv`](../macros/counter/rtl/counter.sv). It is an N-bit
-synchronous up-counter with reset, enable, and wrap at `COUNTER_MAX`.
+synchronous up-counter with reset, enable, and wrap at `CTR_MAX`.
 
 ```{.systemverilog filename="macros/counter/rtl/counter.sv"}
 module counter #(
@@ -1044,7 +1044,7 @@ from 0 back to `2^16 - 1`. The recommended steps are:
    [`counter_top.sv`](../macros/counter/rtl/counter_top.sv),
    [`constants.sv`](../macros/counter/rtl/constants.sv)). Change the
    bit-width and turn the increment block into a decrement, with
-   wrap-around from 0 to `COUNTER_MAX`.
+   wrap-around from 0 to `CTR_MAX`.
 2. Update the testbenches in
    [`testbenches/verilog/`](../macros/counter/testbenches/verilog/),
    [`testbenches/cocotb/`](../macros/counter/testbenches/cocotb/), and

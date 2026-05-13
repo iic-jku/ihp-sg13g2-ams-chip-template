@@ -8,14 +8,14 @@
 `define __COUNTER_TOP__
 
 module counter_top #(
-  parameter  int unsigned COUNTER_MAX      = `COUNTER_MAX_DEFAULT,
-  localparam int unsigned COUNTER_BITWIDTH = $clog2(COUNTER_MAX + 1)
+  parameter  int unsigned CTR_MAX = `COUNTER_MAX_DEFAULT,
+  localparam int unsigned CTR_BW  = $clog2(CTR_MAX + 1)
 )(
-  input  logic clock_i,
-  input  logic reset_n_i,  // Active-low reset ('1' not pressed, '0' pressed)
-  input  logic enable_i,
+  input logic               clock_i,
+  input logic               reset_n_i,
+  input logic               enable_i,
 
-  output logic [COUNTER_BITWIDTH-1:0] counter_value_o
+  output logic [CTR_BW-1:0] counter_value_o
 );
 
   // Internal active-high reset (wrapper handles polarity conversion)
@@ -24,8 +24,8 @@ module counter_top #(
 
   // Embed Counter
   counter #(
-    .CTR_BW(COUNTER_BITWIDTH),
-    .CTR_MAX(COUNTER_MAX)
+    .CTR_BW(CTR_BW),
+    .CTR_MAX(CTR_MAX)
   ) counter_0 (
     .clock_i(clock_i),
     .reset_i(reset),

@@ -202,7 +202,7 @@ The cocotb testbench is located in `testbenches/cocotb/counter_top_tb.py` and ex
 - reset clears the counter to 0
 - the counter holds its value while `enable_i` is low
 - the counter increments by 1 on every rising clock edge while `enable_i` is high
-- the counter wraps from `COUNTER_MAX` back to 0
+- the counter wraps from `CTR_MAX` back to 0
 
 ```sh
 make sim-rtl-cocotb               # run counter_top RTL cocotb simulation
