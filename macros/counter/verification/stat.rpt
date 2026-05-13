@@ -5,30 +5,33 @@
         +----------Local Count, excluding submodules.
         |        +-Local Area, excluding submodules.
         |        | 
-       42        - wires
-       49        - wire bits
+       43        - wires
+       50        - wire bits
         4        - public wires
        11        - public wire bits
         4        - ports
        11        - port bits
-       46  760.234 cells
-        3   27.216   sg13g2_a21oi_1
-        1    9.072   sg13g2_and2_1
+       47   787.45 cells
+        2   18.144   sg13g2_a21oi_1
+        5    45.36   sg13g2_and2_1
         1   14.515   sg13g2_buf_4
         8   391.91   sg13g2_dfrbpq_1
         2   10.886   sg13g2_inv_1
-        1   18.144   sg13g2_mux2_1
+        2   36.288   sg13g2_mux2_1
         2   14.515   sg13g2_nand2_1
+        1   10.886   sg13g2_nand2_2
         2   18.144   sg13g2_nand3_1
-        2   21.773   sg13g2_nand4_1
-        5   36.288   sg13g2_nor2_1
-        1    16.33   sg13g2_nor3_2
-        3   27.216   sg13g2_o21ai_1
-        3   38.102   sg13g2_or3_1
+        1   10.886   sg13g2_nand4_1
+        1    7.258   sg13g2_nor2_1
+        2   18.144   sg13g2_nor2b_1
+        1    9.072   sg13g2_nor3_1
+        1   21.773   sg13g2_nor4_2
+        2   18.144   sg13g2_o21ai_1
+        2   25.402   sg13g2_or3_1
         8   58.061   sg13g2_tiehi
-        1   14.515   sg13g2_xnor2_1
-        3   43.546   sg13g2_xor2_1
+        2    29.03   sg13g2_xnor2_1
+        2    29.03   sg13g2_xor2_1
 
-   Chip area for module '\counter_top': 760.233600
-     of which used for sequential elements: 391.910400 (51.55%)
+   Chip area for module '\counter_top': 787.449600
+     of which used for sequential elements: 391.910400 (49.77%)
 
