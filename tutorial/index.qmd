@@ -1046,7 +1046,8 @@ are:
 5. Optionally (advanced), adapt the CACE
    [`inverter.yaml`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/inverter/verification/cace/inverter.yaml)
    to characterise the oscillation frequency across PVT.
-6. Re-run the verification chain, `make klayout-verify`, `make
+6. Update the layout in KLayout. The existing `inverter_top.klay.gds` can be used as a starting point, but the internal routing has to be modified to form the ring and the buffer stage. After editing, export a clean `ringosc_top.gds`.
+7. Re-run the verification chain, `make klayout-verify`, `make
    magic-verify`, and `make build-top`.
 
 ## Exercise 3: Update Pinout and Floorplan of the Top-Level {#sec-exercise3}
