@@ -397,7 +397,6 @@ window.Quarto = {
   <li><a href="#viewing-the-macro" id="toc-viewing-the-macro" class="nav-link" data-scroll-target="#viewing-the-macro"><span class="header-section-number">4.6</span> Viewing the Macro</a></li>
   <li><a href="#gate-level-mixed-signal-simulation-with-xschem" id="toc-gate-level-mixed-signal-simulation-with-xschem" class="nav-link" data-scroll-target="#gate-level-mixed-signal-simulation-with-xschem"><span class="header-section-number">4.7</span> Gate-Level Mixed-Signal Simulation with Xschem</a></li>
   <li><a href="#build-and-verify-everything" id="toc-build-and-verify-everything" class="nav-link" data-scroll-target="#build-and-verify-everything"><span class="header-section-number">4.8</span> Build and Verify Everything</a></li>
-  <li><a href="#exercise-modify-the-counter" id="toc-exercise-modify-the-counter" class="nav-link" data-scroll-target="#exercise-modify-the-counter"><span class="header-section-number">4.9</span> Exercise: Modify the Counter</a></li>
   </ul></li>
   <li><a href="#sec-inverter" id="toc-sec-inverter" class="nav-link" data-scroll-target="#sec-inverter"><span class="header-section-number">5</span> Inverter Macro Implementation</a>
   <ul class="collapse">
@@ -435,9 +434,9 @@ window.Quarto = {
   </ul></li>
   <li><a href="#sec-exercises" id="toc-sec-exercises" class="nav-link" data-scroll-target="#sec-exercises"><span class="header-section-number">7</span> Additional Exercises</a>
   <ul class="collapse">
-  <li><a href="#exercise-1-from-8-bit-up-counter-to-16-bit-down-counter" id="toc-exercise-1-from-8-bit-up-counter-to-16-bit-down-counter" class="nav-link" data-scroll-target="#exercise-1-from-8-bit-up-counter-to-16-bit-down-counter"><span class="header-section-number">7.1</span> Exercise 1, From 8-bit Up-Counter to 16-bit Down-Counter</a></li>
-  <li><a href="#exercise-2-inverter-to-three-stage-ring-oscillator" id="toc-exercise-2-inverter-to-three-stage-ring-oscillator" class="nav-link" data-scroll-target="#exercise-2-inverter-to-three-stage-ring-oscillator"><span class="header-section-number">7.2</span> Exercise 2, Inverter to Three-Stage Ring Oscillator</a></li>
-  <li><a href="#exercise-3-update-pinout-and-floorplan-of-the-top-level" id="toc-exercise-3-update-pinout-and-floorplan-of-the-top-level" class="nav-link" data-scroll-target="#exercise-3-update-pinout-and-floorplan-of-the-top-level"><span class="header-section-number">7.3</span> Exercise 3, Update Pinout and Floorplan of the Top-Level</a></li>
+  <li><a href="#exercise-1-from-8-bit-up-counter-to-16-bit-down-counter" id="toc-exercise-1-from-8-bit-up-counter-to-16-bit-down-counter" class="nav-link" data-scroll-target="#exercise-1-from-8-bit-up-counter-to-16-bit-down-counter"><span class="header-section-number">7.1</span> Exercise 1: From 8-bit Up-Counter to 16-bit Down-Counter</a></li>
+  <li><a href="#exercise-2-inverter-to-three-stage-ring-oscillator" id="toc-exercise-2-inverter-to-three-stage-ring-oscillator" class="nav-link" data-scroll-target="#exercise-2-inverter-to-three-stage-ring-oscillator"><span class="header-section-number">7.2</span> Exercise 2: Inverter to Three-Stage Ring Oscillator</a></li>
+  <li><a href="#exercise-3-update-pinout-and-floorplan-of-the-top-level" id="toc-exercise-3-update-pinout-and-floorplan-of-the-top-level" class="nav-link" data-scroll-target="#exercise-3-update-pinout-and-floorplan-of-the-top-level"><span class="header-section-number">7.3</span> Exercise 3: Update Pinout and Floorplan of the Top-Level</a></li>
   </ul></li>
   <li><a href="#acknowledgements" id="toc-acknowledgements" class="nav-link" data-scroll-target="#acknowledgements"><span class="header-section-number">8</span> Acknowledgements</a></li>
   </ul>
@@ -502,7 +501,7 @@ Important
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>This tutorial and the underlying template repository requires the <a href="https://github.com/iic-jku/IIC-OSIC-TOOLS">IIC-OSIC-TOOLS</a> container with tag <code>2026.05</code> or later. All commands below assume that the container has been entered and that the working directory is the cloned repository root.</p>
+<p>This tutorial and the underlying template repository require the <a href="https://github.com/iic-jku/IIC-OSIC-TOOLS">IIC-OSIC-TOOLS</a> container with tag <code>2026.05</code> or later. All commands below assume that the container has been entered and that the working directory is the cloned repository root.</p>
 </div>
 </div>
 <section id="overview" class="level1" data-number="1">
@@ -584,11 +583,11 @@ Figure&nbsp;1: Overview of the open-source tools shipped with the IIC-OSIC-TOOLS
 </div>
 </div>
 </div>
-<p>On macOS the same Docker-based instructions apply. See the container’s <code>README.md</code> for OS-specific notes.</p>
+<p>On macOS, the same Docker-based instructions apply. See the container’s <code>README.md</code> for OS-specific notes.</p>
 </section>
 <section id="selecting-the-ihp-sg13g2-pdk" class="level2" data-number="2.2">
 <h2 data-number="2.2" class="anchored" data-anchor-id="selecting-the-ihp-sg13g2-pdk"><span class="header-section-number">2.2</span> Selecting the IHP SG13G2 PDK</h2>
-<p>The container can host several Open-PDKs (SkyWater 130, GlobalFoundries 180, IHP SG13G2). The active PDK is selected per <code>designs/</code> folder via a marker file called <code>.designinit</code>. Two options exist.</p>
+<p>The container can host several Open-PDKs (SkyWater 130, GlobalFoundries 180, IHP SG13G2). The active PDK is selected per <code>designs/</code> folder via a marker file called <code>.designinit</code>. Two options are available.</p>
 <ol type="1">
 <li><p><strong>Per-design marker file.</strong> Copy a <code>.designinit</code> file referencing the IHP SG13G2 PDK into your <code>designs/</code> directory and restart the container. The PDK is then picked automatically every time the container is launched in that directory.</p></li>
 <li><p><strong>On-the-fly switch.</strong> Run</p>
@@ -878,7 +877,7 @@ Tip
 </section>
 <section id="sec-counter" class="level1" data-number="4">
 <h1 data-number="4"><span class="header-section-number">4</span> Counter Macro Implementation</h1>
-<p>The <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/counter/"><code>counter</code></a> macro is the digital reference macro of the template. It is a parameterisable synchronous up-counter with synchronous active-high reset, where the wrapper converts the chip’s active-low reset internally. The default width is 8 bits, so the counter wraps from 255 back to 0.</p>
+<p>The <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/counter/"><code>counter</code></a> macro is the digital reference macro of the template. It is a parameterisable synchronous up-counter with synchronous active-high reset; the top-level wrapper converts the chip’s active-low reset to an active-high signal. The default width is 8 bits, so the counter wraps from 255 back to 0.</p>
 <section id="folder-structure-of-the-counter-macro" class="level2" data-number="4.1">
 <h2 data-number="4.1" class="anchored" data-anchor-id="folder-structure-of-the-counter-macro"><span class="header-section-number">4.1</span> Folder Structure of the Counter Macro</h2>
 <p>In <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/counter/"><code>macros/counter/</code></a>, the relevant folders are:</p>
@@ -1173,7 +1172,7 @@ Note
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>These arrows in Xschem are called “launchers” and are essentially a series of Tcl commands. Xschem can be completely controlled via Tcl, so repetitive tasks can be easily automated this way. Just select a launcher and press <code>q</code> (for properties) to see the underlying commands and modify them as needed.</p>
+<p>These arrows in Xschem are called “launchers” and are essentially a series of Tcl commands. Since Xschem is fully scriptable via Tcl, repetitive tasks can be easily automated. Select a launcher and press <code>q</code> (Properties) to inspect or modify its underlying Tcl commands.</p>
 </div>
 </div>
 <p>The same simulation can also be run non-interactively from the Makefile, and the result can be plotted from Python.</p>
@@ -1205,24 +1204,6 @@ Note
 <p>The full lint, simulation, and build chain is run with the following command.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> all</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>This calls <code>lint-verilog-all</code>, <code>sim-all</code>, <code>build-fpga</code>, and <code>build-top</code> in sequence. LVS and DRC are already covered by the LibreLane sign-off steps, so no extra verification target is needed for the counter.</p>
-</section>
-<section id="exercise-modify-the-counter" class="level2" data-number="4.9">
-<h2 data-number="4.9" class="anchored" data-anchor-id="exercise-modify-the-counter"><span class="header-section-number">4.9</span> Exercise: Modify the Counter</h2>
-<p>Now it is time to get your hands dirty. Try to modify the counter design, for example, change the bitwidth, make a reverse counter, or add a count direction input to create an up/down counter. Change the reset behaviour to be asynchronous instead of synchronous (which is a popular way to implement a reset). Run the simulations and the flow again, and check the results.</p>
-<p>Try to make small steps and re-check the results after each change. Do not forget to lint your SystemVerilog code with <code>make lint-verilog</code> after every change, and to run the testbenches to check if the behaviour is still correct. If you change the interface of the counter (for example by adding a count direction input), make sure to update the testbenches accordingly.</p>
-<div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Note
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>Our SystemVerilog examples largely follow the this <a href="https://github.com/lowRISC/style-guides/blob/master/VerilogCodingStyle.md">coding style</a>. The digital example is kept very simple on purpose, but feel free to apply more advanced techniques and constructs as you see fit. Just make sure to lint your code and check the testbenches after every change.</p>
-</div>
-</div>
 </section>
 </section>
 <section id="sec-inverter" class="level1" data-number="5">
@@ -1647,8 +1628,8 @@ Important
 <h1 data-number="7"><span class="header-section-number">7</span> Additional Exercises</h1>
 <p>The following exercises repeat the corresponding sections of this tutorial with a modification of the design.</p>
 <section id="exercise-1-from-8-bit-up-counter-to-16-bit-down-counter" class="level2" data-number="7.1">
-<h2 data-number="7.1" class="anchored" data-anchor-id="exercise-1-from-8-bit-up-counter-to-16-bit-down-counter"><span class="header-section-number">7.1</span> Exercise 1, From 8-bit Up-Counter to 16-bit Down-Counter</h2>
-<p>Repeat <a href="#sec-counter" class="quarto-xref">Section&nbsp;4</a> for a 16-bit synchronous down-counter that wraps from 0 back to <code>2^16 - 1</code>. The recommended steps are:</p>
+<h2 data-number="7.1" class="anchored" data-anchor-id="exercise-1-from-8-bit-up-counter-to-16-bit-down-counter"><span class="header-section-number">7.1</span> Exercise 1: From 8-bit Up-Counter to 16-bit Down-Counter</h2>
+<p>Repeat <a href="#sec-counter" class="quarto-xref">Section&nbsp;4</a> for a 16-bit synchronous down-counter that wraps from 0 back to <span class="math inline">\(2^{16} - 1\)</span>. The recommended steps are:</p>
 <ol type="1">
 <li>Update the RTL (<a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/counter/rtl/counter.sv"><code>counter.sv</code></a>, <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/counter/rtl/counter_top.sv"><code>counter_top.sv</code></a>, <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/counter/rtl/constants.sv"><code>constants.sv</code></a>). Change the bit-width and turn the increment block into a decrement, with wrap-around from 0 to <code>CTR_MAX</code>.</li>
 <li>Update the testbenches in <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/counter/testbenches/verilog/"><code>testbenches/verilog/</code></a>, <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/counter/testbenches/cocotb/"><code>testbenches/cocotb/</code></a>, and <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/counter/testbenches/xschem/"><code>testbenches/xschem/</code></a> to cover the new behaviour. Adjust the bus width in the waveform view files (<code>*.gtkw</code>, <code>*.surf.ron</code>) as well.</li>
@@ -1671,19 +1652,19 @@ Important
 </div>
 </section>
 <section id="exercise-2-inverter-to-three-stage-ring-oscillator" class="level2" data-number="7.2">
-<h2 data-number="7.2" class="anchored" data-anchor-id="exercise-2-inverter-to-three-stage-ring-oscillator"><span class="header-section-number">7.2</span> Exercise 2, Inverter to Three-Stage Ring Oscillator</h2>
+<h2 data-number="7.2" class="anchored" data-anchor-id="exercise-2-inverter-to-three-stage-ring-oscillator"><span class="header-section-number">7.2</span> Exercise 2: Inverter to Three-Stage Ring Oscillator</h2>
 <p>Repeat <a href="#sec-inverter" class="quarto-xref">Section&nbsp;5</a> for a three-stage ring oscillator with an output buffer, derived from the existing quad inverter. The recommended steps are:</p>
 <ol type="1">
 <li>Copy the <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/inverter/">inverter</a> macro folder to a new location (for example <code>macros/ringosc/</code>), and adapt the Makefile names.</li>
 <li>Update the schematic in Xschem. Connect three inverters in a ring, and tap the output of the last stage through a buffer. The fourth inverter of the quad inverter can naturally be used as the buffer.</li>
 <li>Update the symbol of the macro (<a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/inverter/schematic/xschem/inverter_top.sym"><code>schematic/xschem/inverter_top.sym</code></a>) and the PEX symbol (<a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/inverter/schematic/xschem/inverter_top_pex.sym"><code>schematic/xschem/inverter_top_pex.sym</code></a>) to expose a single output net, instead of <code>vin1..vin4</code> and <code>vout1..vout4</code>.</li>
 <li>Update the transient testbench (<a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/inverter/testbenches/xschem/inverter_top_tb_tran.sch"><code>testbenches/xschem/inverter_top_tb_tran.sch</code></a>) to measure the oscillation frequency. Delete the AC, DC, and standalone transient testbenches that are no longer relevant.</li>
-<li>Optional (advanced), adapt the CACE <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/inverter/verification/cace/inverter.yaml"><code>inverter.yaml</code></a> to characterise the oscillation frequency across PVT.</li>
+<li>Optionally (advanced), adapt the CACE <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/inverter/verification/cace/inverter.yaml"><code>inverter.yaml</code></a> to characterise the oscillation frequency across PVT.</li>
 <li>Re-run the verification chain, <code>make klayout-verify</code>, <code>make magic-verify</code>, and <code>make build-top</code>.</li>
 </ol>
 </section>
 <section id="exercise-3-update-pinout-and-floorplan-of-the-top-level" class="level2" data-number="7.3">
-<h2 data-number="7.3" class="anchored" data-anchor-id="exercise-3-update-pinout-and-floorplan-of-the-top-level"><span class="header-section-number">7.3</span> Exercise 3, Update Pinout and Floorplan of the Top-Level</h2>
+<h2 data-number="7.3" class="anchored" data-anchor-id="exercise-3-update-pinout-and-floorplan-of-the-top-level"><span class="header-section-number">7.3</span> Exercise 3: Update Pinout and Floorplan of the Top-Level</h2>
 <p>Building on Exercises 1 and 2, swap <code>inverter2</code> for the ring oscillator, delete <code>counter2</code>, and connect the now 16-bit <code>counter1</code> to the freed-up south-side pads. The recommended steps are:</p>
 <ol type="1">
 <li>Replace <code>inverter2</code> with the ring oscillator macro in <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/rtl/chip_core.sv"><code>chip_core.sv</code></a>.</li>
