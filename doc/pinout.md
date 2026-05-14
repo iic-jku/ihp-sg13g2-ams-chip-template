@@ -124,7 +124,7 @@ The `output_PAD` bit-to-role mapping is fixed inside [chip_core.sv](../rtl/chip_
 | 7 | `output_PAD[14]`  | `g_outputs[14].output_pad`  | digital         | out       | `inverter1.vout3`                                           |
 | 8 | `output_PAD[15]`  | `g_outputs[15].output_pad`  | digital         | out       | `inverter1.vout4`                                           |
 
-`inverter2` has four channels in total. Only **channels 1 and 2** are exposed off-chip. Channels 3 and 4 have `vin3`, `vout3`, `vin4`, `vout4` tied to `VSS` inside `chip_core.sv`.
+`inverter2` has four channels in total. Only **channels 1 and 2** are exposed off-chip. Channels 3 and 4 have `vin3`, `vout3`, `vin4`, `vout4` tied to `VSS` inside [chip_core.sv](../rtl/chip_core.sv).
 
 The `sg13g2_IOPadAnalog` cell exposes two internal nodes per pad:
 
@@ -133,4 +133,4 @@ The `sg13g2_IOPadAnalog` cell exposes two internal nodes per pad:
 | `padres` | Via the pad's **secondary** ESD resistor       | Input signals: the series resistor limits ESD current and protects sensitive gate oxides |
 | `padbare`| **Direct** connection to the pad metal (only primary ESD diodes present) | Output signals: bypasses the resistor to minimise parasitic RC and signal distortion |
 
-`inverter2.vin1/vin2` are connected to `analog_PADRES[0:1]` (through the resistor) and `inverter2.vout1/vout2` are driven onto `analog_PADBARE[2:3]` (direct connection), as assigned in `chip_core.sv`.
+`inverter2.vin1/vin2` are connected to `analog_PADRES[0:1]` (through the resistor) and `inverter2.vout1/vout2` are driven onto `analog_PADBARE[2:3]` (direct connection), as assigned in [chip_core.sv](../rtl/chip_core.sv).
