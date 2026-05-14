@@ -35,7 +35,7 @@ plt.rcParams.update({
 
 def plot_digital(fig_title, signals, data_time, figures_dir, filename):
     """Stack digital signals in separate subplots sharing the time axis."""
-    y_ticks = [0.0, 0.5, 1.0, 1.5]
+    y_ticks = [0.0, 1.0, 2.0, 3.0, 4.0]
     fig, axs = plt.subplots(len(signals), sharex=True)
     if len(signals) == 1:
         axs = [axs]
@@ -46,9 +46,9 @@ def plot_digital(fig_title, signals, data_time, figures_dir, filename):
     for ax, (name, values, color) in zip(axs, signals):
         ax.plot(data_time, values, color=color, linewidth=1.3)
         ax.set_ylabel(f'{name} (V)', fontsize=11)
-        ax.set_ylim(-0.1, 1.6)
+        ax.set_ylim(-0.2, 4.2)
         ax.set_yticks(y_ticks)
-        ax.set_yticklabels(["0", "0.5", "1.0", "1.5"], fontsize=8)
+        ax.set_yticklabels(["0", "1.0", "2.0", "3.0", "4.0"], fontsize=8)
         ax.tick_params(axis='x', labelsize=8)
         ax.grid(True, alpha=0.4)
 
@@ -73,28 +73,28 @@ def main():
     ngspice_file = data_dir / "chip_top_tb_tran.txt"
 
     time       = ng.loadngspicecol(str(ngspice_file), "time")
-    clock      = ng.loadngspicecol(str(ngspice_file), "clock")
-    reset_n    = ng.loadngspicecol(str(ngspice_file), "reset_n")
-    enable     = ng.loadngspicecol(str(ngspice_file), "enable")
-    sram_0_out = ng.loadngspicecol(str(ngspice_file), "sram_0_out")
-    inv1_dout1 = ng.loadngspicecol(str(ngspice_file), "inv1_dout1")
-    inv1_dout2 = ng.loadngspicecol(str(ngspice_file), "inv1_dout2")
-    inv1_dout3 = ng.loadngspicecol(str(ngspice_file), "inv1_dout3")
-    inv1_dout4 = ng.loadngspicecol(str(ngspice_file), "inv1_dout4")
-    inv2_vin1  = ng.loadngspicecol(str(ngspice_file), "inv2_vin1")
-    inv2_vout1 = ng.loadngspicecol(str(ngspice_file), "inv2_vout1")
-    inv2_vin2  = ng.loadngspicecol(str(ngspice_file), "inv2_vin2")
-    inv2_vout2 = ng.loadngspicecol(str(ngspice_file), "inv2_vout2")
-    c2_b0      = ng.loadngspicecol(str(ngspice_file), "counter2_value0")
-    c2_b1      = ng.loadngspicecol(str(ngspice_file), "counter2_value1")
-    c2_b2      = ng.loadngspicecol(str(ngspice_file), "counter2_value2")
-    c2_b3      = ng.loadngspicecol(str(ngspice_file), "counter2_value3")
-    c2_b4      = ng.loadngspicecol(str(ngspice_file), "counter2_value4")
-    c2_b5      = ng.loadngspicecol(str(ngspice_file), "counter2_value5")
-    c2_b6      = ng.loadngspicecol(str(ngspice_file), "counter2_value6")
-    c2_b7      = ng.loadngspicecol(str(ngspice_file), "counter2_value7")
-    c1_din1    = ng.loadngspicecol(str(ngspice_file), "counter1_value4_inv1_din1")
-    c1_din2    = ng.loadngspicecol(str(ngspice_file), "counter1_value5_inv1_din2")
+    clock      = ng.loadngspicecol(str(ngspice_file), "v(clock)")
+    reset_n    = ng.loadngspicecol(str(ngspice_file), "v(reset_n)")
+    enable     = ng.loadngspicecol(str(ngspice_file), "v(enable)")
+    sram_0_out = ng.loadngspicecol(str(ngspice_file), "v(sram_0_out)")
+    inv1_dout1 = ng.loadngspicecol(str(ngspice_file), "v(inv1_dout1)")
+    inv1_dout2 = ng.loadngspicecol(str(ngspice_file), "v(inv1_dout2)")
+    inv1_dout3 = ng.loadngspicecol(str(ngspice_file), "v(inv1_dout3)")
+    inv1_dout4 = ng.loadngspicecol(str(ngspice_file), "v(inv1_dout4)")
+    inv2_vin1  = ng.loadngspicecol(str(ngspice_file), "v(inv2_vin1)")
+    inv2_vout1 = ng.loadngspicecol(str(ngspice_file), "v(inv2_vout1)")
+    inv2_vin2  = ng.loadngspicecol(str(ngspice_file), "v(inv2_vin2)")
+    inv2_vout2 = ng.loadngspicecol(str(ngspice_file), "v(inv2_vout2)")
+    c2_b0      = ng.loadngspicecol(str(ngspice_file), "v(counter2_value0)")
+    c2_b1      = ng.loadngspicecol(str(ngspice_file), "v(counter2_value1)")
+    c2_b2      = ng.loadngspicecol(str(ngspice_file), "v(counter2_value2)")
+    c2_b3      = ng.loadngspicecol(str(ngspice_file), "v(counter2_value3)")
+    c2_b4      = ng.loadngspicecol(str(ngspice_file), "v(counter2_value4)")
+    c2_b5      = ng.loadngspicecol(str(ngspice_file), "v(counter2_value5)")
+    c2_b6      = ng.loadngspicecol(str(ngspice_file), "v(counter2_value6)")
+    c2_b7      = ng.loadngspicecol(str(ngspice_file), "v(counter2_value7)")
+    c1_din1    = ng.loadngspicecol(str(ngspice_file), "v(counter1_value4_inv1_din1)")
+    c1_din2    = ng.loadngspicecol(str(ngspice_file), "v(counter1_value5_inv1_din2)")
 
     # Display-friendly axis scale
     time_us = time * 1e6
