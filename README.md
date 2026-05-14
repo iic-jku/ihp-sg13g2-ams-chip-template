@@ -57,7 +57,7 @@ Examples based on this template are:
 
 ## Chip Documentation
 
-A designer-oriented description of this chip lives in [doc/](doc/):
+A designer-oriented description of this chip can be found in [doc/](doc/):
 
 - **[doc/specifications.md](doc/specifications.md)**: top-level specifications (technology, supplies, clock, macro inventory, functional behaviour).
 - **[doc/pinout.md](doc/pinout.md)**: full 32-pad bondpad table per side, with the `chip_top` port and the role each pad carries inside `chip_core`.
@@ -214,7 +214,7 @@ make help
 
 ## Initialize Git Submodules
 
-Initializes and updates the repository submodules (for example `artistic`):
+Initializes and updates the repository submodules (for example [ArtistIC](https://github.com/pulp-platform/artistic)):
 
 ```sh
 make init-submodules
