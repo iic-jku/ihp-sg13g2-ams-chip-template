@@ -15,7 +15,7 @@ Related documents:
 | `CORE_AREA`              | `[365, 365, 1235, 1235]` µm  (870 µm × 870 µm)       |
 | Padframe margin per side | 365 µm (between die edge and core)                   |
 | `FP_SIZING`              | `absolute`                                           |
-| Clock period             | 20 ns (≈ 50 MHz)                                     |
+| Clock period             | 20 ns (50 MHz)                                       |
 | Core supply              | 1.5 V (`VDD` / `VSS`)                                |
 | I/O supply               | 3.3 V (`IOVDD` / `IOVSS`)                            |
 
@@ -26,15 +26,15 @@ The 365 µm padframe margin holds the [bondpads](../ip/sg13g2_ip__bondpad_70x70/
 
 Five hard macros are placed inside the core:
 
-| Macro instance              | Cell                                  | Size (W × H)     | Lower-left (x, y) | Upper-right (x, y) | Orientation |
-| --------------------------- | ------------------------------------- | ---------------- | ----------------- | ------------------ | ----------- |
-| `i_chip_core.sram_0`        | `RM_IHPSG13_1P_1024x32_c2_bm_bist`    | 416.64 × 337.12 µm   | (435, 495)        | (851.64, 832.12)      | N           |
-| `i_chip_core.counter1`      | `counter_top`                         | 200 × 100 µm     | (935, 995)        | (1135, 1095)       | N           |
-| `i_chip_core.counter2`      | `counter_top`                         | 200 × 100 µm     | (935, 495)        | (1135, 595)        | FS          |
-| `i_chip_core.inverter1`     | `inverter_top`                        | 54.18 × 81.92 µm | (1080.00, 850.08) | (1134.18, 932.00)  | N           |
-| `i_chip_core.inverter2`     | `inverter_top`                        | 54.18 × 81.92 µm | (1080.00, 658.14) | (1134.18, 740.06)  | N           |
+| Macro instance              | Cell                                  | Size (W × H)       | Lower-left (x, y) | Upper-right (x, y) | Orientation |
+| --------------------------- | ------------------------------------- | ------------------ | ----------------- | ------------------ | ----------- |
+| `i_chip_core.sram_0`        | `RM_IHPSG13_1P_1024x32_c2_bm_bist`    | 416.64 × 337.12 µm | (435, 495)        | (851.64, 832.12)   | N           |
+| `i_chip_core.counter1`      | `counter_top`                         | 200 × 100 µm       | (935, 995)        | (1135, 1095)       | N           |
+| `i_chip_core.counter2`      | `counter_top`                         | 200 × 100 µm       | (935, 495)        | (1135, 595)        | FS          |
+| `i_chip_core.inverter1`     | `inverter_top`                        | 54.18 × 81.92 µm   | (1080.00, 850.08) | (1134.18, 932.00)  | N           |
+| `i_chip_core.inverter2`     | `inverter_top`                        | 54.18 × 81.92 µm   | (1080.00, 658.14) | (1134.18, 740.06)  | N           |
 
-The values are kept in the `instances` blocks of [config.yaml](../flow/librelane/config.yaml). The `inverter_top` coordinates are tied to the `Metal3` routing grid (`X` is a multiple of 0.48 µm, `Y` a multiple of 0.42 µm).
+The values are kept in the `instances` blocks of [config.yaml](../flow/librelane/config.yaml). The `inverter_top` coordinates are tied to the `Metal3` routing grid (`X` is a multiple of 0.48 µm, `Y` a multiple of 0.42 µm). See [Librelane Cheatsheet](librelane/librelane_cheatsheet.md) for more details on the orientation and configurations.
 
 
 ## Macro placement (top view)
