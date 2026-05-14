@@ -39,8 +39,7 @@ The values are kept in the `instances` blocks of [config.yaml](../flow/librelane
 
 ## Macro placement (top view)
 
-With the current `CORE_AREA` `[365,365,1235,1235]`, the macros occupy the right-hand side of the core: SRAM and `counter2` in the lower half,
-`counter1` and both inverter instances in the upper half.
+With the current `CORE_AREA` `[365,365,1235,1235]`, the macros occupy the right-hand side of the core: SRAM and `counter2` in the lower half, `counter1` and both inverter instances in the upper half.
 
 ```text
 y=1235 ┌───────────────────────────────────────────────┐
