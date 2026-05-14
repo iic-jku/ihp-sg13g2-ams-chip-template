@@ -80,15 +80,15 @@ Exact coordinates, the floorplan diagram and overlap rules are in [floorplan.md]
 
 `counter1` and `counter2` are two instances of the `counter_top` macro (8-bit, default `CTR_MAX = 255`). They share `clk_PAD`, `rst_n_PAD` and `input_PAD[0]`:
 
-- `rst_n = 0` → both counters reset synchronously to 0.
-- `enable = 0` → both counters hold their current value.
-- `enable = 1` → both counters increment by one on every rising clock edge.
+- `rst_n = 0`: both counters reset synchronously to 0.
+- `enable = 0`: both counters hold their current value.
+- `enable = 1`: both counters increment by one on every rising clock edge.
 - On reaching `CTR_MAX`, the next clock edge wraps the counter back to 0.
 
 `counter1_value[3:0]` drives `output_PAD[3:0]` (north LSB nibble).
 `counter1_value[7:4]` drives `bidir_PAD[3:0]` (north MSB nibble, in output mode). `counter2_value[7:0]` drives `output_PAD[11:4]` (full south side).
 
-### Inverter 1 — digital
+### Inverter 1
 
 `inverter1` (instance of `inverter_top`) is used as a 4-channel CMOS digital inverter:
 
@@ -100,7 +100,7 @@ Two test modes are therefore possible:
 1. **Coupled to counter1** (`enable = 1`): observe `~counter1_value[7:4]` on `output_PAD[15:12]` while `counter1_value[7:4]` itself is observable on `bidir_PAD[3:0]`.
 2. **Standalone** (`enable = 0`): drive `bidir_PAD[3:0]` externally and observe the inverted response on `output_PAD[15:12]`.
 
-### Inverter 2 — analog
+### Inverter 2
 
 `inverter2` (instance of `inverter_top`) is used as an analog block. Two of its four channels are exposed via four east-side analog pads:
 
