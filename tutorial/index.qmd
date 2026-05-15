@@ -27,40 +27,45 @@ This documentation is a Work in Progress.
 :::
 
 ::: {.callout-important}
-This tutorial and the underlying template repository require the
-[IIC-OSIC-TOOLS](https://github.com/iic-jku/IIC-OSIC-TOOLS) container with tag
-`2026.05` or later. All commands below assume that the container has been
-entered and that the working directory is the cloned repository root.
+This tutorial and the underlying template repository require the [IIC-OSIC-TOOLS](https://github.com/iic-jku/IIC-OSIC-TOOLS) container with tag `2026.05` or later. All commands below assume that the container has been entered and that the working directory is a folder with the corresponding `Makefile`.
 :::
 
 # Overview
 
-This tutorial is a step-by-step walk-through of the open-source
-analog-mixed signal (AMS) chip flow based on the
-[`ihp-sg13g2-ams-chip-template`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template)
-repository for the IHP SG13G2 130-nm Open-PDK. It covers the tool
-installation, the RTL and analog macro design, and the chip-level
-assembly with padframe, logos, and fill structures.
+This tutorial is a step-by-step walk-through of the open-source analog-mixed signal (AMS) chip flow based on the [`ihp-sg13g2-ams-chip-template`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template) repository for the IHP SG13G2 130-nm Open-PDK. It covers:
+
+- Installation of IIC-OSIC-TOOLS
+- Digital macro design
+  - Design files written in SystemVerilog
+  - Linting with Verilator
+  - Simulation with Icarus Verilog and cocotb
+  - Viewing waveforms with GTKWave and Surfer
+  - Synthesis, placement, routing, and sign-off with LibreLane
+- Analog macro design
+  - Schematic entry in Xschem
+  - Simulation with Ngspice and VACASK
+  - Monte Carlo / mismatch characterisation with CACE
+  - Layout in KLayout
+  - Verification with LVS, DRC, PEX using KLayout and Magic + Netgen
+- Top-level assembly and padframe generation with logos and fill structures using SystemVerilog and the LibreLane flow.
 
 The example design used throughout the tutorial contains:
 
-- Two digital `counter_top` macros (8-bit synchronous up-counters),
-- Two `inverter_top` macros, one used as a 4-channel CMOS digital
-  inverter, one as a 2-channel analog inverter,
-- One `RM_IHPSG13_1P_1024x32_c2_bm_bist` single-port SRAM macro,
-- A 32-pad padframe (8 pads per side) with I/O, power, analog, and
-  bidirectional pads,
-- The top-level chip assembly with PDN, JKU logos, and KLayout fill.
+- Two digital `counter_top` macros (8-bit synchronous up-counters)
+- Two `inverter_top` macros, one used as a 4-channel CMOS digital inverter, one as a 2-channel analog inverter
+- One `RM_IHPSG13_1P_1024x32_c2_bm_bist` single-port SRAM macro
+- A 32-pad padframe (8 pads per side) with I/O, power, analog, and bidirectional pads
+- The top-level chip assembly with PDN, logos, and fill structures
 
-The tutorial ends with a set of exercises that apply the same flow to a
-modified counter, a modified inverter, and a modified top-level
-floorplan.
+The tutorial ends with a set of exercises that apply the same flow to a modified counter, a ring oscillator using the inverters, and a modified top-level floorplan and pinout. This way, all important steps of the flow are covered in a hands-on manner.
 
 ::: {.callout-tip}
-The tutorial can be used both for self-study and as the basis for a
-workshop. Each section can be followed independently.
+The tutorial can be used both for self-study and as the basis for a workshop. Each section can be followed independently.
 :::
 
+::: {.callout-note}
+After the tutorial, readers should be able to use the template repository for custom silicon projects and understand how to apply the open-source tools in the IIC-OSIC-TOOLS container to design, simulate, build, and verify AMS chips with the IHP SG13G2 Open-PDK.
+:::
 
 # Tools, the IIC-OSIC-TOOLS Container {#sec-tools}
 
