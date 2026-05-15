@@ -8,7 +8,7 @@
 
 <meta name="author" content="Simon Dorrer">
 <meta name="author" content="Harald Pretl">
-<meta name="dcterms.date" content="2026-05-14">
+<meta name="dcterms.date" content="2026-05-15">
 
 <title>A Tutorial on Open-Source Analog-Mixed Signal Chip Design with the ihp-sg13g2 Open-PDK – Open-Source Analog-Mixed Signal Chip Design Tutorial</title>
 <style>
@@ -466,7 +466,7 @@ window.Quarto = {
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">May 14, 2026</p>
+      <p class="date">May 15, 2026</p>
     </div>
   </div>
   
@@ -501,21 +501,41 @@ Important
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>This tutorial and the underlying template repository require the <a href="https://github.com/iic-jku/IIC-OSIC-TOOLS">IIC-OSIC-TOOLS</a> container with tag <code>2026.05</code> or later. All commands below assume that the container has been entered and that the working directory is the cloned repository root.</p>
+<p>This tutorial and the underlying template repository require the <a href="https://github.com/iic-jku/IIC-OSIC-TOOLS">IIC-OSIC-TOOLS</a> container with tag <code>2026.05</code> or later. All commands below assume that the container has been entered and that the working directory is a folder with the corresponding <code>Makefile</code>.</p>
 </div>
 </div>
 <section id="overview" class="level1" data-number="1">
 <h1 data-number="1"><span class="header-section-number">1</span> Overview</h1>
-<p>This tutorial is a step-by-step walk-through of the open-source analog-mixed signal (AMS) chip flow based on the <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template"><code>ihp-sg13g2-ams-chip-template</code></a> repository for the IHP SG13G2 130-nm Open-PDK. It covers the tool installation, the RTL and analog macro design, and the chip-level assembly with padframe, logos, and fill structures.</p>
+<p>This tutorial is a step-by-step walk-through of the open-source analog-mixed signal (AMS) chip flow based on the <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template"><code>ihp-sg13g2-ams-chip-template</code></a> repository for the IHP SG13G2 130-nm Open-PDK. It covers:</p>
+<ul>
+<li>Installation of IIC-OSIC-TOOLS</li>
+<li>Digital macro design
+<ul>
+<li>Design files written in SystemVerilog</li>
+<li>Linting with Verilator</li>
+<li>Simulation with Icarus Verilog and cocotb</li>
+<li>Viewing waveforms with GTKWave and Surfer</li>
+<li>Synthesis, placement, routing, and sign-off with LibreLane</li>
+</ul></li>
+<li>Analog macro design
+<ul>
+<li>Schematic entry in Xschem</li>
+<li>Simulation with Ngspice and VACASK</li>
+<li>Monte Carlo / mismatch characterisation with CACE</li>
+<li>Layout in KLayout</li>
+<li>Verification with LVS, DRC, PEX using KLayout and Magic + Netgen</li>
+</ul></li>
+<li>Top-level assembly and padframe generation with logos and fill structures using SystemVerilog and the LibreLane flow.</li>
+</ul>
 <p>The example design used throughout the tutorial contains:</p>
 <ul>
-<li>Two digital <code>counter_top</code> macros (8-bit synchronous up-counters),</li>
-<li>Two <code>inverter_top</code> macros, one used as a 4-channel CMOS digital inverter, one as a 2-channel analog inverter,</li>
-<li>One <code>RM_IHPSG13_1P_1024x32_c2_bm_bist</code> single-port SRAM macro,</li>
-<li>A 32-pad padframe (8 pads per side) with I/O, power, analog, and bidirectional pads,</li>
-<li>The top-level chip assembly with PDN, JKU logos, and KLayout fill.</li>
+<li>Two digital <code>counter_top</code> macros (8-bit synchronous up-counters)</li>
+<li>Two <code>inverter_top</code> macros, one used as a 4-channel CMOS digital inverter, one as a 2-channel analog inverter</li>
+<li>One <code>RM_IHPSG13_1P_1024x32_c2_bm_bist</code> single-port SRAM macro</li>
+<li>A 32-pad padframe (8 pads per side) with I/O, power, analog, and bidirectional pads</li>
+<li>The top-level chip assembly with PDN, logos, and fill structures</li>
 </ul>
-<p>The tutorial ends with a set of exercises that apply the same flow to a modified counter, a modified inverter, and a modified top-level floorplan.</p>
+<p>The tutorial ends with a set of exercises that apply the same flow to a modified counter, a ring oscillator using the inverters, and a modified top-level floorplan and pinout. This way, all important steps of the flow are covered in a hands-on manner.</p>
 <div class="callout callout-style-default callout-tip callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -527,6 +547,19 @@ Tip
 </div>
 <div class="callout-body-container callout-body">
 <p>The tutorial can be used both for self-study and as the basis for a workshop. Each section can be followed independently.</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>After the tutorial, readers should be able to use the template repository for custom silicon projects and understand how to apply the open-source tools in the IIC-OSIC-TOOLS container to design, simulate, build, and verify AMS chips with the IHP SG13G2 Open-PDK.</p>
 </div>
 </div>
 </section>
@@ -547,7 +580,7 @@ Figure&nbsp;1: Overview of the open-source tools shipped with the IIC-OSIC-TOOLS
 <h2 data-number="2.1" class="anchored" data-anchor-id="installation"><span class="header-section-number">2.1</span> Installation</h2>
 <p>The container runs on Linux, macOS, and Windows. The installation instructions are kept in the <a href="https://github.com/iic-jku/IIC-OSIC-TOOLS"><code>iic-jku/IIC-OSIC-TOOLS</code></a> GitHub repository. Video walk-throughs are available for Linux and Windows.</p>
 <div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-5-contents" aria-controls="callout-5" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -556,7 +589,7 @@ Figure&nbsp;1: Overview of the open-source tools shipped with the IIC-OSIC-TOOLS
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-4" class="callout-4-contents callout-collapse collapse">
+<div id="callout-5" class="callout-5-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <ul>
 <li><a href="https://www.youtube.com/watch?v=l8kZUocmY5k">IIC-OSIC-TOOLS installation on Ubuntu (Part 1)</a></li>
@@ -566,7 +599,7 @@ Figure&nbsp;1: Overview of the open-source tools shipped with the IIC-OSIC-TOOLS
 </div>
 </div>
 <div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-5-contents" aria-controls="callout-5" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-6-contents" aria-controls="callout-6" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -575,7 +608,7 @@ Figure&nbsp;1: Overview of the open-source tools shipped with the IIC-OSIC-TOOLS
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-5" class="callout-5-contents callout-collapse collapse">
+<div id="callout-6" class="callout-6-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <ul>
 <li><a href="https://www.youtube.com/watch?v=AiFTwKdS2V4">IIC-OSIC-TOOLS installation on Windows (from 37:20 to 45:15)</a></li>
