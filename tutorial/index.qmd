@@ -136,11 +136,6 @@ By default, the container is already configured for `ihp-sg13g2`, so both option
 
 ## Purpose
 
-  [**Netgen**](https://github.com/rtimothyedwards/netgen) and
-  [**KLayout**](https://github.com/KLayout/klayout) for LVS, DRC, and
-  PEX,
-  simulation.
-regression test for the open-source tools on the IHP SG13G2 Open-PDK.
 This Makefile-driven repository simulates, builds, and fully verifies (LVS, DRC, PEX) a complete analog mixed-signal chip for the ihp-sg13g2 130nm Open-PDK, including padframe generation and top-level assembly. It uses:
 
 - [**LibreLane**](https://github.com/librelane/librelane) for digital macro hardening, padframe generation and top-level assembly
@@ -151,35 +146,38 @@ This Makefile-driven repository simulates, builds, and fully verifies (LVS, DRC,
 - **SystemVerilog**, [**cocotb**](https://github.com/cocotb/cocotb), [**GTKWave**](https://github.com/gtkwave/gtkwave) and [**Surfer**](https://gitlab.com/surfer-project/surfer) for digital simulation
 
 The repository is the starting point for your own custom silicon and provides a universal design flow solution: Just clone the repo, enter the IIC-OSIC-TOOLS container, and run `make all` to get a tapeout-ready analog-mixed signal chip. Focus on your design and do not care about the tools and the design flow!
+
+Furthermore, it serves as a regression test for the above-mentioned open-source tools and their dependencies using the ihp-sg13g2 Open-PDK.
+
 ## Examples
 
+Examples based on this template are:
 
 - [TinyWhisper](https://github.com/iic-jku/TinyWhisper): An Open-Source Fully-Integrated Multi-Mode Short-Wave Transmitter for Amateur Radio Applications in 130-nm CMOS
 - [SPARX](https://github.com/iic-jku/SG13G2_SPARX): An Open-Source, Automated, Programmatically Generated, Frequency-Scalable Six-Port Receiver in 130-nm CMOS
 - wafer.space gf180mcuD MPW [Multi-Project Chip](https://github.com/iic-jku/gf180mcu-jku-projects)
 
+
 ## Directory Structure
 
-The repository is organised into the following top-level folders. The
 The repository is organised into the following top-level folders. The full listing can be found in the [main README.md](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/README.md).
 
-| [`doc/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/doc/) | Designer documentation ([specifications](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/doc/specifications.md), [pinout](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/doc/pinout.md), [floorplan](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/doc/floorplan.md)) and [PDK / tool cheatsheets](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/doc/librelane/librelane_cheatsheet.md). |
-| [`flow/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/flow/) | LibreLane top-level configuration ([`config.yaml`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/flow/librelane/config.yaml), [`pdn_cfg.tcl`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/flow/librelane/pdn_cfg.tcl), `chip_top.sdc`) and the ArtistIC logo flow. |
-| [`ip/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/ip/)   | External IP cells (bondpads, custom IO cells, JKU logos). |
-| [`layout/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/layout/) | Compressed GDS streams of the top-level chip (`chip_top.gds.gz` and `chip_top_logo_fill.gds.gz`). |
-| [`macros/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/) | In-tree macros ([`counter/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/counter/) and [`inverter/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/inverter/)), each with its own Makefile and README. |
-| [`flow/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/flow/) | LibreLane top-level configuration ([`config.yaml`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/flow/librelane/config.yaml), [`pdn_cfg.tcl`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/flow/librelane/pdn_cfg.tcl), [`chip_top.sdc`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/flow/librelane/chip_top.sdc)) and the [ArtistIC](https://github.com/pulp-platform/artistic) logo flow. |
-| [`ip/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/ip/)   | External IP cells (bondpads, custom IO cells, and logos). |
-| [`layout/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/layout/) | Compressed GDS streams of the top-level chip (`chip_top.gds.gz` and `chip_top_logo_fill.gds.gz`). `chip_top_logo_fill.gds.gz` includes the ArtistIC logo and filler structures. |
-| [`macros/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/) | Recursive-style macros ([`counter/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/counter/) and [`inverter/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/inverter/)), each with its own `Makefile` and `README`. |
-| [`release/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/release/) | Tapeout submission artifacts, versioned (`v.1.0.0/`, …). |
-| [`render/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/render/) | Chip and macro renders for documentation. |
-| [`rtl/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/rtl/) | Top-level RTL ([`chip_top.sv`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/rtl/chip_top.sv), [`chip_core.sv`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/rtl/chip_core.sv)). |
+| Folder | Purpose |
+| --- | --- |
+| [`doc/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/doc/) | Designer documentation, including [specifications](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/doc/specifications.md), [pinout](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/doc/pinout.md), [floorplan](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/doc/floorplan.md), and the [PDK and tool cheatsheets](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/doc/librelane/librelane_cheatsheet.md). |
+| [`flow/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/flow/) | LibreLane top-level configuration with [config.yaml](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/flow/librelane/config.yaml), [pdn_cfg.tcl](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/flow/librelane/pdn_cfg.tcl), [chip_top.sdc](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/flow/librelane/chip_top.sdc), plus the [ArtistIC](https://github.com/pulp-platform/artistic) logo flow. |
+| [`ip/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/ip/) | External IP cells including bondpads, custom IO cells, and logos. |
+| [`layout/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/layout/) | Compressed GDS streams of the top-level chip, including chip_top.gds.gz and chip_top_logo_fill.gds.gz. |
+| [`macros/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/) | Recursive-style macros such as [counter/](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/counter/) and [inverter/](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/inverter/), each with its own Makefile and README. |
+| [`netlist/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/netlist/) | Synthesis, schematic, layout, and PEX netlists used for top-level LVS and simulation. |
+| [`release/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/release/) | Tapeout submission artifacts grouped by version. |
+| [`render/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/render/) | Chip and macro renders used in the documentation. |
+| [`rtl/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/rtl/) | Top-level RTL sources, including [chip_top.sv](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/rtl/chip_top.sv) and [chip_core.sv](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/rtl/chip_core.sv). |
 | [`schematic/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/schematic/) | Xschem schematics and symbols for the top-level chip. |
-| [`scripts/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/scripts/) | Helper Python and shell scripts (rendering, logo placement, plotting). |
-| [`testbenches/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/testbenches/) | Cocotb and Xschem testbenches for the top-level chip. |
-| [`tutorial/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/tutorial/) | This Quarto tutorial. |
-| [`verification/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/verification/) | DRC / LVS / signoff reports. |
+| [`scripts/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/scripts/) | Helper Python and shell scripts for rendering, logo placement, and plotting. |
+| [`testbenches/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/testbenches/) | Xschem and cocotb testbenches for the top-level chip. |
+| [`tutorial/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/tutorial/) | This Quarto tutorial and its supporting materials. |
+| [`verification/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/verification/) | DRC, LVS, and signoff reports. |
 
 ## Workflow
 
