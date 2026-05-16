@@ -32,7 +32,7 @@ This tutorial and the underlying template repository require the [IIC-OSIC-TOOLS
 
 # Overview {#sec-overview}
 
-This tutorial is a step-by-step walk-through of the open-source analog-mixed signal (AMS) chip flow based on the [`ihp-sg13g2-ams-chip-template`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template) repository for the ihp-sg13g2 130-nm Open-PDK. It covers:
+This tutorial is a step-by-step walk-through of the open-source analog-mixed signal (AMS) chip flow based on the [`ihp-sg13g2-ams-chip-template`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template) repository for the ihp-sg13g2 130nm Open-PDK. It covers:
 
 - [Overview](#sec-overview) and [Installation](#sec-installation) of [IIC-OSIC-TOOLS](https://github.com/iic-jku/IIC-OSIC-TOOLS)
 - [Digital macro design](#sec-digital)
@@ -67,6 +67,21 @@ The tutorial can be used both for self-study and as the basis for a workshop. Ea
 After the tutorial, readers should be able to use the template repository for custom silicon projects and understand how to apply the open-source tools in the IIC-OSIC-TOOLS container to design, simulate, build, and verify AMS chips with the ihp-sg13g2 Open-PDK.
 :::
 
+## Guidelines & Cheatsheets
+
+The following guidelines and cheatsheets should be helpful for the tutorial, the use of the template repository in general and for implementing your own custom silicon projects.
+
+- [Designer's Guidelines](https://iic-jku.github.io/analog-circuit-design/aicd.html#sec-designers-etiquette)
+- [Linux Cheatsheet](https://iic-jku.github.io/analog-circuit-design/aicd.html#sec-linux-cheatsheet)
+- [SystemVerilog Cheatsheet](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/doc/verilog/SystemVerilog_cheatsheet.pdf)
+- [Verilog Cheatsheet](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/doc/verilog/Verilog_cheatsheet.pdf)
+- [Xschem Cheatsheet](https://iic-jku.github.io/analog-circuit-design/aicd.html#sec-xschem-cheatsheet)
+- [Ngspice Cheatsheet](https://iic-jku.github.io/analog-circuit-design/aicd.html#sec-ngspice-cheatsheet)
+- [KLayout Cheatsheet](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/doc/klayout/klayout_cheatsheet.md)
+- [LibreLane Cheatsheet](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/doc/librelane/librelane_cheatsheet.md)
+- [ihp-sg13g2 Layout Calculation Cheatsheet](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/doc/ihp-sg13g2-Open-PDK/sg13g2_os_layout_cheatsheet.xlsx)
+- [ihp-sg13g2 LV NMOS / PMOS and HV NMOS / PMOS Techsweeps](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/doc/sizing)
+
 # Tools {#sec-tools}
 
 Numerous open-source chip design tools cover the entire development workflow for purely digital, purely analog, or mixed analog-digital chips. Managing these many tools regarding installation, updates, and maintenance is complex, especially given the rapid pace of change. Therefore, the [Institute for Integrated Circuits and Quantum Computing](https://www.jku.at/en/institute-for-integrated-circuits-and-quantum-computing/) at [Johannes Kepler University](https://www.jku.at/) (JKU) Linz, Austria decided to build an all-in-one Docker container ([IIC-OSIC-TOOLS](https://github.com/iic-jku/IIC-OSIC-TOOLS)) that is updated monthly and supports all essential tools and PDKs. This eliminates the need for the time-consuming individual installation of many tools, and a reproducible development environment (important for past tapeouts) is available within a GNU/Linux-based virtual machine.
@@ -86,25 +101,26 @@ The container runs on Linux, macOS, and Windows. The installation instructions a
 Additional video walk-throughs are available for Linux and Windows.
 
 ::: {.callout-note collapse="true"}
-## Ubuntu / Linux installation
+
+### Ubuntu / Linux installation
 
 - [IIC-OSIC-TOOLS installation on Ubuntu](https://www.youtube.com/watch?v=l8kZUocmY5k)
 :::
 
 ::: {.callout-note collapse="true"}
-## Windows installation
+
+### Windows installation
 
 - [IIC-OSIC-TOOLS installation on Windows (from 37:20 to 45:15)](https://www.youtube.com/watch?v=AiFTwKdS2V4)
 :::
-
 
 ## Selecting the ihp-sg13g2 PDK
 
 As mentioned above, the container includes four Open-PDKs. To activate or switch the active PDK, the following two options are available. More detailed instructions can be found in the container's [`README.md`](https://github.com/iic-jku/IIC-OSIC-TOOLS/blob/main/README.md#2-installed-pdks).
 
-1. **`.designinit` file.** Copy the [`.designinit`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/.designinit) file referencing the ihp-sg13g2 PDK into your `designs/` directory and restart the container. The PDK is then picked automatically every time the container is launched in that directory.
+1. **`.designinit` file:** Copy the [`.designinit`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/.designinit) file referencing the ihp-sg13g2 PDK into your `designs/` directory and restart the container. The PDK is then picked automatically every time the container is launched in that directory.
 
-2. **On-the-fly switch.** Run
+2. **On-the-fly switch:** Run
 
    ```sh
    sak-pdk ihp-sg13g2
@@ -115,7 +131,6 @@ As mentioned above, the container includes four Open-PDKs. To activate or switch
 ::: {.callout-tip}
 By default, the container is already configured for `ihp-sg13g2`, so both options above are only needed when switching between PDKs. However, since this tutorial can also be used for all other PDKs, it is worth knowing how to switch the active PDK.
 :::
-
 
 # Repository Overview {#sec-repo}
 
