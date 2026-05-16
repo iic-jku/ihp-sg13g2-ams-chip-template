@@ -30,24 +30,24 @@ This documentation is a Work in Progress.
 This tutorial and the underlying template repository require the [IIC-OSIC-TOOLS](https://github.com/iic-jku/IIC-OSIC-TOOLS) container with tag `2026.05` or later. All commands below assume that the container has been entered and that the working directory is a folder with the corresponding `Makefile`.
 :::
 
-# Overview
+# Overview {#sec-overview}
 
-This tutorial is a step-by-step walk-through of the open-source analog-mixed signal (AMS) chip flow based on the [`ihp-sg13g2-ams-chip-template`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template) repository for the IHP SG13G2 130-nm Open-PDK. It covers:
+This tutorial is a step-by-step walk-through of the open-source analog-mixed signal (AMS) chip flow based on the [`ihp-sg13g2-ams-chip-template`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template) repository for the ihp-sg13g2 130-nm Open-PDK. It covers:
 
-- Installation of IIC-OSIC-TOOLS
-- Digital macro design
+- [Overview](#sec-overview) and [Installation](#sec-installation) of [IIC-OSIC-TOOLS](https://github.com/iic-jku/IIC-OSIC-TOOLS)
+- [Digital macro design](#sec-digital)
   - Design files written in SystemVerilog
-  - Linting with Verilator
-  - Simulation with Icarus Verilog and cocotb
-  - Viewing waveforms with GTKWave and Surfer
-  - Synthesis, placement, routing, and sign-off with LibreLane
-- Analog macro design
-  - Schematic entry in Xschem
-  - Simulation with Ngspice and VACASK
-  - Monte Carlo / mismatch characterisation with CACE
-  - Layout in KLayout
-  - Verification with LVS, DRC, PEX using KLayout and Magic + Netgen
-- Top-level assembly and padframe generation with logos and fill structures using SystemVerilog and the LibreLane flow.
+  - Linting with [Verilator](https://github.com/verilator/verilator)
+  - Simulation with Icarus Verilog and [cocotb](https://github.com/cocotb/cocotb)
+  - Viewing waveforms with [GTKWave](https://github.com/gtkwave/gtkwave) and [Surfer](https://gitlab.com/surfer-project/surfer)
+  - Synthesis, placement, routing, and sign-off with [Yosys](https://github.com/YosysHQ/yosys), [OpenROAD](https://github.com/The-OpenROAD-Project/OpenROAD), and [LibreLane](https://github.com/librelane/librelane)
+- [Analog macro design](#sec-analog)
+  - Schematic entry in [Xschem](https://github.com/StefanSchippers/xschem)
+  - Simulation with [Ngspice](https://github.com/danchitnis/ngspice-sf-mirror) and [VACASK](https://codeberg.org/arpadbuermen/VACASK)
+  - Monte Carlo / mismatch characterisation with [CACE](https://github.com/fossi-foundation/cace)
+  - Layout in [KLayout](https://github.com/KLayout/klayout)
+  - Verification with LVS, DRC, PEX using [KLayout](https://github.com/KLayout/klayout), [Magic](https://github.com/rtimothyedwards/magic) + [Netgen](https://github.com/rtimothyedwards/netgen)
+- [Top-level assembly and padframe generation](#sec-top) with logos and fill structures using SystemVerilog and the [LibreLane](https://github.com/librelane/librelane) flow.
 
 The example design used throughout the tutorial contains:
 
@@ -64,35 +64,31 @@ The tutorial can be used both for self-study and as the basis for a workshop. Ea
 :::
 
 ::: {.callout-note}
-After the tutorial, readers should be able to use the template repository for custom silicon projects and understand how to apply the open-source tools in the IIC-OSIC-TOOLS container to design, simulate, build, and verify AMS chips with the IHP SG13G2 Open-PDK.
+After the tutorial, readers should be able to use the template repository for custom silicon projects and understand how to apply the open-source tools in the IIC-OSIC-TOOLS container to design, simulate, build, and verify AMS chips with the ihp-sg13g2 Open-PDK.
 :::
 
-# Tools, the IIC-OSIC-TOOLS Container {#sec-tools}
+# Tools {#sec-tools}
 
-The open-source AMS flow used here relies on several tools, namely
-Xschem, Magic, KLayout, ngspice, CACE, LibreLane, Yosys, OpenROAD,
-Verilator, cocotb, GTKWave, and Surfer. To make installation and version
-handling easier, they are all bundled into the
-[**IIC-OSIC-TOOLS**](https://github.com/iic-jku/IIC-OSIC-TOOLS) Docker
-container maintained by the IIC at JKU Linz. The container also ships
-the IHP SG13G2 Open-PDK used by this template.
+Numerous open-source chip design tools cover the entire development workflow for purely digital, purely analog, or mixed analog-digital chips. Managing these many tools regarding installation, updates, and maintenance is complex, especially given the rapid pace of change. Therefore, the [Institute for Integrated Circuits and Quantum Computing](https://www.jku.at/en/institute-for-integrated-circuits-and-quantum-computing/) at [Johannes Kepler University](https://www.jku.at/) (JKU) Linz, Austria decided to build an all-in-one Docker container ([IIC-OSIC-TOOLS](https://github.com/iic-jku/IIC-OSIC-TOOLS)) that is updated monthly and supports all essential tools and PDKs. This eliminates the need for the time-consuming individual installation of many tools, and a reproducible development environment (important for past tapeouts) is available within a GNU/Linux-based virtual machine.
 
-![Overview of the open-source tools shipped with the IIC-OSIC-TOOLS
-container.](fig/tools_overview/tools_overview.svg){#fig-tools-overview}
+## IIC-OSIC-TOOLS Container
 
-## Installation
+@fig-tools-overview shows a rough overview of the most important tools in the IIC-OSIC-TOOLS container. Additional tools are also included, which are documented on the associated [GitHub page](https://github.com/iic-jku/IIC-OSIC-TOOLS).
+The open-source AMS flow used in this tutorial relies on several tools, namely [Xschem](https://github.com/StefanSchippers/xschem), [Magic](https://github.com/rtimothyedwards/magic), [Netgen](https://github.com/rtimothyedwards/netgen), [KLayout](https://github.com/KLayout/klayout), [Ngspice](https://github.com/danchitnis/ngspice-sf-mirror), [VACASK](https://codeberg.org/arpadbuermen/VACASK), [CACE](https://github.com/fossi-foundation/cace), [LibreLane](https://github.com/librelane/librelane), [Yosys](https://github.com/YosysHQ/yosys), [OpenROAD](https://github.com/The-OpenROAD-Project/OpenROAD), [Verilator](https://github.com/verilator/verilator), [cocotb](https://github.com/cocotb/cocotb), [GTKWave](https://github.com/gtkwave/gtkwave), and [Surfer](https://gitlab.com/surfer-project/surfer).
+The container also ships with four PDKs, including [SkyWater sky130A](https://github.com/rtimothyedwards/open_pdks), [GlobalFoundries gf180mcuD](https://github.com/rtimothyedwards/open_pdks), [IHP ihp-sg13cmos5l](https://github.com/IHP-GmbH/ihp-sg13cmos5l) and [IHP ihp-sg13g2](https://github.com/IHP-GmbH/IHP-Open-PDK) used by this template.
 
-The container runs on Linux, macOS, and Windows. The installation
-instructions are kept in the
-[`iic-jku/IIC-OSIC-TOOLS`](https://github.com/iic-jku/IIC-OSIC-TOOLS)
-GitHub repository. Video walk-throughs are available for Linux and
-Windows.
+![Overview of the most important open-source tools and PDKs shipped with the IIC-OSIC-TOOLS container.](fig/tools_overview/tools_overview.svg){#fig-tools-overview}
+
+## Installation {#sec-installation}
+
+The container runs on Linux, macOS, and Windows. The installation instructions are documented in the container's [`README.md`](https://github.com/iic-jku/IIC-OSIC-TOOLS/blob/main/README.md#1-how-to-use-these-open-source-and-free-ic-design-tools). For this tutorial, we recommend the quick one-liner installation.
+
+Additional video walk-throughs are available for Linux and Windows.
 
 ::: {.callout-note collapse="true"}
 ## Ubuntu / Linux installation
 
-- [IIC-OSIC-TOOLS installation on Ubuntu (Part 1)](https://www.youtube.com/watch?v=l8kZUocmY5k)
-- [IIC-OSIC-TOOLS installation on Ubuntu (Part 2)](https://www.youtube.com/watch?v=CpKEOVRHT7o&t=51s)
+- [IIC-OSIC-TOOLS installation on Ubuntu](https://www.youtube.com/watch?v=l8kZUocmY5k)
 :::
 
 ::: {.callout-note collapse="true"}
@@ -101,32 +97,23 @@ Windows.
 - [IIC-OSIC-TOOLS installation on Windows (from 37:20 to 45:15)](https://www.youtube.com/watch?v=AiFTwKdS2V4)
 :::
 
-On macOS, the same Docker-based instructions apply. See the container's
-`README.md` for OS-specific notes.
 
-## Selecting the IHP SG13G2 PDK
+## Selecting the ihp-sg13g2 PDK
 
-The container can host several Open-PDKs (SkyWater 130,
-GlobalFoundries 180, IHP SG13G2). The active PDK is selected per
-`designs/` folder via a marker file called `.designinit`. Two options
-are available.
+As mentioned above, the container includes four Open-PDKs. To activate or switch the active PDK, the following two options are available. More detailed instructions can be found in the container's [`README.md`](https://github.com/iic-jku/IIC-OSIC-TOOLS/blob/main/README.md#2-installed-pdks).
 
-1. **Per-design marker file.** Copy a `.designinit` file referencing the
-   IHP SG13G2 PDK into your `designs/` directory and restart the
-   container. The PDK is then picked automatically every time the
-   container is launched in that directory.
+1. **`.designinit` file.** Copy the [`.designinit`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/.designinit) file referencing the ihp-sg13g2 PDK into your `designs/` directory and restart the container. The PDK is then picked automatically every time the container is launched in that directory.
+
 2. **On-the-fly switch.** Run
 
    ```sh
    sak-pdk ihp-sg13g2
    ```
 
-   inside the container. This switches the active PDK for the current
-   session without modifying any file.
+  inside the container. This switches the active PDK for the current session without modifying any file. When called without arguments (`sak-pdk`), a list of installed PDKs is shown.
 
 ::: {.callout-tip}
-By default the container is already configured for `ihp-sg13g2`, so
-both options above are only needed when switching between PDKs.
+By default, the container is already configured for `ihp-sg13g2`, so both options above are only needed when switching between PDKs. However, since this tutorial can also be used for all other PDKs, it is worth knowing how to switch the active PDK.
 :::
 
 
