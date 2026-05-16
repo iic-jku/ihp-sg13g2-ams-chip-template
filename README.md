@@ -164,7 +164,6 @@ A designer-oriented description of this chip can be found in [doc/](doc/):
 │  ├─ 📁 plot_simulations/
 │  ├─ add_logo_fill.sh
 │  ├─ add_rectangle.py
-│  ├─ gds_xor.py
 │  └─ lay2img.py
 ├─ 📁 testbenches/
 │  ├─ 📁 cocotb/
