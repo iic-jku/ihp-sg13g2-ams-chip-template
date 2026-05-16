@@ -22,10 +22,6 @@ format:
     toc: true
 ---
 
-::: {.callout-warning}
-This documentation is a Work in Progress.
-:::
-
 ::: {.callout-important}
 This tutorial and the underlying template repository require the [IIC-OSIC-TOOLS](https://github.com/iic-jku/IIC-OSIC-TOOLS) container with tag `2026.05` or later. All commands below assume that the container has been entered and that the working directory is a folder with the corresponding `Makefile`.
 :::
@@ -537,7 +533,7 @@ Load a testbench in Xschem, then hold **`Ctrl`** and press the **Simulate** arro
 This is the recommended way to inspect or modify the underlying circuit and the graphical symbol of any device.
 :::
 
-![Xschem `inverter` schematic.](fig/inverter_top/inverter_schematic.svg){#fig-inverter-schematic width=75%}
+![Xschem `inverter` schematic.](fig/inverter_top/inverter_schematic.svg){#fig-inverter-schematic width=50%}
 
 Non-interactive runs and post-processing are also available through the Makefile.
 
@@ -580,7 +576,7 @@ After modifying the layout, export a clean `.gds` file (for example
 `inverter_top.gds`). The Magic-based flows always work on `.gds`, while
 the KLayout-based flows accept either `.gds` or `.klay.gds`.
 
-![`inverter_top` layout in KLayout.](fig/inverter_top/inverter_top_black.png){#fig-inverter-top-layout width=75%}
+![`inverter_top` layout in KLayout.](fig/inverter_top/inverter_top_black.png){#fig-inverter-top-layout width=50%}
 
 ## DRC, LVS, and PEX
 
