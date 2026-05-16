@@ -362,21 +362,21 @@ window.Quarto = {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#sec-overview" id="toc-sec-overview" class="nav-link active" data-scroll-target="#sec-overview"><span class="header-section-number">1</span> Overview</a>
+  <li><a href="#sec-overview" id="toc-sec-overview" class="nav-link active" data-scroll-target="#sec-overview"><span class="header-section-number">1</span> Tutorial Overview</a>
   <ul class="collapse">
   <li><a href="#guidelines-cheatsheets" id="toc-guidelines-cheatsheets" class="nav-link" data-scroll-target="#guidelines-cheatsheets"><span class="header-section-number">1.1</span> Guidelines &amp; Cheatsheets</a></li>
   </ul></li>
   <li><a href="#sec-tools" id="toc-sec-tools" class="nav-link" data-scroll-target="#sec-tools"><span class="header-section-number">2</span> Tools</a>
   <ul class="collapse">
-  <li><a href="#iic-osic-tools-container" id="toc-iic-osic-tools-container" class="nav-link" data-scroll-target="#iic-osic-tools-container"><span class="header-section-number">2.1</span> IIC-OSIC-TOOLS Container</a></li>
-  <li><a href="#sec-installation" id="toc-sec-installation" class="nav-link" data-scroll-target="#sec-installation"><span class="header-section-number">2.2</span> Installation</a></li>
-  <li><a href="#selecting-the-ihp-sg13g2-pdk" id="toc-selecting-the-ihp-sg13g2-pdk" class="nav-link" data-scroll-target="#selecting-the-ihp-sg13g2-pdk"><span class="header-section-number">2.3</span> Selecting the ihp-sg13g2 PDK</a></li>
+  <li><a href="#iic-osic-tools-overview" id="toc-iic-osic-tools-overview" class="nav-link" data-scroll-target="#iic-osic-tools-overview"><span class="header-section-number">2.1</span> IIC-OSIC-TOOLS Overview</a></li>
+  <li><a href="#sec-installation" id="toc-sec-installation" class="nav-link" data-scroll-target="#sec-installation"><span class="header-section-number">2.2</span> IIC-OSIC-TOOLS Installation</a></li>
+  <li><a href="#selection-of-the-pdk" id="toc-selection-of-the-pdk" class="nav-link" data-scroll-target="#selection-of-the-pdk"><span class="header-section-number">2.3</span> Selection of the PDK</a></li>
   </ul></li>
   <li><a href="#sec-repo" id="toc-sec-repo" class="nav-link" data-scroll-target="#sec-repo"><span class="header-section-number">3</span> Repository Overview</a>
   <ul class="collapse">
   <li><a href="#purpose" id="toc-purpose" class="nav-link" data-scroll-target="#purpose"><span class="header-section-number">3.1</span> Purpose</a></li>
   <li><a href="#directory-structure" id="toc-directory-structure" class="nav-link" data-scroll-target="#directory-structure"><span class="header-section-number">3.2</span> Directory Structure</a></li>
-  <li><a href="#workflow-in-a-nutshell" id="toc-workflow-in-a-nutshell" class="nav-link" data-scroll-target="#workflow-in-a-nutshell"><span class="header-section-number">3.3</span> Workflow in a Nutshell</a>
+  <li><a href="#workflow" id="toc-workflow" class="nav-link" data-scroll-target="#workflow"><span class="header-section-number">3.3</span> Workflow</a>
   <ul class="collapse">
   <li><a href="#most-important-top-level-targets" id="toc-most-important-top-level-targets" class="nav-link" data-scroll-target="#most-important-top-level-targets"><span class="header-section-number">3.3.1</span> Most important top-level targets</a></li>
   <li><a href="#most-important-counter-makefile-targets" id="toc-most-important-counter-makefile-targets" class="nav-link" data-scroll-target="#most-important-counter-makefile-targets"><span class="header-section-number">3.3.2</span> Most important counter Makefile targets</a></li>
@@ -509,7 +509,7 @@ Important
 </div>
 </div>
 <section id="sec-overview" class="level1" data-number="1">
-<h1 data-number="1"><span class="header-section-number">1</span> Overview</h1>
+<h1 data-number="1"><span class="header-section-number">1</span> Tutorial Overview</h1>
 <p>This tutorial is a step-by-step walk-through of the open-source analog-mixed signal (AMS) chip flow based on the <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template"><code>ihp-sg13g2-ams-chip-template</code></a> repository for the ihp-sg13g2 130nm Open-PDK. It covers:</p>
 <ul>
 <li><a href="#sec-overview">Overview</a> and <a href="#sec-installation">Installation</a> of <a href="https://github.com/iic-jku/IIC-OSIC-TOOLS">IIC-OSIC-TOOLS</a></li>
@@ -586,8 +586,8 @@ Note
 <section id="sec-tools" class="level1" data-number="2">
 <h1 data-number="2"><span class="header-section-number">2</span> Tools</h1>
 <p>Numerous open-source chip design tools cover the entire development workflow for purely digital, purely analog, or mixed analog-digital chips. Managing these many tools regarding installation, updates, and maintenance is complex, especially given the rapid pace of change. Therefore, the <a href="https://www.jku.at/en/institute-for-integrated-circuits-and-quantum-computing/">Institute for Integrated Circuits and Quantum Computing</a> at <a href="https://www.jku.at/">Johannes Kepler University</a> (JKU) Linz, Austria decided to build an all-in-one Docker container (<a href="https://github.com/iic-jku/IIC-OSIC-TOOLS">IIC-OSIC-TOOLS</a>) that is updated monthly and supports all essential tools and PDKs. This eliminates the need for the time-consuming individual installation of many tools, and a reproducible development environment (important for past tapeouts) is available within a GNU/Linux-based virtual machine.</p>
-<section id="iic-osic-tools-container" class="level2" data-number="2.1">
-<h2 data-number="2.1" class="anchored" data-anchor-id="iic-osic-tools-container"><span class="header-section-number">2.1</span> IIC-OSIC-TOOLS Container</h2>
+<section id="iic-osic-tools-overview" class="level2" data-number="2.1">
+<h2 data-number="2.1" class="anchored" data-anchor-id="iic-osic-tools-overview"><span class="header-section-number">2.1</span> IIC-OSIC-TOOLS Overview</h2>
 <p><a href="#fig-tools-overview" class="quarto-xref">Figure&nbsp;1</a> shows a rough overview of the most important tools in the IIC-OSIC-TOOLS container. Additional tools are also included, which are documented on the associated <a href="https://github.com/iic-jku/IIC-OSIC-TOOLS">GitHub page</a>. The open-source AMS flow used in this tutorial relies on several tools, namely <a href="https://github.com/StefanSchippers/xschem">Xschem</a>, <a href="https://github.com/rtimothyedwards/magic">Magic</a>, <a href="https://github.com/rtimothyedwards/netgen">Netgen</a>, <a href="https://github.com/KLayout/klayout">KLayout</a>, <a href="https://github.com/danchitnis/ngspice-sf-mirror">Ngspice</a>, <a href="https://codeberg.org/arpadbuermen/VACASK">VACASK</a>, <a href="https://github.com/fossi-foundation/cace">CACE</a>, <a href="https://github.com/librelane/librelane">LibreLane</a>, <a href="https://github.com/YosysHQ/yosys">Yosys</a>, <a href="https://github.com/The-OpenROAD-Project/OpenROAD">OpenROAD</a>, <a href="https://github.com/verilator/verilator">Verilator</a>, <a href="https://github.com/cocotb/cocotb">cocotb</a>, <a href="https://github.com/gtkwave/gtkwave">GTKWave</a>, and <a href="https://gitlab.com/surfer-project/surfer">Surfer</a>. The container also ships with four PDKs, including <a href="https://github.com/rtimothyedwards/open_pdks">SkyWater sky130A</a>, <a href="https://github.com/rtimothyedwards/open_pdks">GlobalFoundries gf180mcuD</a>, <a href="https://github.com/IHP-GmbH/ihp-sg13cmos5l">IHP ihp-sg13cmos5l</a> and <a href="https://github.com/IHP-GmbH/IHP-Open-PDK">IHP ihp-sg13g2</a> used by this template.</p>
 <div id="fig-tools-overview" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
@@ -601,7 +601,7 @@ Figure&nbsp;1: Overview of the most important open-source tools and PDKs shipped
 </div>
 </section>
 <section id="sec-installation" class="level2" data-number="2.2">
-<h2 data-number="2.2" class="anchored" data-anchor-id="sec-installation"><span class="header-section-number">2.2</span> Installation</h2>
+<h2 data-number="2.2" class="anchored" data-anchor-id="sec-installation"><span class="header-section-number">2.2</span> IIC-OSIC-TOOLS Installation</h2>
 <p>The container runs on Linux, macOS, and Windows. The installation instructions are documented in the container’s <a href="https://github.com/iic-jku/IIC-OSIC-TOOLS/blob/main/README.md#1-how-to-use-these-open-source-and-free-ic-design-tools"><code>README.md</code></a>. For this tutorial, we recommend the quick one-liner installation.</p>
 <p>Additional video walk-throughs are available for Linux and Windows.</p>
 <div class="callout callout-style-default callout-note callout-titled">
@@ -641,8 +641,8 @@ Figure&nbsp;1: Overview of the most important open-source tools and PDKs shipped
 </div>
 </div>
 </section>
-<section id="selecting-the-ihp-sg13g2-pdk" class="level2" data-number="2.3">
-<h2 data-number="2.3" class="anchored" data-anchor-id="selecting-the-ihp-sg13g2-pdk"><span class="header-section-number">2.3</span> Selecting the ihp-sg13g2 PDK</h2>
+<section id="selection-of-the-pdk" class="level2" data-number="2.3">
+<h2 data-number="2.3" class="anchored" data-anchor-id="selection-of-the-pdk"><span class="header-section-number">2.3</span> Selection of the PDK</h2>
 <p>As mentioned above, the container includes four Open-PDKs. To activate or switch the active PDK, the following two options are available. More detailed instructions can be found in the container’s <a href="https://github.com/iic-jku/IIC-OSIC-TOOLS/blob/main/README.md#2-installed-pdks"><code>README.md</code></a>.</p>
 <ol type="1">
 <li><p><strong><code>.designinit</code> file:</strong> Copy the <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/.designinit"><code>.designinit</code></a> file referencing the ihp-sg13g2 PDK into your <code>designs/</code> directory and restart the container. The PDK is then picked automatically every time the container is launched in that directory.</p></li>
@@ -669,97 +669,53 @@ Tip
 <h1 data-number="3"><span class="header-section-number">3</span> Repository Overview</h1>
 <section id="purpose" class="level2" data-number="3.1">
 <h2 data-number="3.1" class="anchored" data-anchor-id="purpose"><span class="header-section-number">3.1</span> Purpose</h2>
-<p>This <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/README.md">Makefile-driven repository</a> simulates, builds, and verifies (LVS, DRC, PEX) an analog mixed-signal chip for the ihp-sg13g2 130-nm Open-PDK, including padframe generation and top-level assembly. It uses:</p>
+<p><a href="https://github.com/rtimothyedwards/netgen"><strong>Netgen</strong></a> and <a href="https://github.com/KLayout/klayout"><strong>KLayout</strong></a> for LVS, DRC, and PEX, simulation. regression test for the open-source tools on the IHP SG13G2 Open-PDK. This Makefile-driven repository simulates, builds, and fully verifies (LVS, DRC, PEX) a complete analog mixed-signal chip for the ihp-sg13g2 130nm Open-PDK, including padframe generation and top-level assembly. It uses:</p>
 <ul>
-<li><a href="https://github.com/librelane/librelane"><strong>LibreLane</strong></a> for digital macro hardening, padframe generation, and top-level assembly,</li>
-<li><a href="https://github.com/StefanSchippers/xschem"><strong>Xschem</strong></a> for schematic entry,</li>
-<li><a href="https://github.com/danchitnis/ngspice-sf-mirror"><strong>Ngspice</strong></a>, <a href="https://codeberg.org/arpadbuermen/VACASK"><strong>VACASK</strong></a>, and <a href="https://github.com/fossi-foundation/cace"><strong>CACE</strong></a> for analog simulation,</li>
-<li><a href="https://github.com/KLayout/klayout"><strong>KLayout</strong></a> for viewing and routing of the layout,</li>
-<li><a href="https://github.com/rtimothyedwards/magic"><strong>Magic</strong></a> + <a href="https://github.com/rtimothyedwards/netgen"><strong>Netgen</strong></a> and <a href="https://github.com/KLayout/klayout"><strong>KLayout</strong></a> for LVS, DRC, and PEX,</li>
-<li><strong>SystemVerilog</strong>, <a href="https://github.com/cocotb/cocotb"><strong>cocotb</strong></a>, <a href="https://github.com/gtkwave/gtkwave"><strong>GTKWave</strong></a>, and <a href="https://gitlab.com/surfer-project/surfer"><strong>Surfer</strong></a> for digital simulation.</li>
+<li><a href="https://github.com/librelane/librelane"><strong>LibreLane</strong></a> for digital macro hardening, padframe generation and top-level assembly</li>
+<li><a href="https://github.com/StefanSchippers/xschem"><strong>Xschem</strong></a> for schematic entry</li>
+<li><a href="https://github.com/danchitnis/ngspice-sf-mirror"><strong>Ngspice</strong></a>, <a href="https://codeberg.org/arpadbuermen/VACASK"><strong>VACASK</strong></a> and <a href="https://github.com/fossi-foundation/cace"><strong>CACE</strong></a> for analog simulation</li>
+<li><a href="https://github.com/KLayout/klayout"><strong>KLayout</strong></a> for viewing and routing of the layout</li>
+<li><a href="https://github.com/rtimothyedwards/magic"><strong>Magic</strong></a> + <a href="https://github.com/rtimothyedwards/netgen"><strong>Netgen</strong></a> and <a href="https://github.com/KLayout/klayout"><strong>KLayout</strong></a> for LVS, DRC and PEX verification</li>
+<li><strong>SystemVerilog</strong>, <a href="https://github.com/cocotb/cocotb"><strong>cocotb</strong></a>, <a href="https://github.com/gtkwave/gtkwave"><strong>GTKWave</strong></a> and <a href="https://gitlab.com/surfer-project/surfer"><strong>Surfer</strong></a> for digital simulation</li>
 </ul>
-<p>The repository is the right starting point for custom silicon. Just clone it, enter the IIC-OSIC-TOOLS container, run <code>make all</code>, and the result is a tapeout-ready analog-mixed signal chip. It also acts as a regression test for the open-source tools on the IHP SG13G2 Open-PDK.</p>
+<p>The repository is the starting point for your own custom silicon and provides a universal design flow solution: Just clone the repo, enter the IIC-OSIC-TOOLS container, and run <code>make all</code> to get a tapeout-ready analog-mixed signal chip. Focus on your design and do not care about the tools and the design flow! ## Examples</p>
+<ul>
+<li><a href="https://github.com/iic-jku/TinyWhisper">TinyWhisper</a>: An Open-Source Fully-Integrated Multi-Mode Short-Wave Transmitter for Amateur Radio Applications in 130-nm CMOS</li>
+<li><a href="https://github.com/iic-jku/SG13G2_SPARX">SPARX</a>: An Open-Source, Automated, Programmatically Generated, Frequency-Scalable Six-Port Receiver in 130-nm CMOS</li>
+<li>wafer.space gf180mcuD MPW <a href="https://github.com/iic-jku/gf180mcu-jku-projects">Multi-Project Chip</a></li>
+</ul>
 </section>
 <section id="directory-structure" class="level2" data-number="3.2">
 <h2 data-number="3.2" class="anchored" data-anchor-id="directory-structure"><span class="header-section-number">3.2</span> Directory Structure</h2>
-<p>The repository is organised into the following top-level folders. The full listing is in the <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/README.md">main README.md</a>.</p>
-<table class="caption-top table">
-<thead>
-<tr class="header">
-<th>Folder</th>
-<th>Purpose</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/doc/"><code>doc/</code></a></td>
-<td>Designer documentation (<a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/doc/specifications.md">specifications</a>, <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/doc/pinout.md">pinout</a>, <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/doc/floorplan.md">floorplan</a>) and <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/doc/librelane/librelane_cheatsheet.md">PDK / tool cheatsheets</a>.</td>
-</tr>
-<tr class="even">
-<td><a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/flow/"><code>flow/</code></a></td>
-<td>LibreLane top-level configuration (<a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/flow/librelane/config.yaml"><code>config.yaml</code></a>, <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/flow/librelane/pdn_cfg.tcl"><code>pdn_cfg.tcl</code></a>, <code>chip_top.sdc</code>) and the ArtistIC logo flow.</td>
-</tr>
-<tr class="odd">
-<td><a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/ip/"><code>ip/</code></a></td>
-<td>External IP cells (bondpads, custom IO cells, JKU logos).</td>
-</tr>
-<tr class="even">
-<td><a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/layout/"><code>layout/</code></a></td>
-<td>Compressed GDS streams of the top-level chip (<code>chip_top.gds.gz</code> and <code>chip_top_logo_fill.gds.gz</code>).</td>
-</tr>
-<tr class="odd">
-<td><a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/"><code>macros/</code></a></td>
-<td>In-tree macros (<a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/counter/"><code>counter/</code></a> and <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/inverter/"><code>inverter/</code></a>), each with its own Makefile and README.</td>
-</tr>
-<tr class="even">
-<td><a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/netlist/"><code>netlist/</code></a></td>
-<td>Synthesis, layout, and PEX netlists used for LVS and simulation.</td>
-</tr>
-<tr class="odd">
-<td><a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/release/"><code>release/</code></a></td>
-<td>Tapeout submission artifacts, versioned (<code>v.1.0.0/</code>, …).</td>
-</tr>
-<tr class="even">
-<td><a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/render/"><code>render/</code></a></td>
-<td>Chip and macro renders for documentation.</td>
-</tr>
-<tr class="odd">
-<td><a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/rtl/"><code>rtl/</code></a></td>
-<td>Top-level RTL (<a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/rtl/chip_top.sv"><code>chip_top.sv</code></a>, <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/rtl/chip_core.sv"><code>chip_core.sv</code></a>).</td>
-</tr>
-<tr class="even">
-<td><a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/schematic/"><code>schematic/</code></a></td>
-<td>Xschem schematics and symbols for the chip top.</td>
-</tr>
-<tr class="odd">
-<td><a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/scripts/"><code>scripts/</code></a></td>
-<td>Helper Python and shell scripts (rendering, logo placement, plotting).</td>
-</tr>
-<tr class="even">
-<td><a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/testbenches/"><code>testbenches/</code></a></td>
-<td>Cocotb and Xschem testbenches for the top-level chip.</td>
-</tr>
-<tr class="odd">
-<td><a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/tutorial/"><code>tutorial/</code></a></td>
-<td>This Quarto tutorial.</td>
-</tr>
-<tr class="even">
-<td><a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/verification/"><code>verification/</code></a></td>
-<td>DRC / LVS / signoff reports.</td>
-</tr>
-</tbody>
-</table>
+<p>The repository is organised into the following top-level folders. The The repository is organised into the following top-level folders. The full listing can be found in the <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/README.md">main README.md</a>.</p>
+<div class="line-block"><a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/doc/"><code>doc/</code></a> | Designer documentation (<a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/doc/specifications.md">specifications</a>, <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/doc/pinout.md">pinout</a>, <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/doc/floorplan.md">floorplan</a>) and <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/doc/librelane/librelane_cheatsheet.md">PDK / tool cheatsheets</a>. |<br>
+<a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/flow/"><code>flow/</code></a> | LibreLane top-level configuration (<a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/flow/librelane/config.yaml"><code>config.yaml</code></a>, <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/flow/librelane/pdn_cfg.tcl"><code>pdn_cfg.tcl</code></a>, <code>chip_top.sdc</code>) and the ArtistIC logo flow. |<br>
+<a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/ip/"><code>ip/</code></a> | External IP cells (bondpads, custom IO cells, JKU logos). |<br>
+<a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/layout/"><code>layout/</code></a> | Compressed GDS streams of the top-level chip (<code>chip_top.gds.gz</code> and <code>chip_top_logo_fill.gds.gz</code>). |<br>
+<a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/"><code>macros/</code></a> | In-tree macros (<a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/counter/"><code>counter/</code></a> and <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/inverter/"><code>inverter/</code></a>), each with its own Makefile and README. |<br>
+<a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/flow/"><code>flow/</code></a> | LibreLane top-level configuration (<a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/flow/librelane/config.yaml"><code>config.yaml</code></a>, <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/flow/librelane/pdn_cfg.tcl"><code>pdn_cfg.tcl</code></a>, <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/flow/librelane/chip_top.sdc"><code>chip_top.sdc</code></a>) and the <a href="https://github.com/pulp-platform/artistic">ArtistIC</a> logo flow. |<br>
+<a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/ip/"><code>ip/</code></a> | External IP cells (bondpads, custom IO cells, and logos). |<br>
+<a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/layout/"><code>layout/</code></a> | Compressed GDS streams of the top-level chip (<code>chip_top.gds.gz</code> and <code>chip_top_logo_fill.gds.gz</code>). <code>chip_top_logo_fill.gds.gz</code> includes the ArtistIC logo and filler structures. |<br>
+<a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/"><code>macros/</code></a> | Recursive-style macros (<a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/counter/"><code>counter/</code></a> and <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/inverter/"><code>inverter/</code></a>), each with its own <code>Makefile</code> and <code>README</code>. |<br>
+<a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/release/"><code>release/</code></a> | Tapeout submission artifacts, versioned (<code>v.1.0.0/</code>, …). |<br>
+<a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/render/"><code>render/</code></a> | Chip and macro renders for documentation. |<br>
+<a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/rtl/"><code>rtl/</code></a> | Top-level RTL (<a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/rtl/chip_top.sv"><code>chip_top.sv</code></a>, <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/rtl/chip_core.sv"><code>chip_core.sv</code></a>). |<br>
+<a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/schematic/"><code>schematic/</code></a> | Xschem schematics and symbols for the top-level chip. |<br>
+<a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/scripts/"><code>scripts/</code></a> | Helper Python and shell scripts (rendering, logo placement, plotting). |<br>
+<a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/testbenches/"><code>testbenches/</code></a> | Cocotb and Xschem testbenches for the top-level chip. |<br>
+<a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/tutorial/"><code>tutorial/</code></a> | This Quarto tutorial. |<br>
+<a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/verification/"><code>verification/</code></a> | DRC / LVS / signoff reports. |</div>
 </section>
-<section id="workflow-in-a-nutshell" class="level2" data-number="3.3">
-<h2 data-number="3.3" class="anchored" data-anchor-id="workflow-in-a-nutshell"><span class="header-section-number">3.3</span> Workflow in a Nutshell</h2>
-<p>The flow is driven by Makefiles. After cloning the repository and entering the IIC-OSIC-TOOLS container, every step is invoked via a <code>make</code> target. The default goal of every <code>Makefile</code> is <code>help</code>, so <code>make</code> (without arguments) prints the list of available targets.</p>
+<section id="workflow" class="level2" data-number="3.3">
+<h2 data-number="3.3" class="anchored" data-anchor-id="workflow"><span class="header-section-number">3.3</span> Workflow</h2>
+<p>The flow is driven by Makefiles. After cloning the repository and entering the IIC-OSIC-TOOLS container, every step is invoked via a <code>make</code> target. The default goal of every <code>Makefile</code> is <code>help</code>, so <code>make</code> (without arguments) prints the list of available targets. After entering the container, the start folder is <code>foss/designs/</code>.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> clone https://github.com/iic-jku/ihp-sg13g2-ams-chip-template.git</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> ihp-sg13g2-ams-chip-template</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> help              <span class="co"># show available targets at the chip top level</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Each macro under <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/"><code>macros/</code></a> has its own <code>Makefile</code> and <code>README.md</code> with macro-local targets. They are called by the top-level build targets, but can also be invoked directly from inside the macro folder.</p>
 <section id="most-important-top-level-targets" class="level3" data-number="3.3.1">
 <h3 data-number="3.3.1" class="anchored" data-anchor-id="most-important-top-level-targets"><span class="header-section-number">3.3.1</span> Most important top-level targets</h3>
-<p>The full list is in the <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/Makefile">top-level Makefile</a>. The relevant subset is summarised below.</p>
+<p>The full list of targets can be found in the <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/README.md#show-available-targets">top-level README</a>. The relevant subset is summarised below.</p>
 <table class="caption-top table">
 <colgroup>
 <col style="width: 15%">
