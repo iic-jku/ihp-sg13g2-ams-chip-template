@@ -1,5 +1,5 @@
 // SPDX-FileCopyrightText: 2026 Simon Dorrer and Harald Pretl
-// SPDX-License-Identifier: Apache-2.0
+// SPDX-License-Identifier: Apache-2.0 WITH SHL-2.1
 // Description: Shared constants for the counter macro.
 //
 // Implemented as `define macros (not a SystemVerilog package) for Yosys 0.64

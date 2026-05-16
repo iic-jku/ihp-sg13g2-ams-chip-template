@@ -1,5 +1,5 @@
 # SPDX-FileCopyrightText: 2024 Leo Moser, 2026 Simon Dorrer and Harald Pretl
-# SPDX-License-Identifier: Apache-2.0
+# SPDX-License-Identifier: Apache-2.0 WITH SHL-2.1
 
 import klayout.db as db
 import argparse

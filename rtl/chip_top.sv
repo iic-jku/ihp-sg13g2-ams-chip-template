@@ -1,5 +1,5 @@
 // SPDX-FileCopyrightText: 2026 Simon Dorrer and Harald Pretl
-// SPDX-License-Identifier: Apache-2.0
+// SPDX-License-Identifier: Apache-2.0 WITH SHL-2.1
 // Description: Top-level chip wrapper.
 // Instantiates the padframe, the chip core and custom logos.
 // The padframe with bondpads, I/O cells, power ring, corners and fillers is handled by LibreLane.
