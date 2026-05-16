@@ -375,12 +375,13 @@ window.Quarto = {
   <li><a href="#sec-repo" id="toc-sec-repo" class="nav-link" data-scroll-target="#sec-repo"><span class="header-section-number">3</span> Repository Overview</a>
   <ul class="collapse">
   <li><a href="#purpose" id="toc-purpose" class="nav-link" data-scroll-target="#purpose"><span class="header-section-number">3.1</span> Purpose</a></li>
-  <li><a href="#directory-structure" id="toc-directory-structure" class="nav-link" data-scroll-target="#directory-structure"><span class="header-section-number">3.2</span> Directory Structure</a></li>
-  <li><a href="#workflow" id="toc-workflow" class="nav-link" data-scroll-target="#workflow"><span class="header-section-number">3.3</span> Workflow</a>
+  <li><a href="#examples" id="toc-examples" class="nav-link" data-scroll-target="#examples"><span class="header-section-number">3.2</span> Examples</a></li>
+  <li><a href="#directory-structure" id="toc-directory-structure" class="nav-link" data-scroll-target="#directory-structure"><span class="header-section-number">3.3</span> Directory Structure</a></li>
+  <li><a href="#workflow" id="toc-workflow" class="nav-link" data-scroll-target="#workflow"><span class="header-section-number">3.4</span> Workflow</a>
   <ul class="collapse">
-  <li><a href="#most-important-top-level-targets" id="toc-most-important-top-level-targets" class="nav-link" data-scroll-target="#most-important-top-level-targets"><span class="header-section-number">3.3.1</span> Most important top-level targets</a></li>
-  <li><a href="#most-important-counter-makefile-targets" id="toc-most-important-counter-makefile-targets" class="nav-link" data-scroll-target="#most-important-counter-makefile-targets"><span class="header-section-number">3.3.2</span> Most important counter Makefile targets</a></li>
-  <li><a href="#most-important-inverter-makefile-targets" id="toc-most-important-inverter-makefile-targets" class="nav-link" data-scroll-target="#most-important-inverter-makefile-targets"><span class="header-section-number">3.3.3</span> Most important inverter Makefile targets</a></li>
+  <li><a href="#most-important-top-level-targets" id="toc-most-important-top-level-targets" class="nav-link" data-scroll-target="#most-important-top-level-targets"><span class="header-section-number">3.4.1</span> Most important top-level targets</a></li>
+  <li><a href="#most-important-counter-makefile-targets" id="toc-most-important-counter-makefile-targets" class="nav-link" data-scroll-target="#most-important-counter-makefile-targets"><span class="header-section-number">3.4.2</span> Most important counter Makefile targets</a></li>
+  <li><a href="#most-important-inverter-makefile-targets" id="toc-most-important-inverter-makefile-targets" class="nav-link" data-scroll-target="#most-important-inverter-makefile-targets"><span class="header-section-number">3.4.3</span> Most important inverter Makefile targets</a></li>
   </ul></li>
   </ul></li>
   <li><a href="#sec-counter" id="toc-sec-counter" class="nav-link" data-scroll-target="#sec-counter"><span class="header-section-number">4</span> Counter Macro Implementation</a>
@@ -669,7 +670,7 @@ Tip
 <h1 data-number="3"><span class="header-section-number">3</span> Repository Overview</h1>
 <section id="purpose" class="level2" data-number="3.1">
 <h2 data-number="3.1" class="anchored" data-anchor-id="purpose"><span class="header-section-number">3.1</span> Purpose</h2>
-<p><a href="https://github.com/rtimothyedwards/netgen"><strong>Netgen</strong></a> and <a href="https://github.com/KLayout/klayout"><strong>KLayout</strong></a> for LVS, DRC, and PEX, simulation. regression test for the open-source tools on the IHP SG13G2 Open-PDK. This Makefile-driven repository simulates, builds, and fully verifies (LVS, DRC, PEX) a complete analog mixed-signal chip for the ihp-sg13g2 130nm Open-PDK, including padframe generation and top-level assembly. It uses:</p>
+<p>This Makefile-driven repository simulates, builds, and fully verifies (LVS, DRC, PEX) a complete analog mixed-signal chip for the ihp-sg13g2 130nm Open-PDK, including padframe generation and top-level assembly. It uses:</p>
 <ul>
 <li><a href="https://github.com/librelane/librelane"><strong>LibreLane</strong></a> for digital macro hardening, padframe generation and top-level assembly</li>
 <li><a href="https://github.com/StefanSchippers/xschem"><strong>Xschem</strong></a> for schematic entry</li>
@@ -678,43 +679,97 @@ Tip
 <li><a href="https://github.com/rtimothyedwards/magic"><strong>Magic</strong></a> + <a href="https://github.com/rtimothyedwards/netgen"><strong>Netgen</strong></a> and <a href="https://github.com/KLayout/klayout"><strong>KLayout</strong></a> for LVS, DRC and PEX verification</li>
 <li><strong>SystemVerilog</strong>, <a href="https://github.com/cocotb/cocotb"><strong>cocotb</strong></a>, <a href="https://github.com/gtkwave/gtkwave"><strong>GTKWave</strong></a> and <a href="https://gitlab.com/surfer-project/surfer"><strong>Surfer</strong></a> for digital simulation</li>
 </ul>
-<p>The repository is the starting point for your own custom silicon and provides a universal design flow solution: Just clone the repo, enter the IIC-OSIC-TOOLS container, and run <code>make all</code> to get a tapeout-ready analog-mixed signal chip. Focus on your design and do not care about the tools and the design flow! ## Examples</p>
+<p>The repository is the starting point for your own custom silicon and provides a universal design flow solution: Just clone the repo, enter the IIC-OSIC-TOOLS container, and run <code>make all</code> to get a tapeout-ready analog-mixed signal chip. Focus on your design and do not care about the tools and the design flow!</p>
+<p>Furthermore, it serves as a regression test for the above-mentioned open-source tools and their dependencies using the ihp-sg13g2 Open-PDK.</p>
+</section>
+<section id="examples" class="level2" data-number="3.2">
+<h2 data-number="3.2" class="anchored" data-anchor-id="examples"><span class="header-section-number">3.2</span> Examples</h2>
+<p>Examples based on this template are:</p>
 <ul>
 <li><a href="https://github.com/iic-jku/TinyWhisper">TinyWhisper</a>: An Open-Source Fully-Integrated Multi-Mode Short-Wave Transmitter for Amateur Radio Applications in 130-nm CMOS</li>
 <li><a href="https://github.com/iic-jku/SG13G2_SPARX">SPARX</a>: An Open-Source, Automated, Programmatically Generated, Frequency-Scalable Six-Port Receiver in 130-nm CMOS</li>
 <li>wafer.space gf180mcuD MPW <a href="https://github.com/iic-jku/gf180mcu-jku-projects">Multi-Project Chip</a></li>
 </ul>
 </section>
-<section id="directory-structure" class="level2" data-number="3.2">
-<h2 data-number="3.2" class="anchored" data-anchor-id="directory-structure"><span class="header-section-number">3.2</span> Directory Structure</h2>
-<p>The repository is organised into the following top-level folders. The The repository is organised into the following top-level folders. The full listing can be found in the <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/README.md">main README.md</a>.</p>
-<div class="line-block"><a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/doc/"><code>doc/</code></a> | Designer documentation (<a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/doc/specifications.md">specifications</a>, <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/doc/pinout.md">pinout</a>, <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/doc/floorplan.md">floorplan</a>) and <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/doc/librelane/librelane_cheatsheet.md">PDK / tool cheatsheets</a>. |<br>
-<a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/flow/"><code>flow/</code></a> | LibreLane top-level configuration (<a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/flow/librelane/config.yaml"><code>config.yaml</code></a>, <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/flow/librelane/pdn_cfg.tcl"><code>pdn_cfg.tcl</code></a>, <code>chip_top.sdc</code>) and the ArtistIC logo flow. |<br>
-<a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/ip/"><code>ip/</code></a> | External IP cells (bondpads, custom IO cells, JKU logos). |<br>
-<a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/layout/"><code>layout/</code></a> | Compressed GDS streams of the top-level chip (<code>chip_top.gds.gz</code> and <code>chip_top_logo_fill.gds.gz</code>). |<br>
-<a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/"><code>macros/</code></a> | In-tree macros (<a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/counter/"><code>counter/</code></a> and <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/inverter/"><code>inverter/</code></a>), each with its own Makefile and README. |<br>
-<a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/flow/"><code>flow/</code></a> | LibreLane top-level configuration (<a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/flow/librelane/config.yaml"><code>config.yaml</code></a>, <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/flow/librelane/pdn_cfg.tcl"><code>pdn_cfg.tcl</code></a>, <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/flow/librelane/chip_top.sdc"><code>chip_top.sdc</code></a>) and the <a href="https://github.com/pulp-platform/artistic">ArtistIC</a> logo flow. |<br>
-<a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/ip/"><code>ip/</code></a> | External IP cells (bondpads, custom IO cells, and logos). |<br>
-<a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/layout/"><code>layout/</code></a> | Compressed GDS streams of the top-level chip (<code>chip_top.gds.gz</code> and <code>chip_top_logo_fill.gds.gz</code>). <code>chip_top_logo_fill.gds.gz</code> includes the ArtistIC logo and filler structures. |<br>
-<a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/"><code>macros/</code></a> | Recursive-style macros (<a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/counter/"><code>counter/</code></a> and <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/inverter/"><code>inverter/</code></a>), each with its own <code>Makefile</code> and <code>README</code>. |<br>
-<a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/release/"><code>release/</code></a> | Tapeout submission artifacts, versioned (<code>v.1.0.0/</code>, …). |<br>
-<a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/render/"><code>render/</code></a> | Chip and macro renders for documentation. |<br>
-<a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/rtl/"><code>rtl/</code></a> | Top-level RTL (<a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/rtl/chip_top.sv"><code>chip_top.sv</code></a>, <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/rtl/chip_core.sv"><code>chip_core.sv</code></a>). |<br>
-<a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/schematic/"><code>schematic/</code></a> | Xschem schematics and symbols for the top-level chip. |<br>
-<a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/scripts/"><code>scripts/</code></a> | Helper Python and shell scripts (rendering, logo placement, plotting). |<br>
-<a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/testbenches/"><code>testbenches/</code></a> | Cocotb and Xschem testbenches for the top-level chip. |<br>
-<a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/tutorial/"><code>tutorial/</code></a> | This Quarto tutorial. |<br>
-<a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/verification/"><code>verification/</code></a> | DRC / LVS / signoff reports. |</div>
+<section id="directory-structure" class="level2" data-number="3.3">
+<h2 data-number="3.3" class="anchored" data-anchor-id="directory-structure"><span class="header-section-number">3.3</span> Directory Structure</h2>
+<p>The repository is organised into the following top-level folders. The full listing can be found in the <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/README.md">main README.md</a>.</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Folder</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/doc/"><code>doc/</code></a></td>
+<td>Designer documentation, including <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/doc/specifications.md">specifications</a>, <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/doc/pinout.md">pinout</a>, <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/doc/floorplan.md">floorplan</a>, and the <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/doc/librelane/librelane_cheatsheet.md">PDK and tool cheatsheets</a>.</td>
+</tr>
+<tr class="even">
+<td><a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/flow/"><code>flow/</code></a></td>
+<td>LibreLane top-level configuration with <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/flow/librelane/config.yaml">config.yaml</a>, <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/flow/librelane/pdn_cfg.tcl">pdn_cfg.tcl</a>, <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/flow/librelane/chip_top.sdc">chip_top.sdc</a>, plus the <a href="https://github.com/pulp-platform/artistic">ArtistIC</a> logo flow.</td>
+</tr>
+<tr class="odd">
+<td><a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/ip/"><code>ip/</code></a></td>
+<td>External IP cells including bondpads, custom IO cells, and logos.</td>
+</tr>
+<tr class="even">
+<td><a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/layout/"><code>layout/</code></a></td>
+<td>Compressed GDS streams of the top-level chip, including chip_top.gds.gz and chip_top_logo_fill.gds.gz.</td>
+</tr>
+<tr class="odd">
+<td><a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/"><code>macros/</code></a></td>
+<td>Recursive-style macros such as <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/counter/">counter/</a> and <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/inverter/">inverter/</a>, each with its own Makefile and README.</td>
+</tr>
+<tr class="even">
+<td><a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/netlist/"><code>netlist/</code></a></td>
+<td>Synthesis, schematic, layout, and PEX netlists used for top-level LVS and simulation.</td>
+</tr>
+<tr class="odd">
+<td><a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/release/"><code>release/</code></a></td>
+<td>Tapeout submission artifacts grouped by version.</td>
+</tr>
+<tr class="even">
+<td><a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/render/"><code>render/</code></a></td>
+<td>Chip and macro renders used in the documentation.</td>
+</tr>
+<tr class="odd">
+<td><a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/rtl/"><code>rtl/</code></a></td>
+<td>Top-level RTL sources, including <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/rtl/chip_top.sv">chip_top.sv</a> and <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/rtl/chip_core.sv">chip_core.sv</a>.</td>
+</tr>
+<tr class="even">
+<td><a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/schematic/"><code>schematic/</code></a></td>
+<td>Xschem schematics and symbols for the top-level chip.</td>
+</tr>
+<tr class="odd">
+<td><a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/scripts/"><code>scripts/</code></a></td>
+<td>Helper Python and shell scripts for rendering, logo placement, and plotting.</td>
+</tr>
+<tr class="even">
+<td><a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/testbenches/"><code>testbenches/</code></a></td>
+<td>Xschem and cocotb testbenches for the top-level chip.</td>
+</tr>
+<tr class="odd">
+<td><a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/tutorial/"><code>tutorial/</code></a></td>
+<td>This Quarto tutorial and its supporting materials.</td>
+</tr>
+<tr class="even">
+<td><a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/verification/"><code>verification/</code></a></td>
+<td>DRC, LVS, and signoff reports.</td>
+</tr>
+</tbody>
+</table>
 </section>
-<section id="workflow" class="level2" data-number="3.3">
-<h2 data-number="3.3" class="anchored" data-anchor-id="workflow"><span class="header-section-number">3.3</span> Workflow</h2>
+<section id="workflow" class="level2" data-number="3.4">
+<h2 data-number="3.4" class="anchored" data-anchor-id="workflow"><span class="header-section-number">3.4</span> Workflow</h2>
 <p>The flow is driven by Makefiles. After cloning the repository and entering the IIC-OSIC-TOOLS container, every step is invoked via a <code>make</code> target. The default goal of every <code>Makefile</code> is <code>help</code>, so <code>make</code> (without arguments) prints the list of available targets. After entering the container, the start folder is <code>foss/designs/</code>.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> clone https://github.com/iic-jku/ihp-sg13g2-ams-chip-template.git</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> ihp-sg13g2-ams-chip-template</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> help              <span class="co"># show available targets at the chip top level</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Each macro under <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/"><code>macros/</code></a> has its own <code>Makefile</code> and <code>README.md</code> with macro-local targets. They are called by the top-level build targets, but can also be invoked directly from inside the macro folder.</p>
-<section id="most-important-top-level-targets" class="level3" data-number="3.3.1">
-<h3 data-number="3.3.1" class="anchored" data-anchor-id="most-important-top-level-targets"><span class="header-section-number">3.3.1</span> Most important top-level targets</h3>
+<section id="most-important-top-level-targets" class="level3" data-number="3.4.1">
+<h3 data-number="3.4.1" class="anchored" data-anchor-id="most-important-top-level-targets"><span class="header-section-number">3.4.1</span> Most important top-level targets</h3>
 <p>The full list of targets can be found in the <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/README.md#show-available-targets">top-level README</a>. The relevant subset is summarised below.</p>
 <table class="caption-top table">
 <colgroup>
@@ -787,8 +842,8 @@ Tip
 </tbody>
 </table>
 </section>
-<section id="most-important-counter-makefile-targets" class="level3" data-number="3.3.2">
-<h3 data-number="3.3.2" class="anchored" data-anchor-id="most-important-counter-makefile-targets"><span class="header-section-number">3.3.2</span> Most important counter Makefile targets</h3>
+<section id="most-important-counter-makefile-targets" class="level3" data-number="3.4.2">
+<h3 data-number="3.4.2" class="anchored" data-anchor-id="most-important-counter-makefile-targets"><span class="header-section-number">3.4.2</span> Most important counter Makefile targets</h3>
 <p>The <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/counter/Makefile">counter Makefile</a> provides:</p>
 <table class="caption-top table">
 <colgroup>
@@ -838,8 +893,8 @@ Tip
 </table>
 <p>See the <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/counter/README.md">counter README</a> for details.</p>
 </section>
-<section id="most-important-inverter-makefile-targets" class="level3" data-number="3.3.3">
-<h3 data-number="3.3.3" class="anchored" data-anchor-id="most-important-inverter-makefile-targets"><span class="header-section-number">3.3.3</span> Most important inverter Makefile targets</h3>
+<section id="most-important-inverter-makefile-targets" class="level3" data-number="3.4.3">
+<h3 data-number="3.4.3" class="anchored" data-anchor-id="most-important-inverter-makefile-targets"><span class="header-section-number">3.4.3</span> Most important inverter Makefile targets</h3>
 <p>The <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/inverter/Makefile">inverter Makefile</a> provides:</p>
 <table class="caption-top table">
 <thead>
