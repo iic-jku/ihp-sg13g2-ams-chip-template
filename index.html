@@ -384,7 +384,7 @@ window.Quarto = {
   <li><a href="#most-important-inverter-makefile-targets" id="toc-most-important-inverter-makefile-targets" class="nav-link" data-scroll-target="#most-important-inverter-makefile-targets"><span class="header-section-number">3.4.3</span> Most important inverter Makefile targets</a></li>
   </ul></li>
   </ul></li>
-  <li><a href="#sec-counter" id="toc-sec-counter" class="nav-link" data-scroll-target="#sec-counter"><span class="header-section-number">4</span> Counter Macro Implementation</a>
+  <li><a href="#sec-digital" id="toc-sec-digital" class="nav-link" data-scroll-target="#sec-digital"><span class="header-section-number">4</span> Digital Macro Implementation</a>
   <ul class="collapse">
   <li><a href="#folder-structure-of-the-counter-macro" id="toc-folder-structure-of-the-counter-macro" class="nav-link" data-scroll-target="#folder-structure-of-the-counter-macro"><span class="header-section-number">4.1</span> Folder Structure of the Counter Macro</a></li>
   <li><a href="#reading-the-rtl" id="toc-reading-the-rtl" class="nav-link" data-scroll-target="#reading-the-rtl"><span class="header-section-number">4.2</span> Reading the RTL</a>
@@ -403,7 +403,7 @@ window.Quarto = {
   <li><a href="#gate-level-mixed-signal-simulation-with-xschem" id="toc-gate-level-mixed-signal-simulation-with-xschem" class="nav-link" data-scroll-target="#gate-level-mixed-signal-simulation-with-xschem"><span class="header-section-number">4.7</span> Gate-Level Mixed-Signal Simulation with Xschem</a></li>
   <li><a href="#build-and-verify-everything" id="toc-build-and-verify-everything" class="nav-link" data-scroll-target="#build-and-verify-everything"><span class="header-section-number">4.8</span> Build and Verify Everything</a></li>
   </ul></li>
-  <li><a href="#sec-inverter" id="toc-sec-inverter" class="nav-link" data-scroll-target="#sec-inverter"><span class="header-section-number">5</span> Inverter Macro Implementation</a>
+  <li><a href="#sec-analog" id="toc-sec-analog" class="nav-link" data-scroll-target="#sec-analog"><span class="header-section-number">5</span> Analog Macro Implementation</a>
   <ul class="collapse">
   <li><a href="#folder-structure-of-the-inverter-macro" id="toc-folder-structure-of-the-inverter-macro" class="nav-link" data-scroll-target="#folder-structure-of-the-inverter-macro"><span class="header-section-number">5.1</span> Folder Structure of the Inverter Macro</a></li>
   <li><a href="#schematic-level-simulation" id="toc-schematic-level-simulation" class="nav-link" data-scroll-target="#schematic-level-simulation"><span class="header-section-number">5.2</span> Schematic-Level Simulation</a></li>
@@ -693,7 +693,7 @@ Tip
 </section>
 <section id="directory-structure" class="level2" data-number="3.3">
 <h2 data-number="3.3" class="anchored" data-anchor-id="directory-structure"><span class="header-section-number">3.3</span> Directory Structure</h2>
-<p>The repository is organised into the following top-level folders. The full listing can be found in the <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/README.md">main README.md</a>.</p>
+<p>The repository is organised into the following top-level folders. The full listing can be found in the <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/README.md#directory-structure">top-level README.md</a>.</p>
 <table class="caption-top table">
 <thead>
 <tr class="header">
@@ -766,15 +766,15 @@ Tip
 <p>The flow is driven by Makefiles. After cloning the repository and entering the IIC-OSIC-TOOLS container, every step is invoked via a <code>make</code> target. The default goal of every <code>Makefile</code> is <code>help</code>, so <code>make</code> (without arguments) prints the list of available targets. After entering the container, the start folder is <code>foss/designs/</code>.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> clone https://github.com/iic-jku/ihp-sg13g2-ams-chip-template.git</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> ihp-sg13g2-ams-chip-template</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> help              <span class="co"># show available targets at the chip top level</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> help              <span class="co"># show available targets at the top level</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Each macro under <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/"><code>macros/</code></a> has its own <code>Makefile</code> and <code>README.md</code> with macro-local targets. They are called by the top-level build targets, but can also be invoked directly from inside the macro folder.</p>
 <section id="most-important-top-level-targets" class="level3" data-number="3.4.1">
 <h3 data-number="3.4.1" class="anchored" data-anchor-id="most-important-top-level-targets"><span class="header-section-number">3.4.1</span> Most important top-level targets</h3>
 <p>The full list of targets can be found in the <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/README.md#show-available-targets">top-level README</a>. The relevant subset is summarised below.</p>
 <table class="caption-top table">
 <colgroup>
-<col style="width: 15%">
-<col style="width: 84%">
+<col style="width: 31%">
+<col style="width: 68%">
 </colgroup>
 <thead>
 <tr class="header">
@@ -793,11 +793,11 @@ Tip
 </tr>
 <tr class="odd">
 <td><code>make sim-rtl-cocotb</code> / <code>sim-gl-cocotb</code></td>
-<td>Run the RTL / gate-level cocotb testbench for the chip top.</td>
+<td>Run the RTL / gate-level cocotb testbench for the top-level.</td>
 </tr>
 <tr class="even">
 <td><code>make sim-gl-xschem</code></td>
-<td>Run the gate-level Xschem testbench. Converges, but it may take a long time depending on the hardware used — not included in <code>sim-all</code>.</td>
+<td>Run the gate-level Xschem testbench. Converges, but it may take a long time depending on the hardware used and is therefore not included in <code>sim-all</code>.</td>
 </tr>
 <tr class="odd">
 <td><code>make sim-view-cocotb</code></td>
@@ -805,7 +805,7 @@ Tip
 </tr>
 <tr class="even">
 <td><code>make librelane</code> / <code>librelane-nodrc</code></td>
-<td>Run the LibreLane flow for the chip top (with / without DRC steps).</td>
+<td>Run the LibreLane flow for the top-level (with / without DRC steps).</td>
 </tr>
 <tr class="odd">
 <td><code>make copy-reports</code> / <code>copy-gds</code> / <code>copy-netlist</code> / <code>copy-render</code></td>
@@ -821,7 +821,7 @@ Tip
 </tr>
 <tr class="even">
 <td><code>make build-top</code></td>
-<td>Run LibreLane on the chip top, copy back all artifacts, add logo and fill, render the final GDS.</td>
+<td>Run LibreLane on the top-level, copy back all artifacts, add logo and fill, render the final GDS.</td>
 </tr>
 <tr class="odd">
 <td><code>make build-all</code></td>
@@ -847,8 +847,8 @@ Tip
 <p>The <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/counter/Makefile">counter Makefile</a> provides:</p>
 <table class="caption-top table">
 <colgroup>
-<col style="width: 39%">
-<col style="width: 60%">
+<col style="width: 43%">
+<col style="width: 56%">
 </colgroup>
 <thead>
 <tr class="header">
@@ -942,8 +942,8 @@ Tip
 </section>
 </section>
 </section>
-<section id="sec-counter" class="level1" data-number="4">
-<h1 data-number="4"><span class="header-section-number">4</span> Counter Macro Implementation</h1>
+<section id="sec-digital" class="level1" data-number="4">
+<h1 data-number="4"><span class="header-section-number">4</span> Digital Macro Implementation</h1>
 <p>The <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/counter/"><code>counter</code></a> macro is the digital reference macro of the template. It is a parameterisable synchronous up-counter with synchronous active-high reset; the top-level wrapper converts the chip’s active-low reset to an active-high signal. The default width is 8 bits, so the counter wraps from 255 back to 0.</p>
 <section id="folder-structure-of-the-counter-macro" class="level2" data-number="4.1">
 <h2 data-number="4.1" class="anchored" data-anchor-id="folder-structure-of-the-counter-macro"><span class="header-section-number">4.1</span> Folder Structure of the Counter Macro</h2>
@@ -1273,8 +1273,8 @@ Note
 <p>This calls <code>lint-verilog-all</code>, <code>sim-all</code>, <code>build-fpga</code>, and <code>build-top</code> in sequence. LVS and DRC are already covered by the LibreLane sign-off steps, so no extra verification target is needed for the counter.</p>
 </section>
 </section>
-<section id="sec-inverter" class="level1" data-number="5">
-<h1 data-number="5"><span class="header-section-number">5</span> Inverter Macro Implementation</h1>
+<section id="sec-analog" class="level1" data-number="5">
+<h1 data-number="5"><span class="header-section-number">5</span> Analog Macro Implementation</h1>
 <p>The <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/inverter/"><code>inverter</code></a> macro is the analog reference macro of the template. It is a four-channel CMOS inverter, drawn at transistor level, and verified with the comprehensive AMS sign-off chain (<a href="https://en.wikipedia.org/wiki/Layout_versus_schematic">LVS</a>, <a href="https://en.wikipedia.org/wiki/Design_rule_checking">DRC</a>, <a href="https://en.wikipedia.org/wiki/Parasitic_extraction">PEX</a>, <a href="https://en.wikipedia.org/wiki/Monte_Carlo_method">Monte-Carlo</a> simulation for process variations and mismatch with CACE). Two instances are used in the chip core. One is used as a 4-channel digital inverter (<code>inverter1</code>), the other as a 2-channel analog inverter (<code>inverter2</code>). See the <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/doc/specifications.md">chip specifications</a> for the full picture.</p>
 <section id="folder-structure-of-the-inverter-macro" class="level2" data-number="5.1">
 <h2 data-number="5.1" class="anchored" data-anchor-id="folder-structure-of-the-inverter-macro"><span class="header-section-number">5.1</span> Folder Structure of the Inverter Macro</h2>
@@ -1542,7 +1542,7 @@ Tip
 </section>
 <section id="top-level-simulation" class="level2" data-number="6.5">
 <h2 data-number="6.5" class="anchored" data-anchor-id="top-level-simulation"><span class="header-section-number">6.5</span> Top-Level Simulation</h2>
-<p>The same RTL and gate-level cocotb flow as in <a href="#sec-counter" class="quarto-xref">Section&nbsp;4</a> is available at chip level.</p>
+<p>The same RTL and gate-level cocotb flow as in <a href="#sec-digital" class="quarto-xref">Section&nbsp;4</a> is available at chip level.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb26"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> sim-rtl-cocotb</span>
 <span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> sim-gl-cocotb</span>
 <span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> sim-view-cocotb                                <span class="co"># GTKWave</span></span>
@@ -1691,7 +1691,7 @@ Important
 <p>The following exercises repeat the corresponding sections of this tutorial with a modification of the design.</p>
 <section id="sec-exercise1" class="level2" data-number="7.1">
 <h2 data-number="7.1" class="anchored" data-anchor-id="sec-exercise1"><span class="header-section-number">7.1</span> Exercise 1: From 8-bit Up-Counter to 16-bit Down-Counter</h2>
-<p>Repeat <a href="#sec-counter" class="quarto-xref">Section&nbsp;4</a> for a 16-bit synchronous down-counter that wraps from 0 back to <span class="math inline">\(2^{16} - 1\)</span>. The recommended steps are:</p>
+<p>Repeat <a href="#sec-digital" class="quarto-xref">Section&nbsp;4</a> for a 16-bit synchronous down-counter that wraps from 0 back to <span class="math inline">\(2^{16} - 1\)</span>. The recommended steps are:</p>
 <ol type="1">
 <li>Update the RTL (<a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/counter/rtl/counter.sv"><code>counter.sv</code></a>, <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/counter/rtl/counter_top.sv"><code>counter_top.sv</code></a>, <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/counter/rtl/constants.sv"><code>constants.sv</code></a>). Change the bit-width and turn the increment block into a decrement, with wrap-around from 0 to <code>CTR_MAX</code>.</li>
 <li>Update the testbenches in <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/counter/testbenches/verilog/"><code>testbenches/verilog/</code></a>, <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/counter/testbenches/cocotb/"><code>testbenches/cocotb/</code></a>, and <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/counter/testbenches/xschem/"><code>testbenches/xschem/</code></a> to cover the new behaviour. Adjust the bus width in the waveform view files (<code>*.gtkw</code>, <code>*.surf.ron</code>) as well.</li>
@@ -1715,7 +1715,7 @@ Important
 </section>
 <section id="sec-exercise2" class="level2" data-number="7.2">
 <h2 data-number="7.2" class="anchored" data-anchor-id="sec-exercise2"><span class="header-section-number">7.2</span> Exercise 2: Inverter to Three-Stage Ring Oscillator</h2>
-<p>Repeat <a href="#sec-inverter" class="quarto-xref">Section&nbsp;5</a> for a three-stage ring oscillator with an output buffer, derived from the existing quad inverter. The recommended steps are:</p>
+<p>Repeat <a href="#sec-analog" class="quarto-xref">Section&nbsp;5</a> for a three-stage ring oscillator with an output buffer, derived from the existing quad inverter. The recommended steps are:</p>
 <ol type="1">
 <li>Copy the <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/inverter/">inverter</a> macro folder to a new location (for example <code>macros/ringosc/</code>), and adapt the Makefile names.</li>
 <li>Update the schematic in Xschem. Connect three inverters in a ring, and tap the output of the last stage through a buffer. The fourth inverter of the quad inverter can naturally be used as the buffer.</li>
