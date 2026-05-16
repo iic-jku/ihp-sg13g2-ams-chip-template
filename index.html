@@ -1155,15 +1155,15 @@ Important
 <p>Surfer is currently not working on macOS, and might not work on Windows/WSL. If you want to use Surfer, please run the container on Linux.</p>
 </div>
 </div>
-<div class="callout callout-style-simple callout-note">
-<div class="callout-body d-flex">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
+<div id="fig-counter-top-verilog-gtkwave" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-counter-top-verilog-gtkwave-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="fig/counter_top/counter_top_verilog_gtkwave.png" class="lightbox" data-gallery="quarto-lightbox-gallery-2" title="Figure&nbsp;2: RTL Verilog waveform of counter_top in GTKWave."><img src="fig/counter_top/counter_top_verilog_gtkwave.png" class="img-fluid figure-img"></a>
 </div>
-<div class="callout-body-container">
-<p><strong>Figure placeholder. RTL Verilog waveform of <code>counter_top</code> in GTKWave or Surfer.</strong></p>
-</div>
-</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-counter-top-verilog-gtkwave-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;2: RTL Verilog waveform of <code>counter_top</code> in GTKWave.
+</figcaption>
+</figure>
 </div>
 </section>
 <section id="rtl-and-gate-level-with-cocotb" class="level3" data-number="4.4.2">
@@ -1209,15 +1209,15 @@ Tip
 <p>After the flow finishes, the macro layout can be inspected with KLayout. The container provides the <code>ke</code> alias for <code>klayout -e</code> (edit mode).</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="ex">ke</span> macros/counter/final/gds/counter_top.gds</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>The LibreLane render is copied to <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/counter/render/img/"><code>macros/counter/render/img/counter_top_librelane.png</code></a>, and the high-resolution render from <code>lay2img.py</code> is saved as <code>counter_top.png</code> in the same folder. The sign-off reports are written to <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/counter/verification/"><code>macros/counter/verification/</code></a>.</p>
-<div class="callout callout-style-simple callout-note">
-<div class="callout-body d-flex">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
+<div id="fig-counter-top-layout" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-counter-top-layout-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="fig/counter_top/counter_top_black.png" class="lightbox" data-gallery="quarto-lightbox-gallery-3" title="Figure&nbsp;3: counter_top layout in KLayout."><img src="fig/counter_top/counter_top_black.png" class="img-fluid figure-img"></a>
 </div>
-<div class="callout-body-container">
-<p><strong>Figure placeholder. <code>counter_top</code> layout in KLayout.</strong></p>
-</div>
-</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-counter-top-layout-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;3: <code>counter_top</code> layout in KLayout.
+</figcaption>
+</figure>
 </div>
 </section>
 <section id="gate-level-mixed-signal-simulation-with-xschem" class="level2" data-number="4.7">
@@ -1245,25 +1245,25 @@ Note
 <p>The same simulation can also be run non-interactively from the Makefile, and the result can be plotted from Python.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> sim-gl-xschem</span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> sim-view-xschem</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="callout callout-style-simple callout-note">
-<div class="callout-body d-flex">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
+<div id="fig-counter-top-tb-tran-schematic" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-counter-top-tb-tran-schematic-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="fig/counter_top/counter_top_tb_tran_schematic.svg" class="lightbox" data-gallery="quarto-lightbox-gallery-4" title="Figure&nbsp;4: Xschem mixed-signal gate-level testbench counter_top_tb_tran."><img src="fig/counter_top/counter_top_tb_tran_schematic.svg" class="img-fluid figure-img"></a>
 </div>
-<div class="callout-body-container">
-<p><strong>Figure placeholder. Xschem mixed-signal testbench <code>counter_top_tb_tran</code>.</strong></p>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-counter-top-tb-tran-schematic-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;4: Xschem mixed-signal gate-level testbench <code>counter_top_tb_tran</code>.
+</figcaption>
+</figure>
 </div>
+<div id="fig-counter-top-tb-tran-sim" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-counter-top-tb-tran-sim-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="fig/counter_top/counter_top_tb_tran_sim.svg" class="lightbox" data-gallery="quarto-lightbox-gallery-5" title="Figure&nbsp;5: Plotted Xschem simulation results of counter_top_tb_tran from scripts/plot_simulations/plot_counter_top.py."><img src="fig/counter_top/counter_top_tb_tran_sim.svg" class="img-fluid figure-img"></a>
 </div>
-</div>
-<div class="callout callout-style-simple callout-note">
-<div class="callout-body d-flex">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-body-container">
-<p><strong>Figure placeholder. Plotted Xschem simulation results from <code>scripts/plot_simulations/plot_counter_top.py</code>.</strong></p>
-</div>
-</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-counter-top-tb-tran-sim-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;5: Plotted Xschem simulation results of <code>counter_top_tb_tran</code> from <code>scripts/plot_simulations/plot_counter_top.py</code>.
+</figcaption>
+</figure>
 </div>
 </section>
 <section id="build-and-verify-everything" class="level2" data-number="4.8">
@@ -1348,15 +1348,75 @@ Tip
 <li><a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/inverter/testbenches/xschem/inverter_top_tb_tran.sch"><code>inverter_top_tb_tran.sch</code></a>, top-level transient on <code>inverter_top</code>.</li>
 </ul>
 <p>Load a testbench in Xschem, then hold <strong><code>Ctrl</code></strong> and press the <strong>Simulate</strong> arrow in the schematic to launch the simulator manually.</p>
-<div class="callout callout-style-simple callout-note">
-<div class="callout-body d-flex">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
+<div id="fig-inverter-tb-tran-schematic" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-inverter-tb-tran-schematic-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="fig/inverter_top/inverter_tb_tran_schematic.svg" class="lightbox" data-gallery="quarto-lightbox-gallery-6" title="Figure&nbsp;6: Xschem testbench inverter_tb_tran (single-channel transient response on inverter)."><img src="fig/inverter_top/inverter_tb_tran_schematic.svg" class="img-fluid figure-img"></a>
 </div>
-<div class="callout-body-container">
-<p><strong>Figure placeholder. Xschem <code>inverter_tb_tran</code> simulation result.</strong></p>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-inverter-tb-tran-schematic-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;6: Xschem testbench <code>inverter_tb_tran</code> (single-channel transient response on <code>inverter</code>).
+</figcaption>
+</figure>
 </div>
+<div id="fig-inverter-tb-ac-ol-schematic" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-inverter-tb-ac-ol-schematic-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="fig/inverter_top/inverter_tb_ac_ol_schematic.svg" class="lightbox" data-gallery="quarto-lightbox-gallery-7" title="Figure&nbsp;7: Xschem testbench inverter_tb_ac_ol (open-loop AC characterisation on inverter)."><img src="fig/inverter_top/inverter_tb_ac_ol_schematic.svg" class="img-fluid figure-img"></a>
 </div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-inverter-tb-ac-ol-schematic-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;7: Xschem testbench <code>inverter_tb_ac_ol</code> (open-loop AC characterisation on <code>inverter</code>).
+</figcaption>
+</figure>
+</div>
+<div id="fig-inverter-tb-ac-ol-sim" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-inverter-tb-ac-ol-sim-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="fig/inverter_top/inverter_tb_ac_ol_sim.svg" class="lightbox" data-gallery="quarto-lightbox-gallery-8" title="Figure&nbsp;8: Plotted simulation result of inverter_tb_ac_ol."><img src="fig/inverter_top/inverter_tb_ac_ol_sim.svg" class="img-fluid figure-img"></a>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-inverter-tb-ac-ol-sim-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;8: Plotted simulation result of <code>inverter_tb_ac_ol</code>.
+</figcaption>
+</figure>
+</div>
+<div id="fig-inverter-tb-vout-schematic" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-inverter-tb-vout-schematic-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="fig/inverter_top/inverter_tb_Vout_schematic.svg" class="lightbox" data-gallery="quarto-lightbox-gallery-9" title="Figure&nbsp;9: Xschem testbench inverter_tb_Vout (DC input sweep on inverter)."><img src="fig/inverter_top/inverter_tb_Vout_schematic.svg" class="img-fluid figure-img"></a>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-inverter-tb-vout-schematic-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;9: Xschem testbench <code>inverter_tb_Vout</code> (DC input sweep on <code>inverter</code>).
+</figcaption>
+</figure>
+</div>
+<div id="fig-inverter-tb-vout-sim" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-inverter-tb-vout-sim-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="fig/inverter_top/inverter_tb_Vout_sim.svg" class="lightbox" data-gallery="quarto-lightbox-gallery-10" title="Figure&nbsp;10: Plotted simulation result of inverter_tb_Vout."><img src="fig/inverter_top/inverter_tb_Vout_sim.svg" class="img-fluid figure-img"></a>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-inverter-tb-vout-sim-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;10: Plotted simulation result of <code>inverter_tb_Vout</code>.
+</figcaption>
+</figure>
+</div>
+<div id="fig-inverter-top-tb-tran-schematic" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-inverter-top-tb-tran-schematic-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="fig/inverter_top/inverter_top_tb_tran_schematic.svg" class="lightbox" data-gallery="quarto-lightbox-gallery-11" title="Figure&nbsp;11: Xschem top-level testbench inverter_top_tb_tran (transient on inverter_top)."><img src="fig/inverter_top/inverter_top_tb_tran_schematic.svg" class="img-fluid figure-img"></a>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-inverter-top-tb-tran-schematic-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;11: Xschem top-level testbench <code>inverter_top_tb_tran</code> (transient on <code>inverter_top</code>).
+</figcaption>
+</figure>
+</div>
+<div id="fig-inverter-top-tb-tran-sim" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-inverter-top-tb-tran-sim-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="fig/inverter_top/inverter_top_tb_tran_sim.svg" class="lightbox" data-gallery="quarto-lightbox-gallery-12" title="Figure&nbsp;12: Plotted simulation result of inverter_top_tb_tran."><img src="fig/inverter_top/inverter_top_tb_tran_sim.svg" class="img-fluid figure-img"></a>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-inverter-top-tb-tran-sim-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;12: Plotted simulation result of <code>inverter_top_tb_tran</code>.
+</figcaption>
+</figure>
 </div>
 <div class="callout callout-style-default callout-tip callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -1374,6 +1434,16 @@ Tip
 </ul>
 <p>This is the recommended way to inspect or modify the underlying circuit and the graphical symbol of any device.</p>
 </div>
+</div>
+<div id="fig-inverter-schematic" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-inverter-schematic-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="fig/inverter_top/inverter_schematic.svg" class="lightbox" data-gallery="quarto-lightbox-gallery-13" title="Figure&nbsp;13: Xschem inverter schematic."><img src="fig/inverter_top/inverter_schematic.svg" class="img-fluid figure-img" style="width:75.0%"></a>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-inverter-schematic-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;13: Xschem <code>inverter</code> schematic.
+</figcaption>
+</figure>
 </div>
 <p>Non-interactive runs and post-processing are also available through the Makefile.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb15"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> macros/inverter</span>
@@ -1393,15 +1463,15 @@ Tip
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb17"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> macros/inverter/layout</span>
 <span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="ex">ke</span> inverter_top.klay.gds</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>After modifying the layout, export a clean <code>.gds</code> file (for example <code>inverter_top.gds</code>). The Magic-based flows always work on <code>.gds</code>, while the KLayout-based flows accept either <code>.gds</code> or <code>.klay.gds</code>.</p>
-<div class="callout callout-style-simple callout-note">
-<div class="callout-body d-flex">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
+<div id="fig-inverter-top-layout" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-inverter-top-layout-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="fig/inverter_top/inverter_top_black.png" class="lightbox" data-gallery="quarto-lightbox-gallery-14" title="Figure&nbsp;14: inverter_top layout in KLayout."><img src="fig/inverter_top/inverter_top_black.png" class="img-fluid figure-img" style="width:75.0%"></a>
 </div>
-<div class="callout-body-container">
-<p><strong>Figure placeholder. <code>inverter_top</code> layout in KLayout.</strong></p>
-</div>
-</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-inverter-top-layout-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;14: <code>inverter_top</code> layout in KLayout.
+</figcaption>
+</figure>
 </div>
 </section>
 <section id="drc-lvs-and-pex" class="level2" data-number="5.5">
@@ -1548,15 +1618,15 @@ Tip
 <span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> sim-view-cocotb                                <span class="co"># GTKWave</span></span>
 <span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> sim-view-cocotb WAVEFORM_VIEWER=surfer         <span class="co"># Surfer</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>The cocotb testbench at chip level is <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/testbenches/cocotb/chip_top_tb.py"><code>testbenches/cocotb/chip_top_tb.py</code></a>, and it covers the global enable, reset, counters, and bidir behaviour documented in <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/doc/specifications.md">specifications.md</a>.</p>
-<div class="callout callout-style-simple callout-note">
-<div class="callout-body d-flex">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
+<div id="fig-chip-top-cocotb-gtkwave" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-chip-top-cocotb-gtkwave-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="fig/chip_top/chip_top_cocotb_gtkwave.png" class="lightbox" data-gallery="quarto-lightbox-gallery-15" title="Figure&nbsp;15: chip_top cocotb waveform in GTKWave."><img src="fig/chip_top/chip_top_cocotb_gtkwave.png" class="img-fluid figure-img"></a>
 </div>
-<div class="callout-body-container">
-<p><strong>Figure placeholder. <code>chip_top</code> cocotb waveform.</strong></p>
-</div>
-</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-chip-top-cocotb-gtkwave-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;15: <code>chip_top</code> cocotb waveform in GTKWave.
+</figcaption>
+</figure>
 </div>
 <p>For mixed-signal sign-off, the <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/testbenches/xschem/"><code>testbenches/xschem/chip_top_tb_tran.sch</code></a> testbench exists and can be opened in Xschem the same way as for the counter or the inverter.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb27"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> testbenches/xschem</span>
@@ -1574,6 +1644,56 @@ Note
 <p>The top-level Xschem testbench converges, but it may take a long time depending on the hardware used. <code>make sim-gl-xschem</code> is therefore not part of <code>sim-all</code> and must be called manually when needed.</p>
 </div>
 </div>
+<div id="fig-chip-top-tb-tran-schematic" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-chip-top-tb-tran-schematic-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="fig/chip_top/chip_top_tb_tran_schematic.svg" class="lightbox" data-gallery="quarto-lightbox-gallery-16" title="Figure&nbsp;16: Xschem top-level mixed-signal testbench chip_top_tb_tran."><img src="fig/chip_top/chip_top_tb_tran_schematic.svg" class="img-fluid figure-img"></a>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-chip-top-tb-tran-schematic-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;16: Xschem top-level mixed-signal testbench <code>chip_top_tb_tran</code>.
+</figcaption>
+</figure>
+</div>
+<div id="fig-chip-top-tb-tran-analog-inv-sim" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-chip-top-tb-tran-analog-inv-sim-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="fig/chip_top/chip_top_tb_tran_analog_inv_sim.svg" class="lightbox" data-gallery="quarto-lightbox-gallery-17" title="Figure&nbsp;17: Plotted simulation result of chip_top_tb_tran — analog inverter 1 response."><img src="fig/chip_top/chip_top_tb_tran_analog_inv_sim.svg" class="img-fluid figure-img"></a>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-chip-top-tb-tran-analog-inv-sim-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;17: Plotted simulation result of <code>chip_top_tb_tran</code> — analog inverter 1 response.
+</figcaption>
+</figure>
+</div>
+<div id="fig-chip-top-tb-tran-digital1-sim" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-chip-top-tb-tran-digital1-sim-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="fig/chip_top/chip_top_tb_tran_digital1_sim.svg" class="lightbox" data-gallery="quarto-lightbox-gallery-18" title="Figure&nbsp;18: Plotted simulation result of chip_top_tb_tran — digital inverter 2 outputs."><img src="fig/chip_top/chip_top_tb_tran_digital1_sim.svg" class="img-fluid figure-img"></a>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-chip-top-tb-tran-digital1-sim-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;18: Plotted simulation result of <code>chip_top_tb_tran</code> — digital inverter 2 outputs.
+</figcaption>
+</figure>
+</div>
+<div id="fig-chip-top-tb-tran-digital2-sim" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-chip-top-tb-tran-digital2-sim-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="fig/chip_top/chip_top_tb_tran_digital2_sim.svg" class="lightbox" data-gallery="quarto-lightbox-gallery-19" title="Figure&nbsp;19: Plotted simulation result of chip_top_tb_tran — digital counter 2 outputs."><img src="fig/chip_top/chip_top_tb_tran_digital2_sim.svg" class="img-fluid figure-img"></a>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-chip-top-tb-tran-digital2-sim-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;19: Plotted simulation result of <code>chip_top_tb_tran</code> — digital counter 2 outputs.
+</figcaption>
+</figure>
+</div>
+<div id="fig-chip-top-tb-tran-digital3-sim" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-chip-top-tb-tran-digital3-sim-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="fig/chip_top/chip_top_tb_tran_digital3_sim.svg" class="lightbox" data-gallery="quarto-lightbox-gallery-20" title="Figure&nbsp;20: Plotted simulation result of chip_top_tb_tran — digital counter 1 / inverter 1 bidirs."><img src="fig/chip_top/chip_top_tb_tran_digital3_sim.svg" class="img-fluid figure-img"></a>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-chip-top-tb-tran-digital3-sim-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;20: Plotted simulation result of <code>chip_top_tb_tran</code> — digital counter 1 / inverter 1 bidirs.
+</figcaption>
+</figure>
+</div>
 <div class="callout callout-style-default callout-tip callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -1587,6 +1707,16 @@ Tip
 <p>Inspect the Xschem symbol of <code>chip_top</code> to see the connections defined in <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/rtl/chip_core.sv"><code>chip_core.sv</code></a> visually. Use <strong><code>e</code> / <code>Ctrl + e</code></strong> and <strong><code>i</code> / <code>Ctrl + e</code></strong> to descend into and back out of subcircuits and symbols.</p>
 <p>Note that the SRAM is not in the schematic. IHP does not ship a SPICE model or an Xschem symbol for the <code>RM_IHPSG13_1P_1024x32_c2_bm_bist</code> macro, so it is excluded from the schematic-level simulation.</p>
 </div>
+</div>
+<div id="fig-chip-top-schematic" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-chip-top-schematic-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="fig/chip_top/chip_top_schematic.svg" class="lightbox" data-gallery="quarto-lightbox-gallery-21" title="Figure&nbsp;21: Xschem schematic of chip_top, showing the connections between the padframe and the core macros (the SRAM is not in the schematic)."><img src="fig/chip_top/chip_top_schematic.svg" class="img-fluid figure-img"></a>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-chip-top-schematic-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;21: Xschem schematic of <code>chip_top</code>, showing the connections between the padframe and the core macros (the SRAM is not in the schematic).
+</figcaption>
+</figure>
 </div>
 </section>
 <section id="building-the-chip" class="level2" data-number="6.6">
@@ -1603,15 +1733,25 @@ Tip
 <p>After a successful build, the chip can be opened with KLayout.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb30"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="ex">ke</span> layout/chip_top_logo_fill.gds.gz   <span class="co"># KLayout edit mode</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>The render generated by <code>lay2img.py</code> is in <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/render/img/"><code>render/img/</code></a>. The sign-off reports (Yosys, antenna, STA, IR-drop, LVS, manufacturability) are in <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/verification/reports/"><code>verification/reports/</code></a>.</p>
-<div class="callout callout-style-simple callout-note">
-<div class="callout-body d-flex">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
+<div id="fig-chip-top-layout" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-chip-top-layout-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="fig/chip_top/chip_top_black.png" class="lightbox" data-gallery="quarto-lightbox-gallery-22" title="Figure&nbsp;22: chip_top_logo_fill layout in KLayout (all layers)."><img src="fig/chip_top/chip_top_black.png" class="img-fluid figure-img"></a>
 </div>
-<div class="callout-body-container">
-<p><strong>Figure placeholder. <code>chip_top_logo_fill</code> layout in KLayout.</strong></p>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-chip-top-layout-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;22: <code>chip_top_logo_fill</code> layout in KLayout (all layers).
+</figcaption>
+</figure>
 </div>
+<div id="fig-chip-top-layout-tm2" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-chip-top-layout-tm2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="fig/chip_top/chip_top_black_TM2.png" class="lightbox" data-gallery="quarto-lightbox-gallery-23" title="Figure&nbsp;23: chip_top_logo_fill layout in KLayout with only TopMetal2 selected, showing the power distribution network."><img src="fig/chip_top/chip_top_black_TM2.png" class="img-fluid figure-img"></a>
 </div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-chip-top-layout-tm2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;23: <code>chip_top_logo_fill</code> layout in KLayout with only TopMetal2 selected, showing the power distribution network.
+</figcaption>
+</figure>
 </div>
 </section>
 <section id="chip-level-verification" class="level2" data-number="6.8">
