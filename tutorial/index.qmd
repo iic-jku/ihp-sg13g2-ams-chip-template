@@ -347,10 +347,7 @@ make sim-view-verilog WAVEFORM_VIEWER=surfer
 Surfer is currently not working on macOS, and might not work on Windows/WSL. If you want to use Surfer, please run the container on Linux.
 :::
 
-::: {.callout-note appearance="simple"}
-**Figure placeholder. RTL Verilog waveform of `counter_top` in GTKWave
-or Surfer.**
-:::
+![RTL Verilog waveform of `counter_top` in GTKWave.](fig/counter_top/counter_top_verilog_gtkwave.png){#fig-counter-top-verilog-gtkwave}
 
 ### RTL and gate-level with cocotb
 
@@ -409,9 +406,7 @@ and the high-resolution render from `lay2img.py` is saved as
 `counter_top.png` in the same folder. The sign-off reports are written
 to [`macros/counter/verification/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/counter/verification/).
 
-::: {.callout-note appearance="simple"}
-**Figure placeholder. `counter_top` layout in KLayout.**
-:::
+![`counter_top` layout in KLayout.](fig/counter_top/counter_top_black.png){#fig-counter-top-layout}
 
 ## Gate-Level Mixed-Signal Simulation with Xschem
 
@@ -453,20 +448,13 @@ make sim-gl-xschem
 make sim-view-xschem
 ```
 
-::: {.callout-note appearance="simple"}
-**Figure placeholder. Xschem mixed-signal testbench
-`counter_top_tb_tran`.**
-:::
+![Xschem mixed-signal gate-level testbench `counter_top_tb_tran`.](fig/counter_top/counter_top_tb_tran_schematic.svg){#fig-counter-top-tb-tran-schematic}
 
-::: {.callout-note appearance="simple"}
-**Figure placeholder. Plotted Xschem simulation results from
-`scripts/plot_simulations/plot_counter_top.py`.**
-:::
+![Plotted Xschem simulation results of `counter_top_tb_tran` from `scripts/plot_simulations/plot_counter_top.py`.](fig/counter_top/counter_top_tb_tran_sim.svg){#fig-counter-top-tb-tran-sim}
 
 ## Build and Verify Everything
 
-The full lint, simulation, and build chain is run with the following
-command.
+The full lint, simulation, and build chain is run with the following command.
 
 ```sh
 make all
@@ -524,28 +512,34 @@ Four testbenches are available in
 - [`inverter_tb_Vout.sch`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/inverter/testbenches/xschem/inverter_tb_Vout.sch), DC input sweep,
 - [`inverter_top_tb_tran.sch`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/inverter/testbenches/xschem/inverter_top_tb_tran.sch), top-level transient on `inverter_top`.
 
-Load a testbench in Xschem, then hold **`Ctrl`** and press the
-**Simulate** arrow in the schematic to launch
-the simulator manually.
+Load a testbench in Xschem, then hold **`Ctrl`** and press the **Simulate** arrow in the schematic to launch the simulator manually.
 
-::: {.callout-note appearance="simple"}
-**Figure placeholder. Xschem `inverter_tb_tran` simulation result.**
-:::
+![Xschem testbench `inverter_tb_tran` (single-channel transient response on `inverter`).](fig/inverter_top/inverter_tb_tran_schematic.svg){#fig-inverter-tb-tran-schematic}
+
+![Xschem testbench `inverter_tb_ac_ol` (open-loop AC characterisation on `inverter`).](fig/inverter_top/inverter_tb_ac_ol_schematic.svg){#fig-inverter-tb-ac-ol-schematic}
+
+![Plotted simulation result of `inverter_tb_ac_ol`.](fig/inverter_top/inverter_tb_ac_ol_sim.svg){#fig-inverter-tb-ac-ol-sim}
+
+![Xschem testbench `inverter_tb_Vout` (DC input sweep on `inverter`).](fig/inverter_top/inverter_tb_Vout_schematic.svg){#fig-inverter-tb-vout-schematic}
+
+![Plotted simulation result of `inverter_tb_Vout`.](fig/inverter_top/inverter_tb_Vout_sim.svg){#fig-inverter-tb-vout-sim}
+
+![Xschem top-level testbench `inverter_top_tb_tran` (transient on `inverter_top`).](fig/inverter_top/inverter_top_tb_tran_schematic.svg){#fig-inverter-top-tb-tran-schematic}
+
+![Plotted simulation result of `inverter_top_tb_tran`.](fig/inverter_top/inverter_top_tb_tran_sim.svg){#fig-inverter-top-tb-tran-sim}
 
 ::: {.callout-tip}
 ## Useful Xschem keybindings
 
-- Mark a symbol and press **`e`** to descend into the underlying
-  circuit, then **`Ctrl` + `e`** to go back up.
-- Mark a symbol and press **`i`** to descend into the symbol drawing,
-  then **`Ctrl` + `e`** to go back up.
+- Mark a symbol and press **`e`** to descend into the underlying circuit, then **`Ctrl` + `e`** to go back up.
+- Mark a symbol and press **`i`** to descend into the symbol drawing, then **`Ctrl` + `e`** to go back up.
 
-This is the recommended way to inspect or modify the underlying
-circuit and the graphical symbol of any device.
+This is the recommended way to inspect or modify the underlying circuit and the graphical symbol of any device.
 :::
 
-Non-interactive runs and post-processing are also available through the
-Makefile.
+![Xschem `inverter` schematic.](fig/inverter_top/inverter_schematic.svg){#fig-inverter-schematic width=75%}
+
+Non-interactive runs and post-processing are also available through the Makefile.
 
 ```sh
 cd macros/inverter
@@ -586,9 +580,7 @@ After modifying the layout, export a clean `.gds` file (for example
 `inverter_top.gds`). The Magic-based flows always work on `.gds`, while
 the KLayout-based flows accept either `.gds` or `.klay.gds`.
 
-::: {.callout-note appearance="simple"}
-**Figure placeholder. `inverter_top` layout in KLayout.**
-:::
+![`inverter_top` layout in KLayout.](fig/inverter_top/inverter_top_black.png){#fig-inverter-top-layout width=75%}
 
 ## DRC, LVS, and PEX
 
@@ -829,9 +821,7 @@ The cocotb testbench at chip level is
 and it covers the global enable, reset, counters, and bidir behaviour
 documented in [specifications.md](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/doc/specifications.md).
 
-::: {.callout-note appearance="simple"}
-**Figure placeholder. `chip_top` cocotb waveform.**
-:::
+![`chip_top` cocotb waveform in GTKWave.](fig/chip_top/chip_top_cocotb_gtkwave.png){#fig-chip-top-cocotb-gtkwave}
 
 For mixed-signal sign-off, the
 [`testbenches/xschem/chip_top_tb_tran.sch`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/testbenches/xschem/)
@@ -848,6 +838,16 @@ The top-level Xschem testbench converges, but it may take a long time depending 
 `sim-all` and must be called manually when needed.
 :::
 
+![Xschem top-level mixed-signal testbench `chip_top_tb_tran`.](fig/chip_top/chip_top_tb_tran_schematic.svg){#fig-chip-top-tb-tran-schematic}
+
+![Plotted simulation result of `chip_top_tb_tran` — analog inverter 1 response.](fig/chip_top/chip_top_tb_tran_analog_inv_sim.svg){#fig-chip-top-tb-tran-analog-inv-sim}
+
+![Plotted simulation result of `chip_top_tb_tran` — digital inverter 2 outputs.](fig/chip_top/chip_top_tb_tran_digital1_sim.svg){#fig-chip-top-tb-tran-digital1-sim}
+
+![Plotted simulation result of `chip_top_tb_tran` — digital counter 2 outputs.](fig/chip_top/chip_top_tb_tran_digital2_sim.svg){#fig-chip-top-tb-tran-digital2-sim}
+
+![Plotted simulation result of `chip_top_tb_tran` — digital counter 1 / inverter 1 bidirs.](fig/chip_top/chip_top_tb_tran_digital3_sim.svg){#fig-chip-top-tb-tran-digital3-sim}
+
 ::: {.callout-tip}
 Inspect the Xschem symbol of `chip_top` to see the connections defined
 in [`chip_core.sv`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/rtl/chip_core.sv) visually. Use **`e` / `Ctrl +
@@ -858,6 +858,8 @@ Note that the SRAM is not in the schematic. IHP does not ship a SPICE
 model or an Xschem symbol for the `RM_IHPSG13_1P_1024x32_c2_bm_bist`
 macro, so it is excluded from the schematic-level simulation.
 :::
+
+![Xschem schematic of `chip_top`, showing the connections between the padframe and the core macros (the SRAM is not in the schematic).](fig/chip_top/chip_top_schematic.svg){#fig-chip-top-schematic}
 
 ## Building the Chip
 
@@ -900,9 +902,9 @@ The render generated by `lay2img.py` is in
 STA, IR-drop, LVS, manufacturability) are in
 [`verification/reports/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/verification/reports/).
 
-::: {.callout-note appearance="simple"}
-**Figure placeholder. `chip_top_logo_fill` layout in KLayout.**
-:::
+![`chip_top_logo_fill` layout in KLayout (all layers).](fig/chip_top/chip_top_black.png){#fig-chip-top-layout}
+
+![`chip_top_logo_fill` layout in KLayout with only TopMetal2 selected, showing the power distribution network.](fig/chip_top/chip_top_black_TM2.png){#fig-chip-top-layout-tm2}
 
 ## Chip-Level Verification
 
