@@ -4,7 +4,7 @@
     "href": "index.html",
     "title": "A Tutorial on Open-Source Analog-Mixed Signal Chip Design with the ihp-sg13g2 Open-PDK",
     "section": "",
-    "text": "Warning\n\n\n\nThis documentation is a Work in Progress."
+    "text": "Important\n\n\n\nThis tutorial and the underlying template repository require the IIC-OSIC-TOOLS container with tag 2026.05 or later. All commands below assume that the container has been entered and that the working directory is a folder with the corresponding Makefile."
   },
   {
     "objectID": "index.html#guidelines-cheatsheets",
