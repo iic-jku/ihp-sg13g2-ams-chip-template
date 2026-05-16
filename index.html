@@ -362,7 +362,10 @@ window.Quarto = {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#sec-overview" id="toc-sec-overview" class="nav-link active" data-scroll-target="#sec-overview"><span class="header-section-number">1</span> Overview</a></li>
+  <li><a href="#sec-overview" id="toc-sec-overview" class="nav-link active" data-scroll-target="#sec-overview"><span class="header-section-number">1</span> Overview</a>
+  <ul class="collapse">
+  <li><a href="#guidelines-cheatsheets" id="toc-guidelines-cheatsheets" class="nav-link" data-scroll-target="#guidelines-cheatsheets"><span class="header-section-number">1.1</span> Guidelines &amp; Cheatsheets</a></li>
+  </ul></li>
   <li><a href="#sec-tools" id="toc-sec-tools" class="nav-link" data-scroll-target="#sec-tools"><span class="header-section-number">2</span> Tools</a>
   <ul class="collapse">
   <li><a href="#iic-osic-tools-container" id="toc-iic-osic-tools-container" class="nav-link" data-scroll-target="#iic-osic-tools-container"><span class="header-section-number">2.1</span> IIC-OSIC-TOOLS Container</a></li>
@@ -507,7 +510,7 @@ Important
 </div>
 <section id="sec-overview" class="level1" data-number="1">
 <h1 data-number="1"><span class="header-section-number">1</span> Overview</h1>
-<p>This tutorial is a step-by-step walk-through of the open-source analog-mixed signal (AMS) chip flow based on the <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template"><code>ihp-sg13g2-ams-chip-template</code></a> repository for the ihp-sg13g2 130-nm Open-PDK. It covers:</p>
+<p>This tutorial is a step-by-step walk-through of the open-source analog-mixed signal (AMS) chip flow based on the <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template"><code>ihp-sg13g2-ams-chip-template</code></a> repository for the ihp-sg13g2 130nm Open-PDK. It covers:</p>
 <ul>
 <li><a href="#sec-overview">Overview</a> and <a href="#sec-installation">Installation</a> of <a href="https://github.com/iic-jku/IIC-OSIC-TOOLS">IIC-OSIC-TOOLS</a></li>
 <li><a href="#sec-digital">Digital macro design</a>
@@ -563,6 +566,22 @@ Note
 <p>After the tutorial, readers should be able to use the template repository for custom silicon projects and understand how to apply the open-source tools in the IIC-OSIC-TOOLS container to design, simulate, build, and verify AMS chips with the ihp-sg13g2 Open-PDK.</p>
 </div>
 </div>
+<section id="guidelines-cheatsheets" class="level2" data-number="1.1">
+<h2 data-number="1.1" class="anchored" data-anchor-id="guidelines-cheatsheets"><span class="header-section-number">1.1</span> Guidelines &amp; Cheatsheets</h2>
+<p>The following guidelines and cheatsheets should be helpful for the tutorial, the use of the template repository in general and for implementing your own custom silicon projects.</p>
+<ul>
+<li><a href="https://iic-jku.github.io/analog-circuit-design/aicd.html#sec-designers-etiquette">Designer’s Guidelines</a></li>
+<li><a href="https://iic-jku.github.io/analog-circuit-design/aicd.html#sec-linux-cheatsheet">Linux Cheatsheet</a></li>
+<li><a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/doc/verilog/SystemVerilog_cheatsheet.pdf">SystemVerilog Cheatsheet</a></li>
+<li><a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/doc/verilog/Verilog_cheatsheet.pdf">Verilog Cheatsheet</a></li>
+<li><a href="https://iic-jku.github.io/analog-circuit-design/aicd.html#sec-xschem-cheatsheet">Xschem Cheatsheet</a></li>
+<li><a href="https://iic-jku.github.io/analog-circuit-design/aicd.html#sec-ngspice-cheatsheet">Ngspice Cheatsheet</a></li>
+<li><a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/doc/klayout/klayout_cheatsheet.md">KLayout Cheatsheet</a></li>
+<li><a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/doc/librelane/librelane_cheatsheet.md">LibreLane Cheatsheet</a></li>
+<li><a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/doc/ihp-sg13g2-Open-PDK/sg13g2_os_layout_cheatsheet.xlsx">ihp-sg13g2 Layout Calculation Cheatsheet</a></li>
+<li><a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/doc/sizing">ihp-sg13g2 LV NMOS / PMOS and HV NMOS / PMOS Techsweeps</a></li>
+</ul>
+</section>
 </section>
 <section id="sec-tools" class="level1" data-number="2">
 <h1 data-number="2"><span class="header-section-number">2</span> Tools</h1>
@@ -626,8 +645,8 @@ Figure&nbsp;1: Overview of the most important open-source tools and PDKs shipped
 <h2 data-number="2.3" class="anchored" data-anchor-id="selecting-the-ihp-sg13g2-pdk"><span class="header-section-number">2.3</span> Selecting the ihp-sg13g2 PDK</h2>
 <p>As mentioned above, the container includes four Open-PDKs. To activate or switch the active PDK, the following two options are available. More detailed instructions can be found in the container’s <a href="https://github.com/iic-jku/IIC-OSIC-TOOLS/blob/main/README.md#2-installed-pdks"><code>README.md</code></a>.</p>
 <ol type="1">
-<li><p><strong><code>.designinit</code> file.</strong> Copy the <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/.designinit"><code>.designinit</code></a> file referencing the ihp-sg13g2 PDK into your <code>designs/</code> directory and restart the container. The PDK is then picked automatically every time the container is launched in that directory.</p></li>
-<li><p><strong>On-the-fly switch.</strong> Run</p>
+<li><p><strong><code>.designinit</code> file:</strong> Copy the <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/.designinit"><code>.designinit</code></a> file referencing the ihp-sg13g2 PDK into your <code>designs/</code> directory and restart the container. The PDK is then picked automatically every time the container is launched in that directory.</p></li>
+<li><p><strong>On-the-fly switch:</strong> Run</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">sak-pdk</span> ihp-sg13g2</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div></li>
 </ol>
 <p>inside the container. This switches the active PDK for the current session without modifying any file. When called without arguments (<code>sak-pdk</code>), a list of installed PDKs is shown.</p>

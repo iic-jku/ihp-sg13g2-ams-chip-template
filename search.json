@@ -7,6 +7,13 @@
     "text": "Warning\n\n\n\nThis documentation is a Work in Progress."
   },
   {
+    "objectID": "index.html#guidelines-cheatsheets",
+    "href": "index.html#guidelines-cheatsheets",
+    "title": "A Tutorial on Open-Source Analog-Mixed Signal Chip Design with the ihp-sg13g2 Open-PDK",
+    "section": "1.1 Guidelines & Cheatsheets",
+    "text": "1.1 Guidelines & Cheatsheets\nThe following guidelines and cheatsheets should be helpful for the tutorial, the use of the template repository in general and for implementing your own custom silicon projects.\n\nDesigner’s Guidelines\nLinux Cheatsheet\nSystemVerilog Cheatsheet\nVerilog Cheatsheet\nXschem Cheatsheet\nNgspice Cheatsheet\nKLayout Cheatsheet\nLibreLane Cheatsheet\nihp-sg13g2 Layout Calculation Cheatsheet\nihp-sg13g2 LV NMOS / PMOS and HV NMOS / PMOS Techsweeps"
+  },
+  {
     "objectID": "index.html#iic-osic-tools-container",
     "href": "index.html#iic-osic-tools-container",
     "title": "A Tutorial on Open-Source Analog-Mixed Signal Chip Design with the ihp-sg13g2 Open-PDK",
@@ -25,7 +32,7 @@
     "href": "index.html#selecting-the-ihp-sg13g2-pdk",
     "title": "A Tutorial on Open-Source Analog-Mixed Signal Chip Design with the ihp-sg13g2 Open-PDK",
     "section": "2.3 Selecting the ihp-sg13g2 PDK",
-    "text": "2.3 Selecting the ihp-sg13g2 PDK\nAs mentioned above, the container includes four Open-PDKs. To activate or switch the active PDK, the following two options are available. More detailed instructions can be found in the container’s README.md.\n\n.designinit file. Copy the .designinit file referencing the ihp-sg13g2 PDK into your designs/ directory and restart the container. The PDK is then picked automatically every time the container is launched in that directory.\nOn-the-fly switch. Run\nsak-pdk ihp-sg13g2\n\ninside the container. This switches the active PDK for the current session without modifying any file. When called without arguments (sak-pdk), a list of installed PDKs is shown.\n\n\n\n\n\n\nTip\n\n\n\nBy default, the container is already configured for ihp-sg13g2, so both options above are only needed when switching between PDKs. However, since this tutorial can also be used for all other PDKs, it is worth knowing how to switch the active PDK."
+    "text": "2.3 Selecting the ihp-sg13g2 PDK\nAs mentioned above, the container includes four Open-PDKs. To activate or switch the active PDK, the following two options are available. More detailed instructions can be found in the container’s README.md.\n\n.designinit file: Copy the .designinit file referencing the ihp-sg13g2 PDK into your designs/ directory and restart the container. The PDK is then picked automatically every time the container is launched in that directory.\nOn-the-fly switch: Run\nsak-pdk ihp-sg13g2\n\ninside the container. This switches the active PDK for the current session without modifying any file. When called without arguments (sak-pdk), a list of installed PDKs is shown.\n\n\n\n\n\n\nTip\n\n\n\nBy default, the container is already configured for ihp-sg13g2, so both options above are only needed when switching between PDKs. However, since this tutorial can also be used for all other PDKs, it is worth knowing how to switch the active PDK."
   },
   {
     "objectID": "index.html#purpose",
