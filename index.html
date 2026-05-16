@@ -362,11 +362,12 @@ window.Quarto = {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#overview" id="toc-overview" class="nav-link active" data-scroll-target="#overview"><span class="header-section-number">1</span> Overview</a></li>
-  <li><a href="#sec-tools" id="toc-sec-tools" class="nav-link" data-scroll-target="#sec-tools"><span class="header-section-number">2</span> Tools, the IIC-OSIC-TOOLS Container</a>
+  <li><a href="#sec-overview" id="toc-sec-overview" class="nav-link active" data-scroll-target="#sec-overview"><span class="header-section-number">1</span> Overview</a></li>
+  <li><a href="#sec-tools" id="toc-sec-tools" class="nav-link" data-scroll-target="#sec-tools"><span class="header-section-number">2</span> Tools</a>
   <ul class="collapse">
-  <li><a href="#installation" id="toc-installation" class="nav-link" data-scroll-target="#installation"><span class="header-section-number">2.1</span> Installation</a></li>
-  <li><a href="#selecting-the-ihp-sg13g2-pdk" id="toc-selecting-the-ihp-sg13g2-pdk" class="nav-link" data-scroll-target="#selecting-the-ihp-sg13g2-pdk"><span class="header-section-number">2.2</span> Selecting the IHP SG13G2 PDK</a></li>
+  <li><a href="#iic-osic-tools-container" id="toc-iic-osic-tools-container" class="nav-link" data-scroll-target="#iic-osic-tools-container"><span class="header-section-number">2.1</span> IIC-OSIC-TOOLS Container</a></li>
+  <li><a href="#sec-installation" id="toc-sec-installation" class="nav-link" data-scroll-target="#sec-installation"><span class="header-section-number">2.2</span> Installation</a></li>
+  <li><a href="#selecting-the-ihp-sg13g2-pdk" id="toc-selecting-the-ihp-sg13g2-pdk" class="nav-link" data-scroll-target="#selecting-the-ihp-sg13g2-pdk"><span class="header-section-number">2.3</span> Selecting the ihp-sg13g2 PDK</a></li>
   </ul></li>
   <li><a href="#sec-repo" id="toc-sec-repo" class="nav-link" data-scroll-target="#sec-repo"><span class="header-section-number">3</span> Repository Overview</a>
   <ul class="collapse">
@@ -504,28 +505,28 @@ Important
 <p>This tutorial and the underlying template repository require the <a href="https://github.com/iic-jku/IIC-OSIC-TOOLS">IIC-OSIC-TOOLS</a> container with tag <code>2026.05</code> or later. All commands below assume that the container has been entered and that the working directory is a folder with the corresponding <code>Makefile</code>.</p>
 </div>
 </div>
-<section id="overview" class="level1" data-number="1">
+<section id="sec-overview" class="level1" data-number="1">
 <h1 data-number="1"><span class="header-section-number">1</span> Overview</h1>
-<p>This tutorial is a step-by-step walk-through of the open-source analog-mixed signal (AMS) chip flow based on the <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template"><code>ihp-sg13g2-ams-chip-template</code></a> repository for the IHP SG13G2 130-nm Open-PDK. It covers:</p>
+<p>This tutorial is a step-by-step walk-through of the open-source analog-mixed signal (AMS) chip flow based on the <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template"><code>ihp-sg13g2-ams-chip-template</code></a> repository for the ihp-sg13g2 130-nm Open-PDK. It covers:</p>
 <ul>
-<li>Installation of IIC-OSIC-TOOLS</li>
-<li>Digital macro design
+<li><a href="#sec-overview">Overview</a> and <a href="#sec-installation">Installation</a> of <a href="https://github.com/iic-jku/IIC-OSIC-TOOLS">IIC-OSIC-TOOLS</a></li>
+<li><a href="#sec-digital">Digital macro design</a>
 <ul>
 <li>Design files written in SystemVerilog</li>
-<li>Linting with Verilator</li>
-<li>Simulation with Icarus Verilog and cocotb</li>
-<li>Viewing waveforms with GTKWave and Surfer</li>
-<li>Synthesis, placement, routing, and sign-off with LibreLane</li>
+<li>Linting with <a href="https://github.com/verilator/verilator">Verilator</a></li>
+<li>Simulation with Icarus Verilog and <a href="https://github.com/cocotb/cocotb">cocotb</a></li>
+<li>Viewing waveforms with <a href="https://github.com/gtkwave/gtkwave">GTKWave</a> and <a href="https://gitlab.com/surfer-project/surfer">Surfer</a></li>
+<li>Synthesis, placement, routing, and sign-off with <a href="https://github.com/YosysHQ/yosys">Yosys</a>, <a href="https://github.com/The-OpenROAD-Project/OpenROAD">OpenROAD</a>, and <a href="https://github.com/librelane/librelane">LibreLane</a></li>
 </ul></li>
-<li>Analog macro design
+<li><a href="#sec-analog">Analog macro design</a>
 <ul>
-<li>Schematic entry in Xschem</li>
-<li>Simulation with Ngspice and VACASK</li>
-<li>Monte Carlo / mismatch characterisation with CACE</li>
-<li>Layout in KLayout</li>
-<li>Verification with LVS, DRC, PEX using KLayout and Magic + Netgen</li>
+<li>Schematic entry in <a href="https://github.com/StefanSchippers/xschem">Xschem</a></li>
+<li>Simulation with <a href="https://github.com/danchitnis/ngspice-sf-mirror">Ngspice</a> and <a href="https://codeberg.org/arpadbuermen/VACASK">VACASK</a></li>
+<li>Monte Carlo / mismatch characterisation with <a href="https://github.com/fossi-foundation/cace">CACE</a></li>
+<li>Layout in <a href="https://github.com/KLayout/klayout">KLayout</a></li>
+<li>Verification with LVS, DRC, PEX using <a href="https://github.com/KLayout/klayout">KLayout</a>, <a href="https://github.com/rtimothyedwards/magic">Magic</a> + <a href="https://github.com/rtimothyedwards/netgen">Netgen</a></li>
 </ul></li>
-<li>Top-level assembly and padframe generation with logos and fill structures using SystemVerilog and the LibreLane flow.</li>
+<li><a href="#sec-top">Top-level assembly and padframe generation</a> with logos and fill structures using SystemVerilog and the <a href="https://github.com/librelane/librelane">LibreLane</a> flow.</li>
 </ul>
 <p>The example design used throughout the tutorial contains:</p>
 <ul>
@@ -559,26 +560,31 @@ Note
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>After the tutorial, readers should be able to use the template repository for custom silicon projects and understand how to apply the open-source tools in the IIC-OSIC-TOOLS container to design, simulate, build, and verify AMS chips with the IHP SG13G2 Open-PDK.</p>
+<p>After the tutorial, readers should be able to use the template repository for custom silicon projects and understand how to apply the open-source tools in the IIC-OSIC-TOOLS container to design, simulate, build, and verify AMS chips with the ihp-sg13g2 Open-PDK.</p>
 </div>
 </div>
 </section>
 <section id="sec-tools" class="level1" data-number="2">
-<h1 data-number="2"><span class="header-section-number">2</span> Tools, the IIC-OSIC-TOOLS Container</h1>
-<p>The open-source AMS flow used here relies on several tools, namely Xschem, Magic, KLayout, ngspice, CACE, LibreLane, Yosys, OpenROAD, Verilator, cocotb, GTKWave, and Surfer. To make installation and version handling easier, they are all bundled into the <a href="https://github.com/iic-jku/IIC-OSIC-TOOLS"><strong>IIC-OSIC-TOOLS</strong></a> Docker container maintained by the IIC at JKU Linz. The container also ships the IHP SG13G2 Open-PDK used by this template.</p>
+<h1 data-number="2"><span class="header-section-number">2</span> Tools</h1>
+<p>Numerous open-source chip design tools cover the entire development workflow for purely digital, purely analog, or mixed analog-digital chips. Managing these many tools regarding installation, updates, and maintenance is complex, especially given the rapid pace of change. Therefore, the <a href="https://www.jku.at/en/institute-for-integrated-circuits-and-quantum-computing/">Institute for Integrated Circuits and Quantum Computing</a> at <a href="https://www.jku.at/">Johannes Kepler University</a> (JKU) Linz, Austria decided to build an all-in-one Docker container (<a href="https://github.com/iic-jku/IIC-OSIC-TOOLS">IIC-OSIC-TOOLS</a>) that is updated monthly and supports all essential tools and PDKs. This eliminates the need for the time-consuming individual installation of many tools, and a reproducible development environment (important for past tapeouts) is available within a GNU/Linux-based virtual machine.</p>
+<section id="iic-osic-tools-container" class="level2" data-number="2.1">
+<h2 data-number="2.1" class="anchored" data-anchor-id="iic-osic-tools-container"><span class="header-section-number">2.1</span> IIC-OSIC-TOOLS Container</h2>
+<p><a href="#fig-tools-overview" class="quarto-xref">Figure&nbsp;1</a> shows a rough overview of the most important tools in the IIC-OSIC-TOOLS container. Additional tools are also included, which are documented on the associated <a href="https://github.com/iic-jku/IIC-OSIC-TOOLS">GitHub page</a>. The open-source AMS flow used in this tutorial relies on several tools, namely <a href="https://github.com/StefanSchippers/xschem">Xschem</a>, <a href="https://github.com/rtimothyedwards/magic">Magic</a>, <a href="https://github.com/rtimothyedwards/netgen">Netgen</a>, <a href="https://github.com/KLayout/klayout">KLayout</a>, <a href="https://github.com/danchitnis/ngspice-sf-mirror">Ngspice</a>, <a href="https://codeberg.org/arpadbuermen/VACASK">VACASK</a>, <a href="https://github.com/fossi-foundation/cace">CACE</a>, <a href="https://github.com/librelane/librelane">LibreLane</a>, <a href="https://github.com/YosysHQ/yosys">Yosys</a>, <a href="https://github.com/The-OpenROAD-Project/OpenROAD">OpenROAD</a>, <a href="https://github.com/verilator/verilator">Verilator</a>, <a href="https://github.com/cocotb/cocotb">cocotb</a>, <a href="https://github.com/gtkwave/gtkwave">GTKWave</a>, and <a href="https://gitlab.com/surfer-project/surfer">Surfer</a>. The container also ships with four PDKs, including <a href="https://github.com/rtimothyedwards/open_pdks">SkyWater sky130A</a>, <a href="https://github.com/rtimothyedwards/open_pdks">GlobalFoundries gf180mcuD</a>, <a href="https://github.com/IHP-GmbH/ihp-sg13cmos5l">IHP ihp-sg13cmos5l</a> and <a href="https://github.com/IHP-GmbH/IHP-Open-PDK">IHP ihp-sg13g2</a> used by this template.</p>
 <div id="fig-tools-overview" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-tools-overview-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<a href="fig/tools_overview/tools_overview.svg" class="lightbox" data-gallery="quarto-lightbox-gallery-1" title="Figure&nbsp;1: Overview of the open-source tools shipped with the IIC-OSIC-TOOLS container."><img src="fig/tools_overview/tools_overview.svg" class="img-fluid figure-img"></a>
+<a href="fig/tools_overview/tools_overview.svg" class="lightbox" data-gallery="quarto-lightbox-gallery-1" title="Figure&nbsp;1: Overview of the most important open-source tools and PDKs shipped with the IIC-OSIC-TOOLS container."><img src="fig/tools_overview/tools_overview.svg" class="img-fluid figure-img"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-tools-overview-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;1: Overview of the open-source tools shipped with the IIC-OSIC-TOOLS container.
+Figure&nbsp;1: Overview of the most important open-source tools and PDKs shipped with the IIC-OSIC-TOOLS container.
 </figcaption>
 </figure>
 </div>
-<section id="installation" class="level2" data-number="2.1">
-<h2 data-number="2.1" class="anchored" data-anchor-id="installation"><span class="header-section-number">2.1</span> Installation</h2>
-<p>The container runs on Linux, macOS, and Windows. The installation instructions are kept in the <a href="https://github.com/iic-jku/IIC-OSIC-TOOLS"><code>iic-jku/IIC-OSIC-TOOLS</code></a> GitHub repository. Video walk-throughs are available for Linux and Windows.</p>
+</section>
+<section id="sec-installation" class="level2" data-number="2.2">
+<h2 data-number="2.2" class="anchored" data-anchor-id="sec-installation"><span class="header-section-number">2.2</span> Installation</h2>
+<p>The container runs on Linux, macOS, and Windows. The installation instructions are documented in the container’s <a href="https://github.com/iic-jku/IIC-OSIC-TOOLS/blob/main/README.md#1-how-to-use-these-open-source-and-free-ic-design-tools"><code>README.md</code></a>. For this tutorial, we recommend the quick one-liner installation.</p>
+<p>Additional video walk-throughs are available for Linux and Windows.</p>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-5-contents" aria-controls="callout-5" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
@@ -592,8 +598,7 @@ Figure&nbsp;1: Overview of the open-source tools shipped with the IIC-OSIC-TOOLS
 <div id="callout-5" class="callout-5-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <ul>
-<li><a href="https://www.youtube.com/watch?v=l8kZUocmY5k">IIC-OSIC-TOOLS installation on Ubuntu (Part 1)</a></li>
-<li><a href="https://www.youtube.com/watch?v=CpKEOVRHT7o&amp;t=51s">IIC-OSIC-TOOLS installation on Ubuntu (Part 2)</a></li>
+<li><a href="https://www.youtube.com/watch?v=l8kZUocmY5k">IIC-OSIC-TOOLS installation on Ubuntu</a></li>
 </ul>
 </div>
 </div>
@@ -616,17 +621,16 @@ Figure&nbsp;1: Overview of the open-source tools shipped with the IIC-OSIC-TOOLS
 </div>
 </div>
 </div>
-<p>On macOS, the same Docker-based instructions apply. See the container’s <code>README.md</code> for OS-specific notes.</p>
 </section>
-<section id="selecting-the-ihp-sg13g2-pdk" class="level2" data-number="2.2">
-<h2 data-number="2.2" class="anchored" data-anchor-id="selecting-the-ihp-sg13g2-pdk"><span class="header-section-number">2.2</span> Selecting the IHP SG13G2 PDK</h2>
-<p>The container can host several Open-PDKs (SkyWater 130, GlobalFoundries 180, IHP SG13G2). The active PDK is selected per <code>designs/</code> folder via a marker file called <code>.designinit</code>. Two options are available.</p>
+<section id="selecting-the-ihp-sg13g2-pdk" class="level2" data-number="2.3">
+<h2 data-number="2.3" class="anchored" data-anchor-id="selecting-the-ihp-sg13g2-pdk"><span class="header-section-number">2.3</span> Selecting the ihp-sg13g2 PDK</h2>
+<p>As mentioned above, the container includes four Open-PDKs. To activate or switch the active PDK, the following two options are available. More detailed instructions can be found in the container’s <a href="https://github.com/iic-jku/IIC-OSIC-TOOLS/blob/main/README.md#2-installed-pdks"><code>README.md</code></a>.</p>
 <ol type="1">
-<li><p><strong>Per-design marker file.</strong> Copy a <code>.designinit</code> file referencing the IHP SG13G2 PDK into your <code>designs/</code> directory and restart the container. The PDK is then picked automatically every time the container is launched in that directory.</p></li>
+<li><p><strong><code>.designinit</code> file.</strong> Copy the <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/.designinit"><code>.designinit</code></a> file referencing the ihp-sg13g2 PDK into your <code>designs/</code> directory and restart the container. The PDK is then picked automatically every time the container is launched in that directory.</p></li>
 <li><p><strong>On-the-fly switch.</strong> Run</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">sak-pdk</span> ihp-sg13g2</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>inside the container. This switches the active PDK for the current session without modifying any file.</p></li>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">sak-pdk</span> ihp-sg13g2</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div></li>
 </ol>
+<p>inside the container. This switches the active PDK for the current session without modifying any file. When called without arguments (<code>sak-pdk</code>), a list of installed PDKs is shown.</p>
 <div class="callout callout-style-default callout-tip callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -637,7 +641,7 @@ Tip
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>By default the container is already configured for <code>ihp-sg13g2</code>, so both options above are only needed when switching between PDKs.</p>
+<p>By default, the container is already configured for <code>ihp-sg13g2</code>, so both options above are only needed when switching between PDKs. However, since this tutorial can also be used for all other PDKs, it is worth knowing how to switch the active PDK.</p>
 </div>
 </div>
 </section>
