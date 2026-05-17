@@ -177,7 +177,7 @@ The repository is organised into the following top-level folders. The full listi
 
 ## Workflow
 
-The flow is driven by Makefiles. After cloning the repository and entering the IIC-OSIC-TOOLS container, every step is invoked via a `make` target. The default goal of every `Makefile` is `help`, so `make` (without arguments) prints the list of available targets. After entering the container, the start folder is `foss/designs/`.
+The flow is driven by Makefiles. After cloning the repository and entering the IIC-OSIC-TOOLS container, every step is invoked via a `make` target. The default goal of every `Makefile` is `help`, so `make` (without arguments) prints the list of available targets. After entering the container, the starting folder is `foss/designs/`.
 
 ```sh
 git clone https://github.com/iic-jku/ihp-sg13g2-ams-chip-template.git
@@ -189,7 +189,9 @@ Each macro under [`macros/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-temp
 
 ### Most important top-level targets
 
-The full list of targets can be found in the [top-level README](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/README.md#show-available-targets). The relevant subset is summarised below.
+### Top-level targets
+
+The [top-level Makefile](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/Makefile) provides:
 
 | Target              | What it does                                                                                          |
 | ----------------------------------------------- | ----------------------------------------------------------------------------------------------------- |
@@ -200,15 +202,17 @@ The full list of targets can be found in the [top-level README](https://github.c
 | `make sim-view-cocotb` | Open the latest cocotb waveform in GTKWave (or Surfer with `WAVEFORM_VIEWER=surfer`).              |
 | `make librelane` / `librelane-nodrc` | Run the LibreLane flow for the top-level (with / without DRC steps).                  |
 | `make copy-reports` / `copy-gds` / `copy-netlist` / `copy-render` | Copy the latest LibreLane artifacts back into the source tree. |
-| `make build-bondpad` / `build-logos` | Build the bondpad and the JKU logos under `ip/`.                                     |
+| `make build-bondpad` / `build-logos` | Build the bondpad and the logos under `ip/`.                                     |
 | `make build-counter` / `build-inverter` / `make build-macros` | Build the digital and analog macros individually or together. |
-| `make build-top`    | Run LibreLane on the top-level, copy back all artifacts, add logo and fill, render the final GDS.      |
-| `make build-all`    | Init submodules, build bondpad, build logos, build macros, and `build-top`.                           |
+| `make build-top`    | Run LibreLane on the top-level, copy back all artifacts, add logos and fill structures, and render the final GDS. |
+| `make build-all`    | Init submodules, build bondpad, build logos, build macros, and build top-level.                           |
 | `make klayout-verify` / `magic-verify` | Run LVS, DRC, and PEX for a given cell with KLayout or Magic.                      |
-| `make all`          | Full simulation, build, and DRC pass.                                                                 |
+| `make all`          | Full simulation, build, and verification.                                                                 |
 | `make release VERSION=2.1.0` | Copy GDS, netlists, and renders into `release/v.<VERSION>/` for tapeout submission.          |
 
-### Most important counter Makefile targets
+See the [top-level README](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/README.md) for more details and how to use the Makefile targets.
+
+### Digital macro targets
 
 The [counter Makefile](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/counter/Makefile) provides:
 
@@ -218,14 +222,16 @@ The [counter Makefile](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/b
 | `make sim-rtl-verilog`                            | Run the SystemVerilog testbench with Icarus Verilog.                        |
 | `make sim-rtl-cocotb` / `sim-gl-cocotb`           | Run the cocotb RTL / gate-level simulation.                                 |
 | `make sim-view-verilog` / `sim-view-cocotb`       | Open the latest waveform in GTKWave or Surfer.                              |
-| `make sim-gl-xschem` / `sim-view-xschem`          | Run the mixed-signal XSPICE simulation in Xschem and plot the results.      |
 | `make librelane` (and `-nodrc`, `-magicdrc`, …)   | Run the LibreLane flow for the counter macro.                               |
-| `make generate-xspice`                            | Convert the post-synthesis netlist into an XSPICE model for Xschem.         |
-| `make build-fpga` / `make build-top` / `make all` | FPGA bitstream, full ASIC build, or both plus simulation in one call.       |
+| `make generate-xspice`                            | Convert the gate-level netlist into an XSPICE model for Xschem.             |
+| `make sim-gl-xschem` / `sim-view-xschem`          | Run the mixed-signal XSPICE simulation in Xschem and plot the results.      |
+| `make build-fpga`                                 | Run the full FPGA flow: lint, synthesis, P&R, and bitstream generation.     |
+| `make build-top`                                  | Run LibreLane, copy reports, netlists, and final views, and render the final GDS. |
+| `make all`                                        | Run lint, all simulations, the FPGA build, and the full macro build flow.   |
 
-See the [counter README](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/counter/README.md) for details.
+See the [counter README](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/counter/README.md) for more details and how to use the Makefile targets.
 
-### Most important inverter Makefile targets
+### Analog macro targets
 
 The [inverter Makefile](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/inverter/Makefile) provides:
 
@@ -237,10 +243,11 @@ The [inverter Makefile](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/
 | `make klayout-drc` / `magic-drc`                  | Run DRC using KLayout or Magic.                                             |
 | `make klayout-pex` / `magic-pex` (`EXT_MODE=<1|2|3>`) | Run parasitic extraction in C, CC, or full-RC mode.                     |
 | `make klayout-verify` / `magic-verify`            | Run LVS + DRC + PEX for a given cell.                                       |
-| `make lef` / `make lib` / `make verilog`          | Generate the LEF, the Liberty stub, and the Verilog stub for integration.   |
-| `make build-top` / `make all`                     | Build deliverables, or run simulation, verification, and build together.    |
+| `make lef` / `make lib` / `make verilog`          | Generate the LEF, the Liberty stub, and the Verilog stub for top-level integration.   |
+| `make build-top`                                  | Build the analog macro deliverables: LEF, LIB, Verilog stub, GDS and rendered layout image. |
+| `make all`                                        | Run all simulations, the analog macro build flow and KLayout / Magic verification. |
 
-See the [inverter README](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/inverter/README.md) for details.
+See the [inverter README](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/inverter/README.md) for more details and how to use the Makefile targets.
 
 
 # Digital Macro Implementation {#sec-digital}
