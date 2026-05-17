@@ -429,33 +429,32 @@ This calls `lint-verilog-all`, `sim-all`, `build-fpga`, and `build-top` in seque
 
 # Analog Macro Implementation {#sec-analog}
 
-The [`inverter`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/inverter/) macro is the analog reference
-macro of the template. It is a four-channel CMOS inverter, drawn at
-transistor level, and verified with the comprehensive AMS sign-off
-chain ([LVS](https://en.wikipedia.org/wiki/Layout_versus_schematic), [DRC](https://en.wikipedia.org/wiki/Design_rule_checking), [PEX](https://en.wikipedia.org/wiki/Parasitic_extraction), [Monte-Carlo](https://en.wikipedia.org/wiki/Monte_Carlo_method) simulation for process variations and mismatch with CACE). Two instances are used in the chip core. One is used as a 4-channel digital
-inverter (`inverter1`), the other as a 2-channel analog inverter
-(`inverter2`). See the [chip specifications](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/doc/specifications.md)
-for the full picture.
+The [`inverter`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/inverter/) macro is the analog reference macro of the template. It is a four-channel CMOS inverter, drawn at transistor level, and verified with a comprehensive verification chain:
 
-## Folder Structure of the Inverter Macro
+- Layout vs. Schematic ([LVS](https://en.wikipedia.org/wiki/Layout_versus_schematic)) with KLayout or Magic + Netgen,
+- Design Rule Checking ([DRC](https://en.wikipedia.org/wiki/Design_rule_checking)) with KLayout or Magic,
+- Parasitic Extraction ([PEX](https://en.wikipedia.org/wiki/Parasitic_extraction)) with KLayout or Magic,
+- [Monte Carlo](https://en.wikipedia.org/wiki/Monte_Carlo_method) simulation of process and mismatch variations with CACE.
 
-In [`macros/inverter/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/inverter/), the relevant folders are:
+Two instances are used in the chip core. One is used as a 4-channel digital inverter (`inverter1`), and the other as a 2-channel analog inverter (`inverter2`). See the [chip specifications](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/doc/specifications.md) for the full picture.
+
+## Folder Structure
+
+The inverter design files are located in [`macros/inverter/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/inverter/), and the relevant folders are:
 
 | Folder                                          | Content                                                                                  |
 | ------------------------------------------------------- | ---------------------------------------------------------------------------------------- |
 | [`schematic/xschem/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/inverter/schematic/xschem/) | Xschem schematics and symbols (`inverter.sch`, `inverter.sym`, `inverter_top.sch`, `inverter_top.sym`, `inverter_top_pex.sym`). |
-| [`layout/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/inverter/layout/)         | KLayout-edited GDS streams (`*.klay.gds`) and the exported `inverter_top.gds`.           |
-| [`testbenches/xschem/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/inverter/testbenches/xschem/) | Transient, AC open-loop, output-DC, and top-level transient testbenches.      |
-| [`netlist/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/inverter/netlist/)       | `schematic/` (CDL / SPICE for LVS), `layout/` (extracted), `pex/` (PEX SPICE).           |
+| [`layout/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/inverter/layout/)         | KLayout GDS files (`*.klay.gds`) and the exported `inverter_top.gds`.           |
+| [`testbenches/xschem/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/inverter/testbenches/xschem/) | Transient, AC open-loop, DC input sweep, and top-level transient testbenches.      |
+| [`netlist/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/inverter/netlist/)       | `schematic/` (CDL for KLayout LVS / SPICE for Magic + Netgen LVS), `layout/` (extracted for LVS), `pex/` (SPICE).           |
 | [`scripts/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/inverter/scripts/)       | Python plotters, sizing notebooks, layout rendering, PEX pin reordering.                 |
 | [`verification/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/inverter/verification/) | `drc/`, `lvs/`, and `cace/` (process, mismatch, supply sweeps).                       |
 | [`final/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/inverter/final/)           | Build deliverables for the top-level integration (LEF, LIB, Verilog stub, GDS).          |
 | [`render/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/inverter/render/)         | Macro renders for documentation.                                                         |
 
 ::: {.callout-tip}
-Read the [inverter README](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/inverter/README.md) first to get
-familiar with the folder layout and the available Makefile targets.
-Most of the commands below are documented there as well.
+Read the [inverter README](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/inverter/README.md) first to get familiar with the folder layout and the available Makefile targets. Most of the commands below are documented there as well.
 :::
 
 ## Schematic-Level Simulation
@@ -465,55 +464,69 @@ Go to the Xschem testbench folder and start Xschem.
 ```sh
 cd macros/inverter/testbenches/xschem
 xschem
+xschem <testbench_name>.sch # load a testbench schematic directly at startup
 ```
 
 Four testbenches are available in
 [`testbenches/xschem/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/inverter/testbenches/xschem/).
 
-- [`inverter_tb_tran.sch`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/inverter/testbenches/xschem/inverter_tb_tran.sch), single-channel transient response,
-- [`inverter_tb_ac_ol.sch`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/inverter/testbenches/xschem/inverter_tb_ac_ol.sch), open-loop AC characterisation,
-- [`inverter_tb_Vout.sch`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/inverter/testbenches/xschem/inverter_tb_Vout.sch), DC input sweep,
-- [`inverter_top_tb_tran.sch`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/inverter/testbenches/xschem/inverter_top_tb_tran.sch), top-level transient on `inverter_top`.
+- [`inverter_tb_tran.sch`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/inverter/testbenches/xschem/inverter_tb_tran.sch), single-channel transient response (see @fig-inverter-tb-tran-schematic),
+- [`inverter_tb_ac_ol.sch`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/inverter/testbenches/xschem/inverter_tb_ac_ol.sch), open-loop AC characterisation (see @fig-inverter-tb-ac-ol-schematic),
+- [`inverter_tb_dc_vout.sch`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/inverter/testbenches/xschem/inverter_tb_dc_vout.sch), DC input sweep (see @fig-inverter-tb-dc-vout-schematic),
+- [`inverter_top_tb_tran.sch`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/inverter/testbenches/xschem/inverter_top_tb_tran.sch), top-level transient on `inverter_top` (see @fig-inverter-top-tb-tran-schematic).
 
-Load a testbench in Xschem, then hold **`Ctrl`** and press the **Simulate** arrow in the schematic to launch the simulator manually.
+Load a testbench in Xschem by pressing **`Ctrl + o`**, then hold **`Ctrl`** and click the **Simulate** button in the schematic to launch the simulator. Once the simulation has finished, hold **`Ctrl`** and click the **Load waves** arrow to load the results into the integrated waveform viewer. The following figures show the testbench schematics and selected plotted results.
 
 ![Xschem testbench `inverter_tb_tran` (single-channel transient response on `inverter`).](fig/inverter_top/inverter_tb_tran_schematic.svg){#fig-inverter-tb-tran-schematic}
 
 ![Xschem testbench `inverter_tb_ac_ol` (open-loop AC characterisation on `inverter`).](fig/inverter_top/inverter_tb_ac_ol_schematic.svg){#fig-inverter-tb-ac-ol-schematic}
 
-![Plotted simulation result of `inverter_tb_ac_ol`.](fig/inverter_top/inverter_tb_ac_ol_sim.svg){#fig-inverter-tb-ac-ol-sim}
-
-![Xschem testbench `inverter_tb_Vout` (DC input sweep on `inverter`).](fig/inverter_top/inverter_tb_Vout_schematic.svg){#fig-inverter-tb-vout-schematic}
-
-![Plotted simulation result of `inverter_tb_Vout`.](fig/inverter_top/inverter_tb_Vout_sim.svg){#fig-inverter-tb-vout-sim}
+![Xschem testbench `inverter_tb_dc_vout` (DC input sweep on `inverter`).](fig/inverter_top/inverter_tb_dc_vout_schematic.svg){#fig-inverter-tb-dc-vout-schematic}
 
 ![Xschem top-level testbench `inverter_top_tb_tran` (transient on `inverter_top`).](fig/inverter_top/inverter_top_tb_tran_schematic.svg){#fig-inverter-top-tb-tran-schematic}
-
-![Plotted simulation result of `inverter_top_tb_tran`.](fig/inverter_top/inverter_top_tb_tran_sim.svg){#fig-inverter-top-tb-tran-sim}
-
-::: {.callout-tip}
-## Useful Xschem keybindings
-
-- Mark a symbol and press **`e`** to descend into the underlying circuit, then **`Ctrl` + `e`** to go back up.
-- Mark a symbol and press **`i`** to descend into the symbol drawing, then **`Ctrl` + `e`** to go back up.
-
-This is the recommended way to inspect or modify the underlying circuit and the graphical symbol of any device.
-:::
-
-![Xschem `inverter` schematic.](fig/inverter_top/inverter_schematic.svg){#fig-inverter-schematic width=50%}
 
 Non-interactive runs and post-processing are also available through the Makefile.
 
 ```sh
 cd macros/inverter
-make sim-xschem TB=inverter_tb_tran
-make sim-view-xschem CELL=inverter        # plot results with Python
+make sim-xschem TB=<testbench_name>     # run a specific testbench non-interactively
+make sim-view-xschem CELL=inverter      # plot results of inverter with Python
+make sim-view-xschem CELL=inverter_top  # plot results of inverter_top with Python
 ```
 
-The full simulation suite (all four testbenches plus the CACE flow) is
-triggered with `make sim-all`.
+The Makefile target `sim-view-xschem` calls the Python plotters in [`scripts/plot_simulations/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/inverter/scripts/plot_simulations) to parse the raw simulation output and plot the results with Matplotlib. The following figures show some of these plotted results.
 
-## Process Variation and Mismatch (CACE)
+![Plotted simulation result of `inverter_tb_ac_ol`.](fig/inverter_top/inverter_tb_ac_ol_sim.svg){#fig-inverter-tb-ac-ol-sim width=90%}
+
+![Plotted simulation result of `inverter_tb_dc_vout`.](fig/inverter_top/inverter_tb_dc_vout_sim.svg){#fig-inverter-tb-dc-vout-sim width=80%}
+
+![Plotted simulation result of `inverter_top_tb_tran`.](fig/inverter_top/inverter_top_tb_tran_sim.svg){#fig-inverter-top-tb-tran-sim width=80%}
+
+::: {.callout-tip}
+The full simulation suite, including all four testbenches plus the CACE flow (see @sec-cace), is triggered with `make sim-all`.
+:::
+
+## Schematic-Level Drawing
+
+To inspect or modify the underlying circuit of a symbol, mark the symbol and press **`e`** to descend into the underlying circuit, then **`Ctrl + e`** to go back up. To inspect or modify the graphical symbol of a device, mark the symbol and press **`i`** to descend into the symbol drawing, then **`Ctrl + e`** to go back up again.
+
+::: {.callout-tip}
+Since Xschem is a text-based schematic editor, you can also add `*.sch` and `.sym` files in a text editor and modify them there. This is especially useful for search-and-replace operations.
+:::
+
+@fig-inverter-symbol shows the symbol of the `inverter` cell.
+
+![Xschem `inverter` symbol.](fig/inverter_top/inverter_symbol.svg){#fig-inverter-symbol width=30%}
+
+@fig-inverter-schematic displays the schematic of the `inverter` cell with additional small-signal parameters for the NMOS and PMOS transistors at the chosen operating point. To view these small-signal parameters, hold **`Ctrl`** and click **Annotate OP** after the simulation has finished. Afterwards, descend into the inverter schematic.
+
+![Xschem `inverter` schematic.](fig/inverter_top/inverter_schematic.svg){#fig-inverter-schematic width=75%}
+
+::: {.callout-note}
+The devices `ntap` and `ptap` are the NMOS and PMOS substrate contacts, which are required for a successful KLayout LVS and have no impact on the circuit functionality. This approach is only used by the ihp-sg13g2 PDK and is controversial since it requires additional pins `nwell` and `psub` and overloads the schematic drawings.
+:::
+
+## Process Variation and Mismatch (CACE) {#sec-cace}
 
 [CACE](https://github.com/fossi-foundation/cace) drives ngspice via a
 characterisation YAML file
