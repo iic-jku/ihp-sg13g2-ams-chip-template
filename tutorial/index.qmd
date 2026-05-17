@@ -446,7 +446,7 @@ The inverter design files are located in [`macros/inverter/`](https://github.com
 | ------------------------------------------------------- | ---------------------------------------------------------------------------------------- |
 | [`schematic/xschem/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/inverter/schematic/xschem/) | Xschem schematics and symbols (`inverter.sch`, `inverter.sym`, `inverter_top.sch`, `inverter_top.sym`, `inverter_top_pex.sym`). |
 | [`layout/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/inverter/layout/)         | KLayout GDS files (`*.klay.gds`) and the exported `inverter_top.gds`.           |
-| [`testbenches/xschem/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/inverter/testbenches/xschem/) | Transient, AC open-loop, DC input sweep, and top-level transient testbenches.      |
+| [`testbenches/xschem/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/inverter/testbenches/xschem/) | Transient, ac open-loop, dc input sweep, and top-level transient testbenches.      |
 | [`netlist/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/inverter/netlist/)       | `schematic/` (CDL for KLayout LVS / SPICE for Magic + Netgen LVS), `layout/` (extracted for LVS), `pex/` (SPICE).           |
 | [`scripts/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/inverter/scripts/)       | Python plotters, sizing notebooks, layout rendering, PEX pin reordering.                 |
 | [`verification/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/inverter/verification/) | `drc/`, `lvs/`, and `cace/` (process, mismatch, supply sweeps).                       |
@@ -471,17 +471,17 @@ Four testbenches are available in
 [`testbenches/xschem/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/inverter/testbenches/xschem/).
 
 - [`inverter_tb_tran.sch`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/inverter/testbenches/xschem/inverter_tb_tran.sch), single-channel transient response (see @fig-inverter-tb-tran-schematic),
-- [`inverter_tb_ac_ol.sch`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/inverter/testbenches/xschem/inverter_tb_ac_ol.sch), open-loop AC characterisation (see @fig-inverter-tb-ac-ol-schematic),
-- [`inverter_tb_dc_vout.sch`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/inverter/testbenches/xschem/inverter_tb_dc_vout.sch), DC input sweep (see @fig-inverter-tb-dc-vout-schematic),
+- [`inverter_tb_ac_ol.sch`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/inverter/testbenches/xschem/inverter_tb_ac_ol.sch), open-loop ac characterisation (see @fig-inverter-tb-ac-ol-schematic),
+- [`inverter_tb_dc_vout.sch`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/inverter/testbenches/xschem/inverter_tb_dc_vout.sch), dc input sweep (see @fig-inverter-tb-dc-vout-schematic),
 - [`inverter_top_tb_tran.sch`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/inverter/testbenches/xschem/inverter_top_tb_tran.sch), top-level transient on `inverter_top` (see @fig-inverter-top-tb-tran-schematic).
 
 Load a testbench in Xschem by pressing **`Ctrl + o`**, then hold **`Ctrl`** and click the **Simulate** button in the schematic to launch the simulator. Once the simulation has finished, hold **`Ctrl`** and click the **Load waves** arrow to load the results into the integrated waveform viewer. The following figures show the testbench schematics and selected plotted results.
 
 ![Xschem testbench `inverter_tb_tran` (single-channel transient response on `inverter`).](fig/inverter_top/inverter_tb_tran_schematic.svg){#fig-inverter-tb-tran-schematic}
 
-![Xschem testbench `inverter_tb_ac_ol` (open-loop AC characterisation on `inverter`).](fig/inverter_top/inverter_tb_ac_ol_schematic.svg){#fig-inverter-tb-ac-ol-schematic}
+![Xschem testbench `inverter_tb_ac_ol` (open-loop ac characterisation on `inverter`).](fig/inverter_top/inverter_tb_ac_ol_schematic.svg){#fig-inverter-tb-ac-ol-schematic}
 
-![Xschem testbench `inverter_tb_dc_vout` (DC input sweep on `inverter`).](fig/inverter_top/inverter_tb_dc_vout_schematic.svg){#fig-inverter-tb-dc-vout-schematic}
+![Xschem testbench `inverter_tb_dc_vout` (dc input sweep on `inverter`).](fig/inverter_top/inverter_tb_dc_vout_schematic.svg){#fig-inverter-tb-dc-vout-schematic}
 
 ![Xschem top-level testbench `inverter_top_tb_tran` (transient on `inverter_top`).](fig/inverter_top/inverter_top_tb_tran_schematic.svg){#fig-inverter-top-tb-tran-schematic}
 
@@ -528,19 +528,35 @@ The devices `ntap` and `ptap` are the NMOS and PMOS substrate contacts, which ar
 
 ## Process Variation and Mismatch (CACE) {#sec-cace}
 
-[CACE](https://github.com/fossi-foundation/cace) drives ngspice via a
-characterisation YAML file
-([`verification/cace/inverter.yaml`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/inverter/verification/cace/inverter.yaml))
-and produces Monte-Carlo, mismatch, and supply-sweep plots.
+[CACE](https://github.com/fossi-foundation/cace) drives Ngspice via a
+characterisation YAML file ([`verification/cace/inverter.yaml`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/inverter/verification/cace/inverter.yaml)) to run Monte-Carlo simulations and produce process and mismatch variation plots.
 
 ```sh
 make sim-cace
 ```
 
-Plots are written to
-[`verification/cace/results/inverter/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/inverter/verification/cace/).
-This step is mainly relevant for advanced designers that want to
-characterise the macro across PVT corners.
+Plots are written to [`verification/cace/results/inverter/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/inverter/verification/cace/results/inverter).
+This step is mainly relevant for advanced designers that want to characterise the analog macro across PVT corners. The following figures show the result of the CACE simulations for 200 iterations.
+
+@fig-inverter-cace-adc-mc and @fig-inverter-cace-adc-mm show the process and mismatch variations of the dc open-loop gain $A_\mathrm{dc,ol}$, while @fig-inverter-cace-adc-vdd plots its variation across several process corners at one fixed supply voltage.
+
+![CACE process variation of $A_\mathrm{dc,ol}$.](fig/inverter_top/Adc_ol_dB_mc.png){#fig-inverter-cace-adc-mc width=70%}
+
+![CACE mismatch variation of $A_\mathrm{dc,ol}$.](fig/inverter_top/Adc_ol_dB_mm.png){#fig-inverter-cace-adc-mm width=70%}
+
+![CACE variation of $A_\mathrm{dc,ol}$ across several process corners.](fig/inverter_top/Adc_ol_dB_vs_vdd.png){#fig-inverter-cace-adc-vdd}
+
+@fig-inverter-cace-fcu-mc and @fig-inverter-cace-fcu-mm show the process and mismatch variations of the open-loop lower cut-off frequency $f_\mathrm{cu}$, while @fig-inverter-cace-fcu-vdd plots its variation across several process corners at one fixed supply voltage.
+
+![CACE process variation of $f_\mathrm{cu}$.](fig/inverter_top/fcu_mc.png){#fig-inverter-cace-fcu-mc width=70%}
+
+![CACE mismatch variation of $f_\mathrm{cu}$.](fig/inverter_top/fcu_mm.png){#fig-inverter-cace-fcu-mm width=70%}
+
+![CACE variation of $f_\mathrm{cu}$ across several process corners.](fig/inverter_top/fcu_vs_vdd.png){#fig-inverter-cace-fcu-vdd}
+
+::: {.callout-tip}
+In the `inverter.yaml` characterisation file, more parameter sweeps can be added, for example, across temperature, supply voltages or load capacitance.
+:::
 
 ## Inspect / Edit the Layout
 
@@ -1011,7 +1027,7 @@ are:
    `vout1..vout4`.
 4. Update the transient testbench
    ([`testbenches/xschem/inverter_top_tb_tran.sch`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/inverter/testbenches/xschem/inverter_top_tb_tran.sch))
-   to measure the oscillation frequency. Delete the AC, DC, and
+  to measure the oscillation frequency. Delete the ac, dc, and
    standalone transient testbenches that are no longer relevant.
 5. Optionally (advanced), adapt the CACE
    [`inverter.yaml`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/inverter/verification/cace/inverter.yaml)
