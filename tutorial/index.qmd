@@ -74,6 +74,7 @@ The following guidelines and cheatsheets should be helpful for the tutorial, the
 - [Xschem Cheatsheet](https://iic-jku.github.io/analog-circuit-design/aicd.html#sec-xschem-cheatsheet)
 - [Ngspice Cheatsheet](https://iic-jku.github.io/analog-circuit-design/aicd.html#sec-ngspice-cheatsheet)
 - [KLayout Cheatsheet](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/doc/klayout/klayout_cheatsheet.md)
+- [KLayout Productivity Suite / Plugins](https://github.com/iic-jku/klayout-productivity-suite)
 - [LibreLane Cheatsheet](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/doc/librelane/librelane_cheatsheet.md)
 - [ihp-sg13g2 Layout Calculation Cheatsheet](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/doc/ihp-sg13g2-Open-PDK/sg13g2_os_layout_cheatsheet.xlsx)
 - [ihp-sg13g2 LV NMOS / PMOS and HV NMOS / PMOS Techsweeps](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/doc/sizing)
@@ -110,7 +111,7 @@ Additional video walk-throughs are available for Linux and Windows.
 - [IIC-OSIC-TOOLS installation on Windows (from 37:20 to 45:15)](https://www.youtube.com/watch?v=AiFTwKdS2V4)
 :::
 
-## Selection of the PDK
+## PDK Selection
 
 As mentioned above, the container includes four Open-PDKs. To activate or switch the active PDK, the following two options are available. More detailed instructions can be found in the container's [`README.md`](https://github.com/iic-jku/IIC-OSIC-TOOLS/blob/main/README.md#2-installed-pdks).
 
@@ -185,9 +186,9 @@ cd ihp-sg13g2-ams-chip-template
 make help              # show available targets at the top level
 ```
 
-Each macro under [`macros/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/) has its own `Makefile` and `README.md` with macro-local targets. They are called by the top-level build targets, but can also be invoked directly from inside the macro folder.
+Each macro under [`macros/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/) has its own `Makefile` and `README.md` with macro-local targets. They are called by the top-level build targets, but can also be invoked directly from inside the macro folder. @fig-targets-overview visualises how the Makefile targets of the whole directory structure depend on each other.
 
-### Most important top-level targets
+![Overview of the Makefile targets.](fig/targets_overview/targets_overview.svg){#fig-targets-overview}
 
 ### Top-level targets
 
@@ -252,46 +253,36 @@ See the [inverter README](https://github.com/iic-jku/ihp-sg13g2-ams-chip-templat
 
 # Digital Macro Implementation {#sec-digital}
 
-The [`counter`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/counter/) macro is the digital reference macro
-of the template. It is a parameterisable synchronous up-counter with
-synchronous active-high reset; the top-level wrapper converts the chip's
-active-low reset to an active-high signal. The default width is 8 bits,
-so the counter wraps from 255 back to 0.
+The [`counter`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/counter/) macro is the digital reference macro of the template. It is a parameterisable synchronous up-counter with synchronous active-high reset implemented with SystemVerilog in [`counter.sv`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/counter/rtl/counter.sv). The top-level wrapper [`counter_top.sv`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/counter/rtl/counter_top.sv) converts the chip's active-low reset to an active-high signal. The default width is 8 bits, so the counter wraps from 255 back to 0.
 
-## Folder Structure of the Counter Macro
+## Folder Structure
 
-In [`macros/counter/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/counter/), the relevant folders are:
+The counter design files are located in [`macros/counter/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/counter/), the relevant folders are:
 
 | Folder                                       | Content                                                                                  |
 | ---------------------------------------------------- | ---------------------------------------------------------------------------------------- |
 | [`rtl/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/counter/rtl/)             | SystemVerilog sources: [`constants.sv`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/counter/rtl/constants.sv), [`counter.sv`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/counter/rtl/counter.sv), [`counter_top.sv`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/counter/rtl/counter_top.sv). |
 | [`testbenches/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/counter/testbenches/) | `verilog/`, `cocotb/`, and `xschem/` testbenches with pre-configured GTKWave and Surfer view files. |
 | [`flow/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/counter/flow/)           | LibreLane configuration (`config.yaml`, `pin_order.cfg`, `impl.sdc`, `signoff.sdc`). |
-| [`final/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/counter/final/)         | Final views copied from the latest LibreLane run (GDS, LEF, LIB per corner, NL, PNL, SPEF, VH). |
+| [`final/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/counter/final/)         | Final deliverables (GDS, LEF, LIB per corner, NL, PNL, SPEF, VH) copied from the latest LibreLane run for top-level integration. |
 | [`fpga/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/counter/fpga/)           | Optional FPGA flow for the [pico-ice](https://pico-ice.tinyvision.ai/) board.    |
-| [`netlist/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/counter/netlist/)     | Gate-level netlists (`nl/`, `pnl/`, `spice/`, `xspice/`).                              |
-| [`schematic/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/counter/schematic/) | Xschem symbol of the macro for mixed-signal usage.                                     |
+| [`netlist/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/counter/netlist/)     | `nl/`, `pnl/`, `spice/` and `xspice/` netlists (see [LibreLane cheatsheet](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/doc/librelane/librelane_cheatsheet.md#3-netlists--circuit-views) for more details). |
+| [`schematic/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/counter/schematic/) | Xschem symbol of the macro for use in mixed-signal Xschem testbenches.                                       |
 | [`scripts/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/counter/scripts/)     | Helper scripts (XSPICE conversion, plotting, layout rendering).                        |
 | [`verification/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/counter/verification/) | Yosys, antenna, STA, IR-drop, DRC, LVS, and manufacturability reports.            |
 | [`render/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/counter/render/)       | Macro renders for documentation.                                                       |
 
 ::: {.callout-tip}
-Read the [counter README](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/counter/README.md) first to get
-familiar with the folder layout and the available Makefile targets. Most
-of the commands below are documented there as well.
+Read the [counter README](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/counter/README.md) first to get familiar with the folder layout and the available Makefile targets. Most of the commands below are documented there as well.
 :::
 
 ## Reading the RTL
 
-The macro is split into a parameterised counter and a thin top-level
-wrapper that converts the chip's active-low reset to the internal
-active-high reset of the counter.
+The macro is split into a parameterised counter and a top-level wrapper that converts the chip's active-low reset to the internal active-high reset of the counter.
 
 ### `counter.sv`
 
-The arithmetic is implemented in
-[`counter.sv`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/counter/rtl/counter.sv). It is an $N$-bit
-synchronous up-counter with reset, enable, and wrap at `CTR_MAX`.
+The logic is implemented in [`counter.sv`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/counter/rtl/counter.sv). It is an $N$-bit synchronous up-counter with reset and enable, and it wraps at `CTR_MAX`. $N$ defaults to 8, so the counter counts from 0 to 255 and then wraps back to 0.
 
 ```{.systemverilog filename="macros/counter/rtl/counter.sv"}
 {{< include ../macros/counter/rtl/counter.sv >}}
@@ -299,28 +290,21 @@ synchronous up-counter with reset, enable, and wrap at `CTR_MAX`.
 
 ### `counter_top.sv`
 
-[`counter_top.sv`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/counter/rtl/counter_top.sv) wraps the
-counter and converts the active-low reset (`reset_n_i`) to an
-active-high signal.
+[`counter_top.sv`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/counter/rtl/counter_top.sv) wraps the counter and converts the active-low reset (`reset_n_i`) to an active-high signal `reset`.
 
 ```{.systemverilog filename="macros/counter/rtl/counter_top.sv"}
 {{< include ../macros/counter/rtl/counter_top.sv >}}
 ```
 
-Shared defaults like the bit-width and the clock frequency are defined
-in [`constants.sv`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/counter/rtl/constants.sv). They are
-exposed as `` `define `` macros instead of a SystemVerilog `package`,
-because Yosys 0.64 cannot parse `import pkg::*` in a module header.
+Shared defaults are defined in [`constants.sv`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/counter/rtl/constants.sv). For example, for the final implementation, the maximum counter value is defined in `constants.sv` with the variable `COUNTER_MAX_DEFAULT`. For the testbenches, `CLK_FREQ_DEFAULT` is defined there to set the default clock frequency (e.g. 50 MHz) for the simulations. They are exposed as `` `define `` macros instead of a SystemVerilog `package`, because Yosys 0.64 cannot parse `import pkg::*` in a module header.
 
 ::: {.callout-note}
-Open the three RTL files (using `gedit` or `vim`) and follow the counter through reset, hold,
-increment, and wrap-around. Check why the constants are
-`` `define ``-style macros and not `package` parameters.
+Open the three RTL files (using `gedit` or `vim`), follow and understand the counter through reset, hold, increment, and wrap-around.
 :::
 
 ## Linting
 
-[Linting](https://en.wikipedia.org/wiki/Lint_(software)) is done with [Verilator](https://www.veripool.org/verilator/).
+[Linting](https://en.wikipedia.org/wiki/Lint_(software)) is done with [Verilator](https://www.veripool.org/verilator/) and can be executed with the following commands.
 
 ```sh
 cd macros/counter
@@ -335,29 +319,19 @@ make lint-verilog-all            # lint counter and counter_top in sequence
 
 ### RTL with SystemVerilog testbench (Icarus Verilog)
 
-A SystemVerilog testbench
-([`counter_top_tb.sv`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/counter/testbenches/verilog/counter_top_tb.sv))
-checks reset, hold, increment, and wrap-around. Run it with the
-following commands.
+A SystemVerilog testbench ([`counter_top_tb.sv`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/counter/testbenches/verilog/counter_top_tb.sv)) checks reset, hold, increment, and wrap-around. Run it with the following commands.
 
 ```sh
 make sim-rtl-verilog
-make sim-view-verilog                      # open in GTKWave (default)
+make sim-view-verilog               # open in GTKWave (default)
 make sim-view-verilog WAVEFORM_VIEWER=surfer
 ```
-
-::: {.callout-important}
-Surfer is currently not working on macOS, and might not work on Windows/WSL. If you want to use Surfer, please run the container on Linux.
-:::
 
 ![RTL Verilog waveform of `counter_top` in GTKWave.](fig/counter_top/counter_top_verilog_gtkwave.png){#fig-counter-top-verilog-gtkwave}
 
 ### RTL and gate-level with cocotb
 
-The [cocotb](https://www.cocotb.org/) testbench
-([`counter_top_tb.py`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/counter/testbenches/cocotb/counter_top_tb.py))
-covers the same four behaviours from Python, and is the one called by
-`make all`.
+The [cocotb](https://www.cocotb.org/) testbench ([`counter_top_tb.py`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/counter/testbenches/cocotb/counter_top_tb.py)) checks the same four cases (reset, hold, increment, and wrap-around) as the SystemVerilog testbench, but implements them in Python.
 
 ```sh
 make sim-rtl-cocotb                # RTL simulation
@@ -366,92 +340,78 @@ make sim-view-cocotb               # view in GTKWave
 make sim-view-cocotb WAVEFORM_VIEWER=surfer
 ```
 
-The gate-level cocotb run uses the post-synthesis netlist
-[`netlist/nl/counter_top.nl.v`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/counter/netlist/nl/), which is
-copied from the latest LibreLane run by `make copy-netlist`.
+![Gate-level cocotb waveform of `counter_top` in GTKWave.](fig/counter_top/counter_top_cocotb_gtkwave.png){#fig-counter-top-cocotb-gtkwave}
 
-::: {.callout-note appearance="simple"}
-**Figure placeholder. Cocotb gate-level waveform of `counter_top`.**
-:::
+The gate-level cocotb run uses the gate-level Verilog netlist produced after synthesis: [`netlist/nl/counter_top.nl.v`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/counter/netlist/nl/). In this tutorial, this netlist for the counter already exists. For new designs, run `make build-top` first to execute the LibreLane flow, then run `make copy-netlist` to copy the netlists from the latest LibreLane run.
 
 ## LibreLane Hardening
 
-The LibreLane flow synthesises, places, and routes the macro, runs the
-sign-off steps, and writes its final views to `flow/final/`. The
-wrapper target `make build-top` runs the flow, copies the reports,
-final folders, netlists, and the render back into the source tree, and
-renders the final GDS.
+The LibreLane flow synthesises, places, and routes the macro, runs the sign-off steps, and writes its final output files to `flow/final/`. The wrapper target `make build-top` runs the flow, renders the final GDS, and copies the reports, final folders, netlists, and render output back into the source tree.
 
 ```sh
 make build-top
 ```
 
 ::: {.callout-tip}
-The macro can also be built as an FPGA bitstream
-([`fpga/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/counter/fpga/)) for a pico-ice board with `make
-build-fpga`. The FPGA path is not used in this tutorial and is listed
-here for reference.
+The macro can also be built as an FPGA bitstream ([`fpga/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/counter/fpga/)) for a pico-ice board (or other FPGA boards) with `make build-fpga`. The FPGA flow is not used in this tutorial and is only listed here for reference.
 :::
 
 ## Viewing the Macro
 
-After the flow finishes, the macro layout can be inspected with
-KLayout. The container provides the `ke` alias for `klayout -e` (edit
-mode).
+After the flow finishes, the macro layout can be inspected with KLayout. The container provides the `ke` alias for `klayout -e` (edit mode). With the following command, the final GDS from the latest LibreLane run is opened in KLayout. With the keys `0`, `1`, `2`, ..., `9` you can view different layers as explained in the [KLayout cheatsheet](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/doc/klayout/klayout_cheatsheet.md) or in the [klayout-layer-shortcuts](https://github.com/iic-jku/klayout-layer-shortcuts) plugin.
 
 ```sh
-ke macros/counter/final/gds/counter_top.gds
+ke final/gds/counter_top.gds
 ```
 
-The LibreLane render is copied to
-[`macros/counter/render/img/counter_top_librelane.png`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/counter/render/img/),
-and the high-resolution render from `lay2img.py` is saved as
-`counter_top.png` in the same folder. The sign-off reports are written
-to [`macros/counter/verification/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/counter/verification/).
+![`counter_top` layout in KLayout (200 µm x 100 µm).](fig/counter_top/counter_top_black.png){#fig-counter-top-layout}
 
-![`counter_top` layout in KLayout.](fig/counter_top/counter_top_black.png){#fig-counter-top-layout}
+The LibreLane render is copied to [`render/img/counter_top_librelane.png`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/counter/render/img/), and the high-resolution render from `lay2img.py` is saved as `counter_top.png` in the same folder. The sign-off reports are written to [`verification/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/counter/verification/).
+
+## RTL Mixed-Signal Simulation with Xschem
+
+For an introduction to Ngspice and Verilog RTL co-simulation with Xschem, see Stefan Schippers' video: [Ngspice + Verilog Co-Simulation in Xschem](https://www.youtube.com/watch?v=PPd7jkcHOgA). This RTL mixed-signal simulation is currently not included in this repository, but it will be added in a future update.
 
 ## Gate-Level Mixed-Signal Simulation with Xschem
 
-A more accurate sign-off step is the gate-level mixed-signal simulation
-in Xschem with the ngspice XSPICE event-driven engine. The
-post-synthesis Verilog netlist (`yosys-synthesis/<TOP>.nl.v`) is
-converted into an XSPICE model with the following command.
+A more accurate validation step is the gate-level mixed-signal simulation in Xschem with the Ngspice XSPICE event-driven engine. The gate-level Verilog netlist produced after synthesis (`runs/RUN_*/*-yosys-synthesis/<TOP>.nl.v`) is converted into an XSPICE model with the following command.
 
 ```sh
 make generate-xspice
 ```
 
-The conversion pipeline is `.nl.v → .vp → .spice → .xspice`, followed
-by a pin-reorder pass to match the Xschem symbol
+The conversion pipeline is `.nl.v → .vp → .spice → .xspice`, followed by a pin-reorder pass to match the Xschem symbol
 ([`schematic/xschem/counter_top.sym`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/counter/schematic/xschem/)).
 
-The Xschem testbench
-([`counter_top_tb_tran.sch`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/counter/testbenches/xschem/))
-can be opened and simulated interactively.
+::: {.callout-note}
+`.vp` is the gate-level Verilog netlist with power pins. Hence, one might think that the conversion could be done directly from the `.pnl.v` netlist in the `flow/final/` folder. However, the `.nl.v` file from the LibreLane `yosys-synthesis` step must be used. The target `make generate-xspice` is not executed by `make all`.
+:::
+
+The Xschem testbench ([`counter_top_tb_tran.sch`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/counter/testbenches/xschem/)) can be opened and simulated interactively.
 
 ```sh
-cd macros/counter/testbenches/xschem
+cd testbenches/xschem
 xschem counter_top_tb_tran.sch
 ```
 
-In Xschem, hold **`Shift`** and click the **Simulate** button in the
-schematic to launch the simulator. You can also hold **`Ctrl`** and click the **Simulate** arrow, followed by a **`Ctrl`**-click on the **Load waves** arrow to load the simulation results into the integrated waveform viewer.
+![Xschem mixed-signal gate-level testbench `counter_top_tb_tran`.](fig/counter_top/counter_top_tb_tran_schematic.svg){#fig-counter-top-tb-tran-schematic}
 
-::: {.callout-note}
-These arrows in Xschem are called "launchers" and are essentially a series of Tcl commands. Since Xschem is fully scriptable via Tcl, repetitive tasks can be easily automated. Select a launcher and press `q` (Properties) to inspect or modify its underlying Tcl commands.
+In Xschem, hold **`Ctrl`** and click the **Simulate** button in the schematic to launch the simulator. Once the simulation has finished, you can hold **`Ctrl`** and click the **Load waves** arrow to load the simulation results into the integrated waveform viewer.
+
+::: {.callout-tip}
+This testbench also shows multiple ways to connect and display bus signals in Xschem. For more information, refer to the [Xschem documentation: Use Bus/Vector notation for signal bundles / arrays of instances](https://xschem.sourceforge.io/stefan/xschem_man/tutorial_busses.html).
 :::
 
-The same simulation can also be run
-non-interactively from the Makefile, and the result can be plotted from
-Python.
+::: {.callout-note}
+These arrows in Xschem are called "launchers" and are essentially a series of Tcl commands. Since Xschem is fully scriptable via Tcl, repetitive tasks can be easily automated. Select a launcher and press `q` (Properties) to inspect or modify its underlying Tcl commands. This is also the beauty of Xschem and the reason why it is possible to also run simulations non-interactively, generate netlists, and run LVS with only Makefile targets, as you will see below.
+:::
+
+The same simulation can also be run non-interactively from the Makefile, and the result can be plotted from Python.
 
 ```sh
 make sim-gl-xschem
 make sim-view-xschem
 ```
-
-![Xschem mixed-signal gate-level testbench `counter_top_tb_tran`.](fig/counter_top/counter_top_tb_tran_schematic.svg){#fig-counter-top-tb-tran-schematic}
 
 ![Plotted Xschem simulation results of `counter_top_tb_tran` from `scripts/plot_simulations/plot_counter_top.py`.](fig/counter_top/counter_top_tb_tran_sim.svg){#fig-counter-top-tb-tran-sim}
 
@@ -463,9 +423,7 @@ The full lint, simulation, and build chain is run with the following command.
 make all
 ```
 
-This calls `lint-verilog-all`, `sim-all`, `build-fpga`, and `build-top`
-in sequence. LVS and DRC are already covered by the LibreLane sign-off
-steps, so no extra verification target is needed for the counter.
+This calls `lint-verilog-all`, `sim-all`, `build-fpga`, and `build-top` in sequence. LVS and DRC are already covered by the LibreLane sign-off steps, so no extra verification target is needed for the digital macro.
 
 # Analog Macro Implementation {#sec-analog}
 
