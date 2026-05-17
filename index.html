@@ -1337,7 +1337,7 @@ Figure&nbsp;6: Plotted Xschem simulation results of <code>counter_top_tb_tran</c
 </tr>
 <tr class="odd">
 <td><a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/inverter/testbenches/xschem/"><code>testbenches/xschem/</code></a></td>
-<td>Transient, AC open-loop, DC input sweep, and top-level transient testbenches.</td>
+<td>Transient, ac open-loop, dc input sweep, and top-level transient testbenches.</td>
 </tr>
 <tr class="even">
 <td><a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/inverter/netlist/"><code>netlist/</code></a></td>
@@ -1384,8 +1384,8 @@ Tip
 <p>Four testbenches are available in <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/inverter/testbenches/xschem/"><code>testbenches/xschem/</code></a>.</p>
 <ul>
 <li><a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/inverter/testbenches/xschem/inverter_tb_tran.sch"><code>inverter_tb_tran.sch</code></a>, single-channel transient response (see <a href="#fig-inverter-tb-tran-schematic" class="quarto-xref">Figure&nbsp;7</a>),</li>
-<li><a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/inverter/testbenches/xschem/inverter_tb_ac_ol.sch"><code>inverter_tb_ac_ol.sch</code></a>, open-loop AC characterisation (see <a href="#fig-inverter-tb-ac-ol-schematic" class="quarto-xref">Figure&nbsp;8</a>),</li>
-<li><a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/inverter/testbenches/xschem/inverter_tb_dc_vout.sch"><code>inverter_tb_dc_vout.sch</code></a>, DC input sweep (see <a href="#fig-inverter-tb-dc-vout-schematic" class="quarto-xref">Figure&nbsp;9</a>),</li>
+<li><a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/inverter/testbenches/xschem/inverter_tb_ac_ol.sch"><code>inverter_tb_ac_ol.sch</code></a>, open-loop ac characterisation (see <a href="#fig-inverter-tb-ac-ol-schematic" class="quarto-xref">Figure&nbsp;8</a>),</li>
+<li><a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/inverter/testbenches/xschem/inverter_tb_dc_vout.sch"><code>inverter_tb_dc_vout.sch</code></a>, dc input sweep (see <a href="#fig-inverter-tb-dc-vout-schematic" class="quarto-xref">Figure&nbsp;9</a>),</li>
 <li><a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/inverter/testbenches/xschem/inverter_top_tb_tran.sch"><code>inverter_top_tb_tran.sch</code></a>, top-level transient on <code>inverter_top</code> (see <a href="#fig-inverter-top-tb-tran-schematic" class="quarto-xref">Figure&nbsp;10</a>).</li>
 </ul>
 <p>Load a testbench in Xschem by pressing <strong><code>Ctrl + o</code></strong>, then hold <strong><code>Ctrl</code></strong> and click the <strong>Simulate</strong> button in the schematic to launch the simulator. Once the simulation has finished, hold <strong><code>Ctrl</code></strong> and click the <strong>Load waves</strong> arrow to load the results into the integrated waveform viewer. The following figures show the testbench schematics and selected plotted results.</p>
@@ -1402,20 +1402,20 @@ Figure&nbsp;7: Xschem testbench <code>inverter_tb_tran</code> (single-channel tr
 <div id="fig-inverter-tb-ac-ol-schematic" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-inverter-tb-ac-ol-schematic-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<a href="fig/inverter_top/inverter_tb_ac_ol_schematic.svg" class="lightbox" data-gallery="quarto-lightbox-gallery-8" title="Figure&nbsp;8: Xschem testbench inverter_tb_ac_ol (open-loop AC characterisation on inverter)."><img src="fig/inverter_top/inverter_tb_ac_ol_schematic.svg" class="img-fluid figure-img"></a>
+<a href="fig/inverter_top/inverter_tb_ac_ol_schematic.svg" class="lightbox" data-gallery="quarto-lightbox-gallery-8" title="Figure&nbsp;8: Xschem testbench inverter_tb_ac_ol (open-loop ac characterisation on inverter)."><img src="fig/inverter_top/inverter_tb_ac_ol_schematic.svg" class="img-fluid figure-img"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-inverter-tb-ac-ol-schematic-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;8: Xschem testbench <code>inverter_tb_ac_ol</code> (open-loop AC characterisation on <code>inverter</code>).
+Figure&nbsp;8: Xschem testbench <code>inverter_tb_ac_ol</code> (open-loop ac characterisation on <code>inverter</code>).
 </figcaption>
 </figure>
 </div>
 <div id="fig-inverter-tb-dc-vout-schematic" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-inverter-tb-dc-vout-schematic-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<a href="fig/inverter_top/inverter_tb_dc_vout_schematic.svg" class="lightbox" data-gallery="quarto-lightbox-gallery-9" title="Figure&nbsp;9: Xschem testbench inverter_tb_dc_vout (DC input sweep on inverter)."><img src="fig/inverter_top/inverter_tb_dc_vout_schematic.svg" class="img-fluid figure-img"></a>
+<a href="fig/inverter_top/inverter_tb_dc_vout_schematic.svg" class="lightbox" data-gallery="quarto-lightbox-gallery-9" title="Figure&nbsp;9: Xschem testbench inverter_tb_dc_vout (dc input sweep on inverter)."><img src="fig/inverter_top/inverter_tb_dc_vout_schematic.svg" class="img-fluid figure-img"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-inverter-tb-dc-vout-schematic-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;9: Xschem testbench <code>inverter_tb_dc_vout</code> (DC input sweep on <code>inverter</code>).
+Figure&nbsp;9: Xschem testbench <code>inverter_tb_dc_vout</code> (dc input sweep on <code>inverter</code>).
 </figcaption>
 </figure>
 </div>
@@ -1533,9 +1533,84 @@ Note
 </section>
 <section id="sec-cace" class="level2" data-number="5.4">
 <h2 data-number="5.4" class="anchored" data-anchor-id="sec-cace"><span class="header-section-number">5.4</span> Process Variation and Mismatch (CACE)</h2>
-<p><a href="https://github.com/fossi-foundation/cace">CACE</a> drives ngspice via a characterisation YAML file (<a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/inverter/verification/cace/inverter.yaml"><code>verification/cace/inverter.yaml</code></a>) and produces Monte-Carlo, mismatch, and supply-sweep plots.</p>
+<p><a href="https://github.com/fossi-foundation/cace">CACE</a> drives Ngspice via a characterisation YAML file (<a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/inverter/verification/cace/inverter.yaml"><code>verification/cace/inverter.yaml</code></a>) to run Monte-Carlo simulations and produce process and mismatch variation plots.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb16"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> sim-cace</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>Plots are written to <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/inverter/verification/cace/"><code>verification/cace/results/inverter/</code></a>. This step is mainly relevant for advanced designers that want to characterise the macro across PVT corners.</p>
+<p>Plots are written to <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/inverter/verification/cace/results/inverter"><code>verification/cace/results/inverter/</code></a>. This step is mainly relevant for advanced designers that want to characterise the analog macro across PVT corners. The following figures show the result of the CACE simulations for 200 iterations.</p>
+<p><a href="#fig-inverter-cace-adc-mc" class="quarto-xref">Figure&nbsp;16</a> and <a href="#fig-inverter-cace-adc-mm" class="quarto-xref">Figure&nbsp;17</a> show the process and mismatch variations of the dc open-loop gain <span class="math inline">\(A_\mathrm{dc,ol}\)</span>, while <a href="#fig-inverter-cace-adc-vdd" class="quarto-xref">Figure&nbsp;18</a> plots its variation across several process corners at one fixed supply voltage.</p>
+<div id="fig-inverter-cace-adc-mc" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-inverter-cace-adc-mc-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="fig/inverter_top/Adc_ol_dB_mc.png" class="lightbox" data-gallery="quarto-lightbox-gallery-16" title="Figure&nbsp;16: CACE process variation of A_\mathrm{dc,ol}."><img src="fig/inverter_top/Adc_ol_dB_mc.png" class="img-fluid figure-img" style="width:70.0%"></a>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-inverter-cace-adc-mc-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;16: CACE process variation of <span class="math inline">\(A_\mathrm{dc,ol}\)</span>.
+</figcaption>
+</figure>
+</div>
+<div id="fig-inverter-cace-adc-mm" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-inverter-cace-adc-mm-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="fig/inverter_top/Adc_ol_dB_mm.png" class="lightbox" data-gallery="quarto-lightbox-gallery-17" title="Figure&nbsp;17: CACE mismatch variation of A_\mathrm{dc,ol}."><img src="fig/inverter_top/Adc_ol_dB_mm.png" class="img-fluid figure-img" style="width:70.0%"></a>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-inverter-cace-adc-mm-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;17: CACE mismatch variation of <span class="math inline">\(A_\mathrm{dc,ol}\)</span>.
+</figcaption>
+</figure>
+</div>
+<div id="fig-inverter-cace-adc-vdd" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-inverter-cace-adc-vdd-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="fig/inverter_top/Adc_ol_dB_vs_vdd.png" class="lightbox" data-gallery="quarto-lightbox-gallery-18" title="Figure&nbsp;18: CACE variation of A_\mathrm{dc,ol} across several process corners."><img src="fig/inverter_top/Adc_ol_dB_vs_vdd.png" class="img-fluid figure-img"></a>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-inverter-cace-adc-vdd-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;18: CACE variation of <span class="math inline">\(A_\mathrm{dc,ol}\)</span> across several process corners.
+</figcaption>
+</figure>
+</div>
+<p><a href="#fig-inverter-cace-fcu-mc" class="quarto-xref">Figure&nbsp;19</a> and <a href="#fig-inverter-cace-fcu-mm" class="quarto-xref">Figure&nbsp;20</a> show the process and mismatch variations of the open-loop lower cut-off frequency <span class="math inline">\(f_\mathrm{cu}\)</span>, while <a href="#fig-inverter-cace-fcu-vdd" class="quarto-xref">Figure&nbsp;21</a> plots its variation across several process corners at one fixed supply voltage.</p>
+<div id="fig-inverter-cace-fcu-mc" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-inverter-cace-fcu-mc-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="fig/inverter_top/fcu_mc.png" class="lightbox" data-gallery="quarto-lightbox-gallery-19" title="Figure&nbsp;19: CACE process variation of f_\mathrm{cu}."><img src="fig/inverter_top/fcu_mc.png" class="img-fluid figure-img" style="width:70.0%"></a>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-inverter-cace-fcu-mc-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;19: CACE process variation of <span class="math inline">\(f_\mathrm{cu}\)</span>.
+</figcaption>
+</figure>
+</div>
+<div id="fig-inverter-cace-fcu-mm" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-inverter-cace-fcu-mm-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="fig/inverter_top/fcu_mm.png" class="lightbox" data-gallery="quarto-lightbox-gallery-20" title="Figure&nbsp;20: CACE mismatch variation of f_\mathrm{cu}."><img src="fig/inverter_top/fcu_mm.png" class="img-fluid figure-img" style="width:70.0%"></a>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-inverter-cace-fcu-mm-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;20: CACE mismatch variation of <span class="math inline">\(f_\mathrm{cu}\)</span>.
+</figcaption>
+</figure>
+</div>
+<div id="fig-inverter-cace-fcu-vdd" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-inverter-cace-fcu-vdd-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="fig/inverter_top/fcu_vs_vdd.png" class="lightbox" data-gallery="quarto-lightbox-gallery-21" title="Figure&nbsp;21: CACE variation of f_\mathrm{cu} across several process corners."><img src="fig/inverter_top/fcu_vs_vdd.png" class="img-fluid figure-img"></a>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-inverter-cace-fcu-vdd-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;21: CACE variation of <span class="math inline">\(f_\mathrm{cu}\)</span> across several process corners.
+</figcaption>
+</figure>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Tip
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>In the <code>inverter.yaml</code> characterisation file, more parameter sweeps can be added, for example, across temperature, supply voltages or load capacitance.</p>
+</div>
+</div>
 </section>
 <section id="inspect-edit-the-layout" class="level2" data-number="5.5">
 <h2 data-number="5.5" class="anchored" data-anchor-id="inspect-edit-the-layout"><span class="header-section-number">5.5</span> Inspect / Edit the Layout</h2>
@@ -1546,10 +1621,10 @@ Note
 <div id="fig-inverter-top-layout" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-inverter-top-layout-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<a href="fig/inverter_top/inverter_top_black.png" class="lightbox" data-gallery="quarto-lightbox-gallery-16" title="Figure&nbsp;16: inverter_top layout in KLayout."><img src="fig/inverter_top/inverter_top_black.png" class="img-fluid figure-img" style="width:50.0%"></a>
+<a href="fig/inverter_top/inverter_top_black.png" class="lightbox" data-gallery="quarto-lightbox-gallery-22" title="Figure&nbsp;22: inverter_top layout in KLayout."><img src="fig/inverter_top/inverter_top_black.png" class="img-fluid figure-img" style="width:50.0%"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-inverter-top-layout-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;16: <code>inverter_top</code> layout in KLayout.
+Figure&nbsp;22: <code>inverter_top</code> layout in KLayout.
 </figcaption>
 </figure>
 </div>
@@ -1701,10 +1776,10 @@ Figure&nbsp;16: <code>inverter_top</code> layout in KLayout.
 <div id="fig-chip-top-cocotb-gtkwave" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-chip-top-cocotb-gtkwave-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<a href="fig/chip_top/chip_top_cocotb_gtkwave.png" class="lightbox" data-gallery="quarto-lightbox-gallery-17" title="Figure&nbsp;17: chip_top cocotb waveform in GTKWave."><img src="fig/chip_top/chip_top_cocotb_gtkwave.png" class="img-fluid figure-img"></a>
+<a href="fig/chip_top/chip_top_cocotb_gtkwave.png" class="lightbox" data-gallery="quarto-lightbox-gallery-23" title="Figure&nbsp;23: chip_top cocotb waveform in GTKWave."><img src="fig/chip_top/chip_top_cocotb_gtkwave.png" class="img-fluid figure-img"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-chip-top-cocotb-gtkwave-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;17: <code>chip_top</code> cocotb waveform in GTKWave.
+Figure&nbsp;23: <code>chip_top</code> cocotb waveform in GTKWave.
 </figcaption>
 </figure>
 </div>
@@ -1727,50 +1802,50 @@ Note
 <div id="fig-chip-top-tb-tran-schematic" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-chip-top-tb-tran-schematic-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<a href="fig/chip_top/chip_top_tb_tran_schematic.svg" class="lightbox" data-gallery="quarto-lightbox-gallery-18" title="Figure&nbsp;18: Xschem top-level mixed-signal testbench chip_top_tb_tran."><img src="fig/chip_top/chip_top_tb_tran_schematic.svg" class="img-fluid figure-img"></a>
+<a href="fig/chip_top/chip_top_tb_tran_schematic.svg" class="lightbox" data-gallery="quarto-lightbox-gallery-24" title="Figure&nbsp;24: Xschem top-level mixed-signal testbench chip_top_tb_tran."><img src="fig/chip_top/chip_top_tb_tran_schematic.svg" class="img-fluid figure-img"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-chip-top-tb-tran-schematic-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;18: Xschem top-level mixed-signal testbench <code>chip_top_tb_tran</code>.
+Figure&nbsp;24: Xschem top-level mixed-signal testbench <code>chip_top_tb_tran</code>.
 </figcaption>
 </figure>
 </div>
 <div id="fig-chip-top-tb-tran-analog-inv-sim" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-chip-top-tb-tran-analog-inv-sim-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<a href="fig/chip_top/chip_top_tb_tran_analog_inv_sim.svg" class="lightbox" data-gallery="quarto-lightbox-gallery-19" title="Figure&nbsp;19: Plotted simulation result of chip_top_tb_tran — analog inverter 1 response."><img src="fig/chip_top/chip_top_tb_tran_analog_inv_sim.svg" class="img-fluid figure-img"></a>
+<a href="fig/chip_top/chip_top_tb_tran_analog_inv_sim.svg" class="lightbox" data-gallery="quarto-lightbox-gallery-25" title="Figure&nbsp;25: Plotted simulation result of chip_top_tb_tran — analog inverter 1 response."><img src="fig/chip_top/chip_top_tb_tran_analog_inv_sim.svg" class="img-fluid figure-img"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-chip-top-tb-tran-analog-inv-sim-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;19: Plotted simulation result of <code>chip_top_tb_tran</code> — analog inverter 1 response.
+Figure&nbsp;25: Plotted simulation result of <code>chip_top_tb_tran</code> — analog inverter 1 response.
 </figcaption>
 </figure>
 </div>
 <div id="fig-chip-top-tb-tran-digital1-sim" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-chip-top-tb-tran-digital1-sim-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<a href="fig/chip_top/chip_top_tb_tran_digital1_sim.svg" class="lightbox" data-gallery="quarto-lightbox-gallery-20" title="Figure&nbsp;20: Plotted simulation result of chip_top_tb_tran — digital inverter 2 outputs."><img src="fig/chip_top/chip_top_tb_tran_digital1_sim.svg" class="img-fluid figure-img"></a>
+<a href="fig/chip_top/chip_top_tb_tran_digital1_sim.svg" class="lightbox" data-gallery="quarto-lightbox-gallery-26" title="Figure&nbsp;26: Plotted simulation result of chip_top_tb_tran — digital inverter 2 outputs."><img src="fig/chip_top/chip_top_tb_tran_digital1_sim.svg" class="img-fluid figure-img"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-chip-top-tb-tran-digital1-sim-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;20: Plotted simulation result of <code>chip_top_tb_tran</code> — digital inverter 2 outputs.
+Figure&nbsp;26: Plotted simulation result of <code>chip_top_tb_tran</code> — digital inverter 2 outputs.
 </figcaption>
 </figure>
 </div>
 <div id="fig-chip-top-tb-tran-digital2-sim" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-chip-top-tb-tran-digital2-sim-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<a href="fig/chip_top/chip_top_tb_tran_digital2_sim.svg" class="lightbox" data-gallery="quarto-lightbox-gallery-21" title="Figure&nbsp;21: Plotted simulation result of chip_top_tb_tran — digital counter 2 outputs."><img src="fig/chip_top/chip_top_tb_tran_digital2_sim.svg" class="img-fluid figure-img"></a>
+<a href="fig/chip_top/chip_top_tb_tran_digital2_sim.svg" class="lightbox" data-gallery="quarto-lightbox-gallery-27" title="Figure&nbsp;27: Plotted simulation result of chip_top_tb_tran — digital counter 2 outputs."><img src="fig/chip_top/chip_top_tb_tran_digital2_sim.svg" class="img-fluid figure-img"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-chip-top-tb-tran-digital2-sim-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;21: Plotted simulation result of <code>chip_top_tb_tran</code> — digital counter 2 outputs.
+Figure&nbsp;27: Plotted simulation result of <code>chip_top_tb_tran</code> — digital counter 2 outputs.
 </figcaption>
 </figure>
 </div>
 <div id="fig-chip-top-tb-tran-digital3-sim" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-chip-top-tb-tran-digital3-sim-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<a href="fig/chip_top/chip_top_tb_tran_digital3_sim.svg" class="lightbox" data-gallery="quarto-lightbox-gallery-22" title="Figure&nbsp;22: Plotted simulation result of chip_top_tb_tran — digital counter 1 / inverter 1 bidirs."><img src="fig/chip_top/chip_top_tb_tran_digital3_sim.svg" class="img-fluid figure-img"></a>
+<a href="fig/chip_top/chip_top_tb_tran_digital3_sim.svg" class="lightbox" data-gallery="quarto-lightbox-gallery-28" title="Figure&nbsp;28: Plotted simulation result of chip_top_tb_tran — digital counter 1 / inverter 1 bidirs."><img src="fig/chip_top/chip_top_tb_tran_digital3_sim.svg" class="img-fluid figure-img"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-chip-top-tb-tran-digital3-sim-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;22: Plotted simulation result of <code>chip_top_tb_tran</code> — digital counter 1 / inverter 1 bidirs.
+Figure&nbsp;28: Plotted simulation result of <code>chip_top_tb_tran</code> — digital counter 1 / inverter 1 bidirs.
 </figcaption>
 </figure>
 </div>
@@ -1791,10 +1866,10 @@ Tip
 <div id="fig-chip-top-schematic" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-chip-top-schematic-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<a href="fig/chip_top/chip_top_schematic.svg" class="lightbox" data-gallery="quarto-lightbox-gallery-23" title="Figure&nbsp;23: Xschem schematic of chip_top, showing the connections between the padframe and the core macros (the SRAM is not in the schematic)."><img src="fig/chip_top/chip_top_schematic.svg" class="img-fluid figure-img"></a>
+<a href="fig/chip_top/chip_top_schematic.svg" class="lightbox" data-gallery="quarto-lightbox-gallery-29" title="Figure&nbsp;29: Xschem schematic of chip_top, showing the connections between the padframe and the core macros (the SRAM is not in the schematic)."><img src="fig/chip_top/chip_top_schematic.svg" class="img-fluid figure-img"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-chip-top-schematic-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;23: Xschem schematic of <code>chip_top</code>, showing the connections between the padframe and the core macros (the SRAM is not in the schematic).
+Figure&nbsp;29: Xschem schematic of <code>chip_top</code>, showing the connections between the padframe and the core macros (the SRAM is not in the schematic).
 </figcaption>
 </figure>
 </div>
@@ -1816,20 +1891,20 @@ Figure&nbsp;23: Xschem schematic of <code>chip_top</code>, showing the connectio
 <div id="fig-chip-top-layout" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-chip-top-layout-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<a href="fig/chip_top/chip_top_black.png" class="lightbox" data-gallery="quarto-lightbox-gallery-24" title="Figure&nbsp;24: chip_top_logo_fill layout in KLayout (all layers)."><img src="fig/chip_top/chip_top_black.png" class="img-fluid figure-img"></a>
+<a href="fig/chip_top/chip_top_black.png" class="lightbox" data-gallery="quarto-lightbox-gallery-30" title="Figure&nbsp;30: chip_top_logo_fill layout in KLayout (all layers)."><img src="fig/chip_top/chip_top_black.png" class="img-fluid figure-img"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-chip-top-layout-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;24: <code>chip_top_logo_fill</code> layout in KLayout (all layers).
+Figure&nbsp;30: <code>chip_top_logo_fill</code> layout in KLayout (all layers).
 </figcaption>
 </figure>
 </div>
 <div id="fig-chip-top-layout-tm2" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-chip-top-layout-tm2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<a href="fig/chip_top/chip_top_black_TM2.png" class="lightbox" data-gallery="quarto-lightbox-gallery-25" title="Figure&nbsp;25: chip_top_logo_fill layout in KLayout with only TopMetal2 selected, showing the power distribution network."><img src="fig/chip_top/chip_top_black_TM2.png" class="img-fluid figure-img"></a>
+<a href="fig/chip_top/chip_top_black_TM2.png" class="lightbox" data-gallery="quarto-lightbox-gallery-31" title="Figure&nbsp;31: chip_top_logo_fill layout in KLayout with only TopMetal2 selected, showing the power distribution network."><img src="fig/chip_top/chip_top_black_TM2.png" class="img-fluid figure-img"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-chip-top-layout-tm2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;25: <code>chip_top_logo_fill</code> layout in KLayout with only TopMetal2 selected, showing the power distribution network.
+Figure&nbsp;31: <code>chip_top_logo_fill</code> layout in KLayout with only TopMetal2 selected, showing the power distribution network.
 </figcaption>
 </figure>
 </div>
@@ -1940,7 +2015,7 @@ Important
 <li>Copy the <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/inverter/">inverter</a> macro folder to a new location (for example <code>macros/ringosc/</code>), and adapt the Makefile names.</li>
 <li>Update the schematic in Xschem. Connect three inverters in a ring, and tap the output of the last stage through a buffer. The fourth inverter of the quad inverter can naturally be used as the buffer.</li>
 <li>Update the symbol of the macro (<a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/inverter/schematic/xschem/inverter_top.sym"><code>schematic/xschem/inverter_top.sym</code></a>) and the PEX symbol (<a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/inverter/schematic/xschem/inverter_top_pex.sym"><code>schematic/xschem/inverter_top_pex.sym</code></a>) to expose a single output net, instead of <code>vin1..vin4</code> and <code>vout1..vout4</code>.</li>
-<li>Update the transient testbench (<a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/inverter/testbenches/xschem/inverter_top_tb_tran.sch"><code>testbenches/xschem/inverter_top_tb_tran.sch</code></a>) to measure the oscillation frequency. Delete the AC, DC, and standalone transient testbenches that are no longer relevant.</li>
+<li>Update the transient testbench (<a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/inverter/testbenches/xschem/inverter_top_tb_tran.sch"><code>testbenches/xschem/inverter_top_tb_tran.sch</code></a>) to measure the oscillation frequency. Delete the ac, dc, and standalone transient testbenches that are no longer relevant.</li>
 <li>Optionally (advanced), adapt the CACE <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/inverter/verification/cace/inverter.yaml"><code>inverter.yaml</code></a> to characterise the oscillation frequency across PVT.</li>
 <li>Update the layout in KLayout. The existing <code>inverter_top.klay.gds</code> can be used as a starting point, but the internal routing has to be modified to form the ring and the buffer stage. After editing, export a clean <code>ringosc_top.gds</code>.</li>
 <li>Re-run the verification chain, <code>make klayout-verify</code>, <code>make magic-verify</code>, and <code>make build-top</code>.</li>
