@@ -76,7 +76,7 @@
 │     ├─ *_tb_*.sch
 │     ├─ inverter_tb_ac_ol.sch
 │     ├─ inverter_tb_tran.sch
-│     ├─ inverter_tb_Vout.sch
+│     ├─ inverter_tb_dc_vout.sch
 │     ├─ inverter_top_tb_tran.sch
 │     └─ xschemrc
 ├─ 📁 verification/
@@ -149,7 +149,7 @@ For example:
 ```sh
 make sim-xschem TB=inverter_tb_ac_ol
 make sim-xschem TB=inverter_tb_tran
-make sim-xschem TB=inverter_tb_Vout
+make sim-xschem TB=inverter_tb_dc_vout
 make sim-xschem TB=inverter_top_tb_tran
 ```
 
@@ -207,7 +207,7 @@ Result plots are saved to:
 Runs all simulation steps in sequence:
 - `make sim-xschem TB=inverter_tb_ac_ol`
 - `make sim-xschem TB=inverter_tb_tran`
-- `make sim-xschem TB=inverter_tb_Vout`
+- `make sim-xschem TB=inverter_tb_dc_vout`
 - `make sim-xschem TB=inverter_top_tb_tran`
 - `make sim-cace`
 

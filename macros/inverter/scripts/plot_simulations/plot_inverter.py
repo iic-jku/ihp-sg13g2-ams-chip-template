@@ -99,7 +99,7 @@ def main():
     # ------------------------------------------------------------------
     # 4. Load ngspice DC simulation data
     # ------------------------------------------------------------------
-    ngspice_file_dc = data_dir / "inverter_tb_Vout.txt"
+    ngspice_file_dc = data_dir / "inverter_tb_dc_vout.txt"
 
     vin = ng.loadngspicecol(str(ngspice_file_dc), "v(vin)")
     vout = ng.loadngspicecol(str(ngspice_file_dc), "v(vout)")
@@ -142,9 +142,9 @@ def main():
     # ------------------------------------------------------------------
     # 6. Export DC figures and CSV
     # ------------------------------------------------------------------
-    fig2.savefig(str(figures_dir / "inverter_tb_Vout.svg"), bbox_inches='tight')
-    fig2.savefig(str(figures_dir / "inverter_tb_Vout.pdf"), bbox_inches='tight')
-    np.savetxt(str(figures_dir / "inverter_tb_Vout.csv"),
+    fig2.savefig(str(figures_dir / "inverter_tb_dc_vout.svg"), bbox_inches='tight')
+    fig2.savefig(str(figures_dir / "inverter_tb_dc_vout.pdf"), bbox_inches='tight')
+    np.savetxt(str(figures_dir / "inverter_tb_dc_vout.csv"),
                np.column_stack((vin, vout, gain)), comments="",
                header="vin,vout,dvout_dvin", delimiter=",")
     # =========================================================================

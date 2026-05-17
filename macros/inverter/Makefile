@@ -100,7 +100,7 @@ sim-cace: ## Run CACE simulations and collect result plots
 sim-all: ## Simulate the macro
 	$(MAKE) sim-xschem TB=inverter_tb_ac_ol
 	$(MAKE) sim-xschem TB=inverter_tb_tran
-	$(MAKE) sim-xschem TB=inverter_tb_Vout
+	$(MAKE) sim-xschem TB=inverter_tb_dc_vout
 	$(MAKE) sim-xschem TB=inverter_top_tb_tran
 #	$(MAKE) sim-view-xschem CELL=inverter
 #	$(MAKE) sim-view-xschem CELL=inverter_top
