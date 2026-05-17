@@ -370,7 +370,7 @@ window.Quarto = {
   <ul class="collapse">
   <li><a href="#iic-osic-tools-overview" id="toc-iic-osic-tools-overview" class="nav-link" data-scroll-target="#iic-osic-tools-overview"><span class="header-section-number">2.1</span> IIC-OSIC-TOOLS Overview</a></li>
   <li><a href="#sec-installation" id="toc-sec-installation" class="nav-link" data-scroll-target="#sec-installation"><span class="header-section-number">2.2</span> IIC-OSIC-TOOLS Installation</a></li>
-  <li><a href="#selection-of-the-pdk" id="toc-selection-of-the-pdk" class="nav-link" data-scroll-target="#selection-of-the-pdk"><span class="header-section-number">2.3</span> Selection of the PDK</a></li>
+  <li><a href="#pdk-selection" id="toc-pdk-selection" class="nav-link" data-scroll-target="#pdk-selection"><span class="header-section-number">2.3</span> PDK Selection</a></li>
   </ul></li>
   <li><a href="#sec-repo" id="toc-sec-repo" class="nav-link" data-scroll-target="#sec-repo"><span class="header-section-number">3</span> Repository Overview</a>
   <ul class="collapse">
@@ -379,15 +379,14 @@ window.Quarto = {
   <li><a href="#directory-structure" id="toc-directory-structure" class="nav-link" data-scroll-target="#directory-structure"><span class="header-section-number">3.3</span> Directory Structure</a></li>
   <li><a href="#workflow" id="toc-workflow" class="nav-link" data-scroll-target="#workflow"><span class="header-section-number">3.4</span> Workflow</a>
   <ul class="collapse">
-  <li><a href="#most-important-top-level-targets" id="toc-most-important-top-level-targets" class="nav-link" data-scroll-target="#most-important-top-level-targets"><span class="header-section-number">3.4.1</span> Most important top-level targets</a></li>
-  <li><a href="#top-level-targets" id="toc-top-level-targets" class="nav-link" data-scroll-target="#top-level-targets"><span class="header-section-number">3.4.2</span> Top-level targets</a></li>
-  <li><a href="#digital-macro-targets" id="toc-digital-macro-targets" class="nav-link" data-scroll-target="#digital-macro-targets"><span class="header-section-number">3.4.3</span> Digital macro targets</a></li>
-  <li><a href="#analog-macro-targets" id="toc-analog-macro-targets" class="nav-link" data-scroll-target="#analog-macro-targets"><span class="header-section-number">3.4.4</span> Analog macro targets</a></li>
+  <li><a href="#top-level-targets" id="toc-top-level-targets" class="nav-link" data-scroll-target="#top-level-targets"><span class="header-section-number">3.4.1</span> Top-level targets</a></li>
+  <li><a href="#digital-macro-targets" id="toc-digital-macro-targets" class="nav-link" data-scroll-target="#digital-macro-targets"><span class="header-section-number">3.4.2</span> Digital macro targets</a></li>
+  <li><a href="#analog-macro-targets" id="toc-analog-macro-targets" class="nav-link" data-scroll-target="#analog-macro-targets"><span class="header-section-number">3.4.3</span> Analog macro targets</a></li>
   </ul></li>
   </ul></li>
   <li><a href="#sec-digital" id="toc-sec-digital" class="nav-link" data-scroll-target="#sec-digital"><span class="header-section-number">4</span> Digital Macro Implementation</a>
   <ul class="collapse">
-  <li><a href="#folder-structure-of-the-counter-macro" id="toc-folder-structure-of-the-counter-macro" class="nav-link" data-scroll-target="#folder-structure-of-the-counter-macro"><span class="header-section-number">4.1</span> Folder Structure of the Counter Macro</a></li>
+  <li><a href="#folder-structure" id="toc-folder-structure" class="nav-link" data-scroll-target="#folder-structure"><span class="header-section-number">4.1</span> Folder Structure</a></li>
   <li><a href="#reading-the-rtl" id="toc-reading-the-rtl" class="nav-link" data-scroll-target="#reading-the-rtl"><span class="header-section-number">4.2</span> Reading the RTL</a>
   <ul class="collapse">
   <li><a href="#counter.sv" id="toc-counter.sv" class="nav-link" data-scroll-target="#counter.sv"><span class="header-section-number">4.2.1</span> <code>counter.sv</code></a></li>
@@ -401,8 +400,9 @@ window.Quarto = {
   </ul></li>
   <li><a href="#librelane-hardening" id="toc-librelane-hardening" class="nav-link" data-scroll-target="#librelane-hardening"><span class="header-section-number">4.5</span> LibreLane Hardening</a></li>
   <li><a href="#viewing-the-macro" id="toc-viewing-the-macro" class="nav-link" data-scroll-target="#viewing-the-macro"><span class="header-section-number">4.6</span> Viewing the Macro</a></li>
-  <li><a href="#gate-level-mixed-signal-simulation-with-xschem" id="toc-gate-level-mixed-signal-simulation-with-xschem" class="nav-link" data-scroll-target="#gate-level-mixed-signal-simulation-with-xschem"><span class="header-section-number">4.7</span> Gate-Level Mixed-Signal Simulation with Xschem</a></li>
-  <li><a href="#build-and-verify-everything" id="toc-build-and-verify-everything" class="nav-link" data-scroll-target="#build-and-verify-everything"><span class="header-section-number">4.8</span> Build and Verify Everything</a></li>
+  <li><a href="#rtl-mixed-signal-simulation-with-xschem" id="toc-rtl-mixed-signal-simulation-with-xschem" class="nav-link" data-scroll-target="#rtl-mixed-signal-simulation-with-xschem"><span class="header-section-number">4.7</span> RTL Mixed-Signal Simulation with Xschem</a></li>
+  <li><a href="#gate-level-mixed-signal-simulation-with-xschem" id="toc-gate-level-mixed-signal-simulation-with-xschem" class="nav-link" data-scroll-target="#gate-level-mixed-signal-simulation-with-xschem"><span class="header-section-number">4.8</span> Gate-Level Mixed-Signal Simulation with Xschem</a></li>
+  <li><a href="#build-and-verify-everything" id="toc-build-and-verify-everything" class="nav-link" data-scroll-target="#build-and-verify-everything"><span class="header-section-number">4.9</span> Build and Verify Everything</a></li>
   </ul></li>
   <li><a href="#sec-analog" id="toc-sec-analog" class="nav-link" data-scroll-target="#sec-analog"><span class="header-section-number">5</span> Analog Macro Implementation</a>
   <ul class="collapse">
@@ -566,6 +566,7 @@ Note
 <li><a href="https://iic-jku.github.io/analog-circuit-design/aicd.html#sec-xschem-cheatsheet">Xschem Cheatsheet</a></li>
 <li><a href="https://iic-jku.github.io/analog-circuit-design/aicd.html#sec-ngspice-cheatsheet">Ngspice Cheatsheet</a></li>
 <li><a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/doc/klayout/klayout_cheatsheet.md">KLayout Cheatsheet</a></li>
+<li><a href="https://github.com/iic-jku/klayout-productivity-suite">KLayout Productivity Suite / Plugins</a></li>
 <li><a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/doc/librelane/librelane_cheatsheet.md">LibreLane Cheatsheet</a></li>
 <li><a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/doc/ihp-sg13g2-Open-PDK/sg13g2_os_layout_cheatsheet.xlsx">ihp-sg13g2 Layout Calculation Cheatsheet</a></li>
 <li><a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/doc/sizing">ihp-sg13g2 LV NMOS / PMOS and HV NMOS / PMOS Techsweeps</a></li>
@@ -630,8 +631,8 @@ Figure&nbsp;1: Overview of the most important open-source tools and PDKs shipped
 </div>
 </div>
 </section>
-<section id="selection-of-the-pdk" class="level2" data-number="2.3">
-<h2 data-number="2.3" class="anchored" data-anchor-id="selection-of-the-pdk"><span class="header-section-number">2.3</span> Selection of the PDK</h2>
+<section id="pdk-selection" class="level2" data-number="2.3">
+<h2 data-number="2.3" class="anchored" data-anchor-id="pdk-selection"><span class="header-section-number">2.3</span> PDK Selection</h2>
 <p>As mentioned above, the container includes four Open-PDKs. To activate or switch the active PDK, the following two options are available. More detailed instructions can be found in the container’s <a href="https://github.com/iic-jku/IIC-OSIC-TOOLS/blob/main/README.md#2-installed-pdks"><code>README.md</code></a>.</p>
 <ol type="1">
 <li><p><strong><code>.designinit</code> file:</strong> Copy the <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/.designinit"><code>.designinit</code></a> file referencing the ihp-sg13g2 PDK into your <code>designs/</code> directory and restart the container. The PDK is then picked automatically every time the container is launched in that directory.</p></li>
@@ -756,11 +757,8 @@ Tip
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> ihp-sg13g2-ams-chip-template</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> help              <span class="co"># show available targets at the top level</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Each macro under <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/"><code>macros/</code></a> has its own <code>Makefile</code> and <code>README.md</code> with macro-local targets. They are called by the top-level build targets, but can also be invoked directly from inside the macro folder.</p>
-<section id="most-important-top-level-targets" class="level3" data-number="3.4.1">
-<h3 data-number="3.4.1" class="anchored" data-anchor-id="most-important-top-level-targets"><span class="header-section-number">3.4.1</span> Most important top-level targets</h3>
-</section>
-<section id="top-level-targets" class="level3" data-number="3.4.2">
-<h3 data-number="3.4.2" class="anchored" data-anchor-id="top-level-targets"><span class="header-section-number">3.4.2</span> Top-level targets</h3>
+<section id="top-level-targets" class="level3" data-number="3.4.1">
+<h3 data-number="3.4.1" class="anchored" data-anchor-id="top-level-targets"><span class="header-section-number">3.4.1</span> Top-level targets</h3>
 <p>The <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/Makefile">top-level Makefile</a> provides:</p>
 <table class="caption-top table">
 <colgroup>
@@ -834,8 +832,8 @@ Tip
 </table>
 <p>See the <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/README.md">top-level README</a> for more details and how to use the Makefile targets.</p>
 </section>
-<section id="digital-macro-targets" class="level3" data-number="3.4.3">
-<h3 data-number="3.4.3" class="anchored" data-anchor-id="digital-macro-targets"><span class="header-section-number">3.4.3</span> Digital macro targets</h3>
+<section id="digital-macro-targets" class="level3" data-number="3.4.2">
+<h3 data-number="3.4.2" class="anchored" data-anchor-id="digital-macro-targets"><span class="header-section-number">3.4.2</span> Digital macro targets</h3>
 <p>The <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/counter/Makefile">counter Makefile</a> provides:</p>
 <table class="caption-top table">
 <colgroup>
@@ -893,8 +891,8 @@ Tip
 </table>
 <p>See the <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/counter/README.md">counter README</a> for more details and how to use the Makefile targets.</p>
 </section>
-<section id="analog-macro-targets" class="level3" data-number="3.4.4">
-<h3 data-number="3.4.4" class="anchored" data-anchor-id="analog-macro-targets"><span class="header-section-number">3.4.4</span> Analog macro targets</h3>
+<section id="analog-macro-targets" class="level3" data-number="3.4.3">
+<h3 data-number="3.4.3" class="anchored" data-anchor-id="analog-macro-targets"><span class="header-section-number">3.4.3</span> Analog macro targets</h3>
 <p>The <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/inverter/Makefile">inverter Makefile</a> provides:</p>
 <table class="caption-top table">
 <thead>
@@ -948,10 +946,10 @@ Tip
 </section>
 <section id="sec-digital" class="level1" data-number="4">
 <h1 data-number="4"><span class="header-section-number">4</span> Digital Macro Implementation</h1>
-<p>The <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/counter/"><code>counter</code></a> macro is the digital reference macro of the template. It is a parameterisable synchronous up-counter with synchronous active-high reset; the top-level wrapper converts the chip’s active-low reset to an active-high signal. The default width is 8 bits, so the counter wraps from 255 back to 0.</p>
-<section id="folder-structure-of-the-counter-macro" class="level2" data-number="4.1">
-<h2 data-number="4.1" class="anchored" data-anchor-id="folder-structure-of-the-counter-macro"><span class="header-section-number">4.1</span> Folder Structure of the Counter Macro</h2>
-<p>In <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/counter/"><code>macros/counter/</code></a>, the relevant folders are:</p>
+<p>The <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/counter/"><code>counter</code></a> macro is the digital reference macro of the template. It is a parameterisable synchronous up-counter with synchronous active-high reset implemented with SystemVerilog in <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/counter/rtl/counter.sv"><code>counter.sv</code></a>. The top-level wrapper <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/counter/rtl/counter_top.sv"><code>counter_top.sv</code></a> converts the chip’s active-low reset to an active-high signal. The default width is 8 bits, so the counter wraps from 255 back to 0.</p>
+<section id="folder-structure" class="level2" data-number="4.1">
+<h2 data-number="4.1" class="anchored" data-anchor-id="folder-structure"><span class="header-section-number">4.1</span> Folder Structure</h2>
+<p>The counter design files are located in <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/counter/"><code>macros/counter/</code></a>, the relevant folders are:</p>
 <table class="caption-top table">
 <thead>
 <tr class="header">
@@ -974,7 +972,7 @@ Tip
 </tr>
 <tr class="even">
 <td><a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/counter/final/"><code>final/</code></a></td>
-<td>Final views copied from the latest LibreLane run (GDS, LEF, LIB per corner, NL, PNL, SPEF, VH).</td>
+<td>Final deliverables (GDS, LEF, LIB per corner, NL, PNL, SPEF, VH) copied from the latest LibreLane run for top-level integration.</td>
 </tr>
 <tr class="odd">
 <td><a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/counter/fpga/"><code>fpga/</code></a></td>
@@ -982,11 +980,11 @@ Tip
 </tr>
 <tr class="even">
 <td><a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/counter/netlist/"><code>netlist/</code></a></td>
-<td>Gate-level netlists (<code>nl/</code>, <code>pnl/</code>, <code>spice/</code>, <code>xspice/</code>).</td>
+<td><code>nl/</code>, <code>pnl/</code>, <code>spice/</code> and <code>xspice/</code> netlists (see <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/doc/librelane/librelane_cheatsheet.md#3-netlists--circuit-views">LibreLane cheatsheet</a> for more details).</td>
 </tr>
 <tr class="odd">
 <td><a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/counter/schematic/"><code>schematic/</code></a></td>
-<td>Xschem symbol of the macro for mixed-signal usage.</td>
+<td>Xschem symbol of the macro for use in mixed-signal Xschem testbenches.</td>
 </tr>
 <tr class="even">
 <td><a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/counter/scripts/"><code>scripts/</code></a></td>
@@ -1018,10 +1016,10 @@ Tip
 </section>
 <section id="reading-the-rtl" class="level2" data-number="4.2">
 <h2 data-number="4.2" class="anchored" data-anchor-id="reading-the-rtl"><span class="header-section-number">4.2</span> Reading the RTL</h2>
-<p>The macro is split into a parameterised counter and a thin top-level wrapper that converts the chip’s active-low reset to the internal active-high reset of the counter.</p>
+<p>The macro is split into a parameterised counter and a top-level wrapper that converts the chip’s active-low reset to the internal active-high reset of the counter.</p>
 <section id="counter.sv" class="level3" data-number="4.2.1">
 <h3 data-number="4.2.1" class="anchored" data-anchor-id="counter.sv"><span class="header-section-number">4.2.1</span> <code>counter.sv</code></h3>
-<p>The arithmetic is implemented in <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/counter/rtl/counter.sv"><code>counter.sv</code></a>. It is an <span class="math inline">\(N\)</span>-bit synchronous up-counter with reset, enable, and wrap at <code>CTR_MAX</code>.</p>
+<p>The logic is implemented in <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/counter/rtl/counter.sv"><code>counter.sv</code></a>. It is an <span class="math inline">\(N\)</span>-bit synchronous up-counter with reset and enable, and it wraps at <code>CTR_MAX</code>. <span class="math inline">\(N\)</span> defaults to 8, so the counter counts from 0 to 255 and then wraps back to 0.</p>
 <div class="code-with-filename">
 <div class="code-with-filename-file">
 <pre><strong>macros/counter/rtl/counter.sv</strong></pre>
@@ -1069,7 +1067,7 @@ Tip
 </section>
 <section id="counter_top.sv" class="level3" data-number="4.2.2">
 <h3 data-number="4.2.2" class="anchored" data-anchor-id="counter_top.sv"><span class="header-section-number">4.2.2</span> <code>counter_top.sv</code></h3>
-<p><a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/counter/rtl/counter_top.sv"><code>counter_top.sv</code></a> wraps the counter and converts the active-low reset (<code>reset_n_i</code>) to an active-high signal.</p>
+<p><a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/counter/rtl/counter_top.sv"><code>counter_top.sv</code></a> wraps the counter and converts the active-low reset (<code>reset_n_i</code>) to an active-high signal <code>reset</code>.</p>
 <div class="code-with-filename">
 <div class="code-with-filename-file">
 <pre><strong>macros/counter/rtl/counter_top.sv</strong></pre>
@@ -1113,7 +1111,7 @@ Tip
 <span id="cb4-37"><a href="#cb4-37" aria-hidden="true" tabindex="-1"></a><span class="ot">`endif</span></span>
 <span id="cb4-38"><a href="#cb4-38" aria-hidden="true" tabindex="-1"></a><span class="ot">`default_nettype</span> <span class="kw">wire</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<p>Shared defaults like the bit-width and the clock frequency are defined in <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/counter/rtl/constants.sv"><code>constants.sv</code></a>. They are exposed as <code>`define</code> macros instead of a SystemVerilog <code>package</code>, because Yosys 0.64 cannot parse <code>import pkg::*</code> in a module header.</p>
+<p>Shared defaults are defined in <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/counter/rtl/constants.sv"><code>constants.sv</code></a>. For example, for the final implementation, the maximum counter value is defined in <code>constants.sv</code> with the variable <code>COUNTER_MAX_DEFAULT</code>. For the testbenches, <code>CLK_FREQ_DEFAULT</code> is defined there to set the default clock frequency (e.g.&nbsp;50 MHz) for the simulations. They are exposed as <code>`define</code> macros instead of a SystemVerilog <code>package</code>, because Yosys 0.64 cannot parse <code>import pkg::*</code> in a module header.</p>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -1124,14 +1122,14 @@ Note
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>Open the three RTL files (using <code>gedit</code> or <code>vim</code>) and follow the counter through reset, hold, increment, and wrap-around. Check why the constants are <code>`define</code>-style macros and not <code>package</code> parameters.</p>
+<p>Open the three RTL files (using <code>gedit</code> or <code>vim</code>), follow and understand the counter through reset, hold, increment, and wrap-around.</p>
 </div>
 </div>
 </section>
 </section>
 <section id="linting" class="level2" data-number="4.3">
 <h2 data-number="4.3" class="anchored" data-anchor-id="linting"><span class="header-section-number">4.3</span> Linting</h2>
-<p><a href="https://en.wikipedia.org/wiki/Lint_(software)">Linting</a> is done with <a href="https://www.veripool.org/verilator/">Verilator</a>.</p>
+<p><a href="https://en.wikipedia.org/wiki/Lint_(software)">Linting</a> is done with <a href="https://www.veripool.org/verilator/">Verilator</a> and can be executed with the following commands.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> macros/counter</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> lint-verilog                <span class="co"># lint the full counter_top design</span></span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> lint-verilog CELL=counter   <span class="co"># lint only the standalone counter</span></span>
@@ -1144,21 +1142,8 @@ Note
 <h3 data-number="4.4.1" class="anchored" data-anchor-id="rtl-with-systemverilog-testbench-icarus-verilog"><span class="header-section-number">4.4.1</span> RTL with SystemVerilog testbench (Icarus Verilog)</h3>
 <p>A SystemVerilog testbench (<a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/counter/testbenches/verilog/counter_top_tb.sv"><code>counter_top_tb.sv</code></a>) checks reset, hold, increment, and wrap-around. Run it with the following commands.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> sim-rtl-verilog</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> sim-view-verilog                      <span class="co"># open in GTKWave (default)</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> sim-view-verilog               <span class="co"># open in GTKWave (default)</span></span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> sim-view-verilog WAVEFORM_VIEWER=surfer</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="callout callout-style-default callout-important callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Important
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>Surfer is currently not working on macOS, and might not work on Windows/WSL. If you want to use Surfer, please run the container on Linux.</p>
-</div>
-</div>
 <div id="fig-counter-top-verilog-gtkwave" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-counter-top-verilog-gtkwave-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
@@ -1172,27 +1157,27 @@ Figure&nbsp;2: RTL Verilog waveform of <code>counter_top</code> in GTKWave.
 </section>
 <section id="rtl-and-gate-level-with-cocotb" class="level3" data-number="4.4.2">
 <h3 data-number="4.4.2" class="anchored" data-anchor-id="rtl-and-gate-level-with-cocotb"><span class="header-section-number">4.4.2</span> RTL and gate-level with cocotb</h3>
-<p>The <a href="https://www.cocotb.org/">cocotb</a> testbench (<a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/counter/testbenches/cocotb/counter_top_tb.py"><code>counter_top_tb.py</code></a>) covers the same four behaviours from Python, and is the one called by <code>make all</code>.</p>
+<p>The <a href="https://www.cocotb.org/">cocotb</a> testbench (<a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/counter/testbenches/cocotb/counter_top_tb.py"><code>counter_top_tb.py</code></a>) checks the same four cases (reset, hold, increment, and wrap-around) as the SystemVerilog testbench, but implements them in Python.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> sim-rtl-cocotb                <span class="co"># RTL simulation</span></span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> sim-gl-cocotb                 <span class="co"># post-synthesis gate-level simulation</span></span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> sim-view-cocotb               <span class="co"># view in GTKWave</span></span>
 <span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> sim-view-cocotb WAVEFORM_VIEWER=surfer</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>The gate-level cocotb run uses the post-synthesis netlist <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/counter/netlist/nl/"><code>netlist/nl/counter_top.nl.v</code></a>, which is copied from the latest LibreLane run by <code>make copy-netlist</code>.</p>
-<div class="callout callout-style-simple callout-note">
-<div class="callout-body d-flex">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
+<div id="fig-counter-top-cocotb-gtkwave" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-counter-top-cocotb-gtkwave-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="fig/counter_top/counter_top_cocotb_gtkwave.png" class="lightbox" data-gallery="quarto-lightbox-gallery-3" title="Figure&nbsp;3: Gate-level cocotb waveform of counter_top in GTKWave."><img src="fig/counter_top/counter_top_cocotb_gtkwave.png" class="img-fluid figure-img"></a>
 </div>
-<div class="callout-body-container">
-<p><strong>Figure placeholder. Cocotb gate-level waveform of <code>counter_top</code>.</strong></p>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-counter-top-cocotb-gtkwave-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;3: Gate-level cocotb waveform of <code>counter_top</code> in GTKWave.
+</figcaption>
+</figure>
 </div>
-</div>
-</div>
+<p>The gate-level cocotb run uses the gate-level Verilog netlist produced after synthesis: <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/counter/netlist/nl/"><code>netlist/nl/counter_top.nl.v</code></a>. In this tutorial, this netlist for the counter already exists. For new designs, run <code>make build-top</code> first to execute the LibreLane flow, then run <code>make copy-netlist</code> to copy the netlists from the latest LibreLane run.</p>
 </section>
 </section>
 <section id="librelane-hardening" class="level2" data-number="4.5">
 <h2 data-number="4.5" class="anchored" data-anchor-id="librelane-hardening"><span class="header-section-number">4.5</span> LibreLane Hardening</h2>
-<p>The LibreLane flow synthesises, places, and routes the macro, runs the sign-off steps, and writes its final views to <code>flow/final/</code>. The wrapper target <code>make build-top</code> runs the flow, copies the reports, final folders, netlists, and the render back into the source tree, and renders the final GDS.</p>
+<p>The LibreLane flow synthesises, places, and routes the macro, runs the sign-off steps, and writes its final output files to <code>flow/final/</code>. The wrapper target <code>make build-top</code> runs the flow, renders the final GDS, and copies the reports, final folders, netlists, and render output back into the source tree.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> build-top</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="callout callout-style-default callout-tip callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -1204,35 +1189,35 @@ Tip
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>The macro can also be built as an FPGA bitstream (<a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/counter/fpga/"><code>fpga/</code></a>) for a pico-ice board with <code>make build-fpga</code>. The FPGA path is not used in this tutorial and is listed here for reference.</p>
+<p>The macro can also be built as an FPGA bitstream (<a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/counter/fpga/"><code>fpga/</code></a>) for a pico-ice board (or other FPGA boards) with <code>make build-fpga</code>. The FPGA flow is not used in this tutorial and is only listed here for reference.</p>
 </div>
 </div>
 </section>
 <section id="viewing-the-macro" class="level2" data-number="4.6">
 <h2 data-number="4.6" class="anchored" data-anchor-id="viewing-the-macro"><span class="header-section-number">4.6</span> Viewing the Macro</h2>
-<p>After the flow finishes, the macro layout can be inspected with KLayout. The container provides the <code>ke</code> alias for <code>klayout -e</code> (edit mode).</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="ex">ke</span> macros/counter/final/gds/counter_top.gds</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>The LibreLane render is copied to <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/counter/render/img/"><code>macros/counter/render/img/counter_top_librelane.png</code></a>, and the high-resolution render from <code>lay2img.py</code> is saved as <code>counter_top.png</code> in the same folder. The sign-off reports are written to <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/counter/verification/"><code>macros/counter/verification/</code></a>.</p>
+<p>After the flow finishes, the macro layout can be inspected with KLayout. The container provides the <code>ke</code> alias for <code>klayout -e</code> (edit mode). With the following command, the final GDS from the latest LibreLane run is opened in KLayout. With the keys <code>0</code>, <code>1</code>, <code>2</code>, …, <code>9</code> you can view different layers as explained in the <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/doc/klayout/klayout_cheatsheet.md">KLayout cheatsheet</a> or in the <a href="https://github.com/iic-jku/klayout-layer-shortcuts">klayout-layer-shortcuts</a> plugin.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="ex">ke</span> final/gds/counter_top.gds</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div id="fig-counter-top-layout" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-counter-top-layout-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<a href="fig/counter_top/counter_top_black.png" class="lightbox" data-gallery="quarto-lightbox-gallery-3" title="Figure&nbsp;3: counter_top layout in KLayout."><img src="fig/counter_top/counter_top_black.png" class="img-fluid figure-img"></a>
+<a href="fig/counter_top/counter_top_black.png" class="lightbox" data-gallery="quarto-lightbox-gallery-4" title="Figure&nbsp;4: counter_top layout in KLayout (200 µm x 100 µm)."><img src="fig/counter_top/counter_top_black.png" class="img-fluid figure-img"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-counter-top-layout-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;3: <code>counter_top</code> layout in KLayout.
+Figure&nbsp;4: <code>counter_top</code> layout in KLayout (200 µm x 100 µm).
 </figcaption>
 </figure>
 </div>
+<p>The LibreLane render is copied to <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/counter/render/img/"><code>render/img/counter_top_librelane.png</code></a>, and the high-resolution render from <code>lay2img.py</code> is saved as <code>counter_top.png</code> in the same folder. The sign-off reports are written to <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/counter/verification/"><code>verification/</code></a>.</p>
 </section>
-<section id="gate-level-mixed-signal-simulation-with-xschem" class="level2" data-number="4.7">
-<h2 data-number="4.7" class="anchored" data-anchor-id="gate-level-mixed-signal-simulation-with-xschem"><span class="header-section-number">4.7</span> Gate-Level Mixed-Signal Simulation with Xschem</h2>
-<p>A more accurate sign-off step is the gate-level mixed-signal simulation in Xschem with the ngspice XSPICE event-driven engine. The post-synthesis Verilog netlist (<code>yosys-synthesis/&lt;TOP&gt;.nl.v</code>) is converted into an XSPICE model with the following command.</p>
+<section id="rtl-mixed-signal-simulation-with-xschem" class="level2" data-number="4.7">
+<h2 data-number="4.7" class="anchored" data-anchor-id="rtl-mixed-signal-simulation-with-xschem"><span class="header-section-number">4.7</span> RTL Mixed-Signal Simulation with Xschem</h2>
+<p>For an introduction to Ngspice and Verilog RTL co-simulation with Xschem, see Stefan Schippers’ video: <a href="https://www.youtube.com/watch?v=PPd7jkcHOgA">Ngspice + Verilog Co-Simulation in Xschem</a>. This RTL mixed-signal simulation is currently not included in this repository, but it will be added in a future update.</p>
+</section>
+<section id="gate-level-mixed-signal-simulation-with-xschem" class="level2" data-number="4.8">
+<h2 data-number="4.8" class="anchored" data-anchor-id="gate-level-mixed-signal-simulation-with-xschem"><span class="header-section-number">4.8</span> Gate-Level Mixed-Signal Simulation with Xschem</h2>
+<p>A more accurate validation step is the gate-level mixed-signal simulation in Xschem with the Ngspice XSPICE event-driven engine. The gate-level Verilog netlist produced after synthesis (<code>runs/RUN_*/*-yosys-synthesis/&lt;TOP&gt;.nl.v</code>) is converted into an XSPICE model with the following command.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> generate-xspice</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>The conversion pipeline is <code>.nl.v → .vp → .spice → .xspice</code>, followed by a pin-reorder pass to match the Xschem symbol (<a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/counter/schematic/xschem/"><code>schematic/xschem/counter_top.sym</code></a>).</p>
-<p>The Xschem testbench (<a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/counter/testbenches/xschem/"><code>counter_top_tb_tran.sch</code></a>) can be opened and simulated interactively.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> macros/counter/testbenches/xschem</span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="ex">xschem</span> counter_top_tb_tran.sch</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>In Xschem, hold <strong><code>Shift</code></strong> and click the <strong>Simulate</strong> button in the schematic to launch the simulator. You can also hold <strong><code>Ctrl</code></strong> and click the <strong>Simulate</strong> arrow, followed by a <strong><code>Ctrl</code></strong>-click on the <strong>Load waves</strong> arrow to load the simulation results into the integrated waveform viewer.</p>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -1243,38 +1228,68 @@ Note
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>These arrows in Xschem are called “launchers” and are essentially a series of Tcl commands. Since Xschem is fully scriptable via Tcl, repetitive tasks can be easily automated. Select a launcher and press <code>q</code> (Properties) to inspect or modify its underlying Tcl commands.</p>
+<p><code>.vp</code> is the gate-level Verilog netlist with power pins. Hence, one might think that the conversion could be done directly from the <code>.pnl.v</code> netlist in the <code>flow/final/</code> folder. However, the <code>.nl.v</code> file from the LibreLane <code>yosys-synthesis</code> step must be used. The target <code>make generate-xspice</code> is not executed by <code>make all</code>.</p>
+</div>
+</div>
+<p>The Xschem testbench (<a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/counter/testbenches/xschem/"><code>counter_top_tb_tran.sch</code></a>) can be opened and simulated interactively.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> testbenches/xschem</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="ex">xschem</span> counter_top_tb_tran.sch</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div id="fig-counter-top-tb-tran-schematic" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-counter-top-tb-tran-schematic-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="fig/counter_top/counter_top_tb_tran_schematic.svg" class="lightbox" data-gallery="quarto-lightbox-gallery-5" title="Figure&nbsp;5: Xschem mixed-signal gate-level testbench counter_top_tb_tran."><img src="fig/counter_top/counter_top_tb_tran_schematic.svg" class="img-fluid figure-img"></a>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-counter-top-tb-tran-schematic-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;5: Xschem mixed-signal gate-level testbench <code>counter_top_tb_tran</code>.
+</figcaption>
+</figure>
+</div>
+<p>In Xschem, hold <strong><code>Ctrl</code></strong> and click the <strong>Simulate</strong> button in the schematic to launch the simulator. Once the simulation has finished, you can hold <strong><code>Ctrl</code></strong> and click the <strong>Load waves</strong> arrow to load the simulation results into the integrated waveform viewer.</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Tip
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>This testbench also shows multiple ways to connect and display bus signals in Xschem. For more information, refer to the <a href="https://xschem.sourceforge.io/stefan/xschem_man/tutorial_busses.html">Xschem documentation: Use Bus/Vector notation for signal bundles / arrays of instances</a>.</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>These arrows in Xschem are called “launchers” and are essentially a series of Tcl commands. Since Xschem is fully scriptable via Tcl, repetitive tasks can be easily automated. Select a launcher and press <code>q</code> (Properties) to inspect or modify its underlying Tcl commands. This is also the beauty of Xschem and the reason why it is possible to also run simulations non-interactively, generate netlists, and run LVS with only Makefile targets, as you will see below.</p>
 </div>
 </div>
 <p>The same simulation can also be run non-interactively from the Makefile, and the result can be plotted from Python.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> sim-gl-xschem</span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> sim-view-xschem</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div id="fig-counter-top-tb-tran-schematic" class="quarto-float quarto-figure quarto-figure-center anchored">
-<figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-counter-top-tb-tran-schematic-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<a href="fig/counter_top/counter_top_tb_tran_schematic.svg" class="lightbox" data-gallery="quarto-lightbox-gallery-4" title="Figure&nbsp;4: Xschem mixed-signal gate-level testbench counter_top_tb_tran."><img src="fig/counter_top/counter_top_tb_tran_schematic.svg" class="img-fluid figure-img"></a>
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-counter-top-tb-tran-schematic-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;4: Xschem mixed-signal gate-level testbench <code>counter_top_tb_tran</code>.
-</figcaption>
-</figure>
-</div>
 <div id="fig-counter-top-tb-tran-sim" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-counter-top-tb-tran-sim-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<a href="fig/counter_top/counter_top_tb_tran_sim.svg" class="lightbox" data-gallery="quarto-lightbox-gallery-5" title="Figure&nbsp;5: Plotted Xschem simulation results of counter_top_tb_tran from scripts/plot_simulations/plot_counter_top.py."><img src="fig/counter_top/counter_top_tb_tran_sim.svg" class="img-fluid figure-img"></a>
+<a href="fig/counter_top/counter_top_tb_tran_sim.svg" class="lightbox" data-gallery="quarto-lightbox-gallery-6" title="Figure&nbsp;6: Plotted Xschem simulation results of counter_top_tb_tran from scripts/plot_simulations/plot_counter_top.py."><img src="fig/counter_top/counter_top_tb_tran_sim.svg" class="img-fluid figure-img"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-counter-top-tb-tran-sim-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;5: Plotted Xschem simulation results of <code>counter_top_tb_tran</code> from <code>scripts/plot_simulations/plot_counter_top.py</code>.
+Figure&nbsp;6: Plotted Xschem simulation results of <code>counter_top_tb_tran</code> from <code>scripts/plot_simulations/plot_counter_top.py</code>.
 </figcaption>
 </figure>
 </div>
 </section>
-<section id="build-and-verify-everything" class="level2" data-number="4.8">
-<h2 data-number="4.8" class="anchored" data-anchor-id="build-and-verify-everything"><span class="header-section-number">4.8</span> Build and Verify Everything</h2>
+<section id="build-and-verify-everything" class="level2" data-number="4.9">
+<h2 data-number="4.9" class="anchored" data-anchor-id="build-and-verify-everything"><span class="header-section-number">4.9</span> Build and Verify Everything</h2>
 <p>The full lint, simulation, and build chain is run with the following command.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> all</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>This calls <code>lint-verilog-all</code>, <code>sim-all</code>, <code>build-fpga</code>, and <code>build-top</code> in sequence. LVS and DRC are already covered by the LibreLane sign-off steps, so no extra verification target is needed for the counter.</p>
+<p>This calls <code>lint-verilog-all</code>, <code>sim-all</code>, <code>build-fpga</code>, and <code>build-top</code> in sequence. LVS and DRC are already covered by the LibreLane sign-off steps, so no extra verification target is needed for the digital macro.</p>
 </section>
 </section>
 <section id="sec-analog" class="level1" data-number="5">
@@ -1355,70 +1370,70 @@ Tip
 <div id="fig-inverter-tb-tran-schematic" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-inverter-tb-tran-schematic-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<a href="fig/inverter_top/inverter_tb_tran_schematic.svg" class="lightbox" data-gallery="quarto-lightbox-gallery-6" title="Figure&nbsp;6: Xschem testbench inverter_tb_tran (single-channel transient response on inverter)."><img src="fig/inverter_top/inverter_tb_tran_schematic.svg" class="img-fluid figure-img"></a>
+<a href="fig/inverter_top/inverter_tb_tran_schematic.svg" class="lightbox" data-gallery="quarto-lightbox-gallery-7" title="Figure&nbsp;7: Xschem testbench inverter_tb_tran (single-channel transient response on inverter)."><img src="fig/inverter_top/inverter_tb_tran_schematic.svg" class="img-fluid figure-img"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-inverter-tb-tran-schematic-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;6: Xschem testbench <code>inverter_tb_tran</code> (single-channel transient response on <code>inverter</code>).
+Figure&nbsp;7: Xschem testbench <code>inverter_tb_tran</code> (single-channel transient response on <code>inverter</code>).
 </figcaption>
 </figure>
 </div>
 <div id="fig-inverter-tb-ac-ol-schematic" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-inverter-tb-ac-ol-schematic-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<a href="fig/inverter_top/inverter_tb_ac_ol_schematic.svg" class="lightbox" data-gallery="quarto-lightbox-gallery-7" title="Figure&nbsp;7: Xschem testbench inverter_tb_ac_ol (open-loop AC characterisation on inverter)."><img src="fig/inverter_top/inverter_tb_ac_ol_schematic.svg" class="img-fluid figure-img"></a>
+<a href="fig/inverter_top/inverter_tb_ac_ol_schematic.svg" class="lightbox" data-gallery="quarto-lightbox-gallery-8" title="Figure&nbsp;8: Xschem testbench inverter_tb_ac_ol (open-loop AC characterisation on inverter)."><img src="fig/inverter_top/inverter_tb_ac_ol_schematic.svg" class="img-fluid figure-img"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-inverter-tb-ac-ol-schematic-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;7: Xschem testbench <code>inverter_tb_ac_ol</code> (open-loop AC characterisation on <code>inverter</code>).
+Figure&nbsp;8: Xschem testbench <code>inverter_tb_ac_ol</code> (open-loop AC characterisation on <code>inverter</code>).
 </figcaption>
 </figure>
 </div>
 <div id="fig-inverter-tb-ac-ol-sim" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-inverter-tb-ac-ol-sim-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<a href="fig/inverter_top/inverter_tb_ac_ol_sim.svg" class="lightbox" data-gallery="quarto-lightbox-gallery-8" title="Figure&nbsp;8: Plotted simulation result of inverter_tb_ac_ol."><img src="fig/inverter_top/inverter_tb_ac_ol_sim.svg" class="img-fluid figure-img"></a>
+<a href="fig/inverter_top/inverter_tb_ac_ol_sim.svg" class="lightbox" data-gallery="quarto-lightbox-gallery-9" title="Figure&nbsp;9: Plotted simulation result of inverter_tb_ac_ol."><img src="fig/inverter_top/inverter_tb_ac_ol_sim.svg" class="img-fluid figure-img"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-inverter-tb-ac-ol-sim-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;8: Plotted simulation result of <code>inverter_tb_ac_ol</code>.
+Figure&nbsp;9: Plotted simulation result of <code>inverter_tb_ac_ol</code>.
 </figcaption>
 </figure>
 </div>
 <div id="fig-inverter-tb-vout-schematic" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-inverter-tb-vout-schematic-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<a href="fig/inverter_top/inverter_tb_Vout_schematic.svg" class="lightbox" data-gallery="quarto-lightbox-gallery-9" title="Figure&nbsp;9: Xschem testbench inverter_tb_Vout (DC input sweep on inverter)."><img src="fig/inverter_top/inverter_tb_Vout_schematic.svg" class="img-fluid figure-img"></a>
+<a href="fig/inverter_top/inverter_tb_Vout_schematic.svg" class="lightbox" data-gallery="quarto-lightbox-gallery-10" title="Figure&nbsp;10: Xschem testbench inverter_tb_Vout (DC input sweep on inverter)."><img src="fig/inverter_top/inverter_tb_Vout_schematic.svg" class="img-fluid figure-img"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-inverter-tb-vout-schematic-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;9: Xschem testbench <code>inverter_tb_Vout</code> (DC input sweep on <code>inverter</code>).
+Figure&nbsp;10: Xschem testbench <code>inverter_tb_Vout</code> (DC input sweep on <code>inverter</code>).
 </figcaption>
 </figure>
 </div>
 <div id="fig-inverter-tb-vout-sim" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-inverter-tb-vout-sim-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<a href="fig/inverter_top/inverter_tb_Vout_sim.svg" class="lightbox" data-gallery="quarto-lightbox-gallery-10" title="Figure&nbsp;10: Plotted simulation result of inverter_tb_Vout."><img src="fig/inverter_top/inverter_tb_Vout_sim.svg" class="img-fluid figure-img"></a>
+<a href="fig/inverter_top/inverter_tb_Vout_sim.svg" class="lightbox" data-gallery="quarto-lightbox-gallery-11" title="Figure&nbsp;11: Plotted simulation result of inverter_tb_Vout."><img src="fig/inverter_top/inverter_tb_Vout_sim.svg" class="img-fluid figure-img"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-inverter-tb-vout-sim-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;10: Plotted simulation result of <code>inverter_tb_Vout</code>.
+Figure&nbsp;11: Plotted simulation result of <code>inverter_tb_Vout</code>.
 </figcaption>
 </figure>
 </div>
 <div id="fig-inverter-top-tb-tran-schematic" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-inverter-top-tb-tran-schematic-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<a href="fig/inverter_top/inverter_top_tb_tran_schematic.svg" class="lightbox" data-gallery="quarto-lightbox-gallery-11" title="Figure&nbsp;11: Xschem top-level testbench inverter_top_tb_tran (transient on inverter_top)."><img src="fig/inverter_top/inverter_top_tb_tran_schematic.svg" class="img-fluid figure-img"></a>
+<a href="fig/inverter_top/inverter_top_tb_tran_schematic.svg" class="lightbox" data-gallery="quarto-lightbox-gallery-12" title="Figure&nbsp;12: Xschem top-level testbench inverter_top_tb_tran (transient on inverter_top)."><img src="fig/inverter_top/inverter_top_tb_tran_schematic.svg" class="img-fluid figure-img"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-inverter-top-tb-tran-schematic-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;11: Xschem top-level testbench <code>inverter_top_tb_tran</code> (transient on <code>inverter_top</code>).
+Figure&nbsp;12: Xschem top-level testbench <code>inverter_top_tb_tran</code> (transient on <code>inverter_top</code>).
 </figcaption>
 </figure>
 </div>
 <div id="fig-inverter-top-tb-tran-sim" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-inverter-top-tb-tran-sim-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<a href="fig/inverter_top/inverter_top_tb_tran_sim.svg" class="lightbox" data-gallery="quarto-lightbox-gallery-12" title="Figure&nbsp;12: Plotted simulation result of inverter_top_tb_tran."><img src="fig/inverter_top/inverter_top_tb_tran_sim.svg" class="img-fluid figure-img"></a>
+<a href="fig/inverter_top/inverter_top_tb_tran_sim.svg" class="lightbox" data-gallery="quarto-lightbox-gallery-13" title="Figure&nbsp;13: Plotted simulation result of inverter_top_tb_tran."><img src="fig/inverter_top/inverter_top_tb_tran_sim.svg" class="img-fluid figure-img"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-inverter-top-tb-tran-sim-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;12: Plotted simulation result of <code>inverter_top_tb_tran</code>.
+Figure&nbsp;13: Plotted simulation result of <code>inverter_top_tb_tran</code>.
 </figcaption>
 </figure>
 </div>
@@ -1442,10 +1457,10 @@ Figure&nbsp;12: Plotted simulation result of <code>inverter_top_tb_tran</code>.
 <div id="fig-inverter-schematic" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-inverter-schematic-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<a href="fig/inverter_top/inverter_schematic.svg" class="lightbox" data-gallery="quarto-lightbox-gallery-13" title="Figure&nbsp;13: Xschem inverter schematic."><img src="fig/inverter_top/inverter_schematic.svg" class="img-fluid figure-img" style="width:50.0%"></a>
+<a href="fig/inverter_top/inverter_schematic.svg" class="lightbox" data-gallery="quarto-lightbox-gallery-14" title="Figure&nbsp;14: Xschem inverter schematic."><img src="fig/inverter_top/inverter_schematic.svg" class="img-fluid figure-img" style="width:50.0%"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-inverter-schematic-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;13: Xschem <code>inverter</code> schematic.
+Figure&nbsp;14: Xschem <code>inverter</code> schematic.
 </figcaption>
 </figure>
 </div>
@@ -1470,10 +1485,10 @@ Figure&nbsp;13: Xschem <code>inverter</code> schematic.
 <div id="fig-inverter-top-layout" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-inverter-top-layout-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<a href="fig/inverter_top/inverter_top_black.png" class="lightbox" data-gallery="quarto-lightbox-gallery-14" title="Figure&nbsp;14: inverter_top layout in KLayout."><img src="fig/inverter_top/inverter_top_black.png" class="img-fluid figure-img" style="width:50.0%"></a>
+<a href="fig/inverter_top/inverter_top_black.png" class="lightbox" data-gallery="quarto-lightbox-gallery-15" title="Figure&nbsp;15: inverter_top layout in KLayout."><img src="fig/inverter_top/inverter_top_black.png" class="img-fluid figure-img" style="width:50.0%"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-inverter-top-layout-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;14: <code>inverter_top</code> layout in KLayout.
+Figure&nbsp;15: <code>inverter_top</code> layout in KLayout.
 </figcaption>
 </figure>
 </div>
@@ -1625,10 +1640,10 @@ Figure&nbsp;14: <code>inverter_top</code> layout in KLayout.
 <div id="fig-chip-top-cocotb-gtkwave" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-chip-top-cocotb-gtkwave-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<a href="fig/chip_top/chip_top_cocotb_gtkwave.png" class="lightbox" data-gallery="quarto-lightbox-gallery-15" title="Figure&nbsp;15: chip_top cocotb waveform in GTKWave."><img src="fig/chip_top/chip_top_cocotb_gtkwave.png" class="img-fluid figure-img"></a>
+<a href="fig/chip_top/chip_top_cocotb_gtkwave.png" class="lightbox" data-gallery="quarto-lightbox-gallery-16" title="Figure&nbsp;16: chip_top cocotb waveform in GTKWave."><img src="fig/chip_top/chip_top_cocotb_gtkwave.png" class="img-fluid figure-img"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-chip-top-cocotb-gtkwave-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;15: <code>chip_top</code> cocotb waveform in GTKWave.
+Figure&nbsp;16: <code>chip_top</code> cocotb waveform in GTKWave.
 </figcaption>
 </figure>
 </div>
@@ -1651,50 +1666,50 @@ Note
 <div id="fig-chip-top-tb-tran-schematic" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-chip-top-tb-tran-schematic-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<a href="fig/chip_top/chip_top_tb_tran_schematic.svg" class="lightbox" data-gallery="quarto-lightbox-gallery-16" title="Figure&nbsp;16: Xschem top-level mixed-signal testbench chip_top_tb_tran."><img src="fig/chip_top/chip_top_tb_tran_schematic.svg" class="img-fluid figure-img"></a>
+<a href="fig/chip_top/chip_top_tb_tran_schematic.svg" class="lightbox" data-gallery="quarto-lightbox-gallery-17" title="Figure&nbsp;17: Xschem top-level mixed-signal testbench chip_top_tb_tran."><img src="fig/chip_top/chip_top_tb_tran_schematic.svg" class="img-fluid figure-img"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-chip-top-tb-tran-schematic-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;16: Xschem top-level mixed-signal testbench <code>chip_top_tb_tran</code>.
+Figure&nbsp;17: Xschem top-level mixed-signal testbench <code>chip_top_tb_tran</code>.
 </figcaption>
 </figure>
 </div>
 <div id="fig-chip-top-tb-tran-analog-inv-sim" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-chip-top-tb-tran-analog-inv-sim-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<a href="fig/chip_top/chip_top_tb_tran_analog_inv_sim.svg" class="lightbox" data-gallery="quarto-lightbox-gallery-17" title="Figure&nbsp;17: Plotted simulation result of chip_top_tb_tran — analog inverter 1 response."><img src="fig/chip_top/chip_top_tb_tran_analog_inv_sim.svg" class="img-fluid figure-img"></a>
+<a href="fig/chip_top/chip_top_tb_tran_analog_inv_sim.svg" class="lightbox" data-gallery="quarto-lightbox-gallery-18" title="Figure&nbsp;18: Plotted simulation result of chip_top_tb_tran — analog inverter 1 response."><img src="fig/chip_top/chip_top_tb_tran_analog_inv_sim.svg" class="img-fluid figure-img"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-chip-top-tb-tran-analog-inv-sim-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;17: Plotted simulation result of <code>chip_top_tb_tran</code> — analog inverter 1 response.
+Figure&nbsp;18: Plotted simulation result of <code>chip_top_tb_tran</code> — analog inverter 1 response.
 </figcaption>
 </figure>
 </div>
 <div id="fig-chip-top-tb-tran-digital1-sim" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-chip-top-tb-tran-digital1-sim-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<a href="fig/chip_top/chip_top_tb_tran_digital1_sim.svg" class="lightbox" data-gallery="quarto-lightbox-gallery-18" title="Figure&nbsp;18: Plotted simulation result of chip_top_tb_tran — digital inverter 2 outputs."><img src="fig/chip_top/chip_top_tb_tran_digital1_sim.svg" class="img-fluid figure-img"></a>
+<a href="fig/chip_top/chip_top_tb_tran_digital1_sim.svg" class="lightbox" data-gallery="quarto-lightbox-gallery-19" title="Figure&nbsp;19: Plotted simulation result of chip_top_tb_tran — digital inverter 2 outputs."><img src="fig/chip_top/chip_top_tb_tran_digital1_sim.svg" class="img-fluid figure-img"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-chip-top-tb-tran-digital1-sim-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;18: Plotted simulation result of <code>chip_top_tb_tran</code> — digital inverter 2 outputs.
+Figure&nbsp;19: Plotted simulation result of <code>chip_top_tb_tran</code> — digital inverter 2 outputs.
 </figcaption>
 </figure>
 </div>
 <div id="fig-chip-top-tb-tran-digital2-sim" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-chip-top-tb-tran-digital2-sim-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<a href="fig/chip_top/chip_top_tb_tran_digital2_sim.svg" class="lightbox" data-gallery="quarto-lightbox-gallery-19" title="Figure&nbsp;19: Plotted simulation result of chip_top_tb_tran — digital counter 2 outputs."><img src="fig/chip_top/chip_top_tb_tran_digital2_sim.svg" class="img-fluid figure-img"></a>
+<a href="fig/chip_top/chip_top_tb_tran_digital2_sim.svg" class="lightbox" data-gallery="quarto-lightbox-gallery-20" title="Figure&nbsp;20: Plotted simulation result of chip_top_tb_tran — digital counter 2 outputs."><img src="fig/chip_top/chip_top_tb_tran_digital2_sim.svg" class="img-fluid figure-img"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-chip-top-tb-tran-digital2-sim-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;19: Plotted simulation result of <code>chip_top_tb_tran</code> — digital counter 2 outputs.
+Figure&nbsp;20: Plotted simulation result of <code>chip_top_tb_tran</code> — digital counter 2 outputs.
 </figcaption>
 </figure>
 </div>
 <div id="fig-chip-top-tb-tran-digital3-sim" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-chip-top-tb-tran-digital3-sim-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<a href="fig/chip_top/chip_top_tb_tran_digital3_sim.svg" class="lightbox" data-gallery="quarto-lightbox-gallery-20" title="Figure&nbsp;20: Plotted simulation result of chip_top_tb_tran — digital counter 1 / inverter 1 bidirs."><img src="fig/chip_top/chip_top_tb_tran_digital3_sim.svg" class="img-fluid figure-img"></a>
+<a href="fig/chip_top/chip_top_tb_tran_digital3_sim.svg" class="lightbox" data-gallery="quarto-lightbox-gallery-21" title="Figure&nbsp;21: Plotted simulation result of chip_top_tb_tran — digital counter 1 / inverter 1 bidirs."><img src="fig/chip_top/chip_top_tb_tran_digital3_sim.svg" class="img-fluid figure-img"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-chip-top-tb-tran-digital3-sim-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;20: Plotted simulation result of <code>chip_top_tb_tran</code> — digital counter 1 / inverter 1 bidirs.
+Figure&nbsp;21: Plotted simulation result of <code>chip_top_tb_tran</code> — digital counter 1 / inverter 1 bidirs.
 </figcaption>
 </figure>
 </div>
@@ -1715,10 +1730,10 @@ Tip
 <div id="fig-chip-top-schematic" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-chip-top-schematic-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<a href="fig/chip_top/chip_top_schematic.svg" class="lightbox" data-gallery="quarto-lightbox-gallery-21" title="Figure&nbsp;21: Xschem schematic of chip_top, showing the connections between the padframe and the core macros (the SRAM is not in the schematic)."><img src="fig/chip_top/chip_top_schematic.svg" class="img-fluid figure-img"></a>
+<a href="fig/chip_top/chip_top_schematic.svg" class="lightbox" data-gallery="quarto-lightbox-gallery-22" title="Figure&nbsp;22: Xschem schematic of chip_top, showing the connections between the padframe and the core macros (the SRAM is not in the schematic)."><img src="fig/chip_top/chip_top_schematic.svg" class="img-fluid figure-img"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-chip-top-schematic-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;21: Xschem schematic of <code>chip_top</code>, showing the connections between the padframe and the core macros (the SRAM is not in the schematic).
+Figure&nbsp;22: Xschem schematic of <code>chip_top</code>, showing the connections between the padframe and the core macros (the SRAM is not in the schematic).
 </figcaption>
 </figure>
 </div>
@@ -1740,20 +1755,20 @@ Figure&nbsp;21: Xschem schematic of <code>chip_top</code>, showing the connectio
 <div id="fig-chip-top-layout" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-chip-top-layout-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<a href="fig/chip_top/chip_top_black.png" class="lightbox" data-gallery="quarto-lightbox-gallery-22" title="Figure&nbsp;22: chip_top_logo_fill layout in KLayout (all layers)."><img src="fig/chip_top/chip_top_black.png" class="img-fluid figure-img"></a>
+<a href="fig/chip_top/chip_top_black.png" class="lightbox" data-gallery="quarto-lightbox-gallery-23" title="Figure&nbsp;23: chip_top_logo_fill layout in KLayout (all layers)."><img src="fig/chip_top/chip_top_black.png" class="img-fluid figure-img"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-chip-top-layout-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;22: <code>chip_top_logo_fill</code> layout in KLayout (all layers).
+Figure&nbsp;23: <code>chip_top_logo_fill</code> layout in KLayout (all layers).
 </figcaption>
 </figure>
 </div>
 <div id="fig-chip-top-layout-tm2" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-chip-top-layout-tm2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<a href="fig/chip_top/chip_top_black_TM2.png" class="lightbox" data-gallery="quarto-lightbox-gallery-23" title="Figure&nbsp;23: chip_top_logo_fill layout in KLayout with only TopMetal2 selected, showing the power distribution network."><img src="fig/chip_top/chip_top_black_TM2.png" class="img-fluid figure-img"></a>
+<a href="fig/chip_top/chip_top_black_TM2.png" class="lightbox" data-gallery="quarto-lightbox-gallery-24" title="Figure&nbsp;24: chip_top_logo_fill layout in KLayout with only TopMetal2 selected, showing the power distribution network."><img src="fig/chip_top/chip_top_black_TM2.png" class="img-fluid figure-img"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-chip-top-layout-tm2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;23: <code>chip_top_logo_fill</code> layout in KLayout with only TopMetal2 selected, showing the power distribution network.
+Figure&nbsp;24: <code>chip_top_logo_fill</code> layout in KLayout with only TopMetal2 selected, showing the power distribution network.
 </figcaption>
 </figure>
 </div>
