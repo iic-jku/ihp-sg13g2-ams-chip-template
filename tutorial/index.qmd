@@ -186,9 +186,7 @@ cd ihp-sg13g2-ams-chip-template
 make help              # show available targets at the top level
 ```
 
-Each macro under [`macros/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/) has its own `Makefile` and `README.md` with macro-local targets. They are called by the top-level build targets, but can also be invoked directly from inside the macro folder. @fig-targets-overview visualises how the Makefile targets of the whole directory structure depend on each other.
-
-![Overview of the Makefile targets.](fig/targets_overview/targets_overview.svg){#fig-targets-overview}
+Each macro under [`macros/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/) has its own `Makefile` and `README.md` with macro-local targets. They are called by the top-level build targets, but can also be invoked directly from inside the macro folder. 
 
 ### Top-level targets
 
