@@ -186,7 +186,11 @@ cd ihp-sg13g2-ams-chip-template
 make help              # show available targets at the top level
 ```
 
-Each macro under [`macros/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/) has its own `Makefile` and `README.md` with macro-local targets. They are called by the top-level build targets, but can also be invoked directly from inside the macro folder. 
+::: {.callout-tip}
+Instead of `git clone`, you can start by clicking the green "Use this template" button on the GitHub page to create your own copy of the repository. This way, you can push your changes to your own GitHub repository and even make it public if you want to share your custom silicon design with the community.
+:::
+
+Each macro under [`macros/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/) has its own `Makefile` and `README.md` with macro-local targets. They are called by the top-level build targets, but can also be invoked directly from inside the macro folder.
 
 ### Top-level targets
 
