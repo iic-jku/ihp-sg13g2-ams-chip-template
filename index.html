@@ -380,8 +380,9 @@ window.Quarto = {
   <li><a href="#workflow" id="toc-workflow" class="nav-link" data-scroll-target="#workflow"><span class="header-section-number">3.4</span> Workflow</a>
   <ul class="collapse">
   <li><a href="#most-important-top-level-targets" id="toc-most-important-top-level-targets" class="nav-link" data-scroll-target="#most-important-top-level-targets"><span class="header-section-number">3.4.1</span> Most important top-level targets</a></li>
-  <li><a href="#most-important-counter-makefile-targets" id="toc-most-important-counter-makefile-targets" class="nav-link" data-scroll-target="#most-important-counter-makefile-targets"><span class="header-section-number">3.4.2</span> Most important counter Makefile targets</a></li>
-  <li><a href="#most-important-inverter-makefile-targets" id="toc-most-important-inverter-makefile-targets" class="nav-link" data-scroll-target="#most-important-inverter-makefile-targets"><span class="header-section-number">3.4.3</span> Most important inverter Makefile targets</a></li>
+  <li><a href="#top-level-targets" id="toc-top-level-targets" class="nav-link" data-scroll-target="#top-level-targets"><span class="header-section-number">3.4.2</span> Top-level targets</a></li>
+  <li><a href="#digital-macro-targets" id="toc-digital-macro-targets" class="nav-link" data-scroll-target="#digital-macro-targets"><span class="header-section-number">3.4.3</span> Digital macro targets</a></li>
+  <li><a href="#analog-macro-targets" id="toc-analog-macro-targets" class="nav-link" data-scroll-target="#analog-macro-targets"><span class="header-section-number">3.4.4</span> Analog macro targets</a></li>
   </ul></li>
   </ul></li>
   <li><a href="#sec-digital" id="toc-sec-digital" class="nav-link" data-scroll-target="#sec-digital"><span class="header-section-number">4</span> Digital Macro Implementation</a>
@@ -750,14 +751,17 @@ Tip
 </section>
 <section id="workflow" class="level2" data-number="3.4">
 <h2 data-number="3.4" class="anchored" data-anchor-id="workflow"><span class="header-section-number">3.4</span> Workflow</h2>
-<p>The flow is driven by Makefiles. After cloning the repository and entering the IIC-OSIC-TOOLS container, every step is invoked via a <code>make</code> target. The default goal of every <code>Makefile</code> is <code>help</code>, so <code>make</code> (without arguments) prints the list of available targets. After entering the container, the start folder is <code>foss/designs/</code>.</p>
+<p>The flow is driven by Makefiles. After cloning the repository and entering the IIC-OSIC-TOOLS container, every step is invoked via a <code>make</code> target. The default goal of every <code>Makefile</code> is <code>help</code>, so <code>make</code> (without arguments) prints the list of available targets. After entering the container, the starting folder is <code>foss/designs/</code>.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> clone https://github.com/iic-jku/ihp-sg13g2-ams-chip-template.git</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> ihp-sg13g2-ams-chip-template</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> help              <span class="co"># show available targets at the top level</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Each macro under <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/"><code>macros/</code></a> has its own <code>Makefile</code> and <code>README.md</code> with macro-local targets. They are called by the top-level build targets, but can also be invoked directly from inside the macro folder.</p>
 <section id="most-important-top-level-targets" class="level3" data-number="3.4.1">
 <h3 data-number="3.4.1" class="anchored" data-anchor-id="most-important-top-level-targets"><span class="header-section-number">3.4.1</span> Most important top-level targets</h3>
-<p>The full list of targets can be found in the <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/README.md#show-available-targets">top-level README</a>. The relevant subset is summarised below.</p>
+</section>
+<section id="top-level-targets" class="level3" data-number="3.4.2">
+<h3 data-number="3.4.2" class="anchored" data-anchor-id="top-level-targets"><span class="header-section-number">3.4.2</span> Top-level targets</h3>
+<p>The <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/Makefile">top-level Makefile</a> provides:</p>
 <table class="caption-top table">
 <colgroup>
 <col style="width: 31%">
@@ -800,7 +804,7 @@ Tip
 </tr>
 <tr class="even">
 <td><code>make build-bondpad</code> / <code>build-logos</code></td>
-<td>Build the bondpad and the JKU logos under <code>ip/</code>.</td>
+<td>Build the bondpad and the logos under <code>ip/</code>.</td>
 </tr>
 <tr class="odd">
 <td><code>make build-counter</code> / <code>build-inverter</code> / <code>make build-macros</code></td>
@@ -808,11 +812,11 @@ Tip
 </tr>
 <tr class="even">
 <td><code>make build-top</code></td>
-<td>Run LibreLane on the top-level, copy back all artifacts, add logo and fill, render the final GDS.</td>
+<td>Run LibreLane on the top-level, copy back all artifacts, add logos and fill structures, and render the final GDS.</td>
 </tr>
 <tr class="odd">
 <td><code>make build-all</code></td>
-<td>Init submodules, build bondpad, build logos, build macros, and <code>build-top</code>.</td>
+<td>Init submodules, build bondpad, build logos, build macros, and build top-level.</td>
 </tr>
 <tr class="even">
 <td><code>make klayout-verify</code> / <code>magic-verify</code></td>
@@ -820,7 +824,7 @@ Tip
 </tr>
 <tr class="odd">
 <td><code>make all</code></td>
-<td>Full simulation, build, and DRC pass.</td>
+<td>Full simulation, build, and verification.</td>
 </tr>
 <tr class="even">
 <td><code>make release VERSION=2.1.0</code></td>
@@ -828,9 +832,10 @@ Tip
 </tr>
 </tbody>
 </table>
+<p>See the <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/README.md">top-level README</a> for more details and how to use the Makefile targets.</p>
 </section>
-<section id="most-important-counter-makefile-targets" class="level3" data-number="3.4.2">
-<h3 data-number="3.4.2" class="anchored" data-anchor-id="most-important-counter-makefile-targets"><span class="header-section-number">3.4.2</span> Most important counter Makefile targets</h3>
+<section id="digital-macro-targets" class="level3" data-number="3.4.3">
+<h3 data-number="3.4.3" class="anchored" data-anchor-id="digital-macro-targets"><span class="header-section-number">3.4.3</span> Digital macro targets</h3>
 <p>The <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/counter/Makefile">counter Makefile</a> provides:</p>
 <table class="caption-top table">
 <colgroup>
@@ -861,27 +866,35 @@ Tip
 <td>Open the latest waveform in GTKWave or Surfer.</td>
 </tr>
 <tr class="odd">
+<td><code>make librelane</code> (and <code>-nodrc</code>, <code>-magicdrc</code>, …)</td>
+<td>Run the LibreLane flow for the counter macro.</td>
+</tr>
+<tr class="even">
+<td><code>make generate-xspice</code></td>
+<td>Convert the gate-level netlist into an XSPICE model for Xschem.</td>
+</tr>
+<tr class="odd">
 <td><code>make sim-gl-xschem</code> / <code>sim-view-xschem</code></td>
 <td>Run the mixed-signal XSPICE simulation in Xschem and plot the results.</td>
 </tr>
 <tr class="even">
-<td><code>make librelane</code> (and <code>-nodrc</code>, <code>-magicdrc</code>, …)</td>
-<td>Run the LibreLane flow for the counter macro.</td>
+<td><code>make build-fpga</code></td>
+<td>Run the full FPGA flow: lint, synthesis, P&amp;R, and bitstream generation.</td>
 </tr>
 <tr class="odd">
-<td><code>make generate-xspice</code></td>
-<td>Convert the post-synthesis netlist into an XSPICE model for Xschem.</td>
+<td><code>make build-top</code></td>
+<td>Run LibreLane, copy reports, netlists, and final views, and render the final GDS.</td>
 </tr>
 <tr class="even">
-<td><code>make build-fpga</code> / <code>make build-top</code> / <code>make all</code></td>
-<td>FPGA bitstream, full ASIC build, or both plus simulation in one call.</td>
+<td><code>make all</code></td>
+<td>Run lint, all simulations, the FPGA build, and the full macro build flow.</td>
 </tr>
 </tbody>
 </table>
-<p>See the <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/counter/README.md">counter README</a> for details.</p>
+<p>See the <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/counter/README.md">counter README</a> for more details and how to use the Makefile targets.</p>
 </section>
-<section id="most-important-inverter-makefile-targets" class="level3" data-number="3.4.3">
-<h3 data-number="3.4.3" class="anchored" data-anchor-id="most-important-inverter-makefile-targets"><span class="header-section-number">3.4.3</span> Most important inverter Makefile targets</h3>
+<section id="analog-macro-targets" class="level3" data-number="3.4.4">
+<h3 data-number="3.4.4" class="anchored" data-anchor-id="analog-macro-targets"><span class="header-section-number">3.4.4</span> Analog macro targets</h3>
 <p>The <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/inverter/Makefile">inverter Makefile</a> provides:</p>
 <table class="caption-top table">
 <thead>
@@ -917,15 +930,19 @@ Tip
 </tr>
 <tr class="odd">
 <td><code>make lef</code> / <code>make lib</code> / <code>make verilog</code></td>
-<td>Generate the LEF, the Liberty stub, and the Verilog stub for integration.</td>
+<td>Generate the LEF, the Liberty stub, and the Verilog stub for top-level integration.</td>
 </tr>
 <tr class="even">
-<td><code>make build-top</code> / <code>make all</code></td>
-<td>Build deliverables, or run simulation, verification, and build together.</td>
+<td><code>make build-top</code></td>
+<td>Build the analog macro deliverables: LEF, LIB, Verilog stub, GDS and rendered layout image.</td>
+</tr>
+<tr class="odd">
+<td><code>make all</code></td>
+<td>Run all simulations, the analog macro build flow and KLayout / Magic verification.</td>
 </tr>
 </tbody>
 </table>
-<p>See the <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/inverter/README.md">inverter README</a> for details.</p>
+<p>See the <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/inverter/README.md">inverter README</a> for more details and how to use the Makefile targets.</p>
 </section>
 </section>
 </section>
