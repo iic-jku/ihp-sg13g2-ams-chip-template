@@ -8,7 +8,7 @@
 
 <meta name="author" content="Simon Dorrer">
 <meta name="author" content="Harald Pretl">
-<meta name="dcterms.date" content="2026-05-17">
+<meta name="dcterms.date" content="2026-05-18">
 
 <title>A Tutorial on Open-Source Analog-Mixed Signal Chip Design with the ihp-sg13g2 Open-PDK – Open-Source Analog-Mixed Signal Chip Design Tutorial</title>
 <style>
@@ -410,16 +410,17 @@ window.Quarto = {
   <li><a href="#schematic-level-simulation" id="toc-schematic-level-simulation" class="nav-link" data-scroll-target="#schematic-level-simulation"><span class="header-section-number">5.2</span> Schematic-Level Simulation</a></li>
   <li><a href="#schematic-level-drawing" id="toc-schematic-level-drawing" class="nav-link" data-scroll-target="#schematic-level-drawing"><span class="header-section-number">5.3</span> Schematic-Level Drawing</a></li>
   <li><a href="#sec-cace" id="toc-sec-cace" class="nav-link" data-scroll-target="#sec-cace"><span class="header-section-number">5.4</span> Process Variation and Mismatch (CACE)</a></li>
-  <li><a href="#inspect-edit-the-layout" id="toc-inspect-edit-the-layout" class="nav-link" data-scroll-target="#inspect-edit-the-layout"><span class="header-section-number">5.5</span> Inspect / Edit the Layout</a></li>
-  <li><a href="#drc-lvs-and-pex" id="toc-drc-lvs-and-pex" class="nav-link" data-scroll-target="#drc-lvs-and-pex"><span class="header-section-number">5.6</span> DRC, LVS, and PEX</a>
+  <li><a href="#transistor-sizing" id="toc-transistor-sizing" class="nav-link" data-scroll-target="#transistor-sizing"><span class="header-section-number">5.5</span> Transistor Sizing</a></li>
+  <li><a href="#inspect-edit-the-layout" id="toc-inspect-edit-the-layout" class="nav-link" data-scroll-target="#inspect-edit-the-layout"><span class="header-section-number">5.6</span> Inspect / Edit the Layout</a></li>
+  <li><a href="#drc-lvs-and-pex" id="toc-drc-lvs-and-pex" class="nav-link" data-scroll-target="#drc-lvs-and-pex"><span class="header-section-number">5.7</span> DRC, LVS, and PEX</a>
   <ul class="collapse">
-  <li><a href="#design-rule-check" id="toc-design-rule-check" class="nav-link" data-scroll-target="#design-rule-check"><span class="header-section-number">5.6.1</span> Design Rule Check</a></li>
-  <li><a href="#layout-versus-schematic" id="toc-layout-versus-schematic" class="nav-link" data-scroll-target="#layout-versus-schematic"><span class="header-section-number">5.6.2</span> Layout-Versus-Schematic</a></li>
-  <li><a href="#parasitic-extraction" id="toc-parasitic-extraction" class="nav-link" data-scroll-target="#parasitic-extraction"><span class="header-section-number">5.6.3</span> Parasitic Extraction</a></li>
-  <li><a href="#run-everything-at-once" id="toc-run-everything-at-once" class="nav-link" data-scroll-target="#run-everything-at-once"><span class="header-section-number">5.6.4</span> Run Everything at Once</a></li>
+  <li><a href="#design-rule-check" id="toc-design-rule-check" class="nav-link" data-scroll-target="#design-rule-check"><span class="header-section-number">5.7.1</span> Design Rule Check</a></li>
+  <li><a href="#layout-versus-schematic" id="toc-layout-versus-schematic" class="nav-link" data-scroll-target="#layout-versus-schematic"><span class="header-section-number">5.7.2</span> Layout-Versus-Schematic</a></li>
+  <li><a href="#parasitic-extraction" id="toc-parasitic-extraction" class="nav-link" data-scroll-target="#parasitic-extraction"><span class="header-section-number">5.7.3</span> Parasitic Extraction</a></li>
+  <li><a href="#run-everything-at-once" id="toc-run-everything-at-once" class="nav-link" data-scroll-target="#run-everything-at-once"><span class="header-section-number">5.7.4</span> Run Everything at Once</a></li>
   </ul></li>
-  <li><a href="#build-deliverables-for-top-level-integration" id="toc-build-deliverables-for-top-level-integration" class="nav-link" data-scroll-target="#build-deliverables-for-top-level-integration"><span class="header-section-number">5.7</span> Build Deliverables for Top-Level Integration</a></li>
-  <li><a href="#full-macro-pass" id="toc-full-macro-pass" class="nav-link" data-scroll-target="#full-macro-pass"><span class="header-section-number">5.8</span> Full Macro Pass</a></li>
+  <li><a href="#build-deliverables-for-top-level-integration" id="toc-build-deliverables-for-top-level-integration" class="nav-link" data-scroll-target="#build-deliverables-for-top-level-integration"><span class="header-section-number">5.8</span> Build Deliverables for Top-Level Integration</a></li>
+  <li><a href="#full-macro-pass" id="toc-full-macro-pass" class="nav-link" data-scroll-target="#full-macro-pass"><span class="header-section-number">5.9</span> Full Macro Pass</a></li>
   </ul></li>
   <li><a href="#sec-top" id="toc-sec-top" class="nav-link" data-scroll-target="#sec-top"><span class="header-section-number">6</span> Top-Level Implementation</a>
   <ul class="collapse">
@@ -473,7 +474,7 @@ window.Quarto = {
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">May 17, 2026</p>
+      <p class="date">May 18, 2026</p>
     </div>
   </div>
   
@@ -527,7 +528,7 @@ Important
 <li>Two <code>inverter_top</code> macros, one used as a 4-channel CMOS digital inverter, one as a 2-channel analog inverter</li>
 <li>One <code>RM_IHPSG13_1P_1024x32_c2_bm_bist</code> single-port SRAM macro</li>
 <li>A 32-pad padframe (8 pads per side) with I/O, power, analog, and bidirectional pads</li>
-<li>The top-level chip assembly with PDN, logos, and fill structures</li>
+<li>The top-level chip assembly with power distribution network (PDN), logos, and fill structures</li>
 </ul>
 <p>The tutorial ends with a set of exercises that apply the same flow to a modified counter, a ring oscillator using the inverters, and a modified top-level floorplan and pinout. This way, all important steps of the flow are covered in a hands-on manner.</p>
 <div class="callout callout-style-default callout-tip callout-titled">
@@ -1312,7 +1313,7 @@ Figure&nbsp;6: Plotted Xschem simulation results of <code>counter_top_tb_tran</c
 <ul>
 <li>Layout vs.&nbsp;Schematic (<a href="https://en.wikipedia.org/wiki/Layout_versus_schematic">LVS</a>) with KLayout or Magic + Netgen,</li>
 <li>Design Rule Checking (<a href="https://en.wikipedia.org/wiki/Design_rule_checking">DRC</a>) with KLayout or Magic,</li>
-<li>Parasitic Extraction (<a href="https://en.wikipedia.org/wiki/Parasitic_extraction">PEX</a>) with KLayout or Magic,</li>
+<li>Parasitic Extraction (<a href="https://en.wikipedia.org/wiki/Parasitic_extraction">PEX</a>) with Magic + Netgen,</li>
 <li><a href="https://en.wikipedia.org/wiki/Monte_Carlo_method">Monte Carlo</a> simulation of process and mismatch variations with CACE.</li>
 </ul>
 <p>Two instances are used in the chip core. One is used as a 4-channel digital inverter (<code>inverter1</code>), and the other as a 2-channel analog inverter (<code>inverter2</code>). See the <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/doc/specifications.md">chip specifications</a> for the full picture.</p>
@@ -1510,10 +1511,10 @@ Figure&nbsp;14: Xschem <code>inverter</code> symbol.
 <div id="fig-inverter-schematic" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-inverter-schematic-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<a href="fig/inverter_top/inverter_schematic.svg" class="lightbox" data-gallery="quarto-lightbox-gallery-15" title="Figure&nbsp;15: Xschem inverter schematic."><img src="fig/inverter_top/inverter_schematic.svg" class="img-fluid figure-img" style="width:75.0%"></a>
+<a href="fig/inverter_top/inverter_schematic.svg" class="lightbox" data-gallery="quarto-lightbox-gallery-15" title="Figure&nbsp;15: Xschem inverter schematic with dummy transistors and OP annotations."><img src="fig/inverter_top/inverter_schematic.svg" class="img-fluid figure-img" style="width:65.0%"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-inverter-schematic-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;15: Xschem <code>inverter</code> schematic.
+Figure&nbsp;15: Xschem <code>inverter</code> schematic with dummy transistors and OP annotations.
 </figcaption>
 </figure>
 </div>
@@ -1535,68 +1536,95 @@ Note
 <h2 data-number="5.4" class="anchored" data-anchor-id="sec-cace"><span class="header-section-number">5.4</span> Process Variation and Mismatch (CACE)</h2>
 <p><a href="https://github.com/fossi-foundation/cace">CACE</a> drives Ngspice via a characterisation YAML file (<a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/inverter/verification/cace/inverter.yaml"><code>verification/cace/inverter.yaml</code></a>) to run Monte-Carlo simulations and produce process and mismatch variation plots.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb16"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> sim-cace</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>Plots are written to <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/inverter/verification/cace/results/inverter"><code>verification/cace/results/inverter/</code></a>. This step is mainly relevant for advanced designers that want to characterise the analog macro across PVT corners. The following figures show the result of the CACE simulations for 200 iterations.</p>
-<p><a href="#fig-inverter-cace-adc-mc" class="quarto-xref">Figure&nbsp;16</a> and <a href="#fig-inverter-cace-adc-mm" class="quarto-xref">Figure&nbsp;17</a> show the process and mismatch variations of the dc open-loop gain <span class="math inline">\(A_\mathrm{dc,ol}\)</span>, while <a href="#fig-inverter-cace-adc-vdd" class="quarto-xref">Figure&nbsp;18</a> plots its variation across several process corners at one fixed supply voltage.</p>
-<div id="fig-inverter-cace-adc-mc" class="quarto-float quarto-figure quarto-figure-center anchored">
+<p>Plots are written to <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/inverter/verification/cace/results/inverter"><code>verification/cace/results/inverter/</code></a>. This step is mainly relevant for advanced designers who want to characterise the analog macro across PVT corners. The following figures show the results of the CACE simulations for 200 iterations.</p>
+<p><a href="#fig-inverter-cace-aol" class="quarto-xref">Figure&nbsp;16</a> shows the process (left) and mismatch (right) variations of the dc open-loop gain <span class="math inline">\(A_\mathrm{ol}\)</span>, while <a href="#fig-inverter-cace-aol-vdd" class="quarto-xref">Figure&nbsp;17</a> plots its variation across several process corners at one fixed supply voltage.</p>
+<div id="fig-inverter-cace-aol" class="quarto-layout-panel">
 <figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-inverter-cace-adc-mc-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<a href="fig/inverter_top/Adc_ol_dB_mc.png" class="lightbox" data-gallery="quarto-lightbox-gallery-16" title="Figure&nbsp;16: CACE process variation of A_\mathrm{dc,ol}."><img src="fig/inverter_top/Adc_ol_dB_mc.png" class="img-fluid figure-img" style="width:70.0%"></a>
+<div aria-describedby="fig-inverter-cace-aol-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="quarto-layout-row">
+<div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><a href="fig/inverter_top/Adc_ol_dB_mc.png" class="lightbox" data-gallery="quarto-lightbox-gallery-16" title="Process variation of A_\mathrm{ol}."><img src="fig/inverter_top/Adc_ol_dB_mc.png" class="img-fluid figure-img" style="width:100.0%"></a></p>
+<figcaption>Process variation of <span class="math inline">\(A_\mathrm{ol}\)</span>.</figcaption>
+</figure>
 </div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-inverter-cace-adc-mc-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;16: CACE process variation of <span class="math inline">\(A_\mathrm{dc,ol}\)</span>.
+</div>
+<div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><a href="fig/inverter_top/Adc_ol_dB_mm.png" class="lightbox" data-gallery="quarto-lightbox-gallery-17" title="Mismatch variation of A_\mathrm{ol}."><img src="fig/inverter_top/Adc_ol_dB_mm.png" class="img-fluid figure-img" style="width:100.0%"></a></p>
+<figcaption>Mismatch variation of <span class="math inline">\(A_\mathrm{ol}\)</span>.</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-inverter-cace-aol-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;16: CACE process (left) and mismatch (right) variations of <span class="math inline">\(A_\mathrm{ol}\)</span>.
 </figcaption>
 </figure>
 </div>
-<div id="fig-inverter-cace-adc-mm" class="quarto-float quarto-figure quarto-figure-center anchored">
+<div id="fig-inverter-cace-aol-vdd" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-inverter-cace-adc-mm-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<a href="fig/inverter_top/Adc_ol_dB_mm.png" class="lightbox" data-gallery="quarto-lightbox-gallery-17" title="Figure&nbsp;17: CACE mismatch variation of A_\mathrm{dc,ol}."><img src="fig/inverter_top/Adc_ol_dB_mm.png" class="img-fluid figure-img" style="width:70.0%"></a>
+<div aria-describedby="fig-inverter-cace-aol-vdd-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="fig/inverter_top/Adc_ol_dB_vs_vdd.png" class="lightbox" data-gallery="quarto-lightbox-gallery-18" title="Figure&nbsp;17: CACE variation of A_\mathrm{ol} across several process corners."><img src="fig/inverter_top/Adc_ol_dB_vs_vdd.png" class="img-fluid figure-img" style="width:75.0%"></a>
 </div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-inverter-cace-adc-mm-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;17: CACE mismatch variation of <span class="math inline">\(A_\mathrm{dc,ol}\)</span>.
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-inverter-cace-aol-vdd-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;17: CACE variation of <span class="math inline">\(A_\mathrm{ol}\)</span> across several process corners.
 </figcaption>
 </figure>
 </div>
-<div id="fig-inverter-cace-adc-vdd" class="quarto-float quarto-figure quarto-figure-center anchored">
+<p><a href="#fig-inverter-cace-fcu" class="quarto-xref">Figure&nbsp;18</a> shows the process (left) and mismatch (right) variations of the open-loop lower cut-off frequency <span class="math inline">\(f_\mathrm{cu}\)</span>, while <a href="#fig-inverter-cace-fcu-vdd" class="quarto-xref">Figure&nbsp;19</a> plots its variation across several process corners at one fixed supply voltage.</p>
+<div id="fig-inverter-cace-fcu" class="quarto-layout-panel">
 <figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-inverter-cace-adc-vdd-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<a href="fig/inverter_top/Adc_ol_dB_vs_vdd.png" class="lightbox" data-gallery="quarto-lightbox-gallery-18" title="Figure&nbsp;18: CACE variation of A_\mathrm{dc,ol} across several process corners."><img src="fig/inverter_top/Adc_ol_dB_vs_vdd.png" class="img-fluid figure-img"></a>
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-inverter-cace-adc-vdd-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;18: CACE variation of <span class="math inline">\(A_\mathrm{dc,ol}\)</span> across several process corners.
-</figcaption>
+<div aria-describedby="fig-inverter-cace-fcu-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="quarto-layout-row">
+<div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><a href="fig/inverter_top/fcu_mc.png" class="lightbox" data-gallery="quarto-lightbox-gallery-19" title="Process variation of f_\mathrm{cu}."><img src="fig/inverter_top/fcu_mc.png" class="img-fluid figure-img" style="width:100.0%"></a></p>
+<figcaption>Process variation of <span class="math inline">\(f_\mathrm{cu}\)</span>.</figcaption>
 </figure>
 </div>
-<p><a href="#fig-inverter-cace-fcu-mc" class="quarto-xref">Figure&nbsp;19</a> and <a href="#fig-inverter-cace-fcu-mm" class="quarto-xref">Figure&nbsp;20</a> show the process and mismatch variations of the open-loop lower cut-off frequency <span class="math inline">\(f_\mathrm{cu}\)</span>, while <a href="#fig-inverter-cace-fcu-vdd" class="quarto-xref">Figure&nbsp;21</a> plots its variation across several process corners at one fixed supply voltage.</p>
-<div id="fig-inverter-cace-fcu-mc" class="quarto-float quarto-figure quarto-figure-center anchored">
-<figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-inverter-cace-fcu-mc-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<a href="fig/inverter_top/fcu_mc.png" class="lightbox" data-gallery="quarto-lightbox-gallery-19" title="Figure&nbsp;19: CACE process variation of f_\mathrm{cu}."><img src="fig/inverter_top/fcu_mc.png" class="img-fluid figure-img" style="width:70.0%"></a>
 </div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-inverter-cace-fcu-mc-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;19: CACE process variation of <span class="math inline">\(f_\mathrm{cu}\)</span>.
-</figcaption>
+<div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><a href="fig/inverter_top/fcu_mm.png" class="lightbox" data-gallery="quarto-lightbox-gallery-20" title="Mismatch variation of f_\mathrm{cu}."><img src="fig/inverter_top/fcu_mm.png" class="img-fluid figure-img" style="width:100.0%"></a></p>
+<figcaption>Mismatch variation of <span class="math inline">\(f_\mathrm{cu}\)</span>.</figcaption>
 </figure>
 </div>
-<div id="fig-inverter-cace-fcu-mm" class="quarto-float quarto-figure quarto-figure-center anchored">
-<figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-inverter-cace-fcu-mm-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<a href="fig/inverter_top/fcu_mm.png" class="lightbox" data-gallery="quarto-lightbox-gallery-20" title="Figure&nbsp;20: CACE mismatch variation of f_\mathrm{cu}."><img src="fig/inverter_top/fcu_mm.png" class="img-fluid figure-img" style="width:70.0%"></a>
 </div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-inverter-cace-fcu-mm-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;20: CACE mismatch variation of <span class="math inline">\(f_\mathrm{cu}\)</span>.
+</div>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-inverter-cace-fcu-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;18: CACE process (left) and mismatch (right) variations of <span class="math inline">\(f_\mathrm{cu}\)</span>.
 </figcaption>
 </figure>
 </div>
 <div id="fig-inverter-cace-fcu-vdd" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-inverter-cace-fcu-vdd-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<a href="fig/inverter_top/fcu_vs_vdd.png" class="lightbox" data-gallery="quarto-lightbox-gallery-21" title="Figure&nbsp;21: CACE variation of f_\mathrm{cu} across several process corners."><img src="fig/inverter_top/fcu_vs_vdd.png" class="img-fluid figure-img"></a>
+<a href="fig/inverter_top/fcu_vs_vdd.png" class="lightbox" data-gallery="quarto-lightbox-gallery-21" title="Figure&nbsp;19: CACE variation of f_\mathrm{cu} across several process corners."><img src="fig/inverter_top/fcu_vs_vdd.png" class="img-fluid figure-img" style="width:75.0%"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-inverter-cace-fcu-vdd-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;21: CACE variation of <span class="math inline">\(f_\mathrm{cu}\)</span> across several process corners.
+Figure&nbsp;19: CACE variation of <span class="math inline">\(f_\mathrm{cu}\)</span> across several process corners.
 </figcaption>
 </figure>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Note that the above process and mismatch variation results are poor for an analog circuit. Also, the open-loop gain varies significantly across corners. This is because the example is only a simple inverter without a compensation technique. For a practical single-ended inverter amplifier, one would at least add a feedback resistor from output to input to stabilise the operating point and therefore the gain across corners. If you want to see improved variation results, you can try adding a feedback resistor in the <code>inverter.sch</code> schematic and running the CACE flow again.</p>
+</div>
 </div>
 <div class="callout callout-style-default callout-tip callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -1612,40 +1640,258 @@ Tip
 </div>
 </div>
 </section>
-<section id="inspect-edit-the-layout" class="level2" data-number="5.5">
-<h2 data-number="5.5" class="anchored" data-anchor-id="inspect-edit-the-layout"><span class="header-section-number">5.5</span> Inspect / Edit the Layout</h2>
-<p>The layout is created and edited in KLayout. The container alias <code>ke</code> opens KLayout in edit mode.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb17"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> macros/inverter/layout</span>
-<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="ex">ke</span> inverter_top.klay.gds</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>After modifying the layout, export a clean <code>.gds</code> file (for example <code>inverter_top.gds</code>). The Magic-based flows always work on <code>.gds</code>, while the KLayout-based flows accept either <code>.gds</code> or <code>.klay.gds</code>.</p>
+<section id="transistor-sizing" class="level2" data-number="5.5">
+<h2 data-number="5.5" class="anchored" data-anchor-id="transistor-sizing"><span class="header-section-number">5.5</span> Transistor Sizing</h2>
+<p>During simulation, it could happen that some specifications are not fulfilled and that the inverter must be resized. In this tutorial, the inverter is sized with the <span class="math inline">\(g_\mathrm{m}/I_\mathrm{D}\)</span> method (see <a href="https://iic-jku.github.io/analog-circuit-design/aicd.html#sec-gmid-method">Transistor Sizing Using <span class="math inline">\(g_\mathrm{m}/I_\mathrm{D}\)</span> Methodology</a> for theoretical background). Instead of relying on textbook square-law equations, the method looks up the actual device behaviour from pre-characterised SPICE simulations, parametrised by <span class="math inline">\(g_\mathrm{m}/I_\mathrm{D}\)</span>. An overview of these techsweeps can be found in the folder <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/doc/sizing"><code>doc/sizing/</code></a>. The chosen <span class="math inline">\(g_\mathrm{m}/I_\mathrm{D}\)</span> point sets the inversion level of the transistor and therefore the trade-off between intrinsic gain (high <span class="math inline">\(g_\mathrm{m}/I_\mathrm{D}\)</span>, weak inversion) and bandwidth (low <span class="math inline">\(g_\mathrm{m}/I_\mathrm{D}\)</span>, strong inversion). An overview of the <span class="math inline">\(g_\mathrm{m}/I_\mathrm{D}\)</span> tradeoffs can be found <a href="https://iic-jku.github.io/analog-circuit-design/aicd.html#sec-tradeoffs-saturation">here</a>. For each chosen operating point the lookup tables return all relevant figures of merit (<span class="math inline">\(I_\mathrm{D}/W\)</span>, <span class="math inline">\(g_\mathrm{m}/g_\mathrm{ds}\)</span>, <span class="math inline">\(g_\mathrm{m}/C_\mathrm{gg}\)</span>, <span class="math inline">\(S_\mathrm{TH}\)</span>, etc.) at the actual bias condition, which is then used to compute <span class="math inline">\(W\)</span> for a given drain current.</p>
+<p>The full sizing flow for the inverter is implemented in the Jupyter notebook <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/inverter/scripts/sizing/sizing_inverter.ipynb"><code>scripts/sizing/sizing_inverter.ipynb</code></a>. The notebook uses <a href="https://github.com/dreoilin/pygmid"><code>pygmid</code></a> to query the pre-characterised ihp-sg13g2 NMOS/PMOS lookup tables (<a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/inverter/scripts/sizing/data/sg13g2_lv_nmos.mat"><code>sg13g2_lv_nmos.mat</code></a> and <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/inverter/scripts/sizing/data/sg13g2_lv_pmos.mat"><code>sg13g2_lv_pmos.mat</code></a>). An overview of the <span class="math inline">\(g_\mathrm{m}/I_\mathrm{D}\)</span> MOSFET characterization procedure can be found <a href="https://iic-jku.github.io/analog-circuit-design/aicd.html#sec-techsweep-testbench">here</a>.</p>
+<p>The Jupyter notebook <code>sizing_inverter.ipynb</code> runs through the following steps:</p>
+<ol type="1">
+<li>Define the design targets: <span class="math inline">\(V_\mathrm{DD} = 1.5\,\mathrm{V}\)</span>, <span class="math inline">\(V_\mathrm{cm,in} = V_\mathrm{cm,out} = V_\mathrm{DD}/2 = 0.75\,\mathrm{V}\)</span>, <span class="math inline">\(I_\mathrm{out} = 0.75\,\mathrm{mA}\)</span>, <span class="math inline">\(C_\mathrm{load} = 10\,\mathrm{pF}\)</span> and <span class="math inline">\(L = 1\,\mathrm{\upmu m}\)</span>. <span class="math inline">\(L\)</span> is chosen longer than the minimum to increase intrinsic gain and reduce mismatch, but at the cost of increased area and reduced bandwidth.</li>
+<li>Look up <span class="math inline">\(g_\mathrm{m}/I_\mathrm{D}\)</span>, <span class="math inline">\(g_\mathrm{m}/g_\mathrm{ds}\)</span>, <span class="math inline">\(g_\mathrm{m}/C_\mathrm{gg}\)</span> and <span class="math inline">\(I_\mathrm{D}/W\)</span> based on <span class="math inline">\(L\)</span> and the operating-point voltages.</li>
+<li>Compute the required widths <span class="math inline">\(W = I_\mathrm{D} / (I_\mathrm{D}/W)\)</span> for NMOS and PMOS, and derive the resulting <span class="math inline">\(W_\mathrm{PMOS}/W_\mathrm{NMOS}\)</span> ratio.</li>
+<li>Round the continuous widths to a practical finger configuration with equal finger counts for NMOS and PMOS (for better layout matching) and recompute the small-signal parameters with the final widths.</li>
+<li>Estimate the open-loop gain <span class="math inline">\(A_\mathrm{ol} = -g_\mathrm{m,tot} / g_\mathrm{ds,tot}\)</span> and the output resistance <span class="math inline">\(R_\mathrm{out} = 1/g_\mathrm{ds,tot}\)</span> of the complementary inverter stage.</li>
+</ol>
+<p>The resulting device geometry is summarised in <a href="#tbl-inverter-sizing-geom" class="quarto-xref">Table&nbsp;1</a>.</p>
+<div id="tbl-inverter-sizing-geom" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-inverter-sizing-geom-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;1: Sized device geometry of the complementary inverter.
+</figcaption>
+<div aria-describedby="tbl-inverter-sizing-geom-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 6%">
+<col style="width: 21%">
+<col style="width: 16%">
+<col style="width: 29%">
+<col style="width: 26%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Device</th>
+<th style="text-align: center;"><span class="math inline">\(L\)</span> (<span class="math inline">\(\mathrm{\upmu m}\)</span>)</th>
+<th style="text-align: center;">Fingers (<span class="math inline">\(\mathrm{NF}\)</span>)</th>
+<th style="text-align: center;"><span class="math inline">\(W\)</span> / Finger (<span class="math inline">\(\mathrm{\upmu m}\)</span>)</th>
+<th style="text-align: center;">Total <span class="math inline">\(W\)</span> (<span class="math inline">\(\mathrm{\upmu m}\)</span>)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">NMOS <span class="math inline">\(M_1\)</span></td>
+<td style="text-align: center;">1.0</td>
+<td style="text-align: center;">20</td>
+<td style="text-align: center;">1.0</td>
+<td style="text-align: center;">20.0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">PMOS <span class="math inline">\(M_2\)</span></td>
+<td style="text-align: center;">1.0</td>
+<td style="text-align: center;">20</td>
+<td style="text-align: center;">6.0</td>
+<td style="text-align: center;">120.0</td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure>
+</div>
+<p>With these final widths the notebook computes the small-signal parameters listed in <a href="#tbl-inverter-sizing-ss" class="quarto-xref">Table&nbsp;2</a>. As a reference, compare these values with the OP annotations in <a href="#fig-inverter-schematic" class="quarto-xref">Figure&nbsp;15</a>.</p>
+<div id="tbl-inverter-sizing-ss" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-inverter-sizing-ss-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;2: Calculated small-signal parameters with final widths.
+</figcaption>
+<div aria-describedby="tbl-inverter-sizing-ss-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 45%">
+<col style="width: 11%">
+<col style="width: 11%">
+<col style="width: 30%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Parameter</th>
+<th style="text-align: center;">NMOS <span class="math inline">\(M_1\)</span></th>
+<th style="text-align: center;">PMOS <span class="math inline">\(M_2\)</span></th>
+<th style="text-align: center;">Inverter (NMOS <span class="math inline">\(\parallel\)</span> PMOS)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Drain current <span class="math inline">\(I_\mathrm{D}\)</span> (<span class="math inline">\(\mathrm{mA}\)</span>)</td>
+<td style="text-align: center;">0.89</td>
+<td style="text-align: center;">0.78</td>
+<td style="text-align: center;">–</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Transconductance efficiency <span class="math inline">\(g_\mathrm{m}/I_\mathrm{D}\)</span> (<span class="math inline">\(\mathrm{V^{-1}}\)</span>)</td>
+<td style="text-align: center;">3.76</td>
+<td style="text-align: center;">3.76</td>
+<td style="text-align: center;">–</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Inversion level</td>
+<td style="text-align: center;">strong</td>
+<td style="text-align: center;">strong</td>
+<td style="text-align: center;">–</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Transconductance <span class="math inline">\(g_\mathrm{m}\)</span> (<span class="math inline">\(\mathrm{mS}\)</span>)</td>
+<td style="text-align: center;">3.35</td>
+<td style="text-align: center;">2.92</td>
+<td style="text-align: center;">–</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Output conductance <span class="math inline">\(g_\mathrm{ds}\)</span> (<span class="math inline">\(\mathrm{\upmu S}\)</span>)</td>
+<td style="text-align: center;">116</td>
+<td style="text-align: center;">29</td>
+<td style="text-align: center;">–</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Gate capacitance <span class="math inline">\(C_\mathrm{gg}\)</span> (<span class="math inline">\(\mathrm{fF}\)</span>)</td>
+<td style="text-align: center;">154.32</td>
+<td style="text-align: center;">824.86</td>
+<td style="text-align: center;">–</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Transit frequency <span class="math inline">\(f_\mathrm{T} = g_\mathrm{m}/(2\pi\,C_\mathrm{gg})\)</span> (<span class="math inline">\(\mathrm{GHz}\)</span>)</td>
+<td style="text-align: center;">2.91</td>
+<td style="text-align: center;">0.54</td>
+<td style="text-align: center;">–</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Thermal noise PSD <span class="math inline">\(S_\mathrm{TH}\)</span> at <span class="math inline">\(1\,\mathrm{Hz}\)</span> (<span class="math inline">\(\mathrm{pV^2/Hz}\)</span>)</td>
+<td style="text-align: center;">38.95</td>
+<td style="text-align: center;">73.98</td>
+<td style="text-align: center;">–</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Flicker corner frequency <span class="math inline">\(f_\mathrm{co}\)</span> (<span class="math inline">\(\mathrm{MHz}\)</span>)</td>
+<td style="text-align: center;">3.87</td>
+<td style="text-align: center;">2.28</td>
+<td style="text-align: center;">–</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><span class="math inline">\(g_\mathrm{m,tot} = g_\mathrm{m,NMOS} + g_\mathrm{m,PMOS}\)</span> (<span class="math inline">\(\mathrm{mS}\)</span>)</td>
+<td style="text-align: center;">–</td>
+<td style="text-align: center;">–</td>
+<td style="text-align: center;">6.28</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><span class="math inline">\(g_\mathrm{ds,tot} = g_\mathrm{ds,NMOS} + g_\mathrm{ds,PMOS}\)</span> (<span class="math inline">\(\mathrm{\upmu S}\)</span>)</td>
+<td style="text-align: center;">–</td>
+<td style="text-align: center;">–</td>
+<td style="text-align: center;">145</td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure>
+</div>
+<p>From these values, the open-loop gain <span class="math inline">\(A_\mathrm{ol}\)</span>, the output resistance <span class="math inline">\(R_\mathrm{out}\)</span>, the open-loop cut-off frequency <span class="math inline">\(f_\mathrm{cu}\)</span>, and the unity-gain frequency <span class="math inline">\(f_\mathrm{T}\)</span> with a dominant capacitive load <span class="math inline">\(C_\mathrm{load} = 10\,\mathrm{pF}\)</span> can be estimated as</p>
+<p><span class="math display">\[
+|A_\mathrm{ol}| = \frac{g_\mathrm{m,tot}}{g_\mathrm{ds,tot}} = \frac{6.28\,\mathrm{mS}}{145\,\mathrm{\upmu S}} = 43.2 = 32.72\,\mathrm{dB},
+\]</span></p>
+<p><span class="math display">\[
+R_\mathrm{out} = \frac{1}{g_\mathrm{ds,tot}} = \frac{1}{145\,\mathrm{\upmu S}} = 6.89\,\mathrm{k\Omega},
+\]</span></p>
+<p><span class="math display">\[
+f_\mathrm{cu} = \frac{1}{2\pi\,R_\mathrm{out}\,C_\mathrm{load}} = \frac{1}{2\pi \cdot 6.89\,\mathrm{k\Omega} \cdot 10\,\mathrm{pF}} = 2.31\,\mathrm{MHz},
+\]</span></p>
+<p><span class="math display">\[
+f_\mathrm{T} = \frac{g_\mathrm{m,tot}}{2\pi\,C_\mathrm{load}} = \frac{6.28\,\mathrm{mS}}{2\pi \cdot 10\,\mathrm{pF}} = 100\,\mathrm{MHz}.
+\]</span></p>
+<p><a href="#tbl-inverter-sizing-vs-ac" class="quarto-xref">Table&nbsp;3</a> compares these hand-calculated values against the open-loop ac simulation result from <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/inverter/testbenches/xschem/inverter_tb_ac_ol.sch"><code>inverter_tb_ac_ol</code></a> (see <a href="#fig-inverter-tb-ac-ol-sim" class="quarto-xref">Figure&nbsp;11</a>).</p>
+<div id="tbl-inverter-sizing-vs-ac" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-inverter-sizing-vs-ac-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;3: Calculated vs.&nbsp;simulated open-loop characteristics of the inverter.
+</figcaption>
+<div aria-describedby="tbl-inverter-sizing-vs-ac-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 28%">
+<col style="width: 44%">
+<col style="width: 26%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Quantity</th>
+<th style="text-align: center;"><span class="math inline">\(g_\mathrm{m}/I_\mathrm{D}\)</span> calculation</th>
+<th style="text-align: center;">ac open-loop simulation</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Open-loop gain <span class="math inline">\(A_\mathrm{ol}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(32.72\,\mathrm{dB}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(31.33\,\mathrm{dB}\)</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Dominant pole <span class="math inline">\(f_\mathrm{c}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(2.31\,\mathrm{MHz}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(2.89\,\mathrm{MHz}\)</span></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Unity-gain frequency <span class="math inline">\(f_\mathrm{T}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(100\,\mathrm{MHz}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(107\,\mathrm{MHz}\)</span></td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Tip
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The notebook is fully parametric. Changing <span class="math inline">\(L\)</span>, the target <span class="math inline">\(g_\mathrm{m}/I_\mathrm{D}\)</span> or <span class="math inline">\(I_\mathrm{out}\)</span> and re-running the cells immediately produces a new sizing point, so it can be used as a starting template for sizing other simple analog blocks with the ihp-sg13g2 lookup tables. Try it out yourself by decreasing the transistor length to <span class="math inline">\(L = 0.5\,\mathrm{\upmu m}\)</span> and see how the small-signal parameters and the resulting open-loop gain and cut-off frequency change. What would you expect based on the tradeoffs above?</p>
+</div>
+</div>
+</section>
+<section id="inspect-edit-the-layout" class="level2" data-number="5.6">
+<h2 data-number="5.6" class="anchored" data-anchor-id="inspect-edit-the-layout"><span class="header-section-number">5.6</span> Inspect / Edit the Layout</h2>
+<p>After the schematic is finalised and the design targets are met, the layout can be created. The layout of the <code>inverter</code> cell is hierarchical, and the top-level cell <code>inverter_top</code> contains four instances of the <code>inverter</code> cell. Around the four-channel inverter layout, a power ring is drawn on <code>Metal5</code> and <code>TopMetal1</code> layers, which is connected to the <code>VDD</code> and <code>VSS</code> pins of the four inverters. This power ring is required for top-level integration, connecting the macro power to the chip’s PDN.</p>
+<p>The layout is created and edited in KLayout. The container provides the <code>ke</code> alias for <code>klayout -e</code> (edit mode). With the following command, the GDS of the four-channel inverter is opened in KLayout. With the keys <code>0</code>, <code>1</code>, <code>2</code>, …, <code>9</code> you can view different layers as explained in the <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/doc/klayout/klayout_cheatsheet.md">KLayout cheatsheet</a> or in the <a href="https://github.com/iic-jku/klayout-layer-shortcuts">klayout-layer-shortcuts</a> plugin.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb17"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="ex">ke</span> layout/inverter_top.klay.gds</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>After modifying the layout, export a clean <code>.gds</code> file (for example <code>inverter_top.gds</code>) by pressing <code>File &gt; Export Layout For Tapeout</code>. The Magic-based verification flows only work on <code>.gds</code> files, while the KLayout-based verification flows accept either <code>.gds</code> or <code>.klay.gds</code>.</p>
 <div id="fig-inverter-top-layout" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-inverter-top-layout-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<a href="fig/inverter_top/inverter_top_black.png" class="lightbox" data-gallery="quarto-lightbox-gallery-22" title="Figure&nbsp;22: inverter_top layout in KLayout."><img src="fig/inverter_top/inverter_top_black.png" class="img-fluid figure-img" style="width:50.0%"></a>
+<a href="fig/inverter_top/inverter_top_black.png" class="lightbox" data-gallery="quarto-lightbox-gallery-22" title="Figure&nbsp;20: inverter_top layout in KLayout."><img src="fig/inverter_top/inverter_top_black.png" class="img-fluid figure-img" style="width:75.0%"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-inverter-top-layout-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;22: <code>inverter_top</code> layout in KLayout.
+Figure&nbsp;20: <code>inverter_top</code> layout in KLayout.
 </figcaption>
 </figure>
 </div>
 </section>
-<section id="drc-lvs-and-pex" class="level2" data-number="5.6">
-<h2 data-number="5.6" class="anchored" data-anchor-id="drc-lvs-and-pex"><span class="header-section-number">5.6</span> DRC, LVS, and PEX</h2>
+<section id="drc-lvs-and-pex" class="level2" data-number="5.7">
+<h2 data-number="5.7" class="anchored" data-anchor-id="drc-lvs-and-pex"><span class="header-section-number">5.7</span> DRC, LVS, and PEX</h2>
 <p>The inverter macro can be verified with two sign-off paths, KLayout and Magic + Netgen. Each path covers DRC, LVS, and PEX.</p>
-<section id="design-rule-check" class="level3" data-number="5.6.1">
-<h3 data-number="5.6.1" class="anchored" data-anchor-id="design-rule-check"><span class="header-section-number">5.6.1</span> Design Rule Check</h3>
+<section id="design-rule-check" class="level3" data-number="5.7.1">
+<h3 data-number="5.7.1" class="anchored" data-anchor-id="design-rule-check"><span class="header-section-number">5.7.1</span> Design Rule Check</h3>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb18"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> klayout-drc          <span class="co"># KLayout DRC (FEOL, density, extra rules disabled)</span></span>
 <span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> magic-drc            <span class="co"># Magic DRC via sak-drc.sh</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Reports are saved to <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/inverter/verification/drc/"><code>verification/drc/</code></a>.</p>
 </section>
-<section id="layout-versus-schematic" class="level3" data-number="5.6.2">
-<h3 data-number="5.6.2" class="anchored" data-anchor-id="layout-versus-schematic"><span class="header-section-number">5.6.2</span> Layout-Versus-Schematic</h3>
+<section id="layout-versus-schematic" class="level3" data-number="5.7.2">
+<h3 data-number="5.7.2" class="anchored" data-anchor-id="layout-versus-schematic"><span class="header-section-number">5.7.2</span> Layout-Versus-Schematic</h3>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb19"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> klayout-lvs          <span class="co"># uses CDL netlist exported from Xschem</span></span>
 <span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> magic-lvs            <span class="co"># uses SPICE netlist exported from Xschem</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>The schematic netlist is exported automatically by the matching <code>*-lvs-netlist</code> sub-target. Reports are saved to <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/inverter/verification/lvs/"><code>verification/lvs/</code></a>, and the extracted layout netlist is moved to <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/inverter/netlist/layout/"><code>netlist/layout/</code></a>.</p>
 </section>
-<section id="parasitic-extraction" class="level3" data-number="5.6.3">
-<h3 data-number="5.6.3" class="anchored" data-anchor-id="parasitic-extraction"><span class="header-section-number">5.6.3</span> Parasitic Extraction</h3>
+<section id="parasitic-extraction" class="level3" data-number="5.7.3">
+<h3 data-number="5.7.3" class="anchored" data-anchor-id="parasitic-extraction"><span class="header-section-number">5.7.3</span> Parasitic Extraction</h3>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb20"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> klayout-pex                    <span class="co"># default EXT_MODE=3 (full-RC)</span></span>
 <span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> magic-pex EXT_MODE=2           <span class="co"># CC mode</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>PEX writes a SPICE netlist into <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/inverter/netlist/pex/"><code>netlist/pex/</code></a>. The subcircuit name is renamed to <code>&lt;CELL&gt;_pex</code>, and the pin order is rearranged to match the Xschem PEX symbol (<a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/inverter/schematic/xschem/inverter_top_pex.sym"><code>inverter_top_pex.sym</code></a>).</p>
@@ -1663,15 +1909,15 @@ Figure&nbsp;22: <code>inverter_top</code> layout in KLayout.
 </div>
 </div>
 </section>
-<section id="run-everything-at-once" class="level3" data-number="5.6.4">
-<h3 data-number="5.6.4" class="anchored" data-anchor-id="run-everything-at-once"><span class="header-section-number">5.6.4</span> Run Everything at Once</h3>
+<section id="run-everything-at-once" class="level3" data-number="5.7.4">
+<h3 data-number="5.7.4" class="anchored" data-anchor-id="run-everything-at-once"><span class="header-section-number">5.7.4</span> Run Everything at Once</h3>
 <p>The verify targets bundle LVS, DRC, and PEX in one command.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb21"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> klayout-verify         <span class="co"># CELL defaults to inverter_top</span></span>
 <span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> magic-verify</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 </section>
-<section id="build-deliverables-for-top-level-integration" class="level2" data-number="5.7">
-<h2 data-number="5.7" class="anchored" data-anchor-id="build-deliverables-for-top-level-integration"><span class="header-section-number">5.7</span> Build Deliverables for Top-Level Integration</h2>
+<section id="build-deliverables-for-top-level-integration" class="level2" data-number="5.8">
+<h2 data-number="5.8" class="anchored" data-anchor-id="build-deliverables-for-top-level-integration"><span class="header-section-number">5.8</span> Build Deliverables for Top-Level Integration</h2>
 <p>For the inverter to be picked up by the chip-level LibreLane flow, it must expose a <strong>LEF</strong> (abstract pin / blockage view), a <strong>Liberty timing library</strong> stub, and a <strong>Verilog stub</strong>. They are built individually or via <code>build-top</code>.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb22"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> lef          <span class="co"># final/lef/inverter_top.lef</span></span>
 <span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> lib          <span class="co"># final/lib/inverter_top.lib (Liberty stub)</span></span>
@@ -1679,8 +1925,8 @@ Figure&nbsp;22: <code>inverter_top</code> layout in KLayout.
 <span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> build-top    <span class="co"># the three steps above plus copy-gds and render-gds</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><code>make build-top</code> also copies the GDS to <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/inverter/final/gds/"><code>final/gds/</code></a> and renders the macro to <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/inverter/render/img/"><code>render/img/inverter_top.png</code></a>.</p>
 </section>
-<section id="full-macro-pass" class="level2" data-number="5.8">
-<h2 data-number="5.8" class="anchored" data-anchor-id="full-macro-pass"><span class="header-section-number">5.8</span> Full Macro Pass</h2>
+<section id="full-macro-pass" class="level2" data-number="5.9">
+<h2 data-number="5.9" class="anchored" data-anchor-id="full-macro-pass"><span class="header-section-number">5.9</span> Full Macro Pass</h2>
 <p>The full simulation, verification, and build chain is run with the following command.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb23"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> all</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>This calls <code>sim-all</code> (Xschem + CACE), <code>klayout-verify-all</code>, <code>magic-verify-all</code>, and <code>build-top</code> in sequence. Depending on the host hardware, a full pass can take a few minutes.</p>
@@ -1776,10 +2022,10 @@ Figure&nbsp;22: <code>inverter_top</code> layout in KLayout.
 <div id="fig-chip-top-cocotb-gtkwave" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-chip-top-cocotb-gtkwave-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<a href="fig/chip_top/chip_top_cocotb_gtkwave.png" class="lightbox" data-gallery="quarto-lightbox-gallery-23" title="Figure&nbsp;23: chip_top cocotb waveform in GTKWave."><img src="fig/chip_top/chip_top_cocotb_gtkwave.png" class="img-fluid figure-img"></a>
+<a href="fig/chip_top/chip_top_cocotb_gtkwave.png" class="lightbox" data-gallery="quarto-lightbox-gallery-23" title="Figure&nbsp;21: chip_top cocotb waveform in GTKWave."><img src="fig/chip_top/chip_top_cocotb_gtkwave.png" class="img-fluid figure-img"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-chip-top-cocotb-gtkwave-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;23: <code>chip_top</code> cocotb waveform in GTKWave.
+Figure&nbsp;21: <code>chip_top</code> cocotb waveform in GTKWave.
 </figcaption>
 </figure>
 </div>
@@ -1802,50 +2048,50 @@ Note
 <div id="fig-chip-top-tb-tran-schematic" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-chip-top-tb-tran-schematic-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<a href="fig/chip_top/chip_top_tb_tran_schematic.svg" class="lightbox" data-gallery="quarto-lightbox-gallery-24" title="Figure&nbsp;24: Xschem top-level mixed-signal testbench chip_top_tb_tran."><img src="fig/chip_top/chip_top_tb_tran_schematic.svg" class="img-fluid figure-img"></a>
+<a href="fig/chip_top/chip_top_tb_tran_schematic.svg" class="lightbox" data-gallery="quarto-lightbox-gallery-24" title="Figure&nbsp;22: Xschem top-level mixed-signal testbench chip_top_tb_tran."><img src="fig/chip_top/chip_top_tb_tran_schematic.svg" class="img-fluid figure-img"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-chip-top-tb-tran-schematic-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;24: Xschem top-level mixed-signal testbench <code>chip_top_tb_tran</code>.
+Figure&nbsp;22: Xschem top-level mixed-signal testbench <code>chip_top_tb_tran</code>.
 </figcaption>
 </figure>
 </div>
 <div id="fig-chip-top-tb-tran-analog-inv-sim" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-chip-top-tb-tran-analog-inv-sim-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<a href="fig/chip_top/chip_top_tb_tran_analog_inv_sim.svg" class="lightbox" data-gallery="quarto-lightbox-gallery-25" title="Figure&nbsp;25: Plotted simulation result of chip_top_tb_tran — analog inverter 1 response."><img src="fig/chip_top/chip_top_tb_tran_analog_inv_sim.svg" class="img-fluid figure-img"></a>
+<a href="fig/chip_top/chip_top_tb_tran_analog_inv_sim.svg" class="lightbox" data-gallery="quarto-lightbox-gallery-25" title="Figure&nbsp;23: Plotted simulation result of chip_top_tb_tran — analog inverter 1 response."><img src="fig/chip_top/chip_top_tb_tran_analog_inv_sim.svg" class="img-fluid figure-img"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-chip-top-tb-tran-analog-inv-sim-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;25: Plotted simulation result of <code>chip_top_tb_tran</code> — analog inverter 1 response.
+Figure&nbsp;23: Plotted simulation result of <code>chip_top_tb_tran</code> — analog inverter 1 response.
 </figcaption>
 </figure>
 </div>
 <div id="fig-chip-top-tb-tran-digital1-sim" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-chip-top-tb-tran-digital1-sim-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<a href="fig/chip_top/chip_top_tb_tran_digital1_sim.svg" class="lightbox" data-gallery="quarto-lightbox-gallery-26" title="Figure&nbsp;26: Plotted simulation result of chip_top_tb_tran — digital inverter 2 outputs."><img src="fig/chip_top/chip_top_tb_tran_digital1_sim.svg" class="img-fluid figure-img"></a>
+<a href="fig/chip_top/chip_top_tb_tran_digital1_sim.svg" class="lightbox" data-gallery="quarto-lightbox-gallery-26" title="Figure&nbsp;24: Plotted simulation result of chip_top_tb_tran — digital inverter 2 outputs."><img src="fig/chip_top/chip_top_tb_tran_digital1_sim.svg" class="img-fluid figure-img"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-chip-top-tb-tran-digital1-sim-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;26: Plotted simulation result of <code>chip_top_tb_tran</code> — digital inverter 2 outputs.
+Figure&nbsp;24: Plotted simulation result of <code>chip_top_tb_tran</code> — digital inverter 2 outputs.
 </figcaption>
 </figure>
 </div>
 <div id="fig-chip-top-tb-tran-digital2-sim" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-chip-top-tb-tran-digital2-sim-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<a href="fig/chip_top/chip_top_tb_tran_digital2_sim.svg" class="lightbox" data-gallery="quarto-lightbox-gallery-27" title="Figure&nbsp;27: Plotted simulation result of chip_top_tb_tran — digital counter 2 outputs."><img src="fig/chip_top/chip_top_tb_tran_digital2_sim.svg" class="img-fluid figure-img"></a>
+<a href="fig/chip_top/chip_top_tb_tran_digital2_sim.svg" class="lightbox" data-gallery="quarto-lightbox-gallery-27" title="Figure&nbsp;25: Plotted simulation result of chip_top_tb_tran — digital counter 2 outputs."><img src="fig/chip_top/chip_top_tb_tran_digital2_sim.svg" class="img-fluid figure-img"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-chip-top-tb-tran-digital2-sim-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;27: Plotted simulation result of <code>chip_top_tb_tran</code> — digital counter 2 outputs.
+Figure&nbsp;25: Plotted simulation result of <code>chip_top_tb_tran</code> — digital counter 2 outputs.
 </figcaption>
 </figure>
 </div>
 <div id="fig-chip-top-tb-tran-digital3-sim" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-chip-top-tb-tran-digital3-sim-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<a href="fig/chip_top/chip_top_tb_tran_digital3_sim.svg" class="lightbox" data-gallery="quarto-lightbox-gallery-28" title="Figure&nbsp;28: Plotted simulation result of chip_top_tb_tran — digital counter 1 / inverter 1 bidirs."><img src="fig/chip_top/chip_top_tb_tran_digital3_sim.svg" class="img-fluid figure-img"></a>
+<a href="fig/chip_top/chip_top_tb_tran_digital3_sim.svg" class="lightbox" data-gallery="quarto-lightbox-gallery-28" title="Figure&nbsp;26: Plotted simulation result of chip_top_tb_tran — digital counter 1 / inverter 1 bidirs."><img src="fig/chip_top/chip_top_tb_tran_digital3_sim.svg" class="img-fluid figure-img"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-chip-top-tb-tran-digital3-sim-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;28: Plotted simulation result of <code>chip_top_tb_tran</code> — digital counter 1 / inverter 1 bidirs.
+Figure&nbsp;26: Plotted simulation result of <code>chip_top_tb_tran</code> — digital counter 1 / inverter 1 bidirs.
 </figcaption>
 </figure>
 </div>
@@ -1866,10 +2112,10 @@ Tip
 <div id="fig-chip-top-schematic" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-chip-top-schematic-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<a href="fig/chip_top/chip_top_schematic.svg" class="lightbox" data-gallery="quarto-lightbox-gallery-29" title="Figure&nbsp;29: Xschem schematic of chip_top, showing the connections between the padframe and the core macros (the SRAM is not in the schematic)."><img src="fig/chip_top/chip_top_schematic.svg" class="img-fluid figure-img"></a>
+<a href="fig/chip_top/chip_top_schematic.svg" class="lightbox" data-gallery="quarto-lightbox-gallery-29" title="Figure&nbsp;27: Xschem schematic of chip_top, showing the connections between the padframe and the core macros (the SRAM is not in the schematic)."><img src="fig/chip_top/chip_top_schematic.svg" class="img-fluid figure-img"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-chip-top-schematic-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;29: Xschem schematic of <code>chip_top</code>, showing the connections between the padframe and the core macros (the SRAM is not in the schematic).
+Figure&nbsp;27: Xschem schematic of <code>chip_top</code>, showing the connections between the padframe and the core macros (the SRAM is not in the schematic).
 </figcaption>
 </figure>
 </div>
@@ -1891,20 +2137,20 @@ Figure&nbsp;29: Xschem schematic of <code>chip_top</code>, showing the connectio
 <div id="fig-chip-top-layout" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-chip-top-layout-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<a href="fig/chip_top/chip_top_black.png" class="lightbox" data-gallery="quarto-lightbox-gallery-30" title="Figure&nbsp;30: chip_top_logo_fill layout in KLayout (all layers)."><img src="fig/chip_top/chip_top_black.png" class="img-fluid figure-img"></a>
+<a href="fig/chip_top/chip_top_black.png" class="lightbox" data-gallery="quarto-lightbox-gallery-30" title="Figure&nbsp;28: chip_top_logo_fill layout in KLayout (all layers)."><img src="fig/chip_top/chip_top_black.png" class="img-fluid figure-img"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-chip-top-layout-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;30: <code>chip_top_logo_fill</code> layout in KLayout (all layers).
+Figure&nbsp;28: <code>chip_top_logo_fill</code> layout in KLayout (all layers).
 </figcaption>
 </figure>
 </div>
 <div id="fig-chip-top-layout-tm2" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-chip-top-layout-tm2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<a href="fig/chip_top/chip_top_black_TM2.png" class="lightbox" data-gallery="quarto-lightbox-gallery-31" title="Figure&nbsp;31: chip_top_logo_fill layout in KLayout with only TopMetal2 selected, showing the power distribution network."><img src="fig/chip_top/chip_top_black_TM2.png" class="img-fluid figure-img"></a>
+<a href="fig/chip_top/chip_top_black_TM2.png" class="lightbox" data-gallery="quarto-lightbox-gallery-31" title="Figure&nbsp;29: chip_top_logo_fill layout in KLayout with only TopMetal2 selected, showing the power distribution network."><img src="fig/chip_top/chip_top_black_TM2.png" class="img-fluid figure-img"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-chip-top-layout-tm2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;31: <code>chip_top_logo_fill</code> layout in KLayout with only TopMetal2 selected, showing the power distribution network.
+Figure&nbsp;29: <code>chip_top_logo_fill</code> layout in KLayout with only TopMetal2 selected, showing the power distribution network.
 </figcaption>
 </figure>
 </div>
