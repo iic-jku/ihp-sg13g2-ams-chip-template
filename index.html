@@ -1994,23 +1994,23 @@ Note
 </section>
 <section id="sec-top" class="level1" data-number="6">
 <h1 data-number="6"><span class="header-section-number">6</span> Top-Level Implementation</h1>
-<p>This section covers the chip-level assembly. The top-level files that need to be understood (and, if needed, modified for a new chip) are:</p>
+<p>This section covers the top-level assembly and padframe generation. The top-level files that need to be understood and modified for a new chip are:</p>
 <ul>
-<li><a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/rtl/chip_top.sv"><code>rtl/chip_top.sv</code></a>, the padframe wrapper. It instantiates one I/O cell per pad and exposes the global <code>clk_PAD</code>, <code>rst_n_PAD</code>, <code>input_PAD</code>, <code>output_PAD</code>, <code>bidir_PAD</code>, and <code>analog_PAD</code> buses.</li>
-<li><a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/rtl/chip_core.sv"><code>rtl/chip_core.sv</code></a>, the core logic. It instantiates the digital and analog macros (<code>counter1</code>, <code>counter2</code>, <code>inverter1</code>, <code>inverter2</code>, <code>sram_0</code>) and wires them to the I/O bus.</li>
-<li><a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/flow/librelane/config.yaml"><code>flow/librelane/config.yaml</code></a>, the top-level LibreLane configuration. It defines the padframe order (<code>PAD_WEST</code>, <code>PAD_NORTH</code>, <code>PAD_SOUTH</code>, <code>PAD_EAST</code>), <code>DIE_AREA</code>, <code>CORE_AREA</code>, <code>CLOCK_PERIOD</code>, the macro list (<code>MACROS:</code>), non-default routing rules, PDN parameters, and STA corners.</li>
-<li><a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/flow/librelane/pdn_cfg.tcl"><code>flow/librelane/pdn_cfg.tcl</code></a>, the Tcl callback that builds the OpenROAD PDN. The bottom of the file contains the custom PDN connects for <code>inverter1</code>, <code>inverter2</code>, and <code>sram_0</code>. This is the part that has to be touched when adding new macros.</li>
+<li><a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/rtl/chip_top.sv"><code>rtl/chip_top.sv</code></a>, the padframe wrapper. It instantiates one I/O cell per pad and exposes the global <code>clk_PAD</code>, <code>rst_n_PAD</code>, <code>input_PAD</code>, <code>output_PAD</code>, <code>bidir_PAD</code>, and <code>analog_PAD</code> signals.</li>
+<li><a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/rtl/chip_core.sv"><code>rtl/chip_core.sv</code></a>, the core logic. It instantiates the digital and analog macros (<code>counter1</code>, <code>counter2</code>, <code>inverter1</code>, <code>inverter2</code>, <code>sram_0</code>) and wires them together and to the I/O pads.</li>
+<li><a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/flow/librelane/config.yaml"><code>flow/librelane/config.yaml</code></a>, the top-level LibreLane configuration. It defines the padframe order (<code>PAD_WEST</code>, <code>PAD_NORTH</code>, <code>PAD_SOUTH</code>, <code>PAD_EAST</code>), the chip area (<code>DIE_AREA</code>, <code>CORE_AREA</code>), the PDN core ring (<code>PDN_CORE_RING_VWIDTH</code>, <code>PDN_CORE_RING_HWIDTH</code>, <code>PDN_CORE_RING_VSPACING</code> and <code>PDN_CORE_RING_HSPACING</code>), the clock settings (<code>CLOCK_PORT</code>, <code>CLOCK_NET</code> and <code>CLOCK_PERIOD</code>), the macro list (<code>MACROS</code>), the bondpads, the logos, non-default routing rules (<code>NON_DEFAULT_RULES</code>, <code>DRT_ASSIGN_NDR</code>, and <code>RSZ_DONT_TOUCH_LIST</code>), STA corners, and references to <code>pdn_cfg.tcl</code> and <code>chip_top.sdc</code>.</li>
+<li><a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/flow/librelane/pdn_cfg.tcl"><code>flow/librelane/pdn_cfg.tcl</code></a>, the Tcl script that builds the OpenROAD PDN. The bottom of the file contains the custom PDN connects for <code>inverter1</code>, <code>inverter2</code>, and <code>sram_0</code>. This is the part that has to be touched when adding new macros.</li>
 <li><a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/flow/librelane/chip_top.sdc"><code>flow/librelane/chip_top.sdc</code></a>, timing constraints (clock period, input/output delays).</li>
-<li>Reference documentation, <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/doc/specifications.md">specifications.md</a>, <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/doc/pinout.md">pinout.md</a>, and <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/doc/floorplan.md">floorplan.md</a>.</li>
+<li>Reference documentation for the chip, <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/doc/specifications.md">specifications.md</a>, <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/doc/pinout.md">pinout.md</a>, and <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/doc/floorplan.md">floorplan.md</a>.</li>
 </ul>
 <section id="understanding-chip_top.sv" class="level2" data-number="6.1">
 <h2 data-number="6.1" class="anchored" data-anchor-id="understanding-chip_top.sv"><span class="header-section-number">6.1</span> Understanding <code>chip_top.sv</code></h2>
-<p>The padframe wrapper <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/rtl/chip_top.sv"><code>chip_top.sv</code></a> declares the chip’s parameters and ports. The parameter block at the top of the module controls the number of pads of each type, and is the place to change when the pinout changes.</p>
+<p>The padframe wrapper <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/rtl/chip_top.sv"><code>chip_top.sv</code></a> declares the chip’s parameters and ports. The parameter block at the top of the module controls the number of pads of each type and is the place to update when the pinout changes.</p>
 <div class="code-with-filename">
 <div class="code-with-filename-file">
-<pre><strong>rtl/chip_top.sv (excerpt)</strong></pre>
+<pre><strong>rtl/chip_top.sv (code snippet)</strong></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb24" data-filename="rtl/chip_top.sv (excerpt)"><pre class="sourceCode systemverilog code-with-copy"><code class="sourceCode systemverilog"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="kw">module</span> chip_top #(</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb24" data-filename="rtl/chip_top.sv (code snippet)"><pre class="sourceCode systemverilog code-with-copy"><code class="sourceCode systemverilog"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="kw">module</span> chip_top #(</span>
 <span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Power / ground pads for digital core / analog front-end</span></span>
 <span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>    <span class="kw">parameter</span> <span class="kw">int</span> <span class="kw">unsigned</span> NUM_VDD_PADS    = <span class="dv">1</span>,</span>
 <span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>    <span class="kw">parameter</span> <span class="kw">int</span> <span class="kw">unsigned</span> NUM_VSS_PADS    = <span class="dv">1</span>,</span>
@@ -2026,58 +2026,219 @@ Note
 <span id="cb24-14"><a href="#cb24-14" aria-hidden="true" tabindex="-1"></a>    <span class="kw">parameter</span> <span class="kw">int</span> <span class="kw">unsigned</span> NUM_ANALOG_PADS = <span class="dv">4</span></span>
 <span id="cb24-15"><a href="#cb24-15" aria-hidden="true" tabindex="-1"></a>) ( ... );</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<p>The body of the module is mostly mechanical. One <code>generate</code> block per pad type (<code>vdd_pads</code>, <code>vss_pads</code>, <code>iovdd_pads</code>, <code>iovss_pads</code>, <code>inputs</code>, <code>outputs</code>, <code>bidirs</code>, <code>analogs</code>) instantiates the matching IHP I/O cell, plus single instances for the clock and reset pads. Normally only the parameter counts need to be edited here.</p>
+<p>The remaining code does not need to be modified for a pinout change, since the <code>generate</code> blocks automatically instantiate the correct number of I/O cells based on the parameter values. One <code>generate</code> block per pad type (<code>vdd_pads</code>, <code>vss_pads</code>, <code>iovdd_pads</code>, <code>iovss_pads</code>, <code>inputs</code>, <code>outputs</code>, <code>bidirs</code>, <code>analogs</code>) instantiates the matching IHP I/O cell, plus single instances for the clock and reset pads. An example code snippet of the input pad generation with a <code>generate</code> block is shown below. The <code>input_PAD</code> signals are exposed as ports of the <code>chip_top</code> module and are connected to the pads of the I/O cell, while the <code>input_PAD2CORE</code> signals are connected to the internal core logic in <code>chip_core.sv</code>. The same structure, or a very similar one, applies to the other pad types.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Normally, only the parameter counts need to be edited in <code>chip_top.sv</code>. Only multi-clock and multi-reset chips would require modifications to the clock and reset pad generation, since the current template supports only one clock and one reset pad.</p>
+</div>
+</div>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>rtl/chip_top.sv (code snippet)</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb25" data-filename="rtl/chip_top.sv (code snippet)"><pre class="sourceCode systemverilog code-with-copy"><code class="sourceCode systemverilog"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="kw">generate</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">for</span> (<span class="kw">genvar</span> i = <span class="dv">0</span>; i &lt; NUM_INPUT_PADS; i++) <span class="kw">begin :</span><span class="dt"> </span><span class="kw">g_inputs</span></span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>        sg13g2_IOPadIn input_pad (</span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>            <span class="ot">`ifdef</span> USE_POWER_PINS</span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>            .iovdd (IOVDD),</span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>            .iovss (IOVSS),</span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>            .vdd   (VDD),</span>
+<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a>            .vss   (VSS),</span>
+<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a>            <span class="ot">`endif</span></span>
+<span id="cb25-10"><a href="#cb25-10" aria-hidden="true" tabindex="-1"></a>            .p2c   (input_PAD2CORE[i]),</span>
+<span id="cb25-11"><a href="#cb25-11" aria-hidden="true" tabindex="-1"></a>            .pad   (input_PAD[i])</span>
+<span id="cb25-12"><a href="#cb25-12" aria-hidden="true" tabindex="-1"></a>        );</span>
+<span id="cb25-13"><a href="#cb25-13" aria-hidden="true" tabindex="-1"></a>    <span class="kw">end</span></span>
+<span id="cb25-14"><a href="#cb25-14" aria-hidden="true" tabindex="-1"></a><span class="kw">endgenerate</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The <code>sg13g2_IOPadAnalog</code> cell exposes two internal core-side nodes per analog pad:</p>
+<ul>
+<li><code>padres</code>: path through the pad’s <strong>secondary</strong> ESD resistor</li>
+<li><code>padbare</code>: <strong>direct</strong> path to the pad metal (only primary ESD diodes)</li>
+</ul>
+<p>In this template, <code>inverter2</code> uses both paths:</p>
+<ul>
+<li><code>vin1</code>/<code>vin2</code> are connected to <code>analog_PADRES[0:1]</code> (resistor-protected input path)</li>
+<li><code>vout1</code>/<code>vout2</code> are driven onto <code>analog_PADBARE[2:3]</code> (direct output path to avoid extra RC)</li>
+</ul>
+<p>Inside <code>chip_core.sv</code>, these nets appear as the corresponding lowercase core signals <code>analog_padres[*]</code> and <code>analog_padbare[*]</code>.</p>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>rtl/chip_top.sv (code snippet)</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb26" data-filename="rtl/chip_top.sv (code snippet)"><pre class="sourceCode systemverilog code-with-copy"><code class="sourceCode systemverilog"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="kw">generate</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">for</span> (<span class="kw">genvar</span> i = <span class="dv">0</span>; i &lt; NUM_ANALOG_PADS; i++) <span class="kw">begin :</span><span class="dt"> </span><span class="kw">g_analogs</span></span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>        (* keep *)</span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>        sg13g2_IOPadAnalog analog_pad (</span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>            <span class="ot">`ifdef</span> USE_POWER_PINS</span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>            .iovdd   (IOVDD),</span>
+<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a>            .iovss   (IOVSS),</span>
+<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a>            .vdd     (VDD),</span>
+<span id="cb26-9"><a href="#cb26-9" aria-hidden="true" tabindex="-1"></a>            .vss     (VSS),</span>
+<span id="cb26-10"><a href="#cb26-10" aria-hidden="true" tabindex="-1"></a>            <span class="ot">`endif</span></span>
+<span id="cb26-11"><a href="#cb26-11" aria-hidden="true" tabindex="-1"></a>            .pad     (analog_PAD[i]),</span>
+<span id="cb26-12"><a href="#cb26-12" aria-hidden="true" tabindex="-1"></a>            .padres  (analog_PADRES[i]),</span>
+<span id="cb26-13"><a href="#cb26-13" aria-hidden="true" tabindex="-1"></a>            .padbare (analog_PADBARE[i])</span>
+<span id="cb26-14"><a href="#cb26-14" aria-hidden="true" tabindex="-1"></a>        );</span>
+<span id="cb26-15"><a href="#cb26-15" aria-hidden="true" tabindex="-1"></a>    <span class="kw">end</span></span>
+<span id="cb26-16"><a href="#cb26-16" aria-hidden="true" tabindex="-1"></a><span class="kw">endgenerate</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+</div>
 </section>
 <section id="understanding-chip_core.sv" class="level2" data-number="6.2">
 <h2 data-number="6.2" class="anchored" data-anchor-id="understanding-chip_core.sv"><span class="header-section-number">6.2</span> Understanding <code>chip_core.sv</code></h2>
-<p>The core <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/rtl/chip_core.sv"><code>chip_core.sv</code></a> is where the macros are instantiated and wired to the chip’s I/O. The <code>enable</code> signal is mapped to <code>input_PAD[0]</code>, the two <code>counter_top</code> instances share the clock and reset, the two <code>inverter_top</code> instances are wired up (one digital, one analog), and the SRAM output is XOR-reduced to a single bit on <code>output_PAD[16]</code>. The output assignments at the bottom of the file are naturally the bit-to-role mapping documented in <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/doc/pinout.md">pinout.md</a>.</p>
+<p>The core <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/rtl/chip_core.sv"><code>chip_core.sv</code></a> is where the macros are instantiated and wired to the chip’s I/O pads. The <code>enable</code> signal is mapped to <code>input_PAD[0]</code>, the two <code>counter_top</code> instances share the clock and reset, the two <code>inverter_top</code> instances are wired up (one digital, one analog), and the SRAM output is XOR-reduced to a single bit on <code>output_PAD[16]</code>. The input and output assignments at the top and bottom of the file correspond to the bit-to-role mapping documented in <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/doc/pinout.md">pinout.md</a>. For improved clarity, every assignment is written on a separate line. Advanced designers can also use bus notation for more compact code.</p>
 <div class="code-with-filename">
 <div class="code-with-filename-file">
-<pre><strong>rtl/chip_core.sv (excerpt)</strong></pre>
+<pre><strong>rtl/chip_core.sv (code snippet)</strong></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb25" data-filename="rtl/chip_core.sv (excerpt)"><pre class="sourceCode systemverilog code-with-copy"><code class="sourceCode systemverilog"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Counter 1</span></span>
-<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="kw">assign</span> output_out[<span class="dv">3</span>:<span class="dv">0</span>]  = counter1_value[<span class="dv">3</span>:<span class="dv">0</span>];</span>
-<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a><span class="co">// Counter 2</span></span>
-<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a><span class="kw">assign</span> output_out[<span class="dv">11</span>:<span class="dv">4</span>] = counter2_value;</span>
-<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a><span class="co">// Inverter 1 (digital)</span></span>
-<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a><span class="kw">assign</span> output_out[<span class="dv">12</span>]   = inv1_dout1;</span>
-<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a><span class="co">// ...</span></span>
-<span id="cb25-10"><a href="#cb25-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb25-11"><a href="#cb25-11" aria-hidden="true" tabindex="-1"></a><span class="co">// SRAM parity</span></span>
-<span id="cb25-12"><a href="#cb25-12" aria-hidden="true" tabindex="-1"></a><span class="kw">assign</span> output_out[<span class="dv">16</span>]   = ^sram_0_out;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb27" data-filename="rtl/chip_core.sv (code snippet)"><pre class="sourceCode systemverilog code-with-copy"><code class="sourceCode systemverilog"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="co">// ======================================================</span></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="co">// Input Assignments</span></span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a><span class="co">// ======================================================</span></span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a><span class="kw">logic</span> enable;</span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a><span class="kw">assign</span> enable = input_in[<span class="dv">0</span>];</span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a><span class="co">// Inverter 1</span></span>
+<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a><span class="kw">wire</span> inv1_din1 = bidir_in[<span class="dv">0</span>];</span>
+<span id="cb27-9"><a href="#cb27-9" aria-hidden="true" tabindex="-1"></a><span class="kw">wire</span> inv1_din2 = bidir_in[<span class="dv">1</span>];</span>
+<span id="cb27-10"><a href="#cb27-10" aria-hidden="true" tabindex="-1"></a><span class="kw">wire</span> inv1_din3 = bidir_in[<span class="dv">2</span>];</span>
+<span id="cb27-11"><a href="#cb27-11" aria-hidden="true" tabindex="-1"></a><span class="kw">wire</span> inv1_din4 = bidir_in[<span class="dv">3</span>];</span>
+<span id="cb27-12"><a href="#cb27-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-13"><a href="#cb27-13" aria-hidden="true" tabindex="-1"></a><span class="co">// Inverter 2</span></span>
+<span id="cb27-14"><a href="#cb27-14" aria-hidden="true" tabindex="-1"></a><span class="kw">wire</span> inv2_vin1 = analog_padres[<span class="dv">0</span>];</span>
+<span id="cb27-15"><a href="#cb27-15" aria-hidden="true" tabindex="-1"></a><span class="kw">wire</span> inv2_vin2 = analog_padres[<span class="dv">1</span>];</span>
+<span id="cb27-16"><a href="#cb27-16" aria-hidden="true" tabindex="-1"></a><span class="co">// ======================================================</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>rtl/chip_core.sv (code snippet)</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb28" data-filename="rtl/chip_core.sv (code snippet)"><pre class="sourceCode systemverilog code-with-copy"><code class="sourceCode systemverilog"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="co">// ======================================================</span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a><span class="co">// Output Assignments</span></span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a><span class="co">// ======================================================</span></span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a><span class="co">// Digital outputs</span></span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a><span class="co">// Counter 1</span></span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a><span class="kw">assign</span> output_out[<span class="dv">0</span>]  = counter1_value[<span class="dv">0</span>];</span>
+<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a><span class="kw">assign</span> output_out[<span class="dv">1</span>]  = counter1_value[<span class="dv">1</span>];</span>
+<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a><span class="kw">assign</span> output_out[<span class="dv">2</span>]  = counter1_value[<span class="dv">2</span>];</span>
+<span id="cb28-9"><a href="#cb28-9" aria-hidden="true" tabindex="-1"></a><span class="kw">assign</span> output_out[<span class="dv">3</span>]  = counter1_value[<span class="dv">3</span>];</span>
+<span id="cb28-10"><a href="#cb28-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-11"><a href="#cb28-11" aria-hidden="true" tabindex="-1"></a><span class="co">// Counter 2</span></span>
+<span id="cb28-12"><a href="#cb28-12" aria-hidden="true" tabindex="-1"></a><span class="kw">assign</span> output_out[<span class="dv">4</span>]  = counter2_value[<span class="dv">0</span>];</span>
+<span id="cb28-13"><a href="#cb28-13" aria-hidden="true" tabindex="-1"></a><span class="kw">assign</span> output_out[<span class="dv">5</span>]  = counter2_value[<span class="dv">1</span>];</span>
+<span id="cb28-14"><a href="#cb28-14" aria-hidden="true" tabindex="-1"></a><span class="kw">assign</span> output_out[<span class="dv">6</span>]  = counter2_value[<span class="dv">2</span>];</span>
+<span id="cb28-15"><a href="#cb28-15" aria-hidden="true" tabindex="-1"></a><span class="kw">assign</span> output_out[<span class="dv">7</span>]  = counter2_value[<span class="dv">3</span>];</span>
+<span id="cb28-16"><a href="#cb28-16" aria-hidden="true" tabindex="-1"></a><span class="kw">assign</span> output_out[<span class="dv">8</span>]  = counter2_value[<span class="dv">4</span>];</span>
+<span id="cb28-17"><a href="#cb28-17" aria-hidden="true" tabindex="-1"></a><span class="kw">assign</span> output_out[<span class="dv">9</span>]  = counter2_value[<span class="dv">5</span>];</span>
+<span id="cb28-18"><a href="#cb28-18" aria-hidden="true" tabindex="-1"></a><span class="kw">assign</span> output_out[<span class="dv">10</span>] = counter2_value[<span class="dv">6</span>];</span>
+<span id="cb28-19"><a href="#cb28-19" aria-hidden="true" tabindex="-1"></a><span class="kw">assign</span> output_out[<span class="dv">11</span>] = counter2_value[<span class="dv">7</span>];</span>
+<span id="cb28-20"><a href="#cb28-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-21"><a href="#cb28-21" aria-hidden="true" tabindex="-1"></a><span class="co">// Inverter 1</span></span>
+<span id="cb28-22"><a href="#cb28-22" aria-hidden="true" tabindex="-1"></a><span class="kw">assign</span> output_out[<span class="dv">12</span>] = inv1_dout1;</span>
+<span id="cb28-23"><a href="#cb28-23" aria-hidden="true" tabindex="-1"></a><span class="kw">assign</span> output_out[<span class="dv">13</span>] = inv1_dout2;</span>
+<span id="cb28-24"><a href="#cb28-24" aria-hidden="true" tabindex="-1"></a><span class="kw">assign</span> output_out[<span class="dv">14</span>] = inv1_dout3;</span>
+<span id="cb28-25"><a href="#cb28-25" aria-hidden="true" tabindex="-1"></a><span class="kw">assign</span> output_out[<span class="dv">15</span>] = inv1_dout4;</span>
+<span id="cb28-26"><a href="#cb28-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-27"><a href="#cb28-27" aria-hidden="true" tabindex="-1"></a><span class="co">// SRAM</span></span>
+<span id="cb28-28"><a href="#cb28-28" aria-hidden="true" tabindex="-1"></a><span class="co">// Reduce the 32-bit SRAM output to a single bit by computing the parity.</span></span>
+<span id="cb28-29"><a href="#cb28-29" aria-hidden="true" tabindex="-1"></a><span class="co">// output_out[16] = 1 when an odd number of bits in sram_0_out are 1.</span></span>
+<span id="cb28-30"><a href="#cb28-30" aria-hidden="true" tabindex="-1"></a><span class="co">// output_out[16] = 0 when an even number of bits in sram_0_out are 1.</span></span>
+<span id="cb28-31"><a href="#cb28-31" aria-hidden="true" tabindex="-1"></a><span class="kw">assign</span> output_out[<span class="dv">16</span>] = ^sram_0_out;</span>
+<span id="cb28-32"><a href="#cb28-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-33"><a href="#cb28-33" aria-hidden="true" tabindex="-1"></a><span class="co">// Digital bidirectionals (output side)</span></span>
+<span id="cb28-34"><a href="#cb28-34" aria-hidden="true" tabindex="-1"></a><span class="co">// Bidir output enable: drive when `enable` is high (counter visible),</span></span>
+<span id="cb28-35"><a href="#cb28-35" aria-hidden="true" tabindex="-1"></a><span class="co">// float as input when low (so external stimuli can drive inverter1).</span></span>
+<span id="cb28-36"><a href="#cb28-36" aria-hidden="true" tabindex="-1"></a><span class="kw">assign</span> bidir_out[<span class="dv">0</span>] = counter1_value[<span class="dv">4</span>];</span>
+<span id="cb28-37"><a href="#cb28-37" aria-hidden="true" tabindex="-1"></a><span class="kw">assign</span> bidir_oe[<span class="dv">0</span>]  = enable;</span>
+<span id="cb28-38"><a href="#cb28-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-39"><a href="#cb28-39" aria-hidden="true" tabindex="-1"></a><span class="kw">assign</span> bidir_out[<span class="dv">1</span>] = counter1_value[<span class="dv">5</span>];</span>
+<span id="cb28-40"><a href="#cb28-40" aria-hidden="true" tabindex="-1"></a><span class="kw">assign</span> bidir_oe[<span class="dv">1</span>]  = enable;</span>
+<span id="cb28-41"><a href="#cb28-41" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-42"><a href="#cb28-42" aria-hidden="true" tabindex="-1"></a><span class="kw">assign</span> bidir_out[<span class="dv">2</span>] = counter1_value[<span class="dv">6</span>];</span>
+<span id="cb28-43"><a href="#cb28-43" aria-hidden="true" tabindex="-1"></a><span class="kw">assign</span> bidir_oe[<span class="dv">2</span>]  = enable;</span>
+<span id="cb28-44"><a href="#cb28-44" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-45"><a href="#cb28-45" aria-hidden="true" tabindex="-1"></a><span class="kw">assign</span> bidir_out[<span class="dv">3</span>] = counter1_value[<span class="dv">7</span>];</span>
+<span id="cb28-46"><a href="#cb28-46" aria-hidden="true" tabindex="-1"></a><span class="kw">assign</span> bidir_oe[<span class="dv">3</span>]  = enable;</span>
+<span id="cb28-47"><a href="#cb28-47" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-48"><a href="#cb28-48" aria-hidden="true" tabindex="-1"></a><span class="co">// Analog outputs</span></span>
+<span id="cb28-49"><a href="#cb28-49" aria-hidden="true" tabindex="-1"></a><span class="kw">assign</span> analog_padbare[<span class="dv">2</span>] = inv2_vout1;</span>
+<span id="cb28-50"><a href="#cb28-50" aria-hidden="true" tabindex="-1"></a><span class="kw">assign</span> analog_padbare[<span class="dv">3</span>] = inv2_vout2;</span>
+<span id="cb28-51"><a href="#cb28-51" aria-hidden="true" tabindex="-1"></a><span class="co">// ======================================================</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
 <section id="understanding-config.yaml" class="level2" data-number="6.3">
 <h2 data-number="6.3" class="anchored" data-anchor-id="understanding-config.yaml"><span class="header-section-number">6.3</span> Understanding <code>config.yaml</code></h2>
-<p>The chip-level LibreLane configuration <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/flow/librelane/config.yaml"><code>config.yaml</code></a> covers four sections.</p>
+<p>The top-level LibreLane configuration <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/flow/librelane/config.yaml"><code>config.yaml</code></a> covers the following sections and references <code>pdn_cfg.tcl</code> and <code>chip_top.sdc</code>.</p>
 <ol type="1">
-<li><strong>Padframe layout.</strong> The <code>PAD_WEST</code>, <code>PAD_NORTH</code>, <code>PAD_SOUTH</code>, and <code>PAD_EAST</code> lists, in the order documented in <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/doc/pinout.md"><code>doc/pinout.md</code></a>.</li>
-<li><strong>Floorplan and timing.</strong> <code>DIE_AREA</code>, <code>CORE_AREA</code>, <code>CLOCK_PERIOD</code>, <code>FP_SIZING</code>, <code>PL_TARGET_DENSITY_PCT</code>.</li>
-<li><strong><code>MACROS:</code> block.</strong> For every macro, the GDS, LEF, Liberty libraries, power-pin connections, and placement coordinates (<code>location</code>, <code>orientation</code>).</li>
-<li><strong>PDN parameters.</strong> <code>PDN_CORE_RING</code>, ring widths and spacings, <code>PDN_MACRO_CONNECTIONS</code>, and the path to <code>pdn_cfg.tcl</code>.</li>
+<li><strong>Padframe generation.</strong> <code>PAD_WEST</code>, <code>PAD_NORTH</code>, <code>PAD_SOUTH</code>, and <code>PAD_EAST</code>, in the order documented in <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/doc/pinout.md"><code>doc/pinout.md</code></a>.</li>
+<li><strong>PDN core ring.</strong> <code>PDN_CORE_RING</code>, <code>PDN_CORE_RING_VWIDTH</code>, <code>PDN_CORE_RING_HWIDTH</code>, <code>PDN_CORE_RING_VSPACING</code>, and <code>PDN_CORE_RING_HSPACING</code>.</li>
+<li><strong>Clock settings.</strong> <code>CLOCK_PORT</code>, <code>CLOCK_NET</code>, and <code>CLOCK_PERIOD</code>.</li>
+<li><strong>STA corners.</strong></li>
 </ol>
-<p>For floorplan changes (moving macros, changing the die size, adding new macros), the <code>MACROS:</code> section is the one to edit. The rectangular constraints documented in <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/doc/floorplan.md"><code>doc/floorplan.md</code></a> apply. Stay inside the core, respect the M3 routing grid for inverters, and never overlap with another macro rectangle.</p>
+<ul>
+<li><code>nom_fast_1p32V_m40C</code></li>
+<li><code>nom_fast_1p65V_m40C</code></li>
+<li><code>nom_slow_1p08V_125C</code></li>
+<li><code>nom_slow_1p35V_125C</code></li>
+<li><code>nom_typ_1p20V_25C</code></li>
+<li><code>nom_typ_1p50V_25C</code></li>
+</ul>
+<ol start="5" type="1">
+<li><strong>Non-default routing rules.</strong> <code>NON_DEFAULT_RULES</code>, <code>DRT_ASSIGN_NDR</code>, and <code>RSZ_DONT_TOUCH_LIST</code>.</li>
+<li><strong>Macro, bondpad, and logo placement.</strong> <code>MACROS</code> with per-macro files and placement (<code>location</code>, <code>orientation</code>), plus top-level bondpad and logo placement settings, together with chip area and placement constraints (<code>DIE_AREA</code>, <code>CORE_AREA</code>, <code>FP_SIZING</code>, <code>PL_TARGET_DENSITY_PCT</code>).</li>
+</ol>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The <code>NON_DEFAULT_RULES</code> section defines a dedicated routing rule for the analog traces of <code>inverter2</code> (<code>PADRES</code> and <code>PADBARE</code>). In this template, <code>NDR_analog</code> sets a wider wire width and larger spacing for the selected metals and vias, which helps reduce coupling and preserve analog signal quality.</p>
+<p>The <code>DRT_ASSIGN_NDR</code> section applies this rule during detailed routing by matching net names with regular expressions (<code>^.*PADRES.*$</code> and <code>^.*PADBARE.*$</code>). The <code>RSZ_DONT_TOUCH_LIST</code> then protects the same analog nets from resizing, buffering, or other optimization steps, so the routed analog paths remain unchanged.</p>
+</div>
+</div>
 </section>
 <section id="understanding-pdn_cfg.tcl" class="level2" data-number="6.4">
 <h2 data-number="6.4" class="anchored" data-anchor-id="understanding-pdn_cfg.tcl"><span class="header-section-number">6.4</span> Understanding <code>pdn_cfg.tcl</code></h2>
-<p><a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/flow/librelane/pdn_cfg.tcl"><code>pdn_cfg.tcl</code></a> is the OpenROAD callback that builds the power-distribution network. Most of the file is generic boilerplate from LibreLane and OpenLane.</p>
-<p>For macro changes, the bottom of the file is the relevant part. It defines per-instance PDN grids and macro connects. The current chip provides the following.</p>
+<p><a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/flow/librelane/pdn_cfg.tcl"><code>pdn_cfg.tcl</code></a> is the OpenROAD callback that builds the power-distribution network (PDN). Most of the file follows the standard structure provided by LibreLane and OpenLane.</p>
+<p>For macro changes, the bottom of the file is the relevant part. It defines per-instance PDN grids and macro connections. The current chip provides the following.</p>
 <ul>
-<li>A default macro grid (TM2 to TM1) used by the two counters.</li>
-<li>A custom grid for <code>inverter1</code> and <code>inverter2</code> (TM2 to TM1 and TM2 to Metal5, because each inverter macro has its own internal M5 / TM1 ring).</li>
-<li>A custom grid for <code>sram_0</code> (Metal5 stripes bridged to Metal4 and TopMetal1, because the SRAM exposes its supplies on M4 and M5).</li>
+<li>A default macro grid (<code>TopMetal2</code> to <code>TopMetal1</code>) used by the two counters.</li>
+<li>A custom grid for <code>inverter1</code> and <code>inverter2</code> (<code>TopMetal2</code> to <code>TopMetal1</code> and <code>TopMetal2</code> to <code>Metal5</code>, because each inverter macro has its own internal <code>Metal5</code> / <code>TopMetal1</code> ring).</li>
+<li>A custom grid for <code>sram_0</code> (<code>Metal5</code> stripes bridged to <code>Metal4</code> and <code>TopMetal1</code>, because the SRAM exposes its supplies on <code>Metal4</code> and <code>Metal5</code>).</li>
 </ul>
-<p>When new macros are added, the matching <code>define_pdn_grid</code> plus <code>add_pdn_connect</code> block at the bottom has to be extended (or the default grid is used if the macro layers line up with the chip-level grid).</p>
+<p>When new macros are added, the matching <code>define_pdn_grid</code> plus <code>add_pdn_connect</code> block at the bottom must be extended (or the default grid is used if the macro layers line up with the top-level grid).</p>
 </section>
 <section id="top-level-simulation" class="level2" data-number="6.5">
 <h2 data-number="6.5" class="anchored" data-anchor-id="top-level-simulation"><span class="header-section-number">6.5</span> Top-Level Simulation</h2>
 <p>The same RTL and gate-level cocotb flow as in <a href="#sec-digital" class="quarto-xref">Section&nbsp;4</a> is available at chip level.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb26"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> sim-rtl-cocotb</span>
-<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> sim-gl-cocotb</span>
-<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> sim-view-cocotb                                <span class="co"># GTKWave</span></span>
-<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> sim-view-cocotb WAVEFORM_VIEWER=surfer         <span class="co"># Surfer</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb29"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> sim-rtl-cocotb</span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> sim-gl-cocotb</span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> sim-view-cocotb                                <span class="co"># GTKWave</span></span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> sim-view-cocotb WAVEFORM_VIEWER=surfer         <span class="co"># Surfer</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>The cocotb testbench at chip level is <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/testbenches/cocotb/chip_top_tb.py"><code>testbenches/cocotb/chip_top_tb.py</code></a>, and it covers the global enable, reset, counters, and bidir behaviour documented in <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/doc/specifications.md">specifications.md</a>.</p>
 <div id="fig-chip-top-cocotb-gtkwave" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
@@ -2090,8 +2251,8 @@ Figure&nbsp;21: <code>chip_top</code> cocotb waveform in GTKWave.
 </figure>
 </div>
 <p>For mixed-signal sign-off, the <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/testbenches/xschem/"><code>testbenches/xschem/chip_top_tb_tran.sch</code></a> testbench exists and can be opened in Xschem the same way as for the counter or the inverter.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb27"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> testbenches/xschem</span>
-<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="ex">xschem</span> chip_top_tb_tran.sch</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb30"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> testbenches/xschem</span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a><span class="ex">xschem</span> chip_top_tb_tran.sch</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -2183,16 +2344,16 @@ Figure&nbsp;27: Xschem schematic of <code>chip_top</code>, showing the connectio
 <section id="building-the-chip" class="level2" data-number="6.6">
 <h2 data-number="6.6" class="anchored" data-anchor-id="building-the-chip"><span class="header-section-number">6.6</span> Building the Chip</h2>
 <p>When the floorplan and pinout are settled, the chip can be built from scratch with the following command.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb28"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> build-all</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb31"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> build-all</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>This runs the steps in order, <code>init-submodules</code>, <code>build-bondpad</code>, <code>build-logos</code>, <code>build-macros</code>, and <code>build-top</code>. It is the right starting point on a fresh machine after cloning the repository and entering the IIC-OSIC-TOOLS container.</p>
 <p>To re-run only the top-level flow (for example after a change in <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/flow/librelane/config.yaml"><code>config.yaml</code></a> or <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/rtl/chip_core.sv"><code>chip_core.sv</code></a>), without rebuilding the bondpad, logos, or macros, run the following command.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb29"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> build-top</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb32"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> build-top</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Internally, <code>build-top</code> chains <code>librelane-nodrc</code>, <code>copy-reports</code>, <code>copy-gds</code>, <code>copy-netlist</code>, <code>copy-render</code>, <code>add-logo-fill</code>, and <code>render-gds</code>. The final GDS is written to <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/layout/"><code>layout/chip_top_logo_fill.gds.gz</code></a>.</p>
 </section>
 <section id="viewing-the-chip" class="level2" data-number="6.7">
 <h2 data-number="6.7" class="anchored" data-anchor-id="viewing-the-chip"><span class="header-section-number">6.7</span> Viewing the Chip</h2>
 <p>After a successful build, the chip can be opened with KLayout.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb30"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="ex">ke</span> layout/chip_top_logo_fill.gds.gz   <span class="co"># KLayout edit mode</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb33"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="ex">ke</span> layout/chip_top_logo_fill.gds.gz   <span class="co"># KLayout edit mode</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>The render generated by <code>lay2img.py</code> is in <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/render/img/"><code>render/img/</code></a>. The sign-off reports (Yosys, antenna, STA, IR-drop, LVS, manufacturability) are in <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/verification/reports/"><code>verification/reports/</code></a>.</p>
 <div id="fig-chip-top-layout" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
@@ -2220,15 +2381,15 @@ Figure&nbsp;29: <code>chip_top_logo_fill</code> layout in KLayout with only TopM
 <p>DRC, LVS, and PEX are also available at chip level.</p>
 <section id="drc" class="level3" data-number="6.8.1">
 <h3 data-number="6.8.1" class="anchored" data-anchor-id="drc"><span class="header-section-number">6.8.1</span> DRC</h3>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb31"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> magic-drc CELL=chip_top              <span class="co"># Magic DRC on the bare chip</span></span>
-<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> magic-drc CELL=chip_top_logo_fill    <span class="co"># Magic DRC including logo + filler</span></span>
-<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> klayout-drc-minimum                  <span class="co"># fast pre-check KLayout DRC</span></span>
-<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> klayout-drc-regular                  <span class="co"># full KLayout DRC (slower)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb34"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> magic-drc CELL=chip_top              <span class="co"># Magic DRC on the bare chip</span></span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> magic-drc CELL=chip_top_logo_fill    <span class="co"># Magic DRC including logo + filler</span></span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> klayout-drc-minimum                  <span class="co"># fast pre-check KLayout DRC</span></span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> klayout-drc-regular                  <span class="co"># full KLayout DRC (slower)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><code>klayout-drc-minimum</code> is a quick pre-check on the final top-level layout including the logo and the fill structures. <code>klayout-drc-regular</code> does the full check, but takes longer.</p>
 </section>
 <section id="pex" class="level3" data-number="6.8.2">
 <h3 data-number="6.8.2" class="anchored" data-anchor-id="pex"><span class="header-section-number">6.8.2</span> PEX</h3>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb32"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> magic-pex CELL=chip_top              <span class="co"># only chip_top, default EXT_MODE=1</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb35"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> magic-pex CELL=chip_top              <span class="co"># only chip_top, default EXT_MODE=1</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="callout callout-style-default callout-tip callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -2245,7 +2406,7 @@ Tip
 </section>
 <section id="lvs" class="level3" data-number="6.8.3">
 <h3 data-number="6.8.3" class="anchored" data-anchor-id="lvs"><span class="header-section-number">6.8.3</span> LVS</h3>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb33"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> magic-lvs                            <span class="co"># top-level Magic + Netgen LVS</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb36"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> magic-lvs                            <span class="co"># top-level Magic + Netgen LVS</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="callout callout-style-default callout-warning callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -2264,13 +2425,13 @@ Warning
 <section id="full-pass" class="level2" data-number="6.9">
 <h2 data-number="6.9" class="anchored" data-anchor-id="full-pass"><span class="header-section-number">6.9</span> Full Pass</h2>
 <p>The comprehensive simulation, build, and DRC pass for the complete chip is run with the following command.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb34"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> all</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb37"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> all</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>This calls <code>sim-all</code> (RTL/GL cocotb, GL Xschem when available), then <code>build-all</code>, then Magic DRC on both <code>chip_top</code> and <code>chip_top_logo_fill</code>. Depending on the host hardware, this can take a while.</p>
 </section>
 <section id="releasing-for-tapeout" class="level2" data-number="6.10">
 <h2 data-number="6.10" class="anchored" data-anchor-id="releasing-for-tapeout"><span class="header-section-number">6.10</span> Releasing for Tapeout</h2>
 <p>When the chip is clean, the <code>release</code> target copies the GDS, the netlists, and the renders into a versioned folder for tapeout submission.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb35"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> release VERSION=2.1.0</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb38"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> release VERSION=2.1.0</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>The artifacts are written to <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/release/"><code>release/v.2.1.0/</code></a> (<code>gds/</code>, <code>netlist/{layout,pnl,spice}/</code>, <code>img/</code>).</p>
 <div class="callout callout-style-default callout-important callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -2336,7 +2497,7 @@ Important
 <li>Delete <code>counter2</code> and rewire all eight south-side pads to the new 16-bit <code>counter1</code> value.</li>
 <li>Update the parameters of <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/rtl/chip_top.sv"><code>chip_top.sv</code></a> so that <code>NUM_OUTPUT_PADS</code>, <code>NUM_BIDIR_PADS</code>, <code>NUM_ANALOG_PADS</code>, and <code>NUM_VSS_PADS</code> match the new pin count (see <a href="#sec-top" class="quarto-xref">Section&nbsp;6</a>).</li>
 <li>Update the macro instantiation and wiring in <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/rtl/chip_core.sv"><code>chip_core.sv</code></a>.</li>
-<li>Update the placement coordinates in the <code>MACROS:</code> block of <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/flow/librelane/config.yaml"><code>config.yaml</code></a>. Keep the <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/doc/floorplan.md"><code>doc/floorplan.md</code></a> constraints in mind, namely stay in the core, no overlaps, and respect the M3 grid for inverter-like macros.</li>
+<li>Update the placement coordinates in the <code>MACROS</code> block of <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/flow/librelane/config.yaml"><code>config.yaml</code></a>. Keep the <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/doc/floorplan.md"><code>doc/floorplan.md</code></a> constraints in mind, namely stay in the core, no overlaps, and respect the <code>Metal3</code> grid for inverter-like macros.</li>
 <li>Update the PAD lists (<code>PAD_WEST</code>, <code>PAD_NORTH</code>, <code>PAD_SOUTH</code>, <code>PAD_EAST</code>) in <code>config.yaml</code> to match the new pinout.</li>
 <li>Update <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/flow/librelane/pdn_cfg.tcl"><code>pdn_cfg.tcl</code></a> so that the new macros are covered by the correct PDN grid (default for digital, <code>inverter_top</code>-style for analog).</li>
 <li>Rebuild the chip from scratch with <code>make build-all</code>, then verify with <code>make magic-drc CELL=chip_top</code> and <code>make klayout-drc-minimum</code>.</li>
