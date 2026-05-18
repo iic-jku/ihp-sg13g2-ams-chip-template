@@ -607,7 +607,7 @@ With these final widths the notebook computes the small-signal parameters listed
 
 : Calculated small-signal parameters with final widths. {#tbl-inverter-sizing-ss}
 
-From these values, the open-loop gain $A_\mathrm{ol}$, the output resistance $R_\mathrm{out}$, the open-loop cut-off frequency $f_\mathrm{cu}$, and the unity-gain frequency $f_\mathrm{T}$ with a dominant capacitive load $C_\mathrm{load} = 10\,\mathrm{pF}$ can be estimated as
+From these values, the open-loop dc gain $A_\mathrm{ol}$, the output resistance $R_\mathrm{out}$, the open-loop cut-off frequency $f_\mathrm{cu}$, and the unity-gain frequency $f_\mathrm{T}$ with a dominant capacitive load $C_\mathrm{load} = 10\,\mathrm{pF}$ can be estimated as
 
 $$
 |A_\mathrm{ol}| = \frac{g_\mathrm{m,tot}}{g_\mathrm{ds,tot}} = \frac{6.28\,\mathrm{mS}}{145\,\mathrm{\upmu S}} = 43.2 = 32.72\,\mathrm{dB},
@@ -629,8 +629,8 @@ $$
 
 | Quantity                  | $g_\mathrm{m}/I_\mathrm{D}$ calculation | ac open-loop simulation |
 | :------------------------ | :-------------------------------------: | :---------------------: |
-| Open-loop gain $A_\mathrm{ol}$ | $32.72\,\mathrm{dB}$                | $31.33\,\mathrm{dB}$   |
-| Dominant pole $f_\mathrm{c}$   | $2.31\,\mathrm{MHz}$                | $2.89\,\mathrm{MHz}$   |
+| Open-loop dc gain $A_\mathrm{ol}$ | $32.72\,\mathrm{dB}$                | $31.33\,\mathrm{dB}$   |
+| Open-loop cut-off frequency $f_\mathrm{cu}$   | $2.31\,\mathrm{MHz}$                | $2.89\,\mathrm{MHz}$   |
 | Unity-gain frequency $f_\mathrm{T}$ | $100\,\mathrm{MHz}$            | $107\,\mathrm{MHz}$    |
 
 : Calculated vs. simulated open-loop characteristics of the inverter. {#tbl-inverter-sizing-vs-ac}
@@ -655,61 +655,75 @@ After modifying the layout, export a clean `.gds` file (for example `inverter_to
 
 ## DRC, LVS, and PEX
 
-The inverter macro can be verified with two sign-off paths, KLayout and
-Magic + Netgen. Each path covers DRC, LVS, and PEX.
+The inverter macro can be verified with two verification flows, either with KLayout or with Magic + Netgen. Each flow covers DRC, LVS, and PEX. Magic + Netgen provides only non-interactive command-line flows, while KLayout also has interactive GUI-based DRC and LVS.
 
 ### Design Rule Check
 
+The non-interactive DRC can be run with the following Makefile targets. The `CELL` variable can be set to run DRC on a specific cell, or it defaults to `inverter_top` if not set.
+
 ```sh
-make klayout-drc          # KLayout DRC (FEOL, density, extra rules disabled)
-make magic-drc            # Magic DRC via sak-drc.sh
+make klayout-drc [CELL=<cellname>]  # default CELL=inverter_top
+make magic-drc [CELL=<cellname>]    # default CELL=inverter_top
 ```
 
-Reports are saved to
-[`verification/drc/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/inverter/verification/drc/).
+Reports are saved to [`verification/drc/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/inverter/verification/drc/).
+
+::: {.callout-tip}
+In KLayout, a non-interactive DRC run can be launched from the GUI by pressing **`F9`**. The DRC options can be modified by pressing **`F10`**.
+
+![KLayout DRC output windows.](fig/inverter_top/KLayout_DRC_Output.png){width=100%}
+:::
 
 ### Layout-Versus-Schematic
 
+The non-interactive LVS can be run with the following Makefile targets. The `CELL` variable can be set to run LVS on a specific cell, or it defaults to `inverter_top` if not set.
+
 ```sh
-make klayout-lvs          # uses CDL netlist exported from Xschem
-make magic-lvs            # uses SPICE netlist exported from Xschem
+make klayout-lvs [CELL=<cellname>]  # default CELL=inverter_top, uses CDL netlist exported from Xschem
+make magic-lvs [CELL=<cellname>]    # default CELL=inverter_top, uses SPICE netlist exported from Xschem
 ```
 
-The schematic netlist is exported automatically by the matching
-`*-lvs-netlist` sub-target. Reports are saved to
-[`verification/lvs/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/inverter/verification/lvs/), and the
-extracted layout netlist is moved to
-[`netlist/layout/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/inverter/netlist/layout/).
+The schematic netlist is exported automatically by the matching `*-lvs-netlist` sub-target and moved to [`netlist/schematic/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/inverter/netlist/schematic/). The extracted layout netlist is moved to
+[`netlist/layout/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/inverter/netlist/layout/) and the reports are saved to [`verification/lvs/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/inverter/verification/lvs/).
+
+::: {.callout-tip}
+In KLayout, a non-interactive LVS run can be launched from the GUI by pressing **`F11`**. The LVS options can be modified by pressing **`F12`**, where the schematic netlist `inverter_top_klayout.cdl` has to be selected manually. Set `deep` as the run mode.
+
+![KLayout LVS output windows.](fig/inverter_top/KLayout_LVS_Output.png){width=100%}
+:::
 
 ### Parasitic Extraction
 
+The non-interactive PEX can be run with the following Makefile targets. The `CELL` variable can be set to run PEX on a specific cell, or it defaults to `inverter_top` if not set. The `EXT_MODE` variable can be set to choose between different extraction modes,
+
+- `EXT_MODE=1` for C-decoupled mode,
+- `EXT_MODE=2` for C-coupled mode,
+- `EXT_MODE=3` for full-RC extraction.
+
+If not set, it defaults to `EXT_MODE=3`.
+
 ```sh
-make klayout-pex                    # default EXT_MODE=3 (full-RC)
-make magic-pex EXT_MODE=2           # CC mode
+make klayout-pex [CELL=<cellname>] [EXT_MODE=<1|2|3>]         # default CELL=inverter_top, default EXT_MODE=3 (full-RC)
+make magic-pex [CELL=<cellname>] [EXT_MODE=<1|2|3>]           # default CELL=inverter_top, default EXT_MODE=2 (CC mode)
 ```
 
-PEX writes a SPICE netlist into
-[`netlist/pex/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/inverter/netlist/pex/). The subcircuit name
-is renamed to `<CELL>_pex`, and the pin order is rearranged to match
-the Xschem PEX symbol
-([`inverter_top_pex.sym`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/inverter/schematic/xschem/inverter_top_pex.sym)).
+PEX writes a SPICE netlist into [`netlist/pex/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/inverter/netlist/pex/). The subcircuit name is renamed to `<CELL>_pex`, and the pin order is rearranged to match the Xschem PEX symbol ([`inverter_top_pex.sym`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/inverter/schematic/xschem/inverter_top_pex.sym)).
 
 ::: {.callout-tip}
-## Post-layout simulation
-
-Open one of the Xschem testbenches and swap the original symbol with
-the PEX symbol to use the extracted netlist in the same testbench.
-This is the recommended way to compare schematic-only and post-layout
-simulation results.
+To run a post-layout simulation, open one of the Xschem testbenches and swap the original symbol with the PEX symbol and include the path to the SPICE netlist to use the extracted netlist in the same testbench. This is the recommended way to compare schematic-only and post-layout simulation results.
 :::
 
-### Run Everything at Once
+::: {.callout-note}
+Note that [KLayout-PEX (KPEX)](https://github.com/iic-jku/klayout-pex) is currently under development and therefore the Magic engine is used internally for the actual extraction.
+:::
 
-The verify targets bundle LVS, DRC, and PEX in one command.
+### Run Full Verification Flow at Once
+
+If you want to run the full verification flow at once, the verify targets bundle LVS, DRC, and PEX in one command.
 
 ```sh
-make klayout-verify         # CELL defaults to inverter_top
-make magic-verify
+make klayout-verify [CELL=<cellname>]   # default CELL=inverter_top
+make magic-verify [CELL=<cellname>]     # default CELL=inverter_top
 ```
 
 ## Build Deliverables for Top-Level Integration
