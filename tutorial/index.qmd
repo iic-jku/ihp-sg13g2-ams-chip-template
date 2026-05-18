@@ -752,20 +752,20 @@ This calls `sim-all` (Xschem + CACE), `klayout-verify-all`, `magic-verify-all`, 
 
 # Top-Level Implementation {#sec-top}
 
-This section covers the chip-level assembly. The top-level files that need to be understood (and, if needed, modified for a new chip) are:
+This section covers the top-level assembly and padframe generation. The top-level files that need to be understood and modified for a new chip are:
 
-- [`rtl/chip_top.sv`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/rtl/chip_top.sv), the padframe wrapper. It instantiates one I/O cell per pad and exposes the global `clk_PAD`, `rst_n_PAD`, `input_PAD`, `output_PAD`, `bidir_PAD`, and `analog_PAD` buses.
-- [`rtl/chip_core.sv`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/rtl/chip_core.sv), the core logic. It instantiates the digital and analog macros (`counter1`, `counter2`, `inverter1`, `inverter2`, `sram_0`) and wires them to the I/O bus.
-- [`flow/librelane/config.yaml`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/flow/librelane/config.yaml), the top-level LibreLane configuration. It defines the padframe order (`PAD_WEST`, `PAD_NORTH`, `PAD_SOUTH`, `PAD_EAST`), `DIE_AREA`, `CORE_AREA`, `CLOCK_PERIOD`, the macro list (`MACROS:`), non-default routing rules, PDN parameters, and STA corners.
-- [`flow/librelane/pdn_cfg.tcl`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/flow/librelane/pdn_cfg.tcl), the Tcl callback that builds the OpenROAD PDN. The bottom of the file contains the custom PDN connects for `inverter1`, `inverter2`, and `sram_0`. This is the part that has to be touched when adding new macros.
+- [`rtl/chip_top.sv`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/rtl/chip_top.sv), the padframe wrapper. It instantiates one I/O cell per pad and exposes the global `clk_PAD`, `rst_n_PAD`, `input_PAD`, `output_PAD`, `bidir_PAD`, and `analog_PAD` signals.
+- [`rtl/chip_core.sv`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/rtl/chip_core.sv), the core logic. It instantiates the digital and analog macros (`counter1`, `counter2`, `inverter1`, `inverter2`, `sram_0`) and wires them together and to the I/O pads.
+- [`flow/librelane/config.yaml`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/flow/librelane/config.yaml), the top-level LibreLane configuration. It defines the padframe order (`PAD_WEST`, `PAD_NORTH`, `PAD_SOUTH`, `PAD_EAST`), the chip area (`DIE_AREA`, `CORE_AREA`), the PDN core ring (`PDN_CORE_RING_VWIDTH`, `PDN_CORE_RING_HWIDTH`, `PDN_CORE_RING_VSPACING` and `PDN_CORE_RING_HSPACING`), the clock settings (`CLOCK_PORT`, `CLOCK_NET` and `CLOCK_PERIOD`), the macro list (`MACROS`), the bondpads, the logos, non-default routing rules (`NON_DEFAULT_RULES`, `DRT_ASSIGN_NDR`, and `RSZ_DONT_TOUCH_LIST`), STA corners, and references to `pdn_cfg.tcl` and `chip_top.sdc`.
+- [`flow/librelane/pdn_cfg.tcl`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/flow/librelane/pdn_cfg.tcl), the Tcl script that builds the OpenROAD PDN. The bottom of the file contains the custom PDN connects for `inverter1`, `inverter2`, and `sram_0`. This is the part that has to be touched when adding new macros.
 - [`flow/librelane/chip_top.sdc`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/flow/librelane/chip_top.sdc), timing constraints (clock period, input/output delays).
-- Reference documentation, [specifications.md](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/doc/specifications.md), [pinout.md](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/doc/pinout.md), and [floorplan.md](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/doc/floorplan.md).
+- Reference documentation for the chip, [specifications.md](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/doc/specifications.md), [pinout.md](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/doc/pinout.md), and [floorplan.md](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/doc/floorplan.md).
 
 ## Understanding `chip_top.sv`
 
-The padframe wrapper [`chip_top.sv`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/rtl/chip_top.sv) declares the chip's parameters and ports. The parameter block at the top of the module controls the number of pads of each type, and is the place to change when the pinout changes.
+The padframe wrapper [`chip_top.sv`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/rtl/chip_top.sv) declares the chip's parameters and ports. The parameter block at the top of the module controls the number of pads of each type and is the place to update when the pinout changes.
 
-```{.systemverilog filename="rtl/chip_top.sv (excerpt)"}
+```{.systemverilog filename="rtl/chip_top.sv (code snippet)"}
 module chip_top #(
     // Power / ground pads for digital core / analog front-end
     parameter int unsigned NUM_VDD_PADS    = 1,
@@ -783,49 +783,173 @@ module chip_top #(
 ) ( ... );
 ```
 
-The body of the module is mostly mechanical. One `generate` block per pad type (`vdd_pads`, `vss_pads`, `iovdd_pads`, `iovss_pads`, `inputs`, `outputs`, `bidirs`, `analogs`) instantiates the matching IHP I/O cell, plus single instances for the clock and reset pads. Normally only the parameter counts need to be edited here.
+The remaining code does not need to be modified for a pinout change, since the `generate` blocks automatically instantiate the correct number of I/O cells based on the parameter values. One `generate` block per pad type (`vdd_pads`, `vss_pads`, `iovdd_pads`, `iovss_pads`, `inputs`, `outputs`, `bidirs`, `analogs`) instantiates the matching IHP I/O cell, plus single instances for the clock and reset pads. An example code snippet of the input pad generation with a `generate` block is shown below. The `input_PAD` signals are exposed as ports of the `chip_top` module and are connected to the pads of the I/O cell, while the `input_PAD2CORE` signals are connected to the internal core logic in `chip_core.sv`. The same structure, or a very similar one, applies to the other pad types.
+
+::: {.callout-note}
+Normally, only the parameter counts need to be edited in `chip_top.sv`. Only multi-clock and multi-reset chips would require modifications to the clock and reset pad generation, since the current template supports only one clock and one reset pad.
+:::
+
+```{.systemverilog filename="rtl/chip_top.sv (code snippet)"}
+generate
+    for (genvar i = 0; i < NUM_INPUT_PADS; i++) begin : g_inputs
+        sg13g2_IOPadIn input_pad (
+            `ifdef USE_POWER_PINS
+            .iovdd (IOVDD),
+            .iovss (IOVSS),
+            .vdd   (VDD),
+            .vss   (VSS),
+            `endif
+            .p2c   (input_PAD2CORE[i]),
+            .pad   (input_PAD[i])
+        );
+    end
+endgenerate
+```
+
+::: {.callout-note}
+The `sg13g2_IOPadAnalog` cell exposes two internal core-side nodes per analog pad:
+
+- `padres`: path through the pad's **secondary** ESD resistor
+- `padbare`: **direct** path to the pad metal (only primary ESD diodes)
+
+In this template, `inverter2` uses both paths:
+
+- `vin1`/`vin2` are connected to `analog_PADRES[0:1]` (resistor-protected input path)
+- `vout1`/`vout2` are driven onto `analog_PADBARE[2:3]` (direct output path to avoid extra RC)
+
+Inside `chip_core.sv`, these nets appear as the corresponding lowercase core signals `analog_padres[*]` and `analog_padbare[*]`.
+
+```{.systemverilog filename="rtl/chip_top.sv (code snippet)"}
+generate
+    for (genvar i = 0; i < NUM_ANALOG_PADS; i++) begin : g_analogs
+        (* keep *)
+        sg13g2_IOPadAnalog analog_pad (
+            `ifdef USE_POWER_PINS
+            .iovdd   (IOVDD),
+            .iovss   (IOVSS),
+            .vdd     (VDD),
+            .vss     (VSS),
+            `endif
+            .pad     (analog_PAD[i]),
+            .padres  (analog_PADRES[i]),
+            .padbare (analog_PADBARE[i])
+        );
+    end
+endgenerate
+```
+:::
 
 ## Understanding `chip_core.sv`
 
-The core [`chip_core.sv`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/rtl/chip_core.sv) is where the macros are instantiated and wired to the chip's I/O. The `enable` signal is mapped to `input_PAD[0]`, the two `counter_top` instances share the clock and reset, the two `inverter_top` instances are wired up (one digital, one analog), and the SRAM output is XOR-reduced to a single bit on `output_PAD[16]`. The output assignments at the bottom of the file are naturally the bit-to-role mapping documented in [pinout.md](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/doc/pinout.md).
+The core [`chip_core.sv`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/rtl/chip_core.sv) is where the macros are instantiated and wired to the chip's I/O pads. The `enable` signal is mapped to `input_PAD[0]`, the two `counter_top` instances share the clock and reset, the two `inverter_top` instances are wired up (one digital, one analog), and the SRAM output is XOR-reduced to a single bit on `output_PAD[16]`. The input and output assignments at the top and bottom of the file correspond to the bit-to-role mapping documented in [pinout.md](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/doc/pinout.md). For improved clarity, every assignment is written on a separate line. Advanced designers can also use bus notation for more compact code.
 
-```{.systemverilog filename="rtl/chip_core.sv (excerpt)"}
+```{.systemverilog filename="rtl/chip_core.sv (code snippet)"}
+// ======================================================
+// Input Assignments
+// ======================================================
+logic enable;
+assign enable = input_in[0];
+
+// Inverter 1
+wire inv1_din1 = bidir_in[0];
+wire inv1_din2 = bidir_in[1];
+wire inv1_din3 = bidir_in[2];
+wire inv1_din4 = bidir_in[3];
+
+// Inverter 2
+wire inv2_vin1 = analog_padres[0];
+wire inv2_vin2 = analog_padres[1];
+// ======================================================
+```
+
+```{.systemverilog filename="rtl/chip_core.sv (code snippet)"}
+// ======================================================
+// Output Assignments
+// ======================================================
+// Digital outputs
 // Counter 1
-assign output_out[3:0]  = counter1_value[3:0];
+assign output_out[0]  = counter1_value[0];
+assign output_out[1]  = counter1_value[1];
+assign output_out[2]  = counter1_value[2];
+assign output_out[3]  = counter1_value[3];
 
 // Counter 2
-assign output_out[11:4] = counter2_value;
+assign output_out[4]  = counter2_value[0];
+assign output_out[5]  = counter2_value[1];
+assign output_out[6]  = counter2_value[2];
+assign output_out[7]  = counter2_value[3];
+assign output_out[8]  = counter2_value[4];
+assign output_out[9]  = counter2_value[5];
+assign output_out[10] = counter2_value[6];
+assign output_out[11] = counter2_value[7];
 
-// Inverter 1 (digital)
-assign output_out[12]   = inv1_dout1;
-// ...
+// Inverter 1
+assign output_out[12] = inv1_dout1;
+assign output_out[13] = inv1_dout2;
+assign output_out[14] = inv1_dout3;
+assign output_out[15] = inv1_dout4;
 
-// SRAM parity
-assign output_out[16]   = ^sram_0_out;
+// SRAM
+// Reduce the 32-bit SRAM output to a single bit by computing the parity.
+// output_out[16] = 1 when an odd number of bits in sram_0_out are 1.
+// output_out[16] = 0 when an even number of bits in sram_0_out are 1.
+assign output_out[16] = ^sram_0_out;
+
+// Digital bidirectionals (output side)
+// Bidir output enable: drive when `enable` is high (counter visible),
+// float as input when low (so external stimuli can drive inverter1).
+assign bidir_out[0] = counter1_value[4];
+assign bidir_oe[0]  = enable;
+
+assign bidir_out[1] = counter1_value[5];
+assign bidir_oe[1]  = enable;
+
+assign bidir_out[2] = counter1_value[6];
+assign bidir_oe[2]  = enable;
+
+assign bidir_out[3] = counter1_value[7];
+assign bidir_oe[3]  = enable;
+
+// Analog outputs
+assign analog_padbare[2] = inv2_vout1;
+assign analog_padbare[3] = inv2_vout2;
+// ======================================================
 ```
 
 ## Understanding `config.yaml`
 
-The chip-level LibreLane configuration [`config.yaml`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/flow/librelane/config.yaml) covers four sections.
+The top-level LibreLane configuration [`config.yaml`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/flow/librelane/config.yaml) covers the following sections and references `pdn_cfg.tcl` and `chip_top.sdc`.
 
-1. **Padframe layout.** The `PAD_WEST`, `PAD_NORTH`, `PAD_SOUTH`, and `PAD_EAST` lists, in the order documented in [`doc/pinout.md`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/doc/pinout.md).
-2. **Floorplan and timing.** `DIE_AREA`, `CORE_AREA`, `CLOCK_PERIOD`, `FP_SIZING`, `PL_TARGET_DENSITY_PCT`.
-3. **`MACROS:` block.** For every macro, the GDS, LEF, Liberty libraries, power-pin connections, and placement coordinates (`location`, `orientation`).
-4. **PDN parameters.** `PDN_CORE_RING`, ring widths and spacings, `PDN_MACRO_CONNECTIONS`, and the path to `pdn_cfg.tcl`.
+1. **Padframe generation.** `PAD_WEST`, `PAD_NORTH`, `PAD_SOUTH`, and `PAD_EAST`, in the order documented in [`doc/pinout.md`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/doc/pinout.md).
+2. **PDN core ring.** `PDN_CORE_RING`, `PDN_CORE_RING_VWIDTH`, `PDN_CORE_RING_HWIDTH`, `PDN_CORE_RING_VSPACING`, and `PDN_CORE_RING_HSPACING`.
+3. **Clock settings.** `CLOCK_PORT`, `CLOCK_NET`, and `CLOCK_PERIOD`.
+4. **STA corners.**
+  - `nom_fast_1p32V_m40C`
+  - `nom_fast_1p65V_m40C`
+  - `nom_slow_1p08V_125C`
+  - `nom_slow_1p35V_125C`
+  - `nom_typ_1p20V_25C`
+  - `nom_typ_1p50V_25C`
+5. **Non-default routing rules.** `NON_DEFAULT_RULES`, `DRT_ASSIGN_NDR`, and `RSZ_DONT_TOUCH_LIST`.
+6. **Macro, bondpad, and logo placement.** `MACROS` with per-macro files and placement (`location`, `orientation`), plus top-level bondpad and logo placement settings, together with chip area and placement constraints (`DIE_AREA`, `CORE_AREA`, `FP_SIZING`, `PL_TARGET_DENSITY_PCT`).
 
-For floorplan changes (moving macros, changing the die size, adding new macros), the `MACROS:` section is the one to edit. The rectangular constraints documented in [`doc/floorplan.md`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/doc/floorplan.md) apply. Stay inside the core, respect the M3 routing grid for inverters, and never overlap with another macro rectangle.
+::: {.callout-note}
+The `NON_DEFAULT_RULES` section defines a dedicated routing rule for the analog traces of `inverter2` (`PADRES` and `PADBARE`). In this template, `NDR_analog` sets a wider wire width and larger spacing for the selected metals and vias, which helps reduce coupling and preserve analog signal quality.
+
+The `DRT_ASSIGN_NDR` section applies this rule during detailed routing by matching net names with regular expressions (`^.*PADRES.*$` and `^.*PADBARE.*$`). The `RSZ_DONT_TOUCH_LIST` then protects the same analog nets from resizing, buffering, or other optimization steps, so the routed analog paths remain unchanged.
+:::
 
 ## Understanding `pdn_cfg.tcl`
 
-[`pdn_cfg.tcl`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/flow/librelane/pdn_cfg.tcl) is the OpenROAD callback that builds the power-distribution network. Most of the file is generic boilerplate from LibreLane and OpenLane.
+[`pdn_cfg.tcl`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/flow/librelane/pdn_cfg.tcl) is the OpenROAD callback that builds the power-distribution network (PDN). Most of the file follows the standard structure provided by LibreLane and OpenLane.
 
-For macro changes, the bottom of the file is the relevant part. It defines per-instance PDN grids and macro connects. The current chip provides the following.
+For macro changes, the bottom of the file is the relevant part. It defines per-instance PDN grids and macro connections. The current chip provides the following.
 
-- A default macro grid (TM2 to TM1) used by the two counters.
-- A custom grid for `inverter1` and `inverter2` (TM2 to TM1 and TM2 to Metal5, because each inverter macro has its own internal M5 / TM1 ring).
-- A custom grid for `sram_0` (Metal5 stripes bridged to Metal4 and TopMetal1, because the SRAM exposes its supplies on M4 and M5).
+- A default macro grid (`TopMetal2` to `TopMetal1`) used by the two counters.
+- A custom grid for `inverter1` and `inverter2` (`TopMetal2` to `TopMetal1` and `TopMetal2` to `Metal5`, because each inverter macro has its own internal `Metal5` / `TopMetal1` ring).
+- A custom grid for `sram_0` (`Metal5` stripes bridged to `Metal4` and `TopMetal1`, because the SRAM exposes its supplies on `Metal4` and `Metal5`).
 
-When new macros are added, the matching `define_pdn_grid` plus `add_pdn_connect` block at the bottom has to be extended (or the default grid is used if the macro layers line up with the chip-level grid).
+When new macros are added, the matching `define_pdn_grid` plus `add_pdn_connect` block at the bottom must be extended (or the default grid is used if the macro layers line up with the top-level grid).
 
 ## Top-Level Simulation
 
@@ -1005,7 +1129,7 @@ Building on @sec-exercise1 and @sec-exercise2, swap `inverter2` for the ring osc
 3. Delete `counter2` and rewire all eight south-side pads to the new 16-bit `counter1` value.
 4. Update the parameters of [`chip_top.sv`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/rtl/chip_top.sv) so that `NUM_OUTPUT_PADS`, `NUM_BIDIR_PADS`, `NUM_ANALOG_PADS`, and `NUM_VSS_PADS` match the new pin count (see @sec-top).
 5. Update the macro instantiation and wiring in [`chip_core.sv`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/rtl/chip_core.sv).
-6. Update the placement coordinates in the `MACROS:` block of [`config.yaml`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/flow/librelane/config.yaml). Keep the [`doc/floorplan.md`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/doc/floorplan.md) constraints in mind, namely stay in the core, no overlaps, and respect the M3 grid for inverter-like macros.
+6. Update the placement coordinates in the `MACROS` block of [`config.yaml`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/flow/librelane/config.yaml). Keep the [`doc/floorplan.md`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/doc/floorplan.md) constraints in mind, namely stay in the core, no overlaps, and respect the `Metal3` grid for inverter-like macros.
 7. Update the PAD lists (`PAD_WEST`, `PAD_NORTH`, `PAD_SOUTH`, `PAD_EAST`) in `config.yaml` to match the new pinout.
 8. Update [`pdn_cfg.tcl`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/flow/librelane/pdn_cfg.tcl) so that the new macros are covered by the correct PDN grid (default for digital, `inverter_top`-style for analog).
 9. Rebuild the chip from scratch with `make build-all`, then verify with `make magic-drc CELL=chip_top` and `make klayout-drc-minimum`.
