@@ -33,14 +33,14 @@ plt.rcParams.update({
 })
 # =========================================================================
 
-def plot_digital(fig_title, signals, data_time, figures_dir, filename):
+def plot_digital(fig_title, signals, data_time, figures_dir, filename, fig_height=9):
     """Stack digital signals in separate subplots sharing the time axis."""
     y_ticks = [0.0, 1.0, 2.0, 3.0, 4.0]
     fig, axs = plt.subplots(len(signals), sharex=True)
     if len(signals) == 1:
         axs = [axs]
     fig.set_figwidth(16)
-    fig.set_figheight(9)
+    fig.set_figheight(fig_height)
     fig.suptitle(fig_title)
 
     for ax, (name, values, color) in zip(axs, signals):
@@ -138,6 +138,7 @@ def main():
         "Chip Top — Counter 2 Output Bits",
         signals2, time_us, figures_dir,
         "chip_top_tb_tran_digital2",
+        fig_height=12,
     )
 
     # ------------------------------------------------------------------
