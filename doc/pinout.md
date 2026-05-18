@@ -131,6 +131,6 @@ The `sg13g2_IOPadAnalog` cell exposes two internal nodes per pad:
 | Net      | Path through pad cell                          | Use case                                                  |
 | -------- | ---------------------------------------------- | --------------------------------------------------------- |
 | `padres` | Via the pad's **secondary** ESD resistor       | Input signals: the series resistor limits ESD current and protects sensitive gate oxides |
-| `padbare`| **Direct** connection to the pad metal (only primary ESD diodes present) | Output signals: bypasses the resistor to minimise parasitic RC and signal distortion |
+| `padbare` | **Direct** connection to the pad metal (only primary ESD diodes present) | Output signals: bypasses the resistor to minimise parasitic RC and signal distortion |
 
-`inverter2.vin1/vin2` are connected to `analog_PADRES[0:1]` (through the resistor) and `inverter2.vout1/vout2` are driven onto `analog_PADBARE[2:3]` (direct connection), as assigned in [chip_core.sv](../rtl/chip_core.sv).
+`inverter2.vin1/vin2` are connected to `analog_PADRES[0:1]` (through the resistor) and `inverter2.vout1/vout2` are driven onto `analog_PADBARE[2:3]` (direct connection). In [chip_core.sv](../rtl/chip_core.sv), these appear as the corresponding core nets `analog_padres[0:1]` and `analog_padbare[2:3]`.
