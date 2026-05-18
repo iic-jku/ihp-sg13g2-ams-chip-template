@@ -417,7 +417,7 @@ window.Quarto = {
   <li><a href="#design-rule-check" id="toc-design-rule-check" class="nav-link" data-scroll-target="#design-rule-check"><span class="header-section-number">5.7.1</span> Design Rule Check</a></li>
   <li><a href="#layout-versus-schematic" id="toc-layout-versus-schematic" class="nav-link" data-scroll-target="#layout-versus-schematic"><span class="header-section-number">5.7.2</span> Layout-Versus-Schematic</a></li>
   <li><a href="#parasitic-extraction" id="toc-parasitic-extraction" class="nav-link" data-scroll-target="#parasitic-extraction"><span class="header-section-number">5.7.3</span> Parasitic Extraction</a></li>
-  <li><a href="#run-everything-at-once" id="toc-run-everything-at-once" class="nav-link" data-scroll-target="#run-everything-at-once"><span class="header-section-number">5.7.4</span> Run Everything at Once</a></li>
+  <li><a href="#run-full-verification-flow-at-once" id="toc-run-full-verification-flow-at-once" class="nav-link" data-scroll-target="#run-full-verification-flow-at-once"><span class="header-section-number">5.7.4</span> Run Full Verification Flow at Once</a></li>
   </ul></li>
   <li><a href="#build-deliverables-for-top-level-integration" id="toc-build-deliverables-for-top-level-integration" class="nav-link" data-scroll-target="#build-deliverables-for-top-level-integration"><span class="header-section-number">5.8</span> Build Deliverables for Top-Level Integration</a></li>
   <li><a href="#full-macro-pass" id="toc-full-macro-pass" class="nav-link" data-scroll-target="#full-macro-pass"><span class="header-section-number">5.9</span> Full Macro Pass</a></li>
@@ -1790,7 +1790,7 @@ Table&nbsp;2: Calculated small-signal parameters with final widths.
 </div>
 </figure>
 </div>
-<p>From these values, the open-loop gain <span class="math inline">\(A_\mathrm{ol}\)</span>, the output resistance <span class="math inline">\(R_\mathrm{out}\)</span>, the open-loop cut-off frequency <span class="math inline">\(f_\mathrm{cu}\)</span>, and the unity-gain frequency <span class="math inline">\(f_\mathrm{T}\)</span> with a dominant capacitive load <span class="math inline">\(C_\mathrm{load} = 10\,\mathrm{pF}\)</span> can be estimated as</p>
+<p>From these values, the open-loop dc gain <span class="math inline">\(A_\mathrm{ol}\)</span>, the output resistance <span class="math inline">\(R_\mathrm{out}\)</span>, the open-loop cut-off frequency <span class="math inline">\(f_\mathrm{cu}\)</span>, and the unity-gain frequency <span class="math inline">\(f_\mathrm{T}\)</span> with a dominant capacitive load <span class="math inline">\(C_\mathrm{load} = 10\,\mathrm{pF}\)</span> can be estimated as</p>
 <p><span class="math display">\[
 |A_\mathrm{ol}| = \frac{g_\mathrm{m,tot}}{g_\mathrm{ds,tot}} = \frac{6.28\,\mathrm{mS}}{145\,\mathrm{\upmu S}} = 43.2 = 32.72\,\mathrm{dB},
 \]</span></p>
@@ -1825,12 +1825,12 @@ Table&nbsp;3: Calculated vs.&nbsp;simulated open-loop characteristics of the inv
 </thead>
 <tbody>
 <tr class="odd">
-<td style="text-align: left;">Open-loop gain <span class="math inline">\(A_\mathrm{ol}\)</span></td>
+<td style="text-align: left;">Open-loop dc gain <span class="math inline">\(A_\mathrm{ol}\)</span></td>
 <td style="text-align: center;"><span class="math inline">\(32.72\,\mathrm{dB}\)</span></td>
 <td style="text-align: center;"><span class="math inline">\(31.33\,\mathrm{dB}\)</span></td>
 </tr>
 <tr class="even">
-<td style="text-align: left;">Dominant pole <span class="math inline">\(f_\mathrm{c}\)</span></td>
+<td style="text-align: left;">Open-loop cut-off frequency <span class="math inline">\(f_\mathrm{cu}\)</span></td>
 <td style="text-align: center;"><span class="math inline">\(2.31\,\mathrm{MHz}\)</span></td>
 <td style="text-align: center;"><span class="math inline">\(2.89\,\mathrm{MHz}\)</span></td>
 </tr>
@@ -1877,23 +1877,70 @@ Figure&nbsp;20: <code>inverter_top</code> layout in KLayout.
 </section>
 <section id="drc-lvs-and-pex" class="level2" data-number="5.7">
 <h2 data-number="5.7" class="anchored" data-anchor-id="drc-lvs-and-pex"><span class="header-section-number">5.7</span> DRC, LVS, and PEX</h2>
-<p>The inverter macro can be verified with two sign-off paths, KLayout and Magic + Netgen. Each path covers DRC, LVS, and PEX.</p>
+<p>The inverter macro can be verified with two verification flows, either with KLayout or with Magic + Netgen. Each flow covers DRC, LVS, and PEX. Magic + Netgen provides only non-interactive command-line flows, while KLayout also has interactive GUI-based DRC and LVS.</p>
 <section id="design-rule-check" class="level3" data-number="5.7.1">
 <h3 data-number="5.7.1" class="anchored" data-anchor-id="design-rule-check"><span class="header-section-number">5.7.1</span> Design Rule Check</h3>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb18"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> klayout-drc          <span class="co"># KLayout DRC (FEOL, density, extra rules disabled)</span></span>
-<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> magic-drc            <span class="co"># Magic DRC via sak-drc.sh</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>The non-interactive DRC can be run with the following Makefile targets. The <code>CELL</code> variable can be set to run DRC on a specific cell, or it defaults to <code>inverter_top</code> if not set.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb18"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> klayout-drc [CELL=<span class="op">&lt;</span>cellname<span class="op">&gt;</span>]  <span class="co"># default CELL=inverter_top</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> magic-drc [CELL=<span class="op">&lt;</span>cellname<span class="op">&gt;</span>]    <span class="co"># default CELL=inverter_top</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Reports are saved to <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/inverter/verification/drc/"><code>verification/drc/</code></a>.</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Tip
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>In KLayout, a non-interactive DRC run can be launched from the GUI by pressing <strong><code>F9</code></strong>. The DRC options can be modified by pressing <strong><code>F10</code></strong>.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><a href="fig/inverter_top/KLayout_DRC_Output.png" class="lightbox" data-gallery="quarto-lightbox-gallery-23" title="KLayout DRC output windows."><img src="fig/inverter_top/KLayout_DRC_Output.png" class="img-fluid figure-img" style="width:100.0%" alt="KLayout DRC output windows."></a></p>
+<figcaption>KLayout DRC output windows.</figcaption>
+</figure>
+</div>
+</div>
+</div>
 </section>
 <section id="layout-versus-schematic" class="level3" data-number="5.7.2">
 <h3 data-number="5.7.2" class="anchored" data-anchor-id="layout-versus-schematic"><span class="header-section-number">5.7.2</span> Layout-Versus-Schematic</h3>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb19"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> klayout-lvs          <span class="co"># uses CDL netlist exported from Xschem</span></span>
-<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> magic-lvs            <span class="co"># uses SPICE netlist exported from Xschem</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>The schematic netlist is exported automatically by the matching <code>*-lvs-netlist</code> sub-target. Reports are saved to <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/inverter/verification/lvs/"><code>verification/lvs/</code></a>, and the extracted layout netlist is moved to <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/inverter/netlist/layout/"><code>netlist/layout/</code></a>.</p>
+<p>The non-interactive LVS can be run with the following Makefile targets. The <code>CELL</code> variable can be set to run LVS on a specific cell, or it defaults to <code>inverter_top</code> if not set.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb19"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> klayout-lvs [CELL=<span class="op">&lt;</span>cellname<span class="op">&gt;</span>]  <span class="co"># default CELL=inverter_top, uses CDL netlist exported from Xschem</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> magic-lvs [CELL=<span class="op">&lt;</span>cellname<span class="op">&gt;</span>]    <span class="co"># default CELL=inverter_top, uses SPICE netlist exported from Xschem</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>The schematic netlist is exported automatically by the matching <code>*-lvs-netlist</code> sub-target and moved to <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/inverter/netlist/schematic/"><code>netlist/schematic/</code></a>. The extracted layout netlist is moved to <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/inverter/netlist/layout/"><code>netlist/layout/</code></a> and the reports are saved to <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/inverter/verification/lvs/"><code>verification/lvs/</code></a>.</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Tip
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>In KLayout, a non-interactive LVS run can be launched from the GUI by pressing <strong><code>F11</code></strong>. The LVS options can be modified by pressing <strong><code>F12</code></strong>, where the schematic netlist <code>inverter_top_klayout.cdl</code> has to be selected manually. Set <code>deep</code> as the run mode.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><a href="fig/inverter_top/KLayout_LVS_Output.png" class="lightbox" data-gallery="quarto-lightbox-gallery-24" title="KLayout LVS output windows."><img src="fig/inverter_top/KLayout_LVS_Output.png" class="img-fluid figure-img" style="width:100.0%" alt="KLayout LVS output windows."></a></p>
+<figcaption>KLayout LVS output windows.</figcaption>
+</figure>
+</div>
+</div>
+</div>
 </section>
 <section id="parasitic-extraction" class="level3" data-number="5.7.3">
 <h3 data-number="5.7.3" class="anchored" data-anchor-id="parasitic-extraction"><span class="header-section-number">5.7.3</span> Parasitic Extraction</h3>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb20"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> klayout-pex                    <span class="co"># default EXT_MODE=3 (full-RC)</span></span>
-<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> magic-pex EXT_MODE=2           <span class="co"># CC mode</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>The non-interactive PEX can be run with the following Makefile targets. The <code>CELL</code> variable can be set to run PEX on a specific cell, or it defaults to <code>inverter_top</code> if not set. The <code>EXT_MODE</code> variable can be set to choose between different extraction modes,</p>
+<ul>
+<li><code>EXT_MODE=1</code> for C-decoupled mode,</li>
+<li><code>EXT_MODE=2</code> for C-coupled mode,</li>
+<li><code>EXT_MODE=3</code> for full-RC extraction.</li>
+</ul>
+<p>If not set, it defaults to <code>EXT_MODE=3</code>.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb20"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> klayout-pex [CELL=<span class="op">&lt;</span>cellname<span class="op">&gt;</span>] [EXT_MODE=<span class="op">&lt;</span>1<span class="kw">|</span><span class="ex">2</span><span class="kw">|</span><span class="dv">3</span><span class="op">&gt;</span>]         <span class="co"># default CELL=inverter_top, default EXT_MODE=3 (full-RC)</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> magic-pex [CELL=<span class="op">&lt;</span>cellname<span class="op">&gt;</span>] [EXT_MODE=<span class="op">&lt;</span>1<span class="kw">|</span><span class="ex">2</span><span class="kw">|</span><span class="dv">3</span><span class="op">&gt;</span>]           <span class="co"># default CELL=inverter_top, default EXT_MODE=2 (CC mode)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>PEX writes a SPICE netlist into <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/inverter/netlist/pex/"><code>netlist/pex/</code></a>. The subcircuit name is renamed to <code>&lt;CELL&gt;_pex</code>, and the pin order is rearranged to match the Xschem PEX symbol (<a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/inverter/schematic/xschem/inverter_top_pex.sym"><code>inverter_top_pex.sym</code></a>).</p>
 <div class="callout callout-style-default callout-tip callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -1901,19 +1948,32 @@ Figure&nbsp;20: <code>inverter_top</code> layout in KLayout.
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Tip</span>Post-layout simulation
+Tip
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>Open one of the Xschem testbenches and swap the original symbol with the PEX symbol to use the extracted netlist in the same testbench. This is the recommended way to compare schematic-only and post-layout simulation results.</p>
+<p>To run a post-layout simulation, open one of the Xschem testbenches and swap the original symbol with the PEX symbol and include the path to the SPICE netlist to use the extracted netlist in the same testbench. This is the recommended way to compare schematic-only and post-layout simulation results.</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Note that <a href="https://github.com/iic-jku/klayout-pex">KLayout-PEX (KPEX)</a> is currently under development and therefore the Magic engine is used internally for the actual extraction.</p>
 </div>
 </div>
 </section>
-<section id="run-everything-at-once" class="level3" data-number="5.7.4">
-<h3 data-number="5.7.4" class="anchored" data-anchor-id="run-everything-at-once"><span class="header-section-number">5.7.4</span> Run Everything at Once</h3>
-<p>The verify targets bundle LVS, DRC, and PEX in one command.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb21"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> klayout-verify         <span class="co"># CELL defaults to inverter_top</span></span>
-<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> magic-verify</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<section id="run-full-verification-flow-at-once" class="level3" data-number="5.7.4">
+<h3 data-number="5.7.4" class="anchored" data-anchor-id="run-full-verification-flow-at-once"><span class="header-section-number">5.7.4</span> Run Full Verification Flow at Once</h3>
+<p>If you want to run the full verification flow at once, the verify targets bundle LVS, DRC, and PEX in one command.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb21"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> klayout-verify [CELL=<span class="op">&lt;</span>cellname<span class="op">&gt;</span>]   <span class="co"># default CELL=inverter_top</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> magic-verify [CELL=<span class="op">&lt;</span>cellname<span class="op">&gt;</span>]     <span class="co"># default CELL=inverter_top</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 </section>
 <section id="build-deliverables-for-top-level-integration" class="level2" data-number="5.8">
@@ -2022,7 +2082,7 @@ Figure&nbsp;20: <code>inverter_top</code> layout in KLayout.
 <div id="fig-chip-top-cocotb-gtkwave" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-chip-top-cocotb-gtkwave-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<a href="fig/chip_top/chip_top_cocotb_gtkwave.png" class="lightbox" data-gallery="quarto-lightbox-gallery-23" title="Figure&nbsp;21: chip_top cocotb waveform in GTKWave."><img src="fig/chip_top/chip_top_cocotb_gtkwave.png" class="img-fluid figure-img"></a>
+<a href="fig/chip_top/chip_top_cocotb_gtkwave.png" class="lightbox" data-gallery="quarto-lightbox-gallery-25" title="Figure&nbsp;21: chip_top cocotb waveform in GTKWave."><img src="fig/chip_top/chip_top_cocotb_gtkwave.png" class="img-fluid figure-img"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-chip-top-cocotb-gtkwave-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure&nbsp;21: <code>chip_top</code> cocotb waveform in GTKWave.
@@ -2048,7 +2108,7 @@ Note
 <div id="fig-chip-top-tb-tran-schematic" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-chip-top-tb-tran-schematic-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<a href="fig/chip_top/chip_top_tb_tran_schematic.svg" class="lightbox" data-gallery="quarto-lightbox-gallery-24" title="Figure&nbsp;22: Xschem top-level mixed-signal testbench chip_top_tb_tran."><img src="fig/chip_top/chip_top_tb_tran_schematic.svg" class="img-fluid figure-img"></a>
+<a href="fig/chip_top/chip_top_tb_tran_schematic.svg" class="lightbox" data-gallery="quarto-lightbox-gallery-26" title="Figure&nbsp;22: Xschem top-level mixed-signal testbench chip_top_tb_tran."><img src="fig/chip_top/chip_top_tb_tran_schematic.svg" class="img-fluid figure-img"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-chip-top-tb-tran-schematic-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure&nbsp;22: Xschem top-level mixed-signal testbench <code>chip_top_tb_tran</code>.
@@ -2058,7 +2118,7 @@ Figure&nbsp;22: Xschem top-level mixed-signal testbench <code>chip_top_tb_tran</
 <div id="fig-chip-top-tb-tran-analog-inv-sim" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-chip-top-tb-tran-analog-inv-sim-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<a href="fig/chip_top/chip_top_tb_tran_analog_inv_sim.svg" class="lightbox" data-gallery="quarto-lightbox-gallery-25" title="Figure&nbsp;23: Plotted simulation result of chip_top_tb_tran — analog inverter 1 response."><img src="fig/chip_top/chip_top_tb_tran_analog_inv_sim.svg" class="img-fluid figure-img"></a>
+<a href="fig/chip_top/chip_top_tb_tran_analog_inv_sim.svg" class="lightbox" data-gallery="quarto-lightbox-gallery-27" title="Figure&nbsp;23: Plotted simulation result of chip_top_tb_tran — analog inverter 1 response."><img src="fig/chip_top/chip_top_tb_tran_analog_inv_sim.svg" class="img-fluid figure-img"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-chip-top-tb-tran-analog-inv-sim-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure&nbsp;23: Plotted simulation result of <code>chip_top_tb_tran</code> — analog inverter 1 response.
@@ -2068,7 +2128,7 @@ Figure&nbsp;23: Plotted simulation result of <code>chip_top_tb_tran</code> — a
 <div id="fig-chip-top-tb-tran-digital1-sim" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-chip-top-tb-tran-digital1-sim-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<a href="fig/chip_top/chip_top_tb_tran_digital1_sim.svg" class="lightbox" data-gallery="quarto-lightbox-gallery-26" title="Figure&nbsp;24: Plotted simulation result of chip_top_tb_tran — digital inverter 2 outputs."><img src="fig/chip_top/chip_top_tb_tran_digital1_sim.svg" class="img-fluid figure-img"></a>
+<a href="fig/chip_top/chip_top_tb_tran_digital1_sim.svg" class="lightbox" data-gallery="quarto-lightbox-gallery-28" title="Figure&nbsp;24: Plotted simulation result of chip_top_tb_tran — digital inverter 2 outputs."><img src="fig/chip_top/chip_top_tb_tran_digital1_sim.svg" class="img-fluid figure-img"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-chip-top-tb-tran-digital1-sim-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure&nbsp;24: Plotted simulation result of <code>chip_top_tb_tran</code> — digital inverter 2 outputs.
@@ -2078,7 +2138,7 @@ Figure&nbsp;24: Plotted simulation result of <code>chip_top_tb_tran</code> — d
 <div id="fig-chip-top-tb-tran-digital2-sim" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-chip-top-tb-tran-digital2-sim-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<a href="fig/chip_top/chip_top_tb_tran_digital2_sim.svg" class="lightbox" data-gallery="quarto-lightbox-gallery-27" title="Figure&nbsp;25: Plotted simulation result of chip_top_tb_tran — digital counter 2 outputs."><img src="fig/chip_top/chip_top_tb_tran_digital2_sim.svg" class="img-fluid figure-img"></a>
+<a href="fig/chip_top/chip_top_tb_tran_digital2_sim.svg" class="lightbox" data-gallery="quarto-lightbox-gallery-29" title="Figure&nbsp;25: Plotted simulation result of chip_top_tb_tran — digital counter 2 outputs."><img src="fig/chip_top/chip_top_tb_tran_digital2_sim.svg" class="img-fluid figure-img"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-chip-top-tb-tran-digital2-sim-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure&nbsp;25: Plotted simulation result of <code>chip_top_tb_tran</code> — digital counter 2 outputs.
@@ -2088,7 +2148,7 @@ Figure&nbsp;25: Plotted simulation result of <code>chip_top_tb_tran</code> — d
 <div id="fig-chip-top-tb-tran-digital3-sim" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-chip-top-tb-tran-digital3-sim-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<a href="fig/chip_top/chip_top_tb_tran_digital3_sim.svg" class="lightbox" data-gallery="quarto-lightbox-gallery-28" title="Figure&nbsp;26: Plotted simulation result of chip_top_tb_tran — digital counter 1 / inverter 1 bidirs."><img src="fig/chip_top/chip_top_tb_tran_digital3_sim.svg" class="img-fluid figure-img"></a>
+<a href="fig/chip_top/chip_top_tb_tran_digital3_sim.svg" class="lightbox" data-gallery="quarto-lightbox-gallery-30" title="Figure&nbsp;26: Plotted simulation result of chip_top_tb_tran — digital counter 1 / inverter 1 bidirs."><img src="fig/chip_top/chip_top_tb_tran_digital3_sim.svg" class="img-fluid figure-img"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-chip-top-tb-tran-digital3-sim-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure&nbsp;26: Plotted simulation result of <code>chip_top_tb_tran</code> — digital counter 1 / inverter 1 bidirs.
@@ -2112,7 +2172,7 @@ Tip
 <div id="fig-chip-top-schematic" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-chip-top-schematic-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<a href="fig/chip_top/chip_top_schematic.svg" class="lightbox" data-gallery="quarto-lightbox-gallery-29" title="Figure&nbsp;27: Xschem schematic of chip_top, showing the connections between the padframe and the core macros (the SRAM is not in the schematic)."><img src="fig/chip_top/chip_top_schematic.svg" class="img-fluid figure-img"></a>
+<a href="fig/chip_top/chip_top_schematic.svg" class="lightbox" data-gallery="quarto-lightbox-gallery-31" title="Figure&nbsp;27: Xschem schematic of chip_top, showing the connections between the padframe and the core macros (the SRAM is not in the schematic)."><img src="fig/chip_top/chip_top_schematic.svg" class="img-fluid figure-img"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-chip-top-schematic-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure&nbsp;27: Xschem schematic of <code>chip_top</code>, showing the connections between the padframe and the core macros (the SRAM is not in the schematic).
@@ -2137,7 +2197,7 @@ Figure&nbsp;27: Xschem schematic of <code>chip_top</code>, showing the connectio
 <div id="fig-chip-top-layout" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-chip-top-layout-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<a href="fig/chip_top/chip_top_black.png" class="lightbox" data-gallery="quarto-lightbox-gallery-30" title="Figure&nbsp;28: chip_top_logo_fill layout in KLayout (all layers)."><img src="fig/chip_top/chip_top_black.png" class="img-fluid figure-img"></a>
+<a href="fig/chip_top/chip_top_black.png" class="lightbox" data-gallery="quarto-lightbox-gallery-32" title="Figure&nbsp;28: chip_top_logo_fill layout in KLayout (all layers)."><img src="fig/chip_top/chip_top_black.png" class="img-fluid figure-img"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-chip-top-layout-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure&nbsp;28: <code>chip_top_logo_fill</code> layout in KLayout (all layers).
@@ -2147,7 +2207,7 @@ Figure&nbsp;28: <code>chip_top_logo_fill</code> layout in KLayout (all layers).
 <div id="fig-chip-top-layout-tm2" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-chip-top-layout-tm2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<a href="fig/chip_top/chip_top_black_TM2.png" class="lightbox" data-gallery="quarto-lightbox-gallery-31" title="Figure&nbsp;29: chip_top_logo_fill layout in KLayout with only TopMetal2 selected, showing the power distribution network."><img src="fig/chip_top/chip_top_black_TM2.png" class="img-fluid figure-img"></a>
+<a href="fig/chip_top/chip_top_black_TM2.png" class="lightbox" data-gallery="quarto-lightbox-gallery-33" title="Figure&nbsp;29: chip_top_logo_fill layout in KLayout with only TopMetal2 selected, showing the power distribution network."><img src="fig/chip_top/chip_top_black_TM2.png" class="img-fluid figure-img"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-chip-top-layout-tm2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure&nbsp;29: <code>chip_top_logo_fill</code> layout in KLayout with only TopMetal2 selected, showing the power distribution network.
