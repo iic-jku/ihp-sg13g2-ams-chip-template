@@ -160,7 +160,7 @@ Examples based on this template are:
 The repository is organised into the following top-level folders. The full listing can be found in the [top-level README.md](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/README.md#directory-structure).
 
 | Folder | Purpose |
-| ------------------------------ | --- |
+| ---------- | ---------------------------------------------------------- |
 | [`doc/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/doc/) | Designer documentation, including [specifications](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/doc/specifications.md), [pinout](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/doc/pinout.md), [floorplan](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/doc/floorplan.md), and the [PDK and tool cheatsheets](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/doc/librelane/librelane_cheatsheet.md). |
 | [`flow/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/flow/) | LibreLane top-level configuration with [config.yaml](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/flow/librelane/config.yaml), [pdn_cfg.tcl](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/flow/librelane/pdn_cfg.tcl), [chip_top.sdc](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/flow/librelane/chip_top.sdc), plus the [ArtistIC](https://github.com/pulp-platform/artistic) logo flow. |
 | [`ip/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/ip/) | External IP cells including bondpads, custom IO cells, and logos. |
@@ -178,7 +178,7 @@ The repository is organised into the following top-level folders. The full listi
 
 ## Workflow
 
-The flow is driven by Makefiles. After cloning the repository and entering the IIC-OSIC-TOOLS container, every step is invoked via a `make` target. The default goal of every `Makefile` is `help`, so `make` (without arguments) prints the list of available targets. After entering the container, the starting folder is `foss/designs/`.
+The flow is driven by Makefiles. After cloning the repository and entering the IIC-OSIC-TOOLS container, every step is invoked via a `make` target. The default target of every `Makefile` is `help`, so `make` (without arguments) prints the list of available targets. After entering the container, the starting folder is `foss/designs/`.
 
 ```sh
 git clone https://github.com/iic-jku/ihp-sg13g2-ams-chip-template.git
@@ -197,7 +197,7 @@ Each macro under [`macros/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-temp
 The [top-level Makefile](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/Makefile) provides:
 
 | Target              | What it does                                                                                          |
-| ----------------------------------------------- | ----------------------------------------------------------------------------------------------------- |
+| ------------------------------ | ---------------------------------------------------------------------- |
 | `make help`         | Print the help banner and list every target with its description.                                     |
 | `make init-submodules` | Initialise and update git submodules (for example the ArtistIC logo flow).                         |
 | `make sim-rtl-cocotb` / `sim-gl-cocotb` | Run the RTL / gate-level cocotb testbench for the top-level.                       |
@@ -220,7 +220,7 @@ See the [top-level README](https://github.com/iic-jku/ihp-sg13g2-ams-chip-templa
 The [counter Makefile](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/counter/Makefile) provides:
 
 | Target                                            | What it does                                                                |
-| --------------------------------------------------------- | --------------------------------------------------------------------------- |
+| ----------------------------------- | ----------------------------------------------------------------- |
 | `make lint-verilog` / `make lint-verilog-all`     | Lint a single cell or the full counter design with Verilator.               |
 | `make sim-rtl-verilog`                            | Run the SystemVerilog testbench with Icarus Verilog.                        |
 | `make sim-rtl-cocotb` / `sim-gl-cocotb`           | Run the cocotb RTL / gate-level simulation.                                 |
@@ -239,7 +239,7 @@ See the [counter README](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template
 The [inverter Makefile](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/inverter/Makefile) provides:
 
 | Target                                            | What it does                                                                |
-| --------------------------------------------------------- | --------------------------------------------------------------------------- |
+| ----------------------------------- | ----------------------------------------------------------------- |
 | `make sim-xschem TB=<tb>` / `make sim-view-xschem` | Run a specific Xschem testbench and plot its results with Python.          |
 | `make sim-cace`                                   | Run [CACE](https://github.com/fossi-foundation/cace) Monte-Carlo / mismatch characterisations. |
 | `make klayout-lvs` / `magic-lvs`                  | Run LVS using KLayout or Magic + Netgen.                                    |
