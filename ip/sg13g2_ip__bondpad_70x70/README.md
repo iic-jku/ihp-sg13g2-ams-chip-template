@@ -31,13 +31,13 @@ make all
 
 ### Individual Targets
 
-| Target        | Description                                  |
-| ------------- | -------------------------------------------- |
-| `bondpad`     | Generate GDS and LEF via `bondpad.py`        |
-| `verilog`     | Generate Verilog blackbox stub (`inout pad`) |
-| `klayout-drc` | Run KLayout DRC using `run_drc.py`           |
-| `magic-drc`   | Run Magic DRC using `sak-drc.sh`             |
-| `clean`       | Remove all generated output directories      |
+| Target        | Description                                                                                                          |
+| ------------- | -------------------------------------------------------------------------------------------------------------------- |
+| `bondpad`     | Generate GDS and LEF via `bondpad.py` (usage: `make bondpad [DIAMETER=<um>] [SHAPE=<square\|octagon\|circle>] [BOTTOM_METAL=<1-6>]`) |
+| `verilog`     | Generate Verilog blackbox stub (`inout pad`)                                                                         |
+| `klayout-drc` | Run KLayout DRC using `run_drc.py` (usage: `make klayout-drc [CELL=<cellname>]`)                                     |
+| `magic-drc`   | Run Magic DRC using `sak-drc.sh` (usage: `make magic-drc [CELL=<cellname>]`)                                         |
+| `clean`       | Remove all generated output directories                                                                              |
 
 ### Parameters
 
@@ -67,7 +67,7 @@ The `script/bondpad.py` script runs in KLayout batch mode. It:
 3. Exports the layout as GDSII
 4. Generates a matching LEF file (with `pad` pin on Metal2–TopMetal2 and metal obstruction layers)
 
-The metal stack used for the bondpad covers Metal2 through TopMetal2, with the `bottom_metal` parameter set to index 1 (Metal2) by default.
+The metal stack used for the bondpad covers `Metal3` through `TopMetal2` by default (`BOTTOM_METAL=3`, matching the SG13G2 PDK default). Override `BOTTOM_METAL` to start the stack at a different layer.
 
 
 ## Design Rule Check (DRC)

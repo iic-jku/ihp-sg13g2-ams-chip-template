@@ -26,10 +26,15 @@ BOTTOM_METAL ?= 3
 
 # Help Target
 help: ## Show this help message
-	@echo 'Usage: make [target]'
+	@echo 'Usage: make <target> [DIAMETER=<um>] [SHAPE=<square|octagon|circle>] [BOTTOM_METAL=<1-6>] [CELL=<cellname>]'
 	@echo ''
 	@echo 'Available targets:'
 	@grep -E '^[a-zA-Z0-9_.-]+:.*## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*## "}; {printf "  %-20s %s\n", $$1, $$2}'
+	@echo ''
+	@echo 'DIAMETER defaults to $(DIAMETER) (µm).'
+	@echo 'SHAPE defaults to $(SHAPE). Allowed: square, octagon, circle.'
+	@echo 'BOTTOM_METAL defaults to $(BOTTOM_METAL) (1=Metal1 .. 5=Metal5, 6=TopMetal1). Top is fixed to TopMetal2.'
+	@echo 'CELL defaults to $(TOP). Override to verify subcells.'
 .PHONY: help
 # ================================================================================================
 
@@ -45,7 +50,7 @@ clean: ## Remove generated outputs and reports
 
 
 # Build Target
-bondpad: ## Generate bondpad GDS and LEF using KLayout Python script
+bondpad: ## Generate bondpad GDS and LEF (usage: make bondpad [DIAMETER=<um>] [SHAPE=<square|octagon|circle>] [BOTTOM_METAL=<1-6>])
 	KLAYOUT_PATH=$(PDK_ROOT)/$(PDK)/libs.tech/klayout:$(PDK_ROOT)/$(PDK)/libs.tech/klayout/tech klayout -n sg13g2 -zz -r script/bondpad.py -rd diameter=$(DIAMETER) -rd shape=$(SHAPE) -rd bottom_metal=$(BOTTOM_METAL) -rd gds_output=$(GDS_DIR)/$(TOP).gds -rd lef_output=$(LEF_DIR)/$(TOP).lef
 .PHONY: bondpad
 # ================================================================================================
