@@ -51,7 +51,7 @@ The example design used throughout the tutorial contains:
 - Two `inverter_top` macros, one used as a 4-channel CMOS digital inverter, one as a 2-channel analog inverter
 - One `RM_IHPSG13_1P_1024x32_c2_bm_bist` single-port SRAM macro
 - A 32-pad padframe (8 pads per side) with I/O, power, analog, and bidirectional pads
-- The top-level chip assembly with PDN, logos, and fill structures
+- The top-level chip assembly with power distribution network (PDN), logos, and fill structures
 
 The tutorial ends with a set of exercises that apply the same flow to a modified counter, a ring oscillator using the inverters, and a modified top-level floorplan and pinout. This way, all important steps of the flow are covered in a hands-on manner.
 
@@ -433,7 +433,7 @@ The [`inverter`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/ma
 
 - Layout vs. Schematic ([LVS](https://en.wikipedia.org/wiki/Layout_versus_schematic)) with KLayout or Magic + Netgen,
 - Design Rule Checking ([DRC](https://en.wikipedia.org/wiki/Design_rule_checking)) with KLayout or Magic,
-- Parasitic Extraction ([PEX](https://en.wikipedia.org/wiki/Parasitic_extraction)) with KLayout or Magic,
+- Parasitic Extraction ([PEX](https://en.wikipedia.org/wiki/Parasitic_extraction)) with Magic + Netgen,
 - [Monte Carlo](https://en.wikipedia.org/wiki/Monte_Carlo_method) simulation of process and mismatch variations with CACE.
 
 Two instances are used in the chip core. One is used as a 4-channel digital inverter (`inverter1`), and the other as a 2-channel analog inverter (`inverter2`). See the [chip specifications](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/doc/specifications.md) for the full picture.
@@ -520,7 +520,7 @@ Since Xschem is a text-based schematic editor, you can also add `*.sch` and `.sy
 
 @fig-inverter-schematic displays the schematic of the `inverter` cell with additional small-signal parameters for the NMOS and PMOS transistors at the chosen operating point. To view these small-signal parameters, hold **`Ctrl`** and click **Annotate OP** after the simulation has finished. Afterwards, descend into the inverter schematic.
 
-![Xschem `inverter` schematic.](fig/inverter_top/inverter_schematic.svg){#fig-inverter-schematic width=75%}
+![Xschem `inverter` schematic with dummy transistors and OP annotations.](fig/inverter_top/inverter_schematic.svg){#fig-inverter-schematic width=65%}
 
 ::: {.callout-note}
 The devices `ntap` and `ptap` are the NMOS and PMOS substrate contacts, which are required for a successful KLayout LVS and have no impact on the circuit functionality. This approach is only used by the ihp-sg13g2 PDK and is controversial since it requires additional pins `nwell` and `psub` and overloads the schematic drawings.
@@ -536,43 +536,122 @@ make sim-cace
 ```
 
 Plots are written to [`verification/cace/results/inverter/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/inverter/verification/cace/results/inverter).
-This step is mainly relevant for advanced designers that want to characterise the analog macro across PVT corners. The following figures show the result of the CACE simulations for 200 iterations.
+This step is mainly relevant for advanced designers who want to characterise the analog macro across PVT corners. The following figures show the results of the CACE simulations for 200 iterations.
 
-@fig-inverter-cace-adc-mc and @fig-inverter-cace-adc-mm show the process and mismatch variations of the dc open-loop gain $A_\mathrm{dc,ol}$, while @fig-inverter-cace-adc-vdd plots its variation across several process corners at one fixed supply voltage.
+@fig-inverter-cace-aol shows the process (left) and mismatch (right) variations of the dc open-loop gain $A_\mathrm{ol}$, while @fig-inverter-cace-aol-vdd plots its variation across several process corners at one fixed supply voltage.
 
-![CACE process variation of $A_\mathrm{dc,ol}$.](fig/inverter_top/Adc_ol_dB_mc.png){#fig-inverter-cace-adc-mc width=70%}
+::: {#fig-inverter-cace-aol layout-ncol=2 fig-cap="CACE process (left) and mismatch (right) variations of $A_\\mathrm{ol}$."}
+![Process variation of $A_\mathrm{ol}$.](fig/inverter_top/Adc_ol_dB_mc.png){width=100%}
 
-![CACE mismatch variation of $A_\mathrm{dc,ol}$.](fig/inverter_top/Adc_ol_dB_mm.png){#fig-inverter-cace-adc-mm width=70%}
+![Mismatch variation of $A_\mathrm{ol}$.](fig/inverter_top/Adc_ol_dB_mm.png){width=100%}
+:::
 
-![CACE variation of $A_\mathrm{dc,ol}$ across several process corners.](fig/inverter_top/Adc_ol_dB_vs_vdd.png){#fig-inverter-cace-adc-vdd}
+![CACE variation of $A_\mathrm{ol}$ across several process corners.](fig/inverter_top/Adc_ol_dB_vs_vdd.png){#fig-inverter-cace-aol-vdd width=75%}
 
-@fig-inverter-cace-fcu-mc and @fig-inverter-cace-fcu-mm show the process and mismatch variations of the open-loop lower cut-off frequency $f_\mathrm{cu}$, while @fig-inverter-cace-fcu-vdd plots its variation across several process corners at one fixed supply voltage.
+@fig-inverter-cace-fcu shows the process (left) and mismatch (right) variations of the open-loop lower cut-off frequency $f_\mathrm{cu}$, while @fig-inverter-cace-fcu-vdd plots its variation across several process corners at one fixed supply voltage.
 
-![CACE process variation of $f_\mathrm{cu}$.](fig/inverter_top/fcu_mc.png){#fig-inverter-cace-fcu-mc width=70%}
+::: {#fig-inverter-cace-fcu layout-ncol=2 fig-cap="CACE process (left) and mismatch (right) variations of $f_\\mathrm{cu}$."}
+![Process variation of $f_\mathrm{cu}$.](fig/inverter_top/fcu_mc.png){width=100%}
 
-![CACE mismatch variation of $f_\mathrm{cu}$.](fig/inverter_top/fcu_mm.png){#fig-inverter-cace-fcu-mm width=70%}
+![Mismatch variation of $f_\mathrm{cu}$.](fig/inverter_top/fcu_mm.png){width=100%}
+:::
 
-![CACE variation of $f_\mathrm{cu}$ across several process corners.](fig/inverter_top/fcu_vs_vdd.png){#fig-inverter-cace-fcu-vdd}
+![CACE variation of $f_\mathrm{cu}$ across several process corners.](fig/inverter_top/fcu_vs_vdd.png){#fig-inverter-cace-fcu-vdd width=75%}
+
+::: {.callout-note}
+Note that the above process and mismatch variation results are poor for an analog circuit. Also, the open-loop gain varies significantly across corners. This is because the example is only a simple inverter without a compensation technique. For a practical single-ended inverter amplifier, one would at least add a feedback resistor from output to input to stabilise the operating point and therefore the gain across corners. If you want to see improved variation results, you can try adding a feedback resistor in the `inverter.sch` schematic and running the CACE flow again.
+:::
 
 ::: {.callout-tip}
 In the `inverter.yaml` characterisation file, more parameter sweeps can be added, for example, across temperature, supply voltages or load capacitance.
 :::
 
+## Transistor Sizing
+
+During simulation, it could happen that some specifications are not fulfilled and that the inverter must be resized. In this tutorial, the inverter is sized with the $g_\mathrm{m}/I_\mathrm{D}$ method (see [Transistor Sizing Using $g_\mathrm{m}/I_\mathrm{D}$ Methodology](https://iic-jku.github.io/analog-circuit-design/aicd.html#sec-gmid-method) for theoretical background). Instead of relying on textbook square-law equations, the method looks up the actual device behaviour from pre-characterised SPICE simulations, parametrised by $g_\mathrm{m}/I_\mathrm{D}$. An overview of these techsweeps can be found in the folder [`doc/sizing/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/doc/sizing). The chosen $g_\mathrm{m}/I_\mathrm{D}$ point sets the inversion level of the transistor and therefore the trade-off between intrinsic gain (high $g_\mathrm{m}/I_\mathrm{D}$, weak inversion) and bandwidth (low $g_\mathrm{m}/I_\mathrm{D}$, strong inversion). An overview of the $g_\mathrm{m}/I_\mathrm{D}$ tradeoffs can be found [here](https://iic-jku.github.io/analog-circuit-design/aicd.html#sec-tradeoffs-saturation). For each chosen operating point the lookup tables return all relevant figures of merit ($I_\mathrm{D}/W$, $g_\mathrm{m}/g_\mathrm{ds}$, $g_\mathrm{m}/C_\mathrm{gg}$, $S_\mathrm{TH}$, etc.) at the actual bias condition, which is then used to compute $W$ for a given drain current.
+
+The full sizing flow for the inverter is implemented in the Jupyter notebook [`scripts/sizing/sizing_inverter.ipynb`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/inverter/scripts/sizing/sizing_inverter.ipynb). The notebook uses [`pygmid`](https://github.com/dreoilin/pygmid) to query the pre-characterised ihp-sg13g2 NMOS/PMOS lookup tables ([`sg13g2_lv_nmos.mat`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/inverter/scripts/sizing/data/sg13g2_lv_nmos.mat) and [`sg13g2_lv_pmos.mat`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/inverter/scripts/sizing/data/sg13g2_lv_pmos.mat)). An overview of the $g_\mathrm{m}/I_\mathrm{D}$ MOSFET characterization procedure can be found [here](https://iic-jku.github.io/analog-circuit-design/aicd.html#sec-techsweep-testbench).
+
+The Jupyter notebook `sizing_inverter.ipynb` runs through the following steps:
+
+1. Define the design targets: $V_\mathrm{DD} = 1.5\,\mathrm{V}$, $V_\mathrm{cm,in} = V_\mathrm{cm,out} = V_\mathrm{DD}/2 = 0.75\,\mathrm{V}$, $I_\mathrm{out} = 0.75\,\mathrm{mA}$, $C_\mathrm{load} = 10\,\mathrm{pF}$ and $L = 1\,\mathrm{\upmu m}$. $L$ is chosen longer than the minimum to increase intrinsic gain and reduce mismatch, but at the cost of increased area and reduced bandwidth.
+2. Look up $g_\mathrm{m}/I_\mathrm{D}$, $g_\mathrm{m}/g_\mathrm{ds}$, $g_\mathrm{m}/C_\mathrm{gg}$ and $I_\mathrm{D}/W$ based on $L$ and the operating-point voltages.
+3. Compute the required widths $W = I_\mathrm{D} / (I_\mathrm{D}/W)$ for NMOS and PMOS, and derive the resulting $W_\mathrm{PMOS}/W_\mathrm{NMOS}$ ratio.
+4. Round the continuous widths to a practical finger configuration with equal finger counts for NMOS and PMOS (for better layout matching) and recompute the small-signal parameters with the final widths.
+5. Estimate the open-loop gain $A_\mathrm{ol} = -g_\mathrm{m,tot} / g_\mathrm{ds,tot}$ and the output resistance $R_\mathrm{out} = 1/g_\mathrm{ds,tot}$ of the complementary inverter stage.
+
+The resulting device geometry is summarised in @tbl-inverter-sizing-geom.
+
+| Device  | $L$ ($\mathrm{\upmu m}$) | Fingers ($\mathrm{NF}$) | $W$ / Finger ($\mathrm{\upmu m}$) | Total $W$ ($\mathrm{\upmu m}$) |
+| :------ | :----------------------: | :-----------------: | :-------------------------------: | :----------------------------: |
+| NMOS $M_1$ | 1.0                   | 20              | 1.0                               | 20.0                           |
+| PMOS $M_2$ | 1.0                   | 20              | 6.0                               | 120.0                          |
+
+: Sized device geometry of the complementary inverter. {#tbl-inverter-sizing-geom}
+
+With these final widths the notebook computes the small-signal parameters listed in @tbl-inverter-sizing-ss. As a reference, compare these values with the OP annotations in @fig-inverter-schematic.
+
+| Parameter                                                  | NMOS $M_1$      | PMOS $M_2$      | Inverter (NMOS $\parallel$ PMOS)        |
+| :--------------------------------------------------------- | :-------------: | :-------------: | :-------------------------------------: |
+| Drain current $I_\mathrm{D}$ ($\mathrm{mA}$)                                           | 0.89       | 0.78       | --                               |
+| Transconductance efficiency $g_\mathrm{m}/I_\mathrm{D}$ ($\mathrm{V^{-1}}$)            | 3.76       | 3.76       | --                               |
+| Inversion level                                                                        | strong     | strong     | --                               |
+| Transconductance $g_\mathrm{m}$ ($\mathrm{mS}$)                                        | 3.35       | 2.92       | --                               |
+| Output conductance $g_\mathrm{ds}$ ($\mathrm{\upmu S}$)                                | 116        | 29         | --                               |
+| Gate capacitance $C_\mathrm{gg}$ ($\mathrm{fF}$)                                        | 154.32     | 824.86     | --                               |
+| Transit frequency $f_\mathrm{T} = g_\mathrm{m}/(2\pi\,C_\mathrm{gg})$ ($\mathrm{GHz}$)  | 2.91       | 0.54       | --                               |
+| Thermal noise PSD $S_\mathrm{TH}$ at $1\,\mathrm{Hz}$ ($\mathrm{pV^2/Hz}$)              | 38.95      | 73.98      | --                               |
+| Flicker corner frequency $f_\mathrm{co}$ ($\mathrm{MHz}$)                               | 3.87       | 2.28       | --                               |
+| $g_\mathrm{m,tot} = g_\mathrm{m,NMOS} + g_\mathrm{m,PMOS}$ ($\mathrm{mS}$)              | --         | --         | 6.28                             |
+| $g_\mathrm{ds,tot} = g_\mathrm{ds,NMOS} + g_\mathrm{ds,PMOS}$ ($\mathrm{\upmu S}$)      | --         | --         | 145                              |
+
+: Calculated small-signal parameters with final widths. {#tbl-inverter-sizing-ss}
+
+From these values, the open-loop gain $A_\mathrm{ol}$, the output resistance $R_\mathrm{out}$, the open-loop cut-off frequency $f_\mathrm{cu}$, and the unity-gain frequency $f_\mathrm{T}$ with a dominant capacitive load $C_\mathrm{load} = 10\,\mathrm{pF}$ can be estimated as
+
+$$
+|A_\mathrm{ol}| = \frac{g_\mathrm{m,tot}}{g_\mathrm{ds,tot}} = \frac{6.28\,\mathrm{mS}}{145\,\mathrm{\upmu S}} = 43.2 = 32.72\,\mathrm{dB},
+$$
+
+$$
+R_\mathrm{out} = \frac{1}{g_\mathrm{ds,tot}} = \frac{1}{145\,\mathrm{\upmu S}} = 6.89\,\mathrm{k\Omega},
+$$
+
+$$
+f_\mathrm{cu} = \frac{1}{2\pi\,R_\mathrm{out}\,C_\mathrm{load}} = \frac{1}{2\pi \cdot 6.89\,\mathrm{k\Omega} \cdot 10\,\mathrm{pF}} = 2.31\,\mathrm{MHz},
+$$
+
+$$
+f_\mathrm{T} = \frac{g_\mathrm{m,tot}}{2\pi\,C_\mathrm{load}} = \frac{6.28\,\mathrm{mS}}{2\pi \cdot 10\,\mathrm{pF}} = 100\,\mathrm{MHz}.
+$$
+
+@tbl-inverter-sizing-vs-ac compares these hand-calculated values against the open-loop ac simulation result from [`inverter_tb_ac_ol`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/inverter/testbenches/xschem/inverter_tb_ac_ol.sch) (see @fig-inverter-tb-ac-ol-sim).
+
+| Quantity                  | $g_\mathrm{m}/I_\mathrm{D}$ calculation | ac open-loop simulation |
+| :------------------------ | :-------------------------------------: | :---------------------: |
+| Open-loop gain $A_\mathrm{ol}$ | $32.72\,\mathrm{dB}$                | $31.33\,\mathrm{dB}$   |
+| Dominant pole $f_\mathrm{c}$   | $2.31\,\mathrm{MHz}$                | $2.89\,\mathrm{MHz}$   |
+| Unity-gain frequency $f_\mathrm{T}$ | $100\,\mathrm{MHz}$            | $107\,\mathrm{MHz}$    |
+
+: Calculated vs. simulated open-loop characteristics of the inverter. {#tbl-inverter-sizing-vs-ac}
+
+::: {.callout-tip}
+The notebook is fully parametric. Changing $L$, the target $g_\mathrm{m}/I_\mathrm{D}$ or $I_\mathrm{out}$ and re-running the cells immediately produces a new sizing point, so it can be used as a starting template for sizing other simple analog blocks with the ihp-sg13g2 lookup tables. Try it out yourself by decreasing the transistor length to $L = 0.5\,\mathrm{\upmu m}$ and see how the small-signal parameters and the resulting open-loop gain and cut-off frequency change. What would you expect based on the tradeoffs above?
+:::
+
 ## Inspect / Edit the Layout
 
-The layout is created and edited in KLayout. The container alias `ke`
-opens KLayout in edit mode.
+After the schematic is finalised and the design targets are met, the layout can be created. The layout of the `inverter` cell is hierarchical, and the top-level cell `inverter_top` contains four instances of the `inverter` cell. Around the four-channel inverter layout, a power ring is drawn on `Metal5` and `TopMetal1` layers, which is connected to the `VDD` and `VSS` pins of the four inverters. This power ring is required for top-level integration, connecting the macro power to the chip's PDN.
+
+The layout is created and edited in KLayout. The container provides the `ke` alias for `klayout -e` (edit mode). With the following command, the GDS of the four-channel inverter is opened in KLayout. With the keys `0`, `1`, `2`, ..., `9` you can view different layers as explained in the [KLayout cheatsheet](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/doc/klayout/klayout_cheatsheet.md) or in the [klayout-layer-shortcuts](https://github.com/iic-jku/klayout-layer-shortcuts) plugin.
 
 ```sh
-cd macros/inverter/layout
-ke inverter_top.klay.gds
+ke layout/inverter_top.klay.gds
 ```
 
-After modifying the layout, export a clean `.gds` file (for example
-`inverter_top.gds`). The Magic-based flows always work on `.gds`, while
-the KLayout-based flows accept either `.gds` or `.klay.gds`.
+After modifying the layout, export a clean `.gds` file (for example `inverter_top.gds`) by pressing `File > Export Layout For Tapeout`. The Magic-based verification flows only work on `.gds` files, while the KLayout-based verification flows accept either `.gds` or `.klay.gds`.
 
-![`inverter_top` layout in KLayout.](fig/inverter_top/inverter_top_black.png){#fig-inverter-top-layout width=50%}
+![`inverter_top` layout in KLayout.](fig/inverter_top/inverter_top_black.png){#fig-inverter-top-layout width=75%}
 
 ## DRC, LVS, and PEX
 
