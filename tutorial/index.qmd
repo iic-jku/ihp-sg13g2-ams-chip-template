@@ -36,7 +36,7 @@ This tutorial is a step-by-step walk-through of the open-source analog-mixed sig
   - Linting with [Verilator](https://github.com/verilator/verilator)
   - Simulation with Icarus Verilog and [cocotb](https://github.com/cocotb/cocotb)
   - Viewing waveforms with [GTKWave](https://github.com/gtkwave/gtkwave) and [Surfer](https://gitlab.com/surfer-project/surfer)
-  - Synthesis, placement, routing, and sign-off with [Yosys](https://github.com/YosysHQ/yosys), [OpenROAD](https://github.com/The-OpenROAD-Project/OpenROAD), and [LibreLane](https://github.com/librelane/librelane)
+  - Synthesis, placement, routing, and verification with [Yosys](https://github.com/YosysHQ/yosys), [OpenROAD](https://github.com/The-OpenROAD-Project/OpenROAD), and [LibreLane](https://github.com/librelane/librelane)
 - [Analog macro design](#sec-analog)
   - Schematic entry in [Xschem](https://github.com/StefanSchippers/xschem)
   - Simulation with [Ngspice](https://github.com/danchitnis/ngspice-sf-mirror) and [VACASK](https://codeberg.org/arpadbuermen/VACASK)
@@ -200,7 +200,7 @@ The [top-level Makefile](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template
 | ------------------------------ | ---------------------------------------------------------------------- |
 | `make help`         | Print the help banner and list every target with its description.                                     |
 | `make init-submodules` | Initialise and update git submodules (for example the ArtistIC logo flow).                         |
-| `make sim-rtl-cocotb` / `sim-gl-cocotb` | Run the RTL / gate-level cocotb testbench for the top-level.                       |
+| `make sim-rtl-cocotb` / `sim-gl-cocotb` | Run the RTL / gate-level (GL) cocotb testbench for the top-level.                       |
 | `make sim-gl-xschem` | Run the gate-level Xschem testbench. Converges, but it may take a long time depending on the hardware used and is therefore not included in `sim-all`. |
 | `make sim-view-cocotb` | Open the latest cocotb waveform in GTKWave (or Surfer with `WAVEFORM_VIEWER=surfer`).              |
 | `make librelane` / `librelane-nodrc` | Run the LibreLane flow for the top-level (with / without DRC steps).                  |
@@ -348,7 +348,7 @@ The gate-level cocotb run uses the gate-level Verilog netlist produced after syn
 
 ## LibreLane Hardening
 
-The LibreLane flow synthesises, places, and routes the macro, runs the sign-off steps, and writes its final output files to `flow/final/`. The wrapper target `make build-top` runs the flow, renders the final GDS, and copies the reports, final folders, netlists, and render output back into the source tree.
+The LibreLane flow synthesises, places, and routes the macro, runs the verification steps, and writes its final output files to `flow/final/`. The wrapper target `make build-top` runs the flow, renders the final GDS, and copies the reports, final folders, netlists, and render output back into the source tree.
 
 ```sh
 make build-top
@@ -368,7 +368,7 @@ ke final/gds/counter_top.gds
 
 ![`counter_top` layout in KLayout (200 µm x 100 µm).](fig/counter_top/counter_top_black.png){#fig-counter-top-layout}
 
-The LibreLane render is copied to [`render/img/counter_top_librelane.png`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/counter/render/img/), and the high-resolution render from `lay2img.py` is saved as `counter_top.png` in the same folder. The sign-off reports are written to [`verification/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/counter/verification/).
+The LibreLane render is copied to [`render/img/counter_top_librelane.png`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/counter/render/img/), and the high-resolution render from `lay2img.py` is saved as `counter_top.png` in the same folder. The verification reports are written to [`verification/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/counter/verification/).
 
 ## RTL Mixed-Signal Simulation with Xschem
 
@@ -425,7 +425,7 @@ The full lint, simulation, and build chain is run with the following command.
 make all
 ```
 
-This calls `lint-verilog-all`, `sim-all`, `build-fpga`, and `build-top` in sequence. LVS and DRC are already covered by the LibreLane sign-off steps, so no extra verification target is needed for the digital macro.
+This calls `lint-verilog-all`, `sim-all`, `build-fpga`, and `build-top` in sequence. LVS and DRC are already covered by the LibreLane verification steps, so no extra verification target is needed for the digital macro.
 
 # Analog Macro Implementation {#sec-analog}
 
@@ -747,7 +747,7 @@ The full simulation, build, and verification chain is run with the following com
 make all
 ```
 
-This calls `sim-all` (Xschem + CACE), `klayout-verify-all`, `magic-verify-all`, and `build-top` in sequence. Depending on the host hardware, a full pass can take a few minutes, especially the CACE simulation step.
+This calls `sim-all` (Xschem + CACE), `klayout-verify-all`, `magic-verify-all`, and `build-top` in sequence. Depending on the hardware used, a full pass can take a few minutes, especially the CACE simulation step.
 
 
 # Top-Level Implementation {#sec-top}
@@ -955,7 +955,7 @@ When new macros are added, the matching `define_pdn_grid` plus `add_pdn_connect`
 # Custom connect for the inverter macros (inverter1, inverter2).
 # The top-level power ring is on TM1 (horizontal) and TM2 (vertical).
 # Each inverter has its own power ring on M5 (horizontal) and TM1 (vertical),
-# so the connection between the top-level power ring and the inverter power rings crosses cleanly. 
+# so the connection between the top-level power ring and the inverter power rings crosses cleanly.
 # Note: within an inverter's power ring no top-level TM1 or TM2 power rails are routed.
 define_pdn_grid \
     -macro \
@@ -984,11 +984,11 @@ make sim-view-cocotb                                # use GTKWave as waveform vi
 make sim-view-cocotb WAVEFORM_VIEWER=surfer         # use Surfer as waveform viewer
 ```
 
-The cocotb testbench at chip level is [`testbenches/cocotb/chip_top_tb.py`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/testbenches/cocotb/chip_top_tb.py), and it covers the global enable, reset, counters, and bidir behaviour documented in [specifications.md](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/doc/specifications.md). The result is shown in @fig-chip-top-cocotb-gtkwave.
+The cocotb testbench at top level is [`testbenches/cocotb/chip_top_tb.py`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/testbenches/cocotb/chip_top_tb.py), and it covers the global enable, reset, counters, and bidir behaviour documented in [`doc/specifications.md`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/doc/specifications.md). The result is shown in @fig-chip-top-cocotb-gtkwave.
 
 ![`chip_top` cocotb waveform in GTKWave.](fig/chip_top/chip_top_cocotb_gtkwave.png){#fig-chip-top-cocotb-gtkwave}
 
-For mixed-signal simulation, the [`testbenches/xschem/chip_top_tb_tran.sch`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/testbenches/xschem/) testbench exists and can be opened in Xschem for interactive simulation the same way as for the counter or the inverter and is shown in @fig-chip-top-tb-tran-schematic.
+For mixed-signal simulation, the [`testbenches/xschem/chip_top_tb_tran.sch`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/testbenches/xschem/chip_top_tb_tran.sch) testbench can be opened in Xschem for interactive simulation, the same way as for the counter or the inverter, and is shown in @fig-chip-top-tb-tran-schematic.
 
 ```sh
 cd testbenches/xschem
@@ -1005,7 +1005,7 @@ make plot-xschem-sim TESTBENCH=chip_top_tb_tran
 ```
 
 ::: {.callout-note}
-The top-level Xschem testbench converges, but it may take a long time depending on the hardware used. `make sim-gl-xschem` is therefore not part of `sim-all` and must be called manually when needed. For this tutorial, the simulation data is already available in the repository in [`scripts/plot_simulations/chip_top_tb_tran.txt`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/scripts/plot_simulations/data/chip_top_tb_tran.txt), so `make plot-xschem-sim TESTBENCH=chip_top_tb_tran` can be run without running the simulation first.
+The top-level Xschem testbench converges, but it may take a long time depending on the hardware used. `make sim-gl-xschem` is therefore not part of `sim-all` and must be called manually when needed. For this tutorial, the simulation data is already available in the repository in [`scripts/plot_simulations/data/chip_top_tb_tran.txt`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/scripts/plot_simulations/data/chip_top_tb_tran.txt), so `make plot-xschem-sim TESTBENCH=chip_top_tb_tran` can be run without running the simulation first.
 :::
 
 The following plots show the results of the top-level transient simulation. The first plot shows the analog inverter response, while the other three plots show the digital outputs of the two counters, the digital inverter, and the bidirs.
@@ -1018,17 +1018,15 @@ The following plots show the results of the top-level transient simulation. The 
 
 ![Plotted simulation result of `chip_top_tb_tran` — digital counter 1 / inverter 1 bidirs.](fig/chip_top/chip_top_tb_tran_digital3_sim.svg){#fig-chip-top-tb-tran-digital3-sim}
 
-::: {.callout-tip}
-Inspect the Xschem symbol of `chip_top` to see the connections defined in [`chip_core.sv`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/rtl/chip_core.sv) visually. Use **`e` / `Ctrl + e`** and **`i` / `Ctrl + e`** to descend into and back out of subcircuits and symbols.
+When the testbench is opened in Xschem, the schematic of `chip_top` can be inspected with the shortcuts **`e`** / **`Ctrl + e`**, and the symbol can be shown with **`i`** / **`Ctrl + i`** as explained in @sec-analog. The schematic and symbol are shown in @fig-chip-top-symbol and @fig-chip-top-schematic, respectively. The schematic shows the connections between the padframe and the core macros, while the symbol shows the pinout of the chip. The SRAM is not included in the schematic, since IHP does not ship a SPICE model or an Xschem symbol for the `RM_IHPSG13_1P_1024x32_c2_bm_bist` macro.
 
-Note that the SRAM is not in the schematic. IHP does not ship a SPICE model or an Xschem symbol for the `RM_IHPSG13_1P_1024x32_c2_bm_bist` macro, so it is excluded from the schematic-level simulation.
-:::
+![Xschem symbol of `chip_top`, showing the pinout of the chip.](fig/chip_top/chip_top_symbol.svg){#fig-chip-top-symbol width=60%}
 
-![Xschem schematic of `chip_top`, showing the connections between the padframe and the core macros (the SRAM is not in the schematic).](fig/chip_top/chip_top_schematic.svg){#fig-chip-top-schematic}
+![Xschem schematic of `chip_top`, showing the connections between the padframe and the core macros.](fig/chip_top/chip_top_schematic.svg){#fig-chip-top-schematic}
 
 ## Building the Chip
 
-When the floorplan and pinout are settled, the chip can be built from scratch with the following command.
+When the floorplan and pinout are planned and configured, the chip can be built from scratch with the following command.
 
 ```sh
 make build-all
@@ -1042,59 +1040,81 @@ To re-run only the top-level flow (for example after a change in [`config.yaml`]
 make build-top
 ```
 
-Internally, `build-top` chains `librelane-nodrc`, `copy-reports`, `copy-gds`, `copy-netlist`, `copy-render`, `add-logo-fill`, and
-`render-gds`. The final GDS is written to [`layout/chip_top_logo_fill.gds.gz`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/layout/).
+Internally, `build-top` runs `librelane-nodrc`, `copy-reports`, `copy-gds`, `copy-netlist`, `copy-render`, `add-logo-fill`, and
+`render-gds`. The final GDS is written to [`layout/chip_top_logo_fill.gds.gz`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/layout/chip_top_logo_fill.gds.gz).
+
+The render generated by `lay2img.py`, which is executed during the `render-gds` step, is located in [`render/img/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/render/img/). The verification reports (Yosys, antenna, STA, IR-drop, LVS, manufacturability) from the top-level LibreLane flow can be found in [`verification/reports/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/verification/reports/). The netlists are located in [`netlist/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/netlist/).
+
+::: {.callout-note}
+Note that currently the LibreLane flow streams out the top-level GDS `layout/chip_top.gds.gz` without the logos and the fill structures. To add the chip logo (PNG → GDS) and the fill structures on top of the LibreLane output, run:
+
+```sh
+make add-logo-fill
+```
+
+This calls `scripts/add_logo_fill.sh` and writes `layout/chip_top_logo_fill.gds.gz`. This step is already called by `make build-top`. In the future, it is planned to replace this script and Makefile target with a custom LibreLane step.
+:::
+
+::: {.callout-tip}
+The difference between `chip_top.gds.gz` and `chip_top_logo_fill.gds.gz` is that the former is the raw top-level layout without any logos or filler cells, while the latter includes the logos and filler cells added for manufacturability and cosmetic purposes. For visual debugging in KLayout, it is recommended to use `chip_top.gds.gz` to avoid the visual clutter of the logos and filler, while for DRC and LVS, `chip_top_logo_fill.gds.gz` should be used since it is the actual layout that will be taped out.
+:::
 
 ## Viewing the Chip
 
 After a successful build, the chip can be opened with KLayout.
 
 ```sh
-ke layout/chip_top_logo_fill.gds.gz   # KLayout edit mode
+ke layout/chip_top.gds.gz             # Chip layout without logos and filler
+ke layout/chip_top_logo_fill.gds.gz   # Chip layout with logos and filler
 ```
 
-The render generated by `lay2img.py` is in [`render/img/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/render/img/). The sign-off reports (Yosys, antenna, STA, IR-drop, LVS, manufacturability) are in [`verification/reports/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/verification/reports/).
+![`chip_top_logo_fill` layout in KLayout ("all" layers).](fig/chip_top/chip_top_black.png){#fig-chip-top-layout width=75%}
 
-![`chip_top_logo_fill` layout in KLayout (all layers).](fig/chip_top/chip_top_black.png){#fig-chip-top-layout}
-
-![`chip_top_logo_fill` layout in KLayout with only TopMetal2 selected, showing the power distribution network.](fig/chip_top/chip_top_black_TM2.png){#fig-chip-top-layout-tm2}
+![`chip_top_logo_fill` layout in KLayout with only `TopMetal2` selected.](fig/chip_top/chip_top_black_TM2.png){#fig-chip-top-layout-tm2 width=75%}
 
 ## Chip-Level Verification
 
-DRC, LVS, and PEX are also available at chip level.
+DRC, LVS, and PEX are also available for the full chip.
 
 ### DRC
+
+The following DRC targets are available for the top-level.
 
 ```sh
 make magic-drc CELL=chip_top              # Magic DRC on the bare chip
 make magic-drc CELL=chip_top_logo_fill    # Magic DRC including logo + filler
-make klayout-drc-minimum                  # fast pre-check KLayout DRC
-make klayout-drc-regular                  # full KLayout DRC (slower)
+make klayout-drc-minimum                  # fast pre-check KLayout DRC on chip_top_logo_fill.gds.gz
+make klayout-drc-regular                  # full KLayout DRC on chip_top_logo_fill.gds.gz (slower)
 ```
 
-`klayout-drc-minimum` is a quick pre-check on the final top-level layout including the logo and the fill structures. `klayout-drc-regular` does the full check, but takes longer.
+`klayout-drc-minimum` is a quick pre-check on the final top-level layout including the logo and the fill structures. `klayout-drc-regular` does the full check, but takes longer. `magic-drc` is faster than `klayout-drc`, but it does not support the full set of DRC rules and is less accurate on the complex top-level layout, so it is recommended to use both.
 
 ### PEX
 
+The following PEX target is available for the top-level.
+
 ```sh
-make magic-pex CELL=chip_top              # only chip_top, default EXT_MODE=1
+make magic-pex                            # only chip_top (without logo and filler), default EXT_MODE=1
 ```
 
-::: {.callout-tip}
-At chip level, PEX is only run on `chip_top` (without logo and filler), and the default `EXT_MODE=1` (C-decoupled) keeps the runtime manageable.
+::: {.callout-warning}
+At top level, PEX is only run on `chip_top` (without logo and filler), and the default `EXT_MODE=1` (C-decoupled) is used to keep the runtime manageable. However, the extracted netlist is still huge, and the post-layout simulation must be run on a powerful server.
 :::
 
 ### LVS
 
+The following LVS target is available for the top-level.
+
 ```sh
+make klayout-lvs                          # top-level KLayout LVS
 make magic-lvs                            # top-level Magic + Netgen LVS
 ```
 
 ::: {.callout-warning}
-The top-level LVS is currently under construction. The infrastructure is in place, but a fully clean run cannot be expected yet.
+The top-level LVS is currently under construction. The flow is in place, but some issues and limitations in the ihp-sg13g2 PDK must be fixed before it can run successfully.
 :::
 
-## Full Pass
+## Full Flow at Once
 
 The comprehensive simulation, build, and DRC pass for the complete chip is run with the following command.
 
@@ -1102,7 +1122,7 @@ The comprehensive simulation, build, and DRC pass for the complete chip is run w
 make all
 ```
 
-This calls `sim-all` (RTL/GL cocotb, GL Xschem when available), then `build-all`, then Magic DRC on both `chip_top` and `chip_top_logo_fill`. Depending on the host hardware, this can take a while.
+This calls `sim-all` (RTL/GL cocotb, GL Xschem when available), then `build-all`, then Magic DRC on both `chip_top` and `chip_top_logo_fill`. To shorten the runtime, the KLayout DRC is currently not included in `make all`. However, depending on the hardware used, `make all` can still take a while.
 
 ## Releasing for Tapeout
 
