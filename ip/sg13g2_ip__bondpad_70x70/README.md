@@ -43,16 +43,19 @@ make all
 
 The following Makefile variables can be overridden:
 
-| Variable   | Default  | Description                        |
-| ---------- | -------- | ---------------------------------- |
-| `DIAMETER` | `70.0`   | Bondpad diameter/side length in µm |
-| `SHAPE`    | `square` | Bondpad shape (`square`/`octagon`/`circle`)  |
+| Variable       | Default  | Description                                                                                |
+| -------------- | -------- | ------------------------------------------------------------------------------------------ |
+| `DIAMETER`     | `70.0`   | Bondpad diameter/side length in µm                                                         |
+| `SHAPE`        | `square` | Bondpad shape (`square`/`octagon`/`circle`)                                                |
+| `BOTTOM_METAL` | `3`      | Lowest metal in the pad stack (`1`=Metal1 .. `5`=Metal5, `6`=TopMetal1). Top is fixed to TopMetal2. |
 
-Example — generate an octagonal 70 µm bondpad:
+Example — generate an octagonal 70 µm bondpad starting at Metal2:
 
 ```bash
-make bondpad DIAMETER=70.0 SHAPE=octagon
+make bondpad DIAMETER=70.0 SHAPE=octagon BOTTOM_METAL=2
 ```
+
+> **Note:** The SG13_dev `bondpad` PCell expects its bottom-metal parameter as the string choice `'1'..'5'` or `'TM1'`. `bondpad.py` maps the integer `BOTTOM_METAL` (1..6) to that choice automatically, and also writes the matching `OBS` range into the LEF so the GDS and LEF stay consistent.
 
 
 ## Bondpad Generator Script

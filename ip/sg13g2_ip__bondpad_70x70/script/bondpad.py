@@ -54,6 +54,13 @@ PCELL = 'bondpad'
 # Full IHP SG13G2 metal stack from bottom to top (indices 0-6).
 METAL_LAYERS = ['Metal1', 'Metal2', 'Metal3', 'Metal4', 'Metal5', 'TopMetal1', 'TopMetal2']
 
+# Mapping from the wrapper's int bottom_metal (1..6) to the value the
+# SG13_dev ``bondpad`` PCell expects on its ``bottomMetal`` parameter
+# (ChoiceConstraint ['1','2','3','4','5','TM1']). Passing the wrong key
+# (e.g. ``bottom_metal``) is silently ignored by ``add_pcell_variant``,
+# which then falls back to the PDK default of '3' (Metal3).
+PCELL_BOTTOM_METAL = {1: '1', 2: '2', 3: '3', 4: '4', 5: '5', 6: 'TM1'}
+
 
 def generate_bondpad_lef(size: float, shape: str, output: str,
                          bottom_metal: int = 1):
@@ -151,7 +158,7 @@ def generate_bondpad_gds(diameter: float, shape: str, output: str,
     top_cell = layout.cell(layout.add_cell(cell_name))
     pcell = layout.add_pcell_variant(lib, pcell_decl.id(),
         {'diameter': f'{diameter}u', 'shape': shape,
-         'bottom_metal': bottom_metal})
+         'bottomMetal': PCELL_BOTTOM_METAL[bottom_metal]})
     top_cell.insert(klayout.db.CellInstArray(pcell, klayout.db.Trans(klayout.db.Vector(offset, offset))))
 
     # Ensure the output directory exists.

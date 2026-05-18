@@ -19,8 +19,9 @@ VH_DIR    	:= final/vh
 DRC_RPT_DIR := verification/drc
 
 # Bondpad parameters
-DIAMETER  	?= 70.0
-SHAPE     	?= square
+DIAMETER     ?= 70.0
+SHAPE        ?= square
+BOTTOM_METAL ?= 3
 
 
 # Help Target
@@ -45,7 +46,7 @@ clean: ## Remove generated outputs and reports
 
 # Build Target
 bondpad: ## Generate bondpad GDS and LEF using KLayout Python script
-	KLAYOUT_PATH=$(PDK_ROOT)/$(PDK)/libs.tech/klayout:$(PDK_ROOT)/$(PDK)/libs.tech/klayout/tech klayout -n sg13g2 -zz -r script/bondpad.py -rd diameter=$(DIAMETER) -rd shape=$(SHAPE) -rd gds_output=$(GDS_DIR)/$(TOP).gds -rd lef_output=$(LEF_DIR)/$(TOP).lef
+	KLAYOUT_PATH=$(PDK_ROOT)/$(PDK)/libs.tech/klayout:$(PDK_ROOT)/$(PDK)/libs.tech/klayout/tech klayout -n sg13g2 -zz -r script/bondpad.py -rd diameter=$(DIAMETER) -rd shape=$(SHAPE) -rd bottom_metal=$(BOTTOM_METAL) -rd gds_output=$(GDS_DIR)/$(TOP).gds -rd lef_output=$(LEF_DIR)/$(TOP).lef
 .PHONY: bondpad
 # ================================================================================================
 
