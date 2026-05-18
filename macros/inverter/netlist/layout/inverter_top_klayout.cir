@@ -1,4 +1,4 @@
-* Extracted by KLayout with SG13G2 LVS runset on : 18/05/2026 21:31
+* Extracted by KLayout with SG13G2 LVS runset on : 18/05/2026 21:42
 
 .SUBCKT inverter_top vin1 vin2 vin3 vin4 vout1 vout2 vout3 vout4 VSS VDD
 X$1 \$19 VSS VDD vout1 vin1 \$10 inverter

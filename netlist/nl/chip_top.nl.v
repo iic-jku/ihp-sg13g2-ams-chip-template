@@ -42000,38 +42000,38 @@ module chip_top (clk_PAD,
  sg13g2_decap_8 FILLER_9_980 ();
  sg13g2_decap_8 FILLER_9_987 ();
  sg13g2_decap_8 FILLER_9_994 ();
- sg13g2_ip__bondpad_70x70 \IO_BOND_analogs[0].analog_pad  (.pad(analog_PAD[0]));
- sg13g2_ip__bondpad_70x70 \IO_BOND_analogs[1].analog_pad  (.pad(analog_PAD[1]));
- sg13g2_ip__bondpad_70x70 \IO_BOND_analogs[2].analog_pad  (.pad(analog_PAD[2]));
- sg13g2_ip__bondpad_70x70 \IO_BOND_analogs[3].analog_pad  (.pad(analog_PAD[3]));
- sg13g2_ip__bondpad_70x70 \IO_BOND_bidirs[0].bidir_pad  (.pad(bidir_PAD[0]));
- sg13g2_ip__bondpad_70x70 \IO_BOND_bidirs[1].bidir_pad  (.pad(bidir_PAD[1]));
- sg13g2_ip__bondpad_70x70 \IO_BOND_bidirs[2].bidir_pad  (.pad(bidir_PAD[2]));
- sg13g2_ip__bondpad_70x70 \IO_BOND_bidirs[3].bidir_pad  (.pad(bidir_PAD[3]));
  sg13g2_ip__bondpad_70x70 IO_BOND_clk_pad (.pad(clk_PAD));
- sg13g2_ip__bondpad_70x70 \IO_BOND_inputs[0].input_pad  (.pad(input_PAD));
- sg13g2_ip__bondpad_70x70 \IO_BOND_iovdd_pads[0].iovdd_pad  (.pad(IOVDD));
- sg13g2_ip__bondpad_70x70 \IO_BOND_iovss_pads[0].iovss_pad  (.pad(IOVSS));
- sg13g2_ip__bondpad_70x70 \IO_BOND_outputs[0].output_pad  (.pad(output_PAD[0]));
- sg13g2_ip__bondpad_70x70 \IO_BOND_outputs[10].output_pad  (.pad(output_PAD[10]));
- sg13g2_ip__bondpad_70x70 \IO_BOND_outputs[11].output_pad  (.pad(output_PAD[11]));
- sg13g2_ip__bondpad_70x70 \IO_BOND_outputs[12].output_pad  (.pad(output_PAD[12]));
- sg13g2_ip__bondpad_70x70 \IO_BOND_outputs[13].output_pad  (.pad(output_PAD[13]));
- sg13g2_ip__bondpad_70x70 \IO_BOND_outputs[14].output_pad  (.pad(output_PAD[14]));
- sg13g2_ip__bondpad_70x70 \IO_BOND_outputs[15].output_pad  (.pad(output_PAD[15]));
- sg13g2_ip__bondpad_70x70 \IO_BOND_outputs[16].output_pad  (.pad(output_PAD[16]));
- sg13g2_ip__bondpad_70x70 \IO_BOND_outputs[1].output_pad  (.pad(output_PAD[1]));
- sg13g2_ip__bondpad_70x70 \IO_BOND_outputs[2].output_pad  (.pad(output_PAD[2]));
- sg13g2_ip__bondpad_70x70 \IO_BOND_outputs[3].output_pad  (.pad(output_PAD[3]));
- sg13g2_ip__bondpad_70x70 \IO_BOND_outputs[4].output_pad  (.pad(output_PAD[4]));
- sg13g2_ip__bondpad_70x70 \IO_BOND_outputs[5].output_pad  (.pad(output_PAD[5]));
- sg13g2_ip__bondpad_70x70 \IO_BOND_outputs[6].output_pad  (.pad(output_PAD[6]));
- sg13g2_ip__bondpad_70x70 \IO_BOND_outputs[7].output_pad  (.pad(output_PAD[7]));
- sg13g2_ip__bondpad_70x70 \IO_BOND_outputs[8].output_pad  (.pad(output_PAD[8]));
- sg13g2_ip__bondpad_70x70 \IO_BOND_outputs[9].output_pad  (.pad(output_PAD[9]));
+ sg13g2_ip__bondpad_70x70 \IO_BOND_g_analogs[0].analog_pad  (.pad(analog_PAD[0]));
+ sg13g2_ip__bondpad_70x70 \IO_BOND_g_analogs[1].analog_pad  (.pad(analog_PAD[1]));
+ sg13g2_ip__bondpad_70x70 \IO_BOND_g_analogs[2].analog_pad  (.pad(analog_PAD[2]));
+ sg13g2_ip__bondpad_70x70 \IO_BOND_g_analogs[3].analog_pad  (.pad(analog_PAD[3]));
+ sg13g2_ip__bondpad_70x70 \IO_BOND_g_bidirs[0].bidir_pad  (.pad(bidir_PAD[0]));
+ sg13g2_ip__bondpad_70x70 \IO_BOND_g_bidirs[1].bidir_pad  (.pad(bidir_PAD[1]));
+ sg13g2_ip__bondpad_70x70 \IO_BOND_g_bidirs[2].bidir_pad  (.pad(bidir_PAD[2]));
+ sg13g2_ip__bondpad_70x70 \IO_BOND_g_bidirs[3].bidir_pad  (.pad(bidir_PAD[3]));
+ sg13g2_ip__bondpad_70x70 \IO_BOND_g_inputs[0].input_pad  (.pad(input_PAD));
+ sg13g2_ip__bondpad_70x70 \IO_BOND_g_iovdd_pads[0].iovdd_pad  (.pad(IOVDD));
+ sg13g2_ip__bondpad_70x70 \IO_BOND_g_iovss_pads[0].iovss_pad  (.pad(IOVSS));
+ sg13g2_ip__bondpad_70x70 \IO_BOND_g_outputs[0].output_pad  (.pad(output_PAD[0]));
+ sg13g2_ip__bondpad_70x70 \IO_BOND_g_outputs[10].output_pad  (.pad(output_PAD[10]));
+ sg13g2_ip__bondpad_70x70 \IO_BOND_g_outputs[11].output_pad  (.pad(output_PAD[11]));
+ sg13g2_ip__bondpad_70x70 \IO_BOND_g_outputs[12].output_pad  (.pad(output_PAD[12]));
+ sg13g2_ip__bondpad_70x70 \IO_BOND_g_outputs[13].output_pad  (.pad(output_PAD[13]));
+ sg13g2_ip__bondpad_70x70 \IO_BOND_g_outputs[14].output_pad  (.pad(output_PAD[14]));
+ sg13g2_ip__bondpad_70x70 \IO_BOND_g_outputs[15].output_pad  (.pad(output_PAD[15]));
+ sg13g2_ip__bondpad_70x70 \IO_BOND_g_outputs[16].output_pad  (.pad(output_PAD[16]));
+ sg13g2_ip__bondpad_70x70 \IO_BOND_g_outputs[1].output_pad  (.pad(output_PAD[1]));
+ sg13g2_ip__bondpad_70x70 \IO_BOND_g_outputs[2].output_pad  (.pad(output_PAD[2]));
+ sg13g2_ip__bondpad_70x70 \IO_BOND_g_outputs[3].output_pad  (.pad(output_PAD[3]));
+ sg13g2_ip__bondpad_70x70 \IO_BOND_g_outputs[4].output_pad  (.pad(output_PAD[4]));
+ sg13g2_ip__bondpad_70x70 \IO_BOND_g_outputs[5].output_pad  (.pad(output_PAD[5]));
+ sg13g2_ip__bondpad_70x70 \IO_BOND_g_outputs[6].output_pad  (.pad(output_PAD[6]));
+ sg13g2_ip__bondpad_70x70 \IO_BOND_g_outputs[7].output_pad  (.pad(output_PAD[7]));
+ sg13g2_ip__bondpad_70x70 \IO_BOND_g_outputs[8].output_pad  (.pad(output_PAD[8]));
+ sg13g2_ip__bondpad_70x70 \IO_BOND_g_outputs[9].output_pad  (.pad(output_PAD[9]));
+ sg13g2_ip__bondpad_70x70 \IO_BOND_g_vdd_pads[0].vdd_pad  (.pad(VDD));
+ sg13g2_ip__bondpad_70x70 \IO_BOND_g_vss_pads[0].vss_pad  (.pad(VSS));
  sg13g2_ip__bondpad_70x70 IO_BOND_rst_n_pad (.pad(rst_n_PAD));
- sg13g2_ip__bondpad_70x70 \IO_BOND_vdd_pads[0].vdd_pad  (.pad(VDD));
- sg13g2_ip__bondpad_70x70 \IO_BOND_vss_pads[0].vss_pad  (.pad(VSS));
  sg13g2_Corner IO_CORNER_NORTH_EAST_INST ();
  sg13g2_Corner IO_CORNER_NORTH_WEST_INST ();
  sg13g2_Corner IO_CORNER_SOUTH_EAST_INST ();
@@ -42249,34 +42249,6 @@ module chip_top (clk_PAD,
  sg13g2_xnor2_1 _221_ (.Y(\i_chip_core.output_out[16] ),
     .A(_014_),
     .B(_029_));
- sg13g2_IOPadAnalog \analogs[0].analog_pad  (.pad(analog_PAD[0]),
-    .padbare(\analog_PADBARE[0] ),
-    .padres(\analog_PADRES[0] ));
- sg13g2_IOPadAnalog \analogs[1].analog_pad  (.pad(analog_PAD[1]),
-    .padbare(\analog_PADBARE[1] ),
-    .padres(\analog_PADRES[1] ));
- sg13g2_IOPadAnalog \analogs[2].analog_pad  (.pad(analog_PAD[2]),
-    .padbare(\analog_PADBARE[2] ),
-    .padres(\analog_PADRES[2] ));
- sg13g2_IOPadAnalog \analogs[3].analog_pad  (.pad(analog_PAD[3]),
-    .padbare(\analog_PADBARE[3] ),
-    .padres(\analog_PADRES[3] ));
- sg13g2_IOPadInOut30mA \bidirs[0].bidir_pad  (.c2p(\i_chip_core.counter1_value[4] ),
-    .c2p_en(\i_chip_core.input_in[0] ),
-    .p2c(\i_chip_core.inv1_din1 ),
-    .pad(bidir_PAD[0]));
- sg13g2_IOPadInOut30mA \bidirs[1].bidir_pad  (.c2p(\i_chip_core.counter1_value[5] ),
-    .c2p_en(\i_chip_core.input_in[0] ),
-    .p2c(\i_chip_core.inv1_din2 ),
-    .pad(bidir_PAD[1]));
- sg13g2_IOPadInOut30mA \bidirs[2].bidir_pad  (.c2p(\i_chip_core.counter1_value[6] ),
-    .c2p_en(\i_chip_core.input_in[0] ),
-    .p2c(\i_chip_core.inv1_din3 ),
-    .pad(bidir_PAD[2]));
- sg13g2_IOPadInOut30mA \bidirs[3].bidir_pad  (.c2p(\i_chip_core.counter1_value[7] ),
-    .c2p_en(\i_chip_core.input_in[0] ),
-    .p2c(\i_chip_core.inv1_din4 ),
-    .pad(bidir_PAD[3]));
  sg13g2_IOPadIn clk_pad (.p2c(clk_PAD2CORE),
     .pad(clk_PAD));
  sg13g2_buf_16 clkbuf_0_clk_PAD2CORE (.X(clknet_0_clk_PAD2CORE),
@@ -42286,6 +42258,74 @@ module chip_top (clk_PAD,
  sg13g2_buf_16 clkbuf_1_1__f_clk_PAD2CORE (.X(clknet_1_1__leaf_clk_PAD2CORE),
     .A(clknet_0_clk_PAD2CORE));
  sg13g2_inv_1 clkload0 (.A(clknet_1_1__leaf_clk_PAD2CORE));
+ sg13g2_IOPadAnalog \g_analogs[0].analog_pad  (.pad(analog_PAD[0]),
+    .padbare(\analog_PADBARE[0] ),
+    .padres(\analog_PADRES[0] ));
+ sg13g2_IOPadAnalog \g_analogs[1].analog_pad  (.pad(analog_PAD[1]),
+    .padbare(\analog_PADBARE[1] ),
+    .padres(\analog_PADRES[1] ));
+ sg13g2_IOPadAnalog \g_analogs[2].analog_pad  (.pad(analog_PAD[2]),
+    .padbare(\analog_PADBARE[2] ),
+    .padres(\analog_PADRES[2] ));
+ sg13g2_IOPadAnalog \g_analogs[3].analog_pad  (.pad(analog_PAD[3]),
+    .padbare(\analog_PADBARE[3] ),
+    .padres(\analog_PADRES[3] ));
+ sg13g2_IOPadInOut30mA \g_bidirs[0].bidir_pad  (.c2p(\i_chip_core.counter1_value[4] ),
+    .c2p_en(\i_chip_core.input_in[0] ),
+    .p2c(\i_chip_core.inv1_din1 ),
+    .pad(bidir_PAD[0]));
+ sg13g2_IOPadInOut30mA \g_bidirs[1].bidir_pad  (.c2p(\i_chip_core.counter1_value[5] ),
+    .c2p_en(\i_chip_core.input_in[0] ),
+    .p2c(\i_chip_core.inv1_din2 ),
+    .pad(bidir_PAD[1]));
+ sg13g2_IOPadInOut30mA \g_bidirs[2].bidir_pad  (.c2p(\i_chip_core.counter1_value[6] ),
+    .c2p_en(\i_chip_core.input_in[0] ),
+    .p2c(\i_chip_core.inv1_din3 ),
+    .pad(bidir_PAD[2]));
+ sg13g2_IOPadInOut30mA \g_bidirs[3].bidir_pad  (.c2p(\i_chip_core.counter1_value[7] ),
+    .c2p_en(\i_chip_core.input_in[0] ),
+    .p2c(\i_chip_core.inv1_din4 ),
+    .pad(bidir_PAD[3]));
+ sg13g2_IOPadIn \g_inputs[0].input_pad  (.p2c(\i_chip_core.input_in[0] ),
+    .pad(input_PAD));
+ sg13g2_IOPadIOVdd \g_iovdd_pads[0].iovdd_pad  ();
+ sg13g2_IOPadIOVss \g_iovss_pads[0].iovss_pad  ();
+ sg13g2_IOPadOut30mA \g_outputs[0].output_pad  (.c2p(\i_chip_core.counter1_value[0] ),
+    .pad(output_PAD[0]));
+ sg13g2_IOPadOut30mA \g_outputs[10].output_pad  (.c2p(\i_chip_core.counter2_value[6] ),
+    .pad(output_PAD[10]));
+ sg13g2_IOPadOut30mA \g_outputs[11].output_pad  (.c2p(\i_chip_core.counter2_value[7] ),
+    .pad(output_PAD[11]));
+ sg13g2_IOPadOut30mA \g_outputs[12].output_pad  (.c2p(\i_chip_core.inv1_dout1 ),
+    .pad(output_PAD[12]));
+ sg13g2_IOPadOut30mA \g_outputs[13].output_pad  (.c2p(\i_chip_core.inv1_dout2 ),
+    .pad(output_PAD[13]));
+ sg13g2_IOPadOut30mA \g_outputs[14].output_pad  (.c2p(\i_chip_core.inv1_dout3 ),
+    .pad(output_PAD[14]));
+ sg13g2_IOPadOut30mA \g_outputs[15].output_pad  (.c2p(\i_chip_core.inv1_dout4 ),
+    .pad(output_PAD[15]));
+ sg13g2_IOPadOut30mA \g_outputs[16].output_pad  (.c2p(\i_chip_core.output_out[16] ),
+    .pad(output_PAD[16]));
+ sg13g2_IOPadOut30mA \g_outputs[1].output_pad  (.c2p(\i_chip_core.counter1_value[1] ),
+    .pad(output_PAD[1]));
+ sg13g2_IOPadOut30mA \g_outputs[2].output_pad  (.c2p(\i_chip_core.counter1_value[2] ),
+    .pad(output_PAD[2]));
+ sg13g2_IOPadOut30mA \g_outputs[3].output_pad  (.c2p(\i_chip_core.counter1_value[3] ),
+    .pad(output_PAD[3]));
+ sg13g2_IOPadOut30mA \g_outputs[4].output_pad  (.c2p(\i_chip_core.counter2_value[0] ),
+    .pad(output_PAD[4]));
+ sg13g2_IOPadOut30mA \g_outputs[5].output_pad  (.c2p(\i_chip_core.counter2_value[1] ),
+    .pad(output_PAD[5]));
+ sg13g2_IOPadOut30mA \g_outputs[6].output_pad  (.c2p(\i_chip_core.counter2_value[2] ),
+    .pad(output_PAD[6]));
+ sg13g2_IOPadOut30mA \g_outputs[7].output_pad  (.c2p(\i_chip_core.counter2_value[3] ),
+    .pad(output_PAD[7]));
+ sg13g2_IOPadOut30mA \g_outputs[8].output_pad  (.c2p(\i_chip_core.counter2_value[4] ),
+    .pad(output_PAD[8]));
+ sg13g2_IOPadOut30mA \g_outputs[9].output_pad  (.c2p(\i_chip_core.counter2_value[5] ),
+    .pad(output_PAD[9]));
+ sg13g2_IOPadVdd \g_vdd_pads[0].vdd_pad  ();
+ sg13g2_IOPadVss \g_vss_pads[0].vss_pad  ();
  sg13g2_dlygate4sd3_1 hold162 (.A(net162),
     .X(net161));
  sg13g2_dlygate4sd3_1 hold163 (.A(\i_chip_core.rst_n ),
@@ -42679,48 +42719,8 @@ module chip_top (clk_PAD,
  sg13g2_tielo \i_chip_core.sram_0_97  (.L_LO(net96));
  sg13g2_tielo \i_chip_core.sram_0_98  (.L_LO(net97));
  sg13g2_tielo \i_chip_core.sram_0_99  (.L_LO(net98));
- sg13g2_IOPadIn \inputs[0].input_pad  (.p2c(\i_chip_core.input_in[0] ),
-    .pad(input_PAD));
- sg13g2_IOPadIOVdd \iovdd_pads[0].iovdd_pad  ();
- sg13g2_IOPadIOVss \iovss_pads[0].iovss_pad  ();
  sg13g2_ip__jku jku_logo ();
  sg13g2_ip__jku_names jku_names ();
- sg13g2_IOPadOut30mA \outputs[0].output_pad  (.c2p(\i_chip_core.counter1_value[0] ),
-    .pad(output_PAD[0]));
- sg13g2_IOPadOut30mA \outputs[10].output_pad  (.c2p(\i_chip_core.counter2_value[6] ),
-    .pad(output_PAD[10]));
- sg13g2_IOPadOut30mA \outputs[11].output_pad  (.c2p(\i_chip_core.counter2_value[7] ),
-    .pad(output_PAD[11]));
- sg13g2_IOPadOut30mA \outputs[12].output_pad  (.c2p(\i_chip_core.inv1_dout1 ),
-    .pad(output_PAD[12]));
- sg13g2_IOPadOut30mA \outputs[13].output_pad  (.c2p(\i_chip_core.inv1_dout2 ),
-    .pad(output_PAD[13]));
- sg13g2_IOPadOut30mA \outputs[14].output_pad  (.c2p(\i_chip_core.inv1_dout3 ),
-    .pad(output_PAD[14]));
- sg13g2_IOPadOut30mA \outputs[15].output_pad  (.c2p(\i_chip_core.inv1_dout4 ),
-    .pad(output_PAD[15]));
- sg13g2_IOPadOut30mA \outputs[16].output_pad  (.c2p(\i_chip_core.output_out[16] ),
-    .pad(output_PAD[16]));
- sg13g2_IOPadOut30mA \outputs[1].output_pad  (.c2p(\i_chip_core.counter1_value[1] ),
-    .pad(output_PAD[1]));
- sg13g2_IOPadOut30mA \outputs[2].output_pad  (.c2p(\i_chip_core.counter1_value[2] ),
-    .pad(output_PAD[2]));
- sg13g2_IOPadOut30mA \outputs[3].output_pad  (.c2p(\i_chip_core.counter1_value[3] ),
-    .pad(output_PAD[3]));
- sg13g2_IOPadOut30mA \outputs[4].output_pad  (.c2p(\i_chip_core.counter2_value[0] ),
-    .pad(output_PAD[4]));
- sg13g2_IOPadOut30mA \outputs[5].output_pad  (.c2p(\i_chip_core.counter2_value[1] ),
-    .pad(output_PAD[5]));
- sg13g2_IOPadOut30mA \outputs[6].output_pad  (.c2p(\i_chip_core.counter2_value[2] ),
-    .pad(output_PAD[6]));
- sg13g2_IOPadOut30mA \outputs[7].output_pad  (.c2p(\i_chip_core.counter2_value[3] ),
-    .pad(output_PAD[7]));
- sg13g2_IOPadOut30mA \outputs[8].output_pad  (.c2p(\i_chip_core.counter2_value[4] ),
-    .pad(output_PAD[8]));
- sg13g2_IOPadOut30mA \outputs[9].output_pad  (.c2p(\i_chip_core.counter2_value[5] ),
-    .pad(output_PAD[9]));
  sg13g2_IOPadIn rst_n_pad (.p2c(\i_chip_core.rst_n ),
     .pad(rst_n_PAD));
- sg13g2_IOPadVdd \vdd_pads[0].vdd_pad  ();
- sg13g2_IOPadVss \vss_pads[0].vss_pad  ();
 endmodule

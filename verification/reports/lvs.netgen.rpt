@@ -157,61 +157,6 @@ VSS                                        |VSS
 Cell pin lists are equivalent.
 Device classes sg13g2_tiehi and sg13g2_tiehi are equivalent.
 
-Cell sg13g2_ip__bondpad_70x70 (0) disconnected node: pad
-
-Subcircuit pins:
-Circuit 1: sg13g2_ip__bondpad_70x70        |Circuit 2: sg13g2_ip__bondpad_70x70        
--------------------------------------------|-------------------------------------------
-pad                                        |pad                                        
----------------------------------------------------------------------------------------
-Cell pin lists are equivalent.
-Device classes sg13g2_ip__bondpad_70x70 and sg13g2_ip__bondpad_70x70 are equivalent.
-Flattening unmatched subcell sg13g2_Clamp_N15N15D in circuit sg13g2_IOPadInOut30mA (1)(1 instance)
-Flattening unmatched subcell sg13g2_GuardRing_N16000W1980HFF in circuit sg13g2_IOPadInOut30mA (1)(1 instance)
-Flattening unmatched subcell sg13g2_GuardRing_P15280W1260HFF in circuit sg13g2_IOPadInOut30mA (1)(1 instance)
-Flattening unmatched subcell sg13g2_Clamp_P15N15D in circuit sg13g2_IOPadInOut30mA (1)(1 instance)
-Flattening unmatched subcell sg13g2_GuardRing_P16000W3852HFF in circuit sg13g2_IOPadInOut30mA (1)(1 instance)
-Flattening unmatched subcell sg13g2_GuardRing_N15280W3132HTF in circuit sg13g2_IOPadInOut30mA (1)(1 instance)
-Flattening unmatched subcell sg13g2_DCNDiode in circuit sg13g2_IOPadInOut30mA (1)(1 instance)
-Flattening unmatched subcell sg13g2_GuardRing_N7276W2716HFF in circuit sg13g2_IOPadInOut30mA (1)(1 instance)
-Flattening unmatched subcell sg13g2_DCPDiode in circuit sg13g2_IOPadInOut30mA (1)(1 instance)
-Flattening unmatched subcell sg13g2_GuardRing_P7276W2716HFF in circuit sg13g2_IOPadInOut30mA (1)(1 instance)
-Flattening unmatched subcell sg13g2_GateDecode in circuit sg13g2_IOPadInOut30mA (1)(1 instance)
-Flattening unmatched subcell sg13g2_io_tie in circuit sg13g2_IOPadInOut30mA (1)(1 instance)
-Flattening unmatched subcell sg13g2_io_inv_x1 in circuit sg13g2_IOPadInOut30mA (1)(1 instance)
-Flattening unmatched subcell sg13g2_io_nor2_x1 in circuit sg13g2_IOPadInOut30mA (1)(1 instance)
-Flattening unmatched subcell sg13g2_LevelUp in circuit sg13g2_IOPadInOut30mA (1)(2 instances)
-Flattening unmatched subcell sg13g2_io_nand2_x1 in circuit sg13g2_IOPadInOut30mA (1)(1 instance)
-Flattening unmatched subcell sg13g2_LevelDown in circuit sg13g2_IOPadInOut30mA (1)(1 instance)
-Flattening unmatched subcell sg13g2_SecondaryProtection in circuit sg13g2_IOPadInOut30mA (1)(1 instance)
-Flattening unmatched subcell sg13g2_GuardRing_P576W948HFF in circuit sg13g2_IOPadInOut30mA (1)(1 instance)
-Flattening unmatched subcell sg13g2_GuardRing_P456W948HFF in circuit sg13g2_IOPadInOut30mA (1)(1 instance)
-Flattening unmatched subcell sg13g2_GuardRing_N1324W456HTF in circuit sg13g2_IOPadInOut30mA (1)(1 instance)
-
-Cell sg13g2_IOPadInOut30mA (0) disconnected node: c2p
-Cell sg13g2_IOPadInOut30mA (0) disconnected node: c2p_en
-Cell sg13g2_IOPadInOut30mA (0) disconnected node: iovdd
-Cell sg13g2_IOPadInOut30mA (0) disconnected node: iovss
-Cell sg13g2_IOPadInOut30mA (0) disconnected node: p2c
-Cell sg13g2_IOPadInOut30mA (0) disconnected node: pad
-Cell sg13g2_IOPadInOut30mA (0) disconnected node: vdd
-Cell sg13g2_IOPadInOut30mA (0) disconnected node: vss
-
-Subcircuit pins:
-Circuit 1: sg13g2_IOPadInOut30mA           |Circuit 2: sg13g2_IOPadInOut30mA           
--------------------------------------------|-------------------------------------------
-c2p                                        |c2p                                        
-c2p_en                                     |c2p_en                                     
-iovdd                                      |iovdd                                      
-iovss                                      |iovss                                      
-p2c                                        |p2c                                        
-pad                                        |pad                                        
-vdd                                        |vdd                                        
-vss                                        |vss                                        
----------------------------------------------------------------------------------------
-Cell pin lists are equivalent.
-Device classes sg13g2_IOPadInOut30mA and sg13g2_IOPadInOut30mA are equivalent.
-
 Cell sg13g2_dlygate4sd3_1 (0) disconnected node: X
 Cell sg13g2_dlygate4sd3_1 (0) disconnected node: A
 Cell sg13g2_dlygate4sd3_1 (0) disconnected node: VDD
@@ -275,44 +220,37 @@ VSS                                        |VSS
 ---------------------------------------------------------------------------------------
 Cell pin lists are equivalent.
 Device classes sg13g2_inv_1 and sg13g2_inv_1 are equivalent.
-Flattening unmatched subcell sg13g2_Clamp_N20N0D in circuit sg13g2_IOPadAnalog (1)(1 instance)
-Flattening unmatched subcell sg13g2_GuardRing_N16000W1980HFF in circuit sg13g2_IOPadAnalog (1)(1 instance)
-Flattening unmatched subcell sg13g2_GuardRing_P15280W1260HFF in circuit sg13g2_IOPadAnalog (1)(1 instance)
-Flattening unmatched subcell sg13g2_Clamp_P20N0D in circuit sg13g2_IOPadAnalog (1)(1 instance)
-Flattening unmatched subcell sg13g2_GuardRing_P16000W3852HFF in circuit sg13g2_IOPadAnalog (1)(1 instance)
-Flattening unmatched subcell sg13g2_GuardRing_N15280W3132HTF in circuit sg13g2_IOPadAnalog (1)(1 instance)
-Flattening unmatched subcell sg13g2_DCNDiode in circuit sg13g2_IOPadAnalog (1)(1 instance)
-Flattening unmatched subcell sg13g2_GuardRing_N7276W2716HFF in circuit sg13g2_IOPadAnalog (1)(1 instance)
-Flattening unmatched subcell sg13g2_DCPDiode in circuit sg13g2_IOPadAnalog (1)(1 instance)
-Flattening unmatched subcell sg13g2_GuardRing_P7276W2716HFF in circuit sg13g2_IOPadAnalog (1)(1 instance)
-Flattening unmatched subcell sg13g2_SecondaryProtection in circuit sg13g2_IOPadAnalog (1)(1 instance)
-Flattening unmatched subcell sg13g2_GuardRing_P576W948HFF in circuit sg13g2_IOPadAnalog (1)(1 instance)
-Flattening unmatched subcell sg13g2_GuardRing_P456W948HFF in circuit sg13g2_IOPadAnalog (1)(1 instance)
-Flattening unmatched subcell sg13g2_GuardRing_N1324W456HTF in circuit sg13g2_IOPadAnalog (1)(1 instance)
+Flattening unmatched subcell sg13g2_DCNDiode in circuit sg13g2_IOPadVss (1)(1 instance)
+Flattening unmatched subcell sg13g2_GuardRing_N7276W2716HFF in circuit sg13g2_IOPadVss (1)(1 instance)
+Flattening unmatched subcell sg13g2_DCPDiode in circuit sg13g2_IOPadVss (1)(1 instance)
+Flattening unmatched subcell sg13g2_GuardRing_P7276W2716HFF in circuit sg13g2_IOPadVss (1)(1 instance)
 
-Cell sg13g2_IOPadAnalog (0) disconnected node: iovdd
-Cell sg13g2_IOPadAnalog (0) disconnected node: iovss
-Cell sg13g2_IOPadAnalog (0) disconnected node: pad
-Cell sg13g2_IOPadAnalog (0) disconnected node: padbare
-Cell sg13g2_IOPadAnalog (0) disconnected node: padres
-Cell sg13g2_IOPadAnalog (0) disconnected node: vdd
-Cell sg13g2_IOPadAnalog (0) disconnected node: vss
-Cell sg13g2_IOPadAnalog (1) disconnected node: vss
-Cell sg13g2_IOPadAnalog (1) disconnected node: vdd
+Cell sg13g2_IOPadVss (0) disconnected node: iovdd
+Cell sg13g2_IOPadVss (0) disconnected node: iovss
+Cell sg13g2_IOPadVss (0) disconnected node: vdd
+Cell sg13g2_IOPadVss (0) disconnected node: vss
+Cell sg13g2_IOPadVss (1) disconnected node: vdd
 
 Subcircuit pins:
-Circuit 1: sg13g2_IOPadAnalog              |Circuit 2: sg13g2_IOPadAnalog              
+Circuit 1: sg13g2_IOPadVss                 |Circuit 2: sg13g2_IOPadVss                 
 -------------------------------------------|-------------------------------------------
 iovdd                                      |iovdd                                      
 iovss                                      |iovss                                      
-pad                                        |pad                                        
-padres                                     |padres                                     
 vdd                                        |vdd                                        
 vss                                        |vss                                        
-padbare                                    |(no matching pin)                          
 ---------------------------------------------------------------------------------------
 Cell pin lists are equivalent.
-Device classes sg13g2_IOPadAnalog and sg13g2_IOPadAnalog are equivalent.
+Device classes sg13g2_IOPadVss and sg13g2_IOPadVss are equivalent.
+
+Cell sg13g2_ip__bondpad_70x70 (0) disconnected node: pad
+
+Subcircuit pins:
+Circuit 1: sg13g2_ip__bondpad_70x70        |Circuit 2: sg13g2_ip__bondpad_70x70        
+-------------------------------------------|-------------------------------------------
+pad                                        |pad                                        
+---------------------------------------------------------------------------------------
+Cell pin lists are equivalent.
+Device classes sg13g2_ip__bondpad_70x70 and sg13g2_ip__bondpad_70x70 are equivalent.
 
 Cell inverter_top (0) disconnected node: vin1
 Cell inverter_top (0) disconnected node: vin2
@@ -399,19 +337,20 @@ VSS                                        |VSS
 ---------------------------------------------------------------------------------------
 Cell pin lists are equivalent.
 Device classes sg13g2_xor2_1 and sg13g2_xor2_1 are equivalent.
-Flattening unmatched subcell sg13g2_DCNDiode in circuit sg13g2_IOPadVss (1)(1 instance)
-Flattening unmatched subcell sg13g2_GuardRing_N7276W2716HFF in circuit sg13g2_IOPadVss (1)(1 instance)
-Flattening unmatched subcell sg13g2_DCPDiode in circuit sg13g2_IOPadVss (1)(1 instance)
-Flattening unmatched subcell sg13g2_GuardRing_P7276W2716HFF in circuit sg13g2_IOPadVss (1)(1 instance)
+Flattening unmatched subcell sg13g2_DCNDiode in circuit sg13g2_IOPadIOVss (1)(1 instance)
+Flattening unmatched subcell sg13g2_GuardRing_N7276W2716HFF in circuit sg13g2_IOPadIOVss (1)(1 instance)
+Flattening unmatched subcell sg13g2_DCPDiode in circuit sg13g2_IOPadIOVss (1)(1 instance)
+Flattening unmatched subcell sg13g2_GuardRing_P7276W2716HFF in circuit sg13g2_IOPadIOVss (1)(1 instance)
 
-Cell sg13g2_IOPadVss (0) disconnected node: iovdd
-Cell sg13g2_IOPadVss (0) disconnected node: iovss
-Cell sg13g2_IOPadVss (0) disconnected node: vdd
-Cell sg13g2_IOPadVss (0) disconnected node: vss
-Cell sg13g2_IOPadVss (1) disconnected node: vdd
+Cell sg13g2_IOPadIOVss (0) disconnected node: iovdd
+Cell sg13g2_IOPadIOVss (0) disconnected node: iovss
+Cell sg13g2_IOPadIOVss (0) disconnected node: vdd
+Cell sg13g2_IOPadIOVss (0) disconnected node: vss
+Cell sg13g2_IOPadIOVss (1) disconnected node: vss
+Cell sg13g2_IOPadIOVss (1) disconnected node: vdd
 
 Subcircuit pins:
-Circuit 1: sg13g2_IOPadVss                 |Circuit 2: sg13g2_IOPadVss                 
+Circuit 1: sg13g2_IOPadIOVss               |Circuit 2: sg13g2_IOPadIOVss               
 -------------------------------------------|-------------------------------------------
 iovdd                                      |iovdd                                      
 iovss                                      |iovss                                      
@@ -419,7 +358,33 @@ vdd                                        |vdd
 vss                                        |vss                                        
 ---------------------------------------------------------------------------------------
 Cell pin lists are equivalent.
-Device classes sg13g2_IOPadVss and sg13g2_IOPadVss are equivalent.
+Device classes sg13g2_IOPadIOVss and sg13g2_IOPadIOVss are equivalent.
+Flattening unmatched subcell sg13g2_Clamp_N43N43D4R in circuit sg13g2_IOPadIOVdd (1)(1 instance)
+Flattening unmatched subcell sg13g2_GuardRing_N16000W4884HFF in circuit sg13g2_IOPadIOVdd (1)(1 instance)
+Flattening unmatched subcell sg13g2_GuardRing_P15280W4164HFF in circuit sg13g2_IOPadIOVdd (1)(1 instance)
+Flattening unmatched subcell sg13g2_RCClampResistor in circuit sg13g2_IOPadIOVdd (1)(1 instance)
+Flattening unmatched subcell sg13g2_RCClampInverter in circuit sg13g2_IOPadIOVdd (1)(1 instance)
+Flattening unmatched subcell sg13g2_GuardRing_P16000W4466HFT in circuit sg13g2_IOPadIOVdd (1)(1 instance)
+Flattening unmatched subcell sg13g2_GuardRing_N9472W2216HTT in circuit sg13g2_IOPadIOVdd (1)(1 instance)
+Flattening unmatched subcell sg13g2_GuardRing_N16000W6624HFF in circuit sg13g2_IOPadIOVdd (1)(1 instance)
+
+Cell sg13g2_IOPadIOVdd (0) disconnected node: iovdd
+Cell sg13g2_IOPadIOVdd (0) disconnected node: iovss
+Cell sg13g2_IOPadIOVdd (0) disconnected node: vdd
+Cell sg13g2_IOPadIOVdd (0) disconnected node: vss
+Cell sg13g2_IOPadIOVdd (1) disconnected node: vss
+Cell sg13g2_IOPadIOVdd (1) disconnected node: vdd
+
+Subcircuit pins:
+Circuit 1: sg13g2_IOPadIOVdd               |Circuit 2: sg13g2_IOPadIOVdd               
+-------------------------------------------|-------------------------------------------
+iovdd                                      |iovdd                                      
+iovss                                      |iovss                                      
+vdd                                        |vdd                                        
+vss                                        |vss                                        
+---------------------------------------------------------------------------------------
+Cell pin lists are equivalent.
+Device classes sg13g2_IOPadIOVdd and sg13g2_IOPadIOVdd are equivalent.
 
 
 Subcircuit pins:
@@ -449,6 +414,44 @@ vss                                        |vss
 ---------------------------------------------------------------------------------------
 Cell pin lists are equivalent.
 Device classes sg13g2_Filler200 and sg13g2_Filler200 are equivalent.
+Flattening unmatched subcell sg13g2_Clamp_N20N0D in circuit sg13g2_IOPadAnalog (1)(1 instance)
+Flattening unmatched subcell sg13g2_GuardRing_N16000W1980HFF in circuit sg13g2_IOPadAnalog (1)(1 instance)
+Flattening unmatched subcell sg13g2_GuardRing_P15280W1260HFF in circuit sg13g2_IOPadAnalog (1)(1 instance)
+Flattening unmatched subcell sg13g2_Clamp_P20N0D in circuit sg13g2_IOPadAnalog (1)(1 instance)
+Flattening unmatched subcell sg13g2_GuardRing_P16000W3852HFF in circuit sg13g2_IOPadAnalog (1)(1 instance)
+Flattening unmatched subcell sg13g2_GuardRing_N15280W3132HTF in circuit sg13g2_IOPadAnalog (1)(1 instance)
+Flattening unmatched subcell sg13g2_DCNDiode in circuit sg13g2_IOPadAnalog (1)(1 instance)
+Flattening unmatched subcell sg13g2_GuardRing_N7276W2716HFF in circuit sg13g2_IOPadAnalog (1)(1 instance)
+Flattening unmatched subcell sg13g2_DCPDiode in circuit sg13g2_IOPadAnalog (1)(1 instance)
+Flattening unmatched subcell sg13g2_GuardRing_P7276W2716HFF in circuit sg13g2_IOPadAnalog (1)(1 instance)
+Flattening unmatched subcell sg13g2_SecondaryProtection in circuit sg13g2_IOPadAnalog (1)(1 instance)
+Flattening unmatched subcell sg13g2_GuardRing_P576W948HFF in circuit sg13g2_IOPadAnalog (1)(1 instance)
+Flattening unmatched subcell sg13g2_GuardRing_P456W948HFF in circuit sg13g2_IOPadAnalog (1)(1 instance)
+Flattening unmatched subcell sg13g2_GuardRing_N1324W456HTF in circuit sg13g2_IOPadAnalog (1)(1 instance)
+
+Cell sg13g2_IOPadAnalog (0) disconnected node: iovdd
+Cell sg13g2_IOPadAnalog (0) disconnected node: iovss
+Cell sg13g2_IOPadAnalog (0) disconnected node: pad
+Cell sg13g2_IOPadAnalog (0) disconnected node: padbare
+Cell sg13g2_IOPadAnalog (0) disconnected node: padres
+Cell sg13g2_IOPadAnalog (0) disconnected node: vdd
+Cell sg13g2_IOPadAnalog (0) disconnected node: vss
+Cell sg13g2_IOPadAnalog (1) disconnected node: vss
+Cell sg13g2_IOPadAnalog (1) disconnected node: vdd
+
+Subcircuit pins:
+Circuit 1: sg13g2_IOPadAnalog              |Circuit 2: sg13g2_IOPadAnalog              
+-------------------------------------------|-------------------------------------------
+iovdd                                      |iovdd                                      
+iovss                                      |iovss                                      
+pad                                        |pad                                        
+padres                                     |padres                                     
+vdd                                        |vdd                                        
+vss                                        |vss                                        
+padbare                                    |(no matching pin)                          
+---------------------------------------------------------------------------------------
+Cell pin lists are equivalent.
+Device classes sg13g2_IOPadAnalog and sg13g2_IOPadAnalog are equivalent.
 Flattening unmatched subcell sg13g2_DCNDiode in circuit sg13g2_IOPadIn (1)(1 instance)
 Flattening unmatched subcell sg13g2_GuardRing_N7276W2716HFF in circuit sg13g2_IOPadIn (1)(1 instance)
 Flattening unmatched subcell sg13g2_DCPDiode in circuit sg13g2_IOPadIn (1)(1 instance)
@@ -915,84 +918,6 @@ Circuit 1: sg13g2_ip__jku_names            |Circuit 2: sg13g2_ip__jku_names
 ---------------------------------------------------------------------------------------
 Cell pin lists are equivalent.
 Device classes sg13g2_ip__jku_names and sg13g2_ip__jku_names are equivalent.
-
-Cell sg13g2_buf_16 (0) disconnected node: X
-Cell sg13g2_buf_16 (0) disconnected node: A
-Cell sg13g2_buf_16 (0) disconnected node: VDD
-Cell sg13g2_buf_16 (0) disconnected node: VSS
-
-Subcircuit pins:
-Circuit 1: sg13g2_buf_16                   |Circuit 2: sg13g2_buf_16                   
--------------------------------------------|-------------------------------------------
-X                                          |X                                          
-A                                          |A                                          
-VDD                                        |VDD                                        
-VSS                                        |VSS                                        
----------------------------------------------------------------------------------------
-Cell pin lists are equivalent.
-Device classes sg13g2_buf_16 and sg13g2_buf_16 are equivalent.
-
-Cell sg13g2_antennanp (0) disconnected node: A
-Cell sg13g2_antennanp (0) disconnected node: VDD
-Cell sg13g2_antennanp (0) disconnected node: VSS
-
-Subcircuit pins:
-Circuit 1: sg13g2_antennanp                |Circuit 2: sg13g2_antennanp                
--------------------------------------------|-------------------------------------------
-A                                          |A                                          
-VDD                                        |VDD                                        
-VSS                                        |VSS                                        
----------------------------------------------------------------------------------------
-Cell pin lists are equivalent.
-Device classes sg13g2_antennanp and sg13g2_antennanp are equivalent.
-Flattening unmatched subcell sg13g2_DCNDiode in circuit sg13g2_IOPadIOVss (1)(1 instance)
-Flattening unmatched subcell sg13g2_GuardRing_N7276W2716HFF in circuit sg13g2_IOPadIOVss (1)(1 instance)
-Flattening unmatched subcell sg13g2_DCPDiode in circuit sg13g2_IOPadIOVss (1)(1 instance)
-Flattening unmatched subcell sg13g2_GuardRing_P7276W2716HFF in circuit sg13g2_IOPadIOVss (1)(1 instance)
-
-Cell sg13g2_IOPadIOVss (0) disconnected node: iovdd
-Cell sg13g2_IOPadIOVss (0) disconnected node: iovss
-Cell sg13g2_IOPadIOVss (0) disconnected node: vdd
-Cell sg13g2_IOPadIOVss (0) disconnected node: vss
-Cell sg13g2_IOPadIOVss (1) disconnected node: vss
-Cell sg13g2_IOPadIOVss (1) disconnected node: vdd
-
-Subcircuit pins:
-Circuit 1: sg13g2_IOPadIOVss               |Circuit 2: sg13g2_IOPadIOVss               
--------------------------------------------|-------------------------------------------
-iovdd                                      |iovdd                                      
-iovss                                      |iovss                                      
-vdd                                        |vdd                                        
-vss                                        |vss                                        
----------------------------------------------------------------------------------------
-Cell pin lists are equivalent.
-Device classes sg13g2_IOPadIOVss and sg13g2_IOPadIOVss are equivalent.
-Flattening unmatched subcell sg13g2_Clamp_N43N43D4R in circuit sg13g2_IOPadIOVdd (1)(1 instance)
-Flattening unmatched subcell sg13g2_GuardRing_N16000W4884HFF in circuit sg13g2_IOPadIOVdd (1)(1 instance)
-Flattening unmatched subcell sg13g2_GuardRing_P15280W4164HFF in circuit sg13g2_IOPadIOVdd (1)(1 instance)
-Flattening unmatched subcell sg13g2_RCClampResistor in circuit sg13g2_IOPadIOVdd (1)(1 instance)
-Flattening unmatched subcell sg13g2_RCClampInverter in circuit sg13g2_IOPadIOVdd (1)(1 instance)
-Flattening unmatched subcell sg13g2_GuardRing_P16000W4466HFT in circuit sg13g2_IOPadIOVdd (1)(1 instance)
-Flattening unmatched subcell sg13g2_GuardRing_N9472W2216HTT in circuit sg13g2_IOPadIOVdd (1)(1 instance)
-Flattening unmatched subcell sg13g2_GuardRing_N16000W6624HFF in circuit sg13g2_IOPadIOVdd (1)(1 instance)
-
-Cell sg13g2_IOPadIOVdd (0) disconnected node: iovdd
-Cell sg13g2_IOPadIOVdd (0) disconnected node: iovss
-Cell sg13g2_IOPadIOVdd (0) disconnected node: vdd
-Cell sg13g2_IOPadIOVdd (0) disconnected node: vss
-Cell sg13g2_IOPadIOVdd (1) disconnected node: vss
-Cell sg13g2_IOPadIOVdd (1) disconnected node: vdd
-
-Subcircuit pins:
-Circuit 1: sg13g2_IOPadIOVdd               |Circuit 2: sg13g2_IOPadIOVdd               
--------------------------------------------|-------------------------------------------
-iovdd                                      |iovdd                                      
-iovss                                      |iovss                                      
-vdd                                        |vdd                                        
-vss                                        |vss                                        
----------------------------------------------------------------------------------------
-Cell pin lists are equivalent.
-Device classes sg13g2_IOPadIOVdd and sg13g2_IOPadIOVdd are equivalent.
 Flattening unmatched subcell sg13g2_Clamp_N43N43D4R in circuit sg13g2_IOPadVdd (1)(1 instance)
 Flattening unmatched subcell sg13g2_GuardRing_N16000W4884HFF in circuit sg13g2_IOPadVdd (1)(1 instance)
 Flattening unmatched subcell sg13g2_GuardRing_P15280W4164HFF in circuit sg13g2_IOPadVdd (1)(1 instance)
@@ -1020,6 +945,81 @@ vss                                        |vss
 Cell pin lists are equivalent.
 Device classes sg13g2_IOPadVdd and sg13g2_IOPadVdd are equivalent.
 
+Cell sg13g2_buf_16 (0) disconnected node: X
+Cell sg13g2_buf_16 (0) disconnected node: A
+Cell sg13g2_buf_16 (0) disconnected node: VDD
+Cell sg13g2_buf_16 (0) disconnected node: VSS
+
+Subcircuit pins:
+Circuit 1: sg13g2_buf_16                   |Circuit 2: sg13g2_buf_16                   
+-------------------------------------------|-------------------------------------------
+X                                          |X                                          
+A                                          |A                                          
+VDD                                        |VDD                                        
+VSS                                        |VSS                                        
+---------------------------------------------------------------------------------------
+Cell pin lists are equivalent.
+Device classes sg13g2_buf_16 and sg13g2_buf_16 are equivalent.
+Flattening unmatched subcell sg13g2_Clamp_N15N15D in circuit sg13g2_IOPadInOut30mA (1)(1 instance)
+Flattening unmatched subcell sg13g2_GuardRing_N16000W1980HFF in circuit sg13g2_IOPadInOut30mA (1)(1 instance)
+Flattening unmatched subcell sg13g2_GuardRing_P15280W1260HFF in circuit sg13g2_IOPadInOut30mA (1)(1 instance)
+Flattening unmatched subcell sg13g2_Clamp_P15N15D in circuit sg13g2_IOPadInOut30mA (1)(1 instance)
+Flattening unmatched subcell sg13g2_GuardRing_P16000W3852HFF in circuit sg13g2_IOPadInOut30mA (1)(1 instance)
+Flattening unmatched subcell sg13g2_GuardRing_N15280W3132HTF in circuit sg13g2_IOPadInOut30mA (1)(1 instance)
+Flattening unmatched subcell sg13g2_DCNDiode in circuit sg13g2_IOPadInOut30mA (1)(1 instance)
+Flattening unmatched subcell sg13g2_GuardRing_N7276W2716HFF in circuit sg13g2_IOPadInOut30mA (1)(1 instance)
+Flattening unmatched subcell sg13g2_DCPDiode in circuit sg13g2_IOPadInOut30mA (1)(1 instance)
+Flattening unmatched subcell sg13g2_GuardRing_P7276W2716HFF in circuit sg13g2_IOPadInOut30mA (1)(1 instance)
+Flattening unmatched subcell sg13g2_GateDecode in circuit sg13g2_IOPadInOut30mA (1)(1 instance)
+Flattening unmatched subcell sg13g2_io_tie in circuit sg13g2_IOPadInOut30mA (1)(1 instance)
+Flattening unmatched subcell sg13g2_io_inv_x1 in circuit sg13g2_IOPadInOut30mA (1)(1 instance)
+Flattening unmatched subcell sg13g2_io_nor2_x1 in circuit sg13g2_IOPadInOut30mA (1)(1 instance)
+Flattening unmatched subcell sg13g2_LevelUp in circuit sg13g2_IOPadInOut30mA (1)(2 instances)
+Flattening unmatched subcell sg13g2_io_nand2_x1 in circuit sg13g2_IOPadInOut30mA (1)(1 instance)
+Flattening unmatched subcell sg13g2_LevelDown in circuit sg13g2_IOPadInOut30mA (1)(1 instance)
+Flattening unmatched subcell sg13g2_SecondaryProtection in circuit sg13g2_IOPadInOut30mA (1)(1 instance)
+Flattening unmatched subcell sg13g2_GuardRing_P576W948HFF in circuit sg13g2_IOPadInOut30mA (1)(1 instance)
+Flattening unmatched subcell sg13g2_GuardRing_P456W948HFF in circuit sg13g2_IOPadInOut30mA (1)(1 instance)
+Flattening unmatched subcell sg13g2_GuardRing_N1324W456HTF in circuit sg13g2_IOPadInOut30mA (1)(1 instance)
+
+Cell sg13g2_IOPadInOut30mA (0) disconnected node: c2p
+Cell sg13g2_IOPadInOut30mA (0) disconnected node: c2p_en
+Cell sg13g2_IOPadInOut30mA (0) disconnected node: iovdd
+Cell sg13g2_IOPadInOut30mA (0) disconnected node: iovss
+Cell sg13g2_IOPadInOut30mA (0) disconnected node: p2c
+Cell sg13g2_IOPadInOut30mA (0) disconnected node: pad
+Cell sg13g2_IOPadInOut30mA (0) disconnected node: vdd
+Cell sg13g2_IOPadInOut30mA (0) disconnected node: vss
+
+Subcircuit pins:
+Circuit 1: sg13g2_IOPadInOut30mA           |Circuit 2: sg13g2_IOPadInOut30mA           
+-------------------------------------------|-------------------------------------------
+c2p                                        |c2p                                        
+c2p_en                                     |c2p_en                                     
+iovdd                                      |iovdd                                      
+iovss                                      |iovss                                      
+p2c                                        |p2c                                        
+pad                                        |pad                                        
+vdd                                        |vdd                                        
+vss                                        |vss                                        
+---------------------------------------------------------------------------------------
+Cell pin lists are equivalent.
+Device classes sg13g2_IOPadInOut30mA and sg13g2_IOPadInOut30mA are equivalent.
+
+Cell sg13g2_antennanp (0) disconnected node: A
+Cell sg13g2_antennanp (0) disconnected node: VDD
+Cell sg13g2_antennanp (0) disconnected node: VSS
+
+Subcircuit pins:
+Circuit 1: sg13g2_antennanp                |Circuit 2: sg13g2_antennanp                
+-------------------------------------------|-------------------------------------------
+A                                          |A                                          
+VDD                                        |VDD                                        
+VSS                                        |VSS                                        
+---------------------------------------------------------------------------------------
+Cell pin lists are equivalent.
+Device classes sg13g2_antennanp and sg13g2_antennanp are equivalent.
+
 Cell chip_top (0) disconnected node: sg13g2_ip__jku:jku_logo/(no pins)
 Cell chip_top (0) disconnected node: sg13g2_ip__jku_names:jku_names/(no pins)
 Cell chip_top (1) disconnected node: jku_logo/(no pins)
@@ -1043,28 +1043,28 @@ sg13g2_fill_2 (171->1)                     |sg13g2_fill_2 (171->1)
 sg13g2_fill_1 (259->1)                     |sg13g2_fill_1 (259->1)                     
 sg13g2_Filler4000 (36)                     |sg13g2_Filler4000 (36)                     
 sg13g2_tiehi (3)                           |sg13g2_tiehi (3)                           
-sg13g2_ip__bondpad_70x70 (32)              |sg13g2_ip__bondpad_70x70 (32)              
-sg13g2_IOPadInOut30mA (4)                  |sg13g2_IOPadInOut30mA (4)                  
 sg13g2_dlygate4sd3_1 (2)                   |sg13g2_dlygate4sd3_1 (2)                   
 sg13g2_IOPadOut30mA (17)                   |sg13g2_IOPadOut30mA (17)                   
 sg13g2_inv_1 (1)                           |sg13g2_inv_1 (1)                           
-sg13g2_IOPadAnalog (4)                     |sg13g2_IOPadAnalog (4)                     
+sg13g2_IOPadVss (1)                        |sg13g2_IOPadVss (1)                        
+sg13g2_ip__bondpad_70x70 (32)              |sg13g2_ip__bondpad_70x70 (32)              
 inverter_top (2)                           |inverter_top (2)                           
 sg13g2_Corner (4)                          |sg13g2_Corner (4)                          
 sg13g2_Filler400 (8)                       |sg13g2_Filler400 (8)                       
 sg13g2_xor2_1 (9)                          |sg13g2_xor2_1 (9)                          
-sg13g2_IOPadVss (1)                        |sg13g2_IOPadVss (1)                        
+sg13g2_IOPadIOVss (1)                      |sg13g2_IOPadIOVss (1)                      
+sg13g2_IOPadIOVdd (1)                      |sg13g2_IOPadIOVdd (1)                      
 sg13g2_ip__jku (1)                         |sg13g2_ip__jku (1)                         
 sg13g2_Filler200 (4)                       |sg13g2_Filler200 (4)                       
+sg13g2_IOPadAnalog (4)                     |sg13g2_IOPadAnalog (4)                     
 sg13g2_IOPadIn (3)                         |sg13g2_IOPadIn (3)                         
 counter_top (2)                            |counter_top (2)                            
 RM_IHPSG13_1P_1024x32_c2_bm_bist (1)       |RM_IHPSG13_1P_1024x32_c2_bm_bist (1)       
 sg13g2_ip__jku_names (1)                   |sg13g2_ip__jku_names (1)                   
-sg13g2_buf_16 (3)                          |sg13g2_buf_16 (3)                          
-sg13g2_antennanp (4)                       |sg13g2_antennanp (4)                       
-sg13g2_IOPadIOVss (1)                      |sg13g2_IOPadIOVss (1)                      
-sg13g2_IOPadIOVdd (1)                      |sg13g2_IOPadIOVdd (1)                      
 sg13g2_IOPadVdd (1)                        |sg13g2_IOPadVdd (1)                        
+sg13g2_buf_16 (3)                          |sg13g2_buf_16 (3)                          
+sg13g2_IOPadInOut30mA (4)                  |sg13g2_IOPadInOut30mA (4)                  
+sg13g2_antennanp (4)                       |sg13g2_antennanp (4)                       
 Number of devices: 401                     |Number of devices: 401                     
 Number of nets: 295                        |Number of nets: 295                        
 ---------------------------------------------------------------------------------------
@@ -1085,23 +1085,23 @@ bidir_PAD[1]                               |bidir_PAD[1]
 bidir_PAD[2]                               |bidir_PAD[2]                               
 bidir_PAD[3]                               |bidir_PAD[3]                               
 input_PAD                                  |input_PAD                                  
-output_PAD[15]                             |output_PAD[15]                             
-output_PAD[10]                             |output_PAD[10]                             
-output_PAD[14]                             |output_PAD[14]                             
-output_PAD[13]                             |output_PAD[13]                             
-output_PAD[8]                              |output_PAD[8]                              
-output_PAD[12]                             |output_PAD[12]                             
-output_PAD[1]                              |output_PAD[1]                              
-output_PAD[5]                              |output_PAD[5]                              
-output_PAD[3]                              |output_PAD[3]                              
-output_PAD[7]                              |output_PAD[7]                              
-output_PAD[2]                              |output_PAD[2]                              
-output_PAD[6]                              |output_PAD[6]                              
 output_PAD[16]                             |output_PAD[16]                             
 output_PAD[11]                             |output_PAD[11]                             
 output_PAD[9]                              |output_PAD[9]                              
 output_PAD[0]                              |output_PAD[0]                              
 output_PAD[4]                              |output_PAD[4]                              
+output_PAD[15]                             |output_PAD[15]                             
+output_PAD[10]                             |output_PAD[10]                             
+output_PAD[8]                              |output_PAD[8]                              
+output_PAD[14]                             |output_PAD[14]                             
+output_PAD[3]                              |output_PAD[3]                              
+output_PAD[7]                              |output_PAD[7]                              
+output_PAD[13]                             |output_PAD[13]                             
+output_PAD[2]                              |output_PAD[2]                              
+output_PAD[6]                              |output_PAD[6]                              
+output_PAD[1]                              |output_PAD[1]                              
+output_PAD[5]                              |output_PAD[5]                              
+output_PAD[12]                             |output_PAD[12]                             
 clk_PAD                                    |clk_PAD                                    
 rst_n_PAD                                  |rst_n_PAD                                  
 IOVDD                                      |IOVDD                                      
