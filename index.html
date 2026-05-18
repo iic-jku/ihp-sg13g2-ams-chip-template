@@ -420,7 +420,7 @@ window.Quarto = {
   <li><a href="#run-full-verification-flow-at-once" id="toc-run-full-verification-flow-at-once" class="nav-link" data-scroll-target="#run-full-verification-flow-at-once"><span class="header-section-number">5.7.4</span> Run Full Verification Flow at Once</a></li>
   </ul></li>
   <li><a href="#build-deliverables-for-top-level-integration" id="toc-build-deliverables-for-top-level-integration" class="nav-link" data-scroll-target="#build-deliverables-for-top-level-integration"><span class="header-section-number">5.8</span> Build Deliverables for Top-Level Integration</a></li>
-  <li><a href="#full-macro-pass" id="toc-full-macro-pass" class="nav-link" data-scroll-target="#full-macro-pass"><span class="header-section-number">5.9</span> Full Macro Pass</a></li>
+  <li><a href="#full-analog-macro-flow" id="toc-full-analog-macro-flow" class="nav-link" data-scroll-target="#full-analog-macro-flow"><span class="header-section-number">5.9</span> Full Analog Macro Flow</a></li>
   </ul></li>
   <li><a href="#sec-top" id="toc-sec-top" class="nav-link" data-scroll-target="#sec-top"><span class="header-section-number">6</span> Top-Level Implementation</a>
   <ul class="collapse">
@@ -1952,7 +1952,7 @@ Tip
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>To run a post-layout simulation, open one of the Xschem testbenches and swap the original symbol with the PEX symbol and include the path to the SPICE netlist to use the extracted netlist in the same testbench. This is the recommended way to compare schematic-only and post-layout simulation results.</p>
+<p>To run a post-layout simulation, open one of the Xschem testbenches, swap the original symbol with the PEX symbol, and include the path to the SPICE netlist so the extracted netlist is used in the same testbench. This is the recommended way to compare schematic-only and post-layout simulation results.</p>
 </div>
 </div>
 <div class="callout callout-style-default callout-note callout-titled">
@@ -1978,18 +1978,18 @@ Note
 </section>
 <section id="build-deliverables-for-top-level-integration" class="level2" data-number="5.8">
 <h2 data-number="5.8" class="anchored" data-anchor-id="build-deliverables-for-top-level-integration"><span class="header-section-number">5.8</span> Build Deliverables for Top-Level Integration</h2>
-<p>For the inverter to be picked up by the chip-level LibreLane flow, it must expose a <strong>LEF</strong> (abstract pin / blockage view), a <strong>Liberty timing library</strong> stub, and a <strong>Verilog stub</strong>. They are built individually or via <code>build-top</code>.</p>
+<p>For the inverter to be picked up by the top-level LibreLane flow, it must expose a <strong><a href="https://en.wikipedia.org/wiki/LEF/DEF">LEF</a></strong> (abstract pin / blockage view), a <strong><a href="https://chipverify.com/rtl-synthesis/introduction-to-liberty-format">Liberty timing library</a></strong> stub, and a <strong>Verilog stub</strong>. The Verilog stub is referenced by <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/rtl/chip_top.sv"><code>rtl/chip_top.sv</code></a> for top-level integration. These files can be built with individual Makefile targets or via <code>build-top</code>.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb22"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> lef          <span class="co"># final/lef/inverter_top.lef</span></span>
-<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> lib          <span class="co"># final/lib/inverter_top.lib (Liberty stub)</span></span>
-<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> verilog      <span class="co"># final/vh/inverter_top.v (pin classification from PEX)</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> lib          <span class="co"># final/lib/inverter_top.lib</span></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> verilog      <span class="co"># final/vh/inverter_top.v</span></span>
 <span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> build-top    <span class="co"># the three steps above plus copy-gds and render-gds</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><code>make build-top</code> also copies the GDS to <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/inverter/final/gds/"><code>final/gds/</code></a> and renders the macro to <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/inverter/render/img/"><code>render/img/inverter_top.png</code></a>.</p>
+<p><code>make build-top</code> also copies the GDS to <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/inverter/final/gds/"><code>final/gds/</code></a> and renders the macro to <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/inverter/render/img/"><code>render/img/inverter_top.png</code></a>, as displayed in <a href="#fig-inverter-top-layout" class="quarto-xref">Figure&nbsp;20</a>.</p>
 </section>
-<section id="full-macro-pass" class="level2" data-number="5.9">
-<h2 data-number="5.9" class="anchored" data-anchor-id="full-macro-pass"><span class="header-section-number">5.9</span> Full Macro Pass</h2>
-<p>The full simulation, verification, and build chain is run with the following command.</p>
+<section id="full-analog-macro-flow" class="level2" data-number="5.9">
+<h2 data-number="5.9" class="anchored" data-anchor-id="full-analog-macro-flow"><span class="header-section-number">5.9</span> Full Analog Macro Flow</h2>
+<p>The full simulation, build, and verification chain is run with the following command.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb23"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> all</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>This calls <code>sim-all</code> (Xschem + CACE), <code>klayout-verify-all</code>, <code>magic-verify-all</code>, and <code>build-top</code> in sequence. Depending on the host hardware, a full pass can take a few minutes.</p>
+<p>This calls <code>sim-all</code> (Xschem + CACE), <code>klayout-verify-all</code>, <code>magic-verify-all</code>, and <code>build-top</code> in sequence. Depending on the host hardware, a full pass can take a few minutes, especially the CACE simulation step.</p>
 </section>
 </section>
 <section id="sec-top" class="level1" data-number="6">
