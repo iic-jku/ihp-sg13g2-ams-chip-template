@@ -949,7 +949,29 @@ For macro changes, the bottom of the file is the relevant part. It defines per-i
 - A custom grid for `inverter1` and `inverter2` (`TopMetal2` to `TopMetal1` and `TopMetal2` to `Metal5`, because each inverter macro has its own internal `Metal5` / `TopMetal1` ring).
 - A custom grid for `sram_0` (`Metal5` stripes bridged to `Metal4` and `TopMetal1`, because the SRAM exposes its supplies on `Metal4` and `Metal5`).
 
-When new macros are added, the matching `define_pdn_grid` plus `add_pdn_connect` block at the bottom must be extended (or the default grid is used if the macro layers line up with the top-level grid).
+When new macros are added, the matching `define_pdn_grid` plus `add_pdn_connect` block at the bottom must be extended (or the default grid is used if the macro layers line up with the top-level grid). The custom grid for the inverters is shown below as an example. The comments explain the reasoning behind the layer choices and the connection structure.
+
+```{.tcl filename="flow/librelane/pdn_cfg.tcl (code snippet)"}
+# Custom connect for the inverter macros (inverter1, inverter2).
+# The top-level power ring is on TM1 (horizontal) and TM2 (vertical).
+# Each inverter has its own power ring on M5 (horizontal) and TM1 (vertical),
+# so the connection between the top-level power ring and the inverter power rings crosses cleanly. 
+# Note: within an inverter's power ring no top-level TM1 or TM2 power rails are routed.
+define_pdn_grid \
+    -macro \
+    -instances "i_chip_core.inverter1 i_chip_core.inverter2" \
+    -name inverter_top \
+    -starts_with POWER \
+    -halo "$::env(PDN_HORIZONTAL_HALO) $::env(PDN_VERTICAL_HALO)"
+
+add_pdn_connect \
+    -grid inverter_top \
+    -layers "$::env(PDN_VERTICAL_LAYER) $::env(PDN_HORIZONTAL_LAYER)"
+
+add_pdn_connect \
+    -grid inverter_top \
+    -layers "$::env(PDN_VERTICAL_LAYER) Metal5"
+```
 
 ## Top-Level Simulation
 
