@@ -980,28 +980,37 @@ The same RTL and gate-level cocotb flow as in @sec-digital is available at chip 
 ```sh
 make sim-rtl-cocotb
 make sim-gl-cocotb
-make sim-view-cocotb                                # GTKWave
-make sim-view-cocotb WAVEFORM_VIEWER=surfer         # Surfer
+make sim-view-cocotb                                # use GTKWave as waveform viewer
+make sim-view-cocotb WAVEFORM_VIEWER=surfer         # use Surfer as waveform viewer
 ```
 
-The cocotb testbench at chip level is [`testbenches/cocotb/chip_top_tb.py`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/testbenches/cocotb/chip_top_tb.py), and it covers the global enable, reset, counters, and bidir behaviour documented in [specifications.md](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/doc/specifications.md).
+The cocotb testbench at chip level is [`testbenches/cocotb/chip_top_tb.py`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/testbenches/cocotb/chip_top_tb.py), and it covers the global enable, reset, counters, and bidir behaviour documented in [specifications.md](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/doc/specifications.md). The result is shown in @fig-chip-top-cocotb-gtkwave.
 
 ![`chip_top` cocotb waveform in GTKWave.](fig/chip_top/chip_top_cocotb_gtkwave.png){#fig-chip-top-cocotb-gtkwave}
 
-For mixed-signal sign-off, the [`testbenches/xschem/chip_top_tb_tran.sch`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/testbenches/xschem/) testbench exists and can be opened in Xschem the same way as for the counter or the inverter.
+For mixed-signal simulation, the [`testbenches/xschem/chip_top_tb_tran.sch`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/testbenches/xschem/) testbench exists and can be opened in Xschem for interactive simulation the same way as for the counter or the inverter and is shown in @fig-chip-top-tb-tran-schematic.
 
 ```sh
 cd testbenches/xschem
 xschem chip_top_tb_tran.sch
 ```
 
-::: {.callout-note}
-The top-level Xschem testbench converges, but it may take a long time depending on the hardware used. `make sim-gl-xschem` is therefore not part of `sim-all` and must be called manually when needed.
-:::
-
 ![Xschem top-level mixed-signal testbench `chip_top_tb_tran`.](fig/chip_top/chip_top_tb_tran_schematic.svg){#fig-chip-top-tb-tran-schematic}
 
-![Plotted simulation result of `chip_top_tb_tran` — analog inverter 1 response.](fig/chip_top/chip_top_tb_tran_analog_inv_sim.svg){#fig-chip-top-tb-tran-analog-inv-sim}
+Again, the simulation and plotting can be run non-interactive from the command line with the following targets.
+
+```sh
+make sim-gl-xschem
+make plot-xschem-sim TESTBENCH=chip_top_tb_tran
+```
+
+::: {.callout-note}
+The top-level Xschem testbench converges, but it may take a long time depending on the hardware used. `make sim-gl-xschem` is therefore not part of `sim-all` and must be called manually when needed. For this tutorial, the simulation data is already available in the repository in [`scripts/plot_simulations/chip_top_tb_tran.txt`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/scripts/plot_simulations/data/chip_top_tb_tran.txt), so `make plot-xschem-sim TESTBENCH=chip_top_tb_tran` can be run without running the simulation first.
+:::
+
+The following plots show the results of the top-level transient simulation. The first plot shows the analog inverter response, while the other three plots show the digital outputs of the two counters, the digital inverter, and the bidirs.
+
+![Plotted simulation result of `chip_top_tb_tran` — analog inverter 1 response.](fig/chip_top/chip_top_tb_tran_analog_inv_sim.svg){#fig-chip-top-tb-tran-analog-inv-sim width=75%}
 
 ![Plotted simulation result of `chip_top_tb_tran` — digital inverter 2 outputs.](fig/chip_top/chip_top_tb_tran_digital1_sim.svg){#fig-chip-top-tb-tran-digital1-sim}
 
