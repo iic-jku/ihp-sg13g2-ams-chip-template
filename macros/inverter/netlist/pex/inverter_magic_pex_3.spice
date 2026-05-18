@@ -1,4 +1,4 @@
-* PEX produced on Wed May 13 01:39:10 PM CEST 2026 using /foss/tools/sak/sak-pex.sh with m=3 and s=1
+* PEX produced on Mon May 18 09:32:04 PM CEST 2026 using /foss/tools/sak/sak-pex.sh with m=3 and s=1
 * NGSPICE file created from inverter_pex.ext - technology: ihp-sg13g2
 
 .subckt inverter_pex vin VSS VDD vout
@@ -754,8 +754,8 @@ R704 VSS.n127 VSS.n126 0.001
 R705 VSS.n191 VSS.n190 0.001
 R706 VSS.n197 VSS.n73 0.001
 C0 vout VDD 15.0304f
-C1 vout vin 18.1624f
-C2 VDD vin 28.614f
+C1 vin VDD 28.614f
+C2 vout vin 18.1624f
 C3 vout VSS 4.60296f
 C4 vin VSS 14.97998f
 C5 VDD VSS 3.72261f

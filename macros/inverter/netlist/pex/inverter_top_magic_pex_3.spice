@@ -1,203 +1,203 @@
-* PEX produced on Wed May 13 03:50:41 PM CEST 2026 using /foss/tools/sak/sak-pex.sh with m=3 and s=1
+* PEX produced on Mon May 18 09:32:18 PM CEST 2026 using /foss/tools/sak/sak-pex.sh with m=3 and s=1
 * NGSPICE file created from inverter_top_pex.ext - technology: ihp-sg13g2
 
 .subckt inverter_top_pex VDD vin4 vout4 VSS vin3 vout3 vin2 vout2 vout1 vin1
-X0 vout3.t4 vin3.t0 VSS.t72 VSS.t53 sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
+X0 vout3.t17 vin3.t0 VSS.t72 VSS.t53 sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
 X1 VDD.t5 VDD.t4 VDD.t5 VDD.t1 sg13_lv_pmos ad=1.14p pd=6.38u as=0 ps=0 w=6u l=1u
 X2 VSS.t22 VSS.t19 VSS.t21 VSS.t20 sg13_lv_nmos ad=0.34p pd=2.68u as=0 ps=0 w=1u l=1u
 X3 VDD.t16 VDD.t15 VDD.t16 VDD.t12 sg13_lv_pmos ad=1.14p pd=6.38u as=0 ps=0 w=6u l=1u
 X4 VDD.t97 vin4.t0 vout4.t4 VDD.t1 sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
-X5 vout2.t16 vin2.t2 VSS.t43 VSS.t44 sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
-X6 vout3.t14 vin3.t2 VDD.t45 VDD.t1 sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
-X7 vout4.t12 vin4.t2 VSS.t106 VSS.t107 sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
-X8 vout3.t8 vin3.t0 VSS.t9 VSS.t26 sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
-X9 vout2.t11 vin2.t2 VSS.t37 VSS.t38 sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
-X10 vout4.t5 vin4.t0 VDD.t99 VDD.t1 sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
-X11 VDD.t16 vin2.t0 vout2.t8 VDD.t12 sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
-X12 VSS.t43 vin2.t2 vout2.t15 VSS.t42 sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
-X13 vout2.t17 vin2.t2 VSS.t46 VSS.t47 sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
-X14 vout2.t3 vin2.t0 VDD.t23 VDD.t12 sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
-X15 VSS.t112 vin4.t2 vout4.t16 VSS.t111 sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
-X16 vout1.t2 vin1.t0 VSS.t98 VSS.t99 sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
-X17 VDD.t27 vin2.t0 vout2.t4 VDD.t12 sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
-X18 vout4.t11 vin4.t2 VSS.t2 VSS.t104 sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
-X19 VDD.t23 vin2.t0 vout2.t9 VDD.t12 sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
-X20 VSS.t72 vin3.t0 vout3.t7 VSS.t51 sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
-X21 vout4.t17 vin4.t2 VSS.t121 VSS.t122 sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
-X22 VSS.t115 vin4.t2 vout4.t13 VSS.t114 sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
-X23 VDD.t45 vin3.t2 vout3.t13 VDD.t1 sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
-X24 VDD.t37 vin2.t0 vout2.t1 VDD.t12 sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
-X25 vout3.t16 vin3.t2 VDD.t47 VDD.t1 sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
-X26 VSS.t37 vin2.t2 vout2.t10 VSS.t36 sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
-X27 VDD.t51 vin3.t2 vout3.t17 VDD.t1 sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
+X5 vout2.t6 vin2.t2 VSS.t43 VSS.t44 sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
+X6 vout3.t2 vin3.t2 VDD.t45 VDD.t1 sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
+X7 vout4.t17 vin4.t2 VSS.t106 VSS.t107 sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
+X8 vout3.t12 vin3.t0 VSS.t9 VSS.t26 sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
+X9 vout2.t7 vin2.t2 VSS.t37 VSS.t38 sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
+X10 vout4.t6 vin4.t0 VDD.t99 VDD.t1 sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
+X11 VDD.t16 vin2.t0 vout2.t18 VDD.t12 sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
+X12 VSS.t43 vin2.t2 vout2.t8 VSS.t42 sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
+X13 vout2.t4 vin2.t2 VSS.t46 VSS.t47 sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
+X14 vout2.t16 vin2.t0 VDD.t23 VDD.t12 sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
+X15 VSS.t112 vin4.t2 vout4.t11 VSS.t111 sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
+X16 vout1.t7 vin1.t0 VSS.t98 VSS.t99 sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
+X17 VDD.t27 vin2.t0 vout2.t17 VDD.t12 sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
+X18 vout4.t13 vin4.t2 VSS.t2 VSS.t104 sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
+X19 VDD.t23 vin2.t0 vout2.t19 VDD.t12 sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
+X20 VSS.t72 vin3.t0 vout3.t16 VSS.t51 sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
+X21 vout4.t16 vin4.t2 VSS.t121 VSS.t122 sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
+X22 VSS.t115 vin4.t2 vout4.t12 VSS.t114 sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
+X23 VDD.t45 vin3.t2 vout3.t1 VDD.t1 sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
+X24 VDD.t37 vin2.t0 vout2.t14 VDD.t12 sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
+X25 vout3.t8 vin3.t2 VDD.t47 VDD.t1 sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
+X26 VSS.t37 vin2.t2 vout2.t9 VSS.t36 sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
+X27 VDD.t51 vin3.t2 vout3.t4 VDD.t1 sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
 X28 VSS.t10 VSS.t7 VSS.t9 VSS.t8 sg13_lv_nmos ad=0.34p pd=2.68u as=0 ps=0 w=1u l=1u
-X29 vout2.t8 vin2.t0 VDD.t39 VDD.t12 sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
-X30 vout2.t15 vin2.t2 VSS.t40 VSS.t41 sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
-X31 vout1.t9 vin1.t0 VSS.t92 VSS.t93 sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
-X32 VSS.t46 vin2.t2 vout2.t16 VSS.t45 sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
-X33 vout4.t15 vin4.t2 VSS.t118 VSS.t119 sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
+X29 vout2.t18 vin2.t0 VDD.t39 VDD.t12 sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
+X30 vout2.t8 vin2.t2 VSS.t40 VSS.t41 sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
+X31 vout1.t3 vin1.t0 VSS.t92 VSS.t93 sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
+X32 VSS.t46 vin2.t2 vout2.t6 VSS.t45 sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
+X33 vout4.t18 vin4.t2 VSS.t118 VSS.t119 sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
 X34 vout1.t14 vin1.t2 VDD.t65 VDD.t12 sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
-X35 vout1.t3 vin1.t0 VSS.t86 VSS.t87 sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
-X36 VSS.t124 vin4.t2 vout4.t17 VSS.t123 sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
+X35 vout1.t1 vin1.t0 VSS.t86 VSS.t87 sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
+X36 VSS.t124 vin4.t2 vout4.t16 VSS.t123 sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
 X37 VDD.t10 VDD.t9 VDD.t10 VDD.t1 sg13_lv_pmos ad=1.14p pd=6.38u as=0 ps=0 w=6u l=1u
-X38 VSS.t92 vin1.t0 vout1.t4 VSS.t91 sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
-X39 vout2.t9 vin2.t0 VDD.t13 VDD.t12 sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
-X40 VDD.t85 vin4.t0 vout4.t6 VDD.t1 sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
-X41 vout1.t1 vin1.t0 VSS.t95 VSS.t96 sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
-X42 vout3.t7 vin3.t0 VSS.t70 VSS.t50 sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
+X38 VSS.t92 vin1.t0 vout1.t2 VSS.t91 sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
+X39 vout2.t19 vin2.t0 VDD.t13 VDD.t12 sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
+X40 VDD.t85 vin4.t0 vout4.t1 VDD.t1 sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
+X41 vout1.t6 vin1.t0 VSS.t95 VSS.t96 sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
+X42 vout3.t16 vin3.t0 VSS.t70 VSS.t50 sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
 X43 VDD.t10 vin3.t1 vout3.t0 VDD.t1 sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
-X44 vout4.t3 vin4.t0 VDD.t87 VDD.t1 sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
-X45 VDD.t83 vin4.t0 vout4.t9 VDD.t1 sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
-X46 vout3.t13 vin3.t2 VDD.t43 VDD.t1 sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
-X47 VDD.t47 vin3.t2 vout3.t14 VDD.t1 sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
+X44 vout4.t9 vin4.t0 VDD.t87 VDD.t1 sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
+X45 VDD.t83 vin4.t0 vout4.t7 VDD.t1 sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
+X46 vout3.t1 vin3.t2 VDD.t43 VDD.t1 sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
+X47 VDD.t47 vin3.t2 vout3.t2 VDD.t1 sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
 X48 VSS.t6 VSS.t4 VSS.t6 VSS.t5 sg13_lv_nmos ad=0.19p pd=1.38u as=0 ps=0 w=1u l=1u
-X49 VDD.t91 vin4.t0 vout4.t0 VDD.t1 sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
-X50 VDD.t39 vin2.t0 vout2.t2 VDD.t12 sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
-X51 VSS.t127 vin4.t2 vout4.t19 VSS.t126 sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
-X52 VDD.t43 vin3.t2 vout3.t15 VDD.t1 sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
-X53 VSS.t86 vin1.t0 vout1.t10 VSS.t85 sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
+X49 VDD.t91 vin4.t0 vout4.t10 VDD.t1 sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
+X50 VDD.t39 vin2.t0 vout2.t15 VDD.t12 sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
+X51 VSS.t127 vin4.t2 vout4.t14 VSS.t126 sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
+X52 VDD.t43 vin3.t2 vout3.t9 VDD.t1 sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
+X53 VSS.t86 vin1.t0 vout1.t8 VSS.t85 sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
 X54 VDD.t65 vin1.t2 vout1.t13 VDD.t12 sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
-X55 vout4.t10 vin4.t2 VSS.t130 VSS.t131 sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
-X56 vout1.t17 vin1.t2 VDD.t67 VDD.t12 sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
-X57 vout4.t0 vin4.t0 VDD.t89 VDD.t1 sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
-X58 vout1.t4 vin1.t0 VSS.t89 VSS.t90 sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
-X59 VDD.t71 vin1.t2 vout1.t18 VDD.t12 sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
-X60 vout3.t2 vin3.t0 VSS.t66 VSS.t44 sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
-X61 VSS.t95 vin1.t0 vout1.t9 VSS.t94 sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
+X55 vout4.t0 vin4.t2 VSS.t130 VSS.t131 sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
+X56 vout1.t19 vin1.t2 VDD.t67 VDD.t12 sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
+X57 vout4.t10 vin4.t0 VDD.t89 VDD.t1 sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
+X58 vout1.t2 vin1.t0 VSS.t89 VSS.t90 sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
+X59 VDD.t71 vin1.t2 vout1.t17 VDD.t12 sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
+X60 vout3.t10 vin3.t0 VSS.t66 VSS.t44 sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
+X61 VSS.t95 vin1.t0 vout1.t3 VSS.t94 sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
 X62 VDD.t14 VDD.t11 VDD.t13 VDD.t12 sg13_lv_pmos ad=2.04p pd=12.68u as=0 ps=0 w=6u l=1u
-X63 vout4.t8 vin4.t0 VDD.t97 VDD.t1 sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
-X64 VDD.t57 vin3.t2 vout3.t12 VDD.t1 sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
-X65 VDD.t93 vin4.t0 vout4.t1 VDD.t1 sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
+X63 vout4.t5 vin4.t0 VDD.t97 VDD.t1 sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
+X64 VDD.t57 vin3.t2 vout3.t6 VDD.t1 sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
+X65 VDD.t93 vin4.t0 vout4.t8 VDD.t1 sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
 X66 vout3.t0 vin3.t2 VDD.t59 VDD.t1 sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
-X67 vout3.t10 vin3.t0 VSS.t62 VSS.t38 sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
-X68 VSS.t66 vin3.t0 vout3.t1 VSS.t42 sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
+X67 vout3.t14 vin3.t0 VSS.t62 VSS.t38 sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
+X68 VSS.t66 vin3.t0 vout3.t15 VSS.t42 sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
 X69 VDD.t21 VDD.t20 VDD.t21 VDD.t12 sg13_lv_pmos ad=1.14p pd=6.38u as=0 ps=0 w=6u l=1u
-X70 vout3.t3 vin3.t0 VSS.t68 VSS.t47 sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
+X70 vout3.t11 vin3.t0 VSS.t68 VSS.t47 sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
 X71 vout4.t4 vin4.t0 VDD.t95 VDD.t1 sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
-X72 vout3.t15 vin3.t2 VDD.t7 VDD.t1 sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
+X72 vout3.t9 vin3.t2 VDD.t7 VDD.t1 sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
 X73 VDD.t21 vin1.t1 vout1.t0 VDD.t12 sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
-X74 vout2.t2 vin2.t0 VDD.t37 VDD.t12 sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
+X74 vout2.t15 vin2.t0 VDD.t37 VDD.t12 sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
 X75 vout1.t13 vin1.t2 VDD.t63 VDD.t12 sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
-X76 vout2.t14 vin2.t2 VSS.t31 VSS.t32 sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
+X76 vout2.t3 vin2.t2 VSS.t31 VSS.t32 sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
 X77 VDD.t67 vin1.t2 vout1.t14 VDD.t12 sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
-X78 VDD.t63 vin1.t2 vout1.t19 VDD.t12 sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
-X79 VDD.t59 vin3.t2 vout3.t11 VDD.t1 sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
-X80 VSS.t62 vin3.t0 vout3.t9 VSS.t36 sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
-X81 vout3.t1 vin3.t0 VSS.t64 VSS.t41 sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
-X82 VSS.t109 vin4.t2 vout4.t12 VSS.t108 sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
-X83 VDD.t5 vin4.t0 vout4.t5 VDD.t1 sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
-X84 VSS.t68 vin3.t0 vout3.t2 VSS.t45 sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
-X85 vout4.t13 vin4.t2 VSS.t112 VSS.t113 sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
-X86 VDD.t77 vin1.t2 vout1.t12 VDD.t12 sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
-X87 vout2.t0 vin2.t0 VDD.t33 VDD.t12 sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
+X78 VDD.t63 vin1.t2 vout1.t18 VDD.t12 sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
+X79 VDD.t59 vin3.t2 vout3.t3 VDD.t1 sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
+X80 VSS.t62 vin3.t0 vout3.t18 VSS.t36 sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
+X81 vout3.t15 vin3.t0 VSS.t64 VSS.t41 sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
+X82 VSS.t109 vin4.t2 vout4.t17 VSS.t108 sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
+X83 VDD.t5 vin4.t0 vout4.t6 VDD.t1 sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
+X84 VSS.t68 vin3.t0 vout3.t10 VSS.t45 sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
+X85 vout4.t12 vin4.t2 VSS.t112 VSS.t113 sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
+X86 VDD.t77 vin1.t2 vout1.t15 VDD.t12 sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
+X87 vout2.t11 vin2.t0 VDD.t33 VDD.t12 sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
 X88 vout1.t0 vin1.t2 VDD.t79 VDD.t12 sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
-X89 VSS.t106 vin4.t2 vout4.t11 VSS.t105 sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
+X89 VSS.t106 vin4.t2 vout4.t13 VSS.t105 sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
 X90 VDD.t8 VDD.t6 VDD.t7 VDD.t1 sg13_lv_pmos ad=2.04p pd=12.68u as=0 ps=0 w=6u l=1u
-X91 vout2.t6 vin2.t0 VDD.t29 VDD.t12 sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
-X92 VDD.t33 vin2.t0 vout2.t7 VDD.t12 sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
-X93 VSS.t31 vin2.t2 vout2.t13 VSS.t30 sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
-X94 VSS.t118 vin4.t2 vout4.t14 VSS.t117 sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
-X95 vout2.t1 vin2.t0 VDD.t35 VDD.t12 sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
+X91 vout2.t12 vin2.t0 VDD.t29 VDD.t12 sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
+X92 VDD.t33 vin2.t0 vout2.t10 VDD.t12 sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
+X93 VSS.t31 vin2.t2 vout2.t2 VSS.t30 sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
+X94 VSS.t118 vin4.t2 vout4.t19 VSS.t117 sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
+X95 vout2.t14 vin2.t0 VDD.t35 VDD.t12 sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
 X96 VDD.t3 VDD.t0 VDD.t2 VDD.t1 sg13_lv_pmos ad=2.04p pd=12.68u as=0 ps=0 w=6u l=1u
-X97 vout2.t10 vin2.t2 VSS.t34 VSS.t35 sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
-X98 VSS.t40 vin2.t2 vout2.t11 VSS.t39 sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
-X99 vout1.t19 vin1.t2 VDD.t18 VDD.t12 sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
-X100 vout1.t8 vin1.t0 VSS.t80 VSS.t81 sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
-X101 vout4.t14 vin4.t2 VSS.t115 VSS.t116 sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
-X102 vout3.t11 vin3.t2 VDD.t57 VDD.t1 sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
-X103 vout4.t18 vin4.t2 VSS.t127 VSS.t128 sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
+X97 vout2.t9 vin2.t2 VSS.t34 VSS.t35 sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
+X98 VSS.t40 vin2.t2 vout2.t7 VSS.t39 sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
+X99 vout1.t18 vin1.t2 VDD.t18 VDD.t12 sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
+X100 vout1.t5 vin1.t0 VSS.t80 VSS.t81 sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
+X101 vout4.t19 vin4.t2 VSS.t115 VSS.t116 sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
+X102 vout3.t3 vin3.t2 VDD.t57 VDD.t1 sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
+X103 vout4.t15 vin4.t2 VSS.t127 VSS.t128 sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
 X104 VSS.t18 VSS.t17 VSS.t18 VSS.t12 sg13_lv_nmos ad=0.19p pd=1.38u as=0 ps=0 w=1u l=1u
-X105 VSS.t121 vin4.t2 vout4.t15 VSS.t120 sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
-X106 VDD.t79 vin1.t2 vout1.t15 VDD.t12 sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
-X107 VSS.t18 vin2.t1 vout2.t19 VSS.t54 sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
-X108 VDD.t29 vin2.t0 vout2.t5 VDD.t12 sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
-X109 vout4.t19 vin4.t2 VSS.t124 VSS.t125 sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
-X110 vout4.t7 vin4.t0 VDD.t85 VDD.t1 sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
-X111 vout2.t7 vin2.t0 VDD.t31 VDD.t12 sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
-X112 vout2.t13 vin2.t2 VSS.t28 VSS.t29 sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
-X113 VDD.t35 vin2.t0 vout2.t0 VDD.t12 sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
-X114 VSS.t34 vin2.t2 vout2.t14 VSS.t33 sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
-X115 VDD.t99 vin4.t0 vout4.t8 VDD.t1 sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
+X105 VSS.t121 vin4.t2 vout4.t18 VSS.t120 sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
+X106 VDD.t79 vin1.t2 vout1.t16 VDD.t12 sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
+X107 VSS.t18 vin2.t1 vout2.t0 VSS.t54 sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
+X108 VDD.t29 vin2.t0 vout2.t13 VDD.t12 sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
+X109 vout4.t14 vin4.t2 VSS.t124 VSS.t125 sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
+X110 vout4.t2 vin4.t0 VDD.t85 VDD.t1 sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
+X111 vout2.t10 vin2.t0 VDD.t31 VDD.t12 sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
+X112 vout2.t2 vin2.t2 VSS.t28 VSS.t29 sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
+X113 VDD.t35 vin2.t0 vout2.t11 VDD.t12 sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
+X114 VSS.t34 vin2.t2 vout2.t3 VSS.t33 sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
+X115 VDD.t99 vin4.t0 vout4.t5 VDD.t1 sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
 X116 VDD.t19 VDD.t17 VDD.t18 VDD.t12 sg13_lv_pmos ad=2.04p pd=12.68u as=0 ps=0 w=6u l=1u
-X117 VSS.t28 vin2.t2 vout2.t12 VSS.t27 sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
-X118 VSS.t80 vin1.t0 vout1.t7 VSS.t79 sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
-X119 vout3.t18 vin3.t2 VDD.t53 VDD.t1 sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
-X120 vout1.t10 vin1.t0 VSS.t83 VSS.t84 sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
-X121 VSS.t89 vin1.t0 vout1.t3 VSS.t88 sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
-X122 vout3.t17 vin3.t2 VDD.t49 VDD.t1 sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
-X123 VDD.t53 vin3.t2 vout3.t19 VDD.t1 sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
-X124 vout3.t12 vin3.t2 VDD.t55 VDD.t1 sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
-X125 vout3.t6 vin3.t0 VSS.t58 VSS.t32 sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
-X126 VSS.t49 vin2.t2 vout2.t17 VSS.t48 sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
-X127 vout1.t15 vin1.t2 VDD.t77 VDD.t12 sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
-X128 vout2.t19 vin2.t2 VSS.t52 VSS.t53 sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
-X129 VSS.t6 vin4.t1 vout4.t10 VSS.t132 sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
+X117 VSS.t28 vin2.t2 vout2.t5 VSS.t27 sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
+X118 VSS.t80 vin1.t0 vout1.t4 VSS.t79 sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
+X119 vout3.t7 vin3.t2 VDD.t53 VDD.t1 sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
+X120 vout1.t8 vin1.t0 VSS.t83 VSS.t84 sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
+X121 VSS.t89 vin1.t0 vout1.t1 VSS.t88 sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
+X122 vout3.t4 vin3.t2 VDD.t49 VDD.t1 sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
+X123 VDD.t53 vin3.t2 vout3.t5 VDD.t1 sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
+X124 vout3.t6 vin3.t2 VDD.t55 VDD.t1 sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
+X125 vout3.t19 vin3.t0 VSS.t58 VSS.t32 sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
+X126 VSS.t49 vin2.t2 vout2.t4 VSS.t48 sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
+X127 vout1.t16 vin1.t2 VDD.t77 VDD.t12 sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
+X128 vout2.t0 vin2.t2 VSS.t52 VSS.t53 sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
+X129 VSS.t6 vin4.t1 vout4.t0 VSS.t132 sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
 X130 VSS.t25 VSS.t23 VSS.t25 VSS.t24 sg13_lv_nmos ad=0.19p pd=1.38u as=0 ps=0 w=1u l=1u
-X131 VSS.t25 vin1.t0 vout1.t5 VSS.t103 sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
-X132 vout2.t12 vin2.t2 VSS.t15 VSS.t26 sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
+X131 VSS.t25 vin1.t0 vout1.t9 VSS.t103 sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
+X132 vout2.t5 vin2.t2 VSS.t15 VSS.t26 sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
 X133 VSS.t3 VSS.t0 VSS.t2 VSS.t1 sg13_lv_nmos ad=0.34p pd=2.68u as=0 ps=0 w=1u l=1u
-X134 vout1.t7 vin1.t0 VSS.t77 VSS.t78 sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
-X135 VSS.t83 vin1.t0 vout1.t8 VSS.t82 sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
-X136 VDD.t49 vin3.t2 vout3.t16 VDD.t1 sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
-X137 VSS.t77 vin1.t0 vout1.t6 VSS.t76 sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
-X138 vout4.t6 vin4.t0 VDD.t83 VDD.t1 sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
-X139 vout3.t19 vin3.t2 VDD.t51 VDD.t1 sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
-X140 VDD.t55 vin3.t2 vout3.t18 VDD.t1 sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
-X141 VSS.t58 vin3.t0 vout3.t5 VSS.t30 sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
-X142 vout3.t9 vin3.t0 VSS.t60 VSS.t35 sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
-X143 vout1.t11 vin1.t2 VDD.t73 VDD.t12 sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
-X144 VSS.t52 vin2.t2 vout2.t18 VSS.t51 sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
-X145 VSS.t64 vin3.t0 vout3.t10 VSS.t39 sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
-X146 VDD.t87 vin4.t0 vout4.t7 VDD.t1 sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
-X147 vout1.t18 vin1.t2 VDD.t69 VDD.t12 sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
-X148 VDD.t73 vin1.t2 vout1.t16 VDD.t12 sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
-X149 vout4.t9 vin4.t0 VDD.t2 VDD.t1 sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
-X150 VSS.t98 vin1.t0 vout1.t1 VSS.t97 sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
-X151 vout1.t5 vin1.t0 VSS.t101 VSS.t102 sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
-X152 vout1.t12 vin1.t2 VDD.t75 VDD.t12 sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
-X153 vout2.t4 vin2.t0 VDD.t25 VDD.t12 sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
-X154 vout4.t16 vin4.t2 VSS.t109 VSS.t110 sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
+X134 vout1.t4 vin1.t0 VSS.t77 VSS.t78 sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
+X135 VSS.t83 vin1.t0 vout1.t5 VSS.t82 sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
+X136 VDD.t49 vin3.t2 vout3.t8 VDD.t1 sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
+X137 VSS.t77 vin1.t0 vout1.t10 VSS.t76 sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
+X138 vout4.t1 vin4.t0 VDD.t83 VDD.t1 sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
+X139 vout3.t5 vin3.t2 VDD.t51 VDD.t1 sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
+X140 VDD.t55 vin3.t2 vout3.t7 VDD.t1 sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
+X141 VSS.t58 vin3.t0 vout3.t13 VSS.t30 sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
+X142 vout3.t18 vin3.t0 VSS.t60 VSS.t35 sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
+X143 vout1.t12 vin1.t2 VDD.t73 VDD.t12 sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
+X144 VSS.t52 vin2.t2 vout2.t1 VSS.t51 sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
+X145 VSS.t64 vin3.t0 vout3.t14 VSS.t39 sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
+X146 VDD.t87 vin4.t0 vout4.t2 VDD.t1 sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
+X147 vout1.t17 vin1.t2 VDD.t69 VDD.t12 sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
+X148 VDD.t73 vin1.t2 vout1.t11 VDD.t12 sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
+X149 vout4.t7 vin4.t0 VDD.t2 VDD.t1 sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
+X150 VSS.t98 vin1.t0 vout1.t6 VSS.t97 sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
+X151 vout1.t9 vin1.t0 VSS.t101 VSS.t102 sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
+X152 vout1.t15 vin1.t2 VDD.t75 VDD.t12 sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
+X153 vout2.t17 vin2.t0 VDD.t25 VDD.t12 sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
+X154 vout4.t11 vin4.t2 VSS.t109 VSS.t110 sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
 X155 VSS.t16 VSS.t14 VSS.t15 VSS.t8 sg13_lv_nmos ad=0.34p pd=2.68u as=0 ps=0 w=1u l=1u
 X156 VSS.t13 VSS.t11 VSS.t13 VSS.t12 sg13_lv_nmos ad=0.19p pd=1.38u as=0 ps=0 w=1u l=1u
-X157 vout4.t2 vin4.t0 VDD.t93 VDD.t1 sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
-X158 VSS.t13 vin3.t0 vout3.t4 VSS.t54 sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
-X159 VSS.t130 vin4.t2 vout4.t18 VSS.t129 sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
-X160 VDD.t89 vin4.t0 vout4.t3 VDD.t1 sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
-X161 vout1.t6 vin1.t0 VSS.t21 VSS.t75 sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
-X162 vout3.t5 vin3.t0 VSS.t56 VSS.t29 sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
-X163 VSS.t60 vin3.t0 vout3.t6 VSS.t33 sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
-X164 vout4.t1 vin4.t0 VDD.t91 VDD.t1 sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
-X165 vout2.t18 vin2.t2 VSS.t49 VSS.t50 sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
-X166 VSS.t56 vin3.t0 vout3.t8 VSS.t27 sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
-X167 VDD.t69 vin1.t2 vout1.t17 VDD.t12 sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
-X168 vout1.t16 vin1.t2 VDD.t71 VDD.t12 sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
-X169 VDD.t75 vin1.t2 vout1.t11 VDD.t12 sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
-X170 VDD.t95 vin4.t0 vout4.t2 VDD.t1 sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
-X171 VSS.t101 vin1.t0 vout1.t2 VSS.t100 sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
-X172 VDD.t25 vin2.t0 vout2.t3 VDD.t12 sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
-X173 vout2.t5 vin2.t0 VDD.t27 VDD.t12 sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
-X174 VDD.t31 vin2.t0 vout2.t6 VDD.t12 sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
-X175 VSS.t70 vin3.t0 vout3.t3 VSS.t48 sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
-R0 vout1.n9 vout1.t5 10.2939
-R1 vout1.n8 vout1.t2 10.2939
-R2 vout1.n7 vout1.t1 10.2939
-R3 vout1.n6 vout1.t9 10.2939
-R4 vout1.n5 vout1.t4 10.2939
-R5 vout1.n4 vout1.t3 10.2939
-R6 vout1.n3 vout1.t10 10.2939
-R7 vout1.n2 vout1.t8 10.2939
-R8 vout1.n1 vout1.t7 10.2939
-R9 vout1.n0 vout1.t6 10.2939
+X157 vout4.t3 vin4.t0 VDD.t93 VDD.t1 sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
+X158 VSS.t13 vin3.t0 vout3.t17 VSS.t54 sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
+X159 VSS.t130 vin4.t2 vout4.t15 VSS.t129 sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
+X160 VDD.t89 vin4.t0 vout4.t9 VDD.t1 sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
+X161 vout1.t10 vin1.t0 VSS.t21 VSS.t75 sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
+X162 vout3.t13 vin3.t0 VSS.t56 VSS.t29 sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
+X163 VSS.t60 vin3.t0 vout3.t19 VSS.t33 sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
+X164 vout4.t8 vin4.t0 VDD.t91 VDD.t1 sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
+X165 vout2.t1 vin2.t2 VSS.t49 VSS.t50 sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
+X166 VSS.t56 vin3.t0 vout3.t12 VSS.t27 sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
+X167 VDD.t69 vin1.t2 vout1.t19 VDD.t12 sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
+X168 vout1.t11 vin1.t2 VDD.t71 VDD.t12 sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
+X169 VDD.t75 vin1.t2 vout1.t12 VDD.t12 sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
+X170 VDD.t95 vin4.t0 vout4.t3 VDD.t1 sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
+X171 VSS.t101 vin1.t0 vout1.t7 VSS.t100 sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
+X172 VDD.t25 vin2.t0 vout2.t16 VDD.t12 sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
+X173 vout2.t13 vin2.t0 VDD.t27 VDD.t12 sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
+X174 VDD.t31 vin2.t0 vout2.t12 VDD.t12 sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
+X175 VSS.t70 vin3.t0 vout3.t11 VSS.t48 sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
+R0 vout1.n9 vout1.t9 10.2939
+R1 vout1.n8 vout1.t7 10.2939
+R2 vout1.n7 vout1.t6 10.2939
+R3 vout1.n6 vout1.t3 10.2939
+R4 vout1.n5 vout1.t2 10.2939
+R5 vout1.n4 vout1.t1 10.2939
+R6 vout1.n3 vout1.t8 10.2939
+R7 vout1.n2 vout1.t5 10.2939
+R8 vout1.n1 vout1.t4 10.2939
+R9 vout1.n0 vout1.t10 10.2939
 R10 vout1.n9 vout1.t0 2.0884
-R11 vout1.n8 vout1.t15 2.0884
-R12 vout1.n7 vout1.t12 2.0884
-R13 vout1.n6 vout1.t11 2.0884
-R14 vout1.n5 vout1.t16 2.0884
-R15 vout1.n4 vout1.t18 2.0693
-R16 vout1.n3 vout1.t17 2.0693
+R11 vout1.n8 vout1.t16 2.0884
+R12 vout1.n7 vout1.t15 2.0884
+R13 vout1.n6 vout1.t12 2.0884
+R14 vout1.n5 vout1.t11 2.0884
+R15 vout1.n4 vout1.t17 2.0693
+R16 vout1.n3 vout1.t19 2.0693
 R17 vout1.n2 vout1.t14 2.0693
 R18 vout1.n1 vout1.t13 2.0693
-R19 vout1.n0 vout1.t19 2.06738
+R19 vout1.n0 vout1.t18 2.06738
 R20 vout1.n9 vout1.n8 0.16242
 R21 vout1.n8 vout1.n7 0.16242
 R22 vout1.n7 vout1.n6 0.16242
@@ -257,26 +257,26 @@ R75 vin1.n1 vin1.n0 0.0265126
 R76 vin1 vin1.n28 0.00974
 R77 vin1.n16 vin1.t1 0.00374593
 R78 vin1.n16 vin1.t2 0.00125388
-R79 vout2.n9 vout2.t19 10.2939
-R80 vout2.n8 vout2.t18 10.2939
-R81 vout2.n7 vout2.t17 10.2939
-R82 vout2.n6 vout2.t16 10.2939
-R83 vout2.n5 vout2.t15 10.2939
-R84 vout2.n4 vout2.t11 10.2939
-R85 vout2.n3 vout2.t10 10.2939
-R86 vout2.n2 vout2.t14 10.2939
-R87 vout2.n1 vout2.t13 10.2939
-R88 vout2.n0 vout2.t12 10.2933
-R89 vout2.n9 vout2.t8 2.08789
-R90 vout2.n8 vout2.t2 2.08789
-R91 vout2.n7 vout2.t1 2.08789
-R92 vout2.n6 vout2.t0 2.08789
-R93 vout2.n5 vout2.t7 2.08789
-R94 vout2.n4 vout2.t6 2.0693
-R95 vout2.n3 vout2.t5 2.0693
-R96 vout2.n2 vout2.t4 2.0693
-R97 vout2.n1 vout2.t3 2.0693
-R98 vout2.n0 vout2.t9 2.0693
+R79 vout2.n9 vout2.t0 10.2939
+R80 vout2.n8 vout2.t1 10.2939
+R81 vout2.n7 vout2.t4 10.2939
+R82 vout2.n6 vout2.t6 10.2939
+R83 vout2.n5 vout2.t8 10.2939
+R84 vout2.n4 vout2.t7 10.2939
+R85 vout2.n3 vout2.t9 10.2939
+R86 vout2.n2 vout2.t3 10.2939
+R87 vout2.n1 vout2.t2 10.2939
+R88 vout2.n0 vout2.t5 10.2933
+R89 vout2.n9 vout2.t18 2.08789
+R90 vout2.n8 vout2.t15 2.08789
+R91 vout2.n7 vout2.t14 2.08789
+R92 vout2.n6 vout2.t11 2.08789
+R93 vout2.n5 vout2.t10 2.08789
+R94 vout2.n4 vout2.t12 2.0693
+R95 vout2.n3 vout2.t13 2.0693
+R96 vout2.n2 vout2.t17 2.0693
+R97 vout2.n1 vout2.t16 2.0693
+R98 vout2.n0 vout2.t19 2.0693
 R99 vout2.n9 vout2.n8 0.16242
 R100 vout2.n8 vout2.n7 0.16242
 R101 vout2.n7 vout2.n6 0.16242
@@ -336,26 +336,26 @@ R154 vin2.n1 vin2.n0 0.0265126
 R155 vin2 vin2.n28 0.00974
 R156 vin2.n16 vin2.t1 0.00374593
 R157 vin2.n16 vin2.t2 0.00125388
-R158 vout3.n9 vout3.t4 10.2939
-R159 vout3.n8 vout3.t7 10.2939
-R160 vout3.n7 vout3.t3 10.2939
-R161 vout3.n6 vout3.t2 10.2939
-R162 vout3.n5 vout3.t1 10.2939
-R163 vout3.n4 vout3.t10 10.2939
-R164 vout3.n3 vout3.t9 10.2939
-R165 vout3.n2 vout3.t6 10.2939
-R166 vout3.n1 vout3.t5 10.2939
-R167 vout3.n0 vout3.t8 10.2939
+R158 vout3.n9 vout3.t17 10.2939
+R159 vout3.n8 vout3.t16 10.2939
+R160 vout3.n7 vout3.t11 10.2939
+R161 vout3.n6 vout3.t10 10.2939
+R162 vout3.n5 vout3.t15 10.2939
+R163 vout3.n4 vout3.t14 10.2939
+R164 vout3.n3 vout3.t18 10.2939
+R165 vout3.n2 vout3.t19 10.2939
+R166 vout3.n1 vout3.t13 10.2939
+R167 vout3.n0 vout3.t12 10.2939
 R168 vout3.n9 vout3.t0 2.0884
-R169 vout3.n8 vout3.t11 2.0884
-R170 vout3.n7 vout3.t12 2.0884
-R171 vout3.n6 vout3.t18 2.0884
-R172 vout3.n5 vout3.t19 2.0884
-R173 vout3.n4 vout3.t17 2.0693
-R174 vout3.n3 vout3.t16 2.0693
-R175 vout3.n2 vout3.t14 2.0693
-R176 vout3.n1 vout3.t13 2.0693
-R177 vout3.n0 vout3.t15 2.06738
+R169 vout3.n8 vout3.t3 2.0884
+R170 vout3.n7 vout3.t6 2.0884
+R171 vout3.n6 vout3.t7 2.0884
+R172 vout3.n5 vout3.t5 2.0884
+R173 vout3.n4 vout3.t4 2.0693
+R174 vout3.n3 vout3.t8 2.0693
+R175 vout3.n2 vout3.t2 2.0693
+R176 vout3.n1 vout3.t1 2.0693
+R177 vout3.n0 vout3.t9 2.06738
 R178 vout3.n9 vout3.n8 0.16242
 R179 vout3.n8 vout3.n7 0.16242
 R180 vout3.n7 vout3.n6 0.16242
@@ -415,26 +415,26 @@ R233 vin3.n1 vin3.n0 0.0265126
 R234 vin3 vin3.n28 0.00974
 R235 vin3.n16 vin3.t1 0.00374593
 R236 vin3.n16 vin3.t2 0.00125388
-R237 vout4.n9 vout4.t10 10.2939
-R238 vout4.n8 vout4.t18 10.2939
-R239 vout4.n7 vout4.t19 10.2939
-R240 vout4.n6 vout4.t17 10.2939
-R241 vout4.n5 vout4.t15 10.2939
-R242 vout4.n4 vout4.t14 10.2939
-R243 vout4.n3 vout4.t13 10.2939
-R244 vout4.n2 vout4.t16 10.2939
-R245 vout4.n1 vout4.t12 10.2939
-R246 vout4.n0 vout4.t11 10.2933
-R247 vout4.n9 vout4.t5 2.08789
-R248 vout4.n8 vout4.t8 2.08789
+R237 vout4.n9 vout4.t0 10.2939
+R238 vout4.n8 vout4.t15 10.2939
+R239 vout4.n7 vout4.t14 10.2939
+R240 vout4.n6 vout4.t16 10.2939
+R241 vout4.n5 vout4.t18 10.2939
+R242 vout4.n4 vout4.t19 10.2939
+R243 vout4.n3 vout4.t12 10.2939
+R244 vout4.n2 vout4.t11 10.2939
+R245 vout4.n1 vout4.t17 10.2939
+R246 vout4.n0 vout4.t13 10.2933
+R247 vout4.n9 vout4.t6 2.08789
+R248 vout4.n8 vout4.t5 2.08789
 R249 vout4.n7 vout4.t4 2.08789
-R250 vout4.n6 vout4.t2 2.08789
-R251 vout4.n5 vout4.t1 2.08789
-R252 vout4.n4 vout4.t0 2.0693
-R253 vout4.n3 vout4.t3 2.0693
-R254 vout4.n2 vout4.t7 2.0693
-R255 vout4.n1 vout4.t6 2.0693
-R256 vout4.n0 vout4.t9 2.0693
+R250 vout4.n6 vout4.t3 2.08789
+R251 vout4.n5 vout4.t8 2.08789
+R252 vout4.n4 vout4.t10 2.0693
+R253 vout4.n3 vout4.t9 2.0693
+R254 vout4.n2 vout4.t2 2.0693
+R255 vout4.n1 vout4.t1 2.0693
+R256 vout4.n0 vout4.t7 2.0693
 R257 vout4.n9 vout4.n8 0.16242
 R258 vout4.n8 vout4.n7 0.16242
 R259 vout4.n7 vout4.n6 0.16242
@@ -4017,21 +4017,21 @@ R3835 VSS.n551 VSS.n14 0.001
 R3836 VSS.n554 VSS.n418 0.001
 R3837 VSS.n556 VSS.n419 0.001
 R3838 VSS.n560 VSS.n420 0.001
-C0 vin4 vin3 0.05053f
-C1 vin4 vout4 18.2968f
-C2 vin2 vin3 0.05785f
-C3 VDD vin3 29.202f
-C4 vout3 vin3 18.2968f
-C5 VDD vout4 15.3949f
-C6 VDD vout1 15.3949f
-C7 vin1 vout1 18.2968f
-C8 VDD vin4 29.2329f
-C9 vin2 vout2 18.2968f
-C10 vout2 VDD 15.3834f
-C11 vin2 VDD 29.202f
-C12 vout3 VDD 15.3834f
-C13 vin2 vin1 0.05053f
-C14 VDD vin1 29.2329f
+C0 vin3 vin2 0.05785f
+C1 vin3 vout3 18.2968f
+C2 vout1 VDD 15.3949f
+C3 vout2 VDD 15.3834f
+C4 vin2 VDD 29.202f
+C5 vout3 VDD 15.3834f
+C6 vin1 vout1 18.2968f
+C7 vin2 vout2 18.2968f
+C8 vin1 VDD 29.2329f
+C9 vin4 vin3 0.05053f
+C10 vin4 vout4 18.2968f
+C11 vin1 vin2 0.05053f
+C12 vin4 VDD 29.2329f
+C13 vin3 VDD 29.202f
+C14 vout4 VDD 15.3949f
 C15 vout1 VSS 8.36734f
 C16 vin1 VSS 19.17327f
 C17 vout2 VSS 8.3656f
@@ -4943,26 +4943,26 @@ C922 vin4.n25 VSS 0.07539f
 C923 vin4.n26 VSS 0.07539f
 C924 vin4.n27 VSS 0.09987f
 C925 vin4.n28 VSS 0.29722f
-C926 vout4.t10 VSS 0.11212f
-C927 vout4.t5 VSS 0.80266f
-C928 vout4.t18 VSS 0.11212f
-C929 vout4.t8 VSS 0.80266f
-C930 vout4.t19 VSS 0.11212f
+C926 vout4.t0 VSS 0.11212f
+C927 vout4.t6 VSS 0.80266f
+C928 vout4.t15 VSS 0.11212f
+C929 vout4.t5 VSS 0.80266f
+C930 vout4.t14 VSS 0.11212f
 C931 vout4.t4 VSS 0.80266f
-C932 vout4.t17 VSS 0.11212f
-C933 vout4.t2 VSS 0.80266f
-C934 vout4.t15 VSS 0.11212f
-C935 vout4.t1 VSS 0.80266f
-C936 vout4.t14 VSS 0.11212f
-C937 vout4.t0 VSS 0.7961f
-C938 vout4.t13 VSS 0.11212f
-C939 vout4.t3 VSS 0.7961f
-C940 vout4.t16 VSS 0.11212f
-C941 vout4.t7 VSS 0.7961f
-C942 vout4.t12 VSS 0.11212f
-C943 vout4.t6 VSS 0.7961f
-C944 vout4.t11 VSS 0.11212f
-C945 vout4.t9 VSS 0.7961f
+C932 vout4.t16 VSS 0.11212f
+C933 vout4.t3 VSS 0.80266f
+C934 vout4.t18 VSS 0.11212f
+C935 vout4.t8 VSS 0.80266f
+C936 vout4.t19 VSS 0.11212f
+C937 vout4.t10 VSS 0.7961f
+C938 vout4.t12 VSS 0.11212f
+C939 vout4.t9 VSS 0.7961f
+C940 vout4.t11 VSS 0.11212f
+C941 vout4.t2 VSS 0.7961f
+C942 vout4.t17 VSS 0.11212f
+C943 vout4.t1 VSS 0.7961f
+C944 vout4.t13 VSS 0.11212f
+C945 vout4.t7 VSS 0.7961f
 C946 vout4.n0 VSS 2.04997f
 C947 vout4.n1 VSS 2.22049f
 C948 vout4.n2 VSS 2.22049f
@@ -5006,25 +5006,25 @@ C985 vin3.n26 VSS 0.07544f
 C986 vin3.n27 VSS 0.09993f
 C987 vin3.n28 VSS 0.2974f
 C988 vout3.t0 VSS 0.80234f
-C989 vout3.t4 VSS 0.11208f
-C990 vout3.t11 VSS 0.80234f
-C991 vout3.t7 VSS 0.11208f
-C992 vout3.t12 VSS 0.80234f
-C993 vout3.t3 VSS 0.11208f
-C994 vout3.t18 VSS 0.80234f
-C995 vout3.t2 VSS 0.11208f
-C996 vout3.t19 VSS 0.80234f
-C997 vout3.t1 VSS 0.11208f
-C998 vout3.t17 VSS 0.79584f
-C999 vout3.t10 VSS 0.11208f
-C1000 vout3.t16 VSS 0.79584f
-C1001 vout3.t9 VSS 0.11208f
-C1002 vout3.t14 VSS 0.79584f
-C1003 vout3.t6 VSS 0.11208f
-C1004 vout3.t13 VSS 0.79584f
-C1005 vout3.t5 VSS 0.11208f
-C1006 vout3.t15 VSS 0.79616f
-C1007 vout3.t8 VSS 0.11208f
+C989 vout3.t17 VSS 0.11208f
+C990 vout3.t3 VSS 0.80234f
+C991 vout3.t16 VSS 0.11208f
+C992 vout3.t6 VSS 0.80234f
+C993 vout3.t11 VSS 0.11208f
+C994 vout3.t7 VSS 0.80234f
+C995 vout3.t10 VSS 0.11208f
+C996 vout3.t5 VSS 0.80234f
+C997 vout3.t15 VSS 0.11208f
+C998 vout3.t4 VSS 0.79584f
+C999 vout3.t14 VSS 0.11208f
+C1000 vout3.t8 VSS 0.79584f
+C1001 vout3.t18 VSS 0.11208f
+C1002 vout3.t2 VSS 0.79584f
+C1003 vout3.t19 VSS 0.11208f
+C1004 vout3.t1 VSS 0.79584f
+C1005 vout3.t13 VSS 0.11208f
+C1006 vout3.t9 VSS 0.79616f
+C1007 vout3.t12 VSS 0.11208f
 C1008 vout3.n0 VSS 2.04901f
 C1009 vout3.n1 VSS 2.21979f
 C1010 vout3.n2 VSS 2.21979f
@@ -5067,26 +5067,26 @@ C1046 vin2.n25 VSS 0.07544f
 C1047 vin2.n26 VSS 0.07544f
 C1048 vin2.n27 VSS 0.09993f
 C1049 vin2.n28 VSS 0.2974f
-C1050 vout2.t19 VSS 0.11208f
-C1051 vout2.t8 VSS 0.80241f
-C1052 vout2.t18 VSS 0.11208f
-C1053 vout2.t2 VSS 0.80241f
-C1054 vout2.t17 VSS 0.11208f
-C1055 vout2.t1 VSS 0.80241f
-C1056 vout2.t16 VSS 0.11208f
-C1057 vout2.t0 VSS 0.80241f
-C1058 vout2.t15 VSS 0.11208f
-C1059 vout2.t7 VSS 0.80241f
-C1060 vout2.t11 VSS 0.11208f
-C1061 vout2.t6 VSS 0.79584f
-C1062 vout2.t10 VSS 0.11208f
-C1063 vout2.t5 VSS 0.79584f
-C1064 vout2.t14 VSS 0.11208f
-C1065 vout2.t4 VSS 0.79584f
-C1066 vout2.t13 VSS 0.11208f
-C1067 vout2.t3 VSS 0.79584f
-C1068 vout2.t12 VSS 0.11208f
-C1069 vout2.t9 VSS 0.79584f
+C1050 vout2.t0 VSS 0.11208f
+C1051 vout2.t18 VSS 0.80241f
+C1052 vout2.t1 VSS 0.11208f
+C1053 vout2.t15 VSS 0.80241f
+C1054 vout2.t4 VSS 0.11208f
+C1055 vout2.t14 VSS 0.80241f
+C1056 vout2.t6 VSS 0.11208f
+C1057 vout2.t11 VSS 0.80241f
+C1058 vout2.t8 VSS 0.11208f
+C1059 vout2.t10 VSS 0.80241f
+C1060 vout2.t7 VSS 0.11208f
+C1061 vout2.t12 VSS 0.79584f
+C1062 vout2.t9 VSS 0.11208f
+C1063 vout2.t13 VSS 0.79584f
+C1064 vout2.t3 VSS 0.11208f
+C1065 vout2.t17 VSS 0.79584f
+C1066 vout2.t2 VSS 0.11208f
+C1067 vout2.t16 VSS 0.79584f
+C1068 vout2.t5 VSS 0.11208f
+C1069 vout2.t19 VSS 0.79584f
 C1070 vout2.n0 VSS 2.04933f
 C1071 vout2.n1 VSS 2.21979f
 C1072 vout2.n2 VSS 2.21979f
@@ -5130,25 +5130,25 @@ C1109 vin1.n26 VSS 0.07539f
 C1110 vin1.n27 VSS 0.09987f
 C1111 vin1.n28 VSS 0.29722f
 C1112 vout1.t0 VSS 0.80259f
-C1113 vout1.t5 VSS 0.11212f
-C1114 vout1.t15 VSS 0.80259f
-C1115 vout1.t2 VSS 0.11212f
-C1116 vout1.t12 VSS 0.80259f
-C1117 vout1.t1 VSS 0.11212f
-C1118 vout1.t11 VSS 0.80259f
-C1119 vout1.t9 VSS 0.11212f
-C1120 vout1.t16 VSS 0.80259f
-C1121 vout1.t4 VSS 0.11212f
-C1122 vout1.t18 VSS 0.7961f
-C1123 vout1.t3 VSS 0.11212f
-C1124 vout1.t17 VSS 0.7961f
-C1125 vout1.t10 VSS 0.11212f
+C1113 vout1.t9 VSS 0.11212f
+C1114 vout1.t16 VSS 0.80259f
+C1115 vout1.t7 VSS 0.11212f
+C1116 vout1.t15 VSS 0.80259f
+C1117 vout1.t6 VSS 0.11212f
+C1118 vout1.t12 VSS 0.80259f
+C1119 vout1.t3 VSS 0.11212f
+C1120 vout1.t11 VSS 0.80259f
+C1121 vout1.t2 VSS 0.11212f
+C1122 vout1.t17 VSS 0.7961f
+C1123 vout1.t1 VSS 0.11212f
+C1124 vout1.t19 VSS 0.7961f
+C1125 vout1.t8 VSS 0.11212f
 C1126 vout1.t14 VSS 0.7961f
-C1127 vout1.t8 VSS 0.11212f
+C1127 vout1.t5 VSS 0.11212f
 C1128 vout1.t13 VSS 0.7961f
-C1129 vout1.t7 VSS 0.11212f
-C1130 vout1.t19 VSS 0.79641f
-C1131 vout1.t6 VSS 0.11212f
+C1129 vout1.t4 VSS 0.11212f
+C1130 vout1.t18 VSS 0.79641f
+C1131 vout1.t10 VSS 0.11212f
 C1132 vout1.n0 VSS 2.04966f
 C1133 vout1.n1 VSS 2.22049f
 C1134 vout1.n2 VSS 2.22049f

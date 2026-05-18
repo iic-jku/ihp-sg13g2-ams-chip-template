@@ -8,50 +8,51 @@
  </tags>
  <categories>
   <category>
-   <name>Padc.a</name>
-   <description>6.9. Padc.a : CuPillarPad size is 35.0 um</description>
+   <name>TM2.a</name>
+   <description>5.25. TM2.a: Min. TopMetal2 width: 2.0 μm.</description>
    <categories>
    </categories>
   </category>
   <category>
-   <name>Padc.b</name>
-   <description>6.9. Padc.b : Min. CuPillarPad space is 40.0 um</description>
+   <name>TM2.b</name>
+   <description>5.25. TM2.b: Min. TopMetal2 (drawing + filler) space or notch: 2.0 μm.</description>
    <categories>
    </categories>
   </category>
   <category>
-   <name>Padc.c</name>
-   <description>6.9. Padc.c : Min. TopMetal2 (within dfpad) enclosure of CuPillarPad is 7.5 um</description>
-   <categories>
-   </categories>
-  </category>
-  <category>
-   <name>padc.f</name>
-   <description>6.9.2. Padc.f: Allowed passivation opening shape Circle</description>
+   <name>TM2.bR</name>
+   <description>5.25. TM2.bR : Min. space of TopMetal2 lines if, at least one line is wider than 2.5 µm
+                    and the parallel run is more than 50.0 µm is 5.0 um</description>
    <categories>
    </categories>
   </category>
  <category>
-   <name>TV1.a</name>
-   <description>5.21. TV1.a : Min. and max. TopVia1 width: 0.42 µm</description>
+   <name>TM2Fil.c</name>
+   <description>5.26. TM2Fil.c : Min. TopMetal2:filler space to TopMetal2 is 3.0 um</description>
    <categories>
    </categories>
   </category>
   <category>
-   <name>TV1.b</name>
-   <description>5.21. TV1.b : Min. TopVia1 space: 0.42 µm</description>
+   <name>TM2Fil.a1</name>
+   <description>5.26. TM2Fil.a1 : Max. TopMetal2:filler width is 10.0 um</description>
+   <categories>
+   </categories>
+  </category>
+ <category>
+   <name>Pas.a</name>
+   <description>5.27. Pas.a:Min. Passiv width: 2.1 µm</description>
    <categories>
    </categories>
   </category>
   <category>
-   <name>TV1.c</name>
-   <description>5.21. TV1.c : Min. Metal5 enclosure of TopVia1 is 0.1 um</description>
+   <name>Pas.b</name>
+   <description>5.27. Pas.b: Min. Passiv space or notch: 3.5 µm</description>
    <categories>
    </categories>
   </category>
   <category>
-   <name>TV1.d</name>
-   <description>5.21. TV1.d : Min. TopMetal1 enclosure of TopVia1 is 0.42 um</description>
+   <name>Pas.c</name>
+   <description>5.27. Pas.c : Min. TopMetal2 enclosure of Passiv [Not checked outside of sealring (edge-seal-passive)] is 2.1 um </description>
    <categories>
    </categories>
   </category>
@@ -130,463 +131,6 @@
   <category>
    <name>forbidden.colwind</name>
    <description>forbidden.colwind : 3.2. colwind is forbidden in designs submitted for all 0.13 um techs.</description>
-   <categories>
-   </categories>
-  </category>
- <category>
-   <name>TM2.a</name>
-   <description>5.25. TM2.a: Min. TopMetal2 width: 2.0 μm.</description>
-   <categories>
-   </categories>
-  </category>
-  <category>
-   <name>TM2.b</name>
-   <description>5.25. TM2.b: Min. TopMetal2 (drawing + filler) space or notch: 2.0 μm.</description>
-   <categories>
-   </categories>
-  </category>
-  <category>
-   <name>TM2.bR</name>
-   <description>5.25. TM2.bR : Min. space of TopMetal2 lines if, at least one line is wider than 2.5 µm
-                    and the parallel run is more than 50.0 µm is 5.0 um</description>
-   <categories>
-   </categories>
-  </category>
- <category>
-   <name>Pas.a</name>
-   <description>5.27. Pas.a:Min. Passiv width: 2.1 µm</description>
-   <categories>
-   </categories>
-  </category>
-  <category>
-   <name>Pas.b</name>
-   <description>5.27. Pas.b: Min. Passiv space or notch: 3.5 µm</description>
-   <categories>
-   </categories>
-  </category>
-  <category>
-   <name>Pas.c</name>
-   <description>5.27. Pas.c : Min. TopMetal2 enclosure of Passiv [Not checked outside of sealring (edge-seal-passive)] is 2.1 um </description>
-   <categories>
-   </categories>
-  </category>
- <category>
-   <name>LBE.a</name>
-   <description>9.1. LBE.a: Min. LBE width: 100.0 µm</description>
-   <categories>
-   </categories>
-  </category>
-  <category>
-   <name>LBE.b</name>
-   <description>9.1. LBE.b: Max. LBE width: 1500.0 µm.</description>
-   <categories>
-   </categories>
-  </category>
-  <category>
-   <name>LBE.b1</name>
-   <description>9.1. LBE.b1: Max. LBE area (µm²): 250000.0 .um</description>
-   <categories>
-   </categories>
-  </category>
-  <category>
-   <name>LBE.c</name>
-   <description>9.1. LBE.c: Min. LBE space or notch: 100.0 µm</description>
-   <categories>
-   </categories>
-  </category>
-  <category>
-   <name>LBE.d</name>
-   <description>9.1. LBE.d: Min. LBE space to inner edge of EdgeSeal: 150.0 µm</description>
-   <categories>
-   </categories>
-  </category>
-  <category>
-   <name>LBE.h</name>
-   <description>9.1. LBE.h: No LBE ring allowed.</description>
-   <categories>
-   </categories>
-  </category>
- <category>
-   <name>M1Fil.c</name>
-   <description>5.18. M1Fil.c : Min. Metal1:filler space to Metal1 is 0.42 um</description>
-   <categories>
-   </categories>
-  </category>
-  <category>
-   <name>M1Fil.a2</name>
-   <description>5.18. M1Fil.a2 : Max. Metal1:filler width is 5.0 um</description>
-   <categories>
-   </categories>
-  </category>
-  <category>
-   <name>M2Fil.c</name>
-   <description>5.18. M2Fil.c : Min. Metal2:filler space to Metal2 is 0.42 um</description>
-   <categories>
-   </categories>
-  </category>
-  <category>
-   <name>M2Fil.a2</name>
-   <description>5.18. M2Fil.a2 : Max. Metal2:filler width is 5.0 um</description>
-   <categories>
-   </categories>
-  </category>
-  <category>
-   <name>M3Fil.c</name>
-   <description>5.18. M3Fil.c : Min. Metal3:filler space to Metal3 is 0.42 um</description>
-   <categories>
-   </categories>
-  </category>
-  <category>
-   <name>M3Fil.a2</name>
-   <description>5.18. M3Fil.a2 : Max. Metal3:filler width is 5.0 um</description>
-   <categories>
-   </categories>
-  </category>
-  <category>
-   <name>M4Fil.c</name>
-   <description>5.18. M4Fil.c : Min. Metal4:filler space to Metal4 is 0.42 um</description>
-   <categories>
-   </categories>
-  </category>
-  <category>
-   <name>M4Fil.a2</name>
-   <description>5.18. M4Fil.a2 : Max. Metal4:filler width is 5.0 um</description>
-   <categories>
-   </categories>
-  </category>
-  <category>
-   <name>M5Fil.c</name>
-   <description>5.18. M5Fil.c : Min. Metal5:filler space to Metal5 is 0.42 um</description>
-   <categories>
-   </categories>
-  </category>
-  <category>
-   <name>M5Fil.a2</name>
-   <description>5.18. M5Fil.a2 : Max. Metal5:filler width is 5.0 um</description>
-   <categories>
-   </categories>
-  </category>
- <category>
-   <name>M1.a</name>
-   <description>5.16. M1.a: Min. Metal1 width: 0.16 μm.</description>
-   <categories>
-   </categories>
-  </category>
-  <category>
-   <name>M1.b</name>
-   <description>5.16. M1.b: Min. Metal1 (drawing + filler) space or notch: 0.18 μm.</description>
-   <categories>
-   </categories>
-  </category>
-  <category>
-   <name>M1.e</name>
-   <description>5.16. M1.e Min. space of Metal1 lines if, at least one line is wider than 0.15 µm and the parallel run is more than 1.0 µm is 0.22 um</description>
-   <categories>
-   </categories>
-  </category>
-  <category>
-   <name>M1.f</name>
-   <description>5.16. M1.f Min. space of Metal1 lines if, at least one line is wider than 5.0 µm and the parallel run is more than 10.0 µm is 0.6 um</description>
-   <categories>
-   </categories>
-  </category>
-  <category>
-   <name>M1.g</name>
-   <description>5.16. M1.g Min. 45-degree bent Metal1 width if the bent metal length is &gt; 0.5 µm is 0.2 um</description>
-   <categories>
-   </categories>
-  </category>
-  <category>
-   <name>M1.i</name>
-   <description>5.16. M1.i Min. space of Metal1 lines of which at least one is bent by 45-degree is 0.22 um</description>
-   <categories>
-   </categories>
-  </category>
- <category>
-   <name>TV2.a</name>
-   <description>5.24. TV2.a : Min. and max. TopVia2 width: 0.9 µm</description>
-   <categories>
-   </categories>
-  </category>
-  <category>
-   <name>TV2.b</name>
-   <description>5.24. TV2.b : Min. TopVia2 space: 1.06 µm</description>
-   <categories>
-   </categories>
-  </category>
-  <category>
-   <name>TV2.c</name>
-   <description>5.24. TV2.c : Min. TopMetal1 enclosure of TopVia2 is 0.5 um</description>
-   <categories>
-   </categories>
-  </category>
-  <category>
-   <name>TV2.d</name>
-   <description>5.24. TV2.d : Min. TopMetal2 enclosure of TopVia2 is 0.5 um</description>
-   <categories>
-   </categories>
-  </category>
- <category>
-   <name>Seal.n</name>
-   <description>6.10. seal.n : Sealring must be enclosed by an unbroken Passiv ring</description>
-   <categories>
-   </categories>
-  </category>
-  <category>
-   <name>Seal.b_metal1</name>
-   <description>6.10. Seal.b_metal1 : Min. Activ space to EdgeSeal-metal1 is 4.9 um</description>
-   <categories>
-   </categories>
-  </category>
-  <category>
-   <name>Seal.b_metal2</name>
-   <description>6.10. Seal.b_metal2 : Min. Activ space to EdgeSeal-metal2 is 4.9 um</description>
-   <categories>
-   </categories>
-  </category>
-  <category>
-   <name>Seal.b_metal3</name>
-   <description>6.10. Seal.b_metal3 : Min. Activ space to EdgeSeal-metal3 is 4.9 um</description>
-   <categories>
-   </categories>
-  </category>
-  <category>
-   <name>Seal.b_metal4</name>
-   <description>6.10. Seal.b_metal4 : Min. Activ space to EdgeSeal-metal4 is 4.9 um</description>
-   <categories>
-   </categories>
-  </category>
-  <category>
-   <name>Seal.b_metal5</name>
-   <description>6.10. Seal.b_metal5 : Min. Activ space to EdgeSeal-metal5 is 4.9 um</description>
-   <categories>
-   </categories>
-  </category>
-  <category>
-   <name>Seal.b_topmetal1</name>
-   <description>6.10. Seal.b_topmetal1 : Min. Activ space to EdgeSeal-topmetal1 is 4.9 um</description>
-   <categories>
-   </categories>
-  </category>
-  <category>
-   <name>Seal.b_topmetal2</name>
-   <description>6.10. Seal.b_topmetal2 : Min. Activ space to EdgeSeal-topmetal2 is 4.9 um</description>
-   <categories>
-   </categories>
-  </category>
-  <category>
-   <name>Seal.b_activ</name>
-   <description>6.10. Seal.b_activ : Min. Activ space to EdgeSeal-activ is 4.9 um</description>
-   <categories>
-   </categories>
-  </category>
-  <category>
-   <name>Seal.b_psd</name>
-   <description>6.10. Seal.b_psd : Min. Activ space to EdgeSeal-psd is 4.9 um</description>
-   <categories>
-   </categories>
-  </category>
-  <category>
-   <name>Seal.k</name>
-   <description>6.10. Seal.k : Min. EdgeSeal 45-degree corner length is 21.0 um</description>
-   <categories>
-   </categories>
-  </category>
-  <category>
-   <name>Seal.m</name>
-   <description>6.10. Seal.m : Only one sealring per chip allowed</description>
-   <categories>
-   </categories>
-  </category>
- <category>
-   <name>Slt.e1_M1</name>
-   <description>7.3. Slt.e1_M1 : No M1:slit required on MIM</description>
-   <categories>
-   </categories>
-  </category>
-  <category>
-   <name>Slt.e1_M2</name>
-   <description>7.3. Slt.e1_M2 : No M2:slit required on MIM</description>
-   <categories>
-   </categories>
-  </category>
-  <category>
-   <name>Slt.e1_M3</name>
-   <description>7.3. Slt.e1_M3 : No M3:slit required on MIM</description>
-   <categories>
-   </categories>
-  </category>
-  <category>
-   <name>Slt.e1_M4</name>
-   <description>7.3. Slt.e1_M4 : No M4:slit required on MIM</description>
-   <categories>
-   </categories>
-  </category>
-  <category>
-   <name>Slt.e1_M5</name>
-   <description>7.3. Slt.e1_M5 : No M5:slit required on MIM</description>
-   <categories>
-   </categories>
-  </category>
-  <category>
-   <name>Slt.e1_TM1</name>
-   <description>7.3. Slt.e1_TM1 : No TM1:slit required on MIM</description>
-   <categories>
-   </categories>
-  </category>
-  <category>
-   <name>Slt.e1_TM2</name>
-   <description>7.3. Slt.e1_TM2 : No TM2:slit required on MIM</description>
-   <categories>
-   </categories>
-  </category>
- <category>
-   <name>TM1.a</name>
-   <description>5.22. TM1.a: Min. TopMetal1 width: 1.64 μm.</description>
-   <categories>
-   </categories>
-  </category>
-  <category>
-   <name>TM1.b</name>
-   <description>5.22. TM1.b: Min. TopMetal1 (drawing + filler) space or notch: 1.64 μm.</description>
-   <categories>
-   </categories>
-  </category>
- <category>
-   <name>V1.a</name>
-   <description>5.19. V1.a : Min. and max. Via1 width: 0.19 µm</description>
-   <categories>
-   </categories>
-  </category>
-  <category>
-   <name>V1.b</name>
-   <description>5.19. V1.b : Min. Via1 space: 0.22 µm</description>
-   <categories>
-   </categories>
-  </category>
-  <category>
-   <name>V1.c</name>
-   <description>5.19.  V1.c Min. Metal1 enclosure of Via1 is 0.01 um</description>
-   <categories>
-   </categories>
-  </category>
- <category>
-   <name>V2.a</name>
-   <description>5.20. V2.a : Min. and max. Via2 width: 0.19 µm</description>
-   <categories>
-   </categories>
-  </category>
-  <category>
-   <name>V2.b</name>
-   <description>5.20. V2.b : Min. Via2 space: 0.22 µm</description>
-   <categories>
-   </categories>
-  </category>
-  <category>
-   <name>V2.c</name>
-   <description>5.20. V2.c : Min. Metal2 enclosure of Via2 is 0.005 µm</description>
-   <categories>
-   </categories>
-  </category>
-  <category>
-   <name>V3.a</name>
-   <description>5.20. V3.a : Min. and max. Via3 width: 0.19 µm</description>
-   <categories>
-   </categories>
-  </category>
-  <category>
-   <name>V3.b</name>
-   <description>5.20. V3.b : Min. Via3 space: 0.22 µm</description>
-   <categories>
-   </categories>
-  </category>
-  <category>
-   <name>V3.c</name>
-   <description>5.20. V3.c : Min. Metal3 enclosure of Via3 is 0.005 µm</description>
-   <categories>
-   </categories>
-  </category>
-  <category>
-   <name>V4.a</name>
-   <description>5.20. V4.a : Min. and max. Via4 width: 0.19 µm</description>
-   <categories>
-   </categories>
-  </category>
-  <category>
-   <name>V4.b</name>
-   <description>5.20. V4.b : Min. Via4 space: 0.22 µm</description>
-   <categories>
-   </categories>
-  </category>
-  <category>
-   <name>V4.c</name>
-   <description>5.20. V4.c : Min. Metal4 enclosure of Via4 is 0.005 µm</description>
-   <categories>
-   </categories>
-  </category>
- <category>
-   <name>Pin.a</name>
-   <description>Pin.a : 7.4. Pin.a: Min. activ enclosure of activ:pin = 0um</description>
-   <categories>
-   </categories>
-  </category>
-  <category>
-   <name>Pin.b</name>
-   <description>Pin.b : 7.4. Pin.b: Min. gatpoly enclosure of gatpoly:pin = 0um</description>
-   <categories>
-   </categories>
-  </category>
-  <category>
-   <name>Pin.e</name>
-   <description>Pin.e : 7.4. Pin.e: Min. metal1 enclosure of metal1:pin = 0um</description>
-   <categories>
-   </categories>
-  </category>
-  <category>
-   <name>Pin.f_M2</name>
-   <description>Pin.f_M2 : 7.4. Pin.f_M2: Min. metal2 enclosure of metal2:pin = 0um</description>
-   <categories>
-   </categories>
-  </category>
-  <category>
-   <name>Pin.f_M3</name>
-   <description>Pin.f_M3 : 7.4. Pin.f_M3: Min. metal3 enclosure of metal3:pin = 0um</description>
-   <categories>
-   </categories>
-  </category>
-  <category>
-   <name>Pin.f_M4</name>
-   <description>Pin.f_M4 : 7.4. Pin.f_M4: Min. metal4 enclosure of metal4:pin = 0um</description>
-   <categories>
-   </categories>
-  </category>
-  <category>
-   <name>Pin.f_M5</name>
-   <description>Pin.f_M5 : 7.4. Pin.f_M5: Min. metal5 enclosure of metal5:pin = 0um</description>
-   <categories>
-   </categories>
-  </category>
-  <category>
-   <name>Pin.g</name>
-   <description>Pin.g : 7.4. Pin.g: Min. topmetal1 enclosure of topmetal1:pin = 0um</description>
-   <categories>
-   </categories>
-  </category>
-  <category>
-   <name>Pin.h</name>
-   <description>Pin.h : 7.4. Pin.h: Min. topmetal2 enclosure of topmetal2:pin = 0um</description>
-   <categories>
-   </categories>
-  </category>
- <category>
-   <name>TM2Fil.c</name>
-   <description>5.26. TM2Fil.c : Min. TopMetal2:filler space to TopMetal2 is 3.0 um</description>
-   <categories>
-   </categories>
-  </category>
-  <category>
-   <name>TM2Fil.a1</name>
-   <description>5.26. TM2Fil.a1 : Max. TopMetal2:filler width is 10.0 um</description>
    <categories>
    </categories>
   </category>
@@ -683,6 +227,444 @@
   <category>
    <name>Pad.i</name>
    <description>6.9. Pad.i : dfpad without TopMetal2 not allowed</description>
+   <categories>
+   </categories>
+  </category>
+ <category>
+   <name>Padc.a</name>
+   <description>6.9. Padc.a : CuPillarPad size is 35.0 um</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>Padc.b</name>
+   <description>6.9. Padc.b : Min. CuPillarPad space is 40.0 um</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>Padc.c</name>
+   <description>6.9. Padc.c : Min. TopMetal2 (within dfpad) enclosure of CuPillarPad is 7.5 um</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>padc.f</name>
+   <description>6.9.2. Padc.f: Allowed passivation opening shape Circle</description>
+   <categories>
+   </categories>
+  </category>
+ <category>
+   <name>V2.a</name>
+   <description>5.20. V2.a : Min. and max. Via2 width: 0.19 µm</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>V2.b</name>
+   <description>5.20. V2.b : Min. Via2 space: 0.22 µm</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>V2.c</name>
+   <description>5.20. V2.c : Min. Metal2 enclosure of Via2 is 0.005 µm</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>V3.a</name>
+   <description>5.20. V3.a : Min. and max. Via3 width: 0.19 µm</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>V3.b</name>
+   <description>5.20. V3.b : Min. Via3 space: 0.22 µm</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>V3.c</name>
+   <description>5.20. V3.c : Min. Metal3 enclosure of Via3 is 0.005 µm</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>V4.a</name>
+   <description>5.20. V4.a : Min. and max. Via4 width: 0.19 µm</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>V4.b</name>
+   <description>5.20. V4.b : Min. Via4 space: 0.22 µm</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>V4.c</name>
+   <description>5.20. V4.c : Min. Metal4 enclosure of Via4 is 0.005 µm</description>
+   <categories>
+   </categories>
+  </category>
+ <category>
+   <name>Slt.e1_M1</name>
+   <description>7.3. Slt.e1_M1 : No M1:slit required on MIM</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>Slt.e1_M2</name>
+   <description>7.3. Slt.e1_M2 : No M2:slit required on MIM</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>Slt.e1_M3</name>
+   <description>7.3. Slt.e1_M3 : No M3:slit required on MIM</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>Slt.e1_M4</name>
+   <description>7.3. Slt.e1_M4 : No M4:slit required on MIM</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>Slt.e1_M5</name>
+   <description>7.3. Slt.e1_M5 : No M5:slit required on MIM</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>Slt.e1_TM1</name>
+   <description>7.3. Slt.e1_TM1 : No TM1:slit required on MIM</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>Slt.e1_TM2</name>
+   <description>7.3. Slt.e1_TM2 : No TM2:slit required on MIM</description>
+   <categories>
+   </categories>
+  </category>
+ <category>
+   <name>TM1.a</name>
+   <description>5.22. TM1.a: Min. TopMetal1 width: 1.64 μm.</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>TM1.b</name>
+   <description>5.22. TM1.b: Min. TopMetal1 (drawing + filler) space or notch: 1.64 μm.</description>
+   <categories>
+   </categories>
+  </category>
+ <category>
+   <name>Seal.n</name>
+   <description>6.10. seal.n : Sealring must be enclosed by an unbroken Passiv ring</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>Seal.b_metal1</name>
+   <description>6.10. Seal.b_metal1 : Min. Activ space to EdgeSeal-metal1 is 4.9 um</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>Seal.b_metal2</name>
+   <description>6.10. Seal.b_metal2 : Min. Activ space to EdgeSeal-metal2 is 4.9 um</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>Seal.b_metal3</name>
+   <description>6.10. Seal.b_metal3 : Min. Activ space to EdgeSeal-metal3 is 4.9 um</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>Seal.b_metal4</name>
+   <description>6.10. Seal.b_metal4 : Min. Activ space to EdgeSeal-metal4 is 4.9 um</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>Seal.b_metal5</name>
+   <description>6.10. Seal.b_metal5 : Min. Activ space to EdgeSeal-metal5 is 4.9 um</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>Seal.b_topmetal1</name>
+   <description>6.10. Seal.b_topmetal1 : Min. Activ space to EdgeSeal-topmetal1 is 4.9 um</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>Seal.b_topmetal2</name>
+   <description>6.10. Seal.b_topmetal2 : Min. Activ space to EdgeSeal-topmetal2 is 4.9 um</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>Seal.b_activ</name>
+   <description>6.10. Seal.b_activ : Min. Activ space to EdgeSeal-activ is 4.9 um</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>Seal.b_psd</name>
+   <description>6.10. Seal.b_psd : Min. Activ space to EdgeSeal-psd is 4.9 um</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>Seal.k</name>
+   <description>6.10. Seal.k : Min. EdgeSeal 45-degree corner length is 21.0 um</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>Seal.m</name>
+   <description>6.10. Seal.m : Only one sealring per chip allowed</description>
+   <categories>
+   </categories>
+  </category>
+ <category>
+   <name>M1Fil.c</name>
+   <description>5.18. M1Fil.c : Min. Metal1:filler space to Metal1 is 0.42 um</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>M1Fil.a2</name>
+   <description>5.18. M1Fil.a2 : Max. Metal1:filler width is 5.0 um</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>M2Fil.c</name>
+   <description>5.18. M2Fil.c : Min. Metal2:filler space to Metal2 is 0.42 um</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>M2Fil.a2</name>
+   <description>5.18. M2Fil.a2 : Max. Metal2:filler width is 5.0 um</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>M3Fil.c</name>
+   <description>5.18. M3Fil.c : Min. Metal3:filler space to Metal3 is 0.42 um</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>M3Fil.a2</name>
+   <description>5.18. M3Fil.a2 : Max. Metal3:filler width is 5.0 um</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>M4Fil.c</name>
+   <description>5.18. M4Fil.c : Min. Metal4:filler space to Metal4 is 0.42 um</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>M4Fil.a2</name>
+   <description>5.18. M4Fil.a2 : Max. Metal4:filler width is 5.0 um</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>M5Fil.c</name>
+   <description>5.18. M5Fil.c : Min. Metal5:filler space to Metal5 is 0.42 um</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>M5Fil.a2</name>
+   <description>5.18. M5Fil.a2 : Max. Metal5:filler width is 5.0 um</description>
+   <categories>
+   </categories>
+  </category>
+ <category>
+   <name>TV2.a</name>
+   <description>5.24. TV2.a : Min. and max. TopVia2 width: 0.9 µm</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>TV2.b</name>
+   <description>5.24. TV2.b : Min. TopVia2 space: 1.06 µm</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>TV2.c</name>
+   <description>5.24. TV2.c : Min. TopMetal1 enclosure of TopVia2 is 0.5 um</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>TV2.d</name>
+   <description>5.24. TV2.d : Min. TopMetal2 enclosure of TopVia2 is 0.5 um</description>
+   <categories>
+   </categories>
+  </category>
+ <category>
+   <name>Pin.a</name>
+   <description>Pin.a : 7.4. Pin.a: Min. activ enclosure of activ:pin = 0um</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>Pin.b</name>
+   <description>Pin.b : 7.4. Pin.b: Min. gatpoly enclosure of gatpoly:pin = 0um</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>Pin.e</name>
+   <description>Pin.e : 7.4. Pin.e: Min. metal1 enclosure of metal1:pin = 0um</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>Pin.f_M2</name>
+   <description>Pin.f_M2 : 7.4. Pin.f_M2: Min. metal2 enclosure of metal2:pin = 0um</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>Pin.f_M3</name>
+   <description>Pin.f_M3 : 7.4. Pin.f_M3: Min. metal3 enclosure of metal3:pin = 0um</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>Pin.f_M4</name>
+   <description>Pin.f_M4 : 7.4. Pin.f_M4: Min. metal4 enclosure of metal4:pin = 0um</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>Pin.f_M5</name>
+   <description>Pin.f_M5 : 7.4. Pin.f_M5: Min. metal5 enclosure of metal5:pin = 0um</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>Pin.g</name>
+   <description>Pin.g : 7.4. Pin.g: Min. topmetal1 enclosure of topmetal1:pin = 0um</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>Pin.h</name>
+   <description>Pin.h : 7.4. Pin.h: Min. topmetal2 enclosure of topmetal2:pin = 0um</description>
+   <categories>
+   </categories>
+  </category>
+ <category>
+   <name>TV1.a</name>
+   <description>5.21. TV1.a : Min. and max. TopVia1 width: 0.42 µm</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>TV1.b</name>
+   <description>5.21. TV1.b : Min. TopVia1 space: 0.42 µm</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>TV1.c</name>
+   <description>5.21. TV1.c : Min. Metal5 enclosure of TopVia1 is 0.1 um</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>TV1.d</name>
+   <description>5.21. TV1.d : Min. TopMetal1 enclosure of TopVia1 is 0.42 um</description>
+   <categories>
+   </categories>
+  </category>
+ <category>
+   <name>M1.a</name>
+   <description>5.16. M1.a: Min. Metal1 width: 0.16 μm.</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>M1.b</name>
+   <description>5.16. M1.b: Min. Metal1 (drawing + filler) space or notch: 0.18 μm.</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>M1.e</name>
+   <description>5.16. M1.e Min. space of Metal1 lines if, at least one line is wider than 0.15 µm and the parallel run is more than 1.0 µm is 0.22 um</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>M1.f</name>
+   <description>5.16. M1.f Min. space of Metal1 lines if, at least one line is wider than 5.0 µm and the parallel run is more than 10.0 µm is 0.6 um</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>M1.g</name>
+   <description>5.16. M1.g Min. 45-degree bent Metal1 width if the bent metal length is &gt; 0.5 µm is 0.2 um</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>M1.i</name>
+   <description>5.16. M1.i Min. space of Metal1 lines of which at least one is bent by 45-degree is 0.22 um</description>
+   <categories>
+   </categories>
+  </category>
+ <category>
+   <name>LBE.a</name>
+   <description>9.1. LBE.a: Min. LBE width: 100.0 µm</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>LBE.b</name>
+   <description>9.1. LBE.b: Max. LBE width: 1500.0 µm.</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>LBE.b1</name>
+   <description>9.1. LBE.b1: Max. LBE area (µm²): 250000.0 .um</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>LBE.c</name>
+   <description>9.1. LBE.c: Min. LBE space or notch: 100.0 µm</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>LBE.d</name>
+   <description>9.1. LBE.d: Min. LBE space to inner edge of EdgeSeal: 150.0 µm</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>LBE.h</name>
+   <description>9.1. LBE.h: No LBE ring allowed.</description>
    <categories>
    </categories>
   </category>
@@ -827,6 +809,24 @@
   <category>
    <name>M5.i</name>
    <description>5.17. M5.i Min. space of Metal5 lines of which at least one is bent by 45-degree is 0.24 um</description>
+   <categories>
+   </categories>
+  </category>
+ <category>
+   <name>V1.a</name>
+   <description>5.19. V1.a : Min. and max. Via1 width: 0.19 µm</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>V1.b</name>
+   <description>5.19. V1.b : Min. Via1 space: 0.22 µm</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>V1.c</name>
+   <description>5.19.  V1.c Min. Metal1 enclosure of Via1 is 0.01 um</description>
    <categories>
    </categories>
   </category>
