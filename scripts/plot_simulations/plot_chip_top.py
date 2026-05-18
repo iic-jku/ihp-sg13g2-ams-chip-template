@@ -116,6 +116,7 @@ def main():
         "Chip Top — Digital Inverter Outputs (INV1)",
         signals1, time_us, figures_dir,
         "chip_top_tb_tran_digital1",
+        fig_height=12,
     )
 
     # ------------------------------------------------------------------
