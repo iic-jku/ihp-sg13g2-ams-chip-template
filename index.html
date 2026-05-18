@@ -437,7 +437,7 @@ window.Quarto = {
   <li><a href="#pex" id="toc-pex" class="nav-link" data-scroll-target="#pex"><span class="header-section-number">6.8.2</span> PEX</a></li>
   <li><a href="#lvs" id="toc-lvs" class="nav-link" data-scroll-target="#lvs"><span class="header-section-number">6.8.3</span> LVS</a></li>
   </ul></li>
-  <li><a href="#full-pass" id="toc-full-pass" class="nav-link" data-scroll-target="#full-pass"><span class="header-section-number">6.9</span> Full Pass</a></li>
+  <li><a href="#full-flow-at-once" id="toc-full-flow-at-once" class="nav-link" data-scroll-target="#full-flow-at-once"><span class="header-section-number">6.9</span> Full Flow at Once</a></li>
   <li><a href="#releasing-for-tapeout" id="toc-releasing-for-tapeout" class="nav-link" data-scroll-target="#releasing-for-tapeout"><span class="header-section-number">6.10</span> Releasing for Tapeout</a></li>
   </ul></li>
   <li><a href="#sec-exercises" id="toc-sec-exercises" class="nav-link" data-scroll-target="#sec-exercises"><span class="header-section-number">7</span> Additional Exercises</a>
@@ -510,7 +510,7 @@ Important
 <li>Linting with <a href="https://github.com/verilator/verilator">Verilator</a></li>
 <li>Simulation with Icarus Verilog and <a href="https://github.com/cocotb/cocotb">cocotb</a></li>
 <li>Viewing waveforms with <a href="https://github.com/gtkwave/gtkwave">GTKWave</a> and <a href="https://gitlab.com/surfer-project/surfer">Surfer</a></li>
-<li>Synthesis, placement, routing, and sign-off with <a href="https://github.com/YosysHQ/yosys">Yosys</a>, <a href="https://github.com/The-OpenROAD-Project/OpenROAD">OpenROAD</a>, and <a href="https://github.com/librelane/librelane">LibreLane</a></li>
+<li>Synthesis, placement, routing, and verification with <a href="https://github.com/YosysHQ/yosys">Yosys</a>, <a href="https://github.com/The-OpenROAD-Project/OpenROAD">OpenROAD</a>, and <a href="https://github.com/librelane/librelane">LibreLane</a></li>
 </ul></li>
 <li><a href="#sec-analog">Analog macro design</a>
 <ul>
@@ -797,7 +797,7 @@ Tip
 </tr>
 <tr class="odd">
 <td><code>make sim-rtl-cocotb</code> / <code>sim-gl-cocotb</code></td>
-<td>Run the RTL / gate-level cocotb testbench for the top-level.</td>
+<td>Run the RTL / gate-level (GL) cocotb testbench for the top-level.</td>
 </tr>
 <tr class="even">
 <td><code>make sim-gl-xschem</code></td>
@@ -1192,7 +1192,7 @@ Figure&nbsp;3: Gate-level cocotb waveform of <code>counter_top</code> in GTKWave
 </section>
 <section id="librelane-hardening" class="level2" data-number="4.5">
 <h2 data-number="4.5" class="anchored" data-anchor-id="librelane-hardening"><span class="header-section-number">4.5</span> LibreLane Hardening</h2>
-<p>The LibreLane flow synthesises, places, and routes the macro, runs the sign-off steps, and writes its final output files to <code>flow/final/</code>. The wrapper target <code>make build-top</code> runs the flow, renders the final GDS, and copies the reports, final folders, netlists, and render output back into the source tree.</p>
+<p>The LibreLane flow synthesises, places, and routes the macro, runs the verification steps, and writes its final output files to <code>flow/final/</code>. The wrapper target <code>make build-top</code> runs the flow, renders the final GDS, and copies the reports, final folders, netlists, and render output back into the source tree.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> build-top</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="callout callout-style-default callout-tip callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -1222,7 +1222,7 @@ Figure&nbsp;4: <code>counter_top</code> layout in KLayout (200 µm x 100 µm).
 </figcaption>
 </figure>
 </div>
-<p>The LibreLane render is copied to <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/counter/render/img/"><code>render/img/counter_top_librelane.png</code></a>, and the high-resolution render from <code>lay2img.py</code> is saved as <code>counter_top.png</code> in the same folder. The sign-off reports are written to <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/counter/verification/"><code>verification/</code></a>.</p>
+<p>The LibreLane render is copied to <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/counter/render/img/"><code>render/img/counter_top_librelane.png</code></a>, and the high-resolution render from <code>lay2img.py</code> is saved as <code>counter_top.png</code> in the same folder. The verification reports are written to <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/counter/verification/"><code>verification/</code></a>.</p>
 </section>
 <section id="rtl-mixed-signal-simulation-with-xschem" class="level2" data-number="4.7">
 <h2 data-number="4.7" class="anchored" data-anchor-id="rtl-mixed-signal-simulation-with-xschem"><span class="header-section-number">4.7</span> RTL Mixed-Signal Simulation with Xschem</h2>
@@ -1304,7 +1304,7 @@ Figure&nbsp;6: Plotted Xschem simulation results of <code>counter_top_tb_tran</c
 <h2 data-number="4.9" class="anchored" data-anchor-id="build-and-verify-everything"><span class="header-section-number">4.9</span> Build and Verify Everything</h2>
 <p>The full lint, simulation, and build chain is run with the following command.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> all</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>This calls <code>lint-verilog-all</code>, <code>sim-all</code>, <code>build-fpga</code>, and <code>build-top</code> in sequence. LVS and DRC are already covered by the LibreLane sign-off steps, so no extra verification target is needed for the digital macro.</p>
+<p>This calls <code>lint-verilog-all</code>, <code>sim-all</code>, <code>build-fpga</code>, and <code>build-top</code> in sequence. LVS and DRC are already covered by the LibreLane verification steps, so no extra verification target is needed for the digital macro.</p>
 </section>
 </section>
 <section id="sec-analog" class="level1" data-number="5">
@@ -1989,7 +1989,7 @@ Note
 <h2 data-number="5.9" class="anchored" data-anchor-id="full-analog-macro-flow"><span class="header-section-number">5.9</span> Full Analog Macro Flow</h2>
 <p>The full simulation, build, and verification chain is run with the following command.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb23"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> all</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>This calls <code>sim-all</code> (Xschem + CACE), <code>klayout-verify-all</code>, <code>magic-verify-all</code>, and <code>build-top</code> in sequence. Depending on the host hardware, a full pass can take a few minutes, especially the CACE simulation step.</p>
+<p>This calls <code>sim-all</code> (Xschem + CACE), <code>klayout-verify-all</code>, <code>magic-verify-all</code>, and <code>build-top</code> in sequence. Depending on the hardware used, a full pass can take a few minutes, especially the CACE simulation step.</p>
 </section>
 </section>
 <section id="sec-top" class="level1" data-number="6">
@@ -2238,7 +2238,7 @@ Note
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb29" data-filename="flow/librelane/pdn_cfg.tcl (code snippet)"><pre class="sourceCode tcl code-with-copy"><code class="sourceCode tcl"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Custom connect for the inverter macros (inverter1, inverter2).</span></span>
 <span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a><span class="co"># The top-level power ring is on TM1 (horizontal) and TM2 (vertical).</span></span>
 <span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Each inverter has its own power ring on M5 (horizontal) and TM1 (vertical),</span></span>
-<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a><span class="co"># so the connection between the top-level power ring and the inverter power rings crosses cleanly. </span></span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a><span class="co"># so the connection between the top-level power ring and the inverter power rings crosses cleanly.</span></span>
 <span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Note: within an inverter's power ring no top-level TM1 or TM2 power rails are routed.</span></span>
 <span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a>define_pdn_grid <span class="ch">\</span></span>
 <span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a>    -macro <span class="ch">\</span></span>
@@ -2263,7 +2263,7 @@ Note
 <span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> sim-gl-cocotb</span>
 <span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> sim-view-cocotb                                <span class="co"># use GTKWave as waveform viewer</span></span>
 <span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> sim-view-cocotb WAVEFORM_VIEWER=surfer         <span class="co"># use Surfer as waveform viewer</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>The cocotb testbench at chip level is <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/testbenches/cocotb/chip_top_tb.py"><code>testbenches/cocotb/chip_top_tb.py</code></a>, and it covers the global enable, reset, counters, and bidir behaviour documented in <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/doc/specifications.md">specifications.md</a>. The result is shown in <a href="#fig-chip-top-cocotb-gtkwave" class="quarto-xref">Figure&nbsp;21</a>.</p>
+<p>The cocotb testbench at top level is <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/testbenches/cocotb/chip_top_tb.py"><code>testbenches/cocotb/chip_top_tb.py</code></a>, and it covers the global enable, reset, counters, and bidir behaviour documented in <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/doc/specifications.md"><code>doc/specifications.md</code></a>. The result is shown in <a href="#fig-chip-top-cocotb-gtkwave" class="quarto-xref">Figure&nbsp;21</a>.</p>
 <div id="fig-chip-top-cocotb-gtkwave" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-chip-top-cocotb-gtkwave-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
@@ -2274,7 +2274,7 @@ Figure&nbsp;21: <code>chip_top</code> cocotb waveform in GTKWave.
 </figcaption>
 </figure>
 </div>
-<p>For mixed-signal simulation, the <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/testbenches/xschem/"><code>testbenches/xschem/chip_top_tb_tran.sch</code></a> testbench exists and can be opened in Xschem for interactive simulation the same way as for the counter or the inverter and is shown in <a href="#fig-chip-top-tb-tran-schematic" class="quarto-xref">Figure&nbsp;22</a>.</p>
+<p>For mixed-signal simulation, the <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/testbenches/xschem/chip_top_tb_tran.sch"><code>testbenches/xschem/chip_top_tb_tran.sch</code></a> testbench can be opened in Xschem for interactive simulation, the same way as for the counter or the inverter, and is shown in <a href="#fig-chip-top-tb-tran-schematic" class="quarto-xref">Figure&nbsp;22</a>.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb31"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> testbenches/xschem</span>
 <span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a><span class="ex">xschem</span> chip_top_tb_tran.sch</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div id="fig-chip-top-tb-tran-schematic" class="quarto-float quarto-figure quarto-figure-center anchored">
@@ -2300,7 +2300,7 @@ Note
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>The top-level Xschem testbench converges, but it may take a long time depending on the hardware used. <code>make sim-gl-xschem</code> is therefore not part of <code>sim-all</code> and must be called manually when needed. For this tutorial, the simulation data is already available in the repository in <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/scripts/plot_simulations/data/chip_top_tb_tran.txt"><code>scripts/plot_simulations/chip_top_tb_tran.txt</code></a>, so <code>make plot-xschem-sim TESTBENCH=chip_top_tb_tran</code> can be run without running the simulation first.</p>
+<p>The top-level Xschem testbench converges, but it may take a long time depending on the hardware used. <code>make sim-gl-xschem</code> is therefore not part of <code>sim-all</code> and must be called manually when needed. For this tutorial, the simulation data is already available in the repository in <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/scripts/plot_simulations/data/chip_top_tb_tran.txt"><code>scripts/plot_simulations/data/chip_top_tb_tran.txt</code></a>, so <code>make plot-xschem-sim TESTBENCH=chip_top_tb_tran</code> can be run without running the simulation first.</p>
 </div>
 </div>
 <p>The following plots show the results of the top-level transient simulation. The first plot shows the analog inverter response, while the other three plots show the digital outputs of the two counters, the digital inverter, and the bidirs.</p>
@@ -2344,80 +2344,52 @@ Figure&nbsp;26: Plotted simulation result of <code>chip_top_tb_tran</code> — d
 </figcaption>
 </figure>
 </div>
-<div class="callout callout-style-default callout-tip callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
+<p>When the testbench is opened in Xschem, the schematic of <code>chip_top</code> can be inspected with the shortcuts <strong><code>e</code></strong> / <strong><code>Ctrl + e</code></strong>, and the symbol can be shown with <strong><code>i</code></strong> / <strong><code>Ctrl + i</code></strong> as explained in <a href="#sec-analog" class="quarto-xref">Section&nbsp;5</a>. The schematic and symbol are shown in <a href="#fig-chip-top-symbol" class="quarto-xref">Figure&nbsp;27</a> and <a href="#fig-chip-top-schematic" class="quarto-xref">Figure&nbsp;28</a>, respectively. The schematic shows the connections between the padframe and the core macros, while the symbol shows the pinout of the chip. The SRAM is not included in the schematic, since IHP does not ship a SPICE model or an Xschem symbol for the <code>RM_IHPSG13_1P_1024x32_c2_bm_bist</code> macro.</p>
+<div id="fig-chip-top-symbol" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-chip-top-symbol-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="fig/chip_top/chip_top_symbol.svg" class="lightbox" data-gallery="quarto-lightbox-gallery-31" title="Figure&nbsp;27: Xschem symbol of chip_top, showing the pinout of the chip."><img src="fig/chip_top/chip_top_symbol.svg" class="img-fluid figure-img" style="width:60.0%"></a>
 </div>
-<div class="callout-title-container flex-fill">
-Tip
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>Inspect the Xschem symbol of <code>chip_top</code> to see the connections defined in <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/rtl/chip_core.sv"><code>chip_core.sv</code></a> visually. Use <strong><code>e</code> / <code>Ctrl + e</code></strong> and <strong><code>i</code> / <code>Ctrl + e</code></strong> to descend into and back out of subcircuits and symbols.</p>
-<p>Note that the SRAM is not in the schematic. IHP does not ship a SPICE model or an Xschem symbol for the <code>RM_IHPSG13_1P_1024x32_c2_bm_bist</code> macro, so it is excluded from the schematic-level simulation.</p>
-</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-chip-top-symbol-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;27: Xschem symbol of <code>chip_top</code>, showing the pinout of the chip.
+</figcaption>
+</figure>
 </div>
 <div id="fig-chip-top-schematic" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-chip-top-schematic-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<a href="fig/chip_top/chip_top_schematic.svg" class="lightbox" data-gallery="quarto-lightbox-gallery-31" title="Figure&nbsp;27: Xschem schematic of chip_top, showing the connections between the padframe and the core macros (the SRAM is not in the schematic)."><img src="fig/chip_top/chip_top_schematic.svg" class="img-fluid figure-img"></a>
+<a href="fig/chip_top/chip_top_schematic.svg" class="lightbox" data-gallery="quarto-lightbox-gallery-32" title="Figure&nbsp;28: Xschem schematic of chip_top, showing the connections between the padframe and the core macros."><img src="fig/chip_top/chip_top_schematic.svg" class="img-fluid figure-img"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-chip-top-schematic-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;27: Xschem schematic of <code>chip_top</code>, showing the connections between the padframe and the core macros (the SRAM is not in the schematic).
+Figure&nbsp;28: Xschem schematic of <code>chip_top</code>, showing the connections between the padframe and the core macros.
 </figcaption>
 </figure>
 </div>
 </section>
 <section id="building-the-chip" class="level2" data-number="6.6">
 <h2 data-number="6.6" class="anchored" data-anchor-id="building-the-chip"><span class="header-section-number">6.6</span> Building the Chip</h2>
-<p>When the floorplan and pinout are settled, the chip can be built from scratch with the following command.</p>
+<p>When the floorplan and pinout are planned and configured, the chip can be built from scratch with the following command.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb33"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> build-all</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>This runs the steps in order, <code>init-submodules</code>, <code>build-bondpad</code>, <code>build-logos</code>, <code>build-macros</code>, and <code>build-top</code>. It is the right starting point on a fresh machine after cloning the repository and entering the IIC-OSIC-TOOLS container.</p>
 <p>To re-run only the top-level flow (for example after a change in <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/flow/librelane/config.yaml"><code>config.yaml</code></a> or <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/rtl/chip_core.sv"><code>chip_core.sv</code></a>), without rebuilding the bondpad, logos, or macros, run the following command.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb34"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> build-top</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>Internally, <code>build-top</code> chains <code>librelane-nodrc</code>, <code>copy-reports</code>, <code>copy-gds</code>, <code>copy-netlist</code>, <code>copy-render</code>, <code>add-logo-fill</code>, and <code>render-gds</code>. The final GDS is written to <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/layout/"><code>layout/chip_top_logo_fill.gds.gz</code></a>.</p>
-</section>
-<section id="viewing-the-chip" class="level2" data-number="6.7">
-<h2 data-number="6.7" class="anchored" data-anchor-id="viewing-the-chip"><span class="header-section-number">6.7</span> Viewing the Chip</h2>
-<p>After a successful build, the chip can be opened with KLayout.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb35"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="ex">ke</span> layout/chip_top_logo_fill.gds.gz   <span class="co"># KLayout edit mode</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>The render generated by <code>lay2img.py</code> is in <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/render/img/"><code>render/img/</code></a>. The sign-off reports (Yosys, antenna, STA, IR-drop, LVS, manufacturability) are in <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/verification/reports/"><code>verification/reports/</code></a>.</p>
-<div id="fig-chip-top-layout" class="quarto-float quarto-figure quarto-figure-center anchored">
-<figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-chip-top-layout-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<a href="fig/chip_top/chip_top_black.png" class="lightbox" data-gallery="quarto-lightbox-gallery-32" title="Figure&nbsp;28: chip_top_logo_fill layout in KLayout (all layers)."><img src="fig/chip_top/chip_top_black.png" class="img-fluid figure-img"></a>
+<p>Internally, <code>build-top</code> runs <code>librelane-nodrc</code>, <code>copy-reports</code>, <code>copy-gds</code>, <code>copy-netlist</code>, <code>copy-render</code>, <code>add-logo-fill</code>, and <code>render-gds</code>. The final GDS is written to <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/layout/chip_top_logo_fill.gds.gz"><code>layout/chip_top_logo_fill.gds.gz</code></a>.</p>
+<p>The render generated by <code>lay2img.py</code>, which is executed during the <code>render-gds</code> step, is located in <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/render/img/"><code>render/img/</code></a>. The verification reports (Yosys, antenna, STA, IR-drop, LVS, manufacturability) from the top-level LibreLane flow can be found in <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/verification/reports/"><code>verification/reports/</code></a>. The netlists are located in <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/netlist/"><code>netlist/</code></a>.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
 </div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-chip-top-layout-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;28: <code>chip_top_logo_fill</code> layout in KLayout (all layers).
-</figcaption>
-</figure>
+<div class="callout-title-container flex-fill">
+Note
 </div>
-<div id="fig-chip-top-layout-tm2" class="quarto-float quarto-figure quarto-figure-center anchored">
-<figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-chip-top-layout-tm2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<a href="fig/chip_top/chip_top_black_TM2.png" class="lightbox" data-gallery="quarto-lightbox-gallery-33" title="Figure&nbsp;29: chip_top_logo_fill layout in KLayout with only TopMetal2 selected, showing the power distribution network."><img src="fig/chip_top/chip_top_black_TM2.png" class="img-fluid figure-img"></a>
 </div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-chip-top-layout-tm2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;29: <code>chip_top_logo_fill</code> layout in KLayout with only TopMetal2 selected, showing the power distribution network.
-</figcaption>
-</figure>
+<div class="callout-body-container callout-body">
+<p>Note that currently the LibreLane flow streams out the top-level GDS <code>layout/chip_top.gds.gz</code> without the logos and the fill structures. To add the chip logo (PNG → GDS) and the fill structures on top of the LibreLane output, run:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb35"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> add-logo-fill</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>This calls <code>scripts/add_logo_fill.sh</code> and writes <code>layout/chip_top_logo_fill.gds.gz</code>. This step is already called by <code>make build-top</code>. In the future, it is planned to replace this script and Makefile target with a custom LibreLane step.</p>
 </div>
-</section>
-<section id="chip-level-verification" class="level2" data-number="6.8">
-<h2 data-number="6.8" class="anchored" data-anchor-id="chip-level-verification"><span class="header-section-number">6.8</span> Chip-Level Verification</h2>
-<p>DRC, LVS, and PEX are also available at chip level.</p>
-<section id="drc" class="level3" data-number="6.8.1">
-<h3 data-number="6.8.1" class="anchored" data-anchor-id="drc"><span class="header-section-number">6.8.1</span> DRC</h3>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb36"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> magic-drc CELL=chip_top              <span class="co"># Magic DRC on the bare chip</span></span>
-<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> magic-drc CELL=chip_top_logo_fill    <span class="co"># Magic DRC including logo + filler</span></span>
-<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> klayout-drc-minimum                  <span class="co"># fast pre-check KLayout DRC</span></span>
-<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> klayout-drc-regular                  <span class="co"># full KLayout DRC (slower)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><code>klayout-drc-minimum</code> is a quick pre-check on the final top-level layout including the logo and the fill structures. <code>klayout-drc-regular</code> does the full check, but takes longer.</p>
-</section>
-<section id="pex" class="level3" data-number="6.8.2">
-<h3 data-number="6.8.2" class="anchored" data-anchor-id="pex"><span class="header-section-number">6.8.2</span> PEX</h3>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb37"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> magic-pex CELL=chip_top              <span class="co"># only chip_top, default EXT_MODE=1</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
 <div class="callout callout-style-default callout-tip callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -2428,13 +2400,52 @@ Tip
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>At chip level, PEX is only run on <code>chip_top</code> (without logo and filler), and the default <code>EXT_MODE=1</code> (C-decoupled) keeps the runtime manageable.</p>
+<p>The difference between <code>chip_top.gds.gz</code> and <code>chip_top_logo_fill.gds.gz</code> is that the former is the raw top-level layout without any logos or filler cells, while the latter includes the logos and filler cells added for manufacturability and cosmetic purposes. For visual debugging in KLayout, it is recommended to use <code>chip_top.gds.gz</code> to avoid the visual clutter of the logos and filler, while for DRC and LVS, <code>chip_top_logo_fill.gds.gz</code> should be used since it is the actual layout that will be taped out.</p>
 </div>
 </div>
 </section>
-<section id="lvs" class="level3" data-number="6.8.3">
-<h3 data-number="6.8.3" class="anchored" data-anchor-id="lvs"><span class="header-section-number">6.8.3</span> LVS</h3>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb38"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> magic-lvs                            <span class="co"># top-level Magic + Netgen LVS</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<section id="viewing-the-chip" class="level2" data-number="6.7">
+<h2 data-number="6.7" class="anchored" data-anchor-id="viewing-the-chip"><span class="header-section-number">6.7</span> Viewing the Chip</h2>
+<p>After a successful build, the chip can be opened with KLayout.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb36"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="ex">ke</span> layout/chip_top.gds.gz             <span class="co"># Chip layout without logos and filler</span></span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a><span class="ex">ke</span> layout/chip_top_logo_fill.gds.gz   <span class="co"># Chip layout with logos and filler</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div id="fig-chip-top-layout" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-chip-top-layout-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="fig/chip_top/chip_top_black.png" class="lightbox" data-gallery="quarto-lightbox-gallery-33" title="Figure&nbsp;29: chip_top_logo_fill layout in KLayout (“all” layers)."><img src="fig/chip_top/chip_top_black.png" class="img-fluid figure-img" style="width:75.0%"></a>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-chip-top-layout-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;29: <code>chip_top_logo_fill</code> layout in KLayout (“all” layers).
+</figcaption>
+</figure>
+</div>
+<div id="fig-chip-top-layout-tm2" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-chip-top-layout-tm2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="fig/chip_top/chip_top_black_TM2.png" class="lightbox" data-gallery="quarto-lightbox-gallery-34" title="Figure&nbsp;30: chip_top_logo_fill layout in KLayout with only TopMetal2 selected."><img src="fig/chip_top/chip_top_black_TM2.png" class="img-fluid figure-img" style="width:75.0%"></a>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-chip-top-layout-tm2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;30: <code>chip_top_logo_fill</code> layout in KLayout with only <code>TopMetal2</code> selected.
+</figcaption>
+</figure>
+</div>
+</section>
+<section id="chip-level-verification" class="level2" data-number="6.8">
+<h2 data-number="6.8" class="anchored" data-anchor-id="chip-level-verification"><span class="header-section-number">6.8</span> Chip-Level Verification</h2>
+<p>DRC, LVS, and PEX are also available for the full chip.</p>
+<section id="drc" class="level3" data-number="6.8.1">
+<h3 data-number="6.8.1" class="anchored" data-anchor-id="drc"><span class="header-section-number">6.8.1</span> DRC</h3>
+<p>The following DRC targets are available for the top-level.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb37"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> magic-drc CELL=chip_top              <span class="co"># Magic DRC on the bare chip</span></span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> magic-drc CELL=chip_top_logo_fill    <span class="co"># Magic DRC including logo + filler</span></span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> klayout-drc-minimum                  <span class="co"># fast pre-check KLayout DRC on chip_top_logo_fill.gds.gz</span></span>
+<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> klayout-drc-regular                  <span class="co"># full KLayout DRC on chip_top_logo_fill.gds.gz (slower)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><code>klayout-drc-minimum</code> is a quick pre-check on the final top-level layout including the logo and the fill structures. <code>klayout-drc-regular</code> does the full check, but takes longer. <code>magic-drc</code> is faster than <code>klayout-drc</code>, but it does not support the full set of DRC rules and is less accurate on the complex top-level layout, so it is recommended to use both.</p>
+</section>
+<section id="pex" class="level3" data-number="6.8.2">
+<h3 data-number="6.8.2" class="anchored" data-anchor-id="pex"><span class="header-section-number">6.8.2</span> PEX</h3>
+<p>The following PEX target is available for the top-level.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb38"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> magic-pex                            <span class="co"># only chip_top (without logo and filler), default EXT_MODE=1</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="callout callout-style-default callout-warning callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -2445,21 +2456,40 @@ Warning
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>The top-level LVS is currently under construction. The infrastructure is in place, but a fully clean run cannot be expected yet.</p>
+<p>At top level, PEX is only run on <code>chip_top</code> (without logo and filler), and the default <code>EXT_MODE=1</code> (C-decoupled) is used to keep the runtime manageable. However, the extracted netlist is still huge, and the post-layout simulation must be run on a powerful server.</p>
+</div>
+</div>
+</section>
+<section id="lvs" class="level3" data-number="6.8.3">
+<h3 data-number="6.8.3" class="anchored" data-anchor-id="lvs"><span class="header-section-number">6.8.3</span> LVS</h3>
+<p>The following LVS target is available for the top-level.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb39"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> klayout-lvs                          <span class="co"># top-level KLayout LVS</span></span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> magic-lvs                            <span class="co"># top-level Magic + Netgen LVS</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Warning
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The top-level LVS is currently under construction. The flow is in place, but some issues and limitations in the ihp-sg13g2 PDK must be fixed before it can run successfully.</p>
 </div>
 </div>
 </section>
 </section>
-<section id="full-pass" class="level2" data-number="6.9">
-<h2 data-number="6.9" class="anchored" data-anchor-id="full-pass"><span class="header-section-number">6.9</span> Full Pass</h2>
+<section id="full-flow-at-once" class="level2" data-number="6.9">
+<h2 data-number="6.9" class="anchored" data-anchor-id="full-flow-at-once"><span class="header-section-number">6.9</span> Full Flow at Once</h2>
 <p>The comprehensive simulation, build, and DRC pass for the complete chip is run with the following command.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb39"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> all</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>This calls <code>sim-all</code> (RTL/GL cocotb, GL Xschem when available), then <code>build-all</code>, then Magic DRC on both <code>chip_top</code> and <code>chip_top_logo_fill</code>. Depending on the host hardware, this can take a while.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb40"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> all</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>This calls <code>sim-all</code> (RTL/GL cocotb, GL Xschem when available), then <code>build-all</code>, then Magic DRC on both <code>chip_top</code> and <code>chip_top_logo_fill</code>. To shorten the runtime, the KLayout DRC is currently not included in <code>make all</code>. However, depending on the hardware used, <code>make all</code> can still take a while.</p>
 </section>
 <section id="releasing-for-tapeout" class="level2" data-number="6.10">
 <h2 data-number="6.10" class="anchored" data-anchor-id="releasing-for-tapeout"><span class="header-section-number">6.10</span> Releasing for Tapeout</h2>
 <p>When the chip is clean, the <code>release</code> target copies the GDS, the netlists, and the renders into a versioned folder for tapeout submission.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb40"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> release VERSION=2.1.0</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb41"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> release VERSION=2.1.0</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>The artifacts are written to <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/release/"><code>release/v.2.1.0/</code></a> (<code>gds/</code>, <code>netlist/{layout,pnl,spice}/</code>, <code>img/</code>).</p>
 <div class="callout callout-style-default callout-important callout-titled">
 <div class="callout-header d-flex align-content-center">
