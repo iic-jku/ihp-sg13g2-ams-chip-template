@@ -165,28 +165,47 @@ module chip_core #(
     // ======================================================
     // Digital outputs
     // Counter 1
-    assign output_out[3:0]   = counter1_value[3:0];
+    assign output_out[0]  = counter1_value[0];
+    assign output_out[1]  = counter1_value[1];
+    assign output_out[2]  = counter1_value[2];
+    assign output_out[3]  = counter1_value[3];
 
     // Counter 2
-    assign output_out[11:4]  = counter2_value;
+    assign output_out[4]  = counter2_value[0];
+    assign output_out[5]  = counter2_value[1];
+    assign output_out[6]  = counter2_value[2];
+    assign output_out[7]  = counter2_value[3];
+    assign output_out[8]  = counter2_value[4];
+    assign output_out[9]  = counter2_value[5];
+    assign output_out[10] = counter2_value[6];
+    assign output_out[11] = counter2_value[7];
 
     // Inverter 1
-    assign output_out[12]    = inv1_dout1;
-    assign output_out[13]    = inv1_dout2;
-    assign output_out[14]    = inv1_dout3;
-    assign output_out[15]    = inv1_dout4;
+    assign output_out[12] = inv1_dout1;
+    assign output_out[13] = inv1_dout2;
+    assign output_out[14] = inv1_dout3;
+    assign output_out[15] = inv1_dout4;
 
     // SRAM
     // Reduce the 32-bit SRAM output to a single bit by computing the parity.
     // output_out[16] = 1 when an odd number of bits in sram_0_out are 1.
     // output_out[16] = 0 when an even number of bits in sram_0_out are 1.
-    assign output_out[16]    = ^sram_0_out;
+    assign output_out[16] = ^sram_0_out;
 
     // Digital bidirectionals (output side)
     // Bidir output enable: drive when `enable` is high (counter visible),
     // float as input when low (so external stimuli can drive inverter1).
-    assign bidir_out         = counter1_value[7:4];
-    assign bidir_oe          = {NUM_BIDIR_PADS{enable}};
+    assign bidir_out[0] = counter1_value[4];
+	assign bidir_oe[0]  = enable;
+
+    assign bidir_out[1] = counter1_value[5];
+	assign bidir_oe[1]  = enable;
+
+    assign bidir_out[2] = counter1_value[6];
+	assign bidir_oe[2]  = enable;
+
+    assign bidir_out[3] = counter1_value[7];
+	assign bidir_oe[3]  = enable;
 
     // Analog outputs
     assign analog_padbare[2] = inv2_vout1;
