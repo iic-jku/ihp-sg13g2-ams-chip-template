@@ -710,7 +710,7 @@ make magic-pex [CELL=<cellname>] [EXT_MODE=<1|2|3>]           # default CELL=inv
 PEX writes a SPICE netlist into [`netlist/pex/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/inverter/netlist/pex/). The subcircuit name is renamed to `<CELL>_pex`, and the pin order is rearranged to match the Xschem PEX symbol ([`inverter_top_pex.sym`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/inverter/schematic/xschem/inverter_top_pex.sym)).
 
 ::: {.callout-tip}
-To run a post-layout simulation, open one of the Xschem testbenches and swap the original symbol with the PEX symbol and include the path to the SPICE netlist to use the extracted netlist in the same testbench. This is the recommended way to compare schematic-only and post-layout simulation results.
+To run a post-layout simulation, open one of the Xschem testbenches, swap the original symbol with the PEX symbol, and include the path to the SPICE netlist so the extracted netlist is used in the same testbench. This is the recommended way to compare schematic-only and post-layout simulation results.
 :::
 
 ::: {.callout-note}
@@ -728,34 +728,26 @@ make magic-verify [CELL=<cellname>]     # default CELL=inverter_top
 
 ## Build Deliverables for Top-Level Integration
 
-For the inverter to be picked up by the chip-level LibreLane flow, it
-must expose a **LEF** (abstract pin / blockage view), a **Liberty
-timing library** stub, and a **Verilog stub**. They are built
-individually or via `build-top`.
+For the inverter to be picked up by the top-level LibreLane flow, it must expose a **[LEF](https://en.wikipedia.org/wiki/LEF/DEF)** (abstract pin / blockage view), a **[Liberty timing library](https://chipverify.com/rtl-synthesis/introduction-to-liberty-format)** stub, and a **Verilog stub**. The Verilog stub is referenced by [`rtl/chip_top.sv`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/rtl/chip_top.sv) for top-level integration. These files can be built with individual Makefile targets or via `build-top`.
 
 ```sh
 make lef          # final/lef/inverter_top.lef
-make lib          # final/lib/inverter_top.lib (Liberty stub)
-make verilog      # final/vh/inverter_top.v (pin classification from PEX)
+make lib          # final/lib/inverter_top.lib
+make verilog      # final/vh/inverter_top.v
 make build-top    # the three steps above plus copy-gds and render-gds
 ```
 
-`make build-top` also copies the GDS to
-[`final/gds/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/inverter/final/gds/) and renders the macro to
-[`render/img/inverter_top.png`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/inverter/render/img/).
+`make build-top` also copies the GDS to [`final/gds/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/inverter/final/gds/) and renders the macro to [`render/img/inverter_top.png`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/inverter/render/img/), as displayed in @fig-inverter-top-layout.
 
-## Full Macro Pass
+## Full Analog Macro Flow
 
-The full simulation, verification, and build chain is run with the
-following command.
+The full simulation, build, and verification chain is run with the following command.
 
 ```sh
 make all
 ```
 
-This calls `sim-all` (Xschem + CACE), `klayout-verify-all`,
-`magic-verify-all`, and `build-top` in sequence. Depending on the host
-hardware, a full pass can take a few minutes.
+This calls `sim-all` (Xschem + CACE), `klayout-verify-all`, `magic-verify-all`, and `build-top` in sequence. Depending on the host hardware, a full pass can take a few minutes, especially the CACE simulation step.
 
 
 # Top-Level Implementation {#sec-top}
