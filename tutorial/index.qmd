@@ -23,7 +23,7 @@ format:
 ---
 
 ::: {.callout-important}
-This tutorial and the underlying template repository require the [IIC-OSIC-TOOLS](https://github.com/iic-jku/IIC-OSIC-TOOLS) container with tag `2026.05` or later. All commands below assume that the container has been entered and that the working directory is a folder with the corresponding `Makefile`.
+This tutorial and the underlying template repository require the [IIC-OSIC-TOOLS](https://github.com/iic-jku/IIC-OSIC-TOOLS) container with tag `2026.05` or later. All commands below must be executed from within the container, and the working directory must be a folder containing the corresponding `Makefile`.
 :::
 
 # Tutorial Overview {#sec-overview}
@@ -74,7 +74,7 @@ The following guidelines and cheatsheets should be helpful for the tutorial, the
 - [Xschem Cheatsheet](https://iic-jku.github.io/analog-circuit-design/aicd.html#sec-xschem-cheatsheet)
 - [Ngspice Cheatsheet](https://iic-jku.github.io/analog-circuit-design/aicd.html#sec-ngspice-cheatsheet)
 - [KLayout Cheatsheet](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/doc/klayout/klayout_cheatsheet.md)
-- [KLayout Productivity Suite / Plugins](https://github.com/iic-jku/klayout-productivity-suite)
+- [KLayout Productivity Suite / Plugins](https://iic-jku.github.io/klayout-productivity-suite/doc/doc.html)
 - [LibreLane Cheatsheet](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/doc/librelane/librelane_cheatsheet.md)
 - [ihp-sg13g2 Layout Calculation Cheatsheet](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/doc/ihp-sg13g2-Open-PDK/sg13g2_os_layout_cheatsheet.xlsx)
 - [ihp-sg13g2 LV NMOS / PMOS and HV NMOS / PMOS Techsweeps](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/doc/sizing)
