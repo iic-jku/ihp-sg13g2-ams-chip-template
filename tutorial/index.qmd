@@ -257,7 +257,7 @@ See the [inverter README](https://github.com/iic-jku/ihp-sg13g2-ams-chip-templat
 
 The [`counter`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/counter/) macro is the digital reference macro of the template. It is a parameterisable synchronous up-counter with synchronous active-high reset implemented with SystemVerilog in [`counter.sv`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/counter/rtl/counter.sv). The top-level wrapper [`counter_top.sv`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/counter/rtl/counter_top.sv) converts the chip's active-low reset to an active-high signal. The default width is 8 bits, so the counter wraps from 255 back to 0.
 
-## Folder Structure
+## Directory Structure
 
 The counter design files are located in [`macros/counter/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/counter/), the relevant folders are:
 
@@ -438,7 +438,7 @@ The [`inverter`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/ma
 
 Two instances are used in the chip core. One is used as a 4-channel digital inverter (`inverter1`), and the other as a 2-channel analog inverter (`inverter2`). See the [chip specifications](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/doc/specifications.md) for the full picture.
 
-## Folder Structure
+## Directory Structure
 
 The inverter design files are located in [`macros/inverter/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/inverter/), and the relevant folders are:
 
@@ -748,6 +748,154 @@ make all
 ```
 
 This calls `sim-all` (Xschem + CACE), `klayout-verify-all`, `magic-verify-all`, and `build-top` in sequence. Depending on the hardware used, a full pass can take a few minutes, especially the CACE simulation step.
+
+
+# Bondpad and Logo Implementation {#sec-ip}
+
+The [`ip/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/ip/) folder holds the three custom IP cells that the top-level chip relies on: a bondpad and two logos. These IPs are generated and require zero hand drawing. Each IP ships with a Python script and Makefile targets that produce the final GDS and LEF, and run KLayout and Magic DRC. This makes it easy to re-spin a different bondpad size or shape, swap the logo image, or move the artwork to another metal layer without touching layout tools.
+
+The three IP cells covered in this section are:
+
+- [`sg13g2_ip__bondpad_70x70`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/ip/sg13g2_ip__bondpad_70x70/), a 70 µm × 70 µm square bondpad built from IHP's `SG13_dev` KLayout PCell library,
+- [`sg13g2_ip__jku`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/ip/sg13g2_ip__jku/), the [Johannes Kepler University Linz](https://www.jku.at/) logo, generated from a PNG image,
+- [`sg13g2_ip__jku_names`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/ip/sg13g2_ip__jku_names/), a companion text block with the names of the institute, generated the same way as the JKU logo.
+
+All three IPs follow the same folder structure (`script/`, `final/`, `verification/`) and the same Makefile conventions as the digital and analog macros (`make help`, `make all`, `make clean`, `make klayout-drc`, `make magic-drc`). The logo folders `sg13g2_ip__jku` and `sg13g2_ip__jku_names` have an additional `logo/` folder that contains the source PNG image.
+
+## Directory Structure
+
+The IP design files are located in [`ip/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/ip/), and the relevant folders are:
+
+| Folder                                                                                                                                                                                  | Content                                                                                          |
+| --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------ |
+| [`sg13g2_ip__bondpad_70x70/script/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/ip/sg13g2_ip__bondpad_70x70/script/) | KLayout Python script ([`bondpad.py`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/ip/sg13g2_ip__bondpad_70x70/script/bondpad.py)) that instantiates the `SG13_dev::bondpad` PCell and writes the GDS and LEF. |
+| [`sg13g2_ip__jku/logo/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/ip/sg13g2_ip__jku/logo/) and [`sg13g2_ip__jku_names/logo/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/ip/sg13g2_ip__jku_names/logo/) | Source PNG images (`jku_logo.png`, `jku_names.png`) for the two logos. |
+| [`sg13g2_ip__jku/script/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/ip/sg13g2_ip__jku/script/) and [`sg13g2_ip__jku_names/script/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/ip/sg13g2_ip__jku_names/script/) | PNG-to-GDS converter ([`make_gds.py`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/ip/sg13g2_ip__jku/script/make_gds.py)) shared by both logos. |
+| `final/gds/`, `final/lef/`, `final/lib/`, `final/vh/` | Build deliverables for top-level integration: GDS, LEF, Liberty, and Verilog blackbox stubs. |
+| `verification/drc/` | DRC reports produced by `make klayout-drc` and `make magic-drc`. |
+
+::: {.callout-tip}
+Read the [bondpad README](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/ip/sg13g2_ip__bondpad_70x70/README.md), the [JKU logo README](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/ip/sg13g2_ip__jku/README.md), and the [JKU names README](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/ip/sg13g2_ip__jku_names/README.md) first to get familiar with the Makefile targets and parameters. Most of the commands below are also documented there.
+:::
+
+## Bondpad Generation
+
+The bondpad is generated by the Python script [`script/bondpad.py`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/ip/sg13g2_ip__bondpad_70x70/script/bondpad.py), which runs in KLayout batch mode (`klayout -zz`). It
+
+1. instantiates the `bondpad` PCell from IHP's `SG13_dev` library,
+2. flattens the PCell into a static top cell,
+3. writes the layout as a GDSII file, and
+4. generates a matching LEF macro description for OpenROAD / LibreLane.
+
+Geometry and metal stack are parametrised through three Makefile variables. The defaults match the chip's padframe and the SG13G2 PDK defaults.
+
+| Variable       | Default  | Description                                                                                                                                  |
+| -------------- | -------- | -------------------------------------------------------------------------------------------------------------------------------------------- |
+| `DIAMETER`     | `70.0`   | Bondpad diameter / side length in µm.                                                                                                        |
+| `SHAPE`        | `square` | Pad geometry. Allowed: `square`, `octagon`, `circle`.                                                                                        |
+| `BOTTOM_METAL` | `3`      | Lowest metal in the pad stack: `1`=`Metal1` .. `5`=`Metal5`, `6`=`TopMetal1`. Top is fixed to `TopMetal2`. Default `3` matches `bondpad_bottomMetal` in [`sg13g2_tech.json`](https://github.com/IHP-GmbH/IHP-Open-PDK/blob/main/ihp-sg13g2/libs.tech/klayout/python/sg13g2_pycell_lib/sg13g2_tech.json). |
+
+The available Makefile targets for the bondpad are summarised below.
+
+| Target        | What it does                                                                                                                                                                                            |
+| ------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `bondpad`     | Generate GDS and LEF via [`bondpad.py`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/ip/sg13g2_ip__bondpad_70x70/script/bondpad.py) (`make bondpad [DIAMETER=<um>] [SHAPE=<square\|octagon\|circle>] [BOTTOM_METAL=<1-6>]`). |
+| `verilog`     | Generate a Verilog blackbox stub.                                                                                                                                                                       |
+| `klayout-drc` | Run KLayout DRC (`make klayout-drc [CELL=<cellname>]`).                                                                                                                                                 |
+| `magic-drc`   | Run Magic DRC (`make magic-drc [CELL=<cellname>]`).                                                                                                                                                     |
+| `clean`       | Remove the `final/` and `verification/drc/` output directories.                                                                                                                                         |
+
+To execute the `clean`, `bondpad`, `verilog`, `klayout-drc`, and `magic-drc` targets in sequence, run:
+
+```sh
+cd ip/sg13g2_ip__bondpad_70x70
+make all
+```
+
+View the bondpad layout in KLayout with:
+
+```sh
+ke final/gds/sg13g2_ip__bondpad_70x70.gds
+```
+
+![`sg13g2_ip__bondpad_70x70` layout in KLayout.](fig/bondpad_logo/bondpad_layout.png){#fig-bondpad-layout width=60%}
+
+The bondpad goes from `Metal3` up to `TopMetal2` by default, but the `BOTTOM_METAL` Makefile variable can be set to change the lowest metal in the stack. The pad is surrounded by the pad recognition layer `dfpad (41, 0)`.
+
+The `bondpad` target accepts the geometry and metal-stack variables as command-line overrides. For example, to build an octagonal 80 µm bondpad from `Metal2` up to `TopMetal2`, run:
+
+```sh
+make bondpad DIAMETER=80 SHAPE=octagon BOTTOM_METAL=2
+```
+
+## Logo Generation
+
+Both logo IPs share the same Makefile targets and PNG-to-GDS converter [`script/make_gds.py`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/ip/sg13g2_ip__jku/script/make_gds.py), built on the `klayout.db` Python module. The conversion proceeds in five steps:
+
+1. Open the source PNG (`logo/jku_logo.png` or `logo/jku_names.png`) and convert it to a binary mask using a brightness threshold (default `128`).
+2. Optionally invert the mask (`--invert`) so that the dark logo regions become the foreground.
+3. For each foreground pixel, draw a square of side `--pixel-size` µm on the selected metal layer.
+4. Merge adjacent rectangles into larger polygons (`--merge`) to keep the GDS small and DRC-friendly.
+5. Add the block-bounding rectangle on the boundary layers `prBoundary` (`189/0`) and `NoMetFiller` (`160/0`).
+
+The Makefile derives the foreground GDS layer number (e.g. `67/0` for `Metal5`) and the LEF obstruction layer name from the same `LAYER` variable, so the artwork in the GDS and the blockage exposed to the router always stay consistent.
+
+Both logos share the same set of Makefile variables as shown below. The `jku_names` logo uses a finer standard pixel size to ensure the readability of the smaller text elements.
+
+| Variable      | Default (`jku` / `jku_names`) | Description                                                                                       |
+| ------------- | ----------------------------- | ------------------------------------------------------------------------------------------------- |
+| `IMG_SIZE_PX` | `750` / `750`                 | Source image side length in pixels. Used to compute the scale factor automatically.               |
+| `BLOCK_SIZE`  | `100`  / `100`                | Physical side length of the rendered logo in µm.                                                  |
+| `PIXEL_SIZE`  | `0.50` / `0.25`               | Edge of one rendered pixel in µm. Must stay ≥ the layer's minimum width (`0.21` µm on `Metal5`).  |
+| `LAYER`       | `Metal5` / `Metal5`           | Foreground metal layer. One of `Metal1`..`Metal5`, `TopMetal1`, `TopMetal2`.                      |
+
+The image scale factor is computed automatically as `BLOCK_SIZE / (IMG_SIZE_PX * PIXEL_SIZE)`, so changing any of the three keeps the rendered block at the target physical size.
+
+The available Makefile targets for the logos are summarised below.
+
+| Target        | What it does                                                                                       |
+| ------------- | -------------------------------------------------------------------------------------------------- |
+| `logo`        | Convert the PNG into a GDSII layout using [`make_gds.py`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/ip/sg13g2_ip__jku/script/make_gds.py). |
+| `lef`         | Emit a minimal LEF macro (`CLASS BLOCK`, full-area `OBS` on `LAYER_NAME`).                         |
+| `lib`         | Emit a Liberty timing stub (empty cell) so the LibreLane flow can pick the cell up.                |
+| `verilog`     | Emit a Verilog blackbox stub (`module sg13g2_ip__jku;`) with no ports.                             |
+| `klayout-drc` | Run KLayout DRC (same relaxed rule-set as the bondpad).                                            |
+| `magic-drc`   | Run Magic DRC.                                                                                     |
+| `clean`       | Remove `final/` and `verification/drc/`.                                                           |
+
+To execute the `clean`, `logo`, `lef`, `lib`, `verilog`, `klayout-drc`, and `magic-drc` targets in sequence, run:
+
+```sh
+cd ip/sg13g2_ip__jku                # or ip/sg13g2_ip__jku_names
+make all
+```
+
+View the JKU logo or JKU names layout in KLayout with:
+
+```sh
+ke final/gds/sg13g2_ip__jku.gds     # or sg13g2_ip__jku_names.gds
+```
+
+::: {#fig-jku-logo-layout layout-ncol=2 fig-cap="`sg13g2_ip__jku` logo (left) and `sg13g2_ip__jku` layout in KLayout (right)."}
+![`sg13g2_ip__jku` logo.](fig/bondpad_logo/jku_logo.png){width=100%}
+
+![`sg13g2_ip__jku` layout in KLayout.](fig/bondpad_logo/jku_logo_layout.png){width=100%}
+:::
+
+::: {.callout-tip}
+To replace the logo with your own artwork, drop a square PNG image into `logo/` and either rename it to `jku_logo.png` / `jku_names.png`, or override `IMG_FILE` in the Makefile. A clean black-on-white image with a few hundred pixels per side and high contrast works best.
+:::
+
+## Build from the Top-Level
+
+For top-level assembly, the [top-level Makefile](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/Makefile) exposes two wrapper targets that descend into the IP folders and call `make all`:
+
+```sh
+make build-bondpad      # build ip/sg13g2_ip__bondpad_70x70
+make build-logos        # build ip/sg13g2_ip__jku and ip/sg13g2_ip__jku_names
+```
+
+Both targets are part of `make build-all` (see @sec-top), so the IP cells are refreshed automatically before the chip is hardened with LibreLane. The generated GDS, LEF, Verilog stub and Liberty files are referenced by [`flow/librelane/config.yaml`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/flow/librelane/config.yaml) when assembling the chip top-level. Furthermore, the Verilog stubs are instantiated in [`rtl/chip_top.sv`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/rtl/chip_top.sv).
 
 
 # Top-Level Implementation {#sec-top}
