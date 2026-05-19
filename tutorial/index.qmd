@@ -409,7 +409,7 @@ This testbench also shows multiple ways to connect and display bus signals in Xs
 :::
 
 ::: {.callout-note}
-These arrows in Xschem are called "launchers" and are essentially a series of Tcl commands. Since Xschem is fully scriptable via Tcl, repetitive tasks can be easily automated. Select a launcher and press `q` (Properties) to inspect or modify its underlying Tcl commands. This is also the beauty of Xschem and the reason why it is possible to also run simulations non-interactively, generate netlists, and run LVS with only Makefile targets, as you will see below.
+The green arrows in Xschem are called "launchers" and are essentially a series of Tcl commands. Since Xschem is fully scriptable via Tcl, repetitive tasks can be easily automated. Select a launcher and press `q` (Properties) to inspect or modify its underlying Tcl commands. This is also the beauty of Xschem and the reason why it is possible to also run simulations non-interactively, generate netlists, and run LVS with only Makefile targets, as you will see below.
 :::
 
 The same simulation can also be run non-interactively from the Makefile, and the result can be plotted from Python.
