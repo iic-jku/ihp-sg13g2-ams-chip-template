@@ -84,6 +84,68 @@ def main():
     axs[1].set_ylim(45, 185)
     axs[1].set_yticks(np.arange(45, 185, 45.0))
     axs[1].grid(visible=True, which='both', linestyle='--', alpha=0.5)
+
+    # Characteristic Bode-plot values: DC gain, -3 dB cutoff, transit frequency.
+    # Magnitude is monotonically decreasing in frequency, so reverse the
+    # arrays to feed np.interp (which requires ascending xp).
+    mag_dB_asc = mag_dB[::-1]
+    freq_desc = frequency[::-1]
+    phase_desc = phase_deg[::-1]
+
+    Aol_dB = float(mag_dB[0])
+    Aol_VV = 10.0 ** (Aol_dB / 20.0)
+    f_cu = float(np.interp(Aol_dB - 3.0, mag_dB_asc, freq_desc))
+    phase_cu = float(np.interp(Aol_dB - 3.0, mag_dB_asc, phase_desc))
+    f_T = float(np.interp(0.0, mag_dB_asc, freq_desc))
+    phase_T = float(np.interp(0.0, mag_dB_asc, phase_desc))
+
+    def _fmt_hz(f):
+        for prefix, scale in (('G', 1e9), ('M', 1e6), ('k', 1e3)):
+            if f >= scale:
+                return rf"{f/scale:.2f}\,\mathrm{{{prefix}Hz}}"
+        return rf"{f:.2f}\,\mathrm{{Hz}}"
+
+    marker_color = '#444444'
+    line_kw = dict(color=marker_color, linestyle=':', linewidth=1.2, alpha=0.85)
+    point_kw = dict(marker='o', color=marker_color, linestyle='None',
+                    markersize=6, zorder=5)
+    box_kw = dict(boxstyle='round,pad=0.4', fc='white',
+                  ec=marker_color, alpha=0.9)
+
+    # Magnitude markers (lines + dots)
+    axs[0].axhline(Aol_dB, **line_kw)
+    axs[0].axvline(f_cu, **line_kw)
+    axs[0].axvline(f_T, **line_kw)
+    axs[0].plot([frequency[0]], [Aol_dB], **point_kw)
+    axs[0].plot([f_cu], [Aol_dB - 3.0], **point_kw)
+    axs[0].plot([f_T], [0.0], **point_kw)
+
+    # Magnitude info box (lower-left corner)
+    mag_text = '\n'.join((
+        rf'$A_\mathrm{{ol}} = {Aol_dB:.1f}\,\mathrm{{dB}}\;({Aol_VV:.1f}\,\mathrm{{V/V}})$',
+        rf'$f_\mathrm{{cu}} = {_fmt_hz(f_cu)}$',
+        rf'$f_\mathrm{{T}} = {_fmt_hz(f_T)}$',
+    ))
+    axs[0].text(0.02, 0.05, mag_text, transform=axs[0].transAxes,
+                ha='left', va='bottom', color=marker_color, bbox=box_kw,
+                zorder=6)
+
+    # Phase markers (lines + dots)
+    axs[1].axvline(f_cu, **line_kw)
+    axs[1].axvline(f_T, **line_kw)
+    axs[1].plot([f_cu], [phase_cu], **point_kw)
+    axs[1].plot([f_T], [phase_T], **point_kw)
+
+    # Phase info box (lower-left corner — empty for an inverting stage
+    # whose phase starts near 180 deg and falls with frequency)
+    phase_text = '\n'.join((
+        rf'$\angle A_\mathrm{{ol}}(f_\mathrm{{cu}}) = {phase_cu:.1f}^\circ$',
+        rf'$\angle A_\mathrm{{ol}}(f_\mathrm{{T}}) = {phase_T:.1f}^\circ$',
+    ))
+    axs[1].text(0.02, 0.05, phase_text, transform=axs[1].transAxes,
+                ha='left', va='bottom', color=marker_color, bbox=box_kw,
+                zorder=6)
+
     plt.tight_layout()
     plt.show()
 
