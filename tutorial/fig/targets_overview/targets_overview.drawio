@@ -1,0 +1,196 @@
+<mxfile host="Electron" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/29.0.3 Chrome/140.0.7339.249 Electron/38.7.0 Safari/537.36" version="29.0.3">
+  <diagram id="targetsOverviewV2" name="Page-1">
+    <mxGraphModel dx="3235" dy="1201" grid="1" gridSize="5" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="all" value="&lt;font face=&quot;Courier New&quot; style=&quot;font-size: 20px;&quot;&gt;&lt;b&gt;make all&lt;/b&gt;&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fontSize=18;fillColor=#ffe6cc;strokeColor=#d79b00;strokeWidth=3;shadow=1;fontStyle=1;verticalAlign=middle;sketch=0;" parent="1" vertex="1">
+          <mxGeometry x="-100" y="40" width="200" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="simAll" value="&lt;font face=&quot;Courier New&quot;&gt;&lt;b&gt;make sim-all&lt;/b&gt;&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fontSize=14;fillColor=#f5f5f5;strokeColor=#666666;strokeWidth=2;fontStyle=1;verticalAlign=middle;sketch=0;" parent="1" vertex="1">
+          <mxGeometry x="-860" y="160" width="160" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="buildAll" value="&lt;font face=&quot;Courier New&quot;&gt;&lt;b&gt;make build-all&lt;/b&gt;&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fontSize=14;fillColor=#f5f5f5;strokeColor=#666666;strokeWidth=2;fontStyle=1;verticalAlign=middle;sketch=0;" parent="1" vertex="1">
+          <mxGeometry x="-180" y="160" width="160" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="magicDrcTop" value="&lt;font face=&quot;Courier New&quot;&gt;&lt;b&gt;make magic-drc&lt;/b&gt;&lt;/font&gt;&lt;br&gt;&lt;font style=&quot;font-size: 11px;&quot;&gt;CELL=chip_top&lt;br&gt;(+ chip_top_logo_fill)&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fontSize=14;fillColor=#f5f5f5;strokeColor=#666666;strokeWidth=2;fontStyle=1;verticalAlign=middle;sketch=0;" parent="1" vertex="1">
+          <mxGeometry x="500" y="150" width="200" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="simRtl" value="&lt;font face=&quot;Courier New&quot; style=&quot;font-size: 12px;&quot;&gt;&lt;b&gt;sim-rtl-cocotb&lt;/b&gt;&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fontSize=12;fillColor=#f5f5f5;strokeColor=#666666;strokeWidth=2;fontStyle=1;verticalAlign=middle;sketch=0;" parent="1" vertex="1">
+          <mxGeometry x="-940" y="260" width="160" height="35" as="geometry" />
+        </mxCell>
+        <mxCell id="simGl" value="&lt;font face=&quot;Courier New&quot; style=&quot;font-size: 12px;&quot;&gt;&lt;b&gt;sim-gl-cocotb&lt;/b&gt;&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fontSize=12;fillColor=#f5f5f5;strokeColor=#666666;strokeWidth=2;fontStyle=1;verticalAlign=middle;sketch=0;" parent="1" vertex="1">
+          <mxGeometry x="-770" y="260" width="160" height="35" as="geometry" />
+        </mxCell>
+        <mxCell id="initSubs" value="&lt;font face=&quot;Courier New&quot; style=&quot;font-size: 12px;&quot;&gt;&lt;b&gt;init-submodules&lt;/b&gt;&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fontSize=12;fillColor=#f5f5f5;strokeColor=#666666;strokeWidth=2;fontStyle=1;verticalAlign=middle;sketch=0;" parent="1" vertex="1">
+          <mxGeometry x="-590" y="260" width="160" height="35" as="geometry" />
+        </mxCell>
+        <mxCell id="buildBondpad" value="&lt;font face=&quot;Courier New&quot; style=&quot;font-size: 12px;&quot;&gt;&lt;b&gt;build-bondpad&lt;/b&gt;&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fontSize=12;fillColor=#fff2cc;strokeColor=#d6b656;strokeWidth=2;fontStyle=1;verticalAlign=middle;sketch=0;" parent="1" vertex="1">
+          <mxGeometry x="-400" y="260" width="160" height="35" as="geometry" />
+        </mxCell>
+        <mxCell id="buildLogos" value="&lt;font face=&quot;Courier New&quot; style=&quot;font-size: 12px;&quot;&gt;&lt;b&gt;build-logos&lt;/b&gt;&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fontSize=12;fillColor=#e1d5e7;strokeColor=#9673a6;strokeWidth=2;fontStyle=1;verticalAlign=middle;sketch=0;" parent="1" vertex="1">
+          <mxGeometry x="-210" y="260" width="160" height="35" as="geometry" />
+        </mxCell>
+        <mxCell id="buildMacros" value="&lt;font face=&quot;Courier New&quot; style=&quot;font-size: 12px;&quot;&gt;&lt;b&gt;build-macros&lt;/b&gt;&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fontSize=12;fillColor=#f5f5f5;strokeColor=#666666;strokeWidth=2;fontStyle=1;verticalAlign=middle;sketch=0;" parent="1" vertex="1">
+          <mxGeometry x="60" y="260" width="160" height="35" as="geometry" />
+        </mxCell>
+        <mxCell id="buildTop" value="&lt;font face=&quot;Courier New&quot; style=&quot;font-size: 12px;&quot;&gt;&lt;b&gt;build-top&lt;/b&gt;&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fontSize=12;fillColor=#ffe6cc;strokeColor=#d79b00;strokeWidth=2;fontStyle=1;verticalAlign=middle;sketch=0;" parent="1" vertex="1">
+          <mxGeometry x="370" y="260" width="160" height="35" as="geometry" />
+        </mxCell>
+        <mxCell id="buildCounter" value="&lt;font face=&quot;Courier New&quot; style=&quot;font-size: 12px;&quot;&gt;&lt;b&gt;build-counter&lt;/b&gt;&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fontSize=12;fillColor=#dae8fc;strokeColor=#6c8ebf;strokeWidth=2;fontStyle=1;verticalAlign=middle;sketch=0;" parent="1" vertex="1">
+          <mxGeometry x="-40" y="350" width="160" height="35" as="geometry" />
+        </mxCell>
+        <mxCell id="buildInverter" value="&lt;font face=&quot;Courier New&quot; style=&quot;font-size: 12px;&quot;&gt;&lt;b&gt;build-inverter&lt;/b&gt;&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fontSize=12;fillColor=#d5e8d4;strokeColor=#82b366;strokeWidth=2;fontStyle=1;verticalAlign=middle;sketch=0;" parent="1" vertex="1">
+          <mxGeometry x="170" y="350" width="160" height="35" as="geometry" />
+        </mxCell>
+        <mxCell id="hdrBondpad" value="&lt;b style=&quot;font-size: 16px;&quot;&gt;BONDPAD&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size: 10px;font-family: Courier New;&quot;&gt;ip/sg13g2_ip__bondpad_70x70/&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fontSize=14;fillColor=#fff2cc;strokeColor=#d6b656;strokeWidth=3;fontStyle=1;verticalAlign=middle;sketch=0;" parent="1" vertex="1">
+          <mxGeometry x="-410" y="450" width="180" height="55" as="geometry" />
+        </mxCell>
+        <mxCell id="hdrLogos" value="&lt;b style=&quot;font-size: 16px;&quot;&gt;LOGOS&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size: 10px;font-family: Courier New;&quot;&gt;ip/sg13g2_ip__jku/&lt;br&gt;ip/sg13g2_ip__jku_names/&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fontSize=14;fillColor=#e1d5e7;strokeColor=#9673a6;strokeWidth=3;fontStyle=1;verticalAlign=middle;sketch=0;" parent="1" vertex="1">
+          <mxGeometry x="-220" y="450" width="180" height="55" as="geometry" />
+        </mxCell>
+        <mxCell id="hdrDigital" value="&lt;b style=&quot;font-size: 16px;&quot;&gt;DIGITAL&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size: 10px;font-family: Courier New;&quot;&gt;macros/counter/&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fontSize=14;fillColor=#dae8fc;strokeColor=#6c8ebf;strokeWidth=3;fontStyle=1;verticalAlign=middle;sketch=0;" parent="1" vertex="1">
+          <mxGeometry x="-30" y="450" width="180" height="55" as="geometry" />
+        </mxCell>
+        <mxCell id="hdrAnalog" value="&lt;b style=&quot;font-size: 16px;&quot;&gt;ANALOG&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size: 10px;font-family: Courier New;&quot;&gt;macros/inverter/&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fontSize=14;fillColor=#d5e8d4;strokeColor=#82b366;strokeWidth=3;fontStyle=1;verticalAlign=middle;sketch=0;" parent="1" vertex="1">
+          <mxGeometry x="180" y="450" width="180" height="55" as="geometry" />
+        </mxCell>
+        <mxCell id="hdrMain" value="&lt;b style=&quot;font-size: 16px;&quot;&gt;TOP CHIP&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size: 10px;font-family: Courier New;&quot;&gt;(top-level Makefile)&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fontSize=14;fillColor=#ffe6cc;strokeColor=#d79b00;strokeWidth=3;fontStyle=1;verticalAlign=middle;sketch=0;" parent="1" vertex="1">
+          <mxGeometry x="360" y="450" width="180" height="55" as="geometry" />
+        </mxCell>
+        <mxCell id="bpL1" value="&lt;font face=&quot;Courier New&quot; style=&quot;font-size: 11px;&quot;&gt;&lt;b&gt;bondpad&lt;/b&gt;&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fontSize=11;fillColor=#fff2cc;strokeColor=#d6b656;strokeWidth=1;fontStyle=0;verticalAlign=middle;sketch=0;" parent="1" vertex="1">
+          <mxGeometry x="-400" y="525" width="160" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="bpL2" value="&lt;font face=&quot;Courier New&quot; style=&quot;font-size: 11px;&quot;&gt;&lt;b&gt;verilog&lt;/b&gt;&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fontSize=11;fillColor=#fff2cc;strokeColor=#d6b656;strokeWidth=1;fontStyle=0;verticalAlign=middle;sketch=0;" parent="1" vertex="1">
+          <mxGeometry x="-400" y="560" width="160" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="bpL3" value="&lt;font face=&quot;Courier New&quot; style=&quot;font-size: 11px;&quot;&gt;&lt;b&gt;klayout-drc&lt;/b&gt;&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fontSize=11;fillColor=#fff2cc;strokeColor=#d6b656;strokeWidth=1;fontStyle=0;verticalAlign=middle;sketch=0;" parent="1" vertex="1">
+          <mxGeometry x="-400" y="595" width="160" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="bpL4" value="&lt;font face=&quot;Courier New&quot; style=&quot;font-size: 11px;&quot;&gt;&lt;b&gt;magic-drc&lt;/b&gt;&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fontSize=11;fillColor=#fff2cc;strokeColor=#d6b656;strokeWidth=1;fontStyle=0;verticalAlign=middle;sketch=0;" parent="1" vertex="1">
+          <mxGeometry x="-400" y="630" width="160" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="lgL1" value="&lt;font face=&quot;Courier New&quot; style=&quot;font-size: 11px;&quot;&gt;&lt;b&gt;logo&lt;/b&gt;&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fontSize=11;fillColor=#e1d5e7;strokeColor=#9673a6;strokeWidth=1;fontStyle=0;verticalAlign=middle;sketch=0;" parent="1" vertex="1">
+          <mxGeometry x="-210" y="525" width="160" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="lgL2" value="&lt;font face=&quot;Courier New&quot; style=&quot;font-size: 11px;&quot;&gt;&lt;b&gt;lef&lt;/b&gt;&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fontSize=11;fillColor=#e1d5e7;strokeColor=#9673a6;strokeWidth=1;fontStyle=0;verticalAlign=middle;sketch=0;" parent="1" vertex="1">
+          <mxGeometry x="-210" y="560" width="160" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="lgL3" value="&lt;font face=&quot;Courier New&quot; style=&quot;font-size: 11px;&quot;&gt;&lt;b&gt;lib&lt;/b&gt;&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fontSize=11;fillColor=#e1d5e7;strokeColor=#9673a6;strokeWidth=1;fontStyle=0;verticalAlign=middle;sketch=0;" parent="1" vertex="1">
+          <mxGeometry x="-210" y="595" width="160" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="lgL4" value="&lt;font face=&quot;Courier New&quot; style=&quot;font-size: 11px;&quot;&gt;&lt;b&gt;verilog&lt;/b&gt;&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fontSize=11;fillColor=#e1d5e7;strokeColor=#9673a6;strokeWidth=1;fontStyle=0;verticalAlign=middle;sketch=0;" parent="1" vertex="1">
+          <mxGeometry x="-210" y="630" width="160" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="lgL5" value="&lt;font face=&quot;Courier New&quot; style=&quot;font-size: 11px;&quot;&gt;&lt;b&gt;klayout-drc&lt;/b&gt;&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fontSize=11;fillColor=#e1d5e7;strokeColor=#9673a6;strokeWidth=1;fontStyle=0;verticalAlign=middle;sketch=0;" parent="1" vertex="1">
+          <mxGeometry x="-210" y="665" width="160" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="lgL6" value="&lt;font face=&quot;Courier New&quot; style=&quot;font-size: 11px;&quot;&gt;&lt;b&gt;magic-drc&lt;/b&gt;&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fontSize=11;fillColor=#e1d5e7;strokeColor=#9673a6;strokeWidth=1;fontStyle=0;verticalAlign=middle;sketch=0;" parent="1" vertex="1">
+          <mxGeometry x="-210" y="700" width="160" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="dgL1" value="&lt;font face=&quot;Courier New&quot; style=&quot;font-size: 11px;&quot;&gt;&lt;b&gt;lint-verilog-all&lt;/b&gt;&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fontSize=11;fillColor=#dae8fc;strokeColor=#6c8ebf;strokeWidth=1;fontStyle=0;verticalAlign=middle;sketch=0;" parent="1" vertex="1">
+          <mxGeometry x="-20" y="525" width="160" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="dgL2" value="&lt;font face=&quot;Courier New&quot; style=&quot;font-size: 11px;&quot;&gt;&lt;b&gt;sim-all&lt;/b&gt;&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fontSize=11;fillColor=#dae8fc;strokeColor=#6c8ebf;strokeWidth=1;fontStyle=0;verticalAlign=middle;sketch=0;" parent="1" vertex="1">
+          <mxGeometry x="-20" y="560" width="160" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="dgL3" value="&lt;font face=&quot;Courier New&quot; style=&quot;font-size: 11px;&quot;&gt;&lt;b&gt;build-fpga&lt;/b&gt;&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fontSize=11;fillColor=#dae8fc;strokeColor=#6c8ebf;strokeWidth=1;fontStyle=0;verticalAlign=middle;sketch=0;" parent="1" vertex="1">
+          <mxGeometry x="-20" y="595" width="160" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="dgL4" value="&lt;font face=&quot;Courier New&quot; style=&quot;font-size: 11px;&quot;&gt;&lt;b&gt;build-top&lt;/b&gt;&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fontSize=11;fillColor=#dae8fc;strokeColor=#6c8ebf;strokeWidth=1;fontStyle=0;verticalAlign=middle;sketch=0;" parent="1" vertex="1">
+          <mxGeometry x="-20" y="630" width="160" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="anL1" value="&lt;font face=&quot;Courier New&quot; style=&quot;font-size: 11px;&quot;&gt;&lt;b&gt;sim-all&lt;/b&gt;&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fontSize=11;fillColor=#d5e8d4;strokeColor=#82b366;strokeWidth=1;fontStyle=0;verticalAlign=middle;sketch=0;" parent="1" vertex="1">
+          <mxGeometry x="190" y="525" width="160" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="anL2" value="&lt;font face=&quot;Courier New&quot; style=&quot;font-size: 11px;&quot;&gt;&lt;b&gt;klayout-verify-all&lt;/b&gt;&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fontSize=11;fillColor=#d5e8d4;strokeColor=#82b366;strokeWidth=1;fontStyle=0;verticalAlign=middle;sketch=0;" parent="1" vertex="1">
+          <mxGeometry x="190" y="560" width="160" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="anL3" value="&lt;font face=&quot;Courier New&quot; style=&quot;font-size: 11px;&quot;&gt;&lt;b&gt;magic-verify-all&lt;/b&gt;&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fontSize=11;fillColor=#d5e8d4;strokeColor=#82b366;strokeWidth=1;fontStyle=0;verticalAlign=middle;sketch=0;" parent="1" vertex="1">
+          <mxGeometry x="190" y="595" width="160" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="anL4" value="&lt;font face=&quot;Courier New&quot; style=&quot;font-size: 11px;&quot;&gt;&lt;b&gt;build-top&lt;/b&gt;&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fontSize=11;fillColor=#d5e8d4;strokeColor=#82b366;strokeWidth=1;fontStyle=0;verticalAlign=middle;sketch=0;" parent="1" vertex="1">
+          <mxGeometry x="190" y="630" width="160" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="mnL1" value="&lt;font face=&quot;Courier New&quot; style=&quot;font-size: 11px;&quot;&gt;&lt;b&gt;librelane-nodrc&lt;/b&gt;&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fontSize=11;fillColor=#ffe6cc;strokeColor=#d79b00;strokeWidth=1;fontStyle=0;verticalAlign=middle;sketch=0;" parent="1" vertex="1">
+          <mxGeometry x="370" y="525" width="160" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="mnL2" value="&lt;font face=&quot;Courier New&quot; style=&quot;font-size: 11px;&quot;&gt;&lt;b&gt;copy-reports&lt;/b&gt;&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fontSize=11;fillColor=#ffe6cc;strokeColor=#d79b00;strokeWidth=1;fontStyle=0;verticalAlign=middle;sketch=0;" parent="1" vertex="1">
+          <mxGeometry x="370" y="560" width="160" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="mnL3" value="&lt;font face=&quot;Courier New&quot; style=&quot;font-size: 11px;&quot;&gt;&lt;b&gt;copy-gds&lt;/b&gt;&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fontSize=11;fillColor=#ffe6cc;strokeColor=#d79b00;strokeWidth=1;fontStyle=0;verticalAlign=middle;sketch=0;" parent="1" vertex="1">
+          <mxGeometry x="370" y="595" width="160" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="mnL4" value="&lt;font face=&quot;Courier New&quot; style=&quot;font-size: 11px;&quot;&gt;&lt;b&gt;copy-netlist&lt;/b&gt;&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fontSize=11;fillColor=#ffe6cc;strokeColor=#d79b00;strokeWidth=1;fontStyle=0;verticalAlign=middle;sketch=0;" parent="1" vertex="1">
+          <mxGeometry x="370" y="630" width="160" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="mnL5" value="&lt;font face=&quot;Courier New&quot; style=&quot;font-size: 11px;&quot;&gt;&lt;b&gt;copy-render&lt;/b&gt;&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fontSize=11;fillColor=#ffe6cc;strokeColor=#d79b00;strokeWidth=1;fontStyle=0;verticalAlign=middle;sketch=0;" parent="1" vertex="1">
+          <mxGeometry x="370" y="665" width="160" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="mnL6" value="&lt;font face=&quot;Courier New&quot; style=&quot;font-size: 11px;&quot;&gt;&lt;b&gt;add-logo-fill&lt;/b&gt;&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fontSize=11;fillColor=#ffe6cc;strokeColor=#d79b00;strokeWidth=1;fontStyle=0;verticalAlign=middle;sketch=0;" parent="1" vertex="1">
+          <mxGeometry x="370" y="700" width="160" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="mnL7" value="&lt;font face=&quot;Courier New&quot; style=&quot;font-size: 11px;&quot;&gt;&lt;b&gt;render-gds&lt;/b&gt;&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fontSize=11;fillColor=#ffe6cc;strokeColor=#d79b00;strokeWidth=1;fontStyle=0;verticalAlign=middle;sketch=0;" parent="1" vertex="1">
+          <mxGeometry x="370" y="735" width="160" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="e_all_simAll" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;strokeColor=#666666;strokeWidth=2;endArrow=classic;endFill=1;" parent="1" source="all" target="simAll" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_all_buildAll" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;strokeColor=#666666;strokeWidth=2;endArrow=classic;endFill=1;" parent="1" source="all" target="buildAll" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_all_magicDrcTop" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;strokeColor=#666666;strokeWidth=2;endArrow=classic;endFill=1;" parent="1" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint y="125" as="sourcePoint" />
+            <mxPoint x="600" y="150" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e_simAll_simRtl" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;strokeColor=#666666;strokeWidth=2;endArrow=classic;endFill=1;" parent="1" source="simAll" target="simRtl" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_simAll_simGl" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;strokeColor=#666666;strokeWidth=2;endArrow=classic;endFill=1;" parent="1" source="simAll" target="simGl" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_buildAll_init" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;strokeColor=#666666;strokeWidth=2;endArrow=classic;endFill=1;" parent="1" source="buildAll" target="initSubs" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_buildAll_bondpad" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;strokeColor=#d6b656;strokeWidth=2;endArrow=classic;endFill=1;" parent="1" source="buildAll" target="buildBondpad" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_buildAll_logos" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;strokeColor=#9673a6;strokeWidth=2;endArrow=classic;endFill=1;" parent="1" source="buildAll" target="buildLogos" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_buildAll_macros" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;strokeColor=#666666;strokeWidth=2;endArrow=classic;endFill=1;" parent="1" source="buildAll" target="buildMacros" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_buildAll_top" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;strokeColor=#d79b00;strokeWidth=2;endArrow=classic;endFill=1;" parent="1" source="buildAll" target="buildTop" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_macros_counter" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;strokeColor=#6c8ebf;strokeWidth=2;endArrow=classic;endFill=1;" parent="1" source="buildMacros" target="buildCounter" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_macros_inverter" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;strokeColor=#82b366;strokeWidth=2;endArrow=classic;endFill=1;" parent="1" source="buildMacros" target="buildInverter" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_bondpad_hdr" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;strokeColor=#d6b656;strokeWidth=2;dashed=1;endArrow=classic;endFill=1;" parent="1" source="buildBondpad" target="hdrBondpad" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_logos_hdr" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;strokeColor=#9673a6;strokeWidth=2;dashed=1;endArrow=classic;endFill=1;" parent="1" source="buildLogos" target="hdrLogos" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_counter_hdr" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;strokeColor=#6c8ebf;strokeWidth=2;dashed=1;endArrow=classic;endFill=1;" parent="1" source="buildCounter" target="hdrDigital" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_inverter_hdr" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;strokeColor=#82b366;strokeWidth=2;dashed=1;endArrow=classic;endFill=1;" parent="1" source="buildInverter" target="hdrAnalog" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_top_hdr" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;strokeColor=#d79b00;strokeWidth=2;dashed=1;endArrow=classic;endFill=1;" parent="1" source="buildTop" target="hdrMain" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="legend" value="&lt;b&gt;Legend&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size: 10px;&quot;&gt;&amp;nbsp;Solid arrow: direct &lt;font face=&quot;Courier New&quot;&gt;$(MAKE) &amp;lt;target&amp;gt;&lt;/font&gt; call&lt;br&gt;&amp;nbsp;Dashed arrow: &lt;font face=&quot;Courier New&quot;&gt;$(MAKE) -C &amp;lt;dir&amp;gt; all&lt;/font&gt; (recursive sub-Makefile)&lt;/font&gt;" style="rounded=0;whiteSpace=wrap;html=1;fontSize=11;fillColor=#ffffff;strokeColor=#888888;strokeWidth=1;align=left;verticalAlign=top;spacingLeft=8;spacingTop=4;sketch=0;" parent="1" vertex="1">
+          <mxGeometry x="-940" y="450" width="320" height="60" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
