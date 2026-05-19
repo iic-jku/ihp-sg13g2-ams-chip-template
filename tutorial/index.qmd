@@ -194,7 +194,20 @@ make help              # show available targets at the top level
 Instead of `git clone`, you can start by clicking the green "Use this template" button on the GitHub page to create your own copy of the repository. This way, you can push your changes to your own GitHub repository and even make it public if you want to share your custom silicon design with the community.
 :::
 
-Each macro under [`macros/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/) has its own `Makefile` and `README.md` with macro-local targets. They are called by the top-level build targets, but can also be invoked directly from inside the macro folder.
+Each macro under [`macros/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/) has its own `Makefile` and `README.md` with macro-local targets. They are called by the top-level build targets, but can also be invoked directly from inside the macro folder. @fig-targets-overview visualises how the Makefile targets of the whole directory structure depend on each other.
+
+The colour scheme groups every target by the deliverable it ultimately produces, so a beginner can trace a colour from `make all` down to the final outputs:
+
+- **Orange — top chip / main**: `make all` itself and every target that contributes to the top-level chip GDS (the `build-top` chain in the [top-level Makefile](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/Makefile): `librelane-nodrc`, `copy-*`, `add-logo-fill`, `render-gds`).
+- **Yellow — bondpad IP**: `build-bondpad` and everything inside [`ip/sg13g2_ip__bondpad_70x70/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/ip/sg13g2_ip__bondpad_70x70/).
+- **Purple — logos IP**: `build-logos` and the two sub-Makefiles under [`ip/sg13g2_ip__jku/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/ip/sg13g2_ip__jku/) and [`ip/sg13g2_ip__jku_names/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/ip/sg13g2_ip__jku_names/).
+- **Blue — digital macro**: `build-counter` and the [`macros/counter/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/counter/) Makefile. Blue is the conventional colour for digital design.
+- **Green — analog macro**: `build-inverter` and the [`macros/inverter/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/inverter/) Makefile. Green is the conventional colour for analog design.
+- **Grey — simulation & verification**: intermediate targets that fan out into the coloured deliverables (`sim-all`, `build-all`, `build-macros`, `init-submodules`, `sim-*-cocotb`) and the top-level `magic-drc` checks that are run after the chip is built.
+
+Solid arrows are direct `$(MAKE) <target>` calls within a single Makefile; dashed arrows are recursive `$(MAKE) -C <dir> all` calls that descend into a sub-Makefile (one per coloured deliverable).
+
+![Overview of the Makefile targets that `make all` resolves to. Every coloured lane corresponds to one deliverable (top chip, bondpad, logos, digital macro, analog macro). The grey targets connect `make all` to those lanes.](fig/targets_overview/targets_overview.svg){#fig-targets-overview}
 
 ### Top-level targets
 
