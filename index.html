@@ -456,7 +456,7 @@ window.Quarto = {
   </ul></li>
   <li><a href="#acknowledgements" id="toc-acknowledgements" class="nav-link" data-scroll-target="#acknowledgements"><span class="header-section-number">9</span> Acknowledgements</a></li>
   </ul>
-<div class="toc-actions"><ul><li><a href="{{< meta var.url-repo >}}/edit/main/index.qmd" class="toc-action"><i class="bi bi-git"></i>Edit this page</a></li><li><a href="{{< meta var.url-repo >}}/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div><div class="quarto-alternate-formats"><h2>Other Formats</h2><ul><li><a href="index.pdf"><i class="bi bi-file-pdf"></i>PDF</a></li></ul></div></nav>
+<div class="toc-actions"><ul><li><a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/edit/main/tutorial/index.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div><div class="quarto-alternate-formats"><h2>Other Formats</h2><ul><li><a href="index.pdf"><i class="bi bi-file-pdf"></i>PDF</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -3332,12 +3332,24 @@ Tip
 </div>   
     <div class="nav-footer-center">
       &nbsp;
-    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="{{< meta var.url-repo >}}/edit/main/index.qmd" class="toc-action"><i class="bi bi-git"></i>Edit this page</a></li><li><a href="{{< meta var.url-repo >}}/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div>
+    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/edit/main/tutorial/index.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div>
     <div class="nav-footer-right">
 <p>Website built with <a href="https://quarto.org/" class="external" target="_blank">Quarto</a></p>
 </div>
   </div>
 </footer>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  document.querySelectorAll('a').forEach(function(a) {
+    var t = (a.textContent || '').trim();
+    if (t === 'Edit this page') {
+      a.href = 'https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/pulls';
+    } else if (t === 'Report an issue') {
+      a.href = 'https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/issues';
+    }
+  });
+});
+</script>
 <script>var lightboxQuarto = GLightbox({"closeEffect":"zoom","descPosition":"bottom","loop":false,"openEffect":"zoom","selector":".lightbox"});
 (function() {
   let previousOnload = window.onload;
