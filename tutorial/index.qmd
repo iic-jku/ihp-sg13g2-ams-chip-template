@@ -664,7 +664,7 @@ The notebook is fully parametric. Changing $L$, the target $g_\mathrm{m}/I_\math
 
 After the schematic is finalised and the design targets are met, the layout can be created. The layout of the `inverter` cell is hierarchical, and the top-level cell `inverter_top` contains four instances of the `inverter` cell. Around the four-channel inverter layout, a power ring is drawn on `Metal5` and `TopMetal1` layers, which is connected to the `VDD` and `VSS` pins of the four inverters. This power ring is required for top-level integration, connecting the macro power to the chip's PDN.
 
-The layout is created and edited in KLayout. The container provides the `ke` alias for `klayout -e` (edit mode). With the following command, the GDS of the four-channel inverter is opened in KLayout. With the keys `0`, `1`, `2`, ..., `9` you can view different layers as explained in the [KLayout cheatsheet](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/doc/klayout/klayout_cheatsheet.md) or in the [klayout-layer-shortcuts](https://github.com/iic-jku/klayout-layer-shortcuts) plugin.
+The layout is created and edited in KLayout. The container provides the `ke` alias for `klayout -e` (edit mode). With the following command, the GDS of the four-channel inverter is opened in KLayout as shown @fig-inverter-top-layout. With the keys `0`, `1`, `2`, ..., `9` you can view different layers as explained in the [KLayout cheatsheet](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/doc/klayout/klayout_cheatsheet.md) or in the [klayout-layer-shortcuts](https://github.com/iic-jku/klayout-layer-shortcuts) plugin.
 
 ```sh
 ke layout/inverter_top.klay.gds
@@ -673,6 +673,10 @@ ke layout/inverter_top.klay.gds
 After modifying the layout, export a clean `.gds` file (for example `inverter_top.gds`) by pressing `File > Export Layout For Tapeout`. The Magic-based verification flows only work on `.gds` files, while the KLayout-based verification flows accept either `.gds` or `.klay.gds`.
 
 ![`inverter_top` layout in KLayout.](fig/inverter_top/inverter_top_black.png){#fig-inverter-top-layout width=75%}
+
+KLayout also supports a 2.5D viewer, which can be used to inspect the layout. To open the 2.5D viewer, press `SG13G2 PDK > BEOL 2.5D Viewer`. @fig-inverter-top-layout-3D shows the `inverter_top` layout in the 2.5D viewer.
+
+![`inverter_top` layout in KLayout 2.5D viewer.](fig/inverter_top/inverter_top_3D.png){#fig-inverter-top-layout-3D width=100%}
 
 ## DRC, LVS, and PEX
 
