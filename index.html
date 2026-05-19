@@ -8,7 +8,7 @@
 
 <meta name="author" content="Simon Dorrer">
 <meta name="author" content="Harald Pretl">
-<meta name="dcterms.date" content="2026-05-18">
+<meta name="dcterms.date" content="2026-05-19">
 
 <title>A Tutorial on Open-Source Analog-Mixed Signal Chip Design with the ihp-sg13g2 Open-PDK – Open-Source Analog-Mixed Signal Chip Design Tutorial</title>
 <style>
@@ -386,7 +386,7 @@ window.Quarto = {
   </ul></li>
   <li><a href="#sec-digital" id="toc-sec-digital" class="nav-link" data-scroll-target="#sec-digital"><span class="header-section-number">4</span> Digital Macro Implementation</a>
   <ul class="collapse">
-  <li><a href="#folder-structure" id="toc-folder-structure" class="nav-link" data-scroll-target="#folder-structure"><span class="header-section-number">4.1</span> Folder Structure</a></li>
+  <li><a href="#directory-structure-1" id="toc-directory-structure-1" class="nav-link" data-scroll-target="#directory-structure-1"><span class="header-section-number">4.1</span> Directory Structure</a></li>
   <li><a href="#reading-the-rtl" id="toc-reading-the-rtl" class="nav-link" data-scroll-target="#reading-the-rtl"><span class="header-section-number">4.2</span> Reading the RTL</a>
   <ul class="collapse">
   <li><a href="#counter.sv" id="toc-counter.sv" class="nav-link" data-scroll-target="#counter.sv"><span class="header-section-number">4.2.1</span> <code>counter.sv</code></a></li>
@@ -406,7 +406,7 @@ window.Quarto = {
   </ul></li>
   <li><a href="#sec-analog" id="toc-sec-analog" class="nav-link" data-scroll-target="#sec-analog"><span class="header-section-number">5</span> Analog Macro Implementation</a>
   <ul class="collapse">
-  <li><a href="#folder-structure-1" id="toc-folder-structure-1" class="nav-link" data-scroll-target="#folder-structure-1"><span class="header-section-number">5.1</span> Folder Structure</a></li>
+  <li><a href="#directory-structure-2" id="toc-directory-structure-2" class="nav-link" data-scroll-target="#directory-structure-2"><span class="header-section-number">5.1</span> Directory Structure</a></li>
   <li><a href="#schematic-level-simulation" id="toc-schematic-level-simulation" class="nav-link" data-scroll-target="#schematic-level-simulation"><span class="header-section-number">5.2</span> Schematic-Level Simulation</a></li>
   <li><a href="#schematic-level-drawing" id="toc-schematic-level-drawing" class="nav-link" data-scroll-target="#schematic-level-drawing"><span class="header-section-number">5.3</span> Schematic-Level Drawing</a></li>
   <li><a href="#sec-cace" id="toc-sec-cace" class="nav-link" data-scroll-target="#sec-cace"><span class="header-section-number">5.4</span> Process Variation and Mismatch (CACE)</a></li>
@@ -422,31 +422,38 @@ window.Quarto = {
   <li><a href="#build-deliverables-for-top-level-integration" id="toc-build-deliverables-for-top-level-integration" class="nav-link" data-scroll-target="#build-deliverables-for-top-level-integration"><span class="header-section-number">5.8</span> Build Deliverables for Top-Level Integration</a></li>
   <li><a href="#full-analog-macro-flow" id="toc-full-analog-macro-flow" class="nav-link" data-scroll-target="#full-analog-macro-flow"><span class="header-section-number">5.9</span> Full Analog Macro Flow</a></li>
   </ul></li>
-  <li><a href="#sec-top" id="toc-sec-top" class="nav-link" data-scroll-target="#sec-top"><span class="header-section-number">6</span> Top-Level Implementation</a>
+  <li><a href="#sec-ip" id="toc-sec-ip" class="nav-link" data-scroll-target="#sec-ip"><span class="header-section-number">6</span> Bondpad and Logo Implementation</a>
   <ul class="collapse">
-  <li><a href="#understanding-chip_top.sv" id="toc-understanding-chip_top.sv" class="nav-link" data-scroll-target="#understanding-chip_top.sv"><span class="header-section-number">6.1</span> Understanding <code>chip_top.sv</code></a></li>
-  <li><a href="#understanding-chip_core.sv" id="toc-understanding-chip_core.sv" class="nav-link" data-scroll-target="#understanding-chip_core.sv"><span class="header-section-number">6.2</span> Understanding <code>chip_core.sv</code></a></li>
-  <li><a href="#understanding-config.yaml" id="toc-understanding-config.yaml" class="nav-link" data-scroll-target="#understanding-config.yaml"><span class="header-section-number">6.3</span> Understanding <code>config.yaml</code></a></li>
-  <li><a href="#understanding-pdn_cfg.tcl" id="toc-understanding-pdn_cfg.tcl" class="nav-link" data-scroll-target="#understanding-pdn_cfg.tcl"><span class="header-section-number">6.4</span> Understanding <code>pdn_cfg.tcl</code></a></li>
-  <li><a href="#top-level-simulation" id="toc-top-level-simulation" class="nav-link" data-scroll-target="#top-level-simulation"><span class="header-section-number">6.5</span> Top-Level Simulation</a></li>
-  <li><a href="#building-the-chip" id="toc-building-the-chip" class="nav-link" data-scroll-target="#building-the-chip"><span class="header-section-number">6.6</span> Building the Chip</a></li>
-  <li><a href="#viewing-the-chip" id="toc-viewing-the-chip" class="nav-link" data-scroll-target="#viewing-the-chip"><span class="header-section-number">6.7</span> Viewing the Chip</a></li>
-  <li><a href="#chip-level-verification" id="toc-chip-level-verification" class="nav-link" data-scroll-target="#chip-level-verification"><span class="header-section-number">6.8</span> Chip-Level Verification</a>
+  <li><a href="#directory-structure-3" id="toc-directory-structure-3" class="nav-link" data-scroll-target="#directory-structure-3"><span class="header-section-number">6.1</span> Directory Structure</a></li>
+  <li><a href="#bondpad-generation" id="toc-bondpad-generation" class="nav-link" data-scroll-target="#bondpad-generation"><span class="header-section-number">6.2</span> Bondpad Generation</a></li>
+  <li><a href="#logo-generation" id="toc-logo-generation" class="nav-link" data-scroll-target="#logo-generation"><span class="header-section-number">6.3</span> Logo Generation</a></li>
+  <li><a href="#build-from-the-top-level" id="toc-build-from-the-top-level" class="nav-link" data-scroll-target="#build-from-the-top-level"><span class="header-section-number">6.4</span> Build from the Top-Level</a></li>
+  </ul></li>
+  <li><a href="#sec-top" id="toc-sec-top" class="nav-link" data-scroll-target="#sec-top"><span class="header-section-number">7</span> Top-Level Implementation</a>
   <ul class="collapse">
-  <li><a href="#drc" id="toc-drc" class="nav-link" data-scroll-target="#drc"><span class="header-section-number">6.8.1</span> DRC</a></li>
-  <li><a href="#pex" id="toc-pex" class="nav-link" data-scroll-target="#pex"><span class="header-section-number">6.8.2</span> PEX</a></li>
-  <li><a href="#lvs" id="toc-lvs" class="nav-link" data-scroll-target="#lvs"><span class="header-section-number">6.8.3</span> LVS</a></li>
-  </ul></li>
-  <li><a href="#full-flow-at-once" id="toc-full-flow-at-once" class="nav-link" data-scroll-target="#full-flow-at-once"><span class="header-section-number">6.9</span> Full Flow at Once</a></li>
-  <li><a href="#releasing-for-tapeout" id="toc-releasing-for-tapeout" class="nav-link" data-scroll-target="#releasing-for-tapeout"><span class="header-section-number">6.10</span> Releasing for Tapeout</a></li>
-  </ul></li>
-  <li><a href="#sec-exercises" id="toc-sec-exercises" class="nav-link" data-scroll-target="#sec-exercises"><span class="header-section-number">7</span> Additional Exercises</a>
+  <li><a href="#understanding-chip_top.sv" id="toc-understanding-chip_top.sv" class="nav-link" data-scroll-target="#understanding-chip_top.sv"><span class="header-section-number">7.1</span> Understanding <code>chip_top.sv</code></a></li>
+  <li><a href="#understanding-chip_core.sv" id="toc-understanding-chip_core.sv" class="nav-link" data-scroll-target="#understanding-chip_core.sv"><span class="header-section-number">7.2</span> Understanding <code>chip_core.sv</code></a></li>
+  <li><a href="#understanding-config.yaml" id="toc-understanding-config.yaml" class="nav-link" data-scroll-target="#understanding-config.yaml"><span class="header-section-number">7.3</span> Understanding <code>config.yaml</code></a></li>
+  <li><a href="#understanding-pdn_cfg.tcl" id="toc-understanding-pdn_cfg.tcl" class="nav-link" data-scroll-target="#understanding-pdn_cfg.tcl"><span class="header-section-number">7.4</span> Understanding <code>pdn_cfg.tcl</code></a></li>
+  <li><a href="#top-level-simulation" id="toc-top-level-simulation" class="nav-link" data-scroll-target="#top-level-simulation"><span class="header-section-number">7.5</span> Top-Level Simulation</a></li>
+  <li><a href="#building-the-chip" id="toc-building-the-chip" class="nav-link" data-scroll-target="#building-the-chip"><span class="header-section-number">7.6</span> Building the Chip</a></li>
+  <li><a href="#viewing-the-chip" id="toc-viewing-the-chip" class="nav-link" data-scroll-target="#viewing-the-chip"><span class="header-section-number">7.7</span> Viewing the Chip</a></li>
+  <li><a href="#chip-level-verification" id="toc-chip-level-verification" class="nav-link" data-scroll-target="#chip-level-verification"><span class="header-section-number">7.8</span> Chip-Level Verification</a>
   <ul class="collapse">
-  <li><a href="#sec-exercise1" id="toc-sec-exercise1" class="nav-link" data-scroll-target="#sec-exercise1"><span class="header-section-number">7.1</span> Exercise 1: From 8-bit Up-Counter to 16-bit Down-Counter</a></li>
-  <li><a href="#sec-exercise2" id="toc-sec-exercise2" class="nav-link" data-scroll-target="#sec-exercise2"><span class="header-section-number">7.2</span> Exercise 2: Inverter to Three-Stage Ring Oscillator</a></li>
-  <li><a href="#sec-exercise3" id="toc-sec-exercise3" class="nav-link" data-scroll-target="#sec-exercise3"><span class="header-section-number">7.3</span> Exercise 3: Update Pinout and Floorplan of the Top-Level</a></li>
+  <li><a href="#drc" id="toc-drc" class="nav-link" data-scroll-target="#drc"><span class="header-section-number">7.8.1</span> DRC</a></li>
+  <li><a href="#pex" id="toc-pex" class="nav-link" data-scroll-target="#pex"><span class="header-section-number">7.8.2</span> PEX</a></li>
+  <li><a href="#lvs" id="toc-lvs" class="nav-link" data-scroll-target="#lvs"><span class="header-section-number">7.8.3</span> LVS</a></li>
   </ul></li>
-  <li><a href="#acknowledgements" id="toc-acknowledgements" class="nav-link" data-scroll-target="#acknowledgements"><span class="header-section-number">8</span> Acknowledgements</a></li>
+  <li><a href="#full-flow-at-once" id="toc-full-flow-at-once" class="nav-link" data-scroll-target="#full-flow-at-once"><span class="header-section-number">7.9</span> Full Flow at Once</a></li>
+  <li><a href="#releasing-for-tapeout" id="toc-releasing-for-tapeout" class="nav-link" data-scroll-target="#releasing-for-tapeout"><span class="header-section-number">7.10</span> Releasing for Tapeout</a></li>
+  </ul></li>
+  <li><a href="#sec-exercises" id="toc-sec-exercises" class="nav-link" data-scroll-target="#sec-exercises"><span class="header-section-number">8</span> Additional Exercises</a>
+  <ul class="collapse">
+  <li><a href="#sec-exercise1" id="toc-sec-exercise1" class="nav-link" data-scroll-target="#sec-exercise1"><span class="header-section-number">8.1</span> Exercise 1: From 8-bit Up-Counter to 16-bit Down-Counter</a></li>
+  <li><a href="#sec-exercise2" id="toc-sec-exercise2" class="nav-link" data-scroll-target="#sec-exercise2"><span class="header-section-number">8.2</span> Exercise 2: Inverter to Three-Stage Ring Oscillator</a></li>
+  <li><a href="#sec-exercise3" id="toc-sec-exercise3" class="nav-link" data-scroll-target="#sec-exercise3"><span class="header-section-number">8.3</span> Exercise 3: Update Pinout and Floorplan of the Top-Level</a></li>
+  </ul></li>
+  <li><a href="#acknowledgements" id="toc-acknowledgements" class="nav-link" data-scroll-target="#acknowledgements"><span class="header-section-number">9</span> Acknowledgements</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="{{< meta var.url-repo >}}/edit/main/index.qmd" class="toc-action"><i class="bi bi-git"></i>Edit this page</a></li><li><a href="{{< meta var.url-repo >}}/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div><div class="quarto-alternate-formats"><h2>Other Formats</h2><ul><li><a href="index.pdf"><i class="bi bi-file-pdf"></i>PDF</a></li></ul></div></nav>
     </div>
@@ -474,7 +481,7 @@ window.Quarto = {
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">May 18, 2026</p>
+      <p class="date">May 19, 2026</p>
     </div>
   </div>
   
@@ -962,8 +969,8 @@ Tip
 <section id="sec-digital" class="level1" data-number="4">
 <h1 data-number="4"><span class="header-section-number">4</span> Digital Macro Implementation</h1>
 <p>The <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/counter/"><code>counter</code></a> macro is the digital reference macro of the template. It is a parameterisable synchronous up-counter with synchronous active-high reset implemented with SystemVerilog in <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/counter/rtl/counter.sv"><code>counter.sv</code></a>. The top-level wrapper <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/counter/rtl/counter_top.sv"><code>counter_top.sv</code></a> converts the chip’s active-low reset to an active-high signal. The default width is 8 bits, so the counter wraps from 255 back to 0.</p>
-<section id="folder-structure" class="level2" data-number="4.1">
-<h2 data-number="4.1" class="anchored" data-anchor-id="folder-structure"><span class="header-section-number">4.1</span> Folder Structure</h2>
+<section id="directory-structure-1" class="level2" data-number="4.1">
+<h2 data-number="4.1" class="anchored" data-anchor-id="directory-structure-1"><span class="header-section-number">4.1</span> Directory Structure</h2>
 <p>The counter design files are located in <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/counter/"><code>macros/counter/</code></a>, the relevant folders are:</p>
 <table class="caption-top table">
 <thead>
@@ -1317,8 +1324,8 @@ Figure&nbsp;6: Plotted Xschem simulation results of <code>counter_top_tb_tran</c
 <li><a href="https://en.wikipedia.org/wiki/Monte_Carlo_method">Monte Carlo</a> simulation of process and mismatch variations with CACE.</li>
 </ul>
 <p>Two instances are used in the chip core. One is used as a 4-channel digital inverter (<code>inverter1</code>), and the other as a 2-channel analog inverter (<code>inverter2</code>). See the <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/doc/specifications.md">chip specifications</a> for the full picture.</p>
-<section id="folder-structure-1" class="level2" data-number="5.1">
-<h2 data-number="5.1" class="anchored" data-anchor-id="folder-structure-1"><span class="header-section-number">5.1</span> Folder Structure</h2>
+<section id="directory-structure-2" class="level2" data-number="5.1">
+<h2 data-number="5.1" class="anchored" data-anchor-id="directory-structure-2"><span class="header-section-number">5.1</span> Directory Structure</h2>
 <p>The inverter design files are located in <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/inverter/"><code>macros/inverter/</code></a>, and the relevant folders are:</p>
 <table class="caption-top table">
 <thead>
@@ -1992,8 +1999,293 @@ Note
 <p>This calls <code>sim-all</code> (Xschem + CACE), <code>klayout-verify-all</code>, <code>magic-verify-all</code>, and <code>build-top</code> in sequence. Depending on the hardware used, a full pass can take a few minutes, especially the CACE simulation step.</p>
 </section>
 </section>
-<section id="sec-top" class="level1" data-number="6">
-<h1 data-number="6"><span class="header-section-number">6</span> Top-Level Implementation</h1>
+<section id="sec-ip" class="level1" data-number="6">
+<h1 data-number="6"><span class="header-section-number">6</span> Bondpad and Logo Implementation</h1>
+<p>The <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/ip/"><code>ip/</code></a> folder holds the three custom IP cells that the top-level chip relies on: a bondpad and two logos. These IPs are generated and require zero hand drawing. Each IP ships with a Python script and Makefile targets that produce the final GDS and LEF, and run KLayout and Magic DRC. This makes it easy to re-spin a different bondpad size or shape, swap the logo image, or move the artwork to another metal layer without touching layout tools.</p>
+<p>The three IP cells covered in this section are:</p>
+<ul>
+<li><a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/ip/sg13g2_ip__bondpad_70x70/"><code>sg13g2_ip__bondpad_70x70</code></a>, a 70 µm × 70 µm square bondpad built from IHP’s <code>SG13_dev</code> KLayout PCell library,</li>
+<li><a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/ip/sg13g2_ip__jku/"><code>sg13g2_ip__jku</code></a>, the <a href="https://www.jku.at/">Johannes Kepler University Linz</a> logo, generated from a PNG image,</li>
+<li><a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/ip/sg13g2_ip__jku_names/"><code>sg13g2_ip__jku_names</code></a>, a companion text block with the names of the institute, generated the same way as the JKU logo.</li>
+</ul>
+<p>All three IPs follow the same folder structure (<code>script/</code>, <code>final/</code>, <code>verification/</code>) and the same Makefile conventions as the digital and analog macros (<code>make help</code>, <code>make all</code>, <code>make clean</code>, <code>make klayout-drc</code>, <code>make magic-drc</code>). The logo folders <code>sg13g2_ip__jku</code> and <code>sg13g2_ip__jku_names</code> have an additional <code>logo/</code> folder that contains the source PNG image.</p>
+<section id="directory-structure-3" class="level2" data-number="6.1">
+<h2 data-number="6.1" class="anchored" data-anchor-id="directory-structure-3"><span class="header-section-number">6.1</span> Directory Structure</h2>
+<p>The IP design files are located in <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/ip/"><code>ip/</code></a>, and the relevant folders are:</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Folder</th>
+<th>Content</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/ip/sg13g2_ip__bondpad_70x70/script/"><code>sg13g2_ip__bondpad_70x70/script/</code></a></td>
+<td>KLayout Python script (<a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/ip/sg13g2_ip__bondpad_70x70/script/bondpad.py"><code>bondpad.py</code></a>) that instantiates the <code>SG13_dev::bondpad</code> PCell and writes the GDS and LEF.</td>
+</tr>
+<tr class="even">
+<td><a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/ip/sg13g2_ip__jku/logo/"><code>sg13g2_ip__jku/logo/</code></a> and <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/ip/sg13g2_ip__jku_names/logo/"><code>sg13g2_ip__jku_names/logo/</code></a></td>
+<td>Source PNG images (<code>jku_logo.png</code>, <code>jku_names.png</code>) for the two logos.</td>
+</tr>
+<tr class="odd">
+<td><a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/ip/sg13g2_ip__jku/script/"><code>sg13g2_ip__jku/script/</code></a> and <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/ip/sg13g2_ip__jku_names/script/"><code>sg13g2_ip__jku_names/script/</code></a></td>
+<td>PNG-to-GDS converter (<a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/ip/sg13g2_ip__jku/script/make_gds.py"><code>make_gds.py</code></a>) shared by both logos.</td>
+</tr>
+<tr class="even">
+<td><code>final/gds/</code>, <code>final/lef/</code>, <code>final/lib/</code>, <code>final/vh/</code></td>
+<td>Build deliverables for top-level integration: GDS, LEF, Liberty, and Verilog blackbox stubs.</td>
+</tr>
+<tr class="odd">
+<td><code>verification/drc/</code></td>
+<td>DRC reports produced by <code>make klayout-drc</code> and <code>make magic-drc</code>.</td>
+</tr>
+</tbody>
+</table>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Tip
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Read the <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/ip/sg13g2_ip__bondpad_70x70/README.md">bondpad README</a>, the <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/ip/sg13g2_ip__jku/README.md">JKU logo README</a>, and the <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/ip/sg13g2_ip__jku_names/README.md">JKU names README</a> first to get familiar with the Makefile targets and parameters. Most of the commands below are also documented there.</p>
+</div>
+</div>
+</section>
+<section id="bondpad-generation" class="level2" data-number="6.2">
+<h2 data-number="6.2" class="anchored" data-anchor-id="bondpad-generation"><span class="header-section-number">6.2</span> Bondpad Generation</h2>
+<p>The bondpad is generated by the Python script <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/ip/sg13g2_ip__bondpad_70x70/script/bondpad.py"><code>script/bondpad.py</code></a>, which runs in KLayout batch mode (<code>klayout -zz</code>). It</p>
+<ol type="1">
+<li>instantiates the <code>bondpad</code> PCell from IHP’s <code>SG13_dev</code> library,</li>
+<li>flattens the PCell into a static top cell,</li>
+<li>writes the layout as a GDSII file, and</li>
+<li>generates a matching LEF macro description for OpenROAD / LibreLane.</li>
+</ol>
+<p>Geometry and metal stack are parametrised through three Makefile variables. The defaults match the chip’s padframe and the SG13G2 PDK defaults.</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Variable</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>DIAMETER</code></td>
+<td><code>70.0</code></td>
+<td>Bondpad diameter / side length in µm.</td>
+</tr>
+<tr class="even">
+<td><code>SHAPE</code></td>
+<td><code>square</code></td>
+<td>Pad geometry. Allowed: <code>square</code>, <code>octagon</code>, <code>circle</code>.</td>
+</tr>
+<tr class="odd">
+<td><code>BOTTOM_METAL</code></td>
+<td><code>3</code></td>
+<td>Lowest metal in the pad stack: <code>1</code>=<code>Metal1</code> .. <code>5</code>=<code>Metal5</code>, <code>6</code>=<code>TopMetal1</code>. Top is fixed to <code>TopMetal2</code>. Default <code>3</code> matches <code>bondpad_bottomMetal</code> in <a href="https://github.com/IHP-GmbH/IHP-Open-PDK/blob/main/ihp-sg13g2/libs.tech/klayout/python/sg13g2_pycell_lib/sg13g2_tech.json"><code>sg13g2_tech.json</code></a>.</td>
+</tr>
+</tbody>
+</table>
+<p>The available Makefile targets for the bondpad are summarised below.</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Target</th>
+<th>What it does</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>bondpad</code></td>
+<td>Generate GDS and LEF via <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/ip/sg13g2_ip__bondpad_70x70/script/bondpad.py"><code>bondpad.py</code></a> (<code>make bondpad [DIAMETER=&lt;um&gt;] [SHAPE=&lt;square\|octagon\|circle&gt;] [BOTTOM_METAL=&lt;1-6&gt;]</code>).</td>
+</tr>
+<tr class="even">
+<td><code>verilog</code></td>
+<td>Generate a Verilog blackbox stub.</td>
+</tr>
+<tr class="odd">
+<td><code>klayout-drc</code></td>
+<td>Run KLayout DRC (<code>make klayout-drc [CELL=&lt;cellname&gt;]</code>).</td>
+</tr>
+<tr class="even">
+<td><code>magic-drc</code></td>
+<td>Run Magic DRC (<code>make magic-drc [CELL=&lt;cellname&gt;]</code>).</td>
+</tr>
+<tr class="odd">
+<td><code>clean</code></td>
+<td>Remove the <code>final/</code> and <code>verification/drc/</code> output directories.</td>
+</tr>
+</tbody>
+</table>
+<p>To execute the <code>clean</code>, <code>bondpad</code>, <code>verilog</code>, <code>klayout-drc</code>, and <code>magic-drc</code> targets in sequence, run:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb24"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> ip/sg13g2_ip__bondpad_70x70</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> all</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>View the bondpad layout in KLayout with:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb25"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="ex">ke</span> final/gds/sg13g2_ip__bondpad_70x70.gds</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div id="fig-bondpad-layout" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-bondpad-layout-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="fig/bondpad_logo/bondpad_layout.png" class="lightbox" data-gallery="quarto-lightbox-gallery-25" title="Figure&nbsp;21: sg13g2_ip__bondpad_70x70 layout in KLayout."><img src="fig/bondpad_logo/bondpad_layout.png" class="img-fluid figure-img" style="width:60.0%"></a>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-bondpad-layout-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;21: <code>sg13g2_ip__bondpad_70x70</code> layout in KLayout.
+</figcaption>
+</figure>
+</div>
+<p>The bondpad goes from <code>Metal3</code> up to <code>TopMetal2</code> by default, but the <code>BOTTOM_METAL</code> Makefile variable can be set to change the lowest metal in the stack. The pad is surrounded by the pad recognition layer <code>dfpad (41, 0)</code>.</p>
+<p>The <code>bondpad</code> target accepts the geometry and metal-stack variables as command-line overrides. For example, to build an octagonal 80 µm bondpad from <code>Metal2</code> up to <code>TopMetal2</code>, run:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb26"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> bondpad DIAMETER=80 SHAPE=octagon BOTTOM_METAL=2</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="logo-generation" class="level2" data-number="6.3">
+<h2 data-number="6.3" class="anchored" data-anchor-id="logo-generation"><span class="header-section-number">6.3</span> Logo Generation</h2>
+<p>Both logo IPs share the same Makefile targets and PNG-to-GDS converter <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/ip/sg13g2_ip__jku/script/make_gds.py"><code>script/make_gds.py</code></a>, built on the <code>klayout.db</code> Python module. The conversion proceeds in five steps:</p>
+<ol type="1">
+<li>Open the source PNG (<code>logo/jku_logo.png</code> or <code>logo/jku_names.png</code>) and convert it to a binary mask using a brightness threshold (default <code>128</code>).</li>
+<li>Optionally invert the mask (<code>--invert</code>) so that the dark logo regions become the foreground.</li>
+<li>For each foreground pixel, draw a square of side <code>--pixel-size</code> µm on the selected metal layer.</li>
+<li>Merge adjacent rectangles into larger polygons (<code>--merge</code>) to keep the GDS small and DRC-friendly.</li>
+<li>Add the block-bounding rectangle on the boundary layers <code>prBoundary</code> (<code>189/0</code>) and <code>NoMetFiller</code> (<code>160/0</code>).</li>
+</ol>
+<p>The Makefile derives the foreground GDS layer number (e.g.&nbsp;<code>67/0</code> for <code>Metal5</code>) and the LEF obstruction layer name from the same <code>LAYER</code> variable, so the artwork in the GDS and the blockage exposed to the router always stay consistent.</p>
+<p>Both logos share the same set of Makefile variables as shown below. The <code>jku_names</code> logo uses a finer standard pixel size to ensure the readability of the smaller text elements.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 9%">
+<col style="width: 20%">
+<col style="width: 69%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Variable</th>
+<th>Default (<code>jku</code> / <code>jku_names</code>)</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>IMG_SIZE_PX</code></td>
+<td><code>750</code> / <code>750</code></td>
+<td>Source image side length in pixels. Used to compute the scale factor automatically.</td>
+</tr>
+<tr class="even">
+<td><code>BLOCK_SIZE</code></td>
+<td><code>100</code> / <code>100</code></td>
+<td>Physical side length of the rendered logo in µm.</td>
+</tr>
+<tr class="odd">
+<td><code>PIXEL_SIZE</code></td>
+<td><code>0.50</code> / <code>0.25</code></td>
+<td>Edge of one rendered pixel in µm. Must stay ≥ the layer’s minimum width (<code>0.21</code> µm on <code>Metal5</code>).</td>
+</tr>
+<tr class="even">
+<td><code>LAYER</code></td>
+<td><code>Metal5</code> / <code>Metal5</code></td>
+<td>Foreground metal layer. One of <code>Metal1</code>..<code>Metal5</code>, <code>TopMetal1</code>, <code>TopMetal2</code>.</td>
+</tr>
+</tbody>
+</table>
+<p>The image scale factor is computed automatically as <code>BLOCK_SIZE / (IMG_SIZE_PX * PIXEL_SIZE)</code>, so changing any of the three keeps the rendered block at the target physical size.</p>
+<p>The available Makefile targets for the logos are summarised below.</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Target</th>
+<th>What it does</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>logo</code></td>
+<td>Convert the PNG into a GDSII layout using <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/ip/sg13g2_ip__jku/script/make_gds.py"><code>make_gds.py</code></a>.</td>
+</tr>
+<tr class="even">
+<td><code>lef</code></td>
+<td>Emit a minimal LEF macro (<code>CLASS BLOCK</code>, full-area <code>OBS</code> on <code>LAYER_NAME</code>).</td>
+</tr>
+<tr class="odd">
+<td><code>lib</code></td>
+<td>Emit a Liberty timing stub (empty cell) so the LibreLane flow can pick the cell up.</td>
+</tr>
+<tr class="even">
+<td><code>verilog</code></td>
+<td>Emit a Verilog blackbox stub (<code>module sg13g2_ip__jku;</code>) with no ports.</td>
+</tr>
+<tr class="odd">
+<td><code>klayout-drc</code></td>
+<td>Run KLayout DRC (same relaxed rule-set as the bondpad).</td>
+</tr>
+<tr class="even">
+<td><code>magic-drc</code></td>
+<td>Run Magic DRC.</td>
+</tr>
+<tr class="odd">
+<td><code>clean</code></td>
+<td>Remove <code>final/</code> and <code>verification/drc/</code>.</td>
+</tr>
+</tbody>
+</table>
+<p>To execute the <code>clean</code>, <code>logo</code>, <code>lef</code>, <code>lib</code>, <code>verilog</code>, <code>klayout-drc</code>, and <code>magic-drc</code> targets in sequence, run:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb27"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> ip/sg13g2_ip__jku                <span class="co"># or ip/sg13g2_ip__jku_names</span></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> all</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>View the JKU logo or JKU names layout in KLayout with:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb28"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="ex">ke</span> final/gds/sg13g2_ip__jku.gds     <span class="co"># or sg13g2_ip__jku_names.gds</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div id="fig-jku-logo-layout" class="quarto-layout-panel">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-jku-logo-layout-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="quarto-layout-row">
+<div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><a href="fig/bondpad_logo/jku_logo.png" class="lightbox" data-gallery="quarto-lightbox-gallery-26" title="sg13g2_ip__jku logo."><img src="fig/bondpad_logo/jku_logo.png" class="img-fluid figure-img" style="width:100.0%"></a></p>
+<figcaption><code>sg13g2_ip__jku</code> logo.</figcaption>
+</figure>
+</div>
+</div>
+<div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><a href="fig/bondpad_logo/jku_logo_layout.png" class="lightbox" data-gallery="quarto-lightbox-gallery-27" title="sg13g2_ip__jku layout in KLayout."><img src="fig/bondpad_logo/jku_logo_layout.png" class="img-fluid figure-img" style="width:100.0%"></a></p>
+<figcaption><code>sg13g2_ip__jku</code> layout in KLayout.</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-jku-logo-layout-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;22: <code>sg13g2_ip__jku</code> logo (left) and <code>sg13g2_ip__jku</code> layout in KLayout (right).
+</figcaption>
+</figure>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Tip
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>To replace the logo with your own artwork, drop a square PNG image into <code>logo/</code> and either rename it to <code>jku_logo.png</code> / <code>jku_names.png</code>, or override <code>IMG_FILE</code> in the Makefile. A clean black-on-white image with a few hundred pixels per side and high contrast works best.</p>
+</div>
+</div>
+</section>
+<section id="build-from-the-top-level" class="level2" data-number="6.4">
+<h2 data-number="6.4" class="anchored" data-anchor-id="build-from-the-top-level"><span class="header-section-number">6.4</span> Build from the Top-Level</h2>
+<p>For top-level assembly, the <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/Makefile">top-level Makefile</a> exposes two wrapper targets that descend into the IP folders and call <code>make all</code>:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb29"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> build-bondpad      <span class="co"># build ip/sg13g2_ip__bondpad_70x70</span></span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> build-logos        <span class="co"># build ip/sg13g2_ip__jku and ip/sg13g2_ip__jku_names</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Both targets are part of <code>make build-all</code> (see <a href="#sec-top" class="quarto-xref">Section&nbsp;7</a>), so the IP cells are refreshed automatically before the chip is hardened with LibreLane. The generated GDS, LEF, Verilog stub and Liberty files are referenced by <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/flow/librelane/config.yaml"><code>flow/librelane/config.yaml</code></a> when assembling the chip top-level. Furthermore, the Verilog stubs are instantiated in <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/rtl/chip_top.sv"><code>rtl/chip_top.sv</code></a>.</p>
+</section>
+</section>
+<section id="sec-top" class="level1" data-number="7">
+<h1 data-number="7"><span class="header-section-number">7</span> Top-Level Implementation</h1>
 <p>This section covers the top-level assembly and padframe generation. The top-level files that need to be understood and modified for a new chip are:</p>
 <ul>
 <li><a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/rtl/chip_top.sv"><code>rtl/chip_top.sv</code></a>, the padframe wrapper. It instantiates one I/O cell per pad and exposes the global <code>clk_PAD</code>, <code>rst_n_PAD</code>, <code>input_PAD</code>, <code>output_PAD</code>, <code>bidir_PAD</code>, and <code>analog_PAD</code> signals.</li>
@@ -2003,28 +2295,28 @@ Note
 <li><a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/flow/librelane/chip_top.sdc"><code>flow/librelane/chip_top.sdc</code></a>, timing constraints (clock period, input/output delays).</li>
 <li>Reference documentation for the chip, <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/doc/specifications.md">specifications.md</a>, <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/doc/pinout.md">pinout.md</a>, and <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/doc/floorplan.md">floorplan.md</a>.</li>
 </ul>
-<section id="understanding-chip_top.sv" class="level2" data-number="6.1">
-<h2 data-number="6.1" class="anchored" data-anchor-id="understanding-chip_top.sv"><span class="header-section-number">6.1</span> Understanding <code>chip_top.sv</code></h2>
+<section id="understanding-chip_top.sv" class="level2" data-number="7.1">
+<h2 data-number="7.1" class="anchored" data-anchor-id="understanding-chip_top.sv"><span class="header-section-number">7.1</span> Understanding <code>chip_top.sv</code></h2>
 <p>The padframe wrapper <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/rtl/chip_top.sv"><code>chip_top.sv</code></a> declares the chip’s parameters and ports. The parameter block at the top of the module controls the number of pads of each type and is the place to update when the pinout changes.</p>
 <div class="code-with-filename">
 <div class="code-with-filename-file">
 <pre><strong>rtl/chip_top.sv (code snippet)</strong></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb24" data-filename="rtl/chip_top.sv (code snippet)"><pre class="sourceCode systemverilog code-with-copy"><code class="sourceCode systemverilog"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="kw">module</span> chip_top #(</span>
-<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Power / ground pads for digital core / analog front-end</span></span>
-<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>    <span class="kw">parameter</span> <span class="kw">int</span> <span class="kw">unsigned</span> NUM_VDD_PADS    = <span class="dv">1</span>,</span>
-<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>    <span class="kw">parameter</span> <span class="kw">int</span> <span class="kw">unsigned</span> NUM_VSS_PADS    = <span class="dv">1</span>,</span>
-<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Power / ground pads for I/O</span></span>
-<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>    <span class="kw">parameter</span> <span class="kw">int</span> <span class="kw">unsigned</span> NUM_IOVDD_PADS  = <span class="dv">1</span>,</span>
-<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a>    <span class="kw">parameter</span> <span class="kw">int</span> <span class="kw">unsigned</span> NUM_IOVSS_PADS  = <span class="dv">1</span>,</span>
-<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Signal pads</span></span>
-<span id="cb24-11"><a href="#cb24-11" aria-hidden="true" tabindex="-1"></a>    <span class="kw">parameter</span> <span class="kw">int</span> <span class="kw">unsigned</span> NUM_INPUT_PADS  = <span class="dv">1</span>,  <span class="co">// excluding clock and reset pads</span></span>
-<span id="cb24-12"><a href="#cb24-12" aria-hidden="true" tabindex="-1"></a>    <span class="kw">parameter</span> <span class="kw">int</span> <span class="kw">unsigned</span> NUM_OUTPUT_PADS = <span class="dv">17</span>,</span>
-<span id="cb24-13"><a href="#cb24-13" aria-hidden="true" tabindex="-1"></a>    <span class="kw">parameter</span> <span class="kw">int</span> <span class="kw">unsigned</span> NUM_BIDIR_PADS  = <span class="dv">4</span>,</span>
-<span id="cb24-14"><a href="#cb24-14" aria-hidden="true" tabindex="-1"></a>    <span class="kw">parameter</span> <span class="kw">int</span> <span class="kw">unsigned</span> NUM_ANALOG_PADS = <span class="dv">4</span></span>
-<span id="cb24-15"><a href="#cb24-15" aria-hidden="true" tabindex="-1"></a>) ( ... );</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb30" data-filename="rtl/chip_top.sv (code snippet)"><pre class="sourceCode systemverilog code-with-copy"><code class="sourceCode systemverilog"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="kw">module</span> chip_top #(</span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Power / ground pads for digital core / analog front-end</span></span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>    <span class="kw">parameter</span> <span class="kw">int</span> <span class="kw">unsigned</span> NUM_VDD_PADS    = <span class="dv">1</span>,</span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>    <span class="kw">parameter</span> <span class="kw">int</span> <span class="kw">unsigned</span> NUM_VSS_PADS    = <span class="dv">1</span>,</span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Power / ground pads for I/O</span></span>
+<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a>    <span class="kw">parameter</span> <span class="kw">int</span> <span class="kw">unsigned</span> NUM_IOVDD_PADS  = <span class="dv">1</span>,</span>
+<span id="cb30-8"><a href="#cb30-8" aria-hidden="true" tabindex="-1"></a>    <span class="kw">parameter</span> <span class="kw">int</span> <span class="kw">unsigned</span> NUM_IOVSS_PADS  = <span class="dv">1</span>,</span>
+<span id="cb30-9"><a href="#cb30-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-10"><a href="#cb30-10" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Signal pads</span></span>
+<span id="cb30-11"><a href="#cb30-11" aria-hidden="true" tabindex="-1"></a>    <span class="kw">parameter</span> <span class="kw">int</span> <span class="kw">unsigned</span> NUM_INPUT_PADS  = <span class="dv">1</span>,  <span class="co">// excluding clock and reset pads</span></span>
+<span id="cb30-12"><a href="#cb30-12" aria-hidden="true" tabindex="-1"></a>    <span class="kw">parameter</span> <span class="kw">int</span> <span class="kw">unsigned</span> NUM_OUTPUT_PADS = <span class="dv">17</span>,</span>
+<span id="cb30-13"><a href="#cb30-13" aria-hidden="true" tabindex="-1"></a>    <span class="kw">parameter</span> <span class="kw">int</span> <span class="kw">unsigned</span> NUM_BIDIR_PADS  = <span class="dv">4</span>,</span>
+<span id="cb30-14"><a href="#cb30-14" aria-hidden="true" tabindex="-1"></a>    <span class="kw">parameter</span> <span class="kw">int</span> <span class="kw">unsigned</span> NUM_ANALOG_PADS = <span class="dv">4</span></span>
+<span id="cb30-15"><a href="#cb30-15" aria-hidden="true" tabindex="-1"></a>) ( ... );</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>The remaining code does not need to be modified for a pinout change, since the <code>generate</code> blocks automatically instantiate the correct number of I/O cells based on the parameter values. One <code>generate</code> block per pad type (<code>vdd_pads</code>, <code>vss_pads</code>, <code>iovdd_pads</code>, <code>iovss_pads</code>, <code>inputs</code>, <code>outputs</code>, <code>bidirs</code>, <code>analogs</code>) instantiates the matching IHP I/O cell, plus single instances for the clock and reset pads. An example code snippet of the input pad generation with a <code>generate</code> block is shown below. The <code>input_PAD</code> signals are exposed as ports of the <code>chip_top</code> module and are connected to the pads of the I/O cell, while the <code>input_PAD2CORE</code> signals are connected to the internal core logic in <code>chip_core.sv</code>. The same structure, or a very similar one, applies to the other pad types.</p>
 <div class="callout callout-style-default callout-note callout-titled">
@@ -2044,20 +2336,20 @@ Note
 <div class="code-with-filename-file">
 <pre><strong>rtl/chip_top.sv (code snippet)</strong></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb25" data-filename="rtl/chip_top.sv (code snippet)"><pre class="sourceCode systemverilog code-with-copy"><code class="sourceCode systemverilog"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="kw">generate</span></span>
-<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">for</span> (<span class="kw">genvar</span> i = <span class="dv">0</span>; i &lt; NUM_INPUT_PADS; i++) <span class="kw">begin :</span><span class="dt"> </span><span class="kw">g_inputs</span></span>
-<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>        sg13g2_IOPadIn input_pad (</span>
-<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>            <span class="ot">`ifdef</span> USE_POWER_PINS</span>
-<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>            .iovdd (IOVDD),</span>
-<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>            .iovss (IOVSS),</span>
-<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>            .vdd   (VDD),</span>
-<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a>            .vss   (VSS),</span>
-<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a>            <span class="ot">`endif</span></span>
-<span id="cb25-10"><a href="#cb25-10" aria-hidden="true" tabindex="-1"></a>            .p2c   (input_PAD2CORE[i]),</span>
-<span id="cb25-11"><a href="#cb25-11" aria-hidden="true" tabindex="-1"></a>            .pad   (input_PAD[i])</span>
-<span id="cb25-12"><a href="#cb25-12" aria-hidden="true" tabindex="-1"></a>        );</span>
-<span id="cb25-13"><a href="#cb25-13" aria-hidden="true" tabindex="-1"></a>    <span class="kw">end</span></span>
-<span id="cb25-14"><a href="#cb25-14" aria-hidden="true" tabindex="-1"></a><span class="kw">endgenerate</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb31" data-filename="rtl/chip_top.sv (code snippet)"><pre class="sourceCode systemverilog code-with-copy"><code class="sourceCode systemverilog"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="kw">generate</span></span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">for</span> (<span class="kw">genvar</span> i = <span class="dv">0</span>; i &lt; NUM_INPUT_PADS; i++) <span class="kw">begin :</span><span class="dt"> </span><span class="kw">g_inputs</span></span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>        sg13g2_IOPadIn input_pad (</span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>            <span class="ot">`ifdef</span> USE_POWER_PINS</span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a>            .iovdd (IOVDD),</span>
+<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a>            .iovss (IOVSS),</span>
+<span id="cb31-7"><a href="#cb31-7" aria-hidden="true" tabindex="-1"></a>            .vdd   (VDD),</span>
+<span id="cb31-8"><a href="#cb31-8" aria-hidden="true" tabindex="-1"></a>            .vss   (VSS),</span>
+<span id="cb31-9"><a href="#cb31-9" aria-hidden="true" tabindex="-1"></a>            <span class="ot">`endif</span></span>
+<span id="cb31-10"><a href="#cb31-10" aria-hidden="true" tabindex="-1"></a>            .p2c   (input_PAD2CORE[i]),</span>
+<span id="cb31-11"><a href="#cb31-11" aria-hidden="true" tabindex="-1"></a>            .pad   (input_PAD[i])</span>
+<span id="cb31-12"><a href="#cb31-12" aria-hidden="true" tabindex="-1"></a>        );</span>
+<span id="cb31-13"><a href="#cb31-13" aria-hidden="true" tabindex="-1"></a>    <span class="kw">end</span></span>
+<span id="cb31-14"><a href="#cb31-14" aria-hidden="true" tabindex="-1"></a><span class="kw">endgenerate</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -2084,109 +2376,109 @@ Note
 <div class="code-with-filename-file">
 <pre><strong>rtl/chip_top.sv (code snippet)</strong></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb26" data-filename="rtl/chip_top.sv (code snippet)"><pre class="sourceCode systemverilog code-with-copy"><code class="sourceCode systemverilog"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="kw">generate</span></span>
-<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">for</span> (<span class="kw">genvar</span> i = <span class="dv">0</span>; i &lt; NUM_ANALOG_PADS; i++) <span class="kw">begin :</span><span class="dt"> </span><span class="kw">g_analogs</span></span>
-<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>        (* keep *)</span>
-<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>        sg13g2_IOPadAnalog analog_pad (</span>
-<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>            <span class="ot">`ifdef</span> USE_POWER_PINS</span>
-<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>            .iovdd   (IOVDD),</span>
-<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a>            .iovss   (IOVSS),</span>
-<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a>            .vdd     (VDD),</span>
-<span id="cb26-9"><a href="#cb26-9" aria-hidden="true" tabindex="-1"></a>            .vss     (VSS),</span>
-<span id="cb26-10"><a href="#cb26-10" aria-hidden="true" tabindex="-1"></a>            <span class="ot">`endif</span></span>
-<span id="cb26-11"><a href="#cb26-11" aria-hidden="true" tabindex="-1"></a>            .pad     (analog_PAD[i]),</span>
-<span id="cb26-12"><a href="#cb26-12" aria-hidden="true" tabindex="-1"></a>            .padres  (analog_PADRES[i]),</span>
-<span id="cb26-13"><a href="#cb26-13" aria-hidden="true" tabindex="-1"></a>            .padbare (analog_PADBARE[i])</span>
-<span id="cb26-14"><a href="#cb26-14" aria-hidden="true" tabindex="-1"></a>        );</span>
-<span id="cb26-15"><a href="#cb26-15" aria-hidden="true" tabindex="-1"></a>    <span class="kw">end</span></span>
-<span id="cb26-16"><a href="#cb26-16" aria-hidden="true" tabindex="-1"></a><span class="kw">endgenerate</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb32" data-filename="rtl/chip_top.sv (code snippet)"><pre class="sourceCode systemverilog code-with-copy"><code class="sourceCode systemverilog"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="kw">generate</span></span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">for</span> (<span class="kw">genvar</span> i = <span class="dv">0</span>; i &lt; NUM_ANALOG_PADS; i++) <span class="kw">begin :</span><span class="dt"> </span><span class="kw">g_analogs</span></span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>        (* keep *)</span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a>        sg13g2_IOPadAnalog analog_pad (</span>
+<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a>            <span class="ot">`ifdef</span> USE_POWER_PINS</span>
+<span id="cb32-6"><a href="#cb32-6" aria-hidden="true" tabindex="-1"></a>            .iovdd   (IOVDD),</span>
+<span id="cb32-7"><a href="#cb32-7" aria-hidden="true" tabindex="-1"></a>            .iovss   (IOVSS),</span>
+<span id="cb32-8"><a href="#cb32-8" aria-hidden="true" tabindex="-1"></a>            .vdd     (VDD),</span>
+<span id="cb32-9"><a href="#cb32-9" aria-hidden="true" tabindex="-1"></a>            .vss     (VSS),</span>
+<span id="cb32-10"><a href="#cb32-10" aria-hidden="true" tabindex="-1"></a>            <span class="ot">`endif</span></span>
+<span id="cb32-11"><a href="#cb32-11" aria-hidden="true" tabindex="-1"></a>            .pad     (analog_PAD[i]),</span>
+<span id="cb32-12"><a href="#cb32-12" aria-hidden="true" tabindex="-1"></a>            .padres  (analog_PADRES[i]),</span>
+<span id="cb32-13"><a href="#cb32-13" aria-hidden="true" tabindex="-1"></a>            .padbare (analog_PADBARE[i])</span>
+<span id="cb32-14"><a href="#cb32-14" aria-hidden="true" tabindex="-1"></a>        );</span>
+<span id="cb32-15"><a href="#cb32-15" aria-hidden="true" tabindex="-1"></a>    <span class="kw">end</span></span>
+<span id="cb32-16"><a href="#cb32-16" aria-hidden="true" tabindex="-1"></a><span class="kw">endgenerate</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </div>
 </section>
-<section id="understanding-chip_core.sv" class="level2" data-number="6.2">
-<h2 data-number="6.2" class="anchored" data-anchor-id="understanding-chip_core.sv"><span class="header-section-number">6.2</span> Understanding <code>chip_core.sv</code></h2>
+<section id="understanding-chip_core.sv" class="level2" data-number="7.2">
+<h2 data-number="7.2" class="anchored" data-anchor-id="understanding-chip_core.sv"><span class="header-section-number">7.2</span> Understanding <code>chip_core.sv</code></h2>
 <p>The core <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/rtl/chip_core.sv"><code>chip_core.sv</code></a> is where the macros are instantiated and wired to the chip’s I/O pads. The <code>enable</code> signal is mapped to <code>input_PAD[0]</code>, the two <code>counter_top</code> instances share the clock and reset, the two <code>inverter_top</code> instances are wired up (one digital, one analog), and the SRAM output is XOR-reduced to a single bit on <code>output_PAD[16]</code>. The input and output assignments at the top and bottom of the file correspond to the bit-to-role mapping documented in <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/doc/pinout.md">pinout.md</a>. For improved clarity, every assignment is written on a separate line. Advanced designers can also use bus notation for more compact code.</p>
 <div class="code-with-filename">
 <div class="code-with-filename-file">
 <pre><strong>rtl/chip_core.sv (code snippet)</strong></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb27" data-filename="rtl/chip_core.sv (code snippet)"><pre class="sourceCode systemverilog code-with-copy"><code class="sourceCode systemverilog"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="co">// ======================================================</span></span>
-<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="co">// Input Assignments</span></span>
-<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a><span class="co">// ======================================================</span></span>
-<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a><span class="kw">logic</span> enable;</span>
-<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a><span class="kw">assign</span> enable = input_in[<span class="dv">0</span>];</span>
-<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a><span class="co">// Inverter 1</span></span>
-<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a><span class="kw">wire</span> inv1_din1 = bidir_in[<span class="dv">0</span>];</span>
-<span id="cb27-9"><a href="#cb27-9" aria-hidden="true" tabindex="-1"></a><span class="kw">wire</span> inv1_din2 = bidir_in[<span class="dv">1</span>];</span>
-<span id="cb27-10"><a href="#cb27-10" aria-hidden="true" tabindex="-1"></a><span class="kw">wire</span> inv1_din3 = bidir_in[<span class="dv">2</span>];</span>
-<span id="cb27-11"><a href="#cb27-11" aria-hidden="true" tabindex="-1"></a><span class="kw">wire</span> inv1_din4 = bidir_in[<span class="dv">3</span>];</span>
-<span id="cb27-12"><a href="#cb27-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb27-13"><a href="#cb27-13" aria-hidden="true" tabindex="-1"></a><span class="co">// Inverter 2</span></span>
-<span id="cb27-14"><a href="#cb27-14" aria-hidden="true" tabindex="-1"></a><span class="kw">wire</span> inv2_vin1 = analog_padres[<span class="dv">0</span>];</span>
-<span id="cb27-15"><a href="#cb27-15" aria-hidden="true" tabindex="-1"></a><span class="kw">wire</span> inv2_vin2 = analog_padres[<span class="dv">1</span>];</span>
-<span id="cb27-16"><a href="#cb27-16" aria-hidden="true" tabindex="-1"></a><span class="co">// ======================================================</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb33" data-filename="rtl/chip_core.sv (code snippet)"><pre class="sourceCode systemverilog code-with-copy"><code class="sourceCode systemverilog"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="co">// ======================================================</span></span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a><span class="co">// Input Assignments</span></span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a><span class="co">// ======================================================</span></span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a><span class="kw">logic</span> enable;</span>
+<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a><span class="kw">assign</span> enable = input_in[<span class="dv">0</span>];</span>
+<span id="cb33-6"><a href="#cb33-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-7"><a href="#cb33-7" aria-hidden="true" tabindex="-1"></a><span class="co">// Inverter 1</span></span>
+<span id="cb33-8"><a href="#cb33-8" aria-hidden="true" tabindex="-1"></a><span class="kw">wire</span> inv1_din1 = bidir_in[<span class="dv">0</span>];</span>
+<span id="cb33-9"><a href="#cb33-9" aria-hidden="true" tabindex="-1"></a><span class="kw">wire</span> inv1_din2 = bidir_in[<span class="dv">1</span>];</span>
+<span id="cb33-10"><a href="#cb33-10" aria-hidden="true" tabindex="-1"></a><span class="kw">wire</span> inv1_din3 = bidir_in[<span class="dv">2</span>];</span>
+<span id="cb33-11"><a href="#cb33-11" aria-hidden="true" tabindex="-1"></a><span class="kw">wire</span> inv1_din4 = bidir_in[<span class="dv">3</span>];</span>
+<span id="cb33-12"><a href="#cb33-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-13"><a href="#cb33-13" aria-hidden="true" tabindex="-1"></a><span class="co">// Inverter 2</span></span>
+<span id="cb33-14"><a href="#cb33-14" aria-hidden="true" tabindex="-1"></a><span class="kw">wire</span> inv2_vin1 = analog_padres[<span class="dv">0</span>];</span>
+<span id="cb33-15"><a href="#cb33-15" aria-hidden="true" tabindex="-1"></a><span class="kw">wire</span> inv2_vin2 = analog_padres[<span class="dv">1</span>];</span>
+<span id="cb33-16"><a href="#cb33-16" aria-hidden="true" tabindex="-1"></a><span class="co">// ======================================================</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="code-with-filename">
 <div class="code-with-filename-file">
 <pre><strong>rtl/chip_core.sv (code snippet)</strong></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb28" data-filename="rtl/chip_core.sv (code snippet)"><pre class="sourceCode systemverilog code-with-copy"><code class="sourceCode systemverilog"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="co">// ======================================================</span></span>
-<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a><span class="co">// Output Assignments</span></span>
-<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a><span class="co">// ======================================================</span></span>
-<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a><span class="co">// Digital outputs</span></span>
-<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a><span class="co">// Counter 1</span></span>
-<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a><span class="kw">assign</span> output_out[<span class="dv">0</span>]  = counter1_value[<span class="dv">0</span>];</span>
-<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a><span class="kw">assign</span> output_out[<span class="dv">1</span>]  = counter1_value[<span class="dv">1</span>];</span>
-<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a><span class="kw">assign</span> output_out[<span class="dv">2</span>]  = counter1_value[<span class="dv">2</span>];</span>
-<span id="cb28-9"><a href="#cb28-9" aria-hidden="true" tabindex="-1"></a><span class="kw">assign</span> output_out[<span class="dv">3</span>]  = counter1_value[<span class="dv">3</span>];</span>
-<span id="cb28-10"><a href="#cb28-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-11"><a href="#cb28-11" aria-hidden="true" tabindex="-1"></a><span class="co">// Counter 2</span></span>
-<span id="cb28-12"><a href="#cb28-12" aria-hidden="true" tabindex="-1"></a><span class="kw">assign</span> output_out[<span class="dv">4</span>]  = counter2_value[<span class="dv">0</span>];</span>
-<span id="cb28-13"><a href="#cb28-13" aria-hidden="true" tabindex="-1"></a><span class="kw">assign</span> output_out[<span class="dv">5</span>]  = counter2_value[<span class="dv">1</span>];</span>
-<span id="cb28-14"><a href="#cb28-14" aria-hidden="true" tabindex="-1"></a><span class="kw">assign</span> output_out[<span class="dv">6</span>]  = counter2_value[<span class="dv">2</span>];</span>
-<span id="cb28-15"><a href="#cb28-15" aria-hidden="true" tabindex="-1"></a><span class="kw">assign</span> output_out[<span class="dv">7</span>]  = counter2_value[<span class="dv">3</span>];</span>
-<span id="cb28-16"><a href="#cb28-16" aria-hidden="true" tabindex="-1"></a><span class="kw">assign</span> output_out[<span class="dv">8</span>]  = counter2_value[<span class="dv">4</span>];</span>
-<span id="cb28-17"><a href="#cb28-17" aria-hidden="true" tabindex="-1"></a><span class="kw">assign</span> output_out[<span class="dv">9</span>]  = counter2_value[<span class="dv">5</span>];</span>
-<span id="cb28-18"><a href="#cb28-18" aria-hidden="true" tabindex="-1"></a><span class="kw">assign</span> output_out[<span class="dv">10</span>] = counter2_value[<span class="dv">6</span>];</span>
-<span id="cb28-19"><a href="#cb28-19" aria-hidden="true" tabindex="-1"></a><span class="kw">assign</span> output_out[<span class="dv">11</span>] = counter2_value[<span class="dv">7</span>];</span>
-<span id="cb28-20"><a href="#cb28-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-21"><a href="#cb28-21" aria-hidden="true" tabindex="-1"></a><span class="co">// Inverter 1</span></span>
-<span id="cb28-22"><a href="#cb28-22" aria-hidden="true" tabindex="-1"></a><span class="kw">assign</span> output_out[<span class="dv">12</span>] = inv1_dout1;</span>
-<span id="cb28-23"><a href="#cb28-23" aria-hidden="true" tabindex="-1"></a><span class="kw">assign</span> output_out[<span class="dv">13</span>] = inv1_dout2;</span>
-<span id="cb28-24"><a href="#cb28-24" aria-hidden="true" tabindex="-1"></a><span class="kw">assign</span> output_out[<span class="dv">14</span>] = inv1_dout3;</span>
-<span id="cb28-25"><a href="#cb28-25" aria-hidden="true" tabindex="-1"></a><span class="kw">assign</span> output_out[<span class="dv">15</span>] = inv1_dout4;</span>
-<span id="cb28-26"><a href="#cb28-26" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-27"><a href="#cb28-27" aria-hidden="true" tabindex="-1"></a><span class="co">// SRAM</span></span>
-<span id="cb28-28"><a href="#cb28-28" aria-hidden="true" tabindex="-1"></a><span class="co">// Reduce the 32-bit SRAM output to a single bit by computing the parity.</span></span>
-<span id="cb28-29"><a href="#cb28-29" aria-hidden="true" tabindex="-1"></a><span class="co">// output_out[16] = 1 when an odd number of bits in sram_0_out are 1.</span></span>
-<span id="cb28-30"><a href="#cb28-30" aria-hidden="true" tabindex="-1"></a><span class="co">// output_out[16] = 0 when an even number of bits in sram_0_out are 1.</span></span>
-<span id="cb28-31"><a href="#cb28-31" aria-hidden="true" tabindex="-1"></a><span class="kw">assign</span> output_out[<span class="dv">16</span>] = ^sram_0_out;</span>
-<span id="cb28-32"><a href="#cb28-32" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-33"><a href="#cb28-33" aria-hidden="true" tabindex="-1"></a><span class="co">// Digital bidirectionals (output side)</span></span>
-<span id="cb28-34"><a href="#cb28-34" aria-hidden="true" tabindex="-1"></a><span class="co">// Bidir output enable: drive when `enable` is high (counter visible),</span></span>
-<span id="cb28-35"><a href="#cb28-35" aria-hidden="true" tabindex="-1"></a><span class="co">// float as input when low (so external stimuli can drive inverter1).</span></span>
-<span id="cb28-36"><a href="#cb28-36" aria-hidden="true" tabindex="-1"></a><span class="kw">assign</span> bidir_out[<span class="dv">0</span>] = counter1_value[<span class="dv">4</span>];</span>
-<span id="cb28-37"><a href="#cb28-37" aria-hidden="true" tabindex="-1"></a><span class="kw">assign</span> bidir_oe[<span class="dv">0</span>]  = enable;</span>
-<span id="cb28-38"><a href="#cb28-38" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-39"><a href="#cb28-39" aria-hidden="true" tabindex="-1"></a><span class="kw">assign</span> bidir_out[<span class="dv">1</span>] = counter1_value[<span class="dv">5</span>];</span>
-<span id="cb28-40"><a href="#cb28-40" aria-hidden="true" tabindex="-1"></a><span class="kw">assign</span> bidir_oe[<span class="dv">1</span>]  = enable;</span>
-<span id="cb28-41"><a href="#cb28-41" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-42"><a href="#cb28-42" aria-hidden="true" tabindex="-1"></a><span class="kw">assign</span> bidir_out[<span class="dv">2</span>] = counter1_value[<span class="dv">6</span>];</span>
-<span id="cb28-43"><a href="#cb28-43" aria-hidden="true" tabindex="-1"></a><span class="kw">assign</span> bidir_oe[<span class="dv">2</span>]  = enable;</span>
-<span id="cb28-44"><a href="#cb28-44" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-45"><a href="#cb28-45" aria-hidden="true" tabindex="-1"></a><span class="kw">assign</span> bidir_out[<span class="dv">3</span>] = counter1_value[<span class="dv">7</span>];</span>
-<span id="cb28-46"><a href="#cb28-46" aria-hidden="true" tabindex="-1"></a><span class="kw">assign</span> bidir_oe[<span class="dv">3</span>]  = enable;</span>
-<span id="cb28-47"><a href="#cb28-47" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-48"><a href="#cb28-48" aria-hidden="true" tabindex="-1"></a><span class="co">// Analog outputs</span></span>
-<span id="cb28-49"><a href="#cb28-49" aria-hidden="true" tabindex="-1"></a><span class="kw">assign</span> analog_padbare[<span class="dv">2</span>] = inv2_vout1;</span>
-<span id="cb28-50"><a href="#cb28-50" aria-hidden="true" tabindex="-1"></a><span class="kw">assign</span> analog_padbare[<span class="dv">3</span>] = inv2_vout2;</span>
-<span id="cb28-51"><a href="#cb28-51" aria-hidden="true" tabindex="-1"></a><span class="co">// ======================================================</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb34" data-filename="rtl/chip_core.sv (code snippet)"><pre class="sourceCode systemverilog code-with-copy"><code class="sourceCode systemverilog"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="co">// ======================================================</span></span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a><span class="co">// Output Assignments</span></span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a><span class="co">// ======================================================</span></span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a><span class="co">// Digital outputs</span></span>
+<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a><span class="co">// Counter 1</span></span>
+<span id="cb34-6"><a href="#cb34-6" aria-hidden="true" tabindex="-1"></a><span class="kw">assign</span> output_out[<span class="dv">0</span>]  = counter1_value[<span class="dv">0</span>];</span>
+<span id="cb34-7"><a href="#cb34-7" aria-hidden="true" tabindex="-1"></a><span class="kw">assign</span> output_out[<span class="dv">1</span>]  = counter1_value[<span class="dv">1</span>];</span>
+<span id="cb34-8"><a href="#cb34-8" aria-hidden="true" tabindex="-1"></a><span class="kw">assign</span> output_out[<span class="dv">2</span>]  = counter1_value[<span class="dv">2</span>];</span>
+<span id="cb34-9"><a href="#cb34-9" aria-hidden="true" tabindex="-1"></a><span class="kw">assign</span> output_out[<span class="dv">3</span>]  = counter1_value[<span class="dv">3</span>];</span>
+<span id="cb34-10"><a href="#cb34-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-11"><a href="#cb34-11" aria-hidden="true" tabindex="-1"></a><span class="co">// Counter 2</span></span>
+<span id="cb34-12"><a href="#cb34-12" aria-hidden="true" tabindex="-1"></a><span class="kw">assign</span> output_out[<span class="dv">4</span>]  = counter2_value[<span class="dv">0</span>];</span>
+<span id="cb34-13"><a href="#cb34-13" aria-hidden="true" tabindex="-1"></a><span class="kw">assign</span> output_out[<span class="dv">5</span>]  = counter2_value[<span class="dv">1</span>];</span>
+<span id="cb34-14"><a href="#cb34-14" aria-hidden="true" tabindex="-1"></a><span class="kw">assign</span> output_out[<span class="dv">6</span>]  = counter2_value[<span class="dv">2</span>];</span>
+<span id="cb34-15"><a href="#cb34-15" aria-hidden="true" tabindex="-1"></a><span class="kw">assign</span> output_out[<span class="dv">7</span>]  = counter2_value[<span class="dv">3</span>];</span>
+<span id="cb34-16"><a href="#cb34-16" aria-hidden="true" tabindex="-1"></a><span class="kw">assign</span> output_out[<span class="dv">8</span>]  = counter2_value[<span class="dv">4</span>];</span>
+<span id="cb34-17"><a href="#cb34-17" aria-hidden="true" tabindex="-1"></a><span class="kw">assign</span> output_out[<span class="dv">9</span>]  = counter2_value[<span class="dv">5</span>];</span>
+<span id="cb34-18"><a href="#cb34-18" aria-hidden="true" tabindex="-1"></a><span class="kw">assign</span> output_out[<span class="dv">10</span>] = counter2_value[<span class="dv">6</span>];</span>
+<span id="cb34-19"><a href="#cb34-19" aria-hidden="true" tabindex="-1"></a><span class="kw">assign</span> output_out[<span class="dv">11</span>] = counter2_value[<span class="dv">7</span>];</span>
+<span id="cb34-20"><a href="#cb34-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-21"><a href="#cb34-21" aria-hidden="true" tabindex="-1"></a><span class="co">// Inverter 1</span></span>
+<span id="cb34-22"><a href="#cb34-22" aria-hidden="true" tabindex="-1"></a><span class="kw">assign</span> output_out[<span class="dv">12</span>] = inv1_dout1;</span>
+<span id="cb34-23"><a href="#cb34-23" aria-hidden="true" tabindex="-1"></a><span class="kw">assign</span> output_out[<span class="dv">13</span>] = inv1_dout2;</span>
+<span id="cb34-24"><a href="#cb34-24" aria-hidden="true" tabindex="-1"></a><span class="kw">assign</span> output_out[<span class="dv">14</span>] = inv1_dout3;</span>
+<span id="cb34-25"><a href="#cb34-25" aria-hidden="true" tabindex="-1"></a><span class="kw">assign</span> output_out[<span class="dv">15</span>] = inv1_dout4;</span>
+<span id="cb34-26"><a href="#cb34-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-27"><a href="#cb34-27" aria-hidden="true" tabindex="-1"></a><span class="co">// SRAM</span></span>
+<span id="cb34-28"><a href="#cb34-28" aria-hidden="true" tabindex="-1"></a><span class="co">// Reduce the 32-bit SRAM output to a single bit by computing the parity.</span></span>
+<span id="cb34-29"><a href="#cb34-29" aria-hidden="true" tabindex="-1"></a><span class="co">// output_out[16] = 1 when an odd number of bits in sram_0_out are 1.</span></span>
+<span id="cb34-30"><a href="#cb34-30" aria-hidden="true" tabindex="-1"></a><span class="co">// output_out[16] = 0 when an even number of bits in sram_0_out are 1.</span></span>
+<span id="cb34-31"><a href="#cb34-31" aria-hidden="true" tabindex="-1"></a><span class="kw">assign</span> output_out[<span class="dv">16</span>] = ^sram_0_out;</span>
+<span id="cb34-32"><a href="#cb34-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-33"><a href="#cb34-33" aria-hidden="true" tabindex="-1"></a><span class="co">// Digital bidirectionals (output side)</span></span>
+<span id="cb34-34"><a href="#cb34-34" aria-hidden="true" tabindex="-1"></a><span class="co">// Bidir output enable: drive when `enable` is high (counter visible),</span></span>
+<span id="cb34-35"><a href="#cb34-35" aria-hidden="true" tabindex="-1"></a><span class="co">// float as input when low (so external stimuli can drive inverter1).</span></span>
+<span id="cb34-36"><a href="#cb34-36" aria-hidden="true" tabindex="-1"></a><span class="kw">assign</span> bidir_out[<span class="dv">0</span>] = counter1_value[<span class="dv">4</span>];</span>
+<span id="cb34-37"><a href="#cb34-37" aria-hidden="true" tabindex="-1"></a><span class="kw">assign</span> bidir_oe[<span class="dv">0</span>]  = enable;</span>
+<span id="cb34-38"><a href="#cb34-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-39"><a href="#cb34-39" aria-hidden="true" tabindex="-1"></a><span class="kw">assign</span> bidir_out[<span class="dv">1</span>] = counter1_value[<span class="dv">5</span>];</span>
+<span id="cb34-40"><a href="#cb34-40" aria-hidden="true" tabindex="-1"></a><span class="kw">assign</span> bidir_oe[<span class="dv">1</span>]  = enable;</span>
+<span id="cb34-41"><a href="#cb34-41" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-42"><a href="#cb34-42" aria-hidden="true" tabindex="-1"></a><span class="kw">assign</span> bidir_out[<span class="dv">2</span>] = counter1_value[<span class="dv">6</span>];</span>
+<span id="cb34-43"><a href="#cb34-43" aria-hidden="true" tabindex="-1"></a><span class="kw">assign</span> bidir_oe[<span class="dv">2</span>]  = enable;</span>
+<span id="cb34-44"><a href="#cb34-44" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-45"><a href="#cb34-45" aria-hidden="true" tabindex="-1"></a><span class="kw">assign</span> bidir_out[<span class="dv">3</span>] = counter1_value[<span class="dv">7</span>];</span>
+<span id="cb34-46"><a href="#cb34-46" aria-hidden="true" tabindex="-1"></a><span class="kw">assign</span> bidir_oe[<span class="dv">3</span>]  = enable;</span>
+<span id="cb34-47"><a href="#cb34-47" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-48"><a href="#cb34-48" aria-hidden="true" tabindex="-1"></a><span class="co">// Analog outputs</span></span>
+<span id="cb34-49"><a href="#cb34-49" aria-hidden="true" tabindex="-1"></a><span class="kw">assign</span> analog_padbare[<span class="dv">2</span>] = inv2_vout1;</span>
+<span id="cb34-50"><a href="#cb34-50" aria-hidden="true" tabindex="-1"></a><span class="kw">assign</span> analog_padbare[<span class="dv">3</span>] = inv2_vout2;</span>
+<span id="cb34-51"><a href="#cb34-51" aria-hidden="true" tabindex="-1"></a><span class="co">// ======================================================</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
-<section id="understanding-config.yaml" class="level2" data-number="6.3">
-<h2 data-number="6.3" class="anchored" data-anchor-id="understanding-config.yaml"><span class="header-section-number">6.3</span> Understanding <code>config.yaml</code></h2>
+<section id="understanding-config.yaml" class="level2" data-number="7.3">
+<h2 data-number="7.3" class="anchored" data-anchor-id="understanding-config.yaml"><span class="header-section-number">7.3</span> Understanding <code>config.yaml</code></h2>
 <p>The top-level LibreLane configuration <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/flow/librelane/config.yaml"><code>config.yaml</code></a> covers the following sections and references <code>pdn_cfg.tcl</code> and <code>chip_top.sdc</code>.</p>
 <ol type="1">
 <li><strong>Padframe generation.</strong> <code>PAD_WEST</code>, <code>PAD_NORTH</code>, <code>PAD_SOUTH</code>, and <code>PAD_EAST</code>, in the order documented in <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/doc/pinout.md"><code>doc/pinout.md</code></a>.</li>
@@ -2221,8 +2513,8 @@ Note
 </div>
 </div>
 </section>
-<section id="understanding-pdn_cfg.tcl" class="level2" data-number="6.4">
-<h2 data-number="6.4" class="anchored" data-anchor-id="understanding-pdn_cfg.tcl"><span class="header-section-number">6.4</span> Understanding <code>pdn_cfg.tcl</code></h2>
+<section id="understanding-pdn_cfg.tcl" class="level2" data-number="7.4">
+<h2 data-number="7.4" class="anchored" data-anchor-id="understanding-pdn_cfg.tcl"><span class="header-section-number">7.4</span> Understanding <code>pdn_cfg.tcl</code></h2>
 <p><a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/flow/librelane/pdn_cfg.tcl"><code>pdn_cfg.tcl</code></a> is the OpenROAD callback that builds the power-distribution network (PDN). Most of the file follows the standard structure provided by LibreLane and OpenLane.</p>
 <p>For macro changes, the bottom of the file is the relevant part. It defines per-instance PDN grids and macro connections. The current chip provides the following.</p>
 <ul>
@@ -2235,61 +2527,61 @@ Note
 <div class="code-with-filename-file">
 <pre><strong>flow/librelane/pdn_cfg.tcl (code snippet)</strong></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb29" data-filename="flow/librelane/pdn_cfg.tcl (code snippet)"><pre class="sourceCode tcl code-with-copy"><code class="sourceCode tcl"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Custom connect for the inverter macros (inverter1, inverter2).</span></span>
-<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a><span class="co"># The top-level power ring is on TM1 (horizontal) and TM2 (vertical).</span></span>
-<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Each inverter has its own power ring on M5 (horizontal) and TM1 (vertical),</span></span>
-<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a><span class="co"># so the connection between the top-level power ring and the inverter power rings crosses cleanly.</span></span>
-<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Note: within an inverter's power ring no top-level TM1 or TM2 power rails are routed.</span></span>
-<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a>define_pdn_grid <span class="ch">\</span></span>
-<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a>    -macro <span class="ch">\</span></span>
-<span id="cb29-8"><a href="#cb29-8" aria-hidden="true" tabindex="-1"></a>    -instances <span class="st">"i_chip_core.inverter1 i_chip_core.inverter2"</span> <span class="ch">\</span></span>
-<span id="cb29-9"><a href="#cb29-9" aria-hidden="true" tabindex="-1"></a>    -<span class="ot">name</span> inverter_top <span class="ch">\</span></span>
-<span id="cb29-10"><a href="#cb29-10" aria-hidden="true" tabindex="-1"></a>    -starts_with POWER <span class="ch">\</span></span>
-<span id="cb29-11"><a href="#cb29-11" aria-hidden="true" tabindex="-1"></a>    -halo <span class="st">"</span><span class="dt">$::env</span><span class="va">(</span><span class="vs">PDN_HORIZONTAL_HALO</span><span class="va">)</span><span class="st"> </span><span class="dt">$::env</span><span class="va">(</span><span class="vs">PDN_VERTICAL_HALO</span><span class="va">)</span><span class="st">"</span></span>
-<span id="cb29-12"><a href="#cb29-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-13"><a href="#cb29-13" aria-hidden="true" tabindex="-1"></a>add_pdn_connect <span class="ch">\</span></span>
-<span id="cb29-14"><a href="#cb29-14" aria-hidden="true" tabindex="-1"></a>    -<span class="kw">grid</span> inverter_top <span class="ch">\</span></span>
-<span id="cb29-15"><a href="#cb29-15" aria-hidden="true" tabindex="-1"></a>    -layers <span class="st">"</span><span class="dt">$::env</span><span class="va">(</span><span class="vs">PDN_VERTICAL_LAYER</span><span class="va">)</span><span class="st"> </span><span class="dt">$::env</span><span class="va">(</span><span class="vs">PDN_HORIZONTAL_LAYER</span><span class="va">)</span><span class="st">"</span></span>
-<span id="cb29-16"><a href="#cb29-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-17"><a href="#cb29-17" aria-hidden="true" tabindex="-1"></a>add_pdn_connect <span class="ch">\</span></span>
-<span id="cb29-18"><a href="#cb29-18" aria-hidden="true" tabindex="-1"></a>    -<span class="kw">grid</span> inverter_top <span class="ch">\</span></span>
-<span id="cb29-19"><a href="#cb29-19" aria-hidden="true" tabindex="-1"></a>    -layers <span class="st">"</span><span class="dt">$::env</span><span class="va">(</span><span class="vs">PDN_VERTICAL_LAYER</span><span class="va">)</span><span class="st"> Metal5"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb35" data-filename="flow/librelane/pdn_cfg.tcl (code snippet)"><pre class="sourceCode tcl code-with-copy"><code class="sourceCode tcl"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Custom connect for the inverter macros (inverter1, inverter2).</span></span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a><span class="co"># The top-level power ring is on TM1 (horizontal) and TM2 (vertical).</span></span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Each inverter has its own power ring on M5 (horizontal) and TM1 (vertical),</span></span>
+<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a><span class="co"># so the connection between the top-level power ring and the inverter power rings crosses cleanly.</span></span>
+<span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Note: within an inverter's power ring no top-level TM1 or TM2 power rails are routed.</span></span>
+<span id="cb35-6"><a href="#cb35-6" aria-hidden="true" tabindex="-1"></a>define_pdn_grid <span class="ch">\</span></span>
+<span id="cb35-7"><a href="#cb35-7" aria-hidden="true" tabindex="-1"></a>    -macro <span class="ch">\</span></span>
+<span id="cb35-8"><a href="#cb35-8" aria-hidden="true" tabindex="-1"></a>    -instances <span class="st">"i_chip_core.inverter1 i_chip_core.inverter2"</span> <span class="ch">\</span></span>
+<span id="cb35-9"><a href="#cb35-9" aria-hidden="true" tabindex="-1"></a>    -<span class="ot">name</span> inverter_top <span class="ch">\</span></span>
+<span id="cb35-10"><a href="#cb35-10" aria-hidden="true" tabindex="-1"></a>    -starts_with POWER <span class="ch">\</span></span>
+<span id="cb35-11"><a href="#cb35-11" aria-hidden="true" tabindex="-1"></a>    -halo <span class="st">"</span><span class="dt">$::env</span><span class="va">(</span><span class="vs">PDN_HORIZONTAL_HALO</span><span class="va">)</span><span class="st"> </span><span class="dt">$::env</span><span class="va">(</span><span class="vs">PDN_VERTICAL_HALO</span><span class="va">)</span><span class="st">"</span></span>
+<span id="cb35-12"><a href="#cb35-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-13"><a href="#cb35-13" aria-hidden="true" tabindex="-1"></a>add_pdn_connect <span class="ch">\</span></span>
+<span id="cb35-14"><a href="#cb35-14" aria-hidden="true" tabindex="-1"></a>    -<span class="kw">grid</span> inverter_top <span class="ch">\</span></span>
+<span id="cb35-15"><a href="#cb35-15" aria-hidden="true" tabindex="-1"></a>    -layers <span class="st">"</span><span class="dt">$::env</span><span class="va">(</span><span class="vs">PDN_VERTICAL_LAYER</span><span class="va">)</span><span class="st"> </span><span class="dt">$::env</span><span class="va">(</span><span class="vs">PDN_HORIZONTAL_LAYER</span><span class="va">)</span><span class="st">"</span></span>
+<span id="cb35-16"><a href="#cb35-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-17"><a href="#cb35-17" aria-hidden="true" tabindex="-1"></a>add_pdn_connect <span class="ch">\</span></span>
+<span id="cb35-18"><a href="#cb35-18" aria-hidden="true" tabindex="-1"></a>    -<span class="kw">grid</span> inverter_top <span class="ch">\</span></span>
+<span id="cb35-19"><a href="#cb35-19" aria-hidden="true" tabindex="-1"></a>    -layers <span class="st">"</span><span class="dt">$::env</span><span class="va">(</span><span class="vs">PDN_VERTICAL_LAYER</span><span class="va">)</span><span class="st"> Metal5"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
-<section id="top-level-simulation" class="level2" data-number="6.5">
-<h2 data-number="6.5" class="anchored" data-anchor-id="top-level-simulation"><span class="header-section-number">6.5</span> Top-Level Simulation</h2>
+<section id="top-level-simulation" class="level2" data-number="7.5">
+<h2 data-number="7.5" class="anchored" data-anchor-id="top-level-simulation"><span class="header-section-number">7.5</span> Top-Level Simulation</h2>
 <p>The same RTL and gate-level cocotb flow as in <a href="#sec-digital" class="quarto-xref">Section&nbsp;4</a> is available at chip level.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb30"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> sim-rtl-cocotb</span>
-<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> sim-gl-cocotb</span>
-<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> sim-view-cocotb                                <span class="co"># use GTKWave as waveform viewer</span></span>
-<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> sim-view-cocotb WAVEFORM_VIEWER=surfer         <span class="co"># use Surfer as waveform viewer</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>The cocotb testbench at top level is <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/testbenches/cocotb/chip_top_tb.py"><code>testbenches/cocotb/chip_top_tb.py</code></a>, and it covers the global enable, reset, counters, and bidir behaviour documented in <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/doc/specifications.md"><code>doc/specifications.md</code></a>. The result is shown in <a href="#fig-chip-top-cocotb-gtkwave" class="quarto-xref">Figure&nbsp;21</a>.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb36"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> sim-rtl-cocotb</span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> sim-gl-cocotb</span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> sim-view-cocotb                                <span class="co"># use GTKWave as waveform viewer</span></span>
+<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> sim-view-cocotb WAVEFORM_VIEWER=surfer         <span class="co"># use Surfer as waveform viewer</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>The cocotb testbench at top level is <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/testbenches/cocotb/chip_top_tb.py"><code>testbenches/cocotb/chip_top_tb.py</code></a>, and it covers the global enable, reset, counters, and bidir behaviour documented in <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/doc/specifications.md"><code>doc/specifications.md</code></a>. The result is shown in <a href="#fig-chip-top-cocotb-gtkwave" class="quarto-xref">Figure&nbsp;23</a>.</p>
 <div id="fig-chip-top-cocotb-gtkwave" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-chip-top-cocotb-gtkwave-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<a href="fig/chip_top/chip_top_cocotb_gtkwave.png" class="lightbox" data-gallery="quarto-lightbox-gallery-25" title="Figure&nbsp;21: chip_top cocotb waveform in GTKWave."><img src="fig/chip_top/chip_top_cocotb_gtkwave.png" class="img-fluid figure-img"></a>
+<a href="fig/chip_top/chip_top_cocotb_gtkwave.png" class="lightbox" data-gallery="quarto-lightbox-gallery-28" title="Figure&nbsp;23: chip_top cocotb waveform in GTKWave."><img src="fig/chip_top/chip_top_cocotb_gtkwave.png" class="img-fluid figure-img"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-chip-top-cocotb-gtkwave-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;21: <code>chip_top</code> cocotb waveform in GTKWave.
+Figure&nbsp;23: <code>chip_top</code> cocotb waveform in GTKWave.
 </figcaption>
 </figure>
 </div>
-<p>For mixed-signal simulation, the <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/testbenches/xschem/chip_top_tb_tran.sch"><code>testbenches/xschem/chip_top_tb_tran.sch</code></a> testbench can be opened in Xschem for interactive simulation, the same way as for the counter or the inverter, and is shown in <a href="#fig-chip-top-tb-tran-schematic" class="quarto-xref">Figure&nbsp;22</a>.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb31"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> testbenches/xschem</span>
-<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a><span class="ex">xschem</span> chip_top_tb_tran.sch</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>For mixed-signal simulation, the <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/testbenches/xschem/chip_top_tb_tran.sch"><code>testbenches/xschem/chip_top_tb_tran.sch</code></a> testbench can be opened in Xschem for interactive simulation, the same way as for the counter or the inverter, and is shown in <a href="#fig-chip-top-tb-tran-schematic" class="quarto-xref">Figure&nbsp;24</a>.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb37"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> testbenches/xschem</span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a><span class="ex">xschem</span> chip_top_tb_tran.sch</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div id="fig-chip-top-tb-tran-schematic" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-chip-top-tb-tran-schematic-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<a href="fig/chip_top/chip_top_tb_tran_schematic.svg" class="lightbox" data-gallery="quarto-lightbox-gallery-26" title="Figure&nbsp;22: Xschem top-level mixed-signal testbench chip_top_tb_tran."><img src="fig/chip_top/chip_top_tb_tran_schematic.svg" class="img-fluid figure-img"></a>
+<a href="fig/chip_top/chip_top_tb_tran_schematic.svg" class="lightbox" data-gallery="quarto-lightbox-gallery-29" title="Figure&nbsp;24: Xschem top-level mixed-signal testbench chip_top_tb_tran."><img src="fig/chip_top/chip_top_tb_tran_schematic.svg" class="img-fluid figure-img"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-chip-top-tb-tran-schematic-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;22: Xschem top-level mixed-signal testbench <code>chip_top_tb_tran</code>.
+Figure&nbsp;24: Xschem top-level mixed-signal testbench <code>chip_top_tb_tran</code>.
 </figcaption>
 </figure>
 </div>
 <p>Again, the simulation and plotting can be run non-interactive from the command line with the following targets.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb32"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> sim-gl-xschem</span>
-<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> plot-xschem-sim TESTBENCH=chip_top_tb_tran</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb38"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> sim-gl-xschem</span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> plot-xschem-sim TESTBENCH=chip_top_tb_tran</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -2307,72 +2599,72 @@ Note
 <div id="fig-chip-top-tb-tran-analog-inv-sim" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-chip-top-tb-tran-analog-inv-sim-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<a href="fig/chip_top/chip_top_tb_tran_analog_inv_sim.svg" class="lightbox" data-gallery="quarto-lightbox-gallery-27" title="Figure&nbsp;23: Plotted simulation result of chip_top_tb_tran — analog inverter 1 response."><img src="fig/chip_top/chip_top_tb_tran_analog_inv_sim.svg" class="img-fluid figure-img" style="width:75.0%"></a>
+<a href="fig/chip_top/chip_top_tb_tran_analog_inv_sim.svg" class="lightbox" data-gallery="quarto-lightbox-gallery-30" title="Figure&nbsp;25: Plotted simulation result of chip_top_tb_tran — analog inverter 1 response."><img src="fig/chip_top/chip_top_tb_tran_analog_inv_sim.svg" class="img-fluid figure-img" style="width:75.0%"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-chip-top-tb-tran-analog-inv-sim-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;23: Plotted simulation result of <code>chip_top_tb_tran</code> — analog inverter 1 response.
+Figure&nbsp;25: Plotted simulation result of <code>chip_top_tb_tran</code> — analog inverter 1 response.
 </figcaption>
 </figure>
 </div>
 <div id="fig-chip-top-tb-tran-digital1-sim" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-chip-top-tb-tran-digital1-sim-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<a href="fig/chip_top/chip_top_tb_tran_digital1_sim.svg" class="lightbox" data-gallery="quarto-lightbox-gallery-28" title="Figure&nbsp;24: Plotted simulation result of chip_top_tb_tran — digital inverter 2 outputs."><img src="fig/chip_top/chip_top_tb_tran_digital1_sim.svg" class="img-fluid figure-img"></a>
+<a href="fig/chip_top/chip_top_tb_tran_digital1_sim.svg" class="lightbox" data-gallery="quarto-lightbox-gallery-31" title="Figure&nbsp;26: Plotted simulation result of chip_top_tb_tran — digital inverter 2 outputs."><img src="fig/chip_top/chip_top_tb_tran_digital1_sim.svg" class="img-fluid figure-img"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-chip-top-tb-tran-digital1-sim-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;24: Plotted simulation result of <code>chip_top_tb_tran</code> — digital inverter 2 outputs.
+Figure&nbsp;26: Plotted simulation result of <code>chip_top_tb_tran</code> — digital inverter 2 outputs.
 </figcaption>
 </figure>
 </div>
 <div id="fig-chip-top-tb-tran-digital2-sim" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-chip-top-tb-tran-digital2-sim-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<a href="fig/chip_top/chip_top_tb_tran_digital2_sim.svg" class="lightbox" data-gallery="quarto-lightbox-gallery-29" title="Figure&nbsp;25: Plotted simulation result of chip_top_tb_tran — digital counter 2 outputs."><img src="fig/chip_top/chip_top_tb_tran_digital2_sim.svg" class="img-fluid figure-img"></a>
+<a href="fig/chip_top/chip_top_tb_tran_digital2_sim.svg" class="lightbox" data-gallery="quarto-lightbox-gallery-32" title="Figure&nbsp;27: Plotted simulation result of chip_top_tb_tran — digital counter 2 outputs."><img src="fig/chip_top/chip_top_tb_tran_digital2_sim.svg" class="img-fluid figure-img"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-chip-top-tb-tran-digital2-sim-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;25: Plotted simulation result of <code>chip_top_tb_tran</code> — digital counter 2 outputs.
+Figure&nbsp;27: Plotted simulation result of <code>chip_top_tb_tran</code> — digital counter 2 outputs.
 </figcaption>
 </figure>
 </div>
 <div id="fig-chip-top-tb-tran-digital3-sim" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-chip-top-tb-tran-digital3-sim-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<a href="fig/chip_top/chip_top_tb_tran_digital3_sim.svg" class="lightbox" data-gallery="quarto-lightbox-gallery-30" title="Figure&nbsp;26: Plotted simulation result of chip_top_tb_tran — digital counter 1 / inverter 1 bidirs."><img src="fig/chip_top/chip_top_tb_tran_digital3_sim.svg" class="img-fluid figure-img"></a>
+<a href="fig/chip_top/chip_top_tb_tran_digital3_sim.svg" class="lightbox" data-gallery="quarto-lightbox-gallery-33" title="Figure&nbsp;28: Plotted simulation result of chip_top_tb_tran — digital counter 1 / inverter 1 bidirs."><img src="fig/chip_top/chip_top_tb_tran_digital3_sim.svg" class="img-fluid figure-img"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-chip-top-tb-tran-digital3-sim-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;26: Plotted simulation result of <code>chip_top_tb_tran</code> — digital counter 1 / inverter 1 bidirs.
+Figure&nbsp;28: Plotted simulation result of <code>chip_top_tb_tran</code> — digital counter 1 / inverter 1 bidirs.
 </figcaption>
 </figure>
 </div>
-<p>When the testbench is opened in Xschem, the schematic of <code>chip_top</code> can be inspected with the shortcuts <strong><code>e</code></strong> / <strong><code>Ctrl + e</code></strong>, and the symbol can be shown with <strong><code>i</code></strong> / <strong><code>Ctrl + i</code></strong> as explained in <a href="#sec-analog" class="quarto-xref">Section&nbsp;5</a>. The schematic and symbol are shown in <a href="#fig-chip-top-symbol" class="quarto-xref">Figure&nbsp;27</a> and <a href="#fig-chip-top-schematic" class="quarto-xref">Figure&nbsp;28</a>, respectively. The schematic shows the connections between the padframe and the core macros, while the symbol shows the pinout of the chip. The SRAM is not included in the schematic, since IHP does not ship a SPICE model or an Xschem symbol for the <code>RM_IHPSG13_1P_1024x32_c2_bm_bist</code> macro.</p>
+<p>When the testbench is opened in Xschem, the schematic of <code>chip_top</code> can be inspected with the shortcuts <strong><code>e</code></strong> / <strong><code>Ctrl + e</code></strong>, and the symbol can be shown with <strong><code>i</code></strong> / <strong><code>Ctrl + i</code></strong> as explained in <a href="#sec-analog" class="quarto-xref">Section&nbsp;5</a>. The schematic and symbol are shown in <a href="#fig-chip-top-symbol" class="quarto-xref">Figure&nbsp;29</a> and <a href="#fig-chip-top-schematic" class="quarto-xref">Figure&nbsp;30</a>, respectively. The schematic shows the connections between the padframe and the core macros, while the symbol shows the pinout of the chip. The SRAM is not included in the schematic, since IHP does not ship a SPICE model or an Xschem symbol for the <code>RM_IHPSG13_1P_1024x32_c2_bm_bist</code> macro.</p>
 <div id="fig-chip-top-symbol" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-chip-top-symbol-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<a href="fig/chip_top/chip_top_symbol.svg" class="lightbox" data-gallery="quarto-lightbox-gallery-31" title="Figure&nbsp;27: Xschem symbol of chip_top, showing the pinout of the chip."><img src="fig/chip_top/chip_top_symbol.svg" class="img-fluid figure-img" style="width:60.0%"></a>
+<a href="fig/chip_top/chip_top_symbol.svg" class="lightbox" data-gallery="quarto-lightbox-gallery-34" title="Figure&nbsp;29: Xschem symbol of chip_top, showing the pinout of the chip."><img src="fig/chip_top/chip_top_symbol.svg" class="img-fluid figure-img" style="width:60.0%"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-chip-top-symbol-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;27: Xschem symbol of <code>chip_top</code>, showing the pinout of the chip.
+Figure&nbsp;29: Xschem symbol of <code>chip_top</code>, showing the pinout of the chip.
 </figcaption>
 </figure>
 </div>
 <div id="fig-chip-top-schematic" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-chip-top-schematic-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<a href="fig/chip_top/chip_top_schematic.svg" class="lightbox" data-gallery="quarto-lightbox-gallery-32" title="Figure&nbsp;28: Xschem schematic of chip_top, showing the connections between the padframe and the core macros."><img src="fig/chip_top/chip_top_schematic.svg" class="img-fluid figure-img"></a>
+<a href="fig/chip_top/chip_top_schematic.svg" class="lightbox" data-gallery="quarto-lightbox-gallery-35" title="Figure&nbsp;30: Xschem schematic of chip_top, showing the connections between the padframe and the core macros."><img src="fig/chip_top/chip_top_schematic.svg" class="img-fluid figure-img"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-chip-top-schematic-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;28: Xschem schematic of <code>chip_top</code>, showing the connections between the padframe and the core macros.
+Figure&nbsp;30: Xschem schematic of <code>chip_top</code>, showing the connections between the padframe and the core macros.
 </figcaption>
 </figure>
 </div>
 </section>
-<section id="building-the-chip" class="level2" data-number="6.6">
-<h2 data-number="6.6" class="anchored" data-anchor-id="building-the-chip"><span class="header-section-number">6.6</span> Building the Chip</h2>
+<section id="building-the-chip" class="level2" data-number="7.6">
+<h2 data-number="7.6" class="anchored" data-anchor-id="building-the-chip"><span class="header-section-number">7.6</span> Building the Chip</h2>
 <p>When the floorplan and pinout are planned and configured, the chip can be built from scratch with the following command.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb33"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> build-all</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb39"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> build-all</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>This runs the steps in order, <code>init-submodules</code>, <code>build-bondpad</code>, <code>build-logos</code>, <code>build-macros</code>, and <code>build-top</code>. It is the right starting point on a fresh machine after cloning the repository and entering the IIC-OSIC-TOOLS container.</p>
 <p>To re-run only the top-level flow (for example after a change in <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/flow/librelane/config.yaml"><code>config.yaml</code></a> or <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/rtl/chip_core.sv"><code>chip_core.sv</code></a>), without rebuilding the bondpad, logos, or macros, run the following command.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb34"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> build-top</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb40"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> build-top</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Internally, <code>build-top</code> runs <code>librelane-nodrc</code>, <code>copy-reports</code>, <code>copy-gds</code>, <code>copy-netlist</code>, <code>copy-render</code>, <code>add-logo-fill</code>, and <code>render-gds</code>. The final GDS is written to <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/layout/chip_top_logo_fill.gds.gz"><code>layout/chip_top_logo_fill.gds.gz</code></a>.</p>
 <p>The render generated by <code>lay2img.py</code>, which is executed during the <code>render-gds</code> step, is located in <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/render/img/"><code>render/img/</code></a>. The verification reports (Yosys, antenna, STA, IR-drop, LVS, manufacturability) from the top-level LibreLane flow can be found in <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/verification/reports/"><code>verification/reports/</code></a>. The netlists are located in <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/netlist/"><code>netlist/</code></a>.</p>
 <div class="callout callout-style-default callout-note callout-titled">
@@ -2386,7 +2678,7 @@ Note
 </div>
 <div class="callout-body-container callout-body">
 <p>Note that currently the LibreLane flow streams out the top-level GDS <code>layout/chip_top.gds.gz</code> without the logos and the fill structures. To add the chip logo (PNG → GDS) and the fill structures on top of the LibreLane output, run:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb35"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> add-logo-fill</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb41"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> add-logo-fill</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>This calls <code>scripts/add_logo_fill.sh</code> and writes <code>layout/chip_top_logo_fill.gds.gz</code>. This step is already called by <code>make build-top</code>. In the future, it is planned to replace this script and Makefile target with a custom LibreLane step.</p>
 </div>
 </div>
@@ -2404,48 +2696,48 @@ Tip
 </div>
 </div>
 </section>
-<section id="viewing-the-chip" class="level2" data-number="6.7">
-<h2 data-number="6.7" class="anchored" data-anchor-id="viewing-the-chip"><span class="header-section-number">6.7</span> Viewing the Chip</h2>
+<section id="viewing-the-chip" class="level2" data-number="7.7">
+<h2 data-number="7.7" class="anchored" data-anchor-id="viewing-the-chip"><span class="header-section-number">7.7</span> Viewing the Chip</h2>
 <p>After a successful build, the chip can be opened with KLayout.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb36"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="ex">ke</span> layout/chip_top.gds.gz             <span class="co"># Chip layout without logos and filler</span></span>
-<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a><span class="ex">ke</span> layout/chip_top_logo_fill.gds.gz   <span class="co"># Chip layout with logos and filler</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb42"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="ex">ke</span> layout/chip_top.gds.gz             <span class="co"># Chip layout without logos and filler</span></span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a><span class="ex">ke</span> layout/chip_top_logo_fill.gds.gz   <span class="co"># Chip layout with logos and filler</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div id="fig-chip-top-layout" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-chip-top-layout-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<a href="fig/chip_top/chip_top_black.png" class="lightbox" data-gallery="quarto-lightbox-gallery-33" title="Figure&nbsp;29: chip_top_logo_fill layout in KLayout (“all” layers)."><img src="fig/chip_top/chip_top_black.png" class="img-fluid figure-img" style="width:75.0%"></a>
+<a href="fig/chip_top/chip_top_black.png" class="lightbox" data-gallery="quarto-lightbox-gallery-36" title="Figure&nbsp;31: chip_top_logo_fill layout in KLayout (“all” layers)."><img src="fig/chip_top/chip_top_black.png" class="img-fluid figure-img" style="width:75.0%"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-chip-top-layout-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;29: <code>chip_top_logo_fill</code> layout in KLayout (“all” layers).
+Figure&nbsp;31: <code>chip_top_logo_fill</code> layout in KLayout (“all” layers).
 </figcaption>
 </figure>
 </div>
 <div id="fig-chip-top-layout-tm2" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-chip-top-layout-tm2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<a href="fig/chip_top/chip_top_black_TM2.png" class="lightbox" data-gallery="quarto-lightbox-gallery-34" title="Figure&nbsp;30: chip_top_logo_fill layout in KLayout with only TopMetal2 selected."><img src="fig/chip_top/chip_top_black_TM2.png" class="img-fluid figure-img" style="width:75.0%"></a>
+<a href="fig/chip_top/chip_top_black_TM2.png" class="lightbox" data-gallery="quarto-lightbox-gallery-37" title="Figure&nbsp;32: chip_top_logo_fill layout in KLayout with only TopMetal2 selected."><img src="fig/chip_top/chip_top_black_TM2.png" class="img-fluid figure-img" style="width:75.0%"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-chip-top-layout-tm2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;30: <code>chip_top_logo_fill</code> layout in KLayout with only <code>TopMetal2</code> selected.
+Figure&nbsp;32: <code>chip_top_logo_fill</code> layout in KLayout with only <code>TopMetal2</code> selected.
 </figcaption>
 </figure>
 </div>
 </section>
-<section id="chip-level-verification" class="level2" data-number="6.8">
-<h2 data-number="6.8" class="anchored" data-anchor-id="chip-level-verification"><span class="header-section-number">6.8</span> Chip-Level Verification</h2>
+<section id="chip-level-verification" class="level2" data-number="7.8">
+<h2 data-number="7.8" class="anchored" data-anchor-id="chip-level-verification"><span class="header-section-number">7.8</span> Chip-Level Verification</h2>
 <p>DRC, LVS, and PEX are also available for the full chip.</p>
-<section id="drc" class="level3" data-number="6.8.1">
-<h3 data-number="6.8.1" class="anchored" data-anchor-id="drc"><span class="header-section-number">6.8.1</span> DRC</h3>
+<section id="drc" class="level3" data-number="7.8.1">
+<h3 data-number="7.8.1" class="anchored" data-anchor-id="drc"><span class="header-section-number">7.8.1</span> DRC</h3>
 <p>The following DRC targets are available for the top-level.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb37"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> magic-drc CELL=chip_top              <span class="co"># Magic DRC on the bare chip</span></span>
-<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> magic-drc CELL=chip_top_logo_fill    <span class="co"># Magic DRC including logo + filler</span></span>
-<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> klayout-drc-minimum                  <span class="co"># fast pre-check KLayout DRC on chip_top_logo_fill.gds.gz</span></span>
-<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> klayout-drc-regular                  <span class="co"># full KLayout DRC on chip_top_logo_fill.gds.gz (slower)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb43"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> magic-drc CELL=chip_top              <span class="co"># Magic DRC on the bare chip</span></span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> magic-drc CELL=chip_top_logo_fill    <span class="co"># Magic DRC including logo + filler</span></span>
+<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> klayout-drc-minimum                  <span class="co"># fast pre-check KLayout DRC on chip_top_logo_fill.gds.gz</span></span>
+<span id="cb43-4"><a href="#cb43-4" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> klayout-drc-regular                  <span class="co"># full KLayout DRC on chip_top_logo_fill.gds.gz (slower)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><code>klayout-drc-minimum</code> is a quick pre-check on the final top-level layout including the logo and the fill structures. <code>klayout-drc-regular</code> does the full check, but takes longer. <code>magic-drc</code> is faster than <code>klayout-drc</code>, but it does not support the full set of DRC rules and is less accurate on the complex top-level layout, so it is recommended to use both.</p>
 </section>
-<section id="pex" class="level3" data-number="6.8.2">
-<h3 data-number="6.8.2" class="anchored" data-anchor-id="pex"><span class="header-section-number">6.8.2</span> PEX</h3>
+<section id="pex" class="level3" data-number="7.8.2">
+<h3 data-number="7.8.2" class="anchored" data-anchor-id="pex"><span class="header-section-number">7.8.2</span> PEX</h3>
 <p>The following PEX target is available for the top-level.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb38"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> magic-pex                            <span class="co"># only chip_top (without logo and filler), default EXT_MODE=1</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb44"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> magic-pex                            <span class="co"># only chip_top (without logo and filler), default EXT_MODE=1</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="callout callout-style-default callout-warning callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -2460,11 +2752,11 @@ Warning
 </div>
 </div>
 </section>
-<section id="lvs" class="level3" data-number="6.8.3">
-<h3 data-number="6.8.3" class="anchored" data-anchor-id="lvs"><span class="header-section-number">6.8.3</span> LVS</h3>
+<section id="lvs" class="level3" data-number="7.8.3">
+<h3 data-number="7.8.3" class="anchored" data-anchor-id="lvs"><span class="header-section-number">7.8.3</span> LVS</h3>
 <p>The following LVS target is available for the top-level.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb39"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> klayout-lvs                          <span class="co"># top-level KLayout LVS</span></span>
-<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> magic-lvs                            <span class="co"># top-level Magic + Netgen LVS</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb45"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> klayout-lvs                          <span class="co"># top-level KLayout LVS</span></span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> magic-lvs                            <span class="co"># top-level Magic + Netgen LVS</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="callout callout-style-default callout-warning callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -2480,16 +2772,16 @@ Warning
 </div>
 </section>
 </section>
-<section id="full-flow-at-once" class="level2" data-number="6.9">
-<h2 data-number="6.9" class="anchored" data-anchor-id="full-flow-at-once"><span class="header-section-number">6.9</span> Full Flow at Once</h2>
+<section id="full-flow-at-once" class="level2" data-number="7.9">
+<h2 data-number="7.9" class="anchored" data-anchor-id="full-flow-at-once"><span class="header-section-number">7.9</span> Full Flow at Once</h2>
 <p>The comprehensive simulation, build, and DRC pass for the complete chip is run with the following command.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb40"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> all</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb46"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> all</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>This calls <code>sim-all</code> (RTL/GL cocotb, GL Xschem when available), then <code>build-all</code>, then Magic DRC on both <code>chip_top</code> and <code>chip_top_logo_fill</code>. To shorten the runtime, the KLayout DRC is currently not included in <code>make all</code>. However, depending on the hardware used, <code>make all</code> can still take a while.</p>
 </section>
-<section id="releasing-for-tapeout" class="level2" data-number="6.10">
-<h2 data-number="6.10" class="anchored" data-anchor-id="releasing-for-tapeout"><span class="header-section-number">6.10</span> Releasing for Tapeout</h2>
+<section id="releasing-for-tapeout" class="level2" data-number="7.10">
+<h2 data-number="7.10" class="anchored" data-anchor-id="releasing-for-tapeout"><span class="header-section-number">7.10</span> Releasing for Tapeout</h2>
 <p>When the chip is clean, the <code>release</code> target copies the GDS, the netlists, and the renders into a versioned folder for tapeout submission.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb41"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> release VERSION=2.1.0</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb47"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> release VERSION=2.1.0</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>The artifacts are written to <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/release/"><code>release/v.2.1.0/</code></a> (<code>gds/</code>, <code>netlist/{layout,pnl,spice}/</code>, <code>img/</code>).</p>
 <div class="callout callout-style-default callout-important callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -2506,11 +2798,11 @@ Important
 </div>
 </section>
 </section>
-<section id="sec-exercises" class="level1" data-number="7">
-<h1 data-number="7"><span class="header-section-number">7</span> Additional Exercises</h1>
+<section id="sec-exercises" class="level1" data-number="8">
+<h1 data-number="8"><span class="header-section-number">8</span> Additional Exercises</h1>
 <p>The following exercises repeat the corresponding sections of this tutorial with a modification of the design.</p>
-<section id="sec-exercise1" class="level2" data-number="7.1">
-<h2 data-number="7.1" class="anchored" data-anchor-id="sec-exercise1"><span class="header-section-number">7.1</span> Exercise 1: From 8-bit Up-Counter to 16-bit Down-Counter</h2>
+<section id="sec-exercise1" class="level2" data-number="8.1">
+<h2 data-number="8.1" class="anchored" data-anchor-id="sec-exercise1"><span class="header-section-number">8.1</span> Exercise 1: From 8-bit Up-Counter to 16-bit Down-Counter</h2>
 <p>Repeat <a href="#sec-digital" class="quarto-xref">Section&nbsp;4</a> for a 16-bit synchronous down-counter that wraps from 0 back to <span class="math inline">\(2^{16} - 1\)</span>. The recommended steps are:</p>
 <ol type="1">
 <li>Update the RTL (<a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/counter/rtl/counter.sv"><code>counter.sv</code></a>, <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/counter/rtl/counter_top.sv"><code>counter_top.sv</code></a>, <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/counter/rtl/constants.sv"><code>constants.sv</code></a>). Change the bit-width and turn the increment block into a decrement, with wrap-around from 0 to <code>CTR_MAX</code>.</li>
@@ -2533,8 +2825,8 @@ Important
 </div>
 </div>
 </section>
-<section id="sec-exercise2" class="level2" data-number="7.2">
-<h2 data-number="7.2" class="anchored" data-anchor-id="sec-exercise2"><span class="header-section-number">7.2</span> Exercise 2: Inverter to Three-Stage Ring Oscillator</h2>
+<section id="sec-exercise2" class="level2" data-number="8.2">
+<h2 data-number="8.2" class="anchored" data-anchor-id="sec-exercise2"><span class="header-section-number">8.2</span> Exercise 2: Inverter to Three-Stage Ring Oscillator</h2>
 <p>Repeat <a href="#sec-analog" class="quarto-xref">Section&nbsp;5</a> for a three-stage ring oscillator with an output buffer, derived from the existing quad inverter. The recommended steps are:</p>
 <ol type="1">
 <li>Copy the <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/inverter/">inverter</a> macro folder to a new location (for example <code>macros/ringosc/</code>), and adapt the Makefile names.</li>
@@ -2546,14 +2838,14 @@ Important
 <li>Re-run the verification chain, <code>make klayout-verify</code>, <code>make magic-verify</code>, and <code>make build-top</code>.</li>
 </ol>
 </section>
-<section id="sec-exercise3" class="level2" data-number="7.3">
-<h2 data-number="7.3" class="anchored" data-anchor-id="sec-exercise3"><span class="header-section-number">7.3</span> Exercise 3: Update Pinout and Floorplan of the Top-Level</h2>
-<p>Building on <a href="#sec-exercise1" class="quarto-xref">Section&nbsp;7.1</a> and <a href="#sec-exercise2" class="quarto-xref">Section&nbsp;7.2</a>, swap <code>inverter2</code> for the ring oscillator, delete <code>counter2</code>, and connect the now 16-bit <code>counter1</code> to the freed-up south-side pads. The recommended steps are:</p>
+<section id="sec-exercise3" class="level2" data-number="8.3">
+<h2 data-number="8.3" class="anchored" data-anchor-id="sec-exercise3"><span class="header-section-number">8.3</span> Exercise 3: Update Pinout and Floorplan of the Top-Level</h2>
+<p>Building on <a href="#sec-exercise1" class="quarto-xref">Section&nbsp;8.1</a> and <a href="#sec-exercise2" class="quarto-xref">Section&nbsp;8.2</a>, swap <code>inverter2</code> for the ring oscillator, delete <code>counter2</code>, and connect the now 16-bit <code>counter1</code> to the freed-up south-side pads. The recommended steps are:</p>
 <ol type="1">
 <li>Replace <code>inverter2</code> with the ring oscillator macro in <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/rtl/chip_core.sv"><code>chip_core.sv</code></a>.</li>
 <li>Replace three of the four analog pads with VSS pads, and connect the ring oscillator’s output to the fourth analog pad.</li>
 <li>Delete <code>counter2</code> and rewire all eight south-side pads to the new 16-bit <code>counter1</code> value.</li>
-<li>Update the parameters of <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/rtl/chip_top.sv"><code>chip_top.sv</code></a> so that <code>NUM_OUTPUT_PADS</code>, <code>NUM_BIDIR_PADS</code>, <code>NUM_ANALOG_PADS</code>, and <code>NUM_VSS_PADS</code> match the new pin count (see <a href="#sec-top" class="quarto-xref">Section&nbsp;6</a>).</li>
+<li>Update the parameters of <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/rtl/chip_top.sv"><code>chip_top.sv</code></a> so that <code>NUM_OUTPUT_PADS</code>, <code>NUM_BIDIR_PADS</code>, <code>NUM_ANALOG_PADS</code>, and <code>NUM_VSS_PADS</code> match the new pin count (see <a href="#sec-top" class="quarto-xref">Section&nbsp;7</a>).</li>
 <li>Update the macro instantiation and wiring in <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/rtl/chip_core.sv"><code>chip_core.sv</code></a>.</li>
 <li>Update the placement coordinates in the <code>MACROS</code> block of <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/flow/librelane/config.yaml"><code>config.yaml</code></a>. Keep the <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/doc/floorplan.md"><code>doc/floorplan.md</code></a> constraints in mind, namely stay in the core, no overlaps, and respect the <code>Metal3</code> grid for inverter-like macros.</li>
 <li>Update the PAD lists (<code>PAD_WEST</code>, <code>PAD_NORTH</code>, <code>PAD_SOUTH</code>, <code>PAD_EAST</code>) in <code>config.yaml</code> to match the new pinout.</li>
@@ -2562,8 +2854,8 @@ Important
 </ol>
 </section>
 </section>
-<section id="acknowledgements" class="level1" data-number="8">
-<h1 data-number="8"><span class="header-section-number">8</span> Acknowledgements</h1>
+<section id="acknowledgements" class="level1" data-number="9">
+<h1 data-number="9"><span class="header-section-number">9</span> Acknowledgements</h1>
 <p>This project is funded by the JKU/SAL <a href="https://research.jku.at/de/projects/jku-lit-sal-intelligent-wireless-systems-lab-iws-lab/">IWS Lab</a>, a collaboration of <a href="https://jku.at">Johannes Kepler University</a> and <a href="https://silicon-austria-labs.com">Silicon Austria Labs</a>.</p>
 <table width="100%">
 <tbody><tr>
