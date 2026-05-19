@@ -9,7 +9,8 @@ website:
   title: "Open-Source Analog-Mixed Signal Chip Design Tutorial"
   favicon: fig/favicon.png
   site-url: "https://iic-jku.github.io/ihp-sg13g2-ams-chip-template/"
-  repo-url: "{{< meta var.url-repo >}}"
+  repo-url: "https://github.com/iic-jku/ihp-sg13g2-ams-chip-template"
+  repo-subdir: tutorial
   repo-branch: main
   repo-actions: [edit, issue]
   navbar:
@@ -24,7 +25,7 @@ website:
         href: index.pdf
     right:
       - icon: github
-        href: "{{< meta var.url-repo >}}"
+        href: "https://github.com/iic-jku/ihp-sg13g2-ams-chip-template"
         target: "_blank"
   page-footer:
     left: |
@@ -46,3 +47,17 @@ format:
     fig-align: center
     lang: en-US
     lightbox: true
+    include-after-body:
+      text: |
+        <script>
+        document.addEventListener('DOMContentLoaded', function() {
+          document.querySelectorAll('a').forEach(function(a) {
+            var t = (a.textContent || '').trim();
+            if (t === 'Edit this page') {
+              a.href = 'https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/pulls';
+            } else if (t === 'Report an issue') {
+              a.href = 'https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/issues';
+            }
+          });
+        });
+        </script>
