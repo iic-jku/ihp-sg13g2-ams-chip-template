@@ -1,5 +1,10 @@
 ﻿# ToDo List
 
+- [ ] update table "Folder" column width
+- [ ] test reorder_spice_pins.py update
+- [ ] finish targets_overview.drawio
+- [ ] add exercise-solution branch and finish the exercises there
+- [ ] add VACASK testbenches
 - [ ] adjust fill density on top-level --> KLayout DRC error
 - [ ] add custom LibreLane step for filler insertion after ArtistIC added logo
 - [ ] Add GDSFill to `config.yaml`
