@@ -724,8 +724,8 @@ The non-interactive PEX can be run with the following Makefile targets. The `CEL
 If not set, it defaults to `EXT_MODE=3`.
 
 ```sh
-make klayout-pex [CELL=<cellname>] [EXT_MODE=<1|2|3>]         # default CELL=inverter_top, default EXT_MODE=3 (full-RC)
-make magic-pex [CELL=<cellname>] [EXT_MODE=<1|2|3>]           # default CELL=inverter_top, default EXT_MODE=2 (CC mode)
+make klayout-pex [CELL=<cellname>] [EXT_MODE=<1|2|3>]   # default CELL=inverter_top, default EXT_MODE=3 (full-RC)
+make magic-pex [CELL=<cellname>] [EXT_MODE=<1|2|3>]     # default CELL=inverter_top, default EXT_MODE=2 (CC mode)
 ```
 
 PEX writes a SPICE netlist into [`netlist/pex/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/inverter/netlist/pex/). The subcircuit name is renamed to `<CELL>_pex`, and the pin order is rearranged to match the Xschem PEX symbol ([`inverter_top_pex.sym`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/inverter/schematic/xschem/inverter_top_pex.sym)).
