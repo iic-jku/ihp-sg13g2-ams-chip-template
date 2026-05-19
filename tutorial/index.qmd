@@ -1254,7 +1254,7 @@ make magic-pex                            # only chip_top (without logo and fill
 ```
 
 ::: {.callout-warning}
-At top level, PEX is only run on `chip_top` (without logo and filler), and the default `EXT_MODE=1` (C-decoupled) is used to keep the runtime manageable. However, the extracted netlist is still huge, and the post-layout simulation must be run on a powerful server.
+At the top level, PEX is only run on `chip_top` (without logo and filler), and the default `EXT_MODE=1` (C-decoupled) is used to keep the runtime manageable. However, the extracted netlist [`chip_top_magic_pex_1.spice`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/netlist/pex/chip_top_magic_pex_1.spice) is still huge (~75 MB, ~566k lines), and the post-layout simulation must be run on a powerful server.
 :::
 
 ### LVS
