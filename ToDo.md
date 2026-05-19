@@ -1,5 +1,6 @@
 ﻿# ToDo List
 
+- [ ] Link Harald's UCD workshop video
 - [ ] update table "Folder" column width
 - [ ] test reorder_spice_pins.py update
 - [ ] finish targets_overview.drawio
