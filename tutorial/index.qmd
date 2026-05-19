@@ -26,6 +26,10 @@ format:
 This tutorial and the underlying template repository require the [IIC-OSIC-TOOLS](https://github.com/iic-jku/IIC-OSIC-TOOLS) container with tag `2026.05` or later. All commands below must be executed from within the container, and the working directory must be a folder containing the corresponding `Makefile`.
 :::
 
+::: {.callout-note}
+We happily accept [pull requests](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/pulls) to fix typos or add content! If you want to discuss something that is not clear, please [open an issue](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/issues)!
+:::
+
 # Tutorial Overview {#sec-overview}
 
 This tutorial is a step-by-step walk-through of the open-source analog-mixed signal (AMS) chip flow based on the [`ihp-sg13g2-ams-chip-template`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template) repository for the ihp-sg13g2 130nm Open-PDK. It covers:
@@ -886,7 +890,7 @@ ke final/gds/sg13g2_ip__jku.gds     # or sg13g2_ip__jku_names.gds
 To replace the logo with your own artwork, drop a square PNG image into `logo/` and either rename it to `jku_logo.png` / `jku_names.png`, or override `IMG_FILE` in the Makefile. A clean black-on-white image with a few hundred pixels per side and high contrast works best.
 :::
 
-## Build from the Top-Level
+## Top-Level Assembly
 
 For top-level assembly, the [top-level Makefile](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/Makefile) exposes two wrapper targets that descend into the IP folders and call `make all`:
 
