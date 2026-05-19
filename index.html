@@ -427,7 +427,7 @@ window.Quarto = {
   <li><a href="#directory-structure-3" id="toc-directory-structure-3" class="nav-link" data-scroll-target="#directory-structure-3"><span class="header-section-number">6.1</span> Directory Structure</a></li>
   <li><a href="#bondpad-generation" id="toc-bondpad-generation" class="nav-link" data-scroll-target="#bondpad-generation"><span class="header-section-number">6.2</span> Bondpad Generation</a></li>
   <li><a href="#logo-generation" id="toc-logo-generation" class="nav-link" data-scroll-target="#logo-generation"><span class="header-section-number">6.3</span> Logo Generation</a></li>
-  <li><a href="#build-from-the-top-level" id="toc-build-from-the-top-level" class="nav-link" data-scroll-target="#build-from-the-top-level"><span class="header-section-number">6.4</span> Build from the Top-Level</a></li>
+  <li><a href="#top-level-assembly" id="toc-top-level-assembly" class="nav-link" data-scroll-target="#top-level-assembly"><span class="header-section-number">6.4</span> Top-Level Assembly</a></li>
   </ul></li>
   <li><a href="#sec-top" id="toc-sec-top" class="nav-link" data-scroll-target="#sec-top"><span class="header-section-number">7</span> Top-Level Implementation</a>
   <ul class="collapse">
@@ -505,6 +505,19 @@ Important
 </div>
 <div class="callout-body-container callout-body">
 <p>This tutorial and the underlying template repository require the <a href="https://github.com/iic-jku/IIC-OSIC-TOOLS">IIC-OSIC-TOOLS</a> container with tag <code>2026.05</code> or later. All commands below must be executed from within the container, and the working directory must be a folder containing the corresponding <code>Makefile</code>.</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>We happily accept <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/pulls">pull requests</a> to fix typos or add content! If you want to discuss something that is not clear, please <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/issues">open an issue</a>!</p>
 </div>
 </div>
 <section id="sec-overview" class="level1" data-number="1">
@@ -605,7 +618,7 @@ Figure&nbsp;1: Overview of the most important open-source tools and PDKs shipped
 <p>The container runs on Linux, macOS, and Windows. The installation instructions are documented in the container’s <a href="https://github.com/iic-jku/IIC-OSIC-TOOLS/blob/main/README.md#1-how-to-use-these-open-source-and-free-ic-design-tools"><code>README.md</code></a>. For this tutorial, we recommend the quick one-liner installation.</p>
 <p>Additional video walk-throughs are available for Linux and Windows.</p>
 <div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-5-contents" aria-controls="callout-5" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -614,7 +627,7 @@ Figure&nbsp;1: Overview of the most important open-source tools and PDKs shipped
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-4" class="callout-4-contents callout-collapse collapse">
+<div id="callout-5" class="callout-5-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <ul>
 <li><a href="https://www.youtube.com/watch?v=l8kZUocmY5k">IIC-OSIC-TOOLS installation on Ubuntu</a></li>
@@ -623,7 +636,7 @@ Figure&nbsp;1: Overview of the most important open-source tools and PDKs shipped
 </div>
 </div>
 <div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-5-contents" aria-controls="callout-5" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-6-contents" aria-controls="callout-6" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -632,7 +645,7 @@ Figure&nbsp;1: Overview of the most important open-source tools and PDKs shipped
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-5" class="callout-5-contents callout-collapse collapse">
+<div id="callout-6" class="callout-6-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <ul>
 <li><a href="https://www.youtube.com/watch?v=AiFTwKdS2V4">IIC-OSIC-TOOLS installation on Windows (from 37:20 to 45:15)</a></li>
@@ -2277,8 +2290,8 @@ Tip
 </div>
 </div>
 </section>
-<section id="build-from-the-top-level" class="level2" data-number="6.4">
-<h2 data-number="6.4" class="anchored" data-anchor-id="build-from-the-top-level"><span class="header-section-number">6.4</span> Build from the Top-Level</h2>
+<section id="top-level-assembly" class="level2" data-number="6.4">
+<h2 data-number="6.4" class="anchored" data-anchor-id="top-level-assembly"><span class="header-section-number">6.4</span> Top-Level Assembly</h2>
 <p>For top-level assembly, the <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/Makefile">top-level Makefile</a> exposes two wrapper targets that descend into the IP folders and call <code>make all</code>:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb29"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> build-bondpad      <span class="co"># build ip/sg13g2_ip__bondpad_70x70</span></span>
 <span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> build-logos        <span class="co"># build ip/sg13g2_ip__jku and ip/sg13g2_ip__jku_names</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
