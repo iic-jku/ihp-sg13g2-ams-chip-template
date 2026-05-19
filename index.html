@@ -450,8 +450,9 @@ window.Quarto = {
   <li><a href="#sec-exercises" id="toc-sec-exercises" class="nav-link" data-scroll-target="#sec-exercises"><span class="header-section-number">8</span> Additional Exercises</a>
   <ul class="collapse">
   <li><a href="#sec-exercise1" id="toc-sec-exercise1" class="nav-link" data-scroll-target="#sec-exercise1"><span class="header-section-number">8.1</span> Exercise 1: From 8-bit Up-Counter to 16-bit Down-Counter</a></li>
-  <li><a href="#sec-exercise2" id="toc-sec-exercise2" class="nav-link" data-scroll-target="#sec-exercise2"><span class="header-section-number">8.2</span> Exercise 2: Inverter to Three-Stage Ring Oscillator</a></li>
-  <li><a href="#sec-exercise3" id="toc-sec-exercise3" class="nav-link" data-scroll-target="#sec-exercise3"><span class="header-section-number">8.3</span> Exercise 3: Update Pinout and Floorplan of the Top-Level</a></li>
+  <li><a href="#sec-exercise2" id="toc-sec-exercise2" class="nav-link" data-scroll-target="#sec-exercise2"><span class="header-section-number">8.2</span> Exercise 2: Self-Biased Single-Ended Inverter Amplifier</a></li>
+  <li><a href="#sec-exercise3" id="toc-sec-exercise3" class="nav-link" data-scroll-target="#sec-exercise3"><span class="header-section-number">8.3</span> Exercise 3: Three-Stage Ring Oscillator with Output Buffer</a></li>
+  <li><a href="#sec-exercise4" id="toc-sec-exercise4" class="nav-link" data-scroll-target="#sec-exercise4"><span class="header-section-number">8.4</span> Exercise 4: Update Pinout and Floorplan of the Top-Level</a></li>
   </ul></li>
   <li><a href="#acknowledgements" id="toc-acknowledgements" class="nav-link" data-scroll-target="#acknowledgements"><span class="header-section-number">9</span> Acknowledgements</a></li>
   </ul>
@@ -2800,15 +2801,15 @@ Important
 </section>
 <section id="sec-exercises" class="level1" data-number="8">
 <h1 data-number="8"><span class="header-section-number">8</span> Additional Exercises</h1>
-<p>The following exercises repeat the corresponding sections of this tutorial with a modification of the design.</p>
+<p>The following exercises repeat the corresponding sections of this tutorial with modifications to the design.</p>
 <section id="sec-exercise1" class="level2" data-number="8.1">
 <h2 data-number="8.1" class="anchored" data-anchor-id="sec-exercise1"><span class="header-section-number">8.1</span> Exercise 1: From 8-bit Up-Counter to 16-bit Down-Counter</h2>
-<p>Repeat <a href="#sec-digital" class="quarto-xref">Section&nbsp;4</a> for a 16-bit synchronous down-counter that wraps from 0 back to <span class="math inline">\(2^{16} - 1\)</span>. The recommended steps are:</p>
+<p>Repeat <a href="#sec-digital" class="quarto-xref">Section&nbsp;4</a> for a 16-bit synchronous down-counter that wraps from 0 back to <span class="math inline">\(2^{16} - 1 = 65535\)</span>. The recommended steps are:</p>
 <ol type="1">
-<li>Update the RTL (<a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/counter/rtl/counter.sv"><code>counter.sv</code></a>, <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/counter/rtl/counter_top.sv"><code>counter_top.sv</code></a>, <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/counter/rtl/constants.sv"><code>constants.sv</code></a>). Change the bit-width and turn the increment block into a decrement, with wrap-around from 0 to <code>CTR_MAX</code>.</li>
+<li>Update the RTL (<a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/counter/rtl/counter.sv"><code>counter.sv</code></a>, <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/counter/rtl/counter_top.sv"><code>counter_top.sv</code></a>, <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/counter/rtl/constants.sv"><code>constants.sv</code></a>). Change the bitwidth and turn the increment block into a decrement, with wrap-around from 0 to <code>CTR_MAX</code>.</li>
 <li>Update the testbenches in <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/counter/testbenches/verilog/"><code>testbenches/verilog/</code></a>, <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/counter/testbenches/cocotb/"><code>testbenches/cocotb/</code></a>, and <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/counter/testbenches/xschem/"><code>testbenches/xschem/</code></a> to cover the new behaviour. Adjust the bus width in the waveform view files (<code>*.gtkw</code>, <code>*.surf.ron</code>) as well.</li>
 <li>Run <code>make sim-all</code> to validate the new RTL.</li>
-<li>Re-run the LibreLane flow with <code>make build-top</code>. Check the timing reports, a 16-bit counter at 50 MHz must still close timing.</li>
+<li>Re-run the LibreLane flow with <code>make build-top</code>. Check the timing reports. A 16-bit counter at 50 MHz must still pass timing constraints.</li>
 <li>Regenerate the XSPICE model with <code>make generate-xspice</code>, and re-run the gate-level Xschem simulation.</li>
 </ol>
 <div class="callout callout-style-default callout-tip callout-titled">
@@ -2821,34 +2822,59 @@ Important
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>Replace the binary counter with a 16-bit Gray counter (only one bit toggles per transition). The same testbench infrastructure can be reused with small changes to the self-check expectations.</p>
+<p>Replace the binary counter with a 16-bit Gray counter (only one bit toggles per transition).</p>
 </div>
 </div>
 </section>
 <section id="sec-exercise2" class="level2" data-number="8.2">
-<h2 data-number="8.2" class="anchored" data-anchor-id="sec-exercise2"><span class="header-section-number">8.2</span> Exercise 2: Inverter to Three-Stage Ring Oscillator</h2>
+<h2 data-number="8.2" class="anchored" data-anchor-id="sec-exercise2"><span class="header-section-number">8.2</span> Exercise 2: Self-Biased Single-Ended Inverter Amplifier</h2>
+<p>Repeat <a href="#sec-analog" class="quarto-xref">Section&nbsp;5</a> with a self-biased single-ended inverter amplifier by adding a feedback resistor <span class="math inline">\(R_\mathrm{f}\)</span> between the output and the input of the inverter. As discussed in <a href="#sec-cace" class="quarto-xref">Section&nbsp;5.4</a>, the bare CMOS inverter has poor PVT robustness because nothing pins the gate bias to <span class="math inline">\(V_\mathrm{DD}/2\)</span>. A feedback resistor closes a DC loop that forces the operating point to the high-gain crossover (<span class="math inline">\(V_\mathrm{in} \approx V_\mathrm{out} \approx V_\mathrm{DD}/2\)</span>) regardless of process corner, which also linearises the small-signal transfer characteristic and turns the inverter into a usable single-ended amplifier. The disadvantage of this technique is the reduced input resistance, which equals <span class="math inline">\(R_\mathrm{in} \approx 1 / (g_\mathrm{m,NMOS} + g_\mathrm{m,PMOS})\)</span>. The recommended steps are:</p>
+<ol type="1">
+<li>Open the inverter schematic (<a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/inverter/schematic/xschem/inverter.sch"><code>inverter.sch</code></a>) in Xschem and add a resistor between the <code>vin</code> and <code>vout</code> nets of the inverter. Start with a value of <span class="math inline">\(R_\mathrm{f} \geq 10\,\mathrm{k\Omega}\)</span> and adjust as needed. What can you observe?</li>
+<li>Re-run the schematic-level testbenches from <a href="#sec-analog" class="quarto-xref">Section&nbsp;5</a> and observe the change in behaviour. First, always carefully think about what the expected behaviour would be before running the simulations, and then check if the results match your expectations.</li>
+<li>Re-run the full schematic-level simulation suite with <code>make sim-all</code> to refresh the plotted results in <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/tutorial/fig/inverter_top"><code>fig/inverter_top/</code></a>.</li>
+<li>Re-run the CACE flow with <code>make sim-cace</code> and compare the new process and mismatch plots against <a href="#fig-inverter-cace-aol" class="quarto-xref">Figure&nbsp;16</a> and <a href="#fig-inverter-cace-fcu" class="quarto-xref">Figure&nbsp;18</a>. The spread of <span class="math inline">\(A_\mathrm{ol}\)</span> across corners should be visibly narrower than the open-loop reference.</li>
+<li>[Optional] Sweep <span class="math inline">\(R_\mathrm{f}\)</span> in the CACE characterisation YAML (<a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/inverter/verification/cace/inverter.yaml"><code>inverter.yaml</code></a>) to study the circuit behaviour across a range of feedback resistor values.</li>
+<li>[Optional] Once the schematic results are convincing, propagate the resistor to the layout in <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/inverter/layout/"><code>layout/</code></a> and re-run the verification chain (<code>make klayout-verify</code>, <code>make magic-verify</code>) plus <code>make build-top</code>.</li>
+</ol>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Tip
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Choose <span class="math inline">\(R_\mathrm{f}\)</span> carefully. Too small, and the loop loads the amplifier output and degrades the closed-loop gain. Too large, and the time constant with the input parasitic capacitance dominates, so the amplifier loses gain at the low end of the signal band. A value in the <span class="math inline">\(1\)</span>–<span class="math inline">\(10\,\mathrm{M\Omega}\)</span> range is a sensible starting point for this inverter sizing.</p>
+</div>
+</div>
+</section>
+<section id="sec-exercise3" class="level2" data-number="8.3">
+<h2 data-number="8.3" class="anchored" data-anchor-id="sec-exercise3"><span class="header-section-number">8.3</span> Exercise 3: Three-Stage Ring Oscillator with Output Buffer</h2>
 <p>Repeat <a href="#sec-analog" class="quarto-xref">Section&nbsp;5</a> for a three-stage ring oscillator with an output buffer, derived from the existing quad inverter. The recommended steps are:</p>
 <ol type="1">
 <li>Copy the <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/inverter/">inverter</a> macro folder to a new location (for example <code>macros/ringosc/</code>), and adapt the Makefile names.</li>
 <li>Update the schematic in Xschem. Connect three inverters in a ring, and tap the output of the last stage through a buffer. The fourth inverter of the quad inverter can naturally be used as the buffer.</li>
 <li>Update the symbol of the macro (<a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/inverter/schematic/xschem/inverter_top.sym"><code>schematic/xschem/inverter_top.sym</code></a>) and the PEX symbol (<a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/inverter/schematic/xschem/inverter_top_pex.sym"><code>schematic/xschem/inverter_top_pex.sym</code></a>) to expose a single output net, instead of <code>vin1..vin4</code> and <code>vout1..vout4</code>.</li>
-<li>Update the transient testbench (<a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/inverter/testbenches/xschem/inverter_top_tb_tran.sch"><code>testbenches/xschem/inverter_top_tb_tran.sch</code></a>) to measure the oscillation frequency. Delete the ac, dc, and standalone transient testbenches that are no longer relevant.</li>
-<li>Optionally (advanced), adapt the CACE <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/inverter/verification/cace/inverter.yaml"><code>inverter.yaml</code></a> to characterise the oscillation frequency across PVT.</li>
+<li>Update the transient testbench (<a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/inverter/testbenches/xschem/inverter_top_tb_tran.sch"><code>testbenches/xschem/inverter_top_tb_tran.sch</code></a>) to measure the oscillation frequency. Delete testbenches that are no longer relevant.</li>
+<li>[Optional] Adapt the CACE <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/inverter/verification/cace/inverter.yaml"><code>inverter.yaml</code></a> to characterise the oscillation frequency across PVT.</li>
 <li>Update the layout in KLayout. The existing <code>inverter_top.klay.gds</code> can be used as a starting point, but the internal routing has to be modified to form the ring and the buffer stage. After editing, export a clean <code>ringosc_top.gds</code>.</li>
 <li>Re-run the verification chain, <code>make klayout-verify</code>, <code>make magic-verify</code>, and <code>make build-top</code>.</li>
 </ol>
 </section>
-<section id="sec-exercise3" class="level2" data-number="8.3">
-<h2 data-number="8.3" class="anchored" data-anchor-id="sec-exercise3"><span class="header-section-number">8.3</span> Exercise 3: Update Pinout and Floorplan of the Top-Level</h2>
-<p>Building on <a href="#sec-exercise1" class="quarto-xref">Section&nbsp;8.1</a> and <a href="#sec-exercise2" class="quarto-xref">Section&nbsp;8.2</a>, swap <code>inverter2</code> for the ring oscillator, delete <code>counter2</code>, and connect the now 16-bit <code>counter1</code> to the freed-up south-side pads. The recommended steps are:</p>
+<section id="sec-exercise4" class="level2" data-number="8.4">
+<h2 data-number="8.4" class="anchored" data-anchor-id="sec-exercise4"><span class="header-section-number">8.4</span> Exercise 4: Update Pinout and Floorplan of the Top-Level</h2>
+<p>Building on <a href="#sec-exercise1" class="quarto-xref">Section&nbsp;8.1</a> and <a href="#sec-exercise3" class="quarto-xref">Section&nbsp;8.3</a>, swap <code>inverter2</code> for the ring oscillator, delete <code>counter2</code>, and connect the now 16-bit <code>counter1</code> to the freed-up south-side pads. The recommended steps are:</p>
 <ol type="1">
 <li>Replace <code>inverter2</code> with the ring oscillator macro in <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/rtl/chip_core.sv"><code>chip_core.sv</code></a>.</li>
 <li>Replace three of the four analog pads with VSS pads, and connect the ring oscillator’s output to the fourth analog pad.</li>
-<li>Delete <code>counter2</code> and rewire all eight south-side pads to the new 16-bit <code>counter1</code> value.</li>
+<li>Delete <code>counter2</code> and rewire all eight south-side pads to the new 16-bit <code>counter1</code> values.</li>
 <li>Update the parameters of <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/rtl/chip_top.sv"><code>chip_top.sv</code></a> so that <code>NUM_OUTPUT_PADS</code>, <code>NUM_BIDIR_PADS</code>, <code>NUM_ANALOG_PADS</code>, and <code>NUM_VSS_PADS</code> match the new pin count (see <a href="#sec-top" class="quarto-xref">Section&nbsp;7</a>).</li>
 <li>Update the macro instantiation and wiring in <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/rtl/chip_core.sv"><code>chip_core.sv</code></a>.</li>
 <li>Update the placement coordinates in the <code>MACROS</code> block of <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/flow/librelane/config.yaml"><code>config.yaml</code></a>. Keep the <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/doc/floorplan.md"><code>doc/floorplan.md</code></a> constraints in mind, namely stay in the core, no overlaps, and respect the <code>Metal3</code> grid for inverter-like macros.</li>
-<li>Update the PAD lists (<code>PAD_WEST</code>, <code>PAD_NORTH</code>, <code>PAD_SOUTH</code>, <code>PAD_EAST</code>) in <code>config.yaml</code> to match the new pinout.</li>
+<li>Update the PAD lists (<code>PAD_WEST</code>, <code>PAD_NORTH</code>, <code>PAD_SOUTH</code>, <code>PAD_EAST</code>) in <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/flow/librelane/config.yaml"><code>config.yaml</code></a> to match the new pinout.</li>
 <li>Update <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/flow/librelane/pdn_cfg.tcl"><code>pdn_cfg.tcl</code></a> so that the new macros are covered by the correct PDN grid (default for digital, <code>inverter_top</code>-style for analog).</li>
 <li>Rebuild the chip from scratch with <code>make build-all</code>, then verify with <code>make magic-drc CELL=chip_top</code> and <code>make klayout-drc-minimum</code>.</li>
 </ol>
