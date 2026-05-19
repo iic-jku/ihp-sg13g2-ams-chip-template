@@ -139,7 +139,7 @@ VERILOG_POWER_DEFINE: "USE_POWER_PINS"
 CLOCK_PORT: clk_PAD
 CLOCK_NET:  clk_pad/p2c
 
-CLOCK_PERIOD: 20 # in ns == ~50 MHz
+CLOCK_PERIOD: 20 # in ns == 50 MHz
 
 # Floorplanning
 FP_SIZING: absolute

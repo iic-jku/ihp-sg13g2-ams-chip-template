@@ -55,7 +55,7 @@ VERILOG_POWER_DEFINE: "USE_POWER_PINS"
 # Clock
 CLOCK_PORT: clock_i
 CLOCK_NET: clock_i
-CLOCK_PERIOD: 20 # in ns == ~50MHz
+CLOCK_PERIOD: 20 # in ns == 50 MHz
 
 # Define Standard Cells
 STD_CELL_LIBRARY: sg13g2_stdcell
