@@ -8,7 +8,8 @@
 - [ ] add VACASK testbenches
 - [ ] adjust fill density on top-level --> KLayout DRC error
 - [ ] add custom LibreLane step for filler insertion after ArtistIC added logo
-- [ ] Add GDSFill to `config.yaml`
+- [ ] add custom LibreLane step for power estimation (counter macro & top-level)
+- [ ] add GDSFill to `config.yaml`
 - [ ] finish ToDos in main Makefile
 - [ ] see [TinyWhisper Chip ToDo.md](https://github.com/iic-jku/TinyWhisper/blob/main/ToDo.md)
 - [ ] `ngspice` & `verilog` RTL Co-Simulation using `Xschem`: https://www.youtube.com/watch?v=PPd7jkcHOgA
