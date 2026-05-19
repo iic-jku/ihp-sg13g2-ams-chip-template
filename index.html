@@ -792,24 +792,24 @@ Tip
 <p>Instead of <code>git clone</code>, you can start by clicking the green “Use this template” button on the GitHub page to create your own copy of the repository. This way, you can push your changes to your own GitHub repository and even make it public if you want to share your custom silicon design with the community.</p>
 </div>
 </div>
-<p>Each macro under <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/"><code>macros/</code></a> has its own <code>Makefile</code> and <code>README.md</code> with macro-local targets. They are called by the top-level build targets, but can also be invoked directly from inside the macro folder. <a href="#fig-targets-overview" class="quarto-xref">Figure&nbsp;2</a> visualises how the Makefile targets of the whole directory structure depend on each other.</p>
-<p>The colour scheme groups every target by the deliverable it ultimately produces, so a beginner can trace a colour from <code>make all</code> down to the final outputs:</p>
+<p>Each macro under <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/"><code>macros/</code></a> has its own <code>Makefile</code> and <code>README.md</code>, including macro-specific targets. These targets are invoked by the top-level build flow, but you can also run them directly from inside each macro folder. <a href="#fig-targets-overview" class="quarto-xref">Figure&nbsp;2</a> shows how the Makefile targets across the repository are connected.</p>
+<p>The colour scheme groups targets by the final deliverable they produce, so beginners can follow one colour from <code>make all</code> to the generated outputs:</p>
 <ul>
-<li><strong>Orange — top chip / main</strong>: <code>make all</code> itself and every target that contributes to the top-level chip GDS (the <code>build-top</code> chain in the <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/Makefile">top-level Makefile</a>: <code>librelane-nodrc</code>, <code>copy-*</code>, <code>add-logo-fill</code>, <code>render-gds</code>).</li>
-<li><strong>Yellow — bondpad IP</strong>: <code>build-bondpad</code> and everything inside <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/ip/sg13g2_ip__bondpad_70x70/"><code>ip/sg13g2_ip__bondpad_70x70/</code></a>.</li>
-<li><strong>Purple — logos IP</strong>: <code>build-logos</code> and the two sub-Makefiles under <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/ip/sg13g2_ip__jku/"><code>ip/sg13g2_ip__jku/</code></a> and <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/ip/sg13g2_ip__jku_names/"><code>ip/sg13g2_ip__jku_names/</code></a>.</li>
-<li><strong>Blue — digital macro</strong>: <code>build-counter</code> and the <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/counter/"><code>macros/counter/</code></a> Makefile. Blue is the conventional colour for digital design.</li>
-<li><strong>Green — analog macro</strong>: <code>build-inverter</code> and the <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/inverter/"><code>macros/inverter/</code></a> Makefile. Green is the conventional colour for analog design.</li>
-<li><strong>Grey — simulation &amp; verification</strong>: intermediate targets that fan out into the coloured deliverables (<code>sim-all</code>, <code>build-all</code>, <code>build-macros</code>, <code>init-submodules</code>, <code>sim-*-cocotb</code>) and the top-level <code>magic-drc</code> checks that are run after the chip is built.</li>
+<li><strong>Orange — top chip / main</strong>: This branch includes <code>make all</code> and all targets that contribute to the top-level chip GDS. In the <code>build-top</code> chain of the <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/Makefile">top-level Makefile</a>, these are <code>librelane-nodrc</code>, <code>copy-*</code>, <code>add-logo-fill</code>, and <code>render-gds</code>.</li>
+<li><strong>Yellow — bondpad IP</strong>: This branch includes <code>build-bondpad</code> and all targets inside <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/ip/sg13g2_ip__bondpad_70x70/"><code>ip/sg13g2_ip__bondpad_70x70/</code></a>.</li>
+<li><strong>Purple — logos IP</strong>: This branch includes <code>build-logos</code> and the two sub-Makefiles under <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/ip/sg13g2_ip__jku/"><code>ip/sg13g2_ip__jku/</code></a> and <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/ip/sg13g2_ip__jku_names/"><code>ip/sg13g2_ip__jku_names/</code></a>.</li>
+<li><strong>Blue — digital macro</strong>: This branch includes <code>build-counter</code> and the <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/counter/"><code>macros/counter/</code></a> Makefile.</li>
+<li><strong>Green — analog macro</strong>: This branch includes <code>build-inverter</code> and the <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/inverter/"><code>macros/inverter/</code></a> Makefile.</li>
+<li><strong>Grey — simulation and verification</strong>: This branch includes intermediate targets that feed the coloured deliverables (<code>sim-all</code>, <code>build-all</code>, <code>build-macros</code>, <code>init-submodules</code>, <code>sim-*-cocotb</code>).</li>
 </ul>
-<p>Solid arrows are direct <code>$(MAKE) &lt;target&gt;</code> calls within a single Makefile; dashed arrows are recursive <code>$(MAKE) -C &lt;dir&gt; all</code> calls that descend into a sub-Makefile (one per coloured deliverable).</p>
+<p>Solid arrows represent direct <code>$(MAKE) &lt;target&gt;</code> calls within a single Makefile. Dashed arrows represent recursive <code>$(MAKE) -C &lt;dir&gt; all</code> calls that descend into a sub-Makefile (one per coloured deliverable).</p>
 <div id="fig-targets-overview" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-targets-overview-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<a href="fig/targets_overview/targets_overview.svg" class="lightbox" data-gallery="quarto-lightbox-gallery-2" title="Figure&nbsp;2: Overview of the Makefile targets that make all resolves to. Every coloured lane corresponds to one deliverable (top chip, bondpad, logos, digital macro, analog macro). The grey targets connect make all to those lanes."><img src="fig/targets_overview/targets_overview.svg" class="img-fluid figure-img"></a>
+<a href="fig/targets_overview/targets_overview.svg" class="lightbox" data-gallery="quarto-lightbox-gallery-2" title="Figure&nbsp;2: Overview of the Makefile targets that make all resolves to. Every coloured branch corresponds to one deliverable (top chip, bondpad, logos, digital macro, analog macro). The grey targets connect make all to those branches."><img src="fig/targets_overview/targets_overview.svg" class="img-fluid figure-img"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-targets-overview-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;2: Overview of the Makefile targets that <code>make all</code> resolves to. Every coloured lane corresponds to one deliverable (top chip, bondpad, logos, digital macro, analog macro). The grey targets connect <code>make all</code> to those lanes.
+Figure&nbsp;2: Overview of the Makefile targets that <code>make all</code> resolves to. Every coloured branch corresponds to one deliverable (top chip, bondpad, logos, digital macro, analog macro). The grey targets connect <code>make all</code> to those branches.
 </figcaption>
 </figure>
 </div>
@@ -1915,7 +1915,7 @@ Tip
 <section id="inspect-edit-the-layout" class="level2" data-number="5.6">
 <h2 data-number="5.6" class="anchored" data-anchor-id="inspect-edit-the-layout"><span class="header-section-number">5.6</span> Inspect / Edit the Layout</h2>
 <p>After the schematic is finalised and the design targets are met, the layout can be created. The layout of the <code>inverter</code> cell is hierarchical, and the top-level cell <code>inverter_top</code> contains four instances of the <code>inverter</code> cell. Around the four-channel inverter layout, a power ring is drawn on <code>Metal5</code> and <code>TopMetal1</code> layers, which is connected to the <code>VDD</code> and <code>VSS</code> pins of the four inverters. This power ring is required for top-level integration, connecting the macro power to the chip’s PDN.</p>
-<p>The layout is created and edited in KLayout. The container provides the <code>ke</code> alias for <code>klayout -e</code> (edit mode). With the following command, the GDS of the four-channel inverter is opened in KLayout. With the keys <code>0</code>, <code>1</code>, <code>2</code>, …, <code>9</code> you can view different layers as explained in the <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/doc/klayout/klayout_cheatsheet.md">KLayout cheatsheet</a> or in the <a href="https://github.com/iic-jku/klayout-layer-shortcuts">klayout-layer-shortcuts</a> plugin.</p>
+<p>The layout is created and edited in KLayout. The container provides the <code>ke</code> alias for <code>klayout -e</code> (edit mode). With the following command, the GDS of the four-channel inverter is opened in KLayout as shown <a href="#fig-inverter-top-layout" class="quarto-xref">Figure&nbsp;21</a>. With the keys <code>0</code>, <code>1</code>, <code>2</code>, …, <code>9</code> you can view different layers as explained in the <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/doc/klayout/klayout_cheatsheet.md">KLayout cheatsheet</a> or in the <a href="https://github.com/iic-jku/klayout-layer-shortcuts">klayout-layer-shortcuts</a> plugin.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb17"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="ex">ke</span> layout/inverter_top.klay.gds</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>After modifying the layout, export a clean <code>.gds</code> file (for example <code>inverter_top.gds</code>) by pressing <code>File &gt; Export Layout For Tapeout</code>. The Magic-based verification flows only work on <code>.gds</code> files, while the KLayout-based verification flows accept either <code>.gds</code> or <code>.klay.gds</code>.</p>
 <div id="fig-inverter-top-layout" class="quarto-float quarto-figure quarto-figure-center anchored">
@@ -1925,6 +1925,17 @@ Tip
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-inverter-top-layout-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure&nbsp;21: <code>inverter_top</code> layout in KLayout.
+</figcaption>
+</figure>
+</div>
+<p>KLayout also supports a 2.5D viewer, which can be used to inspect the layout. To open the 2.5D viewer, press <code>SG13G2 PDK &gt; BEOL 2.5D Viewer</code>. <a href="#fig-inverter-top-layout-3D" class="quarto-xref">Figure&nbsp;22</a> shows the <code>inverter_top</code> layout in the 2.5D viewer.</p>
+<div id="fig-inverter-top-layout-3D" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-inverter-top-layout-3D-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="fig/inverter_top/inverter_top_3D.png" class="lightbox" data-gallery="quarto-lightbox-gallery-24" title="Figure&nbsp;22: inverter_top layout in KLayout 2.5D viewer."><img src="fig/inverter_top/inverter_top_3D.png" class="img-fluid figure-img" style="width:100.0%"></a>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-inverter-top-layout-3D-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;22: <code>inverter_top</code> layout in KLayout 2.5D viewer.
 </figcaption>
 </figure>
 </div>
@@ -1951,7 +1962,7 @@ Tip
 <p>In KLayout, a non-interactive DRC run can be launched from the GUI by pressing <strong><code>F9</code></strong>. The DRC options can be modified by pressing <strong><code>F10</code></strong>.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><a href="fig/inverter_top/KLayout_DRC_Output.png" class="lightbox" data-gallery="quarto-lightbox-gallery-24" title="KLayout DRC output windows."><img src="fig/inverter_top/KLayout_DRC_Output.png" class="img-fluid figure-img" style="width:100.0%" alt="KLayout DRC output windows."></a></p>
+<p><a href="fig/inverter_top/KLayout_DRC_Output.png" class="lightbox" data-gallery="quarto-lightbox-gallery-25" title="KLayout DRC output windows."><img src="fig/inverter_top/KLayout_DRC_Output.png" class="img-fluid figure-img" style="width:100.0%" alt="KLayout DRC output windows."></a></p>
 <figcaption>KLayout DRC output windows.</figcaption>
 </figure>
 </div>
@@ -1977,7 +1988,7 @@ Tip
 <p>In KLayout, a non-interactive LVS run can be launched from the GUI by pressing <strong><code>F11</code></strong>. The LVS options can be modified by pressing <strong><code>F12</code></strong>, where the schematic netlist <code>inverter_top_klayout.cdl</code> has to be selected manually. Set <code>deep</code> as the run mode.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><a href="fig/inverter_top/KLayout_LVS_Output.png" class="lightbox" data-gallery="quarto-lightbox-gallery-25" title="KLayout LVS output windows."><img src="fig/inverter_top/KLayout_LVS_Output.png" class="img-fluid figure-img" style="width:100.0%" alt="KLayout LVS output windows."></a></p>
+<p><a href="fig/inverter_top/KLayout_LVS_Output.png" class="lightbox" data-gallery="quarto-lightbox-gallery-26" title="KLayout LVS output windows."><img src="fig/inverter_top/KLayout_LVS_Output.png" class="img-fluid figure-img" style="width:100.0%" alt="KLayout LVS output windows."></a></p>
 <figcaption>KLayout LVS output windows.</figcaption>
 </figure>
 </div>
@@ -1993,8 +2004,8 @@ Tip
 <li><code>EXT_MODE=3</code> for full-RC extraction.</li>
 </ul>
 <p>If not set, it defaults to <code>EXT_MODE=3</code>.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb20"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> klayout-pex [CELL=<span class="op">&lt;</span>cellname<span class="op">&gt;</span>] [EXT_MODE=<span class="op">&lt;</span>1<span class="kw">|</span><span class="ex">2</span><span class="kw">|</span><span class="dv">3</span><span class="op">&gt;</span>]         <span class="co"># default CELL=inverter_top, default EXT_MODE=3 (full-RC)</span></span>
-<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> magic-pex [CELL=<span class="op">&lt;</span>cellname<span class="op">&gt;</span>] [EXT_MODE=<span class="op">&lt;</span>1<span class="kw">|</span><span class="ex">2</span><span class="kw">|</span><span class="dv">3</span><span class="op">&gt;</span>]           <span class="co"># default CELL=inverter_top, default EXT_MODE=2 (CC mode)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb20"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> klayout-pex [CELL=<span class="op">&lt;</span>cellname<span class="op">&gt;</span>] [EXT_MODE=<span class="op">&lt;</span>1<span class="kw">|</span><span class="ex">2</span><span class="kw">|</span><span class="dv">3</span><span class="op">&gt;</span>]   <span class="co"># default CELL=inverter_top, default EXT_MODE=3 (full-RC)</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> magic-pex [CELL=<span class="op">&lt;</span>cellname<span class="op">&gt;</span>] [EXT_MODE=<span class="op">&lt;</span>1<span class="kw">|</span><span class="ex">2</span><span class="kw">|</span><span class="dv">3</span><span class="op">&gt;</span>]     <span class="co"># default CELL=inverter_top, default EXT_MODE=2 (CC mode)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>PEX writes a SPICE netlist into <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/inverter/netlist/pex/"><code>netlist/pex/</code></a>. The subcircuit name is renamed to <code>&lt;CELL&gt;_pex</code>, and the pin order is rearranged to match the Xschem PEX symbol (<a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/inverter/schematic/xschem/inverter_top_pex.sym"><code>inverter_top_pex.sym</code></a>).</p>
 <div class="callout callout-style-default callout-tip callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -2178,10 +2189,10 @@ Tip
 <div id="fig-bondpad-layout" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-bondpad-layout-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<a href="fig/bondpad_logo/bondpad_layout.png" class="lightbox" data-gallery="quarto-lightbox-gallery-26" title="Figure&nbsp;22: sg13g2_ip__bondpad_70x70 layout in KLayout."><img src="fig/bondpad_logo/bondpad_layout.png" class="img-fluid figure-img" style="width:60.0%"></a>
+<a href="fig/bondpad_logo/bondpad_layout.png" class="lightbox" data-gallery="quarto-lightbox-gallery-27" title="Figure&nbsp;23: sg13g2_ip__bondpad_70x70 layout in KLayout."><img src="fig/bondpad_logo/bondpad_layout.png" class="img-fluid figure-img" style="width:60.0%"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-bondpad-layout-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;22: <code>sg13g2_ip__bondpad_70x70</code> layout in KLayout.
+Figure&nbsp;23: <code>sg13g2_ip__bondpad_70x70</code> layout in KLayout.
 </figcaption>
 </figure>
 </div>
@@ -2289,7 +2300,7 @@ Figure&nbsp;22: <code>sg13g2_ip__bondpad_70x70</code> layout in KLayout.
 <div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><a href="fig/bondpad_logo/jku_logo.png" class="lightbox" data-gallery="quarto-lightbox-gallery-27" title="sg13g2_ip__jku logo."><img src="fig/bondpad_logo/jku_logo.png" class="img-fluid figure-img" style="width:100.0%"></a></p>
+<p><a href="fig/bondpad_logo/jku_logo.png" class="lightbox" data-gallery="quarto-lightbox-gallery-28" title="sg13g2_ip__jku logo."><img src="fig/bondpad_logo/jku_logo.png" class="img-fluid figure-img" style="width:100.0%"></a></p>
 <figcaption><code>sg13g2_ip__jku</code> logo.</figcaption>
 </figure>
 </div>
@@ -2297,7 +2308,7 @@ Figure&nbsp;22: <code>sg13g2_ip__bondpad_70x70</code> layout in KLayout.
 <div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><a href="fig/bondpad_logo/jku_logo_layout.png" class="lightbox" data-gallery="quarto-lightbox-gallery-28" title="sg13g2_ip__jku layout in KLayout."><img src="fig/bondpad_logo/jku_logo_layout.png" class="img-fluid figure-img" style="width:100.0%"></a></p>
+<p><a href="fig/bondpad_logo/jku_logo_layout.png" class="lightbox" data-gallery="quarto-lightbox-gallery-29" title="sg13g2_ip__jku layout in KLayout."><img src="fig/bondpad_logo/jku_logo_layout.png" class="img-fluid figure-img" style="width:100.0%"></a></p>
 <figcaption><code>sg13g2_ip__jku</code> layout in KLayout.</figcaption>
 </figure>
 </div>
@@ -2305,7 +2316,7 @@ Figure&nbsp;22: <code>sg13g2_ip__bondpad_70x70</code> layout in KLayout.
 </div>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-jku-logo-layout-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;23: <code>sg13g2_ip__jku</code> logo (left) and <code>sg13g2_ip__jku</code> layout in KLayout (right).
+Figure&nbsp;24: <code>sg13g2_ip__jku</code> logo (left) and <code>sg13g2_ip__jku</code> layout in KLayout (right).
 </figcaption>
 </figure>
 </div>
@@ -2602,27 +2613,27 @@ Note
 <span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> sim-gl-cocotb</span>
 <span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> sim-view-cocotb                                <span class="co"># use GTKWave as waveform viewer</span></span>
 <span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> sim-view-cocotb WAVEFORM_VIEWER=surfer         <span class="co"># use Surfer as waveform viewer</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>The cocotb testbench at top level is <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/testbenches/cocotb/chip_top_tb.py"><code>testbenches/cocotb/chip_top_tb.py</code></a>, and it covers the global enable, reset, counters, and bidir behaviour documented in <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/doc/specifications.md"><code>doc/specifications.md</code></a>. The result is shown in <a href="#fig-chip-top-cocotb-gtkwave" class="quarto-xref">Figure&nbsp;24</a>.</p>
+<p>The cocotb testbench at top level is <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/testbenches/cocotb/chip_top_tb.py"><code>testbenches/cocotb/chip_top_tb.py</code></a>, and it covers the global enable, reset, counters, and bidir behaviour documented in <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/doc/specifications.md"><code>doc/specifications.md</code></a>. The result is shown in <a href="#fig-chip-top-cocotb-gtkwave" class="quarto-xref">Figure&nbsp;25</a>.</p>
 <div id="fig-chip-top-cocotb-gtkwave" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-chip-top-cocotb-gtkwave-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<a href="fig/chip_top/chip_top_cocotb_gtkwave.png" class="lightbox" data-gallery="quarto-lightbox-gallery-29" title="Figure&nbsp;24: chip_top cocotb waveform in GTKWave."><img src="fig/chip_top/chip_top_cocotb_gtkwave.png" class="img-fluid figure-img"></a>
+<a href="fig/chip_top/chip_top_cocotb_gtkwave.png" class="lightbox" data-gallery="quarto-lightbox-gallery-30" title="Figure&nbsp;25: chip_top cocotb waveform in GTKWave."><img src="fig/chip_top/chip_top_cocotb_gtkwave.png" class="img-fluid figure-img"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-chip-top-cocotb-gtkwave-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;24: <code>chip_top</code> cocotb waveform in GTKWave.
+Figure&nbsp;25: <code>chip_top</code> cocotb waveform in GTKWave.
 </figcaption>
 </figure>
 </div>
-<p>For mixed-signal simulation, the <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/testbenches/xschem/chip_top_tb_tran.sch"><code>testbenches/xschem/chip_top_tb_tran.sch</code></a> testbench can be opened in Xschem for interactive simulation, the same way as for the counter or the inverter, and is shown in <a href="#fig-chip-top-tb-tran-schematic" class="quarto-xref">Figure&nbsp;25</a>.</p>
+<p>For mixed-signal simulation, the <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/testbenches/xschem/chip_top_tb_tran.sch"><code>testbenches/xschem/chip_top_tb_tran.sch</code></a> testbench can be opened in Xschem for interactive simulation, the same way as for the counter or the inverter, and is shown in <a href="#fig-chip-top-tb-tran-schematic" class="quarto-xref">Figure&nbsp;26</a>.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb37"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> testbenches/xschem</span>
 <span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a><span class="ex">xschem</span> chip_top_tb_tran.sch</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div id="fig-chip-top-tb-tran-schematic" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-chip-top-tb-tran-schematic-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<a href="fig/chip_top/chip_top_tb_tran_schematic.svg" class="lightbox" data-gallery="quarto-lightbox-gallery-30" title="Figure&nbsp;25: Xschem top-level mixed-signal testbench chip_top_tb_tran."><img src="fig/chip_top/chip_top_tb_tran_schematic.svg" class="img-fluid figure-img"></a>
+<a href="fig/chip_top/chip_top_tb_tran_schematic.svg" class="lightbox" data-gallery="quarto-lightbox-gallery-31" title="Figure&nbsp;26: Xschem top-level mixed-signal testbench chip_top_tb_tran."><img src="fig/chip_top/chip_top_tb_tran_schematic.svg" class="img-fluid figure-img"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-chip-top-tb-tran-schematic-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;25: Xschem top-level mixed-signal testbench <code>chip_top_tb_tran</code>.
+Figure&nbsp;26: Xschem top-level mixed-signal testbench <code>chip_top_tb_tran</code>.
 </figcaption>
 </figure>
 </div>
@@ -2646,61 +2657,61 @@ Note
 <div id="fig-chip-top-tb-tran-analog-inv-sim" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-chip-top-tb-tran-analog-inv-sim-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<a href="fig/chip_top/chip_top_tb_tran_analog_inv_sim.svg" class="lightbox" data-gallery="quarto-lightbox-gallery-31" title="Figure&nbsp;26: Plotted simulation result of chip_top_tb_tran — analog inverter 1 response."><img src="fig/chip_top/chip_top_tb_tran_analog_inv_sim.svg" class="img-fluid figure-img" style="width:75.0%"></a>
+<a href="fig/chip_top/chip_top_tb_tran_analog_inv_sim.svg" class="lightbox" data-gallery="quarto-lightbox-gallery-32" title="Figure&nbsp;27: Plotted simulation result of chip_top_tb_tran — analog inverter 1 response."><img src="fig/chip_top/chip_top_tb_tran_analog_inv_sim.svg" class="img-fluid figure-img" style="width:75.0%"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-chip-top-tb-tran-analog-inv-sim-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;26: Plotted simulation result of <code>chip_top_tb_tran</code> — analog inverter 1 response.
+Figure&nbsp;27: Plotted simulation result of <code>chip_top_tb_tran</code> — analog inverter 1 response.
 </figcaption>
 </figure>
 </div>
 <div id="fig-chip-top-tb-tran-digital1-sim" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-chip-top-tb-tran-digital1-sim-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<a href="fig/chip_top/chip_top_tb_tran_digital1_sim.svg" class="lightbox" data-gallery="quarto-lightbox-gallery-32" title="Figure&nbsp;27: Plotted simulation result of chip_top_tb_tran — digital inverter 2 outputs."><img src="fig/chip_top/chip_top_tb_tran_digital1_sim.svg" class="img-fluid figure-img"></a>
+<a href="fig/chip_top/chip_top_tb_tran_digital1_sim.svg" class="lightbox" data-gallery="quarto-lightbox-gallery-33" title="Figure&nbsp;28: Plotted simulation result of chip_top_tb_tran — digital inverter 2 outputs."><img src="fig/chip_top/chip_top_tb_tran_digital1_sim.svg" class="img-fluid figure-img"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-chip-top-tb-tran-digital1-sim-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;27: Plotted simulation result of <code>chip_top_tb_tran</code> — digital inverter 2 outputs.
+Figure&nbsp;28: Plotted simulation result of <code>chip_top_tb_tran</code> — digital inverter 2 outputs.
 </figcaption>
 </figure>
 </div>
 <div id="fig-chip-top-tb-tran-digital2-sim" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-chip-top-tb-tran-digital2-sim-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<a href="fig/chip_top/chip_top_tb_tran_digital2_sim.svg" class="lightbox" data-gallery="quarto-lightbox-gallery-33" title="Figure&nbsp;28: Plotted simulation result of chip_top_tb_tran — digital counter 2 outputs."><img src="fig/chip_top/chip_top_tb_tran_digital2_sim.svg" class="img-fluid figure-img"></a>
+<a href="fig/chip_top/chip_top_tb_tran_digital2_sim.svg" class="lightbox" data-gallery="quarto-lightbox-gallery-34" title="Figure&nbsp;29: Plotted simulation result of chip_top_tb_tran — digital counter 2 outputs."><img src="fig/chip_top/chip_top_tb_tran_digital2_sim.svg" class="img-fluid figure-img"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-chip-top-tb-tran-digital2-sim-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;28: Plotted simulation result of <code>chip_top_tb_tran</code> — digital counter 2 outputs.
+Figure&nbsp;29: Plotted simulation result of <code>chip_top_tb_tran</code> — digital counter 2 outputs.
 </figcaption>
 </figure>
 </div>
 <div id="fig-chip-top-tb-tran-digital3-sim" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-chip-top-tb-tran-digital3-sim-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<a href="fig/chip_top/chip_top_tb_tran_digital3_sim.svg" class="lightbox" data-gallery="quarto-lightbox-gallery-34" title="Figure&nbsp;29: Plotted simulation result of chip_top_tb_tran — digital counter 1 / inverter 1 bidirs."><img src="fig/chip_top/chip_top_tb_tran_digital3_sim.svg" class="img-fluid figure-img"></a>
+<a href="fig/chip_top/chip_top_tb_tran_digital3_sim.svg" class="lightbox" data-gallery="quarto-lightbox-gallery-35" title="Figure&nbsp;30: Plotted simulation result of chip_top_tb_tran — digital counter 1 / inverter 1 bidirs."><img src="fig/chip_top/chip_top_tb_tran_digital3_sim.svg" class="img-fluid figure-img"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-chip-top-tb-tran-digital3-sim-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;29: Plotted simulation result of <code>chip_top_tb_tran</code> — digital counter 1 / inverter 1 bidirs.
+Figure&nbsp;30: Plotted simulation result of <code>chip_top_tb_tran</code> — digital counter 1 / inverter 1 bidirs.
 </figcaption>
 </figure>
 </div>
-<p>When the testbench is opened in Xschem, the schematic of <code>chip_top</code> can be inspected with the shortcuts <strong><code>e</code></strong> / <strong><code>Ctrl + e</code></strong>, and the symbol can be shown with <strong><code>i</code></strong> / <strong><code>Ctrl + i</code></strong> as explained in <a href="#sec-analog" class="quarto-xref">Section&nbsp;5</a>. The schematic and symbol are shown in <a href="#fig-chip-top-symbol" class="quarto-xref">Figure&nbsp;30</a> and <a href="#fig-chip-top-schematic" class="quarto-xref">Figure&nbsp;31</a>, respectively. The schematic shows the connections between the padframe and the core macros, while the symbol shows the pinout of the chip. The SRAM is not included in the schematic, since IHP does not ship a SPICE model or an Xschem symbol for the <code>RM_IHPSG13_1P_1024x32_c2_bm_bist</code> macro.</p>
+<p>When the testbench is opened in Xschem, the schematic of <code>chip_top</code> can be inspected with the shortcuts <strong><code>e</code></strong> / <strong><code>Ctrl + e</code></strong>, and the symbol can be shown with <strong><code>i</code></strong> / <strong><code>Ctrl + i</code></strong> as explained in <a href="#sec-analog" class="quarto-xref">Section&nbsp;5</a>. The schematic and symbol are shown in <a href="#fig-chip-top-symbol" class="quarto-xref">Figure&nbsp;31</a> and <a href="#fig-chip-top-schematic" class="quarto-xref">Figure&nbsp;32</a>, respectively. The schematic shows the connections between the padframe and the core macros, while the symbol shows the pinout of the chip. The SRAM is not included in the schematic, since IHP does not ship a SPICE model or an Xschem symbol for the <code>RM_IHPSG13_1P_1024x32_c2_bm_bist</code> macro.</p>
 <div id="fig-chip-top-symbol" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-chip-top-symbol-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<a href="fig/chip_top/chip_top_symbol.svg" class="lightbox" data-gallery="quarto-lightbox-gallery-35" title="Figure&nbsp;30: Xschem symbol of chip_top, showing the pinout of the chip."><img src="fig/chip_top/chip_top_symbol.svg" class="img-fluid figure-img" style="width:60.0%"></a>
+<a href="fig/chip_top/chip_top_symbol.svg" class="lightbox" data-gallery="quarto-lightbox-gallery-36" title="Figure&nbsp;31: Xschem symbol of chip_top, showing the pinout of the chip."><img src="fig/chip_top/chip_top_symbol.svg" class="img-fluid figure-img" style="width:60.0%"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-chip-top-symbol-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;30: Xschem symbol of <code>chip_top</code>, showing the pinout of the chip.
+Figure&nbsp;31: Xschem symbol of <code>chip_top</code>, showing the pinout of the chip.
 </figcaption>
 </figure>
 </div>
 <div id="fig-chip-top-schematic" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-chip-top-schematic-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<a href="fig/chip_top/chip_top_schematic.svg" class="lightbox" data-gallery="quarto-lightbox-gallery-36" title="Figure&nbsp;31: Xschem schematic of chip_top, showing the connections between the padframe and the core macros."><img src="fig/chip_top/chip_top_schematic.svg" class="img-fluid figure-img"></a>
+<a href="fig/chip_top/chip_top_schematic.svg" class="lightbox" data-gallery="quarto-lightbox-gallery-37" title="Figure&nbsp;32: Xschem schematic of chip_top, showing the connections between the padframe and the core macros."><img src="fig/chip_top/chip_top_schematic.svg" class="img-fluid figure-img"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-chip-top-schematic-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;31: Xschem schematic of <code>chip_top</code>, showing the connections between the padframe and the core macros.
+Figure&nbsp;32: Xschem schematic of <code>chip_top</code>, showing the connections between the padframe and the core macros.
 </figcaption>
 </figure>
 </div>
@@ -2751,20 +2762,20 @@ Tip
 <div id="fig-chip-top-layout" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-chip-top-layout-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<a href="fig/chip_top/chip_top_black.png" class="lightbox" data-gallery="quarto-lightbox-gallery-37" title="Figure&nbsp;32: chip_top_logo_fill layout in KLayout (“all” layers)."><img src="fig/chip_top/chip_top_black.png" class="img-fluid figure-img" style="width:75.0%"></a>
+<a href="fig/chip_top/chip_top_black.png" class="lightbox" data-gallery="quarto-lightbox-gallery-38" title="Figure&nbsp;33: chip_top_logo_fill layout in KLayout (“all” layers)."><img src="fig/chip_top/chip_top_black.png" class="img-fluid figure-img" style="width:75.0%"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-chip-top-layout-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;32: <code>chip_top_logo_fill</code> layout in KLayout (“all” layers).
+Figure&nbsp;33: <code>chip_top_logo_fill</code> layout in KLayout (“all” layers).
 </figcaption>
 </figure>
 </div>
 <div id="fig-chip-top-layout-tm2" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-chip-top-layout-tm2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<a href="fig/chip_top/chip_top_black_TM2.png" class="lightbox" data-gallery="quarto-lightbox-gallery-38" title="Figure&nbsp;33: chip_top_logo_fill layout in KLayout with only TopMetal2 selected."><img src="fig/chip_top/chip_top_black_TM2.png" class="img-fluid figure-img" style="width:75.0%"></a>
+<a href="fig/chip_top/chip_top_black_TM2.png" class="lightbox" data-gallery="quarto-lightbox-gallery-39" title="Figure&nbsp;34: chip_top_logo_fill layout in KLayout with only TopMetal2 selected."><img src="fig/chip_top/chip_top_black_TM2.png" class="img-fluid figure-img" style="width:75.0%"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-chip-top-layout-tm2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;33: <code>chip_top_logo_fill</code> layout in KLayout with only <code>TopMetal2</code> selected.
+Figure&nbsp;34: <code>chip_top_logo_fill</code> layout in KLayout with only <code>TopMetal2</code> selected.
 </figcaption>
 </figure>
 </div>
