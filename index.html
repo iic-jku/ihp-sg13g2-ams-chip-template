@@ -1304,7 +1304,7 @@ Note
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>These arrows in Xschem are called “launchers” and are essentially a series of Tcl commands. Since Xschem is fully scriptable via Tcl, repetitive tasks can be easily automated. Select a launcher and press <code>q</code> (Properties) to inspect or modify its underlying Tcl commands. This is also the beauty of Xschem and the reason why it is possible to also run simulations non-interactively, generate netlists, and run LVS with only Makefile targets, as you will see below.</p>
+<p>The green arrows in Xschem are called “launchers” and are essentially a series of Tcl commands. Since Xschem is fully scriptable via Tcl, repetitive tasks can be easily automated. Select a launcher and press <code>q</code> (Properties) to inspect or modify its underlying Tcl commands. This is also the beauty of Xschem and the reason why it is possible to also run simulations non-interactively, generate netlists, and run LVS with only Makefile targets, as you will see below.</p>
 </div>
 </div>
 <p>The same simulation can also be run non-interactively from the Makefile, and the result can be plotted from Python.</p>
@@ -1338,6 +1338,19 @@ Figure&nbsp;6: Plotted Xschem simulation results of <code>counter_top_tb_tran</c
 <li><a href="https://en.wikipedia.org/wiki/Monte_Carlo_method">Monte Carlo</a> simulation of process and mismatch variations with CACE.</li>
 </ul>
 <p>Two instances are used in the chip core. One is used as a 4-channel digital inverter (<code>inverter1</code>), and the other as a 2-channel analog inverter (<code>inverter2</code>). See the <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/doc/specifications.md">chip specifications</a> for the full picture.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>An inverter can act as a digital circuit (when the input is driven by a digital signal and the output is switching between the supply rails). Here, we characterize the inverter as an analog circuit, meaning that we are interested in its continuous voltage transfer characteristic and its small-signal voltage gain.</p>
+</div>
+</div>
 <section id="directory-structure-2" class="level2" data-number="5.1">
 <h2 data-number="5.1" class="anchored" data-anchor-id="directory-structure-2"><span class="header-section-number">5.1</span> Directory Structure</h2>
 <p>The inverter design files are located in <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/inverter/"><code>macros/inverter/</code></a>, and the relevant folders are:</p>
