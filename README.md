@@ -48,6 +48,8 @@ Furthermore, it serves as a regression test for the above-mentioned open-source 
 
 A step-by-step tutorial, including additional exercises, can be found [here](https://iic-jku.github.io/ihp-sg13g2-ams-chip-template/index.html).
 
+An overview of the open source IC design landscape is presented [here](https://ic3.ie/resources/open-source-ic-design-day).
+
 
 ## Examples
 
