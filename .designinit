@@ -6,3 +6,8 @@ export PDKPATH=$PDK_ROOT/$PDK
 export STD_CELL_LIBRARY=sg13g2_stdcell
 export SPICE_USERINIT_DIR=$PDKPATH/libs.tech/ngspice
 export KLAYOUT_PATH=$PDKPATH/libs.tech/klayout
+
+# Wrap xschem so it always loads the project xschemrc.
+xschem() {
+    command xschem --rcfile "$DESIGNS/ihp-sg13g2-ams-chip-template/schematic/xschem/xschemrc" "$@"
+}
