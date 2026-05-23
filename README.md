@@ -1,4 +1,4 @@
-﻿# An Open-Source Analog-Mixed Signal Chip Design Template for the ihp-sg13g2 Open-PDK
+﻿# An Open-Source Analog-Mixed Signal Chip Design Template & Tutorial for the ihp-sg13g2 Open-PDK
 
 [![Quarto Publish](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/actions/workflows/quarto-publish.yml/badge.svg?branch=main)](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/actions/workflows/quarto-publish.yml)
 [![Tutorial](https://img.shields.io/badge/Tutorial-online-orange?logo=quarto)](https://iic-jku.github.io/ihp-sg13g2-ams-chip-template/index.html)
