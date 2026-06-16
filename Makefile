@@ -456,6 +456,14 @@ all: ## Simulate, build and verify the chip
 # ================================================================================================
 
 
+# Regression Target
+regression: ## Regression test target for IIC-OSIC-TOOLS.
+	$(MAKE) init-submodules
+	$(MAKE) build-bondpad
+.PHONY: regression
+# ================================================================================================
+
+
 # Release Target
 release: ## Copy GDS, netlists and chip renders to release/v.<VERSION>/ (usage: make release [VERSION=<version>])
 	mkdir -p $(RELEASE_DIR)/v.$(VERSION)/gds
