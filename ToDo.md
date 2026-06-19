@@ -7,7 +7,6 @@
 - [ ] finish targets_overview.drawio
 - [ ] add PF SimulatePARALLEL testbench
 - [ ] add VACASK testbenches
-- [ ] add regression make target
 - [ ] save markdown report of CACE
 - [ ] update table "Folder" column width
 - [ ] add exercise-solution branch and finish the exercises there

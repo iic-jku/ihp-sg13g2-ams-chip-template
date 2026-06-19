@@ -618,6 +618,44 @@ make all
 ```
 
 
+## Regression
+
+The `regression` target is the project's end-to-end smoke test for the [IIC-OSIC-TOOLS](https://github.com/iic-jku/iic-osic-tools) environment. Its goal is to exercise **every tool and flow** in the template at least once with the **shortest possible runtime**. It is a tool/flow regression, not a design sign-off.
+
+```sh
+make regression
+```
+
+To keep the runtime low while still covering the full toolchain, the regression makes the following trade-offs:
+
+- LibreLane runs with only **Magic DRC** enabled (`librelane-magicdrc`) for both the counter macro and the chip top-level. The slower KLayout DRC is skipped to save runtime, while Netgen LVS still runs as part of the flow.
+- The chip top-level Magic DRC runs inside LibreLane on the flow's **unfilled** GDS (`chip_top`, without logo & fill). The logo and fill are added post-flow and are not part of the regression.
+- KLayout DRC is skipped inside the counter and chip LibreLane runs, but is still exercised in the bondpad and logo IP builds, and in the inverter `klayout-verify`.
+- Exactly **one** CACE parameter set is run (the AC VDD sweep `ac_params`, no Monte-Carlo). Swap `ac_params` for `ac_mc_params` / `ac_mm_params` in the target to also exercise the Monte-Carlo flow.
+
+After the counter is hardened, `copy-final` copies its fresh `flow/final/` views into `macros/counter/final/`, so that the gate-level simulation (`sim-gl-cocotb`) and the chip top-level integration use the freshly built outputs rather than the committed ones.
+
+The following tools and flows are checked:
+
+| Tool / flow | Where it is exercised |
+| --- | --- |
+| git submodules | `init-submodules` |
+| Python GDS generation, KLayout scripting (bondpad generator), KLayout DRC, Magic DRC | `build-bondpad`, `build-logos` |
+| Xschem + ngspice (analog simulation) | inverter `sim-xschem` (`inverter_tb_dc_vout`) |
+| CACE (+ ngspice) | inverter CACE, single parameter set (`ac_params`) |
+| KLayout LVS (`run_lvs.py`) + KLayout DRC (`run_drc.py`) + KLayout PEX (`kpex`) | inverter `klayout-verify CELL=inverter_top` |
+| Magic extract + Netgen LVS + Magic DRC + Magic PEX (`sak-pex.sh`) | inverter `magic-verify CELL=inverter_top` |
+| Magic LEF export + LIB + Verilog stub + `lay2img` render | inverter `build-top` |
+| Verilator lint | counter `lint-verilog-all` |
+| Icarus Verilog (`iverilog`/`vvp`) | counter `sim-rtl-verilog` |
+| cocotb (RTL + gate-level) | counter `sim-rtl-cocotb`, `sim-gl-cocotb` |
+| yosys + nextpnr-ice40 + icepack (FPGA) | counter `build-fpga` |
+| LibreLane (OpenROAD / yosys / KLayout streamout / Netgen LVS) | counter + chip `librelane-magicdrc` |
+| Magic DRC (sign-off, run inside LibreLane) | counter + chip `librelane-magicdrc` |
+| `vlog2Verilog` / `vlog2Spice` / `spi2xspice` | counter `generate-xspice` |
+| Xschem gate-level | counter `sim-gl-xschem` |
+
+
 ## Release
 
 Copies the final top-level GDS with logo and fill structures from `layout/` to `release/v.<VERSION>/gds/`, copies the generated netlists into `release/v.<VERSION>/netlist/`, and copies the chip renders into `release/v.<VERSION>/img/`.
