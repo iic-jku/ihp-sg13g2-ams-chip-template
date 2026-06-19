@@ -458,11 +458,6 @@ all: ## Simulate, build and verify the chip
 
 # Regression Target
 regression: ## Regression test target for IIC-OSIC-TOOLS
-	# Init submodules, build bondpad and logos.
-	$(MAKE) init-submodules
-	$(MAKE) build-bondpad
-	$(MAKE) build-logos
-
 	# Analog macro: inverter (Xschem + CACE + LVS/DRC/PEX + build-top)
 	$(MAKE) -C $(MACROS_DIR)/inverter sim-xschem TB=inverter_tb_dc_vout
 	# ONE CACE run: the lightweight AC VDD sweep (no Monte-Carlo) to keep runtime short.
@@ -486,8 +481,11 @@ regression: ## Regression test target for IIC-OSIC-TOOLS
 	$(MAKE) -C $(MACROS_DIR)/counter sim-gl-xschem
 
 	# Top-level assembly
-	# librelane-magicdrc: full RTL-to-GDS. KLayout DRC skipped for runtime.
-	$(MAKE) librelane-magicdrc
+	$(MAKE) init-submodules
+	$(MAKE) build-bondpad
+	$(MAKE) -C $(IP_DIR)/sg13g2_ip__jku all
+	# librelane-nodrc: full RTL-to-GDS. DRC is skipped for runtime.
+	$(MAKE) librelane-nodrc
 .PHONY: regression
 # ================================================================================================
 

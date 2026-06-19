@@ -628,19 +628,21 @@ make regression
 
 To keep the runtime low while still covering the full toolchain, the regression makes the following trade-offs:
 
-- LibreLane runs with only **Magic DRC** enabled (`librelane-magicdrc`) for both the counter macro and the chip top-level. The slower KLayout DRC is skipped to save runtime, while Netgen LVS still runs as part of the flow.
-- The chip top-level Magic DRC runs inside LibreLane on the flow's **unfilled** GDS (`chip_top`, without logo & fill). The logo and fill are added post-flow and are not part of the regression.
-- KLayout DRC is skipped inside the counter and chip LibreLane runs, but is still exercised in the bondpad and logo IP builds, and in the inverter `klayout-verify`.
+- The counter macro is hardened with `librelane-magicdrc` (only **Magic DRC** enabled, the slower KLayout DRC is skipped). Netgen LVS still runs as part of the flow.
+- The chip top-level runs `librelane-nodrc`. All DRC checks are skipped to save runtime on the large top-level assembly. The macros and IP blocks are DRC-checked individually beforehand, so this only leaves the top-level routing/fill unchecked.
+- KLayout DRC (`run_drc.py`) is skipped inside the LibreLane runs, but is still exercised in the bondpad and logo IP builds, and in the inverter `klayout-verify`.
+- Only **one** logo (`sg13g2_ip__jku`) is regenerated. It is the only step that exercises the PNG to GDS flow. The second logo (`sg13g2_ip__jku_names`) uses an identical toolchain and reuses its committed views.
 - Exactly **one** CACE parameter set is run (the AC VDD sweep `ac_params`, no Monte-Carlo). Swap `ac_params` for `ac_mc_params` / `ac_mm_params` in the target to also exercise the Monte-Carlo flow.
 
-After the counter is hardened, `copy-final` copies its fresh `flow/final/` views into `macros/counter/final/`, so that the gate-level simulation (`sim-gl-cocotb`) and the chip top-level integration use the freshly built outputs rather than the committed ones.
+The regression runs bottom-up: first the inverter and counter macros, then the top-level assembly (submodules, bondpad, logo) and finally the chip top-level LibreLane run that integrates the freshly built macros and IP. After the counter is hardened, `copy-final` copies its fresh `flow/final/` views into `macros/counter/final/`, so that the gate-level simulation (`sim-gl-cocotb`) and the chip top-level integration use the freshly built outputs rather than the committed ones.
 
 The following tools and flows are checked:
 
 | Tool / flow | Where it is exercised |
 | --- | --- |
 | git submodules | `init-submodules` |
-| Python GDS generation, KLayout scripting (bondpad generator), KLayout DRC, Magic DRC | `build-bondpad`, `build-logos` |
+| KLayout scripting (bondpad generator), KLayout DRC, Magic DRC | `build-bondpad` |
+| PNG to GDS logo generation, KLayout DRC, Magic DRC | `sg13g2_ip__jku all` (single logo) |
 | Xschem + ngspice (analog simulation) | inverter `sim-xschem` (`inverter_tb_dc_vout`) |
 | CACE (+ ngspice) | inverter CACE, single parameter set (`ac_params`) |
 | KLayout LVS (`run_lvs.py`) + KLayout DRC (`run_drc.py`) + KLayout PEX (`kpex`) | inverter `klayout-verify CELL=inverter_top` |
@@ -650,8 +652,8 @@ The following tools and flows are checked:
 | Icarus Verilog (`iverilog`/`vvp`) | counter `sim-rtl-verilog` |
 | cocotb (RTL + gate-level) | counter `sim-rtl-cocotb`, `sim-gl-cocotb` |
 | yosys + nextpnr-ice40 + icepack (FPGA) | counter `build-fpga` |
-| LibreLane (OpenROAD / yosys / KLayout streamout / Netgen LVS) | counter + chip `librelane-magicdrc` |
-| Magic DRC (sign-off, run inside LibreLane) | counter + chip `librelane-magicdrc` |
+| LibreLane (OpenROAD / yosys / KLayout streamout / Netgen LVS) | counter `librelane-magicdrc`, chip `librelane-nodrc` |
+| Magic DRC (sign-off, run inside LibreLane) | counter `librelane-magicdrc` |
 | `vlog2Verilog` / `vlog2Spice` / `spi2xspice` | counter `generate-xspice` |
 | Xschem gate-level | counter `sim-gl-xschem` |
 
