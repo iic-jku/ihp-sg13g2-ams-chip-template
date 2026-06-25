@@ -37,16 +37,34 @@ jobs:
           # runs inside the target, but fetch them up front as well.
           submodules: recursive
 
-      - name: Restore IIC-OSIC-TOOLS PATH
-        # GitHub Actions overrides $PATH for container jobs with the runner
-        # host's PATH, dropping the image's tool directories. Re-add every
-        # bin/ dir the image ships so the regression's tools are found again.
+      - name: Set up IIC-OSIC-TOOLS environment
+        # GitHub Actions bypasses the container entrypoint, so the image's tool
+        # environment is never initialised: $PATH is overridden with the runner
+        # host's PATH and LD_LIBRARY_PATH/PYTHONPATH/KLAYOUT_PATH/... are unset.
+        # Several tools (notably klayout, which lives in /foss/tools/klayout and
+        # not in a bin/ dir) are then "not found". Replicate the entrypoint by
+        # sourcing the image's single source of truth for the environment and
+        # persist the result so every subsequent step sees the full toolchain.
+        shell: bash
         run: |
-          find /foss -maxdepth 6 \( -path /foss/pdks -o -path /foss/designs \) -prune \
-            -o -type d -name bin -print 2>/dev/null | sort -u >> "$GITHUB_PATH"
-          for d in /foss/bin /usr/local/bin; do
-            [ -d "$d" ] && echo "$d" >> "$GITHUB_PATH"
-          done
+          set -a
+          source /etc/profile.d/iic-osic-tools-setup.sh
+          set +a
+          {
+            echo "PATH=$PATH"
+            echo "PYTHONPATH=$PYTHONPATH"
+            echo "LD_LIBRARY_PATH=$LD_LIBRARY_PATH"
+            echo "LIBRARY_PATH=$LIBRARY_PATH"
+            echo "CPATH=$CPATH"
+            echo "SAK=$SAK"
+            echo "KLAYOUT_HOME=$KLAYOUT_HOME"
+            echo "KLAYOUT_PATH=$KLAYOUT_PATH"
+            echo "PDK=$PDK"
+            echo "PDKPATH=$PDKPATH"
+            echo "PDK_ROOT=$PDK_ROOT"
+            echo "STD_CELL_LIBRARY=$STD_CELL_LIBRARY"
+            echo "SPICE_USERINIT_DIR=$SPICE_USERINIT_DIR"
+          } >> "$GITHUB_ENV"
 
       - name: Show tool environment
         run: |
