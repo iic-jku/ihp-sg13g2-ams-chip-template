@@ -37,6 +37,14 @@ jobs:
           # runs inside the target, but fetch them up front as well.
           submodules: recursive
 
+      - name: Mark workspace as safe for git
+        # The container runs as root while the checkout is owned by a different
+        # UID, so git refuses to operate ("detected dubious ownership"). This
+        # breaks `make init-submodules` and any other git calls. The regression
+        # runs git across the top-level repo, its submodules and the macro/IP
+        # subdirectories, so whitelist all paths rather than a single one.
+        run: git config --global --add safe.directory '*'
+
       - name: Set up IIC-OSIC-TOOLS environment
         # GitHub Actions bypasses the container entrypoint, so the image's tool
         # environment is never initialised: $PATH is overridden with the runner
