@@ -1,0 +1,345 @@
+** sch_path: /foss/designs/ihp130/macros/iqmod/xschem/iqmod_top.sch
+.subckt iqmod_top di_spdt_ctrl_Q di_spdt_ctrl_I voutn_I_RF voutp_I_RF voutn_Q_RF voutp_Q_RF
++ di_analog_en vinp_Q vinn_Q vinn_I vinp_I di_lo_I di_ds_I_p di_ds_I_n di_lo_Ix di_lo_Qx
++ di_ds_Q_n di_ds_Q_p di_lo_Q VSS VDD
+*.PININFO VDD:B voutp_I_RF:B VSS:B di_lo_Q:I di_lo_Qx:I di_lo_I:I di_lo_Ix:I di_ds_I_p:I voutn_I_RF:B voutp_Q_RF:B voutn_Q_RF:B
+*+ di_analog_en:I vinp_I:I vinn_I:I di_spdt_ctrl_I:I di_ds_I_n:I di_ds_Q_p:I vinp_Q:I vinn_Q:I di_spdt_ctrl_Q:I di_ds_Q_n:I
+x1 di_ds_I_p di_spdt_ctrl_I di_ds_I_n di_lo_I di_lo_Ix voutp_I_RF vinp_I vinn_I voutn_I_RF VDD VSS di_analog_en psub
++ iqmod_top_half
+x2 di_ds_Q_p di_spdt_ctrl_Q di_ds_Q_n di_lo_Q di_lo_Qx voutp_Q_RF vinp_Q vinn_Q voutn_Q_RF VDD VSS di_analog_en psub
++ iqmod_top_half
+.ends
+
+* expanding   symbol:  iqmod_top_half.sym # of pins=13
+** sym_path: /foss/designs/ihp130/macros/iqmod/xschem/iqmod_top_half.sym
+** sch_path: /foss/designs/ihp130/macros/iqmod/xschem/iqmod_top_half.sch
+.subckt iqmod_top_half di_ds_p di_spdt_ctrl di_ds_n di_lo_p di_lo_n voutp_RF vinp vinn voutn_RF VDD VSS di_analog_en psub
+*.PININFO VDD:B voutp_RF:B VSS:B di_lo_p:I di_lo_n:I di_ds_p:I voutn_RF:B di_analog_en:I vinp:I vinn:I di_spdt_ctrl:I di_ds_n:I
+*+ psub:B
+x3 voutp_lpf voutn_lpf voutp_RF di_lo_p di_lo_n VDD VSS voutn_RF psub iqmod_mixer
+x1 voutp_lpf vinp_spdt voutn_lpf vinn_spdt VDD VSS di_analog_en psub iqmod_mfb_lpf
+x5 VDD di_spdt_ctrl VSS vinp_spdt di_ds_p vinp psub iqmod_spdt_switch
+x6 VDD di_spdt_ctrl VSS vinn_spdt di_ds_n vinn psub iqmod_spdt_switch
+.ends
+
+
+* expanding   symbol:  iqmod_mixer.sym # of pins=9
+** sym_path: /foss/designs/ihp130/macros/iqmod/xschem/iqmod_mixer.sym
+** sch_path: /foss/designs/ihp130/macros/iqmod/xschem/iqmod_mixer.sch
+.subckt iqmod_mixer vinp_IF vinn_IF voutp_RF vinp_LO vinn_LO VDD VSS voutn_RF psub
+*.PININFO VDD:B VSS:B vinp_IF:I vinn_IF:I voutp_RF:B vinp_LO:I vinn_LO:I voutn_RF:B psub:B
+x2 nwell1 psub VDD vinp_LO_buf VSS voutp_RF vinp_IF vinp_LO_inv iqmod_mixer_tg
+x4 nwell2 psub VDD vinn_LO_buf VSS voutn_RF vinn_IF vinn_LO_inv iqmod_mixer_tg
+x1 nwell1 psub nwell3 VDD vinp_LO vinp_LO_buf VSS vinp_LO_inv iqmod_mixer_se2diff
+x3 nwell2 psub nwell3 VDD vinn_LO vinn_LO_buf VSS vinn_LO_inv iqmod_mixer_se2diff
+.ends
+
+
+* expanding   symbol:  iqmod_mfb_lpf.sym # of pins=8
+** sym_path: /foss/designs/ihp130/macros/iqmod/xschem/iqmod_mfb_lpf.sym
+** sch_path: /foss/designs/ihp130/macros/iqmod/xschem/iqmod_mfb_lpf.sch
+.subckt iqmod_mfb_lpf voutp vinp voutn vinn VDD VSS di_filter_en psub
+*.PININFO VDD:B VSS:B vinp:I vinn:I voutp:O voutn:O di_filter_en:I psub:B
+x1 psub voutp voutn vinn_ota vinp_ota VDD VSS di_filter_en iqmod_mfb_lpf_ota_core_hybrid_bm
+XC1a vinp_stage1 vinn_stage1 cap_cmim w=8.0e-6 l=8.0e-6 m=5
+XC1b vinn_stage1 vinp_stage1 cap_cmim w=8.0e-6 l=8.0e-6 m=5
+XC2a vinp_stage2 vinn_stage2 cap_cmim w=8.0e-6 l=8.0e-6 m=3
+XC2b vinn_stage2 vinp_stage2 cap_cmim w=8.0e-6 l=8.0e-6 m=3
+XC3a voutn vinp_ota cap_cmim w=8.0e-6 l=8.0e-6
+XC3b voutp vinn_ota cap_cmim w=8.0e-6 l=8.0e-6
+x2 psub vinp_stage1 vinp VSS iqmod_mfb_lpf_R1
+x3 psub vinn_stage1 vinn VSS iqmod_mfb_lpf_R1
+x4 vinp_stage1 vinp_stage2 psub VSS iqmod_mfb_lpf_R2
+x5 vinn_stage1 vinn_stage2 psub VSS iqmod_mfb_lpf_R2
+x6 vinp_ota vinp_stage2 psub VSS iqmod_mfb_lpf_R3
+x7 vinn_ota vinn_stage2 psub VSS iqmod_mfb_lpf_R3
+x8 voutn vinp_stage2 psub VSS iqmod_mfb_lpf_R4
+x9 voutp vinn_stage2 psub VSS iqmod_mfb_lpf_R4
+.ends
+
+
+* expanding   symbol:  iqmod_spdt_switch.sym # of pins=7
+** sym_path: /foss/designs/ihp130/macros/iqmod/xschem/iqmod_spdt_switch.sym
+** sch_path: /foss/designs/ihp130/macros/iqmod/xschem/iqmod_spdt_switch.sch
+.subckt iqmod_spdt_switch VDD di_spdt_ctrl VSS v_c v_b v_a psub
+*.PININFO v_a:B v_b:B v_c:B VDD:B VSS:B di_spdt_ctrl:I psub:B
+x1 nwell psub VDD di_spdt_ctrl spdt_ctrl_n VSS iqmod_spdt_switch_inv
+x2 nwell psub VDD spdt_ctrl_n spdt_ctrl_buf VSS iqmod_spdt_switch_inv
+x3 nwell psub VDD spdt_ctrl_buf VSS v_c v_a spdt_ctrl_n iqmod_spdt_switch_tg
+x4 nwell psub VDD spdt_ctrl_n VSS v_c v_b spdt_ctrl_buf iqmod_spdt_switch_tg
+.ends
+
+
+* expanding   symbol:  iqmod_mixer_tg.sym # of pins=8
+** sym_path: /foss/designs/ihp130/macros/iqmod/xschem/iqmod_mixer_tg.sym
+** sch_path: /foss/designs/ihp130/macros/iqmod/xschem/iqmod_mixer_tg.sch
+.subckt iqmod_mixer_tg nwell psub VDD di_tg_ctrl VSS v_b v_a di_tg_ctrl_n
+*.PININFO v_a:B v_b:B di_tg_ctrl:I di_tg_ctrl_n:I VDD:B VSS:B nwell:B psub:B
+XM1 v_a di_tg_ctrl v_b VSS sg13_lv_nmos w=108.0u l=0.13u ng=36
+XM2 v_a di_tg_ctrl_n v_b VDD sg13_lv_pmos w=324.0u l=0.13u ng=36
+XMdummy2 v_b di_tg_ctrl v_b VDD sg13_lv_pmos w=162.0u l=0.13u ng=18
+XMdummy1 v_b di_tg_ctrl_n v_b VSS sg13_lv_nmos w=54.0u l=0.13u ng=18
+.ends
+
+
+* expanding   symbol:  iqmod_mixer_se2diff.sym # of pins=8
+** sym_path: /foss/designs/ihp130/macros/iqmod/xschem/iqmod_mixer_se2diff.sym
+** sch_path: /foss/designs/ihp130/macros/iqmod/xschem/iqmod_mixer_se2diff.sch
+.subckt iqmod_mixer_se2diff nwell1 psub nwell2 VDD vin voutp VSS voutn
+*.PININFO vin:I VDD:B VSS:B voutp:O voutn:O nwell1:B psub:B nwell2:B
+x3 nwell2 psub VDD VDD VSS net2 vse VSS iqmod_mixer_se2diff_tg_NF6
+x8 nwell1 psub VDD vscale1n vscale2p VSS iqmod_mixer_se2diff_inv_NF18
+x5 nwell1 psub VDD vcrossp vcrossn VSS iqmod_mixer_se2diff_inv_NF2
+x6 nwell2 psub VDD vcrossn vcrossp VSS iqmod_mixer_se2diff_inv_NF2
+x2 nwell1 psub VDD net1 vcrossp VSS iqmod_mixer_se2diff_inv_NF6
+x4 nwell2 psub VDD net2 vcrossn VSS iqmod_mixer_se2diff_inv_NF6
+x7 nwell1 psub VDD vcrossp vscale1n VSS iqmod_mixer_se2diff_inv_NF6
+x1 nwell1 psub VDD vse net1 VSS iqmod_mixer_se2diff_inv_NF6
+x9 nwell1 psub VDD vscale2p voutp VSS iqmod_mixer_se2diff_inv_NF54
+x10 nwell2 psub VDD vcrossn vscale1p VSS iqmod_mixer_se2diff_inv_NF6
+x11 nwell2 psub VDD vscale1p vscale2n VSS iqmod_mixer_se2diff_inv_NF18
+x12 nwell2 psub VDD vscale2n voutn VSS iqmod_mixer_se2diff_inv_NF54
+x13 nwell2 psub VDD vin vse VSS iqmod_mixer_se2diff_inv_NF2
+x14 nwell1 psub VDD vin vse VSS iqmod_mixer_se2diff_inv_NF2
+.ends
+
+
+* expanding   symbol:  iqmod_mfb_lpf_ota_core_hybrid_bm.sym # of pins=8
+** sym_path: /foss/designs/ihp130/macros/iqmod/xschem/iqmod_mfb_lpf_ota_core_hybrid_bm.sym
+** sch_path: /foss/designs/ihp130/macros/iqmod/xschem/iqmod_mfb_lpf_ota_core_hybrid_bm.sch
+.subckt iqmod_mfb_lpf_ota_core_hybrid_bm psub voutp voutn vinn vinp VDD VSS di_ota_en
+*.PININFO vinp:I vinn:I VDD:B VSS:B voutp:O voutn:O di_ota_en:I psub:B
+x6 nwell1 psub VDD node_CDG voutn VSS iqmod_mfb_lpf_ota_core_inv_NF20
+x7 nwell2 psub VDD node_CDG voutp VSS iqmod_mfb_lpf_ota_core_inv_NF20
+x11 nwell1 psub VDD voutn node_EF VSS iqmod_mfb_lpf_ota_core_inv_NF20
+x12 nwell2 psub VDD voutp node_EF VSS iqmod_mfb_lpf_ota_core_inv_NF20
+x9 nwell1 psub VDD node_vinp node_BC VSS iqmod_mfb_lpf_ota_core_inv_NF10
+x10 nwell2 psub VDD node_vinn node_BC VSS iqmod_mfb_lpf_ota_core_inv_NF10
+x5 nwell1 psub VDD node_EF node_FG VSS iqmod_mfb_lpf_ota_core_inv_NF6
+x1 nwell1 psub VDD node_BC node_CDG VSS iqmod_mfb_lpf_ota_core_inv_NF6
+x4 nwell2 psub VDD node_BC node_CDG VSS iqmod_mfb_lpf_ota_core_inv_NF6
+x13 nwell2 psub VDD node_EF node_FG VSS iqmod_mfb_lpf_ota_core_inv_NF6
+x8 nwell1 psub VDD node_FG node_CDG VSS iqmod_mfb_lpf_ota_core_inv_NF6
+x14 nwell2 psub VDD node_FG node_CDG VSS iqmod_mfb_lpf_ota_core_inv_NF6
+x2 nwell1 psub VDD node_vinp voutn VSS iqmod_mfb_lpf_ota_core_inv_NF20
+x3 nwell2 psub VDD node_vinn voutp VSS iqmod_mfb_lpf_ota_core_inv_NF20
+x16 ota_en_n_1 nwell1 psub VDD di_ota_en VSS node_vinp VDD vinp iqmod_mfb_lpf_ota_core_spdt_switch
+x17 ota_en_n_2 nwell2 psub VDD di_ota_en VSS node_vinn VDD vinn iqmod_mfb_lpf_ota_core_spdt_switch
+x15 nwell1 psub VDD di_ota_en VSS node_CDG node_BC ota_en_n_1 iqmod_mfb_lpf_ota_core_tg
+x18 nwell1 psub VDD di_ota_en VSS node_FG node_EF ota_en_n_1 iqmod_mfb_lpf_ota_core_tg
+x20 nwell2 psub VDD di_ota_en VSS node_CDG node_BC ota_en_n_2 iqmod_mfb_lpf_ota_core_tg
+x23 nwell2 psub VDD di_ota_en VSS node_FG node_EF ota_en_n_2 iqmod_mfb_lpf_ota_core_tg
+.ends
+
+
+* expanding   symbol:  iqmod_mfb_lpf_R1.sym # of pins=4
+** sym_path: /foss/designs/ihp130/macros/iqmod/xschem/iqmod_mfb_lpf_R1.sym
+** sch_path: /foss/designs/ihp130/macros/iqmod/xschem/iqmod_mfb_lpf_R1.sch
+.subckt iqmod_mfb_lpf_R1 psub v_b v_a VSS
+*.PININFO v_a:B v_b:B VSS:B psub:B
+XR1 v_a net1 VSS rhigh w=0.5e-6 l=27.0e-6
+XR2 net1 net2 VSS rhigh w=0.5e-6 l=27.0e-6
+XR3 net2 v_b VSS rhigh w=0.5e-6 l=27.0e-6
+XRdummy1 VSS VSS VSS rhigh w=0.5e-6 l=27.0e-6
+XRdummy2 VSS VSS VSS rhigh w=0.5e-6 l=27.0e-6
+.ends
+
+
+* expanding   symbol:  iqmod_mfb_lpf_R2.sym # of pins=4
+** sym_path: /foss/designs/ihp130/macros/iqmod/xschem/iqmod_mfb_lpf_R2.sym
+** sch_path: /foss/designs/ihp130/macros/iqmod/xschem/iqmod_mfb_lpf_R2.sch
+.subckt iqmod_mfb_lpf_R2 v_b v_a psub VSS
+*.PININFO v_a:B v_b:B VSS:B psub:B
+XR1 v_a net1 VSS rhigh w=0.5e-6 l=31.0e-6
+XR2 net1 net2 VSS rhigh w=0.5e-6 l=31.0e-6
+XR3 net2 v_b VSS rhigh w=0.5e-6 l=31.0e-6
+XRdummy1 VSS VSS VSS rhigh w=0.5e-6 l=31.0e-6
+XRdummy2 VSS VSS VSS rhigh w=0.5e-6 l=31.0e-6
+.ends
+
+
+* expanding   symbol:  iqmod_mfb_lpf_R3.sym # of pins=4
+** sym_path: /foss/designs/ihp130/macros/iqmod/xschem/iqmod_mfb_lpf_R3.sym
+** sch_path: /foss/designs/ihp130/macros/iqmod/xschem/iqmod_mfb_lpf_R3.sch
+.subckt iqmod_mfb_lpf_R3 v_b v_a psub VSS
+*.PININFO v_a:B v_b:B VSS:B psub:B
+XR1 v_a net1 VSS rhigh w=0.5e-6 l=59.0e-6
+XR2 net1 net2 VSS rhigh w=0.5e-6 l=59.0e-6
+XR3 net2 v_b VSS rhigh w=0.5e-6 l=59.0e-6
+XRdummy1 VSS VSS VSS rhigh w=0.5e-6 l=59.0e-6
+XRdummy2 VSS VSS VSS rhigh w=0.5e-6 l=59.0e-6
+.ends
+
+
+* expanding   symbol:  iqmod_mfb_lpf_R4.sym # of pins=4
+** sym_path: /foss/designs/ihp130/macros/iqmod/xschem/iqmod_mfb_lpf_R4.sym
+** sch_path: /foss/designs/ihp130/macros/iqmod/xschem/iqmod_mfb_lpf_R4.sch
+.subckt iqmod_mfb_lpf_R4 v_b v_a psub VSS
+*.PININFO v_a:B v_b:B VSS:B psub:B
+XR1 v_a net1 VSS rhigh w=0.5e-6 l=60.0e-6
+XR2 net1 net2 VSS rhigh w=0.5e-6 l=60.0e-6
+XR3 net2 v_b VSS rhigh w=0.5e-6 l=60.0e-6
+XRdummy1 VSS VSS VSS rhigh w=0.5e-6 l=60.0e-6
+XRdummy2 VSS VSS VSS rhigh w=0.5e-6 l=60.0e-6
+.ends
+
+
+* expanding   symbol:  iqmod_spdt_switch_inv.sym # of pins=6
+** sym_path: /foss/designs/ihp130/macros/iqmod/xschem/iqmod_spdt_switch_inv.sym
+** sch_path: /foss/designs/ihp130/macros/iqmod/xschem/iqmod_spdt_switch_inv.sch
+.subckt iqmod_spdt_switch_inv nwell psub VDD vin vout VSS
+*.PININFO vin:I VDD:B VSS:B vout:B nwell:B psub:B
+XM1 vout vin VSS VSS sg13_lv_nmos w=2.0u l=0.13u ng=2
+XM2 vout vin VDD VDD sg13_lv_pmos w=12.0u l=0.13u ng=2
+XMdummy1 VSS VSS VSS VSS sg13_lv_nmos w=2.0u l=0.13u ng=2
+XMdummy2 VDD VDD VDD VDD sg13_lv_pmos w=12.0u l=0.13u ng=2
+.ends
+
+
+* expanding   symbol:  iqmod_spdt_switch_tg.sym # of pins=8
+** sym_path: /foss/designs/ihp130/macros/iqmod/xschem/iqmod_spdt_switch_tg.sym
+** sch_path: /foss/designs/ihp130/macros/iqmod/xschem/iqmod_spdt_switch_tg.sch
+.subckt iqmod_spdt_switch_tg nwell psub VDD di_tg_ctrl VSS v_b v_a di_tg_ctrl_n
+*.PININFO v_a:B v_b:B VDD:B VSS:B di_tg_ctrl:I di_tg_ctrl_n:I nwell:B psub:B
+XM2 v_a di_tg_ctrl_n v_b VDD sg13_lv_pmos w=36.0u l=0.13u ng=6
+XM1 v_a di_tg_ctrl v_b VSS sg13_lv_nmos w=6.0u l=0.13u ng=6
+.ends
+
+
+* expanding   symbol:  iqmod_mixer_se2diff_tg_NF6.sym # of pins=8
+** sym_path: /foss/designs/ihp130/macros/iqmod/xschem/iqmod_mixer_se2diff_tg_NF6.sym
+** sch_path: /foss/designs/ihp130/macros/iqmod/xschem/iqmod_mixer_se2diff_tg_NF6.sch
+.subckt iqmod_mixer_se2diff_tg_NF6 nwell psub VDD di_tg_ctrl VSS v_b v_a di_tg_ctrl_n
+*.PININFO v_a:B v_b:B VDD:B VSS:B di_tg_ctrl:I di_tg_ctrl_n:I nwell:B psub:B
+XM2 v_a di_tg_ctrl_n v_b VDD sg13_lv_pmos w=18.0u l=0.13u ng=6
+XM1 v_a di_tg_ctrl v_b VSS sg13_lv_nmos w=6.0u l=0.13u ng=6
+.ends
+
+
+* expanding   symbol:  iqmod_mixer_se2diff_inv_NF18.sym # of pins=6
+** sym_path: /foss/designs/ihp130/macros/iqmod/xschem/iqmod_mixer_se2diff_inv_NF18.sym
+** sch_path: /foss/designs/ihp130/macros/iqmod/xschem/iqmod_mixer_se2diff_inv_NF18.sch
+.subckt iqmod_mixer_se2diff_inv_NF18 nwell psub VDD vin vout VSS
+*.PININFO vin:I VDD:B VSS:B vout:B nwell:B psub:B
+XM1 vout vin VSS VSS sg13_lv_nmos w=18.0u l=0.13u ng=18
+XM2 vout vin VDD VDD sg13_lv_pmos w=54.0u l=0.13u ng=18
+XMdummy1 VSS VSS VSS VSS sg13_lv_nmos w=2.0u l=0.13u ng=2
+XMdummy2 VDD VDD VDD VDD sg13_lv_pmos w=6.0u l=0.13u ng=2
+.ends
+
+
+* expanding   symbol:  iqmod_mixer_se2diff_inv_NF2.sym # of pins=6
+** sym_path: /foss/designs/ihp130/macros/iqmod/xschem/iqmod_mixer_se2diff_inv_NF2.sym
+** sch_path: /foss/designs/ihp130/macros/iqmod/xschem/iqmod_mixer_se2diff_inv_NF2.sch
+.subckt iqmod_mixer_se2diff_inv_NF2 nwell psub VDD vin vout VSS
+*.PININFO vin:I VDD:B VSS:B vout:B nwell:B psub:B
+XM1 vout vin VSS VSS sg13_lv_nmos w=2.0u l=0.13u ng=2
+XM2 vout vin VDD VDD sg13_lv_pmos w=6.0u l=0.13u ng=2
+XMdummy1 VSS VSS VSS VSS sg13_lv_nmos w=2.0u l=0.13u ng=2
+XMdummy2 VDD VDD VDD VDD sg13_lv_pmos w=6.0u l=0.13u ng=2
+.ends
+
+
+* expanding   symbol:  iqmod_mixer_se2diff_inv_NF6.sym # of pins=6
+** sym_path: /foss/designs/ihp130/macros/iqmod/xschem/iqmod_mixer_se2diff_inv_NF6.sym
+** sch_path: /foss/designs/ihp130/macros/iqmod/xschem/iqmod_mixer_se2diff_inv_NF6.sch
+.subckt iqmod_mixer_se2diff_inv_NF6 nwell psub VDD vin vout VSS
+*.PININFO vin:I VDD:B VSS:B vout:B nwell:B psub:B
+XM1 vout vin VSS VSS sg13_lv_nmos w=6.0u l=0.13u ng=6
+XM2 vout vin VDD VDD sg13_lv_pmos w=18.0u l=0.13u ng=6
+XMdummy1 VSS VSS VSS VSS sg13_lv_nmos w=2.0u l=0.13u ng=2
+XMdummy2 VDD VDD VDD VDD sg13_lv_pmos w=6.0u l=0.13u ng=2
+.ends
+
+
+* expanding   symbol:  iqmod_mixer_se2diff_inv_NF54.sym # of pins=6
+** sym_path: /foss/designs/ihp130/macros/iqmod/xschem/iqmod_mixer_se2diff_inv_NF54.sym
+** sch_path: /foss/designs/ihp130/macros/iqmod/xschem/iqmod_mixer_se2diff_inv_NF54.sch
+.subckt iqmod_mixer_se2diff_inv_NF54 nwell psub VDD vin vout VSS
+*.PININFO vin:I VDD:B VSS:B vout:B nwell:B psub:B
+XM1 vout vin VSS VSS sg13_lv_nmos w=54.0u l=0.13u ng=54
+XM2 vout vin VDD VDD sg13_lv_pmos w=162.0u l=0.13u ng=54
+XMdummy1 VSS VSS VSS VSS sg13_lv_nmos w=2.0u l=0.13u ng=2
+XMdummy2 VDD VDD VDD VDD sg13_lv_pmos w=6.0u l=0.13u ng=2
+.ends
+
+
+* expanding   symbol:  iqmod_mfb_lpf_ota_core_inv_NF20.sym # of pins=6
+** sym_path: /foss/designs/ihp130/macros/iqmod/xschem/iqmod_mfb_lpf_ota_core_inv_NF20.sym
+** sch_path: /foss/designs/ihp130/macros/iqmod/xschem/iqmod_mfb_lpf_ota_core_inv_NF20.sch
+.subckt iqmod_mfb_lpf_ota_core_inv_NF20 nwell psub VDD vin vout VSS
+*.PININFO vin:I VDD:B VSS:B vout:B nwell:B psub:B
+XMdummy1 VSS VSS VSS VSS sg13_lv_nmos w=2.0u l=1.0u ng=2
+XMdummy2 VDD VDD VDD VDD sg13_lv_pmos w=12.0u l=1.0u ng=2
+XM1 vout vin VSS VSS sg13_lv_nmos w=20.0u l=1.0u ng=20
+XM2 vout vin VDD VDD sg13_lv_pmos w=120.0u l=1.0u ng=20
+.ends
+
+
+* expanding   symbol:  iqmod_mfb_lpf_ota_core_inv_NF10.sym # of pins=6
+** sym_path: /foss/designs/ihp130/macros/iqmod/xschem/iqmod_mfb_lpf_ota_core_inv_NF10.sym
+** sch_path: /foss/designs/ihp130/macros/iqmod/xschem/iqmod_mfb_lpf_ota_core_inv_NF10.sch
+.subckt iqmod_mfb_lpf_ota_core_inv_NF10 nwell psub VDD vin vout VSS
+*.PININFO vin:I VDD:B VSS:B vout:B nwell:B psub:B
+XM1 vout vin VSS VSS sg13_lv_nmos w=10.0u l=1.0u ng=10
+XM2 vout vin VDD VDD sg13_lv_pmos w=60.0u l=1.0u ng=10
+XMdummy1 VSS VSS VSS VSS sg13_lv_nmos w=2.0u l=1.0u ng=2
+XMdummy2 VDD VDD VDD VDD sg13_lv_pmos w=12.0u l=1.0u ng=2
+.ends
+
+
+* expanding   symbol:  iqmod_mfb_lpf_ota_core_inv_NF6.sym # of pins=6
+** sym_path: /foss/designs/ihp130/macros/iqmod/xschem/iqmod_mfb_lpf_ota_core_inv_NF6.sym
+** sch_path: /foss/designs/ihp130/macros/iqmod/xschem/iqmod_mfb_lpf_ota_core_inv_NF6.sch
+.subckt iqmod_mfb_lpf_ota_core_inv_NF6 nwell psub VDD vin vout VSS
+*.PININFO vin:I VDD:B VSS:B vout:B nwell:B psub:B
+XMdummy1 VSS VSS VSS VSS sg13_lv_nmos w=2.0u l=1.0u ng=2
+XMdummy2 VDD VDD VDD VDD sg13_lv_pmos w=12.0u l=1.0u ng=2
+XM1 vout vin VSS VSS sg13_lv_nmos w=6.0u l=1.0u ng=6
+XM2 vout vin VDD VDD sg13_lv_pmos w=36.0u l=1.0u ng=6
+.ends
+
+
+* expanding   symbol:  iqmod_mfb_lpf_ota_core_spdt_switch.sym # of pins=9
+** sym_path: /foss/designs/ihp130/macros/iqmod/xschem/iqmod_mfb_lpf_ota_core_spdt_switch.sym
+** sch_path: /foss/designs/ihp130/macros/iqmod/xschem/iqmod_mfb_lpf_ota_core_spdt_switch.sch
+.subckt iqmod_mfb_lpf_ota_core_spdt_switch do_spdt_ctrl_n nwell psub VDD di_spdt_ctrl VSS v_c v_b v_a
+*.PININFO v_a:B v_b:B v_c:B VDD:B VSS:B di_spdt_ctrl:I do_spdt_ctrl_n:O nwell:B psub:B
+x1 nwell psub VDD di_spdt_ctrl do_spdt_ctrl_n VSS iqmod_mfb_lpf_ota_core_spdt_switch_inv
+x2 nwell psub VDD do_spdt_ctrl_n spdt_ctrl_buf VSS iqmod_mfb_lpf_ota_core_spdt_switch_inv
+x3 nwell psub VDD spdt_ctrl_buf VSS v_c v_a do_spdt_ctrl_n iqmod_mfb_lpf_ota_core_spdt_switch_tg
+x4 nwell psub VDD do_spdt_ctrl_n VSS v_c v_b spdt_ctrl_buf iqmod_mfb_lpf_ota_core_spdt_switch_tg
+.ends
+
+
+* expanding   symbol:  iqmod_mfb_lpf_ota_core_tg.sym # of pins=8
+** sym_path: /foss/designs/ihp130/macros/iqmod/xschem/iqmod_mfb_lpf_ota_core_tg.sym
+** sch_path: /foss/designs/ihp130/macros/iqmod/xschem/iqmod_mfb_lpf_ota_core_tg.sch
+.subckt iqmod_mfb_lpf_ota_core_tg nwell psub VDD di_tg_ctrl VSS v_b v_a di_tg_ctrl_n
+*.PININFO v_a:B v_b:B VDD:B VSS:B di_tg_ctrl:I di_tg_ctrl_n:I nwell:B psub:B
+XM2 v_a di_tg_ctrl_n v_b VDD sg13_lv_pmos w=36.0u l=0.13u ng=6
+XM1 v_a di_tg_ctrl v_b VSS sg13_lv_nmos w=6.0u l=0.13u ng=6
+.ends
+
+
+* expanding   symbol:  iqmod_mfb_lpf_ota_core_spdt_switch_inv.sym # of pins=6
+** sym_path: /foss/designs/ihp130/macros/iqmod/xschem/iqmod_mfb_lpf_ota_core_spdt_switch_inv.sym
+** sch_path: /foss/designs/ihp130/macros/iqmod/xschem/iqmod_mfb_lpf_ota_core_spdt_switch_inv.sch
+.subckt iqmod_mfb_lpf_ota_core_spdt_switch_inv nwell psub VDD vin vout VSS
+*.PININFO vin:I VDD:B VSS:B vout:B nwell:B psub:B
+XM1 vout vin VSS VSS sg13_lv_nmos w=2.0u l=0.13u ng=2
+XM2 vout vin VDD VDD sg13_lv_pmos w=12.0u l=0.13u ng=2
+XMdummy1 VSS VSS VSS VSS sg13_lv_nmos w=2.0u l=0.13u ng=2
+XMdummy2 VDD VDD VDD VDD sg13_lv_pmos w=12.0u l=0.13u ng=2
+.ends
+
+
+* expanding   symbol:  iqmod_mfb_lpf_ota_core_spdt_switch_tg.sym # of pins=8
+** sym_path: /foss/designs/ihp130/macros/iqmod/xschem/iqmod_mfb_lpf_ota_core_spdt_switch_tg.sym
+** sch_path: /foss/designs/ihp130/macros/iqmod/xschem/iqmod_mfb_lpf_ota_core_spdt_switch_tg.sch
+.subckt iqmod_mfb_lpf_ota_core_spdt_switch_tg nwell psub VDD di_tg_ctrl VSS v_b v_a di_tg_ctrl_n
+*.PININFO v_a:B v_b:B VDD:B VSS:B di_tg_ctrl:I di_tg_ctrl_n:I nwell:B psub:B
+XM2 v_a di_tg_ctrl_n v_b VDD sg13_lv_pmos w=36.0u l=0.13u ng=6
+XM1 v_a di_tg_ctrl v_b VSS sg13_lv_nmos w=6.0u l=0.13u ng=6
+.ends
+
