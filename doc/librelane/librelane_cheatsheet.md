@@ -107,6 +107,28 @@ CTS_APPLY_NDR: full
 
 The IHP SG13G2 technology LEF (`sg13g2_tech.lef`) defines three categories of vias: **cut layers**, **fixed via definitions**, and **GENERATE via rules** (for automatic arrays).
 
+#### Via Overview (Quick Reference)
+
+The technology provides **70 fixed vias** plus **6 `GENERATE` array rules**, across six layer transitions. Only the four inter-metal transitions (`Via1`–`Via4`) offer a choice of variants (17 each); the two top-metal transitions have a single symmetric via each.
+
+| Transition | Cut layer | Fixed variants | GENERATE rule | Composition |
+|---|---|---|---|---|
+| Metal1 → Metal2 | `Via1` | 17 | `via1Array` | 9 single-cut + 8 double-cut |
+| Metal2 → Metal3 | `Via2` | 17 | `via2Array` | 9 single-cut + 8 double-cut |
+| Metal3 → Metal4 | `Via3` | 17 | `via3Array` | 9 single-cut + 8 double-cut |
+| Metal4 → Metal5 | `Via4` | 17 | `via4Array` | 9 single-cut + 8 double-cut |
+| Metal5 → TopMetal1 | `TopVia1` | 1 (`TopVia1EWNS`) | `viaTop1Array` | symmetric only |
+| TopMetal1 → TopMetal2 | `TopVia2` | 1 (`TopVia2EWNS`) | `viaTop2Array` | symmetric only |
+
+**Naming key** — fixed vias are named `<transition>_<variant>`:
+
+- `ViaN_XX` / `XY` / `YX` / `YY` — **single-cut**; the two letters are the enclosure orientation of the metal **below** then **above** (`X` = horizontal / east–west, `Y` = vertical / north–south). Pick the one whose two orientations match the wire directions on each side.
+- `ViaN_..._s` and `ViaN_s` — single-cut with a **wider** metal enclosure (`ViaN_s` is a square/symmetric enclosure).
+- `ViaN_DC{1,2}{B,T,L,R}` — **double-cut** (two cuts → ~2× current capacity and cut redundancy). `1`/`2` = above-metal enclosure aligned / perpendicular to the cut pair; `B/T/L/R` = direction the second cut is placed (`B`=+Y, `T`=−Y, `L`=+X, `R`=−X).
+- `TopViaN_EWNS` — symmetric enclosure on all four sides (**E**ast-**W**est-**N**orth-**S**outh), so it is orientation-independent — the only variant needed for the top metals.
+
+> **Choosing vias for a wide analog NDR:** prefer the **double-cut** (`DC*`) variants for reliability, and add the single-cut orientations (`XX/XY/YX/YY`) so the router can still place a via in tight spots. The top-metal transitions only have the one `EWNS` via each. If you omit the `via` field entirely, the router falls back to the `GENERATE` array rules and automatically sizes a multi-cut array to the wire width.
+
 #### Metal Stack
 
 | Layer | Direction | Min Width | Pitch | Thickness | DC Current Density |
