@@ -245,11 +245,11 @@ DEFAULT_CORNER: nom_typ_1p50V_25C
 # Pending issue to change AUTO_TAPER_NDR_NETS in the LibreLane `config.yaml`: https://github.com/The-OpenROAD-Project/OpenROAD/issues/10032
 NON_DEFAULT_RULES:
   # Rules for analog traces (inverter2 vin/vout pairs).
-  # 1.35 um width and 0.5 um spacing on Metal1 through TopMetal2.
+  # 0.5 um width and 0.5 um spacing on Metal1 through Metal5.
   NDR_analog:
-    width:   ["1.35"]
-    spacing: ["0.5"]
-    via:     ["Via1_DC1B", "Via2_DC1B", "Via3_DC1B", "Via4_DC1B", "TopVia1EWNS", "TopVia2EWNS"]
+    width:   [Metal1, "0.5", Metal2, "0.5", Metal3, "0.5", Metal4, "0.5", Metal5, "0.5"]
+    spacing: [Metal1, "0.5", Metal2, "0.5", Metal3, "0.5", Metal4, "0.5", Metal5, "0.5"]
+    via:     ["Via1_DC1B", "Via2_DC1B", "Via3_DC1B", "Via4_DC1B"]
 
 # Apply NDRs to analog traces during detailed routing
 DRT_ASSIGN_NDR:
