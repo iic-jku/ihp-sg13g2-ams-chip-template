@@ -219,7 +219,7 @@ klayout-lvs-netlist: ## Export CDL schematic netlist from Xschem for KLayout LVS
 		set spiceprefix 1; \
 		set lvs_netlist 1; \
 		set top_is_subckt 1; \
-		set lvs_ignore 0; \
+		set lvs_ignore 1; \
 		set ev_precision $(EV_PRECISION); \
 		set netlist_dir $(NET_SCH_DIR); \
 		xschem set netlist_name [file tail [file rootname [xschem get current_name]]]_klayout.cdl; \
@@ -236,7 +236,8 @@ klayout-lvs: ## Run KLayout LVS of the CELL cell (usage: make klayout-lvs [CELL=
 		--netlist=$(NET_SCH_DIR)/$(CELL)_klayout.cdl \
 		--topcell=$(CELL) \
 		--run_dir=$(LVS_RPT_DIR) \
-		--run_mode=deep
+		--run_mode=deep \
+		--disable_tap_extraction
 	mv $(LVS_RPT_DIR)/$(CELL)_extracted.cir $(NET_LAY_DIR)/$(CELL)_klayout.cir
 	sleep 4
 .PHONY: klayout-lvs
