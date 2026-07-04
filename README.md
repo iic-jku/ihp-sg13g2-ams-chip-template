@@ -1,5 +1,6 @@
 ﻿# An Open-Source Analog Mixed-Signal Chip Design Template & Tutorial for the ihp-sg13g2 Open-PDK
 
+[![License: Solderpad Hardware License v2.1](https://img.shields.io/badge/License-Solderpad%20Hardware%20License%20v2.1-blue.svg)](LICENSE)
 [![Quarto Publish](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/actions/workflows/quarto-publish.yml/badge.svg?branch=main)](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/actions/workflows/quarto-publish.yml)
 [![Regression](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/actions/workflows/regression.yml/badge.svg?branch=main)](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/actions/workflows/regression.yml)
 [![Tutorial](https://img.shields.io/badge/Tutorial-online-orange?logo=quarto)](https://iic-jku.github.io/ihp-sg13g2-ams-chip-template/index.html)
@@ -728,3 +729,7 @@ This project is funded by the JKU/SAL [IWS Lab](https://research.jku.at/de/proje
     </td>
   </tr>
 </table>
+
+## License
+
+Licensed under the **Solderpad Hardware License v2.1**, see [`LICENSE`](LICENSE).
