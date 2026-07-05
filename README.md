@@ -620,6 +620,38 @@ make all
 ```
 
 
+## Release
+
+Copies the final top-level GDS with logo and fill structures from `layout/` to `release/v.<VERSION>/gds/`, copies the generated netlists into `release/v.<VERSION>/netlist/`, and copies the chip renders into `release/v.<VERSION>/img/`.
+
+The following netlist folders are exported:
+
+- `netlist/layout` -> `release/v.<VERSION>/netlist/layout`
+- `netlist/pnl` -> `release/v.<VERSION>/netlist/pnl`
+- `netlist/spice` -> `release/v.<VERSION>/netlist/spice`
+
+The following chip renders are exported:
+
+- `render/img/chip_top_black.png` -> `release/v.<VERSION>/img/chip_top_black.png`
+- `render/img/chip_top_white.png` -> `release/v.<VERSION>/img/chip_top_white.png`
+- `render/img/chip_top_librelane.png` -> `release/v.<VERSION>/img/chip_top_librelane.png`
+
+> [!NOTE]
+> `netlist/schematic` and `netlist/pex` are currently not copied by the `release` target.
+
+Run with default version (`1.0.0`):
+
+```sh
+make release
+```
+
+Run with a custom version:
+
+```sh
+make release VERSION=2.1.0
+```
+
+
 ## Regression
 
 The `regression` target is the project's end-to-end smoke test for the [IIC-OSIC-TOOLS](https://github.com/iic-jku/iic-osic-tools) environment. Its goal is to exercise **every tool and flow** in the template at least once with the **shortest possible runtime**. It is a tool/flow regression, not a design sign-off.
@@ -658,38 +690,6 @@ The following tools and flows are checked:
 | Magic DRC (sign-off, run inside LibreLane) | counter `librelane-magicdrc` |
 | `vlog2Verilog` / `vlog2Spice` / `spi2xspice` | counter `generate-xspice` |
 | Xschem gate-level | counter `sim-gl-xschem` |
-
-
-## Release
-
-Copies the final top-level GDS with logo and fill structures from `layout/` to `release/v.<VERSION>/gds/`, copies the generated netlists into `release/v.<VERSION>/netlist/`, and copies the chip renders into `release/v.<VERSION>/img/`.
-
-The following netlist folders are exported:
-
-- `netlist/layout` -> `release/v.<VERSION>/netlist/layout`
-- `netlist/pnl` -> `release/v.<VERSION>/netlist/pnl`
-- `netlist/spice` -> `release/v.<VERSION>/netlist/spice`
-
-The following chip renders are exported:
-
-- `render/img/chip_top_black.png` -> `release/v.<VERSION>/img/chip_top_black.png`
-- `render/img/chip_top_white.png` -> `release/v.<VERSION>/img/chip_top_white.png`
-- `render/img/chip_top_librelane.png` -> `release/v.<VERSION>/img/chip_top_librelane.png`
-
-> [!NOTE]
-> `netlist/schematic` and `netlist/pex` are currently not copied by the `release` target.
-
-Run with default version (`1.0.0`):
-
-```sh
-make release
-```
-
-Run with a custom version:
-
-```sh
-make release VERSION=2.1.0
-```
 
 
 ## Cite This Work
