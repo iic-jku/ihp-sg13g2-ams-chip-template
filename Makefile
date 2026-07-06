@@ -476,29 +476,29 @@ release: ## Copy GDS, netlists and chip renders to release/v.<VERSION>/ (usage: 
 
 # Regression Target
 regression: ## Regression test target for IIC-OSIC-TOOLS
-	# Analog macro: inverter (Xschem + CACE + LVS/DRC/PEX + build-top)
+# 	Analog macro: inverter (Xschem + CACE + LVS/DRC/PEX + build-top)
 	$(MAKE) -C $(MACROS_DIR)/inverter sim-xschem TB=inverter_tb_dc_vout
 	# ONE CACE run: the lightweight AC VDD sweep (no Monte-Carlo) to keep runtime short.
 	cd $(MACROS_DIR)/inverter/verification/cace && cace inverter.yaml -p ac_params && rm -rf _runs _docs netlist
-	# KLayout & Magic LVS, DRC and PEX of the inverter_top cell.
+# 	KLayout & Magic LVS, DRC and PEX of the inverter_top cell.
 	$(MAKE) -C $(MACROS_DIR)/inverter klayout-verify CELL=inverter_top
 	$(MAKE) -C $(MACROS_DIR)/inverter magic-verify CELL=inverter_top
 	$(MAKE) -C $(MACROS_DIR)/inverter build-top
 
-	# Digital macro: counter (Verilator, Icarus, cocotb, yosys/FPGA, LibreLane, xspice)
+# 	Digital macro: counter (Verilator, Icarus, cocotb, yosys/FPGA, LibreLane, xspice)
 	$(MAKE) -C $(MACROS_DIR)/counter lint-verilog-all
 	$(MAKE) -C $(MACROS_DIR)/counter sim-rtl-verilog
 	$(MAKE) -C $(MACROS_DIR)/counter sim-rtl-cocotb
 	$(MAKE) -C $(MACROS_DIR)/counter build-fpga
-	# librelane-magicdrc: full RTL-to-GDS. KLayout DRC skipped for runtime.
+# 	librelane-magicdrc: full RTL-to-GDS. KLayout DRC skipped for runtime.
 	$(MAKE) -C $(MACROS_DIR)/counter librelane-magicdrc
 	$(MAKE) -C $(MACROS_DIR)/counter copy-final
-	# Gate-level flows that depend on the LibreLane outputs above.
+# 	Gate-level flows that depend on the LibreLane outputs above.
 	$(MAKE) -C $(MACROS_DIR)/counter sim-gl-cocotb
 	$(MAKE) -C $(MACROS_DIR)/counter generate-xspice
 	$(MAKE) -C $(MACROS_DIR)/counter sim-gl-xschem
 
-	# Top-level assembly
+# 	Top-level assembly
 	$(MAKE) init-submodules
 	$(MAKE) build-bondpad
 	$(MAKE) -C $(IP_DIR)/sg13g2_ip__jku all
