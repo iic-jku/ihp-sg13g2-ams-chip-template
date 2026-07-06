@@ -660,6 +660,8 @@ The `regression` target is the project's end-to-end smoke test for the [IIC-OSIC
 make regression
 ```
 
+This target also runs automatically in continuous integration: the [`regression`](.github/workflows/regression.yml) GitHub Actions workflow runs `make regression` inside the `IIC-OSIC-TOOLS` container nightly (and on manual dispatch), and its status is shown by the *Regression* badge at the top of this README. The scheduled run is gated so it only executes when there have been changes since the previous night.
+
 To keep the runtime low while still covering the full toolchain, the regression makes the following trade-offs:
 
 - The counter macro is hardened with `librelane-magicdrc` (only **Magic DRC** enabled, the slower KLayout DRC is skipped). Netgen LVS still runs as part of the flow.
