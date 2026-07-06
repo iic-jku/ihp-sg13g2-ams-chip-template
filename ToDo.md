@@ -1,5 +1,8 @@
 ﻿# ToDo List
 
+- [ ] add GitHub action for checking license headers
+    - https://github.com/aesc-silicon/ElemRV/blob/main/.github/workflows/license-check.yaml
+    - https://github.com/aesc-silicon/ElemRV/blob/main/REUSE.toml
 - [ ] Tutorial: link SPARX for EMS with PALACE
 - [ ] `ngspice` & `verilog` RTL Co-Simulation using `Xschem`: https://www.youtube.com/watch?v=PPd7jkcHOgA
 - [ ] Link Harald's UCD workshop video: https://ic3.ie/resources/open-source-ic-design-day
