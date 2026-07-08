@@ -56,6 +56,8 @@ def main(input_layout, output_image, width, height, oversampling, pdk_root, pdk)
         (49, 0),     # Via3
         (50, 0),     # Metal4
         (66, 0),     # Via4
+        (36, 0),     # MIM
+        (129, 0),    # Via MIM
         (67, 0),     # Metal5
         (125, 0),    # TopVia1
         (126, 0),    # TopMetal1
