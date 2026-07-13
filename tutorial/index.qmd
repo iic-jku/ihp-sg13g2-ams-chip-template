@@ -1287,6 +1287,25 @@ make magic-lvs                            # top-level Magic + Netgen LVS
 The top-level LVS is currently under construction. The flow is in place, but some issues and limitations in the ihp-sg13g2 PDK must be fixed before it can run successfully.
 :::
 
+## Packaging {#sec-packaging}
+
+The die is packaged in a QFN-32 (5x5 mm) open-molded plastic package ([OmPP](https://www.qptechnologies.com/products/ompp/)) from the [EUROPRACTICE ASIC packaging](https://europractice-ic.com/services/packaging/asic-packaging/) offering. The package matches the padframe exactly: all 32 bondpads (8 per side, see @sec-top) are wired one-to-one to the 32 package leads (8 per side). Bonding is done with 25 µm gold wire, the longest wire measures 1.70 mm, and the cover is glued on after bonding.
+
+The bonding diagram below is generated fully automatically with `make bondplan` from the final chip GDS ([`layout/chip_top_logo_fill.gds.gz`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/layout/chip_top_logo_fill.gds.gz)) and the EUROPRACTICE package library [`EP_PACKAGES_08022018.gds`](https://europractice-ic.com/wp-content/uploads/2019/07/EP_PACKAGES_08022018.gds_.gz). The flow extracts the die bondpads together with their names, places the die in the package cavity, draws the bondwires, fills in the title block, and checks wire lengths, crossings, spacing, lead skew, and the clearance around the sensitive analog wires. The [pinout](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/packaging/config.yaml) and all flow settings are kept in a single configuration file, so the diagram never goes out of sync with the chip. Details are documented in the [packaging README](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/packaging).
+
+```sh
+make bondplan                        # uses the default VERSION (1.0.0)
+make bondplan VERSION=2.1.0          # stamp another version on the sheet
+```
+
+The `VERSION` variable is passed to the flow and printed in the title block (`DIE: CHIP_TOP - V.1.0.0`), so the version number is maintained in the Makefile only. The outputs are the bondplan GDS (`packaging/layout/chip_top_bondplan.gds`), the bond report with summary and bond table ([`packaging/result.md`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/packaging/result.md)), and the bonding diagram images (`packaging/render/chip_top_bondplan_{white,black}.{png,svg}`).
+
+![Automatically generated bonding diagram of the ihp-sg13g2 AMS template chip in a QFN-32 package.](fig/chip_top/chip_top_bondplan_white.png){#fig-chip-top-bondplan width=70%}
+
+::: {.callout-tip}
+Check the flow log and [`packaging/result.md`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/packaging/result.md) after every run. Unbonded named pads and NC package pins are reported explicitly, so a forgotten connection in the `PINOUT` table is immediately visible. Warnings are raised for bondwires that are too long (`BONDWIRE_MAX_LENGTH`), cross each other, come too close to each other, land skewed on their lead (`BONDWIRE_MAX_SKEW`), or violate the guard clearance of sensitive wires (`GUARDED_PINS` / `GUARD_SPACING`).
+:::
+
 ## Full Flow at Once
 
 The comprehensive simulation, build, and DRC pass for the complete chip is run with the following command.
@@ -1309,25 +1328,6 @@ The artifacts are written to [`release/v.2.1.0/`](https://github.com/iic-jku/ihp
 
 ::: {.callout-important}
 Run `make all` before `make release`. The release target only copies files, it does not rebuild or re-verify the chip.
-:::
-
-## Packaging {#sec-packaging}
-
-The die is packaged in a QFN-32 (5x5 mm) open-molded plastic package ([OmPP](https://www.qptechnologies.com/products/ompp/)) from the [EUROPRACTICE ASIC packaging](https://europractice-ic.com/services/packaging/asic-packaging/) offering. The package matches the padframe exactly: all 32 bondpads (8 per side, see @sec-top) are wired one-to-one to the 32 package leads (8 per side). Bonding is done with 25 µm gold wire, the longest wire measures 1.70 mm, and the cover is glued on after bonding.
-
-The bonding diagram below is generated fully automatically with `make bondplan` from the final chip GDS ([`layout/chip_top_logo_fill.gds.gz`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/layout/chip_top_logo_fill.gds.gz)) and the EUROPRACTICE package library [`EP_PACKAGES_08022018.gds`](https://europractice-ic.com/wp-content/uploads/2019/07/EP_PACKAGES_08022018.gds_.gz). The flow extracts the die bondpads together with their names, places the die in the package cavity, draws the bondwires, fills in the title block, and checks wire lengths, crossings, spacing, lead skew, and the clearance around the sensitive analog wires. The [pinout](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/packaging/config.yaml) and all flow settings are kept in a single configuration file, so the diagram never goes out of sync with the chip. Details are documented in the [packaging README](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/packaging).
-
-```sh
-make bondplan                        # uses the default VERSION (1.0.0)
-make bondplan VERSION=2.1.0          # stamp another version on the sheet
-```
-
-The `VERSION` variable is passed to the flow and printed in the title block (`DIE: CHIP_TOP - V.1.0.0`), so the version number is maintained in the Makefile only. The outputs are the bondplan GDS (`packaging/layout/chip_top_bondplan.gds`), the bond report with summary and bond table ([`packaging/result.md`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/packaging/result.md)), and the bonding diagram images (`packaging/render/chip_top_bondplan_{white,black}.{png,svg}`).
-
-![Automatically generated bonding diagram of the ihp-sg13g2 AMS template chip in a QFN-32 package.](fig/chip_top/chip_top_bondplan_white.png){#fig-chip-top-bondplan width=70%}
-
-::: {.callout-tip}
-Check the flow log and [`packaging/result.md`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/packaging/result.md) after every run. Unbonded named pads and NC package pins are reported explicitly, so a forgotten connection in the `PINOUT` table is immediately visible. Warnings are raised for bondwires that are too long (`BONDWIRE_MAX_LENGTH`), cross each other, come too close to each other, land skewed on their lead (`BONDWIRE_MAX_SKEW`), or violate the guard clearance of sensitive wires (`GUARDED_PINS` / `GUARD_SPACING`).
 :::
 
 
