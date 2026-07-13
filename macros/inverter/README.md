@@ -1,8 +1,5 @@
 ﻿# ihp-sg13g2 Inverter
 
-> [!IMPORTANT]
-> This repository requires the [IIC-OSIC-TOOLS](https://github.com/iic-jku/IIC-OSIC-TOOLS) container with tag `2026.05` or later.
-
 <p align="center">
   <a href="render/img/inverter_top_white.png">
     <img src="render/img/inverter_top_white.png" alt="Render of the ihp-sg13g2 inverter layout (54um x 82um)" width=70%>

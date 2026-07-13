@@ -1,8 +1,5 @@
 ﻿# ihp-sg13g2 Counter
 
-> [!IMPORTANT]
-> This repository requires the [IIC-OSIC-TOOLS](https://github.com/iic-jku/IIC-OSIC-TOOLS) container with tag `2026.05` or later.
-
 <p align="center">
   <a href="render/img/counter_top_white.png">
     <img src="render/img/counter_top_white.png" alt="Render of the ihp-sg13g2 counter layout (200um x 100um)" width=50%>
