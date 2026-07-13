@@ -22,16 +22,6 @@ def main(input_layout, output_image, width, height, oversampling, pdk_root, pdk)
     lv.load_layout(input_layout, 0)
     lv.max_hier()
 
-    top_cell = lv.active_cellview().layout().top_cell()
-    top_bbox = top_cell.dbbox()
-    aspect_ratio = top_bbox.width() / top_bbox.height()
-
-    if not height and not width:
-        width = 1024
-
-    if not height:
-        height = int(width / aspect_ratio)
-
     # Load the layer properties
     lv.load_layer_props(
         os.path.join(pdk_root, pdk, "libs.tech", "klayout", "tech", "sg13g2.lyp")
@@ -72,16 +62,39 @@ def main(input_layout, output_image, width, height, oversampling, pdk_root, pdk)
         if layer_datatype not in enabled_layers:
             lyp.visible = False
 
+    # Crop box: bounding box of the visible layers only (the outermost
+    # visible structure is the sealring). The full cell bounding box also
+    # covers invisible helper layers and would leave a border margin.
+    layout = lv.active_cellview().layout()
+    top_cell = layout.top_cell()
+    top_bbox = db.DBox()
+    for layer, datatype in enabled_layers:
+        layer_index = layout.find_layer(layer, datatype)
+        if layer_index is not None:
+            top_bbox += top_cell.dbbox(layer_index)
+    if top_bbox.empty():
+        top_bbox = top_cell.dbbox()
+    aspect_ratio = top_bbox.width() / top_bbox.height()
+
+    if not height and not width:
+        width = 1024
+
+    if not height:
+        height = max(1, round(width / aspect_ratio))
+
     # Save the images
     base_name = os.path.splitext(os.path.basename(output_image))[0]
     directory = os.path.dirname(output_image)
 
+    # target=top_bbox crops to the exact visible-layer bounding box, so the
+    # image has zero border margin
     lv.set_config("background-color", background_white)
     lv.save_image_with_options(
         os.path.join(directory, base_name + "_white.png"),
         width,
         height,
         oversampling=oversampling,
+        target=top_bbox,
     )
 
     lv.set_config("background-color", background_black)
@@ -90,6 +103,7 @@ def main(input_layout, output_image, width, height, oversampling, pdk_root, pdk)
         width,
         height,
         oversampling=oversampling,
+        target=top_bbox,
     )
 
 
