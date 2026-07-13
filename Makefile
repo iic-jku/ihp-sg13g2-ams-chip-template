@@ -35,28 +35,30 @@ WAVEFORM_VIEWER ?= gtkwave
 VERSION ?= 1.0.0
 
 # Folder structure
-XSCHEM_SCH_DIR  := schematic/xschem
-XSCHEM_TB_DIR   := testbenches/xschem
-COCOTB_DIR      := testbenches/cocotb
-LAY_DIR         := layout
-SCRIPTS_DIR     := scripts
-SIM_PLOT_DIR    := scripts/plot_simulations
-RENDER_IMG_DIR  := render/img
-SRC_DIR         := rtl
-IP_DIR          := ip
-MACROS_DIR      := macros
-RELEASE_DIR     := release
-NET_SCH_DIR     := netlist/schematic
-NET_LAY_DIR     := netlist/layout
-NET_PEX_DIR     := netlist/pex
-NET_PNL_DIR     := netlist/pnl
-NET_NL_DIR      := netlist/nl
-NET_SPICE_DIR   := netlist/spice
-LVS_RPT_DIR     := verification/lvs
-DRC_RPT_DIR     := verification/drc
-REPORT_DIR      := verification/reports
-LIBRELANE_DIR   := flow/librelane
-FLOW_FINAL_DIR  := flow/final
+XSCHEM_SCH_DIR  		:= schematic/xschem
+XSCHEM_TB_DIR   		:= testbenches/xschem
+COCOTB_DIR      		:= testbenches/cocotb
+LAY_DIR         		:= layout
+SCRIPTS_DIR     		:= scripts
+SIM_PLOT_DIR    		:= scripts/plot_simulations
+RENDER_IMG_DIR  		:= render/img
+SRC_DIR         		:= rtl
+IP_DIR          		:= ip
+MACROS_DIR      		:= macros
+RELEASE_DIR     		:= release
+NET_SCH_DIR     		:= netlist/schematic
+NET_LAY_DIR     		:= netlist/layout
+NET_PEX_DIR     		:= netlist/pex
+NET_PNL_DIR     		:= netlist/pnl
+NET_NL_DIR      		:= netlist/nl
+NET_SPICE_DIR   		:= netlist/spice
+PACKAGING_DIR   		:= packaging
+PACKAGING_RENDER_DIR	:= packaging/render
+LVS_RPT_DIR     		:= verification/lvs
+DRC_RPT_DIR     		:= verification/drc
+REPORT_DIR      		:= verification/reports
+LIBRELANE_DIR   		:= flow/librelane
+FLOW_FINAL_DIR  		:= flow/final
 
 
 # Help Target
@@ -444,20 +446,28 @@ magic-verify: ## Verify CELL cell with Magic (usage: make magic-verify [CELL=<ce
 # ================================================================================================
 
 
+# Packaging Target
+bondplan: ## Generate the bondplan (die in package + bondwires + pin table) in packaging/ (usage: make bondplan VERSION=<version>)
+	cd $(PACKAGING_DIR) && python3 scripts/run_bondplan.py config.yaml VERSION=$(VERSION)
+.PHONY: bondplan
+# ================================================================================================
+
+
 # Simulate, Build and Verify All Target
-all: ## Simulate, build and verify the chip
+all: ## Simulate, build, verify and package the whole chip
 	$(MAKE) sim-all
 	$(MAKE) build-all
 	$(MAKE) magic-drc CELL=$(TOP)
 	$(MAKE) magic-drc CELL=$(TOP)_logo_fill
 #	$(MAKE) klayout-verify
 #	$(MAKE) magic-verify
+	$(MAKE) bondplan
 .PHONY: all
 # ================================================================================================
 
 
 # Release Target
-release: ## Copy GDS, netlists and chip renders to release/v.<VERSION>/ (usage: make release [VERSION=<version>])
+release: ## Copy the gds, netlist files and chip renders to the release folder (usage: make release VERSION=<version>)
 	mkdir -p $(RELEASE_DIR)/v.$(VERSION)/gds
 	mkdir -p $(RELEASE_DIR)/v.$(VERSION)/netlist
 	mkdir -p $(RELEASE_DIR)/v.$(VERSION)/img
@@ -470,6 +480,8 @@ release: ## Copy GDS, netlists and chip renders to release/v.<VERSION>/ (usage: 
 	cp -f $(RENDER_IMG_DIR)/$(TOP)_black.png $(RELEASE_DIR)/v.$(VERSION)/img/$(TOP)_black.png
 	cp -f $(RENDER_IMG_DIR)/$(TOP)_white.png $(RELEASE_DIR)/v.$(VERSION)/img/$(TOP)_white.png
 	cp -f $(RENDER_IMG_DIR)/$(TOP)_librelane.png $(RELEASE_DIR)/v.$(VERSION)/img/$(TOP)_librelane.png
+	cp -f $(PACKAGING_RENDER_DIR)/*_bondplan_black.png $(RELEASE_DIR)/v.$(VERSION)/img/
+	cp -f $(PACKAGING_RENDER_DIR)/*_bondplan_white.png $(RELEASE_DIR)/v.$(VERSION)/img/
 .PHONY: release
 # ================================================================================================
 

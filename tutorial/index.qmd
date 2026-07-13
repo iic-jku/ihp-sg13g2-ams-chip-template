@@ -1311,6 +1311,25 @@ The artifacts are written to [`release/v.2.1.0/`](https://github.com/iic-jku/ihp
 Run `make all` before `make release`. The release target only copies files, it does not rebuild or re-verify the chip.
 :::
 
+## Packaging {#sec-packaging}
+
+The die is packaged in a QFN-32 (5x5 mm) open-molded plastic package ([OmPP](https://www.qptechnologies.com/products/ompp/)) from the [EUROPRACTICE ASIC packaging](https://europractice-ic.com/services/packaging/asic-packaging/) offering. The package matches the padframe exactly: all 32 bondpads (8 per side, see @sec-top) are wired one-to-one to the 32 package leads (8 per side). Bonding is done with 25 µm gold wire, the longest wire measures 1.70 mm, and the cover is glued on after bonding.
+
+The bonding diagram below is generated fully automatically with `make bondplan` from the final chip GDS ([`layout/chip_top_logo_fill.gds.gz`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/layout/chip_top_logo_fill.gds.gz)) and the EUROPRACTICE package library [`EP_PACKAGES_08022018.gds`](https://europractice-ic.com/wp-content/uploads/2019/07/EP_PACKAGES_08022018.gds_.gz). The flow extracts the die bondpads together with their names, places the die in the package cavity, draws the bondwires, fills in the title block, and checks wire lengths, crossings, spacing, lead skew, and the clearance around the sensitive analog wires. The [pinout](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/packaging/config.yaml) and all flow settings are kept in a single configuration file, so the diagram never goes out of sync with the chip. Details are documented in the [packaging README](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/packaging).
+
+```sh
+make bondplan                        # uses the default VERSION (1.0.0)
+make bondplan VERSION=2.1.0          # stamp another version on the sheet
+```
+
+The `VERSION` variable is passed to the flow and printed in the title block (`DIE: CHIP_TOP - V.1.0.0`), so the version number is maintained in the Makefile only. The outputs are the bondplan GDS (`packaging/layout/chip_top_bondplan.gds`), the bond report with summary and bond table ([`packaging/result.md`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/packaging/result.md)), and the bonding diagram images (`packaging/render/chip_top_bondplan_{white,black}.{png,svg}`).
+
+![Automatically generated bonding diagram of the ihp-sg13g2 AMS template chip in a QFN-32 package.](fig/chip_top/chip_top_bondplan_white.png){#fig-chip-top-bondplan width=70%}
+
+::: {.callout-tip}
+Check the flow log and [`packaging/result.md`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/packaging/result.md) after every run. Unbonded named pads and NC package pins are reported explicitly, so a forgotten connection in the `PINOUT` table is immediately visible. Warnings are raised for bondwires that are too long (`BONDWIRE_MAX_LENGTH`), cross each other, come too close to each other, land skewed on their lead (`BONDWIRE_MAX_SKEW`), or violate the guard clearance of sensitive wires (`GUARDED_PINS` / `GUARD_SPACING`).
+:::
+
 
 # Additional Exercises {#sec-exercises}
 
@@ -1373,6 +1392,16 @@ Building on @sec-exercise1 and @sec-exercise3, swap `inverter2` for the ring osc
 8. Update [`pdn_cfg.tcl`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/flow/librelane/pdn_cfg.tcl) so that the new macros are covered by the correct PDN grid (default for digital, `inverter_top`-style for analog).
 9. Rebuild the chip from scratch with `make build-all`, then verify with `make magic-drc CELL=chip_top` and `make klayout-drc-minimum`.
 
+## Exercise 5: Update the Bondplan Configuration {#sec-exercise5}
+
+Building on @sec-exercise4, update the bondplan configuration in [`packaging/config.yaml`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/packaging/config.yaml) so that the packaged chip matches the new pinout (ring oscillator instead of `inverter2`, 16-bit `counter1`, no `counter2`, three additional VSS pads). The recommended steps are:
+
+1. Rebuild the final GDS of the modified chip (`make build-all` from @sec-exercise4), since the bondplan flow reads the die pads and their names directly from [`layout/chip_top_logo_fill.gds.gz`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/layout/chip_top_logo_fill.gds.gz).
+2. Update the `PINOUT` table in [`packaging/config.yaml`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/packaging/config.yaml): the south-side pads now carry `counter1_value[15:8]`, three of the four east-side analog pads became VSS pads, and the fourth carries the ring-oscillator output. Keep the geometric order in mind (pins 1-8 left top→bottom, 9-16 bottom left→right, 17-24 right bottom→top, 25-32 top right→left) so that the bondwires do not cross.
+3. Connect the freed-up VSS pads as downbonds to the exposed pad by adding an `EPAD` list (e.g. `EPAD: ["VSS", "VSS", "VSS"]`) and marking their former leads as NC (`~`). The exposed pad of the QFN32 is the package ground, and the die is attached with conductive epoxy, so ground downbonds are shorter and lower-inductance than wires to leads.
+4. Re-run `make bondplan` and read the flow log and [`packaging/result.md`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/packaging/result.md) carefully: only the deliberately unbonded pads may appear as *unbonded named pads* (plus the seal-ring artifact), and there must be no wire-length, crossing, spacing, lead-skew, or guard-clearance warnings.
+5. Inspect the generated bonding diagram in [`packaging/render/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/packaging/render/) and the bondplan GDS in KLayout (`ke packaging/layout/chip_top_bondplan.gds`). The title block of the A4 drawing sheet (die size, pad pitch, wire count, maximum wire length) is refilled automatically on every run.
+6. [Optional] Experiment with the die placement: rotate the die with `DIE_PLACEMENT.orientation` (e.g. `E`) or move it off-center with `DIE_PLACEMENT.location`, re-run the flow, and observe how the wire-length, spacing, and skew checks react. Restore a placement where all checks pass.
 
 
 # Acknowledgements

@@ -147,6 +147,19 @@ A designer-oriented description of this chip can be found in [doc/](doc/):
 │  ├─ 📁 pex/
 │  ├─ 📁 pnl/
 │  └─ 📁 spice/
+├─ 📁 packaging/
+│  ├─ 📁 layout/
+│  │  ├─ chip_top_bondplan.gds
+│  │  ├─ chip_top_logo_TM2.gds.gz
+│  │  ├─ EP_PACKAGES_08022018.gds
+│  │  └─ OP_QFN32_A4_FIT.gds
+│  ├─ 📁 render/
+│  │  └─ chip_top_bondplan_{white,black}.{png,svg}
+│  ├─ 📁 scripts/
+│  │  └─ run_bondplan.py
+│  ├─ config.yaml
+│  ├─ README.md
+│  └─ result.md
 ├─ 📁 release/
 │  └─ 📁 v.1.0.0/
 │     ├─ 📁 gds/
@@ -611,9 +624,37 @@ make magic-verify
 ```
 
 
+## Packaging (Bondplan Generation)
+
+Generates the bondplan fully automatically: the die placed in the package cavity, all bondwires, a pin table, and the filled EUROPRACTICE title block. Inputs are the final chip GDS (`layout/chip_top_logo_fill.gds.gz`) and the EUROPRACTICE package library, from which the QFN32 drawing sheet is extracted:
+
+```sh
+make bondplan                        # uses the default VERSION (1.0.0)
+make bondplan VERSION=2.1.0          # stamp another version on the sheet
+```
+
+The `VERSION` variable is passed to the flow and printed in the title block (`DIE: CHIP_TOP - V.1.0.0`), so the version number is maintained in the Makefile only.
+
+The flow ([packaging/scripts/run_bondplan.py](packaging/scripts/run_bondplan.py)) is driven by [packaging/config.yaml](packaging/config.yaml), which holds the full package-pin-to-die-pad `PINOUT` in a LibreLane-style config format. It detects the die bondpads (`Passiv` openings and `TopMetal2.text` labels), places the die in the package cavity, draws the bondwires, and checks wire lengths, crossings, spacing, lead skew and analog guard clearances. Outputs:
+
+- `packaging/layout/chip_top_bondplan.gds`: the bondplan GDS
+- [packaging/result.md](packaging/result.md): bond report with summary and bond table
+- `packaging/render/chip_top_bondplan_{white,black}.{png,svg}`: bonding diagram images
+
+See [packaging/README.md](packaging/README.md) for the full flow documentation and configuration reference.
+
+<p align="center">
+  <a href="packaging/render/chip_top_bondplan_white.png">
+    <img src="packaging/render/chip_top_bondplan_white.png" alt="Bonding diagram of the ihp-sg13g2 AMS template chip in a QFN32 package" width=70%>
+  </a>
+  <br>
+  <em>Bonding diagram of the ihp-sg13g2 AMS template chip in a QFN32 package.</em>
+</p>
+
+
 ## Build and Verify All
 
-Runs full simulation (`sim-all`), then `build-all`, followed by Magic DRC for both `chip_top` and `chip_top_logo_fill`:
+Runs full simulation (`sim-all`), then `build-all`, followed by Magic DRC for both `chip_top` and `chip_top_logo_fill`, and finally generates the bondplan (`bondplan`):
 
 ```sh
 make all
@@ -622,7 +663,7 @@ make all
 
 ## Release
 
-Copies the final top-level GDS with logo and fill structures from `layout/` to `release/v.<VERSION>/gds/`, copies the generated netlists into `release/v.<VERSION>/netlist/`, and copies the chip renders into `release/v.<VERSION>/img/`.
+Copies the final top-level GDS with logo and fill structures from `layout/` to `release/v.<VERSION>/gds/`, copies the generated netlists into `release/v.<VERSION>/netlist/`, and copies the chip renders and the bonding diagram into `release/v.<VERSION>/img/`.
 
 The following netlist folders are exported:
 
@@ -635,6 +676,11 @@ The following chip renders are exported:
 - `render/img/chip_top_black.png` -> `release/v.<VERSION>/img/chip_top_black.png`
 - `render/img/chip_top_white.png` -> `release/v.<VERSION>/img/chip_top_white.png`
 - `render/img/chip_top_librelane.png` -> `release/v.<VERSION>/img/chip_top_librelane.png`
+
+The bonding diagram is exported as well (see `make bondplan`):
+
+- `packaging/render/chip_top_bondplan_black.png` -> `release/v.<VERSION>/img/chip_top_bondplan_black.png`
+- `packaging/render/chip_top_bondplan_white.png` -> `release/v.<VERSION>/img/chip_top_bondplan_white.png`
 
 > [!NOTE]
 > `netlist/schematic` and `netlist/pex` are currently not copied by the `release` target.

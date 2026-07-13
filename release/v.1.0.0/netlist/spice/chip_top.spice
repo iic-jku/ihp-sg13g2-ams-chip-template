@@ -40,14 +40,6 @@
 .subckt sg13g2_tiehi L_HI VDD VSS
 .ends
 
-* Black-box entry subcircuit for sg13g2_ip__bondpad_70x70 abstract view
-.subckt sg13g2_ip__bondpad_70x70 pad
-.ends
-
-* Black-box entry subcircuit for sg13g2_IOPadInOut30mA abstract view
-.subckt sg13g2_IOPadInOut30mA c2p c2p_en iovdd iovss p2c pad vdd vss
-.ends
-
 * Black-box entry subcircuit for sg13g2_dlygate4sd3_1 abstract view
 .subckt sg13g2_dlygate4sd3_1 X A VDD VSS
 .ends
@@ -60,8 +52,12 @@
 .subckt sg13g2_inv_1 Y A VDD VSS
 .ends
 
-* Black-box entry subcircuit for sg13g2_IOPadAnalog abstract view
-.subckt sg13g2_IOPadAnalog iovdd iovss pad padbare padres vdd vss
+* Black-box entry subcircuit for sg13g2_IOPadVss abstract view
+.subckt sg13g2_IOPadVss iovdd iovss vdd vss
+.ends
+
+* Black-box entry subcircuit for sg13g2_ip__bondpad_70x70 abstract view
+.subckt sg13g2_ip__bondpad_70x70 pad
 .ends
 
 * Black-box entry subcircuit for inverter_top abstract view
@@ -80,8 +76,12 @@
 .subckt sg13g2_xor2_1 X A B VDD VSS
 .ends
 
-* Black-box entry subcircuit for sg13g2_IOPadVss abstract view
-.subckt sg13g2_IOPadVss iovdd iovss vdd vss
+* Black-box entry subcircuit for sg13g2_IOPadIOVss abstract view
+.subckt sg13g2_IOPadIOVss iovdd iovss vdd vss
+.ends
+
+* Black-box entry subcircuit for sg13g2_IOPadIOVdd abstract view
+.subckt sg13g2_IOPadIOVdd iovdd iovss vdd vss
 .ends
 
 * Black-box entry subcircuit for sg13g2_ip__jku abstract view
@@ -90,6 +90,10 @@
 
 * Black-box entry subcircuit for sg13g2_Filler200 abstract view
 .subckt sg13g2_Filler200 iovdd iovss vdd vss
+.ends
+
+* Black-box entry subcircuit for sg13g2_IOPadAnalog abstract view
+.subckt sg13g2_IOPadAnalog iovdd iovss pad padbare padres vdd vss
 .ends
 
 * Black-box entry subcircuit for sg13g2_IOPadIn abstract view
@@ -135,24 +139,20 @@
 .subckt sg13g2_ip__jku_names
 .ends
 
+* Black-box entry subcircuit for sg13g2_IOPadVdd abstract view
+.subckt sg13g2_IOPadVdd iovdd iovss vdd vss
+.ends
+
 * Black-box entry subcircuit for sg13g2_buf_16 abstract view
 .subckt sg13g2_buf_16 X A VDD VSS
 .ends
 
+* Black-box entry subcircuit for sg13g2_IOPadInOut30mA abstract view
+.subckt sg13g2_IOPadInOut30mA c2p c2p_en iovdd iovss p2c pad vdd vss
+.ends
+
 * Black-box entry subcircuit for sg13g2_antennanp abstract view
 .subckt sg13g2_antennanp A VDD VSS
-.ends
-
-* Black-box entry subcircuit for sg13g2_IOPadIOVss abstract view
-.subckt sg13g2_IOPadIOVss iovdd iovss vdd vss
-.ends
-
-* Black-box entry subcircuit for sg13g2_IOPadIOVdd abstract view
-.subckt sg13g2_IOPadIOVdd iovdd iovss vdd vss
-.ends
-
-* Black-box entry subcircuit for sg13g2_IOPadVdd abstract view
-.subckt sg13g2_IOPadVdd iovdd iovss vdd vss
 .ends
 
 .subckt chip_top IOVDD IOVSS VDD VSS analog_PAD[0] analog_PAD[1] analog_PAD[2] analog_PAD[3]
@@ -2242,7 +2242,6 @@ XFILLER_153_1421 VDD VSS sg13g2_decap_8
 XFILLER_0_434 VDD VSS sg13g2_decap_8
 XFILLER_27_1435 VDD VSS sg13g2_decap_8
 XFILLER_118_1574 VDD VSS sg13g2_decap_8
-XIO_BOND_analogs\[2\].analog_pad analog_PAD[2] sg13g2_ip__bondpad_70x70
 XFILLER_114_1427 VDD VSS sg13g2_decap_8
 XFILLER_29_42 VDD VSS sg13g2_decap_8
 XFILLER_216_1197 VDD VSS sg13g2_decap_8
@@ -2742,8 +2741,6 @@ XFILLER_23_422 VDD VSS sg13g2_fill_1
 XFILLER_24_956 VDD VSS sg13g2_decap_8
 XFILLER_169_917 VDD VSS sg13g2_decap_8
 XFILLER_196_714 VDD VSS sg13g2_decap_8
-Xbidirs\[3\].bidir_pad bidirs\[3\].bidir_pad/c2p ANTENNA_4/A IOVDD IOVSS bidirs\[3\].bidir_pad/p2c
-+ bidir_PAD[3] VDD VSS sg13g2_IOPadInOut30mA
 XFILLER_23_466 VDD VSS sg13g2_decap_8
 XFILLER_24_989 VDD VSS sg13g2_decap_8
 XFILLER_168_427 VDD VSS sg13g2_decap_8
@@ -2752,7 +2749,6 @@ XFILLER_195_224 VDD VSS sg13g2_decap_8
 XFILLER_211_567 VDD VSS sg13g2_decap_8
 XFILLER_10_105 VDD VSS sg13g2_decap_8
 XFILLER_149_630 VDD VSS sg13g2_decap_8
-XIO_BOND_outputs\[4\].output_pad output_PAD[4] sg13g2_ip__bondpad_70x70
 XFILLER_221_1414 VDD VSS sg13g2_decap_8
 XFILLER_17_1253 VDD VSS sg13g2_decap_8
 XFILLER_52_1133 VDD VSS sg13g2_decap_8
@@ -3467,7 +3463,6 @@ XFILLER_124_1056 VDD VSS sg13g2_decap_8
 XFILLER_30_383 VDD VSS sg13g2_fill_1
 XFILLER_15_1351 VDD VSS sg13g2_decap_8
 XFILLER_178_1709 VDD VSS sg13g2_decap_8
-XIO_BOND_outputs\[9\].output_pad output_PAD[9] sg13g2_ip__bondpad_70x70
 XFILLER_176_889 VDD VSS sg13g2_decap_8
 XFILLER_11_1204 VDD VSS sg13g2_decap_8
 XFILLER_191_826 VDD VSS sg13g2_decap_8
@@ -3658,8 +3653,6 @@ XFILLER_39_1126 VDD VSS sg13g2_decap_8
 XFILLER_78_1175 VDD VSS sg13g2_decap_8
 XFILLER_97_1798 VDD VSS sg13g2_decap_8
 XFILLER_165_1134 VDD VSS sg13g2_decap_8
-Xbidirs\[2\].bidir_pad bidirs\[2\].bidir_pad/c2p ANTENNA_4/A IOVDD IOVSS bidirs\[2\].bidir_pad/p2c
-+ bidir_PAD[2] VDD VSS sg13g2_IOPadInOut30mA
 XFILLER_184_1779 VDD VSS sg13g2_decap_8
 XFILLER_23_648 VDD VSS sg13g2_decap_8
 XFILLER_168_609 VDD VSS sg13g2_decap_8
@@ -4444,8 +4437,6 @@ XFILLER_171_721 VDD VSS sg13g2_decap_8
 XFILLER_128_497 VDD VSS sg13g2_decap_8
 XFILLER_183_581 VDD VSS sg13g2_decap_8
 XFILLER_155_283 VDD VSS sg13g2_decap_8
-Xoutputs\[11\].output_pad outputs\[11\].output_pad/c2p IOVDD IOVSS output_PAD[11]
-+ VDD VSS sg13g2_IOPadOut30mA
 XFILLER_143_434 VDD VSS sg13g2_decap_8
 XFILLER_196_1085 VDD VSS sg13g2_decap_8
 XFILLER_157_1036 VDD VSS sg13g2_decap_8
@@ -4631,8 +4622,6 @@ XFILLER_223_714 VDD VSS sg13g2_decap_8
 XFILLER_34_112 VDD VSS sg13g2_decap_4
 XFILLER_21_1570 VDD VSS sg13g2_decap_8
 XFILLER_78_1357 VDD VSS sg13g2_decap_8
-Xbidirs\[1\].bidir_pad bidirs\[1\].bidir_pad/c2p ANTENNA_4/A IOVDD IOVSS bidirs\[1\].bidir_pad/p2c
-+ bidir_PAD[1] VDD VSS sg13g2_IOPadInOut30mA
 XFILLER_207_287 VDD VSS sg13g2_decap_8
 XFILLER_222_224 VDD VSS sg13g2_decap_8
 XFILLER_206_1302 VDD VSS sg13g2_decap_8
@@ -5203,7 +5192,6 @@ XFILLER_155_1123 VDD VSS sg13g2_decap_8
 XFILLER_68_1175 VDD VSS sg13g2_decap_8
 XFILLER_87_1798 VDD VSS sg13g2_decap_8
 XFILLER_135_392 VDD VSS sg13g2_decap_8
-Xoutputs\[16\].output_pad _221_/Y IOVDD IOVSS output_PAD[16] VDD VSS sg13g2_IOPadOut30mA
 XFILLER_2_840 VDD VSS sg13g2_decap_8
 XFILLER_118_91 VDD VSS sg13g2_decap_8
 XFILLER_29_1148 VDD VSS sg13g2_decap_8
@@ -5417,6 +5405,8 @@ XFILLER_54_1786 VDD VSS sg13g2_decap_8
 XFILLER_128_602 VDD VSS sg13g2_decap_8
 XFILLER_7_910 VDD VSS sg13g2_decap_8
 XFILLER_141_1756 VDD VSS sg13g2_decap_8
+Xg_outputs\[12\].output_pad i_chip_core.inverter1/vout1 IOVDD IOVSS output_PAD[12]
++ VDD VSS sg13g2_IOPadOut30mA
 XFILLER_122_1133 VDD VSS sg13g2_decap_8
 XFILLER_50_1639 VDD VSS sg13g2_decap_8
 XFILLER_204_1477 VDD VSS sg13g2_decap_8
@@ -5614,8 +5604,6 @@ XFILLER_189_1071 VDD VSS sg13g2_decap_8
 XFILLER_208_959 VDD VSS sg13g2_decap_8
 XFILLER_21_1752 VDD VSS sg13g2_decap_8
 XFILLER_210_1470 VDD VSS sg13g2_decap_8
-Xbidirs\[0\].bidir_pad bidirs\[0\].bidir_pad/c2p ANTENNA_4/A IOVDD IOVSS bidirs\[0\].bidir_pad/p2c
-+ bidir_PAD[0] VDD VSS sg13g2_IOPadInOut30mA
 XFILLER_169_1667 VDD VSS sg13g2_decap_8
 XFILLER_207_469 VDD VSS sg13g2_decap_8
 XFILLER_222_406 VDD VSS sg13g2_decap_8
@@ -5631,6 +5619,7 @@ XFILLER_187_343 VDD VSS sg13g2_decap_8
 XFILLER_91_84 VDD VSS sg13g2_decap_8
 XFILLER_128_1386 VDD VSS sg13g2_decap_8
 XFILLER_124_1217 VDD VSS sg13g2_decap_8
+Xg_vss_pads\[0\].vss_pad IOVDD IOVSS VDD VSS sg13g2_IOPadVss
 XFILLER_203_686 VDD VSS sg13g2_decap_8
 XFILLER_15_1512 VDD VSS sg13g2_decap_8
 XFILLER_202_196 VDD VSS sg13g2_decap_8
@@ -5813,6 +5802,7 @@ XFILLER_141_917 VDD VSS sg13g2_decap_8
 XFILLER_193_42 VDD VSS sg13g2_decap_8
 XFILLER_153_777 VDD VSS sg13g2_decap_8
 XFILLER_158_1379 VDD VSS sg13g2_decap_8
+XIO_BOND_g_inputs\[0\].input_pad input_PAD sg13g2_ip__bondpad_70x70
 XFILLER_180_574 VDD VSS sg13g2_decap_8
 XFILLER_175_1660 VDD VSS sg13g2_decap_8
 XFILLER_49_1674 VDD VSS sg13g2_decap_8
@@ -6410,8 +6400,6 @@ XFILLER_68_119 VDD VSS sg13g2_decap_4
 XFILLER_2_896 VDD VSS sg13g2_decap_8
 XFILLER_81_1343 VDD VSS sg13g2_decap_8
 XFILLER_150_385 VDD VSS sg13g2_decap_8
-Xanalogs\[0\].analog_pad IOVDD IOVSS analog_PAD[0] analogs\[0\].analog_pad/padbare
-+ i_chip_core.inverter2/vin1 VDD VSS sg13g2_IOPadAnalog
 XFILLER_204_28 VDD VSS sg13g2_decap_8
 XFILLER_215_1799 VDD VSS sg13g2_decap_8
 XFILLER_134_91 VDD VSS sg13g2_decap_8
@@ -6472,6 +6460,7 @@ XFILLER_142_875 VDD VSS sg13g2_decap_8
 XFILLER_9_1722 VDD VSS sg13g2_decap_8
 XFILLER_59_119 VDD VSS sg13g2_decap_4
 XFILLER_141_385 VDD VSS sg13g2_decap_8
+XIO_BOND_g_outputs\[1\].output_pad output_PAD[1] sg13g2_ip__bondpad_70x70
 XFILLER_214_1232 VDD VSS sg13g2_decap_8
 XFILLER_29_1694 VDD VSS sg13g2_decap_8
 XFILLER_64_1574 VDD VSS sg13g2_decap_8
@@ -6605,7 +6594,6 @@ XFILLER_182_252 VDD VSS sg13g2_decap_8
 XFILLER_127_168 VDD VSS sg13g2_decap_8
 XFILLER_13_1484 VDD VSS sg13g2_decap_8
 XFILLER_129_91 VDD VSS sg13g2_decap_8
-XIO_BOND_outputs\[11\].output_pad output_PAD[11] sg13g2_ip__bondpad_70x70
 XFILLER_6_476 VDD VSS sg13g2_decap_8
 XFILLER_142_105 VDD VSS sg13g2_decap_8
 XFILLER_171_959 VDD VSS sg13g2_decap_8
@@ -6925,8 +6913,6 @@ XFILLER_51_1702 VDD VSS sg13g2_decap_8
 XFILLER_205_1540 VDD VSS sg13g2_decap_8
 XFILLER_197_686 VDD VSS sg13g2_decap_8
 XFILLER_199_1617 VDD VSS sg13g2_decap_8
-Xoutputs\[2\].output_pad outputs\[2\].output_pad/c2p IOVDD IOVSS output_PAD[2] VDD
-+ VSS sg13g2_IOPadOut30mA
 XFILLER_12_567 VDD VSS sg13g2_decap_8
 XFILLER_32_1112 VDD VSS sg13g2_decap_8
 XFILLER_157_539 VDD VSS sg13g2_decap_8
@@ -7178,6 +7164,7 @@ XFILLER_0_791 VDD VSS sg13g2_decap_8
 XFILLER_27_1792 VDD VSS sg13g2_decap_8
 XFILLER_227_329 VDD VSS sg13g2_decap_8
 XFILLER_223_49 VDD VSS sg13g2_decap_8
+XIO_BOND_g_outputs\[6\].output_pad output_PAD[6] sg13g2_ip__bondpad_70x70
 XFILLER_208_532 VDD VSS sg13g2_decap_8
 XFILLER_114_1784 VDD VSS sg13g2_decap_8
 XFILLER_78_1112 VDD VSS sg13g2_decap_8
@@ -7293,7 +7280,6 @@ XFILLER_29_1309 VDD VSS sg13g2_decap_8
 XFILLER_11_1582 VDD VSS sg13g2_decap_8
 XFILLER_1_511 VDD VSS sg13g2_decap_8
 XFILLER_174_56 VDD VSS sg13g2_decap_8
-XIO_BOND_outputs\[16\].output_pad output_PAD[16] sg13g2_ip__bondpad_70x70
 XFILLER_85_1672 VDD VSS sg13g2_decap_8
 XFILLER_27_1022 VDD VSS sg13g2_decap_8
 XFILLER_150_567 VDD VSS sg13g2_decap_8
@@ -7648,8 +7634,6 @@ XFILLER_104_1035 VDD VSS sg13g2_decap_8
 XFILLER_143_1095 VDD VSS sg13g2_decap_8
 XFILLER_137_637 VDD VSS sg13g2_decap_8
 XFILLER_149_497 VDD VSS sg13g2_decap_8
-Xoutputs\[7\].output_pad outputs\[7\].output_pad/c2p IOVDD IOVSS output_PAD[7] VDD
-+ VSS sg13g2_IOPadOut30mA
 XFILLER_30_1221 VDD VSS sg13g2_decap_8
 XFILLER_164_434 VDD VSS sg13g2_decap_8
 XFILLER_176_294 VDD VSS sg13g2_decap_8
@@ -7678,6 +7662,8 @@ XFILLER_8_1211 VDD VSS sg13g2_decap_8
 XFILLER_134_1721 VDD VSS sg13g2_decap_8
 XFILLER_24_1003 VDD VSS sg13g2_decap_8
 XFILLER_219_413 VDD VSS sg13g2_decap_8
+Xg_outputs\[1\].output_pad g_outputs\[1\].output_pad/c2p IOVDD IOVSS output_PAD[1]
++ VDD VSS sg13g2_IOPadOut30mA
 XFILLER_63_1063 VDD VSS sg13g2_decap_8
 XFILLER_82_1686 VDD VSS sg13g2_decap_8
 XFILLER_48_56 VDD VSS sg13g2_decap_8
@@ -8128,8 +8114,8 @@ XFILLER_10_1477 VDD VSS sg13g2_decap_8
 XFILLER_69_1091 VDD VSS sg13g2_decap_8
 XFILLER_3_266 VDD VSS sg13g2_decap_8
 XFILLER_193_77 VDD VSS sg13g2_decap_8
-Xi_chip_core.inverter1 bidirs\[0\].bidir_pad/p2c bidirs\[1\].bidir_pad/p2c bidirs\[2\].bidir_pad/p2c
-+ bidirs\[3\].bidir_pad/p2c i_chip_core.inverter1/vout1 i_chip_core.inverter1/vout2
+Xi_chip_core.inverter1 i_chip_core.inverter1/vin1 i_chip_core.inverter1/vin2 i_chip_core.inverter1/vin3
++ i_chip_core.inverter1/vin4 i_chip_core.inverter1/vout1 i_chip_core.inverter1/vout2
 + i_chip_core.inverter1/vout3 i_chip_core.inverter1/vout4 VSS VDD inverter_top
 XFILLER_156_1050 VDD VSS sg13g2_decap_8
 XFILLER_175_1695 VDD VSS sg13g2_decap_8
@@ -8223,6 +8209,7 @@ XFILLER_74_1714 VDD VSS sg13g2_decap_8
 XFILLER_94_1140 VDD VSS sg13g2_decap_8
 XFILLER_213_238 VDD VSS sg13g2_decap_8
 XFILLER_202_84 VDD VSS sg13g2_decap_8
+XIO_BOND_g_outputs\[13\].output_pad output_PAD[13] sg13g2_ip__bondpad_70x70
 XFILLER_15_49 VDD VSS sg13g2_decap_8
 XFILLER_107_1203 VDD VSS sg13g2_decap_8
 XFILLER_35_1709 VDD VSS sg13g2_decap_8
@@ -8419,6 +8406,8 @@ XFILLER_26_1281 VDD VSS sg13g2_decap_8
 XFILLER_61_1161 VDD VSS sg13g2_decap_4
 XFILLER_80_1784 VDD VSS sg13g2_decap_8
 XFILLER_189_1639 VDD VSS sg13g2_decap_8
+Xg_outputs\[6\].output_pad g_outputs\[6\].output_pad/c2p IOVDD IOVSS output_PAD[6]
++ VDD VSS sg13g2_IOPadOut30mA
 XFILLER_27_903 VDD VSS sg13g2_decap_8
 XFILLER_6_1386 VDD VSS sg13g2_decap_8
 XFILLER_113_1273 VDD VSS sg13g2_decap_8
@@ -9511,6 +9500,7 @@ XFILLER_24_193 VDD VSS sg13g2_decap_8
 XFILLER_9_805 VDD VSS sg13g2_decap_8
 XFILLER_169_154 VDD VSS sg13g2_decap_8
 XFILLER_188_56 VDD VSS sg13g2_decap_8
+XIO_BOND_g_iovss_pads\[0\].iovss_pad IOVSS sg13g2_ip__bondpad_70x70
 XFILLER_16_1610 VDD VSS sg13g2_decap_8
 XFILLER_200_434 VDD VSS sg13g2_decap_8
 XFILLER_212_294 VDD VSS sg13g2_decap_8
@@ -10210,7 +10200,6 @@ XFILLER_6_980 VDD VSS sg13g2_decap_8
 XFILLER_192_1625 VDD VSS sg13g2_decap_8
 XFILLER_126_182 VDD VSS sg13g2_decap_8
 XFILLER_118_1707 VDD VSS sg13g2_decap_8
-XIO_BOND_inputs\[0\].input_pad input_PAD sg13g2_ip__bondpad_70x70
 XFILLER_48_0 VDD VSS sg13g2_decap_8
 XFILLER_5_490 VDD VSS sg13g2_decap_8
 XFILLER_138_1155 VDD VSS sg13g2_decap_8
@@ -10396,6 +10385,7 @@ XFILLER_228_1757 VDD VSS sg13g2_decap_8
 XFILLER_179_826 VDD VSS sg13g2_decap_8
 XFILLER_146_1435 VDD VSS sg13g2_decap_8
 XFILLER_94_1378 VDD VSS sg13g2_decap_8
+XIO_BOND_g_iovdd_pads\[0\].iovdd_pad IOVDD sg13g2_ip__bondpad_70x70
 XFILLER_37_1730 VDD VSS sg13g2_decap_8
 XFILLER_222_966 VDD VSS sg13g2_decap_8
 XFILLER_178_336 VDD VSS sg13g2_decap_8
@@ -10624,7 +10614,6 @@ XFILLER_179_1085 VDD VSS sg13g2_decap_8
 XFILLER_200_1484 VDD VSS sg13g2_decap_8
 XFILLER_150_707 VDD VSS sg13g2_decap_8
 XFILLER_162_567 VDD VSS sg13g2_decap_8
-XIO_BOND_outputs\[0\].output_pad output_PAD[0] sg13g2_ip__bondpad_70x70
 XFILLER_118_1301 VDD VSS sg13g2_decap_8
 XFILLER_11_1799 VDD VSS sg13g2_decap_8
 XFILLER_46_1807 VDD VSS sg13g2_decap_4
@@ -10809,7 +10798,6 @@ XFILLER_210_700 VDD VSS sg13g2_decap_8
 XFILLER_222_560 VDD VSS sg13g2_decap_8
 XFILLER_165_1674 VDD VSS sg13g2_decap_8
 XFILLER_22_632 VDD VSS sg13g2_decap_8
-XIO_BOND_analogs\[3\].analog_pad analog_PAD[3] sg13g2_ip__bondpad_70x70
 XFILLER_39_1688 VDD VSS sg13g2_decap_8
 XFILLER_195_924 VDD VSS sg13g2_decap_8
 XFILLER_52_1800 VDD VSS sg13g2_decap_8
@@ -10979,6 +10967,7 @@ XFILLER_195_1667 VDD VSS sg13g2_decap_8
 XFILLER_132_504 VDD VSS sg13g2_decap_8
 XFILLER_144_364 VDD VSS sg13g2_decap_8
 XFILLER_208_63 VDD VSS sg13g2_decap_8
+XIO_BOND_g_vdd_pads\[0\].vdd_pad VDD sg13g2_ip__bondpad_70x70
 XFILLER_171_161 VDD VSS sg13g2_decap_8
 XFILLER_67_1350 VDD VSS sg13g2_decap_8
 XFILLER_176_1099 VDD VSS sg13g2_decap_8
@@ -11354,7 +11343,6 @@ XFILLER_130_805 VDD VSS sg13g2_decap_8
 XFILLER_142_665 VDD VSS sg13g2_decap_8
 XFILLER_173_1036 VDD VSS sg13g2_decap_8
 XFILLER_9_1512 VDD VSS sg13g2_decap_8
-XIO_BOND_outputs\[5\].output_pad output_PAD[5] sg13g2_ip__bondpad_70x70
 XFILLER_141_175 VDD VSS sg13g2_decap_8
 XFILLER_214_1022 VDD VSS sg13g2_decap_8
 XFILLER_29_1484 VDD VSS sg13g2_decap_8
@@ -12969,6 +12957,7 @@ XFILLER_9_1162 VDD VSS sg13g2_decap_8
 XFILLER_135_1672 VDD VSS sg13g2_decap_8
 XFILLER_5_1015 VDD VSS sg13g2_decap_8
 XFILLER_217_504 VDD VSS sg13g2_decap_8
+Xg_iovss_pads\[0\].iovss_pad IOVDD IOVSS VDD VSS sg13g2_IOPadIOVss
 XFILLER_56_49 VDD VSS sg13g2_decap_8
 XFILLER_17_609 VDD VSS sg13g2_decap_8
 XFILLER_29_469 VDD VSS sg13g2_decap_8
@@ -13049,8 +13038,6 @@ XFILLER_110_1609 VDD VSS sg13g2_decap_8
 XFILLER_212_1379 VDD VSS sg13g2_decap_8
 XFILLER_43_1098 VDD VSS sg13g2_decap_8
 XFILLER_130_1057 VDD VSS sg13g2_decap_8
-Xoutputs\[12\].output_pad i_chip_core.inverter1/vout1 IOVDD IOVSS output_PAD[12] VDD
-+ VSS sg13g2_IOPadOut30mA
 XFILLER_5_1582 VDD VSS sg13g2_decap_8
 XFILLER_1_1435 VDD VSS sg13g2_decap_8
 XFILLER_95_1420 VDD VSS sg13g2_decap_8
@@ -13474,7 +13461,6 @@ XFILLER_126_322 VDD VSS sg13g2_decap_8
 XFILLER_12_1148 VDD VSS sg13g2_decap_8
 XFILLER_5_630 VDD VSS sg13g2_decap_8
 XFILLER_103_1287 VDD VSS sg13g2_decap_8
-Xvss_pads\[0\].vss_pad IOVDD IOVSS VDD VSS sg13g2_IOPadVss
 XFILLER_182_973 VDD VSS sg13g2_decap_8
 XFILLER_57_7 VDD VSS sg13g2_decap_8
 XFILLER_86_1238 VDD VSS sg13g2_decap_8
@@ -13891,6 +13877,7 @@ XFILLER_65_1686 VDD VSS sg13g2_decap_8
 XFILLER_133_1022 VDD VSS sg13g2_decap_8
 XFILLER_172_1071 VDD VSS sg13g2_decap_8
 XFILLER_26_1659 VDD VSS sg13g2_decap_8
+Xg_iovdd_pads\[0\].iovdd_pad IOVDD IOVSS VDD VSS sg13g2_IOPadIOVdd
 XFILLER_117_1798 VDD VSS sg13g2_decap_8
 XFILLER_4_1400 VDD VSS sg13g2_decap_8
 XFILLER_133_1099 VDD VSS sg13g2_decap_8
@@ -14042,6 +14029,8 @@ XFILLER_82_1252 VDD VSS sg13g2_decap_8
 XFILLER_156_1099 VDD VSS sg13g2_decap_8
 XFILLER_160_294 VDD VSS sg13g2_decap_8
 XFILLER_126_98 VDD VSS sg13g2_decap_8
+Xg_outputs\[13\].output_pad i_chip_core.inverter1/vout2 IOVDD IOVSS output_PAD[13]
++ VDD VSS sg13g2_IOPadOut30mA
 XFILLER_134_1386 VDD VSS sg13g2_decap_8
 XFILLER_19_63 VDD VSS sg13g2_decap_8
 XFILLER_130_1239 VDD VSS sg13g2_decap_8
@@ -14542,6 +14531,7 @@ XFILLER_171_175 VDD VSS sg13g2_decap_8
 XFILLER_217_1022 VDD VSS sg13g2_decap_8
 XFILLER_67_1364 VDD VSS sg13g2_decap_8
 XFILLER_154_1323 VDD VSS sg13g2_decap_8
+XIO_BOND_g_analogs\[0\].analog_pad analog_PAD[0] sg13g2_ip__bondpad_70x70
 XFILLER_28_1359 VDD VSS sg13g2_decap_8
 XFILLER_119_1476 VDD VSS sg13g2_decap_8
 XFILLER_224_21 VDD VSS sg13g2_decap_8
@@ -15018,8 +15008,6 @@ XFILLER_223_1806 VDD VSS sg13g2_decap_4
 XFILLER_19_1645 VDD VSS sg13g2_decap_8
 XFILLER_11_700 VDD VSS sg13g2_decap_8
 XFILLER_24_42 VDD VSS sg13g2_decap_8
-Xanalogs\[1\].analog_pad IOVDD IOVSS analog_PAD[1] analogs\[1\].analog_pad/padbare
-+ i_chip_core.inverter2/vin2 VDD VSS sg13g2_IOPadAnalog
 XFILLER_168_532 VDD VSS sg13g2_decap_8
 XFILLER_23_571 VDD VSS sg13g2_decap_8
 XFILLER_145_1686 VDD VSS sg13g2_decap_8
@@ -15090,6 +15078,7 @@ XFILLER_179_819 VDD VSS sg13g2_decap_8
 XFILLER_18_1100 VDD VSS sg13g2_decap_8
 XFILLER_222_959 VDD VSS sg13g2_decap_8
 XFILLER_37_1723 VDD VSS sg13g2_decap_8
+XIO_BOND_g_outputs\[2\].output_pad output_PAD[2] sg13g2_ip__bondpad_70x70
 XFILLER_178_329 VDD VSS sg13g2_decap_8
 XFILLER_21_519 VDD VSS sg13g2_decap_8
 XFILLER_226_1463 VDD VSS sg13g2_decap_8
@@ -15215,7 +15204,6 @@ XFILLER_5_1743 VDD VSS sg13g2_decap_8
 XFILLER_112_1630 VDD VSS sg13g2_decap_8
 XFILLER_21_1535 VDD VSS sg13g2_decap_8
 XFILLER_210_1253 VDD VSS sg13g2_decap_8
-XIO_BOND_outputs\[12\].output_pad output_PAD[12] sg13g2_ip__bondpad_70x70
 XFILLER_28_652 VDD VSS sg13g2_decap_8
 XFILLER_216_742 VDD VSS sg13g2_decap_8
 XFILLER_27_140 VDD VSS sg13g2_decap_8
@@ -15396,7 +15384,6 @@ XFILLER_97_14 VDD VSS sg13g2_decap_8
 XFILLER_21_98 VDD VSS sg13g2_decap_8
 XFILLER_84_1315 VDD VSS sg13g2_decap_8
 XFILLER_180_357 VDD VSS sg13g2_decap_8
-XIO_BOND_vdd_pads\[0\].vdd_pad VDD sg13g2_ip__bondpad_70x70
 XFILLER_134_763 VDD VSS sg13g2_decap_8
 XFILLER_161_560 VDD VSS sg13g2_decap_8
 XFILLER_137_98 VDD VSS sg13g2_decap_8
@@ -15538,8 +15525,6 @@ XFILLER_130_210 VDD VSS sg13g2_decap_8
 XFILLER_153_1015 VDD VSS sg13g2_decap_8
 XFILLER_27_1029 VDD VSS sg13g2_decap_8
 XFILLER_217_1771 VDD VSS sg13g2_decap_8
-Xoutputs\[3\].output_pad outputs\[3\].output_pad/c2p IOVDD IOVSS output_PAD[3] VDD
-+ VSS sg13g2_IOPadOut30mA
 XFILLER_118_1168 VDD VSS sg13g2_decap_8
 XFILLER_67_28 VDD VSS sg13g2_decap_8
 XFILLER_131_777 VDD VSS sg13g2_decap_8
@@ -15757,6 +15742,8 @@ XFILLER_1_315 VDD VSS sg13g2_decap_8
 XFILLER_78_49 VDD VSS sg13g2_decap_8
 XFILLER_215_1708 VDD VSS sg13g2_decap_8
 XFILLER_81_1329 VDD VSS sg13g2_decap_8
+Xg_analogs\[0\].analog_pad IOVDD IOVSS analog_PAD[0] g_analogs\[0\].analog_pad/padbare
++ i_chip_core.inverter2/vin1 VDD VSS sg13g2_IOPadAnalog
 XFILLER_63_1730 VDD VSS sg13g2_decap_8
 XFILLER_150_1700 VDD VSS sg13g2_decap_8
 XFILLER_76_105 VDD VSS sg13g2_decap_8
@@ -15779,6 +15766,7 @@ XFILLER_150_21 VDD VSS sg13g2_decap_8
 XFILLER_17_238 VDD VSS sg13g2_decap_8
 XFILLER_22_1482 VDD VSS sg13g2_decap_8
 XFILLER_2_1554 VDD VSS sg13g2_decap_8
+XIO_BOND_g_bidirs\[3\].bidir_pad bidir_PAD[3] sg13g2_ip__bondpad_70x70
 XFILLER_214_840 VDD VSS sg13g2_decap_8
 XFILLER_148_1651 VDD VSS sg13g2_decap_8
 XFILLER_109_1602 VDD VSS sg13g2_decap_8
@@ -15796,6 +15784,7 @@ XFILLER_43_63 VDD VSS sg13g2_decap_8
 XFILLER_158_427 VDD VSS sg13g2_decap_8
 XFILLER_185_224 VDD VSS sg13g2_decap_8
 XFILLER_224_1561 VDD VSS sg13g2_decap_8
+XIO_BOND_g_outputs\[7\].output_pad output_PAD[7] sg13g2_ip__bondpad_70x70
 XFILLER_199_1015 VDD VSS sg13g2_decap_8
 XFILLER_201_567 VDD VSS sg13g2_decap_8
 XFILLER_159_63 VDD VSS sg13g2_decap_8
@@ -16288,8 +16277,6 @@ XFILLER_170_1758 VDD VSS sg13g2_decap_8
 XFILLER_9_1379 VDD VSS sg13g2_decap_8
 XFILLER_29_609 VDD VSS sg13g2_decap_8
 XFILLER_116_1266 VDD VSS sg13g2_decap_8
-Xoutputs\[8\].output_pad outputs\[8\].output_pad/c2p IOVDD IOVSS output_PAD[8] VDD
-+ VSS sg13g2_IOPadOut30mA
 XFILLER_99_1217 VDD VSS sg13g2_decap_8
 XFILLER_211_1722 VDD VSS sg13g2_decap_8
 XFILLER_112_1119 VDD VSS sg13g2_decap_8
@@ -16310,6 +16297,8 @@ XFILLER_169_308 VDD VSS sg13g2_decap_8
 XFILLER_196_105 VDD VSS sg13g2_decap_8
 XFILLER_212_448 VDD VSS sg13g2_decap_8
 XFILLER_209_1673 VDD VSS sg13g2_decap_8
+Xg_outputs\[2\].output_pad g_outputs\[2\].output_pad/c2p IOVDD IOVSS output_PAD[2]
++ VDD VSS sg13g2_IOPadOut30mA
 XFILLER_142_1805 VDD VSS sg13g2_decap_4
 XFILLER_127_1351 VDD VSS sg13g2_decap_8
 XFILLER_205_1526 VDD VSS sg13g2_decap_8
@@ -16720,6 +16709,7 @@ XFILLER_22_1664 VDD VSS sg13g2_decap_8
 XFILLER_96_1721 VDD VSS sg13g2_decap_8
 XFILLER_177_7 VDD VSS sg13g2_decap_8
 XFILLER_211_1393 VDD VSS sg13g2_decap_8
+XIO_BOND_g_bidirs\[2\].bidir_pad bidir_PAD[2] sg13g2_ip__bondpad_70x70
 XFILLER_199_28 VDD VSS sg13g2_decap_8
 XFILLER_183_1702 VDD VSS sg13g2_decap_8
 XFILLER_25_420 VDD VSS sg13g2_decap_8
@@ -16850,6 +16840,7 @@ XFILLER_144_336 VDD VSS sg13g2_decap_8
 XFILLER_208_35 VDD VSS sg13g2_decap_8
 XFILLER_171_133 VDD VSS sg13g2_decap_8
 XFILLER_67_1322 VDD VSS sg13g2_decap_8
+XIO_BOND_g_outputs\[14\].output_pad output_PAD[14] sg13g2_ip__bondpad_70x70
 XFILLER_82_1809 VDD VSS sg13g2_fill_2
 XFILLER_119_1434 VDD VSS sg13g2_decap_8
 XFILLER_28_1317 VDD VSS sg13g2_decap_8
@@ -17061,6 +17052,8 @@ XFILLER_207_1771 VDD VSS sg13g2_decap_8
 XFILLER_108_1168 VDD VSS sg13g2_decap_8
 XFILLER_203_1624 VDD VSS sg13g2_decap_8
 XFILLER_223_1050 VDD VSS sg13g2_decap_8
+Xg_outputs\[7\].output_pad g_outputs\[7\].output_pad/c2p IOVDD IOVSS output_PAD[7]
++ VDD VSS sg13g2_IOPadOut30mA
 XFILLER_73_1392 VDD VSS sg13g2_decap_8
 XFILLER_192_707 VDD VSS sg13g2_decap_8
 XFILLER_160_1351 VDD VSS sg13g2_decap_8
@@ -17714,6 +17707,7 @@ XFILLER_116_1042 VDD VSS sg13g2_decap_8
 XFILLER_135_1665 VDD VSS sg13g2_decap_8
 XFILLER_5_1008 VDD VSS sg13g2_decap_8
 XFILLER_2_91 VDD VSS sg13g2_decap_8
+XIO_BOND_g_bidirs\[1\].bidir_pad bidir_PAD[1] sg13g2_ip__bondpad_70x70
 XFILLER_211_1575 VDD VSS sg13g2_decap_8
 XFILLER_186_1029 VDD VSS sg13g2_decap_8
 XFILLER_25_602 VDD VSS sg13g2_decap_8
@@ -18700,6 +18694,7 @@ XFILLER_150_490 VDD VSS sg13g2_decap_8
 XFILLER_64_1189 VDD VSS sg13g2_decap_8
 XFILLER_151_1148 VDD VSS sg13g2_decap_8
 XFILLER_7_1050 VDD VSS sg13g2_decap_8
+XIO_BOND_g_bidirs\[0\].bidir_pad bidir_PAD[0] sg13g2_ip__bondpad_70x70
 XFILLER_211_1757 VDD VSS sg13g2_decap_8
 XFILLER_209_252 VDD VSS sg13g2_decap_8
 XFILLER_188_1071 VDD VSS sg13g2_decap_8
@@ -19262,7 +19257,6 @@ XFILLER_227_637 VDD VSS sg13g2_decap_8
 XFILLER_208_840 VDD VSS sg13g2_decap_8
 XFILLER_226_147 VDD VSS sg13g2_decap_8
 XFILLER_78_1420 VDD VSS sg13g2_decap_8
-XIO_BOND_outputs\[1\].output_pad output_PAD[1] sg13g2_ip__bondpad_70x70
 XFILLER_207_350 VDD VSS sg13g2_decap_8
 XFILLER_130_1393 VDD VSS sg13g2_decap_8
 XFILLER_1_1771 VDD VSS sg13g2_decap_8
@@ -19987,7 +19981,6 @@ XFILLER_132_91 VDD VSS sg13g2_decap_8
 XFILLER_179_609 VDD VSS sg13g2_decap_8
 XFILLER_146_1218 VDD VSS sg13g2_decap_8
 XFILLER_15_840 VDD VSS sg13g2_decap_8
-XIO_BOND_outputs\[6\].output_pad output_PAD[6] sg13g2_ip__bondpad_70x70
 XFILLER_222_749 VDD VSS sg13g2_decap_8
 XFILLER_128_1630 VDD VSS sg13g2_decap_8
 XFILLER_92_84 VDD VSS sg13g2_decap_8
@@ -20189,7 +20182,6 @@ XFILLER_169_1730 VDD VSS sg13g2_decap_8
 XFILLER_207_532 VDD VSS sg13g2_decap_8
 XFILLER_219_392 VDD VSS sg13g2_decap_8
 XFILLER_19_475 VDD VSS sg13g2_decap_8
-XIO_BOND_bidirs\[3\].bidir_pad bidir_PAD[3] sg13g2_ip__bondpad_70x70
 XFILLER_228_1337 VDD VSS sg13g2_decap_8
 XFILLER_59_1056 VDD VSS sg13g2_decap_8
 XFILLER_78_1679 VDD VSS sg13g2_decap_8
@@ -21154,7 +21146,6 @@ XFILLER_19_657 VDD VSS sg13g2_decap_8
 XFILLER_20_1039 VDD VSS sg13g2_decap_8
 XFILLER_206_224 VDD VSS sg13g2_decap_8
 XFILLER_19_679 VDD VSS sg13g2_decap_8
-XIO_BOND_bidirs\[2\].bidir_pad bidir_PAD[2] sg13g2_ip__bondpad_70x70
 XFILLER_132_70 VDD VSS sg13g2_decap_8
 XFILLER_228_1519 VDD VSS sg13g2_decap_8
 XFILLER_98_1287 VDD VSS sg13g2_decap_8
@@ -21686,8 +21677,6 @@ XFILLER_167_966 VDD VSS sg13g2_decap_8
 XFILLER_103_1217 VDD VSS sg13g2_decap_8
 XFILLER_194_763 VDD VSS sg13g2_decap_8
 XFILLER_182_903 VDD VSS sg13g2_decap_8
-Xoutputs\[13\].output_pad i_chip_core.inverter1/vout2 IOVDD IOVSS output_PAD[13] VDD
-+ VSS sg13g2_IOPadOut30mA
 XFILLER_142_1288 VDD VSS sg13g2_decap_8
 XFILLER_127_819 VDD VSS sg13g2_decap_8
 XFILLER_139_679 VDD VSS sg13g2_decap_8
@@ -22110,7 +22099,6 @@ XFILLER_219_756 VDD VSS sg13g2_decap_8
 XFILLER_150_1365 VDD VSS sg13g2_decap_8
 XFILLER_105_84 VDD VSS sg13g2_decap_8
 XFILLER_41_1660 VDD VSS sg13g2_decap_8
-XIO_BOND_bidirs\[1\].bidir_pad bidir_PAD[1] sg13g2_ip__bondpad_70x70
 XFILLER_206_406 VDD VSS sg13g2_decap_8
 XFILLER_218_266 VDD VSS sg13g2_decap_8
 XFILLER_2_1120 VDD VSS sg13g2_decap_8
@@ -22646,6 +22634,8 @@ XFILLER_224_1715 VDD VSS sg13g2_decap_8
 XFILLER_197_238 VDD VSS sg13g2_decap_8
 XFILLER_0_1498 VDD VSS sg13g2_decap_8
 XFILLER_12_119 VDD VSS sg13g2_decap_8
+Xg_outputs\[14\].output_pad i_chip_core.inverter1/vout3 IOVDD IOVSS output_PAD[14]
++ VDD VSS sg13g2_IOPadOut30mA
 XFILLER_16_1407 VDD VSS sg13g2_decap_8
 XFILLER_90_1336 VDD VSS sg13g2_decap_8
 XFILLER_178_441 VDD VSS sg13g2_decap_8
@@ -23056,7 +23046,6 @@ XFILLER_24_1528 VDD VSS sg13g2_decap_8
 XFILLER_135_1071 VDD VSS sg13g2_decap_8
 XFILLER_213_1246 VDD VSS sg13g2_decap_8
 XFILLER_219_938 VDD VSS sg13g2_decap_8
-XIO_BOND_bidirs\[0\].bidir_pad bidir_PAD[0] sg13g2_ip__bondpad_70x70
 XFILLER_218_448 VDD VSS sg13g2_decap_8
 XFILLER_180_7 VDD VSS sg13g2_decap_8
 XFILLER_2_1302 VDD VSS sg13g2_decap_8
@@ -23147,6 +23136,7 @@ XFILLER_28_91 VDD VSS sg13g2_decap_8
 XFILLER_151_70 VDD VSS sg13g2_decap_8
 XFILLER_17_553 VDD VSS sg13g2_decap_8
 XFILLER_189_322 VDD VSS sg13g2_decap_8
+XIO_BOND_g_analogs\[1\].analog_pad analog_PAD[1] sg13g2_ip__bondpad_70x70
 XFILLER_225_1106 VDD VSS sg13g2_decap_8
 XFILLER_205_665 VDD VSS sg13g2_decap_8
 XFILLER_75_1448 VDD VSS sg13g2_decap_8
@@ -23606,8 +23596,6 @@ XFILLER_161_567 VDD VSS sg13g2_decap_8
 XFILLER_216_1414 VDD VSS sg13g2_decap_8
 XFILLER_47_1133 VDD VSS sg13g2_decap_8
 XFILLER_66_1756 VDD VSS sg13g2_decap_8
-Xanalogs\[2\].analog_pad IOVDD IOVSS analog_PAD[2] i_chip_core.inverter2/vout1 analogs\[2\].analog_pad/padres
-+ VDD VSS sg13g2_IOPadAnalog
 XFILLER_86_1182 VDD VSS sg13g2_decap_8
 XFILLER_173_1141 VDD VSS sg13g2_decap_8
 XFILLER_153_1715 VDD VSS sg13g2_decap_8
@@ -23678,6 +23666,7 @@ XFILLER_158_1659 VDD VSS sg13g2_decap_8
 XFILLER_139_1036 VDD VSS sg13g2_decap_8
 XFILLER_178_1085 VDD VSS sg13g2_decap_8
 XFILLER_180_854 VDD VSS sg13g2_decap_8
+XIO_BOND_g_outputs\[3\].output_pad output_PAD[3] sg13g2_ip__bondpad_70x70
 XFILLER_140_707 VDD VSS sg13g2_decap_8
 XFILLER_152_567 VDD VSS sg13g2_decap_8
 XFILLER_117_1301 VDD VSS sg13g2_decap_8
@@ -23795,7 +23784,6 @@ XFILLER_32_49 VDD VSS sg13g2_decap_8
 XFILLER_193_434 VDD VSS sg13g2_decap_8
 XFILLER_21_687 VDD VSS sg13g2_decap_8
 XFILLER_33_1744 VDD VSS sg13g2_decap_8
-XIO_BOND_outputs\[13\].output_pad output_PAD[13] sg13g2_ip__bondpad_70x70
 XFILLER_20_175 VDD VSS sg13g2_decap_8
 XFILLER_147_840 VDD VSS sg13g2_decap_8
 XFILLER_120_1714 VDD VSS sg13g2_decap_8
@@ -24139,8 +24127,6 @@ XFILLER_208_1519 VDD VSS sg13g2_decap_8
 XFILLER_223_644 VDD VSS sg13g2_decap_8
 XFILLER_145_1809 VDD VSS sg13g2_fill_2
 XFILLER_78_1287 VDD VSS sg13g2_decap_8
-Xoutputs\[4\].output_pad outputs\[4\].output_pad/c2p IOVDD IOVSS output_PAD[4] VDD
-+ VSS sg13g2_IOPadOut30mA
 XFILLER_222_154 VDD VSS sg13g2_decap_8
 XFILLER_206_1232 VDD VSS sg13g2_decap_8
 XFILLER_195_518 VDD VSS sg13g2_decap_8
@@ -24365,6 +24351,8 @@ XFILLER_223_441 VDD VSS sg13g2_decap_8
 XFILLER_39_1035 VDD VSS sg13g2_decap_8
 XFILLER_78_1084 VDD VSS sg13g2_decap_8
 XFILLER_211_63 VDD VSS sg13g2_decap_8
+Xg_analogs\[1\].analog_pad IOVDD IOVSS analog_PAD[1] g_analogs\[1\].analog_pad/padbare
++ i_chip_core.inverter2/vin2 VDD VSS sg13g2_IOPadAnalog
 XFILLER_165_1043 VDD VSS sg13g2_decap_8
 XFILLER_196_805 VDD VSS sg13g2_decap_8
 XFILLER_24_28 VDD VSS sg13g2_decap_8
@@ -24410,6 +24398,7 @@ XFILLER_160_952 VDD VSS sg13g2_decap_8
 XFILLER_132_665 VDD VSS sg13g2_decap_8
 XFILLER_172_1036 VDD VSS sg13g2_decap_8
 XFILLER_8_1512 VDD VSS sg13g2_decap_8
+XIO_BOND_g_outputs\[8\].output_pad output_PAD[8] sg13g2_ip__bondpad_70x70
 XFILLER_24_1304 VDD VSS sg13g2_decap_8
 XFILLER_131_175 VDD VSS sg13g2_decap_8
 XFILLER_213_1022 VDD VSS sg13g2_decap_8
@@ -24706,6 +24695,7 @@ XFILLER_2_42 VDD VSS sg13g2_decap_8
 XFILLER_211_1526 VDD VSS sg13g2_decap_8
 XFILLER_133_1351 VDD VSS sg13g2_decap_8
 XFILLER_81_1294 VDD VSS sg13g2_decap_8
+XIO_BOND_g_outputs\[10\].output_pad output_PAD[10] sg13g2_ip__bondpad_70x70
 XFILLER_225_525 VDD VSS sg13g2_decap_8
 XFILLER_77_1308 VDD VSS sg13g2_decap_8
 XFILLER_20_1543 VDD VSS sg13g2_decap_8
@@ -24743,10 +24733,10 @@ XFILLER_177_189 VDD VSS sg13g2_decap_8
 XFILLER_165_329 VDD VSS sg13g2_decap_8
 XFILLER_222_1666 VDD VSS sg13g2_decap_8
 XFILLER_192_126 VDD VSS sg13g2_decap_8
-Xi_chip_core.counter1 VDD VSS clkload0/A outputs\[0\].output_pad/c2p outputs\[1\].output_pad/c2p
-+ outputs\[2\].output_pad/c2p outputs\[3\].output_pad/c2p bidirs\[0\].bidir_pad/c2p
-+ bidirs\[1\].bidir_pad/c2p bidirs\[2\].bidir_pad/c2p bidirs\[3\].bidir_pad/c2p ANTENNA_4/A
-+ hold162/X counter_top
+Xi_chip_core.counter1 VDD VSS clkload0/A g_outputs\[0\].output_pad/c2p g_outputs\[1\].output_pad/c2p
++ g_outputs\[2\].output_pad/c2p g_outputs\[3\].output_pad/c2p g_bidirs\[0\].bidir_pad/c2p
++ g_bidirs\[1\].bidir_pad/c2p g_bidirs\[2\].bidir_pad/c2p g_bidirs\[3\].bidir_pad/c2p
++ ANTENNA_4/A hold162/X counter_top
 XFILLER_140_1344 VDD VSS sg13g2_decap_8
 XFILLER_14_1358 VDD VSS sg13g2_decap_8
 XFILLER_146_532 VDD VSS sg13g2_decap_8
@@ -24874,8 +24864,6 @@ XFILLER_99_7 VDD VSS sg13g2_decap_8
 XFILLER_188_966 VDD VSS sg13g2_decap_8
 XFILLER_72_1238 VDD VSS sg13g2_decap_8
 XFILLER_202_252 VDD VSS sg13g2_decap_8
-Xoutputs\[9\].output_pad outputs\[9\].output_pad/c2p IOVDD IOVSS output_PAD[9] VDD
-+ VSS sg13g2_IOPadOut30mA
 XFILLER_148_819 VDD VSS sg13g2_decap_8
 XFILLER_187_476 VDD VSS sg13g2_decap_8
 XFILLER_175_616 VDD VSS sg13g2_decap_8
@@ -24908,6 +24896,8 @@ XFILLER_196_1197 VDD VSS sg13g2_decap_8
 XFILLER_157_1148 VDD VSS sg13g2_decap_8
 XFILLER_83_1301 VDD VSS sg13g2_decap_8
 XFILLER_170_343 VDD VSS sg13g2_decap_8
+Xg_outputs\[3\].output_pad g_outputs\[3\].output_pad/c2p IOVDD IOVSS output_PAD[3]
++ VDD VSS sg13g2_IOPadOut30mA
 XFILLER_217_1757 VDD VSS sg13g2_decap_8
 XFILLER_135_1435 VDD VSS sg13g2_decap_8
 XFILLER_83_1378 VDD VSS sg13g2_decap_8
@@ -25457,6 +25447,7 @@ XFILLER_63_105 VDD VSS sg13g2_decap_8
 XFILLER_218_973 VDD VSS sg13g2_decap_8
 XFILLER_17_511 VDD VSS sg13g2_decap_8
 XFILLER_29_371 VDD VSS sg13g2_decap_8
+XIO_BOND_g_outputs\[15\].output_pad output_PAD[15] sg13g2_ip__bondpad_70x70
 XFILLER_205_623 VDD VSS sg13g2_decap_8
 XFILLER_217_483 VDD VSS sg13g2_decap_8
 XFILLER_75_1406 VDD VSS sg13g2_decap_8
@@ -25665,6 +25656,8 @@ XFILLER_68_1287 VDD VSS sg13g2_decap_8
 XFILLER_2_952 VDD VSS sg13g2_decap_8
 XFILLER_150_441 VDD VSS sg13g2_decap_8
 XFILLER_190_1148 VDD VSS sg13g2_decap_8
+Xg_outputs\[8\].output_pad g_outputs\[8\].output_pad/c2p IOVDD IOVSS output_PAD[8]
++ VDD VSS sg13g2_IOPadOut30mA
 XFILLER_7_1001 VDD VSS sg13g2_decap_8
 XFILLER_1_462 VDD VSS sg13g2_decap_8
 XFILLER_211_1708 VDD VSS sg13g2_decap_8
@@ -25936,10 +25929,10 @@ XFILLER_14_1337 VDD VSS sg13g2_decap_8
 XFILLER_146_511 VDD VSS sg13g2_decap_8
 XFILLER_158_371 VDD VSS sg13g2_decap_8
 XFILLER_70_0 VDD VSS sg13g2_decap_8
-Xi_chip_core.counter2 VDD VSS i_chip_core.sram_0/A_CLK outputs\[4\].output_pad/c2p
-+ outputs\[5\].output_pad/c2p outputs\[6\].output_pad/c2p outputs\[7\].output_pad/c2p
-+ outputs\[8\].output_pad/c2p outputs\[9\].output_pad/c2p outputs\[10\].output_pad/c2p
-+ outputs\[11\].output_pad/c2p ANTENNA_4/A hold162/X counter_top
+Xi_chip_core.counter2 VDD VSS i_chip_core.sram_0/A_CLK g_outputs\[4\].output_pad/c2p
++ g_outputs\[5\].output_pad/c2p g_outputs\[6\].output_pad/c2p g_outputs\[7\].output_pad/c2p
++ g_outputs\[8\].output_pad/c2p g_outputs\[9\].output_pad/c2p g_outputs\[10\].output_pad/c2p
++ g_outputs\[11\].output_pad/c2p ANTENNA_4/A hold162/X counter_top
 XFILLER_105_1476 VDD VSS sg13g2_decap_8
 XFILLER_9_392 VDD VSS sg13g2_decap_8
 XFILLER_88_1427 VDD VSS sg13g2_decap_8
@@ -26526,6 +26519,7 @@ XFILLER_176_756 VDD VSS sg13g2_decap_8
 XFILLER_136_609 VDD VSS sg13g2_decap_8
 XFILLER_148_469 VDD VSS sg13g2_decap_8
 XFILLER_102_1210 VDD VSS sg13g2_decap_8
+XIO_BOND_g_vss_pads\[0\].vss_pad VSS sg13g2_ip__bondpad_70x70
 XFILLER_163_406 VDD VSS sg13g2_decap_8
 XFILLER_175_266 VDD VSS sg13g2_decap_8
 XFILLER_198_1057 VDD VSS sg13g2_decap_8
@@ -27210,6 +27204,7 @@ XFILLER_192_651 VDD VSS sg13g2_decap_8
 XFILLER_123_1588 VDD VSS sg13g2_decap_8
 XFILLER_178_1022 VDD VSS sg13g2_decap_8
 XFILLER_137_567 VDD VSS sg13g2_decap_8
+Xg_inputs\[0\].input_pad IOVDD IOVSS ANTENNA_4/A input_PAD VDD VSS sg13g2_IOPadIn
 XFILLER_152_504 VDD VSS sg13g2_decap_8
 XFILLER_30_1151 VDD VSS sg13g2_decap_8
 XFILLER_164_364 VDD VSS sg13g2_decap_8
@@ -27308,7 +27303,6 @@ XFILLER_22_1629 VDD VSS sg13g2_decap_8
 XFILLER_133_1183 VDD VSS sg13g2_decap_8
 XFILLER_211_1358 VDD VSS sg13g2_decap_8
 XFILLER_42_1077 VDD VSS sg13g2_decap_8
-XIO_BOND_analogs\[0\].analog_pad analog_PAD[0] sg13g2_ip__bondpad_70x70
 XFILLER_226_847 VDD VSS sg13g2_decap_8
 XFILLER_4_1561 VDD VSS sg13g2_decap_8
 XFILLER_148_1809 VDD VSS sg13g2_fill_2
@@ -27843,7 +27837,6 @@ XFILLER_16_1561 VDD VSS sg13g2_decap_8
 XFILLER_200_385 VDD VSS sg13g2_decap_8
 XFILLER_12_1414 VDD VSS sg13g2_decap_8
 XFILLER_8_266 VDD VSS sg13g2_decap_8
-XIO_BOND_outputs\[2\].output_pad output_PAD[2] sg13g2_ip__bondpad_70x70
 XFILLER_103_1553 VDD VSS sg13g2_decap_8
 XFILLER_173_749 VDD VSS sg13g2_decap_8
 XFILLER_67_7 VDD VSS sg13g2_decap_8
@@ -28548,7 +28541,6 @@ XFILLER_98_35 VDD VSS sg13g2_decap_8
 XFILLER_153_847 VDD VSS sg13g2_decap_8
 XFILLER_197_1498 VDD VSS sg13g2_decap_8
 XFILLER_158_1449 VDD VSS sg13g2_decap_8
-XIO_BOND_outputs\[7\].output_pad output_PAD[7] sg13g2_ip__bondpad_70x70
 XFILLER_180_644 VDD VSS sg13g2_decap_8
 XFILLER_175_1730 VDD VSS sg13g2_decap_8
 XFILLER_4_868 VDD VSS sg13g2_decap_8
@@ -30306,8 +30298,6 @@ XFILLER_131_147 VDD VSS sg13g2_decap_8
 XFILLER_119_1595 VDD VSS sg13g2_decap_8
 XFILLER_28_1478 VDD VSS sg13g2_decap_8
 XFILLER_105_14 VDD VSS sg13g2_decap_8
-Xoutputs\[14\].output_pad i_chip_core.inverter1/vout3 IOVDD IOVSS output_PAD[14] VDD
-+ VSS sg13g2_IOPadOut30mA
 XFILLER_115_1448 VDD VSS sg13g2_decap_8
 XFILLER_80_1672 VDD VSS sg13g2_decap_8
 XFILLER_6_1274 VDD VSS sg13g2_decap_8
@@ -30515,6 +30505,8 @@ XFILLER_203_1785 VDD VSS sg13g2_decap_8
 XFILLER_129_280 VDD VSS sg13g2_decap_8
 XFILLER_192_868 VDD VSS sg13g2_decap_8
 XFILLER_30_1368 VDD VSS sg13g2_decap_8
+Xg_outputs\[10\].output_pad g_outputs\[10\].output_pad/c2p IOVDD IOVSS output_PAD[10]
++ VDD VSS sg13g2_IOPadOut30mA
 XFILLER_191_378 VDD VSS sg13g2_decap_8
 XFILLER_219_1225 VDD VSS sg13g2_decap_8
 XFILLER_69_1567 VDD VSS sg13g2_decap_8
@@ -30943,7 +30935,6 @@ XFILLER_162_1393 VDD VSS sg13g2_decap_8
 XFILLER_7_119 VDD VSS sg13g2_decap_8
 XFILLER_201_1519 VDD VSS sg13g2_decap_8
 XFILLER_71_1287 VDD VSS sg13g2_decap_8
-XIO_BOND_vss_pads\[0\].vss_pad VSS sg13g2_ip__bondpad_70x70
 XFILLER_20_671 VDD VSS sg13g2_fill_1
 XFILLER_193_952 VDD VSS sg13g2_decap_8
 XFILLER_138_868 VDD VSS sg13g2_decap_8
@@ -31248,6 +31239,8 @@ XFILLER_132_819 VDD VSS sg13g2_decap_8
 XFILLER_144_679 VDD VSS sg13g2_decap_8
 XFILLER_99_91 VDD VSS sg13g2_decap_8
 XFILLER_171_476 VDD VSS sg13g2_decap_8
+Xg_outputs\[15\].output_pad i_chip_core.inverter1/vout4 IOVDD IOVSS output_PAD[15]
++ VDD VSS sg13g2_IOPadOut30mA
 XFILLER_217_1323 VDD VSS sg13g2_decap_8
 XFILLER_158_1771 VDD VSS sg13g2_decap_8
 XFILLER_48_1042 VDD VSS sg13g2_decap_8
@@ -31752,6 +31745,7 @@ XFILLER_182_357 VDD VSS sg13g2_decap_8
 XFILLER_13_1589 VDD VSS sg13g2_decap_8
 XFILLER_136_763 VDD VSS sg13g2_decap_8
 XFILLER_139_1714 VDD VSS sg13g2_decap_8
+XIO_BOND_g_analogs\[2\].analog_pad analog_PAD[2] sg13g2_ip__bondpad_70x70
 XFILLER_151_700 VDD VSS sg13g2_decap_8
 XFILLER_163_560 VDD VSS sg13g2_decap_8
 XFILLER_157_98 VDD VSS sg13g2_decap_8
@@ -32030,8 +32024,6 @@ XFILLER_147_847 VDD VSS sg13g2_decap_8
 XFILLER_174_644 VDD VSS sg13g2_decap_8
 XFILLER_140_1169 VDD VSS sg13g2_decap_8
 XFILLER_146_357 VDD VSS sg13g2_decap_8
-Xoutputs\[0\].output_pad outputs\[0\].output_pad/c2p IOVDD IOVSS output_PAD[0] VDD
-+ VSS sg13g2_IOPadOut30mA
 XFILLER_228_56 VDD VSS sg13g2_decap_8
 XFILLER_122_1581 VDD VSS sg13g2_decap_8
 XFILLER_173_154 VDD VSS sg13g2_decap_8
@@ -32213,8 +32205,6 @@ XFILLER_168_1036 VDD VSS sg13g2_decap_8
 XFILLER_225_147 VDD VSS sg13g2_decap_8
 XFILLER_20_1165 VDD VSS sg13g2_decap_8
 XFILLER_206_350 VDD VSS sg13g2_decap_8
-Xanalogs\[3\].analog_pad IOVDD IOVSS analog_PAD[3] i_chip_core.inverter2/vout2 analogs\[3\].analog_pad/padres
-+ VDD VSS sg13g2_IOPadAnalog
 XFILLER_228_1645 VDD VSS sg13g2_decap_8
 XFILLER_209_1022 VDD VSS sg13g2_decap_8
 XFILLER_146_1323 VDD VSS sg13g2_decap_8
@@ -32283,6 +32273,7 @@ XFILLER_216_147 VDD VSS sg13g2_decap_8
 XFILLER_204_91 VDD VSS sg13g2_decap_8
 XFILLER_77_1420 VDD VSS sg13g2_decap_8
 XFILLER_17_56 VDD VSS sg13g2_decap_8
+XIO_BOND_g_outputs\[4\].output_pad output_PAD[4] sg13g2_ip__bondpad_70x70
 XFILLER_140_35 VDD VSS sg13g2_decap_8
 XFILLER_25_742 VDD VSS sg13g2_decap_8
 XFILLER_197_511 VDD VSS sg13g2_decap_8
@@ -32390,6 +32381,7 @@ XFILLER_209_14 VDD VSS sg13g2_decap_8
 XFILLER_15_1267 VDD VSS sg13g2_decap_8
 X_209_ _211_/A _209_/A _209_/B VDD VSS sg13g2_xor2_1
 XFILLER_128_154 VDD VSS sg13g2_decap_8
+Xg_vdd_pads\[0\].vdd_pad IOVDD IOVSS VDD VSS sg13g2_IOPadVdd
 XFILLER_7_462 VDD VSS sg13g2_decap_8
 XFILLER_102_1259 VDD VSS sg13g2_decap_8
 XFILLER_89_1357 VDD VSS sg13g2_decap_8
@@ -32414,7 +32406,6 @@ XFILLER_48_1098 VDD VSS sg13g2_decap_8
 XFILLER_26_1330 VDD VSS sg13g2_decap_8
 XFILLER_135_1057 VDD VSS sg13g2_decap_8
 XFILLER_140_875 VDD VSS sg13g2_decap_8
-XIO_BOND_outputs\[14\].output_pad output_PAD[14] sg13g2_ip__bondpad_70x70
 XFILLER_57_119 VDD VSS sg13g2_decap_4
 XFILLER_6_1435 VDD VSS sg13g2_decap_8
 XFILLER_113_1322 VDD VSS sg13g2_decap_8
@@ -32757,8 +32748,6 @@ XFILLER_58_7 VDD VSS sg13g2_decap_8
 XFILLER_5_763 VDD VSS sg13g2_decap_8
 XFILLER_153_252 VDD VSS sg13g2_decap_8
 XFILLER_138_1428 VDD VSS sg13g2_decap_8
-Xoutputs\[5\].output_pad outputs\[5\].output_pad/c2p IOVDD IOVSS output_PAD[5] VDD
-+ VSS sg13g2_IOPadOut30mA
 XFILLER_29_1701 VDD VSS sg13g2_decap_8
 XFILLER_113_105 VDD VSS sg13g2_decap_8
 XFILLER_4_273 VDD VSS sg13g2_decap_8
@@ -32979,6 +32968,8 @@ XFILLER_217_14 VDD VSS sg13g2_decap_8
 XFILLER_126_252 VDD VSS sg13g2_decap_8
 XFILLER_12_1078 VDD VSS sg13g2_decap_8
 XFILLER_5_560 VDD VSS sg13g2_decap_8
+Xg_analogs\[2\].analog_pad IOVDD IOVSS analog_PAD[2] i_chip_core.inverter2/vout1 g_analogs\[2\].analog_pad/padres
++ VDD VSS sg13g2_IOPadAnalog
 XFILLER_138_1225 VDD VSS sg13g2_decap_8
 XFILLER_47_1119 VDD VSS sg13g2_decap_8
 XFILLER_86_1168 VDD VSS sg13g2_decap_8
@@ -33012,6 +33003,7 @@ XFILLER_149_1365 VDD VSS sg13g2_decap_8
 XFILLER_24_648 VDD VSS sg13g2_decap_8
 XFILLER_169_609 VDD VSS sg13g2_decap_8
 XFILLER_145_1218 VDD VSS sg13g2_decap_8
+XIO_BOND_g_outputs\[9\].output_pad output_PAD[9] sg13g2_ip__bondpad_70x70
 XFILLER_196_406 VDD VSS sg13g2_decap_8
 XFILLER_212_749 VDD VSS sg13g2_decap_8
 XFILLER_127_1630 VDD VSS sg13g2_decap_8
@@ -33310,6 +33302,7 @@ XFILLER_19_1596 VDD VSS sg13g2_decap_8
 XFILLER_129_826 VDD VSS sg13g2_decap_8
 XFILLER_141_1435 VDD VSS sg13g2_decap_8
 XFILLER_11_651 VDD VSS sg13g2_decap_8
+XIO_BOND_g_outputs\[11\].output_pad output_PAD[11] sg13g2_ip__bondpad_70x70
 XFILLER_15_1449 VDD VSS sg13g2_decap_8
 XFILLER_156_623 VDD VSS sg13g2_decap_8
 XFILLER_168_483 VDD VSS sg13g2_decap_8
@@ -33507,6 +33500,8 @@ XFILLER_74_63 VDD VSS sg13g2_decap_8
 XFILLER_16_721 VDD VSS sg13g2_decap_8
 XFILLER_1_1547 VDD VSS sg13g2_decap_8
 XFILLER_186_1660 VDD VSS sg13g2_decap_8
+Xg_outputs\[4\].output_pad g_outputs\[4\].output_pad/c2p IOVDD IOVSS output_PAD[4]
++ VDD VSS sg13g2_IOPadOut30mA
 XFILLER_21_1486 VDD VSS sg13g2_decap_8
 XFILLER_204_833 VDD VSS sg13g2_decap_8
 XFILLER_216_693 VDD VSS sg13g2_decap_8
@@ -34078,6 +34073,7 @@ XFILLER_13_1547 VDD VSS sg13g2_decap_8
 XFILLER_136_721 VDD VSS sg13g2_decap_8
 XFILLER_148_581 VDD VSS sg13g2_decap_8
 XFILLER_6_539 VDD VSS sg13g2_decap_8
+XIO_BOND_g_outputs\[16\].output_pad output_PAD[16] sg13g2_ip__bondpad_70x70
 XFILLER_157_56 VDD VSS sg13g2_decap_8
 XFILLER_159_1120 VDD VSS sg13g2_decap_8
 XFILLER_104_1686 VDD VSS sg13g2_decap_8
@@ -34273,6 +34269,8 @@ XFILLER_226_1029 VDD VSS sg13g2_decap_8
 XFILLER_203_728 VDD VSS sg13g2_decap_8
 XFILLER_215_588 VDD VSS sg13g2_decap_8
 XFILLER_14_126 VDD VSS sg13g2_decap_8
+Xg_outputs\[9\].output_pad g_outputs\[9\].output_pad/c2p IOVDD IOVSS output_PAD[9]
++ VDD VSS sg13g2_IOPadOut30mA
 XFILLER_58_1772 VDD VSS sg13g2_decap_8
 XFILLER_202_238 VDD VSS sg13g2_decap_8
 XFILLER_145_1742 VDD VSS sg13g2_decap_8
@@ -35062,7 +35060,6 @@ XFILLER_143_490 VDD VSS sg13g2_decap_8
 XFILLER_1_448 VDD VSS sg13g2_decap_8
 XFILLER_157_1092 VDD VSS sg13g2_decap_8
 XFILLER_226_91 VDD VSS sg13g2_decap_8
-Xinputs\[0\].input_pad IOVDD IOVSS ANTENNA_4/A input_PAD VDD VSS sg13g2_IOPadIn
 XFILLER_130_140 VDD VSS sg13g2_decap_8
 XFILLER_39_56 VDD VSS sg13g2_decap_8
 XFILLER_162_35 VDD VSS sg13g2_decap_8
@@ -35906,7 +35903,6 @@ XFILLER_201_1810 VDD VSS sg13g2_fill_1
 XFILLER_223_1589 VDD VSS sg13g2_decap_8
 XFILLER_184_742 VDD VSS sg13g2_decap_8
 X_206_ _208_/A _206_/A _206_/B VDD VSS sg13g2_xor2_1
-XIO_BOND_analogs\[1\].analog_pad analog_PAD[1] sg13g2_ip__bondpad_70x70
 XFILLER_141_1267 VDD VSS sg13g2_decap_8
 XFILLER_11_483 VDD VSS sg13g2_decap_8
 XFILLER_129_658 VDD VSS sg13g2_decap_8
@@ -36414,7 +36410,6 @@ XFILLER_24_1612 VDD VSS sg13g2_decap_8
 XFILLER_131_483 VDD VSS sg13g2_decap_8
 XFILLER_213_1330 VDD VSS sg13g2_decap_8
 XFILLER_106_84 VDD VSS sg13g2_decap_8
-XIO_BOND_outputs\[3\].output_pad output_PAD[3] sg13g2_ip__bondpad_70x70
 XFILLER_218_532 VDD VSS sg13g2_decap_8
 XFILLER_115_1784 VDD VSS sg13g2_decap_8
 XFILLER_66_77 VDD VSS sg13g2_decap_8
@@ -37132,8 +37127,9 @@ XFILLER_29_315 VDD VSS sg13g2_decap_8
 XFILLER_56_112 VDD VSS sg13g2_decap_8
 XFILLER_56_123 VDD VSS sg13g2_fill_1
 XFILLER_217_427 VDD VSS sg13g2_decap_8
+Xg_bidirs\[3\].bidir_pad g_bidirs\[3\].bidir_pad/c2p ANTENNA_4/A IOVDD IOVSS i_chip_core.inverter1/vin4
++ bidir_PAD[3] VDD VSS sg13g2_IOPadInOut30mA
 XFILLER_151_49 VDD VSS sg13g2_decap_8
-XIO_BOND_outputs\[8\].output_pad output_PAD[8] sg13g2_ip__bondpad_70x70
 XFILLER_22_1776 VDD VSS sg13g2_decap_8
 XFILLER_77_1210 VDD VSS sg13g2_decap_8
 XFILLER_44_14 VDD VSS sg13g2_decap_8
@@ -37831,7 +37827,6 @@ XFILLER_138_1015 VDD VSS sg13g2_decap_8
 XFILLER_170_833 VDD VSS sg13g2_decap_8
 XFILLER_177_1064 VDD VSS sg13g2_decap_8
 XFILLER_182_693 VDD VSS sg13g2_decap_8
-XIO_BOND_iovss_pads\[0\].iovss_pad IOVSS sg13g2_ip__bondpad_70x70
 XFILLER_142_546 VDD VSS sg13g2_decap_8
 XFILLER_218_1050 VDD VSS sg13g2_decap_8
 XFILLER_155_1340 VDD VSS sg13g2_decap_8
@@ -38066,6 +38061,8 @@ XFILLER_116_1154 VDD VSS sg13g2_decap_8
 XFILLER_99_1105 VDD VSS sg13g2_decap_8
 XFILLER_211_1610 VDD VSS sg13g2_decap_8
 XFILLER_217_609 VDD VSS sg13g2_decap_8
+Xg_bidirs\[2\].bidir_pad g_bidirs\[2\].bidir_pad/c2p ANTENNA_4/A IOVDD IOVSS i_chip_core.inverter1/vin3
++ bidir_PAD[2] VDD VSS sg13g2_IOPadInOut30mA
 XFILLER_151_1078 VDD VSS sg13g2_decap_8
 XFILLER_204_63 VDD VSS sg13g2_decap_8
 XFILLER_216_119 VDD VSS sg13g2_decap_8
@@ -38077,8 +38074,6 @@ XFILLER_0_1743 VDD VSS sg13g2_decap_8
 XFILLER_227_1127 VDD VSS sg13g2_decap_8
 XFILLER_213_826 VDD VSS sg13g2_decap_8
 XFILLER_225_686 VDD VSS sg13g2_decap_8
-Xoutputs\[10\].output_pad outputs\[10\].output_pad/c2p IOVDD IOVSS output_PAD[10]
-+ VDD VSS sg13g2_IOPadOut30mA
 XFILLER_24_235 VDD VSS sg13g2_decap_8
 XIO_FILL_IO_WEST_4_30 IOVDD IOVSS VDD VSS sg13g2_Filler1000
 XFILLER_212_336 VDD VSS sg13g2_decap_8
@@ -38719,7 +38714,6 @@ XFILLER_157_49 VDD VSS sg13g2_decap_8
 XFILLER_135_224 VDD VSS sg13g2_decap_8
 XFILLER_194_1015 VDD VSS sg13g2_decap_8
 XFILLER_178_1758 VDD VSS sg13g2_decap_8
-XIO_BOND_iovdd_pads\[0\].iovdd_pad IOVDD sg13g2_ip__bondpad_70x70
 XFILLER_191_875 VDD VSS sg13g2_decap_8
 XFILLER_11_1253 VDD VSS sg13g2_decap_8
 XFILLER_219_1722 VDD VSS sg13g2_decap_8
@@ -38843,8 +38837,6 @@ XFILLER_16_182 VDD VSS sg13g2_decap_8
 XFILLER_162_1526 VDD VSS sg13g2_decap_8
 XFILLER_220_721 VDD VSS sg13g2_decap_8
 XFILLER_166_1695 VDD VSS sg13g2_decap_8
-Xoutputs\[15\].output_pad i_chip_core.inverter1/vout4 IOVDD IOVSS output_PAD[15] VDD
-+ VSS sg13g2_IOPadOut30mA
 XFILLER_204_294 VDD VSS sg13g2_decap_8
 XFILLER_127_1679 VDD VSS sg13g2_decap_8
 XFILLER_108_1056 VDD VSS sg13g2_decap_8
@@ -39034,11 +39026,15 @@ XFILLER_9_1449 VDD VSS sg13g2_decap_8
 XFILLER_3_42 VDD VSS sg13g2_decap_8
 XFILLER_116_1336 VDD VSS sg13g2_decap_8
 XFILLER_155_1396 VDD VSS sg13g2_decap_8
+Xg_bidirs\[1\].bidir_pad g_bidirs\[1\].bidir_pad/c2p ANTENNA_4/A IOVDD IOVSS i_chip_core.inverter1/vin2
++ bidir_PAD[1] VDD VSS sg13g2_IOPadInOut30mA
 XFILLER_7_1162 VDD VSS sg13g2_decap_8
 XFILLER_133_1672 VDD VSS sg13g2_decap_8
 XFILLER_3_1015 VDD VSS sg13g2_decap_8
 XFILLER_168_1702 VDD VSS sg13g2_decap_8
 XFILLER_209_364 VDD VSS sg13g2_decap_8
+Xg_outputs\[11\].output_pad g_outputs\[11\].output_pad/c2p IOVDD IOVSS output_PAD[11]
++ VDD VSS sg13g2_IOPadOut30mA
 XFILLER_224_301 VDD VSS sg13g2_decap_8
 XFILLER_227_1309 VDD VSS sg13g2_decap_8
 XFILLER_149_1134 VDD VSS sg13g2_decap_8
@@ -39090,7 +39086,6 @@ XFILLER_156_1127 VDD VSS sg13g2_decap_8
 XFILLER_172_182 VDD VSS sg13g2_decap_8
 XFILLER_160_322 VDD VSS sg13g2_decap_8
 XFILLER_191_1029 VDD VSS sg13g2_decap_8
-Xiovss_pads\[0\].iovss_pad IOVDD IOVSS VDD VSS sg13g2_IOPadIOVss
 XFILLER_154_28 VDD VSS sg13g2_decap_8
 XFILLER_161_889 VDD VSS sg13g2_decap_8
 XFILLER_216_1736 VDD VSS sg13g2_decap_8
@@ -39792,6 +39787,7 @@ XFILLER_1_1113 VDD VSS sg13g2_decap_8
 XFILLER_21_1052 VDD VSS sg13g2_decap_8
 XFILLER_166_1800 VDD VSS sg13g2_decap_8
 XFILLER_17_854 VDD VSS sg13g2_decap_8
+Xg_outputs\[16\].output_pad _221_/Y IOVDD IOVSS output_PAD[16] VDD VSS sg13g2_IOPadOut30mA
 XFILLER_189_623 VDD VSS sg13g2_decap_8
 XFILLER_147_1232 VDD VSS sg13g2_decap_8
 XFILLER_45_70 VDD VSS sg13g2_decap_8
@@ -39986,7 +39982,6 @@ XFILLER_202_1771 VDD VSS sg13g2_decap_8
 XFILLER_103_1168 VDD VSS sg13g2_decap_8
 XFILLER_86_1119 VDD VSS sg13g2_decap_8
 XFILLER_182_854 VDD VSS sg13g2_decap_8
-Xiovdd_pads\[0\].iovdd_pad IOVDD IOVSS VDD VSS sg13g2_IOPadIOVdd
 XFILLER_142_707 VDD VSS sg13g2_decap_8
 XFILLER_154_567 VDD VSS sg13g2_decap_8
 XFILLER_181_364 VDD VSS sg13g2_decap_8
@@ -40002,6 +39997,8 @@ XFILLER_134_280 VDD VSS sg13g2_decap_8
 XFILLER_116_1518 VDD VSS sg13g2_decap_8
 XFILLER_218_1288 VDD VSS sg13g2_decap_8
 XFILLER_155_1578 VDD VSS sg13g2_decap_8
+Xg_bidirs\[0\].bidir_pad g_bidirs\[0\].bidir_pad/c2p ANTENNA_4/A IOVDD IOVSS i_chip_core.inverter1/vin1
++ bidir_PAD[0] VDD VSS sg13g2_IOPadInOut30mA
 XFILLER_81_1742 VDD VSS sg13g2_decap_8
 XFILLER_150_784 VDD VSS sg13g2_decap_8
 XFILLER_114_1231 VDD VSS sg13g2_decap_8
@@ -40109,6 +40106,7 @@ XFILLER_221_1624 VDD VSS sg13g2_decap_8
 XFILLER_202_1001 VDD VSS sg13g2_decap_8
 XFILLER_17_1463 VDD VSS sg13g2_decap_8
 XFILLER_91_1392 VDD VSS sg13g2_decap_8
+XIO_BOND_g_outputs\[0\].output_pad output_PAD[0] sg13g2_ip__bondpad_70x70
 XFILLER_13_1316 VDD VSS sg13g2_decap_8
 XFILLER_148_350 VDD VSS sg13g2_decap_8
 XFILLER_210_287 VDD VSS sg13g2_decap_8
@@ -40209,7 +40207,6 @@ XFILLER_170_1807 VDD VSS sg13g2_decap_4
 XFILLER_9_1428 VDD VSS sg13g2_decap_8
 XFILLER_3_21 VDD VSS sg13g2_decap_8
 XFILLER_116_1315 VDD VSS sg13g2_decap_8
-Xvdd_pads\[0\].vdd_pad IOVDD IOVSS VDD VSS sg13g2_IOPadVdd
 XFILLER_218_1085 VDD VSS sg13g2_decap_8
 XFILLER_155_1375 VDD VSS sg13g2_decap_8
 XFILLER_150_581 VDD VSS sg13g2_decap_8
@@ -40233,7 +40230,6 @@ XFILLER_224_357 VDD VSS sg13g2_decap_8
 XFILLER_209_1722 VDD VSS sg13g2_decap_8
 XIO_FILL_IO_NORTH_2_0 IOVDD IOVSS VDD VSS sg13g2_Filler4000
 XFILLER_127_1400 VDD VSS sg13g2_decap_8
-XIO_BOND_outputs\[10\].output_pad output_PAD[10] sg13g2_ip__bondpad_70x70
 XFILLER_225_1001 VDD VSS sg13g2_decap_8
 XFILLER_205_560 VDD VSS sg13g2_decap_8
 XFILLER_75_1343 VDD VSS sg13g2_decap_8
@@ -40289,6 +40285,7 @@ XFILLER_151_1784 VDD VSS sg13g2_decap_8
 XFILLER_112_1735 VDD VSS sg13g2_decap_8
 XFILLER_227_140 VDD VSS sg13g2_decap_8
 XFILLER_132_1183 VDD VSS sg13g2_decap_8
+XIO_BOND_g_analogs\[3\].analog_pad analog_PAD[3] sg13g2_ip__bondpad_70x70
 XFILLER_210_1358 VDD VSS sg13g2_decap_8
 XFILLER_28_757 VDD VSS sg13g2_decap_8
 XFILLER_41_1077 VDD VSS sg13g2_decap_8
@@ -40570,8 +40567,6 @@ XFILLER_215_1099 VDD VSS sg13g2_decap_8
 XFILLER_48_70 VDD VSS sg13g2_decap_8
 XFILLER_19_510 VDD VSS sg13g2_decap_8
 XFILLER_17_7 VDD VSS sg13g2_decap_8
-Xoutputs\[1\].output_pad outputs\[1\].output_pad/c2p IOVDD IOVSS output_PAD[1] VDD
-+ VSS sg13g2_IOPadOut30mA
 XFILLER_43_1695 VDD VSS sg13g2_decap_8
 XFILLER_4_1155 VDD VSS sg13g2_decap_8
 XFILLER_24_1094 VDD VSS sg13g2_decap_8
@@ -40803,6 +40798,7 @@ XFILLER_147_245 VDD VSS sg13g2_decap_8
 XFILLER_120_1119 VDD VSS sg13g2_decap_8
 XFILLER_15_1561 VDD VSS sg13g2_decap_8
 XFILLER_11_1414 VDD VSS sg13g2_decap_8
+XIO_BOND_g_outputs\[5\].output_pad output_PAD[5] sg13g2_ip__bondpad_70x70
 XFILLER_163_749 VDD VSS sg13g2_decap_8
 XFILLER_102_1564 VDD VSS sg13g2_decap_8
 XFILLER_89_1662 VDD VSS sg13g2_decap_8
@@ -40936,7 +40932,6 @@ XFILLER_189_679 VDD VSS sg13g2_decap_8
 XFILLER_147_1288 VDD VSS sg13g2_decap_8
 XFILLER_73_1441 VDD VSS sg13g2_decap_8
 XFILLER_177_819 VDD VSS sg13g2_decap_8
-XIO_BOND_outputs\[15\].output_pad output_PAD[15] sg13g2_ip__bondpad_70x70
 XFILLER_160_1400 VDD VSS sg13g2_decap_8
 XFILLER_220_959 VDD VSS sg13g2_decap_8
 XFILLER_188_189 VDD VSS sg13g2_decap_8
@@ -41266,8 +41261,6 @@ XFILLER_24_1479 VDD VSS sg13g2_decap_8
 XFILLER_219_889 VDD VSS sg13g2_decap_8
 XFILLER_93_35 VDD VSS sg13g2_decap_8
 XFILLER_18_449 VDD VSS sg13g2_decap_8
-Xoutputs\[6\].output_pad outputs\[6\].output_pad/c2p IOVDD IOVSS output_PAD[6] VDD
-+ VSS sg13g2_IOPadOut30mA
 XFILLER_41_1793 VDD VSS sg13g2_decap_8
 XFILLER_206_539 VDD VSS sg13g2_decap_8
 XFILLER_218_399 VDD VSS sg13g2_decap_8
@@ -41300,6 +41293,8 @@ XFILLER_161_1561 VDD VSS sg13g2_decap_8
 XFILLER_9_147 VDD VSS sg13g2_decap_8
 XFILLER_70_1455 VDD VSS sg13g2_decap_8
 XFILLER_195_980 VDD VSS sg13g2_decap_8
+Xg_outputs\[0\].output_pad g_outputs\[0\].output_pad/c2p IOVDD IOVSS output_PAD[0]
++ VDD VSS sg13g2_IOPadOut30mA
 XFILLER_107_1091 VDD VSS sg13g2_decap_8
 XFILLER_155_822 VDD VSS sg13g2_decap_8
 XFILLER_10_861 VDD VSS sg13g2_decap_8
@@ -41491,6 +41486,8 @@ XFILLER_18_224 VDD VSS sg13g2_decap_8
 XFILLER_207_826 VDD VSS sg13g2_decap_8
 XFILLER_219_686 VDD VSS sg13g2_decap_8
 XFILLER_150_1295 VDD VSS sg13g2_decap_8
+Xg_analogs\[3\].analog_pad IOVDD IOVSS analog_PAD[3] i_chip_core.inverter2/vout2 g_analogs\[3\].analog_pad/padres
++ VDD VSS sg13g2_IOPadAnalog
 XFILLER_206_336 VDD VSS sg13g2_decap_8
 XFILLER_218_196 VDD VSS sg13g2_decap_8
 XFILLER_2_1050 VDD VSS sg13g2_decap_8
@@ -41849,6 +41846,7 @@ XFILLER_125_21 VDD VSS sg13g2_decap_8
 XFILLER_7_1708 VDD VSS sg13g2_decap_8
 XFILLER_138_1190 VDD VSS sg13g2_decap_8
 XFILLER_216_1365 VDD VSS sg13g2_decap_8
+XIO_BOND_g_outputs\[12\].output_pad output_PAD[12] sg13g2_ip__bondpad_70x70
 XFILLER_47_1084 VDD VSS sg13g2_decap_8
 XFILLER_153_1666 VDD VSS sg13g2_decap_8
 XFILLER_130_861 VDD VSS sg13g2_decap_8
@@ -42052,6 +42050,8 @@ XFILLER_166_588 VDD VSS sg13g2_decap_8
 XFILLER_33_1695 VDD VSS sg13g2_decap_8
 XFILLER_181_525 VDD VSS sg13g2_decap_8
 XFILLER_193_385 VDD VSS sg13g2_decap_8
+Xg_outputs\[5\].output_pad g_outputs\[5\].output_pad/c2p IOVDD IOVSS output_PAD[5]
++ VDD VSS sg13g2_IOPadOut30mA
 XFILLER_68_1714 VDD VSS sg13g2_decap_8
 XFILLER_88_1140 VDD VSS sg13g2_decap_8
 XFILLER_135_931 VDD VSS sg13g2_decap_8

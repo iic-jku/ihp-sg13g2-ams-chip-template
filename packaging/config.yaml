@@ -1,0 +1,186 @@
+# =============================================================================
+# Bondplan configuration for the ihp-sg13g2 AMS chip template
+#
+# Consumed by scripts/run_bondplan.py (run from this folder):
+#   python3 scripts/run_bondplan.py config.yaml
+#   klayout -b -r scripts/run_bondplan.py -rd config=config.yaml
+#
+# Structured like a LibreLane config.yaml: flat UPPER_CASE keys, `dir::`
+# prefix for paths relative to this file, placement as location/orientation.
+# {design} in any value expands to DESIGN_NAME, {version} to the VERSION
+# passed on the command line (the Makefile does this, so there is no second
+# place where the version number has to be maintained).
+# =============================================================================
+
+meta:
+  version: 1
+  flow: Bondplan
+
+DESIGN_NAME: chip_top
+
+# --- Die (chip) --------------------------------------------------------------
+DIE_GDS: dir::../layout/{design}_logo_fill.gds.gz
+# DIE_CELL: chip_top_logo_fill    # default: top cell of DIE_GDS
+
+# Layers copied into the extracted die view (IHP SG13G2):
+DIE_EXTRACT_LAYERS: ["9/0", "133/0", "134/0"]   # Passiv, TopVia2, TopMetal2
+DIE_EXTRACT_GDS: dir::layout/{design}_logo_TM2.gds.gz
+DIE_EXTRACT_CELL: "{design}_logo_TM2"
+DIE_KEEP_LABELS: false            # do not copy DIE_PAD_LABEL_LAYER into extract
+
+# Bondpad detection on the die:
+DIE_PAD_LAYER: "9/0"              # Passiv openings define the bondpads
+DIE_PAD_MIN_SIZE: 40              # um; ignore smaller Passiv openings
+DIE_PAD_LABEL_LAYER: "134/25"     # TopMetal2.text labels carry the pad names
+
+# --- Package -----------------------------------------------------------------
+# PACKAGE_GDS is generated automatically from the EUROPRACTICE package
+# library: the PACKAGE_NAME sheet cell is copied out (layer 207/0 dropped).
+# See the README for the list of supported PACKAGE_NAME values.
+PACKAGE_LIBRARY_GDS: dir::layout/EP_PACKAGES_08022018.gds
+PACKAGE_NAME: OP_QFN32_A4_FIT
+# PACKAGE_GDS: ...                # default: <library dir>/<PACKAGE_NAME>.gds
+# PACKAGE_FOOTPRINT_CELL: ...     # default: auto-detect the lead frame
+# Sheet texts to remove when generating the package, as case-insensitive
+# glob patterns (here: the template revision note in the bottom corner)
+PACKAGE_DELETE_TEXTS: ["Updated by *"]
+PACKAGE_LEAD_LAYER: "210/0"       # lead polygons (one per pin)
+PACKAGE_PIN_LABEL_LAYER: "211/0"  # numbered pin texts next to their leads
+PACKAGE_PIN_LABEL_OFFSET: 250     # um; pin number distance outside the
+                                  # package outline
+PACKAGE_PIN_LABEL_SIZE: 180       # um; pin number font size
+
+# --- Die placement -----------------------------------------------------------
+# location: lower-left corner of the (oriented) die outline, in um, relative
+# to the lower-left corner of the package inner border (the square touching
+# the lead tips). Omit location to center the die in the package.
+# orientation: N/S/E/W/FN/FS/FE/FW, as in LibreLane MACROS instances.
+DIE_PLACEMENT:
+  # location: [1010.0, 1010.0]    # default: centered
+  orientation: N
+
+# --- Bondwires ---------------------------------------------------------------
+BONDWIRE_LAYER: "190/0"           # Exchange0.drawing (free for documentation)
+BONDWIRE_TEXT_LAYER: "190/25"     # Exchange0.text, for per-wire labels
+BONDWIRE_WIDTH: 25                # um (drawing width only)
+BONDWIRE_LABELS: true             # write "<pin> <pad>" text at each wire
+TABLE_TEXT_SIZE: 100              # um; bond table font size
+TABLE_GAP: 400                    # um; gap between plan and bond table.
+                                  # The side margins are computed so that
+                                  # left and right come out equal.
+BONDWIRE_LEAD_SITE: 0.5           # bond point on lead: 0 = tip .. 1 = far end
+BONDWIRE_MAX_LENGTH: 3500         # um; warn above this
+BONDWIRE_MAX_SKEW: 30             # deg; warn if a wire lands skewed on its lead
+EPAD_WIRE_LENGTH: 500             # um; length of exposed-pad downbond stubs
+
+# Guarded (sensitive) wires: warn if any other wire comes closer than
+# GUARD_SPACING. Entries are pins or [groups]; wires within one group
+# (e.g. a differential quad) are exempt from each other's check.
+GUARDED_PINS: [[17, 18, 19, 20]]  # analog_PAD[0..3] = inverter2 ch1/ch2
+GUARD_SPACING: 60                 # um; see result.md for the actual gaps
+
+# --- Output ------------------------------------------------------------------
+BONDPLAN_GDS: dir::layout/{design}_bondplan.gds
+BONDPLAN_CELL: "{design}_bondplan"
+# 207/0 is the drawing template's A4 paper rectangle - documentation
+# scaffolding with no use in the bondplan (the frame lines on 211/0 mark
+# the sheet); 134/25 are the die pad name labels
+BONDPLAN_DELETE_LAYERS: ["207/0", "134/25"]
+# Bond report: .md -> Markdown (summary + bond table), .csv -> raw CSV
+BONDPLAN_REPORT: dir::result.md
+
+# PNG follows scripts/lay2img.py conventions: writes *_white / *_black
+BONDPLAN_PNG: dir::render/{design}_bondplan.png
+BONDPLAN_SVG: dir::render/{design}_bondplan.svg
+IMAGE_WIDTH: 2000                 # px
+IMAGE_OVERSAMPLING: 2
+IMAGE_REGION: full                # package (footprint + bond table) | full
+
+# --- Drawing sheet (title block) -----------------------------------------------
+# Keep the EUROPRACTICE A4 drawing frame and fill in its title block.
+# Keys match the label texts on the sheet (case/colon insensitive). Values
+# may use placeholders: {design} {date} {wire_count} {bondwire_width_um}
+# {max_wire_length_um/mm} {min_wire_length_um} {min_gap_um}
+# {die_width_um/mm} {die_height_um/mm} {pad_pitch_um} {pad_opening_um}.
+# A mapping value allows fine placement: {value: "...", dx: <um>, dy: <um>}
+# relative to the label position.
+SHEET_KEEP: true
+SHEET_FIELDS:
+  Request: "JKU IICQC - {design}"
+  Date: "{date}"
+  MPW: "IHP SG13G2"
+  Die: "{design} - v.{version}"
+  "Size incl scribe": "{die_width_mm} x {die_height_mm} mm"
+  "Max. wire length": "{max_wire_length_mm} mm"
+  "Pad-pitch": "{pad_pitch_um} um"
+  "Pad-opening": "{pad_opening_um} um"
+  "Die-thickness": "200 um"
+  "Extra Info": "{wire_count} wires, min gap {min_gap_um} um, mount the lid with its white dot at pin 1"
+  "Qty packaged": "10"
+  "Qty naked": "20"
+  "Die Attach": "conductive epoxy"
+  "Wire": "Gold, {bondwire_width_um} um"
+
+# Lid option checkbox to mark with an X (Taped | Sealed | Glued | Glass).
+# Glued is the standard for open-molded plastic packages (OmPP): the die
+# sits in an open cavity and the cover is glued on after wire bonding.
+LID: Glued
+
+# Font scale factors for the sheet's own texts (label -> factor).
+# Note: the headline text is package-specific; a warning is printed if an
+# entry matches no text on the sheet.
+SHEET_TEXT_SCALE:
+  "Request": 0.7
+  "QFN32(5x5)": 0.7
+
+# --- Pinout ------------------------------------------------------------------
+# Package pin number -> die pad name (TopMetal2.text label on the pad).
+# A list bonds several wires to one lead. Use ~ (null) for NC pins.
+# Duplicate names (VDD/VSS/...) are resolved by shortest-wire assignment.
+# EPAD: downbonds to the exposed pad, drawn from leftover pads with the
+# given names, parallel to the neighboring wires.
+#
+# The die has 32 bondpads (8 per side, see doc/pinout.md) and the QFN32
+# has 32 leads (8 per side), so every die pad is bonded to the lead facing
+# it, one-to-one. No exposed-pad downbonds are needed; add pads to EPAD
+# (e.g. EPAD: ["VSS"]) only if spare ground pads are left unbonded.
+PINOUT:
+  # Left side, top to bottom (pins 1-8) -> die west pads (top to bottom)
+  1:  "clk_PAD"                   # clk (50 MHz)
+  2:  "rst_n_PAD"                 # rst_n (active low)
+  3:  "input_PAD"                 # enable
+  4:  "IOVDD"                     # I/O supply (3.3 V)
+  5:  "IOVSS"                     # I/O ground
+  6:  "VDD"                       # core supply (1.5 V)
+  7:  "VSS"                       # core ground
+  8:  "output_PAD[16]"            # sram_0_out (XOR-reduced SRAM data)
+
+  # Bottom side, left to right (pins 9-16) -> die south pads (left to right)
+  9:  "output_PAD[4]"             # counter2_value[0] (LSB)
+  10: "output_PAD[5]"             # counter2_value[1]
+  11: "output_PAD[6]"             # counter2_value[2]
+  12: "output_PAD[7]"             # counter2_value[3]
+  13: "output_PAD[8]"             # counter2_value[4]
+  14: "output_PAD[9]"             # counter2_value[5]
+  15: "output_PAD[10]"            # counter2_value[6]
+  16: "output_PAD[11]"            # counter2_value[7] (MSB)
+
+  # Right side, bottom to top (pins 17-24) -> die east pads (bottom to top)
+  17: "analog_PAD[0]"             # inverter2.vin1  (via padres)
+  18: "analog_PAD[1]"             # inverter2.vin2  (via padres)
+  19: "analog_PAD[2]"             # inverter2.vout1 (via padbare)
+  20: "analog_PAD[3]"             # inverter2.vout2 (via padbare)
+  21: "output_PAD[12]"            # inverter1.vout1
+  22: "output_PAD[13]"            # inverter1.vout2
+  23: "output_PAD[14]"            # inverter1.vout3
+  24: "output_PAD[15]"            # inverter1.vout4
+
+  # Top side, right to left (pins 25-32) -> die north pads (right to left)
+  25: "bidir_PAD[3]"              # counter1_value[7] (MSB) / inverter1.vin4
+  26: "bidir_PAD[2]"              # counter1_value[6] / inverter1.vin3
+  27: "bidir_PAD[1]"              # counter1_value[5] / inverter1.vin2
+  28: "bidir_PAD[0]"              # counter1_value[4] / inverter1.vin1
+  29: "output_PAD[3]"             # counter1_value[3]
+  30: "output_PAD[2]"             # counter1_value[2]
+  31: "output_PAD[1]"             # counter1_value[1]
+  32: "output_PAD[0]"             # counter1_value[0] (LSB)
