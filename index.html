@@ -446,6 +446,7 @@ window.Quarto = {
   </ul></li>
   <li><a href="#full-flow-at-once" id="toc-full-flow-at-once" class="nav-link" data-scroll-target="#full-flow-at-once"><span class="header-section-number">7.9</span> Full Flow at Once</a></li>
   <li><a href="#releasing-for-tapeout" id="toc-releasing-for-tapeout" class="nav-link" data-scroll-target="#releasing-for-tapeout"><span class="header-section-number">7.10</span> Releasing for Tapeout</a></li>
+  <li><a href="#sec-packaging" id="toc-sec-packaging" class="nav-link" data-scroll-target="#sec-packaging"><span class="header-section-number">7.11</span> Packaging</a></li>
   </ul></li>
   <li><a href="#sec-exercises" id="toc-sec-exercises" class="nav-link" data-scroll-target="#sec-exercises"><span class="header-section-number">8</span> Additional Exercises</a>
   <ul class="collapse">
@@ -453,6 +454,7 @@ window.Quarto = {
   <li><a href="#sec-exercise2" id="toc-sec-exercise2" class="nav-link" data-scroll-target="#sec-exercise2"><span class="header-section-number">8.2</span> Exercise 2: Self-Biased Single-Ended Inverter Amplifier</a></li>
   <li><a href="#sec-exercise3" id="toc-sec-exercise3" class="nav-link" data-scroll-target="#sec-exercise3"><span class="header-section-number">8.3</span> Exercise 3: Three-Stage Ring Oscillator with Output Buffer</a></li>
   <li><a href="#sec-exercise4" id="toc-sec-exercise4" class="nav-link" data-scroll-target="#sec-exercise4"><span class="header-section-number">8.4</span> Exercise 4: Update Pinout and Floorplan of the Top-Level</a></li>
+  <li><a href="#sec-exercise5" id="toc-sec-exercise5" class="nav-link" data-scroll-target="#sec-exercise5"><span class="header-section-number">8.5</span> Exercise 5: Update the Bondplan Configuration</a></li>
   </ul></li>
   <li><a href="#acknowledgements" id="toc-acknowledgements" class="nav-link" data-scroll-target="#acknowledgements"><span class="header-section-number">9</span> Acknowledgements</a></li>
   </ul>
@@ -2855,6 +2857,37 @@ Important
 </div>
 </div>
 </section>
+<section id="sec-packaging" class="level2" data-number="7.11">
+<h2 data-number="7.11" class="anchored" data-anchor-id="sec-packaging"><span class="header-section-number">7.11</span> Packaging</h2>
+<p>The die is packaged in a QFN-32 (5x5 mm) open-molded plastic package (<a href="https://www.qptechnologies.com/products/ompp/">OmPP</a>) from the <a href="https://europractice-ic.com/services/packaging/asic-packaging/">EUROPRACTICE ASIC packaging</a> offering. The package matches the padframe exactly: all 32 bondpads (8 per side, see <a href="#sec-top" class="quarto-xref">Section&nbsp;7</a>) are wired one-to-one to the 32 package leads (8 per side). Bonding is done with 25 µm gold wire, the longest wire measures 1.70 mm, and the cover is glued on after bonding.</p>
+<p>The bonding diagram below is generated fully automatically with <code>make bondplan</code> from the final chip GDS (<a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/layout/chip_top_logo_fill.gds.gz"><code>layout/chip_top_logo_fill.gds.gz</code></a>) and the EUROPRACTICE package library <a href="https://europractice-ic.com/wp-content/uploads/2019/07/EP_PACKAGES_08022018.gds_.gz"><code>EP_PACKAGES_08022018.gds</code></a>. The flow extracts the die bondpads together with their names, places the die in the package cavity, draws the bondwires, fills in the title block, and checks wire lengths, crossings, spacing, lead skew, and the clearance around the sensitive analog wires. The <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/packaging/config.yaml">pinout</a> and all flow settings are kept in a single configuration file, so the diagram never goes out of sync with the chip. Details are documented in the <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/packaging">packaging README</a>.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb48"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> bondplan                        <span class="co"># uses the default VERSION (1.0.0)</span></span>
+<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> bondplan VERSION=2.1.0          <span class="co"># stamp another version on the sheet</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>The <code>VERSION</code> variable is passed to the flow and printed in the title block (<code>DIE: CHIP_TOP - V.1.0.0</code>), so the version number is maintained in the Makefile only. The outputs are the bondplan GDS (<code>packaging/layout/chip_top_bondplan.gds</code>), the bond report with summary and bond table (<a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/packaging/result.md"><code>packaging/result.md</code></a>), and the bonding diagram images (<code>packaging/render/chip_top_bondplan_{white,black}.{png,svg}</code>).</p>
+<div id="fig-chip-top-bondplan" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-chip-top-bondplan-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="fig/chip_top/chip_top_bondplan_white.png" class="lightbox" data-gallery="quarto-lightbox-gallery-40" title="Figure&nbsp;35: Automatically generated bonding diagram of the ihp-sg13g2 AMS template chip in a QFN-32 package."><img src="fig/chip_top/chip_top_bondplan_white.png" class="img-fluid figure-img" style="width:70.0%"></a>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-chip-top-bondplan-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;35: Automatically generated bonding diagram of the ihp-sg13g2 AMS template chip in a QFN-32 package.
+</figcaption>
+</figure>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Tip
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Check the flow log and <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/packaging/result.md"><code>packaging/result.md</code></a> after every run. Unbonded named pads and NC package pins are reported explicitly, so a forgotten connection in the <code>PINOUT</code> table is immediately visible. Warnings are raised for bondwires that are too long (<code>BONDWIRE_MAX_LENGTH</code>), cross each other, come too close to each other, land skewed on their lead (<code>BONDWIRE_MAX_SKEW</code>), or violate the guard clearance of sensitive wires (<code>GUARDED_PINS</code> / <code>GUARD_SPACING</code>).</p>
+</div>
+</div>
+</section>
 </section>
 <section id="sec-exercises" class="level1" data-number="8">
 <h1 data-number="8"><span class="header-section-number">8</span> Additional Exercises</h1>
@@ -2934,6 +2967,18 @@ Tip
 <li>Update the PAD lists (<code>PAD_WEST</code>, <code>PAD_NORTH</code>, <code>PAD_SOUTH</code>, <code>PAD_EAST</code>) in <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/flow/librelane/config.yaml"><code>config.yaml</code></a> to match the new pinout.</li>
 <li>Update <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/flow/librelane/pdn_cfg.tcl"><code>pdn_cfg.tcl</code></a> so that the new macros are covered by the correct PDN grid (default for digital, <code>inverter_top</code>-style for analog).</li>
 <li>Rebuild the chip from scratch with <code>make build-all</code>, then verify with <code>make magic-drc CELL=chip_top</code> and <code>make klayout-drc-minimum</code>.</li>
+</ol>
+</section>
+<section id="sec-exercise5" class="level2" data-number="8.5">
+<h2 data-number="8.5" class="anchored" data-anchor-id="sec-exercise5"><span class="header-section-number">8.5</span> Exercise 5: Update the Bondplan Configuration</h2>
+<p>Building on <a href="#sec-exercise4" class="quarto-xref">Section&nbsp;8.4</a>, update the bondplan configuration in <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/packaging/config.yaml"><code>packaging/config.yaml</code></a> so that the packaged chip matches the new pinout (ring oscillator instead of <code>inverter2</code>, 16-bit <code>counter1</code>, no <code>counter2</code>, three additional VSS pads). The recommended steps are:</p>
+<ol type="1">
+<li>Rebuild the final GDS of the modified chip (<code>make build-all</code> from <a href="#sec-exercise4" class="quarto-xref">Section&nbsp;8.4</a>), since the bondplan flow reads the die pads and their names directly from <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/layout/chip_top_logo_fill.gds.gz"><code>layout/chip_top_logo_fill.gds.gz</code></a>.</li>
+<li>Update the <code>PINOUT</code> table in <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/packaging/config.yaml"><code>packaging/config.yaml</code></a>: the south-side pads now carry <code>counter1_value[15:8]</code>, three of the four east-side analog pads became VSS pads, and the fourth carries the ring-oscillator output. Keep the geometric order in mind (pins 1-8 left top→bottom, 9-16 bottom left→right, 17-24 right bottom→top, 25-32 top right→left) so that the bondwires do not cross.</li>
+<li>Connect the freed-up VSS pads as downbonds to the exposed pad by adding an <code>EPAD</code> list (e.g.&nbsp;<code>EPAD: ["VSS", "VSS", "VSS"]</code>) and marking their former leads as NC (<code>~</code>). The exposed pad of the QFN32 is the package ground, and the die is attached with conductive epoxy, so ground downbonds are shorter and lower-inductance than wires to leads.</li>
+<li>Re-run <code>make bondplan</code> and read the flow log and <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/packaging/result.md"><code>packaging/result.md</code></a> carefully: only the deliberately unbonded pads may appear as <em>unbonded named pads</em> (plus the seal-ring artifact), and there must be no wire-length, crossing, spacing, lead-skew, or guard-clearance warnings.</li>
+<li>Inspect the generated bonding diagram in <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/packaging/render/"><code>packaging/render/</code></a> and the bondplan GDS in KLayout (<code>ke packaging/layout/chip_top_bondplan.gds</code>). The title block of the A4 drawing sheet (die size, pad pitch, wire count, maximum wire length) is refilled automatically on every run.</li>
+<li>[Optional] Experiment with the die placement: rotate the die with <code>DIE_PLACEMENT.orientation</code> (e.g.&nbsp;<code>E</code>) or move it off-center with <code>DIE_PLACEMENT.location</code>, re-run the flow, and observe how the wire-length, spacing, and skew checks react. Restore a placement where all checks pass.</li>
 </ol>
 </section>
 </section>
