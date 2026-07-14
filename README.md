@@ -52,6 +52,8 @@ A step-by-step tutorial, including additional exercises, can be found [here](htt
 
 An overview of the open source IC design landscape is presented [here](https://ic3.ie/resources/open-source-ic-design-day).
 
+Are you interested in an open-source RFIC flow? Check it out [here](https://github.com/iic-jku/SG13CMOS_SPARX).
+
 
 ## Examples
 

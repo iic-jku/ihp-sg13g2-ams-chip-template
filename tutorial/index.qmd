@@ -1404,6 +1404,11 @@ Building on @sec-exercise4, update the bondplan configuration in [`packaging/con
 6. [Optional] Experiment with the die placement: rotate the die with `DIE_PLACEMENT.orientation` (e.g. `E`) or move it off-center with `DIE_PLACEMENT.location`, re-run the flow, and observe how the wire-length, spacing, and skew checks react. Restore a placement where all checks pass.
 
 
+# RFIC Flow
+
+Are you interested in an open-source RFIC flow? Check it out [here](https://github.com/iic-jku/SG13CMOS_SPARX).
+
+
 # Acknowledgements
 
 This project is funded by the JKU/SAL [IWS Lab](https://research.jku.at/de/projects/jku-lit-sal-intelligent-wireless-systems-lab-iws-lab/), a collaboration of [Johannes Kepler University](https://jku.at) and [Silicon Austria Labs](https://silicon-austria-labs.com).
