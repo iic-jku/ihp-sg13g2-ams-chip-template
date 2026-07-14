@@ -1,22 +1,27 @@
 ﻿# ToDo List
 
-- [ ] add GitHub action for checking license headers
-    - https://github.com/aesc-silicon/ElemRV/blob/main/.github/workflows/license-check.yaml
-    - https://github.com/aesc-silicon/ElemRV/blob/main/REUSE.toml
-- [ ] Tutorial: link SPARX for EMS with PALACE
+- [ ] clean up top-level LVS (Magic + Netgen, KLayout ?)
+- [ ] add custom LibreLane step for filler insertion after ArtistIC added logo
+    - flow without filler (GDS streamout + DRC check) --> default
+    - add logo with ArtistIC --> custom
+    - add filler structures --> custom
+        - adjust fill density on top-level: 0.75 (M1), 0.75 (M2), 0.75 (M3), 0.75 (M4), 0.75 (M5), 2.0 (TM1), 2.0 (TM2) --> fix KLayout DRC filler errors
+        - KLayout & Magic Filler: https://librelane.readthedocs.io/en/stable/reference/step_config_vars.html
+        - add GDSFill to `config.yaml`: https://github.com/aesc-silicon/gdsfill 
+    - GDS streamout + DRC check --> custom
+- [ ] add custom LibreLane step for power estimation (counter macro & top-level)
+- [ ] add sg13g2_Filler2000_novdd to split VDD_CORE & VDD_ANA (split voltage domains)
+- [ ] add sg13g2_io_custom to iic-jku/IHP-Open-PDK
+- [ ] add YouTube tutorial
+- [ ] PR IHP sizing scripts
 - [ ] `ngspice` & `verilog` RTL Co-Simulation using `Xschem`: https://www.youtube.com/watch?v=PPd7jkcHOgA
-- [ ] Link Harald's UCD workshop video: https://ic3.ie/resources/open-source-ic-design-day
-- [ ] double check make build-all --> do not simulate (only build) macros.
+- [ ] RTL Co-Simulation using `SpiceBind`
 - [ ] add PF SimulatePARALLEL testbench
+- [ ] double check make build-all --> do not simulate (only build) macros.
 - [ ] add VACASK testbenches
 - [ ] save markdown report of CACE
 - [ ] update table "Folder" column width
 - [ ] add exercise-solution branch and finish the exercises there
-- [ ] adjust fill density on top-level: 0.75 (M1), 0.75 (M2), 0.75 (M3), 0.75 (M4), 0.75 (M5), 2.0 (TM1), 2.0 (TM2) --> fix KLayout DRC filler errors
-- [ ] add custom LibreLane step for filler insertion after ArtistIC added logo
-- [ ] add custom LibreLane step for power estimation (counter macro & top-level)
-- [ ] add GDSFill to `config.yaml`
-- [ ] finish ToDos in main Makefile
-- [ ] see [TinyWhisper Chip ToDo.md](https://github.com/iic-jku/TinyWhisper/blob/main/ToDo.md)
-- [ ] RTL Co-Simulation using `SpiceBind`
-- [ ] build same template for sky130A, gf180mcuD and ihp-sg13cmos5l
+- [ ] build same template for ihp-sg13cmos5l
+- [ ] build same template for gf180mcuD
+- [ ] build same template for sky130A
