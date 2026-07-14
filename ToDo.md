@@ -7,7 +7,6 @@
 - [ ] `ngspice` & `verilog` RTL Co-Simulation using `Xschem`: https://www.youtube.com/watch?v=PPd7jkcHOgA
 - [ ] Link Harald's UCD workshop video: https://ic3.ie/resources/open-source-ic-design-day
 - [ ] double check make build-all --> do not simulate (only build) macros.
-- [ ] finish targets_overview.drawio
 - [ ] add PF SimulatePARALLEL testbench
 - [ ] add VACASK testbenches
 - [ ] save markdown report of CACE
