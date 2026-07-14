@@ -803,16 +803,17 @@ Tip
 <li><strong>Purple — logos IP</strong>: This branch includes <code>build-logos</code> and the two sub-Makefiles under <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/ip/sg13g2_ip__jku/"><code>ip/sg13g2_ip__jku/</code></a> and <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/ip/sg13g2_ip__jku_names/"><code>ip/sg13g2_ip__jku_names/</code></a>.</li>
 <li><strong>Blue — digital macro</strong>: This branch includes <code>build-counter</code> and the <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/counter/"><code>macros/counter/</code></a> Makefile.</li>
 <li><strong>Green — analog macro</strong>: This branch includes <code>build-inverter</code> and the <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/inverter/"><code>macros/inverter/</code></a> Makefile.</li>
+<li><strong>Red — packaging</strong>: This branch includes <code>bondplan</code> and the automated bondplan flow in <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/packaging/"><code>packaging/</code></a> (see <a href="#sec-packaging" class="quarto-xref">Section&nbsp;7.9</a>).</li>
 <li><strong>Grey — simulation and verification</strong>: This branch includes intermediate targets that feed the coloured deliverables (<code>sim-all</code>, <code>build-all</code>, <code>build-macros</code>, <code>init-submodules</code>, <code>sim-*-cocotb</code>).</li>
 </ul>
-<p>Solid arrows represent direct <code>$(MAKE) &lt;target&gt;</code> calls within a single Makefile. Dashed arrows represent recursive <code>$(MAKE) -C &lt;dir&gt; all</code> calls that descend into a sub-Makefile (one per coloured deliverable).</p>
+<p>Solid arrows represent direct <code>$(MAKE) &lt;target&gt;</code> calls within a single Makefile. Dashed arrows represent calls that descend into a subdirectory: recursive <code>$(MAKE) -C &lt;dir&gt; all</code> calls into a sub-Makefile (one per coloured deliverable), or the Python bondplan flow in <code>packaging/</code>.</p>
 <div id="fig-targets-overview" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-targets-overview-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<a href="fig/targets_overview/targets_overview.svg" class="lightbox" data-gallery="quarto-lightbox-gallery-2" title="Figure&nbsp;2: Overview of the Makefile targets that make all resolves to. Every coloured branch corresponds to one deliverable (top chip, bondpad, logos, digital macro, analog macro). The grey targets connect make all to those branches."><img src="fig/targets_overview/targets_overview.svg" class="img-fluid figure-img"></a>
+<a href="fig/targets_overview/targets_overview.svg" class="lightbox" data-gallery="quarto-lightbox-gallery-2" title="Figure&nbsp;2: Overview of the Makefile targets that make all resolves to. Every coloured branch corresponds to one deliverable (top chip, bondpad, logos, digital macro, analog macro, packaging). The grey targets connect make all to those branches."><img src="fig/targets_overview/targets_overview.svg" class="img-fluid figure-img"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-targets-overview-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;2: Overview of the Makefile targets that <code>make all</code> resolves to. Every coloured branch corresponds to one deliverable (top chip, bondpad, logos, digital macro, analog macro). The grey targets connect <code>make all</code> to those branches.
+Figure&nbsp;2: Overview of the Makefile targets that <code>make all</code> resolves to. Every coloured branch corresponds to one deliverable (top chip, bondpad, logos, digital macro, analog macro, packaging). The grey targets connect <code>make all</code> to those branches.
 </figcaption>
 </figure>
 </div>
@@ -880,10 +881,14 @@ Figure&nbsp;2: Overview of the Makefile targets that <code>make all</code> resol
 <td>Run LVS, DRC, and PEX for a given cell with KLayout or Magic.</td>
 </tr>
 <tr class="odd">
-<td><code>make all</code></td>
-<td>Full simulation, build, and verification.</td>
+<td><code>make bondplan</code></td>
+<td>Generate the bondplan (die in package, bondwires, pin table) in <code>packaging/</code> (see <a href="#sec-packaging" class="quarto-xref">Section&nbsp;7.9</a>).</td>
 </tr>
 <tr class="even">
+<td><code>make all</code></td>
+<td>Full simulation, build, verification, and bondplan generation.</td>
+</tr>
+<tr class="odd">
 <td><code>make release VERSION=2.1.0</code></td>
 <td>Copy GDS, netlists, and renders into <code>release/v.&lt;VERSION&gt;/</code> for tapeout submission.</td>
 </tr>
