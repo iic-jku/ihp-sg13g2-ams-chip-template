@@ -1,0 +1,35 @@
+# SPDX-FileCopyrightText: 2026 Simon Dorrer and Harald Pretl
+# SPDX-License-Identifier: Apache-2.0 WITH SHL-2.1
+#
+# Checks all files for missing license and copyright information with REUSE.
+
+name: License Check
+
+on:
+  push:
+    branches:
+      - 'main'
+  pull_request:
+    branches:
+      - 'main'
+
+jobs:
+  license-check:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v5
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.x'
+
+      - name: Install REUSE
+        run: |
+          python -m pip install --upgrade pip
+          pip install 'reuse[charset-normalizer]'
+
+      - name: Check licenses
+        run: reuse lint

@@ -1,0 +1,104 @@
+version = 1
+
+# Files that cannot carry an SPDX header (layout data, netlists, figures,
+# generated reports and renders) are annotated here. Source files (Python
+# scripts, Makefiles, RTL, configs, workflows) carry their own SPDX headers,
+# so the license check still catches new source files without licensing
+# information.
+
+[[annotations]]
+path = [".designinit", ".gitattributes", ".gitignore", ".gitmodules", "CITATION.cff", "README.md", "ToDo.md"]
+SPDX-FileCopyrightText = "2026 Simon Dorrer and Harald Pretl"
+SPDX-License-Identifier = "Apache-2.0 WITH SHL-2.1"
+
+[[annotations]]
+path = ".claude/**"
+SPDX-FileCopyrightText = "2026 Simon Dorrer and Harald Pretl"
+SPDX-License-Identifier = "Apache-2.0 WITH SHL-2.1"
+
+[[annotations]]
+path = "doc/**"
+SPDX-FileCopyrightText = "2026 Simon Dorrer and Harald Pretl"
+SPDX-License-Identifier = "Apache-2.0 WITH SHL-2.1"
+
+[[annotations]]
+path = "flow/logo/**"
+SPDX-FileCopyrightText = "2026 Simon Dorrer and Harald Pretl"
+SPDX-License-Identifier = "Apache-2.0 WITH SHL-2.1"
+
+[[annotations]]
+path = ["ip/*/README.md", "ip/*/final/**", "ip/*/logo/**", "ip/*/verification/**"]
+SPDX-FileCopyrightText = "2026 Simon Dorrer and Harald Pretl"
+SPDX-License-Identifier = "Apache-2.0 WITH SHL-2.1"
+
+[[annotations]]
+path = "layout/**"
+SPDX-FileCopyrightText = "2026 Simon Dorrer and Harald Pretl"
+SPDX-License-Identifier = "Apache-2.0 WITH SHL-2.1"
+
+[[annotations]]
+path = ["macros/*/README.md", "macros/*/final/**", "macros/*/layout/**", "macros/*/netlist/**", "macros/*/render/**", "macros/*/schematic/**"]
+SPDX-FileCopyrightText = "2026 Simon Dorrer and Harald Pretl"
+SPDX-License-Identifier = "Apache-2.0 WITH SHL-2.1"
+
+[[annotations]]
+path = ["macros/counter/fpga/README.md", "macros/counter/fpga/counter_top.asc", "macros/counter/fpga/counter_top.bin", "macros/counter/fpga/counter_top.json", "macros/counter/flow/librelane/pin_order.cfg"]
+SPDX-FileCopyrightText = "2026 Simon Dorrer and Harald Pretl"
+SPDX-License-Identifier = "Apache-2.0 WITH SHL-2.1"
+
+[[annotations]]
+path = ["testbenches/xschem/*.sch", "testbenches/xschem/xschemrc", "testbenches/cocotb/*.gtkw", "testbenches/cocotb/*.surf.ron", "macros/*/testbenches/xschem/**", "macros/*/testbenches/cocotb/*.gtkw", "macros/*/testbenches/cocotb/*.surf.ron", "macros/*/testbenches/verilog/*.gtkw", "macros/*/testbenches/verilog/*.surf.ron"]
+SPDX-FileCopyrightText = "2026 Simon Dorrer and Harald Pretl"
+SPDX-License-Identifier = "Apache-2.0 WITH SHL-2.1"
+
+[[annotations]]
+path = ["scripts/plot_simulations/data/**", "scripts/plot_simulations/figures/**", "macros/*/scripts/plot_simulations/data/**", "macros/*/scripts/plot_simulations/figures/**", "macros/inverter/scripts/sizing/data/**", "macros/inverter/scripts/sizing/figures/**"]
+SPDX-FileCopyrightText = "2026 Simon Dorrer and Harald Pretl"
+SPDX-License-Identifier = "Apache-2.0 WITH SHL-2.1"
+
+[[annotations]]
+path = ["verification/**", "macros/counter/verification/*", "macros/inverter/verification/drc/**", "macros/inverter/verification/lvs/**", "macros/inverter/verification/cace/results/**", "macros/inverter/verification/cace/templates/**", "macros/inverter/verification/cace/scripts/*.csv"]
+SPDX-FileCopyrightText = "2026 Simon Dorrer and Harald Pretl"
+SPDX-License-Identifier = "Apache-2.0 WITH SHL-2.1"
+
+[[annotations]]
+path = "netlist/**"
+SPDX-FileCopyrightText = "2026 Simon Dorrer and Harald Pretl"
+SPDX-License-Identifier = "Apache-2.0 WITH SHL-2.1"
+
+[[annotations]]
+path = ["packaging/README.md", "packaging/result.md", "packaging/layout/chip_top_bondplan.gds", "packaging/layout/chip_top_logo_TM2.gds.gz", "packaging/render/**"]
+SPDX-FileCopyrightText = "2026 Simon Dorrer and Harald Pretl"
+SPDX-License-Identifier = "Apache-2.0 WITH SHL-2.1"
+
+[[annotations]]
+path = "release/**"
+SPDX-FileCopyrightText = "2026 Simon Dorrer and Harald Pretl"
+SPDX-License-Identifier = "Apache-2.0 WITH SHL-2.1"
+
+[[annotations]]
+path = "render/**"
+SPDX-FileCopyrightText = "2026 Simon Dorrer and Harald Pretl"
+SPDX-License-Identifier = "Apache-2.0 WITH SHL-2.1"
+
+[[annotations]]
+path = "schematic/**"
+SPDX-FileCopyrightText = "2026 Simon Dorrer and Harald Pretl"
+SPDX-License-Identifier = "Apache-2.0 WITH SHL-2.1"
+
+[[annotations]]
+path = ["tutorial/.gitignore", "tutorial/index.qmd", "tutorial/fig/**"]
+SPDX-FileCopyrightText = "2026 Simon Dorrer and Harald Pretl"
+SPDX-License-Identifier = "Apache-2.0 WITH SHL-2.1"
+
+# Third-party files keep their original copyright and license.
+
+[[annotations]]
+path = ["ip/sg13g2_io_custom/**", "testbenches/xschem/models/**"]
+SPDX-FileCopyrightText = "2024-2025 IHP PDK Authors"
+SPDX-License-Identifier = "Apache-2.0"
+
+[[annotations]]
+path = ["packaging/layout/EP_PACKAGES_08022018.gds", "packaging/layout/OP_QFN32_A4_FIT.gds"]
+SPDX-FileCopyrightText = "2018 EUROPRACTICE"
+SPDX-License-Identifier = "LicenseRef-EUROPRACTICE"

@@ -3,6 +3,7 @@
 [![License: Solderpad Hardware License v2.1](https://img.shields.io/badge/License-Solderpad%20Hardware%20License%20v2.1-blue.svg)](LICENSE)
 [![Quarto Publish](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/actions/workflows/quarto-publish.yml/badge.svg?branch=main)](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/actions/workflows/quarto-publish.yml)
 [![Regression](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/actions/workflows/regression.yml/badge.svg?branch=main)](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/actions/workflows/regression.yml)
+[![License Check](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/actions/workflows/license-check.yml/badge.svg?branch=main)](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/actions/workflows/license-check.yml)
 [![Tutorial](https://img.shields.io/badge/Tutorial-online-orange?logo=quarto)](https://iic-jku.github.io/ihp-sg13g2-ams-chip-template/index.html)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.20129233.svg)](https://doi.org/10.5281/zenodo.20129233)
 
@@ -76,6 +77,11 @@ A designer-oriented description of this chip can be found in [doc/](doc/):
 
 ```text
 📁 ihp-sg13g2-ams-chip-template/
+├─ 📁 .github/
+│  └─ 📁 workflows/
+│     ├─ license-check.yml
+│     ├─ quarto-publish.yml
+│     └─ regression.yml
 ├─ 📁 doc/
 │  ├─ 📁 ihp-sg13g2-Open-PDK/
 │  ├─ 📁 ihp-structure-proposals/
@@ -118,6 +124,10 @@ A designer-oriented description of this chip can be found in [doc/](doc/):
 ├─ 📁 layout/
 │  ├─ chip_top.gds.gz
 │  └─ chip_top_logo_fill.gds.gz
+├─ 📁 LICENSES/
+│  ├─ Apache-2.0.txt
+│  ├─ LicenseRef-EUROPRACTICE.txt
+│  └─ SHL-2.1.txt
 ├─ 📁 macros/
 │  ├─ 📁 counter/
 │  │  ├─ 📁 final/
@@ -218,6 +228,7 @@ A designer-oriented description of this chip can be found in [doc/](doc/):
 ├─ LICENSE
 ├─ Makefile
 ├─ README.md
+├─ REUSE.toml
 └─ ToDo.md
 ```
 
