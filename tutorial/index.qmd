@@ -1422,6 +1422,10 @@ Building on @sec-exercise4, update the bondplan configuration in [`packaging/con
 5. Inspect the generated bonding diagram in [`packaging/render/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/packaging/render/) and the bondplan GDS in KLayout (`ke packaging/layout/chip_top_bondplan.gds`). The title block of the A4 drawing sheet (die size, pad pitch, wire count, maximum wire length) is refilled automatically on every run.
 6. [Optional] Experiment with the die placement: rotate the die with `DIE_PLACEMENT.orientation` (e.g. `E`) or move it off-center with `DIE_PLACEMENT.location`, re-run the flow, and observe how the wire-length, spacing, and skew checks react. Restore a placement where all checks pass.
 
+::: {.callout-tip}
+The solution to these exercises is available in the [`exercise-solution` branch](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/exercise-solution) of the repository. It is recommended to try the exercises independently first, and then check the solution for reference and debugging.
+:::
+
 
 # RFIC Flow
 
