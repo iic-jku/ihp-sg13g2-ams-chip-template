@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: 2025 LibreLane Contributors, 2026 Simon Dorrer and Harald Pretl
+# SPDX-License-Identifier: Apache-2.0 WITH SHL-2.1
+
 current_design $::env(DESIGN_NAME)
 set_units -time ns
 

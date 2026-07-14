@@ -1,4 +1,7 @@
-﻿# Copyright 2025 LibreLane Contributors
+﻿# SPDX-FileCopyrightText: 2020-2022 Efabless Corporation, 2025 LibreLane Contributors
+# SPDX-License-Identifier: Apache-2.0
+#
+# Copyright 2025 LibreLane Contributors
 #
 # Adapted from OpenLane
 #

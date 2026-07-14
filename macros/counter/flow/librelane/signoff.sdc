@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: 2025 LibreLane Contributors, 2026 Simon Dorrer and Harald Pretl
+# SPDX-License-Identifier: Apache-2.0 WITH SHL-2.1
+#
 # Compared to the implementation SDC, the signoff SDC relaxes
 # max capacitance and transition constraints. (Which are intentionally over-
 # constrained for implementation to yield better results.)
