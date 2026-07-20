@@ -8,7 +8,7 @@
 
 <meta name="author" content="Simon Dorrer">
 <meta name="author" content="Harald Pretl">
-<meta name="dcterms.date" content="2026-07-14">
+<meta name="dcterms.date" content="2026-07-20">
 
 <title>A Tutorial on Open-Source Analog-Mixed Signal Chip Design with the ihp-sg13g2 Open-PDK – Open-Source Analog-Mixed Signal Chip Design Tutorial</title>
 <style>
@@ -83,9 +83,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="site_libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-7b46239bed692545bb4e7594965a6668.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="site_libs/bootstrap/bootstrap-dark-aeaae182288943887056fe2671ceaf91.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
-<link href="site_libs/bootstrap/bootstrap-7b46239bed692545bb4e7594965a6668.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-9818666846f85aeb5d3aea9e6f24af22.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-dark-c86ec6357a3ab046237a7d14b115787d.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="site_libs/bootstrap/bootstrap-9818666846f85aeb5d3aea9e6f24af22.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
 <script src="site_libs/quarto-contrib/glightbox/glightbox.min.js"></script>
 <link href="site_libs/quarto-contrib/glightbox/glightbox.min.css" rel="stylesheet">
 <link href="site_libs/quarto-contrib/glightbox/lightbox.css" rel="stylesheet">
@@ -485,7 +485,7 @@ window.Quarto = {
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">July 14, 2026</p>
+      <p class="date">July 20, 2026</p>
     </div>
   </div>
   
@@ -1587,19 +1587,6 @@ Figure&nbsp;15: Xschem <code>inverter</code> symbol.
 Figure&nbsp;16: Xschem <code>inverter</code> schematic with dummy transistors and OP annotations.
 </figcaption>
 </figure>
-</div>
-<div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Note
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>The devices <code>ntap</code> and <code>ptap</code> are the NMOS and PMOS substrate contacts, which are required for a successful KLayout LVS and have no impact on the circuit functionality. This approach is only used by the ihp-sg13g2 PDK and is controversial since it requires additional pins <code>nwell</code> and <code>psub</code> and overloads the schematic drawings.</p>
-</div>
 </div>
 </section>
 <section id="sec-cace" class="level2" data-number="5.4">
