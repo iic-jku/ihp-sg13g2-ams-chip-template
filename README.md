@@ -596,7 +596,7 @@ The `EXT_MODE` parameter selects the extraction mode:
 > [!NOTE]
 > For `klayout-pex`, `EXT_MODE=1` (C-decoupled) is not yet supported by kpex and automatically falls back to `EXT_MODE=2` (CC) with a warning.
 
-The `.subckt` name in the extracted SPICE file is automatically renamed from `<CELL>_flat` (kpex) or `<CELL>` (Magic) to `<CELL>_pex`.
+The `.subckt` name in the extracted SPICE file is `<CELL>_pex`: `magic-pex` sets it directly via the `sak-pex.sh` option `-n <CELL>_pex`, while for `klayout-pex` it is automatically renamed from `<CELL>_flat` (kpex).
 
 If a matching Xschem symbol (`schematic/<CELL>_pex.sym`) exists, the `.subckt` pin order in the extracted SPICE file is automatically reordered to match the symbol's pin positions. This ensures the PEX netlist can be used directly with the corresponding Xschem symbol for simulation regardless of the selected `EXT_MODE`.
 
@@ -614,6 +614,16 @@ make klayout-pex CELL=chip_top EXT_MODE=3
 make magic-pex
 make magic-pex CELL=chip_top
 make magic-pex CELL=chip_top EXT_MODE=3
+```
+
+For full-RC extraction (`EXT_MODE=3`), `magic-pex` additionally exposes the `sak-pex.sh` `extresist` tuning parameters. They are ignored in `EXT_MODE=1`/`2`:
+
+- `THRESHOLD` - extresist threshold in mOhm (`-t`, default `10000` = 10 Ohm)
+- `MINRES` - extresist minimum resistance in mOhm (`-r`, default `1000` = 1 Ohm)
+- `MINDELAY` - extresist minimum delay in ps (`-y`, default `1`; `0` = gate by resistance)
+
+```sh
+make magic-pex CELL=chip_top EXT_MODE=3 THRESHOLD=5000 MINRES=500 MINDELAY=2
 ```
 
 

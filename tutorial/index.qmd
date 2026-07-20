@@ -727,12 +727,18 @@ The non-interactive PEX can be run with the following Makefile targets. The `CEL
 
 If not set, it defaults to `EXT_MODE=3`.
 
+For full-RC extraction (`EXT_MODE=3`), `magic-pex` also exposes the `sak-pex.sh` `extresist` tuning parameters (ignored in `EXT_MODE=1`/`2`):
+
+- `THRESHOLD` — extresist threshold in mOhm (`-t`, default `10000` = 10 Ohm),
+- `MINRES` — extresist minimum resistance in mOhm (`-r`, default `1000` = 1 Ohm),
+- `MINDELAY` — extresist minimum delay in ps (`-y`, default `1`; `0` = gate by resistance).
+
 ```sh
 make klayout-pex [CELL=<cellname>] [EXT_MODE=<1|2|3>]   # default CELL=inverter_top, default EXT_MODE=3 (full-RC)
-make magic-pex [CELL=<cellname>] [EXT_MODE=<1|2|3>]     # default CELL=inverter_top, default EXT_MODE=2 (CC mode)
+make magic-pex [CELL=<cellname>] [EXT_MODE=<1|2|3>] [THRESHOLD=<mOhm>] [MINRES=<mOhm>] [MINDELAY=<ps>]   # default CELL=inverter_top, default EXT_MODE=3 (full-RC)
 ```
 
-PEX writes a SPICE netlist into [`netlist/pex/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/inverter/netlist/pex/). The subcircuit name is renamed to `<CELL>_pex`, and the pin order is rearranged to match the Xschem PEX symbol ([`inverter_top_pex.sym`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/inverter/schematic/xschem/inverter_top_pex.sym)).
+PEX writes a SPICE netlist into [`netlist/pex/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/inverter/netlist/pex/). The subcircuit is named `<CELL>_pex`, and the pin order is rearranged to match the Xschem PEX symbol ([`inverter_top_pex.sym`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/inverter/schematic/xschem/inverter_top_pex.sym)).
 
 ::: {.callout-tip}
 To run a post-layout simulation, open one of the Xschem testbenches, swap the original symbol with the PEX symbol, and include the path to the SPICE netlist so the extracted netlist is used in the same testbench. This is the recommended way to compare schematic-only and post-layout simulation results.
@@ -1268,7 +1274,10 @@ The following PEX target is available for the top-level.
 
 ```sh
 make magic-pex                            # only chip_top (without logo and filler), default EXT_MODE=1
+make magic-pex EXT_MODE=3 THRESHOLD=5000 MINRES=500 MINDELAY=2   # full-RC with custom extresist settings
 ```
+
+For full-RC extraction (`EXT_MODE=3`), `magic-pex` also exposes the `sak-pex.sh` `extresist` tuning parameters `THRESHOLD` (`-t`, default `10000` mOhm), `MINRES` (`-r`, default `1000` mOhm) and `MINDELAY` (`-y`, default `1` ps; `0` = gate by resistance). They are ignored in `EXT_MODE=1`/`2`.
 
 ::: {.callout-warning}
 At the top level, PEX is only run on `chip_top` (without logo and filler), and the default `EXT_MODE=1` (C-decoupled) is used to keep the runtime manageable. However, the extracted netlist [`chip_top_magic_pex_1.spice`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/netlist/pex/chip_top_magic_pex_1.spice) is still huge (~75 MB, ~566k lines), and the post-layout simulation must be run on a powerful server.
