@@ -547,10 +547,6 @@ Since Xschem is a text-based schematic editor, you can also add `*.sch` and `.sy
 
 ![Xschem `inverter` schematic with dummy transistors and OP annotations.](fig/inverter_top/inverter_schematic.svg){#fig-inverter-schematic width=65%}
 
-::: {.callout-note}
-The devices `ntap` and `ptap` are the NMOS and PMOS substrate contacts, which are required for a successful KLayout LVS and have no impact on the circuit functionality. This approach is only used by the ihp-sg13g2 PDK and is controversial since it requires additional pins `nwell` and `psub` and overloads the schematic drawings.
-:::
-
 ## Process Variation and Mismatch (CACE) {#sec-cace}
 
 [CACE](https://github.com/fossi-foundation/cace) drives Ngspice via a
