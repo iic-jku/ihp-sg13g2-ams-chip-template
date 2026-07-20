@@ -42,10 +42,8 @@ lab=vout}
 N 1220 -880 1220 -850 {lab=vout}
 N 1320 -1030 1320 -910 {lab=VDD}
 N 1320 -790 1320 -670 {lab=VSS}
-N 1220 -1100 1320 -1100 {lab=VDD}
-N 1320 -1100 1320 -1030 {lab=VDD}
-N 1220 -600 1320 -600 {lab=VSS}
-N 1320 -670 1320 -600 {lab=VSS}
+N 1320 -670 1320 -560 {lab=VSS}
+N 1320 -1140 1320 -1030 {lab=VDD}
 C {title-3.sym} 0 0 0 0 {name=l1 author="Simon Dorrer" rev=1.0 lock=true}
 C {devices/ipin.sym} 1100 -850 0 0 {name=p10 lab=vin}
 C {devices/iopin.sym} 1220 -1140 3 0 {name=p11 lab=VDD}
@@ -85,3 +83,5 @@ spiceprefix=X
 C {annotate_fet_params.sym} 1520 -740 0 0 {name=annot1 ref=M1}
 C {annotate_fet_params.sym} 1520 -1020 0 0 {name=annot2 ref=M2}
 C {devices/iopin.sym} 1360 -850 0 0 {name=p6 lab=vout}
+C {lab_pin.sym} 1320 -1140 1 0 {name=p16 sig_type=std_logic lab=VDD}
+C {lab_pin.sym} 1320 -560 3 0 {name=p17 sig_type=std_logic lab=VSS}
