@@ -1,8 +1,7 @@
 ﻿# ToDo List
 
-- [ ] merge `new-klayout-lvs` branch
-- [ ] merge `fixed-auto-taper` branch
 - [ ] clean up top-level LVS (Magic + Netgen, KLayout ?) --> see / merge `top-level-lvs` branch
+- [ ] merge `fixed-auto-taper` branch
 - [ ] add custom LibreLane step for filler insertion after ArtistIC added logo --> see / merge `custom-librelane-steps` branch
     - flow without filler (GDS streamout + DRC check) --> default
     - add logo with ArtistIC --> custom
