@@ -97,7 +97,7 @@ help: ## Show this help message
 
 # Git Submodule Target
 init-submodules: ## Initialize and update git submodules (e.g. flow/artistic)
-	git -C $(MAKEFILE_DIR) submodule update --init
+	git -C $(MAKEFILE_DIR) -c safe.directory='*' submodule update --init
 .PHONY: init-submodules
 # ================================================================================================
 
