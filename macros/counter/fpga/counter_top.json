@@ -1,5 +1,5 @@
 {
-  "creator": "Yosys 0.65 (git sha1 b85cad634, g++ 13.3.0-6ubuntu2~24.04.1 -fPIC -O3)",
+  "creator": "Yosys 0.67 (git sha1 2d1509d1b, Release, GNU /usr/bin/c++ 13.3.0)",
   "modules": {
     "$__ABC9_DELAY": {
       "attributes": {

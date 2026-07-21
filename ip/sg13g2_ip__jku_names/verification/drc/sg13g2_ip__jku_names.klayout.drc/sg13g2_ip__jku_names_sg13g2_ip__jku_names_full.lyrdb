@@ -8,6 +8,36 @@
  </tags>
  <categories>
   <category>
+   <name>NW.b</name>
+   <description>5.1.NW.b : Min. NWell space or notch (same net). NWell regions separated by less than this value will be merged. is 0.62 um</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>NW.b1</name>
+   <description>5.1.NW.b1 : Min. PWell width between NWell regions (different net)  is 1.8 um</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>NW.f1</name>
+   <description>5.1.NW.f1 : Min. NWell space to substrate tie in P+Activ inside ThickGateOx = 0.62 um</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>NW.f1.digibnd</name>
+   <description>5.1.NW.f1.digibnd : Min. NWell space to substrate tie in P+Activ inside ThickGateOx (Inside DigiBnd) = 0.24 um</description>
+   <categories>
+   </categories>
+  </category>
+ <category>
+   <name>TGO.f</name>
+   <description>5.7. TGO.f : Min. ThickGateOx width: 0.86 µm</description>
+   <categories>
+   </categories>
+  </category>
+ <category>
    <name>GFil.d</name>
    <description>5.9. GFil.d : Min. GatPoly:filler space to Activ, GatPoly, Cont, pSD, nSD:block, SalBlock is 1.1 um</description>
    <categories>
@@ -22,6 +52,12 @@
   <category>
    <name>GFil.i</name>
    <description>5.9. GFil.i Max. GatPoly:nofill area (µm²) is 400.0 um x 400.0 um</description>
+   <categories>
+   </categories>
+  </category>
+ <category>
+   <name>pSD.c1</name>
+   <description>5.10. pSD.c1 Min. pSD enclosure of P+Activ in PWell is 0.03 um</description>
    <categories>
    </categories>
   </category>
@@ -46,36 +82,6 @@
   <category>
    <name>PWB.f1</name>
    <description>5.2. PWB.f1 Min. PWell:block space to (P+Activ inside ThickGateOx) in PWell 0.62 um</description>
-   <categories>
-   </categories>
-  </category>
- <category>
-   <name>TGO.f</name>
-   <description>5.7. TGO.f : Min. ThickGateOx width: 0.86 µm</description>
-   <categories>
-   </categories>
-  </category>
- <category>
-   <name>NW.b</name>
-   <description>5.1.NW.b : Min. NWell space or notch (same net). NWell regions separated by less than this value will be merged. is 0.62 um</description>
-   <categories>
-   </categories>
-  </category>
-  <category>
-   <name>NW.b1</name>
-   <description>5.1.NW.b1 : Min. PWell width between NWell regions (different net)  is 1.8 um</description>
-   <categories>
-   </categories>
-  </category>
-  <category>
-   <name>NW.f1</name>
-   <description>5.1.NW.f1 : Min. NWell space to substrate tie in P+Activ inside ThickGateOx = 0.62 um</description>
-   <categories>
-   </categories>
-  </category>
-  <category>
-   <name>NW.f1.digibnd</name>
-   <description>5.1.NW.f1.digibnd : Min. NWell space to substrate tie in P+Activ inside ThickGateOx (Inside DigiBnd) = 0.24 um</description>
    <categories>
    </categories>
   </category>
@@ -134,14 +140,32 @@
    </categories>
   </category>
  <category>
-   <name>LU.b</name>
-   <description>7.2. LU.b : Max. space from any portion of N+Activ inside PWell to an pSD-PWell tie is 20.0 um</description>
+   <name>Sdiod.b</name>
+   <description>6.7. Sdiod.b : Min. and max. nSD:block enclosure of ContBar = 0.4 um</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>Sdiod.c</name>
+   <description>6.7. Sdiod.c : Min. and max. SalBlock enclosure of ContBar = 0.45 um</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>Sdiod.d</name>
+   <description>6.7. Sdiod.d : Min. and max. ContBar width inside nBuLay is 0.3 um</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>Sdiod.e</name>
+   <description>6.7. Sdiod.e : Min. and max. ContBar length inside nBuLay is 1.0 um</description>
    <categories>
    </categories>
   </category>
  <category>
-   <name>pSD.c1</name>
-   <description>5.10. pSD.c1 Min. pSD enclosure of P+Activ in PWell is 0.03 um</description>
+   <name>LU.b</name>
+   <description>7.2. LU.b : Max. space from any portion of N+Activ inside PWell to an pSD-PWell tie is 20.0 um</description>
    <categories>
    </categories>
   </category>
@@ -176,102 +200,6 @@
    </categories>
   </category>
  <category>
-   <name>Sdiod.b</name>
-   <description>6.7. Sdiod.b : Min. and max. nSD:block enclosure of ContBar = 0.4 um</description>
-   <categories>
-   </categories>
-  </category>
-  <category>
-   <name>Sdiod.c</name>
-   <description>6.7. Sdiod.c : Min. and max. SalBlock enclosure of ContBar = 0.45 um</description>
-   <categories>
-   </categories>
-  </category>
-  <category>
-   <name>Sdiod.d</name>
-   <description>6.7. Sdiod.d : Min. and max. ContBar width inside nBuLay is 0.3 um</description>
-   <categories>
-   </categories>
-  </category>
-  <category>
-   <name>Sdiod.e</name>
-   <description>6.7. Sdiod.e : Min. and max. ContBar length inside nBuLay is 1.0 um</description>
-   <categories>
-   </categories>
-  </category>
- <category>
-   <name>Gat.a</name>
-   <description>5.8. Gat.a : Min. GatPoly width: 0.13 µm</description>
-   <categories>
-   </categories>
-  </category>
-  <category>
-   <name>Gat.b</name>
-   <description>5.8. Gat.b : Min. GatPoly (drawing + filler) space or notch: 0.18 µm.</description>
-   <categories>
-   </categories>
-  </category>
-  <category>
-   <name>Gat.d</name>
-   <description>5.8. Gat.d :Min. GatPoly space to Activ: 0.07 µm.</description>
-   <categories>
-   </categories>
-  </category>
-  <category>
-   <name>Gat.a1</name>
-   <description>5.8. Gat.a1 Min. GatPoly width for channel length of 1.2V NFET is 0.13 um</description>
-   <categories>
-   </categories>
-  </category>
-  <category>
-   <name>Gat.a2</name>
-   <description>5.8. Gat.a2 Min. GatPoly width for channel length of 1.2V PFET is 0.13 um</description>
-   <categories>
-   </categories>
-  </category>
-  <category>
-   <name>Gat.g</name>
-   <description>5.8. Gat.g Min. GatPoly width for 45-degree bent shapes if the bend GatPoly,length is &gt; 0.39 µm is 0.16 um</description>
-   <categories>
-   </categories>
-  </category>
- <category>
-   <name>CntB.a</name>
-   <description>5.15. CntB.a Min. and max. ContBar width is 0.16 um</description>
-   <categories>
-   </categories>
-  </category>
-  <category>
-   <name>CntB.a1</name>
-   <description>5.15. CntB.a1 Min. ContBar length is 0.34 um</description>
-   <categories>
-   </categories>
-  </category>
-  <category>
-   <name>CntB.b1</name>
-   <description>5.15. CntB.b1 Min. ContBar space with common run &gt; 5.0 µm is 0.36 um</description>
-   <categories>
-   </categories>
-  </category>
-  <category>
-   <name>CntB.h1</name>
-   <description>5.15. CntB.h1 Min. Metal1 enclosure of ContBar is 0.05 um</description>
-   <categories>
-   </categories>
-  </category>
- <category>
-   <name>Act.a</name>
-   <description>5.5. Act.a : Min. Activ width : 0.15 µm</description>
-   <categories>
-   </categories>
-  </category>
-  <category>
-   <name>Act.b</name>
-   <description>5.5. Act.b : Min. Activ (drawing + filler) space or notch: 0.21 µm.</description>
-   <categories>
-   </categories>
-  </category>
- <category>
    <name>npn13G2.bR</name>
    <description>6.1.3. npn13G2.bR : Max. recommended total number of npn13G2 emitters per chip is 4000</description>
    <categories>
@@ -286,6 +214,18 @@
   <category>
    <name>npn13G2V.cR</name>
    <description>6.1.3. npn13G2V.cR : Max. recommended total number of npn13G2V emitters per chip is 800</description>
+   <categories>
+   </categories>
+  </category>
+ <category>
+   <name>Act.a</name>
+   <description>5.5. Act.a : Min. Activ width : 0.15 µm</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>Act.b</name>
+   <description>5.5. Act.b : Min. Activ (drawing + filler) space or notch: 0.21 µm.</description>
    <categories>
    </categories>
   </category>
@@ -326,6 +266,60 @@
    </categories>
   </category>
  <category>
+   <name>AFil.c1</name>
+   <description>5.6. AFil.c1 Min. Activ:filler space to Activ is 0.42 um</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>AFil.c</name>
+   <description>5.6. AFil.c Min. Activ:filler space to Cont, GatPoly is 1.1 um</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>AFil.d</name>
+   <description>5.6. AFil.d Min. Activ:filler space to NWell, nBuLay is 1.0 um</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>AFil.e</name>
+   <description>5.6. AFil.e Min. Activ:filler space to TRANS is 1.0 um</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>AFil.j</name>
+   <description>5.6. AFil.j Min. nSD:block and SalBlock enclosure of Activ:filler inside PWell:block is 0.25 um</description>
+   <categories>
+   </categories>
+  </category>
+ <category>
+   <name>CntB.a</name>
+   <description>5.15. CntB.a Min. and max. ContBar width is 0.16 um</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>CntB.a1</name>
+   <description>5.15. CntB.a1 Min. ContBar length is 0.34 um</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>CntB.b1</name>
+   <description>5.15. CntB.b1 Min. ContBar space with common run &gt; 5.0 µm is 0.36 um</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>CntB.h1</name>
+   <description>5.15. CntB.h1 Min. Metal1 enclosure of ContBar is 0.05 um</description>
+   <categories>
+   </categories>
+  </category>
+ <category>
    <name>M1.a</name>
    <description>5.16. M1.a: Min. Metal1 width: 0.16 μm.</description>
    <categories>
@@ -358,6 +352,18 @@
   <category>
    <name>M1.i</name>
    <description>5.16. M1.i Min. space of Metal1 lines of which at least one is bent by 45-degree is 0.22 um</description>
+   <categories>
+   </categories>
+  </category>
+ <category>
+   <name>MIM.c</name>
+   <description>6.11. MIM.c : Min. Metal5 enclosure of MIM is 0.6 um</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>MIM.d</name>
+   <description>6.11. MIM.d : Min. MIM enclosure of TopVia1 is 0.36 um</description>
    <categories>
    </categories>
   </category>
@@ -404,44 +410,50 @@
    </categories>
   </category>
  <category>
-   <name>MIM.c</name>
-   <description>6.11. MIM.c : Min. Metal5 enclosure of MIM is 0.6 um</description>
+   <name>Gat.a</name>
+   <description>5.8. Gat.a : Min. GatPoly width: 0.13 µm</description>
    <categories>
    </categories>
   </category>
   <category>
-   <name>MIM.d</name>
-   <description>6.11. MIM.d : Min. MIM enclosure of TopVia1 is 0.36 um</description>
+   <name>Gat.b</name>
+   <description>5.8. Gat.b : Min. GatPoly (drawing + filler) space or notch: 0.18 µm.</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>Gat.d</name>
+   <description>5.8. Gat.d :Min. GatPoly space to Activ: 0.07 µm.</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>Gat.a1</name>
+   <description>5.8. Gat.a1 Min. GatPoly width for channel length of 1.2V NFET is 0.13 um</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>Gat.a2</name>
+   <description>5.8. Gat.a2 Min. GatPoly width for channel length of 1.2V PFET is 0.13 um</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>Gat.g</name>
+   <description>5.8. Gat.g Min. GatPoly width for 45-degree bent shapes if the bend GatPoly,length is &gt; 0.39 µm is 0.16 um</description>
    <categories>
    </categories>
   </category>
  <category>
-   <name>AFil.c1</name>
-   <description>5.6. AFil.c1 Min. Activ:filler space to Activ is 0.42 um</description>
+   <name>TM1.a</name>
+   <description>5.22. TM1.a: Min. TopMetal1 width: 1.64 μm.</description>
    <categories>
    </categories>
   </category>
   <category>
-   <name>AFil.c</name>
-   <description>5.6. AFil.c Min. Activ:filler space to Cont, GatPoly is 1.1 um</description>
-   <categories>
-   </categories>
-  </category>
-  <category>
-   <name>AFil.d</name>
-   <description>5.6. AFil.d Min. Activ:filler space to NWell, nBuLay is 1.0 um</description>
-   <categories>
-   </categories>
-  </category>
-  <category>
-   <name>AFil.e</name>
-   <description>5.6. AFil.e Min. Activ:filler space to TRANS is 1.0 um</description>
-   <categories>
-   </categories>
-  </category>
-  <category>
-   <name>AFil.j</name>
-   <description>5.6. AFil.j Min. nSD:block and SalBlock enclosure of Activ:filler inside PWell:block is 0.25 um</description>
+   <name>TM1.b</name>
+   <description>5.22. TM1.b: Min. TopMetal1 (drawing + filler) space or notch: 1.64 μm.</description>
    <categories>
    </categories>
   </category>
@@ -460,72 +472,6 @@
   <category>
    <name>Pas.c</name>
    <description>5.27. Pas.c : Min. TopMetal2 enclosure of Passiv [Not checked outside of sealring (edge-seal-passive)] is 2.1 um </description>
-   <categories>
-   </categories>
-  </category>
- <category>
-   <name>TM1.a</name>
-   <description>5.22. TM1.a: Min. TopMetal1 width: 1.64 μm.</description>
-   <categories>
-   </categories>
-  </category>
-  <category>
-   <name>TM1.b</name>
-   <description>5.22. TM1.b: Min. TopMetal1 (drawing + filler) space or notch: 1.64 μm.</description>
-   <categories>
-   </categories>
-  </category>
- <category>
-   <name>Pad.m</name>
-   <description>6.9. Pad.m : SBumpPad and CuPillarPad in same layout not allowed</description>
-   <categories>
-   </categories>
-  </category>
-  <category>
-   <name>Pad.fR_M1</name>
-   <description>6.9. Pad.fR_M1 : Min. recommended M1 exit length is 7.0 um</description>
-   <categories>
-   </categories>
-  </category>
-  <category>
-   <name>Pad.fR_M2</name>
-   <description>6.9. Pad.fR_M2 : Min. recommended M2 exit length is 7.0 um</description>
-   <categories>
-   </categories>
-  </category>
-  <category>
-   <name>Pad.fR_M3</name>
-   <description>6.9. Pad.fR_M3 : Min. recommended M3 exit length is 7.0 um</description>
-   <categories>
-   </categories>
-  </category>
-  <category>
-   <name>Pad.fR_M4</name>
-   <description>6.9. Pad.fR_M4 : Min. recommended M4 exit length is 7.0 um</description>
-   <categories>
-   </categories>
-  </category>
-  <category>
-   <name>Pad.fR_M5</name>
-   <description>6.9. Pad.fR_M5 : Min. recommended M5 exit length is 7.0 um</description>
-   <categories>
-   </categories>
-  </category>
-  <category>
-   <name>Pad.fR_TM1</name>
-   <description>6.9. Pad.fR_TM1 : Min. recommended TM1 exit length is 7.0 um</description>
-   <categories>
-   </categories>
-  </category>
-  <category>
-   <name>Pad.fR_TM2</name>
-   <description>6.9. Pad.fR_TM2 : Min. recommended TM2 exit length is 7.0 um</description>
-   <categories>
-   </categories>
-  </category>
-  <category>
-   <name>Pad.i</name>
-   <description>6.9. Pad.i : dfpad without TopMetal2 not allowed</description>
    <categories>
    </categories>
   </category>
@@ -554,26 +500,14 @@
    </categories>
   </category>
  <category>
-   <name>TV1.a</name>
-   <description>5.21. TV1.a : Min. and max. TopVia1 width: 0.42 µm</description>
+   <name>TM2Fil.c</name>
+   <description>5.26. TM2Fil.c : Min. TopMetal2:filler space to TopMetal2 is 3.0 um</description>
    <categories>
    </categories>
   </category>
   <category>
-   <name>TV1.b</name>
-   <description>5.21. TV1.b : Min. TopVia1 space: 0.42 µm</description>
-   <categories>
-   </categories>
-  </category>
-  <category>
-   <name>TV1.c</name>
-   <description>5.21. TV1.c : Min. Metal5 enclosure of TopVia1 is 0.1 um</description>
-   <categories>
-   </categories>
-  </category>
-  <category>
-   <name>TV1.d</name>
-   <description>5.21. TV1.d : Min. TopMetal1 enclosure of TopVia1 is 0.42 um</description>
+   <name>TM2Fil.a1</name>
+   <description>5.26. TM2Fil.a1 : Max. TopMetal2:filler width is 10.0 um</description>
    <categories>
    </categories>
   </category>
@@ -634,30 +568,6 @@
   <category>
    <name>M5Fil.a2</name>
    <description>5.18. M5Fil.a2 : Max. Metal5:filler width is 5.0 um</description>
-   <categories>
-   </categories>
-  </category>
- <category>
-   <name>Padc.a</name>
-   <description>6.9. Padc.a : CuPillarPad size is 35.0 um</description>
-   <categories>
-   </categories>
-  </category>
-  <category>
-   <name>Padc.b</name>
-   <description>6.9. Padc.b : Min. CuPillarPad space is 40.0 um</description>
-   <categories>
-   </categories>
-  </category>
-  <category>
-   <name>Padc.c</name>
-   <description>6.9. Padc.c : Min. TopMetal2 (within dfpad) enclosure of CuPillarPad is 7.5 um</description>
-   <categories>
-   </categories>
-  </category>
-  <category>
-   <name>padc.f</name>
-   <description>6.9.2. Padc.f: Allowed passivation opening shape Circle</description>
    <categories>
    </categories>
   </category>
@@ -734,14 +644,104 @@
    </categories>
   </category>
  <category>
-   <name>TM2Fil.c</name>
-   <description>5.26. TM2Fil.c : Min. TopMetal2:filler space to TopMetal2 is 3.0 um</description>
+   <name>TV1.a</name>
+   <description>5.21. TV1.a : Min. and max. TopVia1 width: 0.42 µm</description>
    <categories>
    </categories>
   </category>
   <category>
-   <name>TM2Fil.a1</name>
-   <description>5.26. TM2Fil.a1 : Max. TopMetal2:filler width is 10.0 um</description>
+   <name>TV1.b</name>
+   <description>5.21. TV1.b : Min. TopVia1 space: 0.42 µm</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>TV1.c</name>
+   <description>5.21. TV1.c : Min. Metal5 enclosure of TopVia1 is 0.1 um</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>TV1.d</name>
+   <description>5.21. TV1.d : Min. TopMetal1 enclosure of TopVia1 is 0.42 um</description>
+   <categories>
+   </categories>
+  </category>
+ <category>
+   <name>Pad.m</name>
+   <description>6.9. Pad.m : SBumpPad and CuPillarPad in same layout not allowed</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>Pad.fR_M1</name>
+   <description>6.9. Pad.fR_M1 : Min. recommended M1 exit length is 7.0 um</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>Pad.fR_M2</name>
+   <description>6.9. Pad.fR_M2 : Min. recommended M2 exit length is 7.0 um</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>Pad.fR_M3</name>
+   <description>6.9. Pad.fR_M3 : Min. recommended M3 exit length is 7.0 um</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>Pad.fR_M4</name>
+   <description>6.9. Pad.fR_M4 : Min. recommended M4 exit length is 7.0 um</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>Pad.fR_M5</name>
+   <description>6.9. Pad.fR_M5 : Min. recommended M5 exit length is 7.0 um</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>Pad.fR_TM1</name>
+   <description>6.9. Pad.fR_TM1 : Min. recommended TM1 exit length is 7.0 um</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>Pad.fR_TM2</name>
+   <description>6.9. Pad.fR_TM2 : Min. recommended TM2 exit length is 7.0 um</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>Pad.i</name>
+   <description>6.9. Pad.i : dfpad without TopMetal2 not allowed</description>
+   <categories>
+   </categories>
+  </category>
+ <category>
+   <name>Padc.a</name>
+   <description>6.9. Padc.a : CuPillarPad size is 35.0 um</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>Padc.b</name>
+   <description>6.9. Padc.b : Min. CuPillarPad space is 40.0 um</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>Padc.c</name>
+   <description>6.9. Padc.c : Min. TopMetal2 (within dfpad) enclosure of CuPillarPad is 7.5 um</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>padc.f</name>
+   <description>6.9.2. Padc.f: Allowed passivation opening shape Circle</description>
    <categories>
    </categories>
   </category>
@@ -772,6 +772,36 @@
   <category>
    <name>Padb.d</name>
    <description>6.9. Padb.d : Min. SBumpPad space to EdgeSeal is 50.0 um</description>
+   <categories>
+   </categories>
+  </category>
+ <category>
+   <name>TM1Fil.c</name>
+   <description>5.23. TM1Fil.c : Min. TopMetal1:filler space to TopMetal1 is 3.0 um</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>TM1Fil.a1</name>
+   <description>5.23. TM1Fil.a1 : Max. TopMetal1:filler width is 10.0 um</description>
+   <categories>
+   </categories>
+  </category>
+ <category>
+   <name>V1.a</name>
+   <description>5.19. V1.a : Min. and max. Via1 width: 0.19 µm</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>V1.b</name>
+   <description>5.19. V1.b : Min. Via1 space: 0.22 µm</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>V1.c</name>
+   <description>5.19.  V1.c Min. Metal1 enclosure of Via1 is 0.01 um</description>
    <categories>
    </categories>
   </category>
@@ -826,37 +856,6 @@
   <category>
    <name>V4.c</name>
    <description>5.20. V4.c : Min. Metal4 enclosure of Via4 is 0.005 µm</description>
-   <categories>
-   </categories>
-  </category>
- <category>
-   <name>TM1Fil.c</name>
-   <description>5.23. TM1Fil.c : Min. TopMetal1:filler space to TopMetal1 is 3.0 um</description>
-   <categories>
-   </categories>
-  </category>
-  <category>
-   <name>TM1Fil.a1</name>
-   <description>5.23. TM1Fil.a1 : Max. TopMetal1:filler width is 10.0 um</description>
-   <categories>
-   </categories>
-  </category>
- <category>
-   <name>TM2.a</name>
-   <description>5.25. TM2.a: Min. TopMetal2 width: 2.0 μm.</description>
-   <categories>
-   </categories>
-  </category>
-  <category>
-   <name>TM2.b</name>
-   <description>5.25. TM2.b: Min. TopMetal2 (drawing + filler) space or notch: 2.0 μm.</description>
-   <categories>
-   </categories>
-  </category>
-  <category>
-   <name>TM2.bR</name>
-   <description>5.25. TM2.bR : Min. space of TopMetal2 lines if, at least one line is wider than 2.5 µm
-                    and the parallel run is more than 50.0 µm is 5.0 um</description>
    <categories>
    </categories>
   </category>
@@ -927,20 +926,21 @@
    </categories>
   </category>
  <category>
-   <name>V1.a</name>
-   <description>5.19. V1.a : Min. and max. Via1 width: 0.19 µm</description>
+   <name>TM2.a</name>
+   <description>5.25. TM2.a: Min. TopMetal2 width: 2.0 μm.</description>
    <categories>
    </categories>
   </category>
   <category>
-   <name>V1.b</name>
-   <description>5.19. V1.b : Min. Via1 space: 0.22 µm</description>
+   <name>TM2.b</name>
+   <description>5.25. TM2.b: Min. TopMetal2 (drawing + filler) space or notch: 2.0 μm.</description>
    <categories>
    </categories>
   </category>
   <category>
-   <name>V1.c</name>
-   <description>5.19.  V1.c Min. Metal1 enclosure of Via1 is 0.01 um</description>
+   <name>TM2.bR</name>
+   <description>5.25. TM2.bR : Min. space of TopMetal2 lines if, at least one line is wider than 2.5 µm
+                    and the parallel run is more than 50.0 µm is 5.0 um</description>
    <categories>
    </categories>
   </category>
