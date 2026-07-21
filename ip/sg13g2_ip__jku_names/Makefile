@@ -86,13 +86,11 @@ logo: ## Generate GDS from image using Python script
 klayout-drc: ## Run KLayout DRC of the CELL cell (usage: make klayout-drc [CELL=<cellname>] [DRC_LEVEL=<precheck|macro|regular>])
 	mkdir -p $(DRC_RPT_DIR)
 	sak-drc.sh -d -k -l $(DRC_LEVEL) -w $(DRC_RPT_DIR) $(GDS_DIR)/$(CELL).gds
-	sleep 4
 .PHONY: klayout-drc
 
 magic-drc: ## Run Magic DRC of the CELL cell (usage: make magic-drc [CELL=<cellname>])
 	mkdir -p $(DRC_RPT_DIR)
 	sak-drc.sh -d -m -f "*" -w $(DRC_RPT_DIR) $(GDS_DIR)/$(CELL).gds
-	sleep 4
 .PHONY: magic-drc
 # ================================================================================================
 

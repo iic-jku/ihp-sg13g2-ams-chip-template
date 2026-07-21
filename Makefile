@@ -316,7 +316,6 @@ klayout-lvs: ## Run KLayout LVS of the CELL cell (usage: make klayout-lvs [CELL=
 		--run_mode=deep \
 		--disable_tap_extraction
 	mv $(LVS_RPT_DIR)/$(CELL)_extracted.cir $(NET_LAY_DIR)/$(CELL)_klayout.cir
-	sleep 4
 .PHONY: klayout-lvs
 
 magic-lvs-netlist: ## Export SPICE schematic netlist from Xschem for Magic + Netgen LVS (usage: make magic-lvs-netlist [CELL=<cellname>] [EV_PRECISION=<digits>])
@@ -344,7 +343,6 @@ magic-lvs: ## Run Magic + Netgen LVS of the CELL cell (usage: make magic-lvs [CE
 	rm -f $(LVS_RPT_DIR)/$(CELL).sch.spc
 	rm -f $(LVS_RPT_DIR)/ext_$(CELL).tcl
 	rm -f $(LVS_RPT_DIR)/*.ext
-	sleep 4
 .PHONY: magic-lvs
 # ================================================================================================
 
@@ -353,25 +351,21 @@ magic-lvs: ## Run Magic + Netgen LVS of the CELL cell (usage: make magic-lvs [CE
 klayout-drc-minimum: ## Run minimum pre-check KLayout DRC of the TOP cell with logo and filler
 	mkdir -p $(DRC_RPT_DIR)
 	sak-drc.sh -d -k -l precheck -w $(DRC_RPT_DIR) $(LAY_DIR)/$(TOP)_logo_fill.gds.gz
-	sleep 4
 .PHONY: klayout-drc-minimum
 
 klayout-drc-regular: ## Run regular KLayout DRC of the TOP cell with logo and filler
 	mkdir -p $(DRC_RPT_DIR)
 	sak-drc.sh -d -k -l regular -w $(DRC_RPT_DIR) $(LAY_DIR)/$(TOP)_logo_fill.gds.gz
-	sleep 4
 .PHONY: klayout-drc-regular
 
 klayout-drc: ## Run KLayout DRC of the CELL cell (usage: make klayout-drc [CELL=<cellname>] [DRC_LEVEL=<precheck|macro|regular>])
 	mkdir -p $(DRC_RPT_DIR)
 	sak-drc.sh -d -k -l $(DRC_LEVEL) -w $(DRC_RPT_DIR) $(LAY_DIR)/$(CELL).gds.gz
-	sleep 4
 .PHONY: klayout-drc
 
 magic-drc: ## Run Magic DRC of the CELL cell (usage: make magic-drc [CELL=<cellname>])
 	mkdir -p $(DRC_RPT_DIR)
 	sak-drc.sh -d -m -f "*" -w $(DRC_RPT_DIR) $(LAY_DIR)/$(CELL).gds.gz
-	sleep 4
 .PHONY: magic-drc
 # ================================================================================================
 
@@ -406,7 +400,6 @@ klayout-pex: ## Run Parasitic Extraction with KPEX of the CELL cell (usage: make
 	else \
 		echo "No symbol $(XSCHEM_SCH_DIR)/$(CELL)_pex.sym found, skipping pin reorder."; \
 	fi
-	sleep 4
 .PHONY: klayout-pex
 
 magic-pex: ## Run Parasitic Extraction with Magic of the CELL cell (usage: make magic-pex [CELL=<cellname>] [EXT_MODE=<1|2|3>] [THRESHOLD=<mOhm>] [MINRES=<mOhm>] [MINDELAY=<ps>])
@@ -420,7 +413,6 @@ magic-pex: ## Run Parasitic Extraction with Magic of the CELL cell (usage: make 
 	else \
 		echo "No symbol $(XSCHEM_SCH_DIR)/$(CELL)_pex.sym found, skipping pin reorder."; \
 	fi
-	sleep 4
 .PHONY: magic-pex
 # ================================================================================================
 
