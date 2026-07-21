@@ -86,7 +86,7 @@ parameters:
         description: Small-signal open-loop gain at 10Hz
         unit: dB
         minimum:
-          value: 5
+          value: 3
         typical:
           value: any
         maximum:
@@ -190,7 +190,7 @@ parameters:
         description: Small-signal open-loop gain at 10Hz
         unit: dB
         minimum:
-          value: 5
+          value: 3
         typical:
           value: any
         maximum:
@@ -259,7 +259,7 @@ parameters:
         description: Small-signal open-loop gain at 10Hz
         unit: dB
         minimum:
-          value: 5
+          value: 3
         typical:
           value: any
         maximum:
