@@ -4,24 +4,24 @@ A logo IP block for [Johannes Kepler University Linz](https://www.jku.at/), rend
 
 ## Directory Structure
 
-```
-sg13g2_ip__jku/
-├── Makefile                    # Build automation
-├── logo/
-│   └── jku_logo.png            # Source PNG image
-├── script/
-│   └── make_gds.py             # PNG-to-GDS converter
-├── final/
-│   ├── gds/
-│   │   └── sg13g2_ip__jku.gds  # Generated GDSII layout
-│   ├── lef/
-│   │   └── sg13g2_ip__jku.lef  # LEF macro for place-and-route
-│   ├── lib/
-│   │   └── sg13g2_ip__jku.lib  # Liberty timing stub
-│   └── vh/
-│       └── sg13g2_ip__jku.v    # Verilog blackbox stub
-└── verification/
-    └── drc/                    # DRC report
+```text
+📁 sg13g2_ip__jku/
+├─ Makefile                   # Build automation
+├─ 📁 logo/
+│  └─ jku_logo.png            # Source PNG image
+├─ 📁 script/
+│  └─ make_gds.py             # PNG-to-GDS converter
+├─ 📁 final/
+│  ├─ 📁 gds/
+│  │  └─ sg13g2_ip__jku.gds   # Generated GDSII layout
+│  ├─ 📁 lef/
+│  │  └─ sg13g2_ip__jku.lef   # LEF macro for place-and-route
+│  ├─ 📁 lib/
+│  │  └─ sg13g2_ip__jku.lib   # Liberty timing stub
+│  └─ 📁 vh/
+│     └─ sg13g2_ip__jku.v     # Verilog blackbox stub
+└─ 📁 verification/
+   └─ 📁 drc/                  # DRC reports
 ```
 
 

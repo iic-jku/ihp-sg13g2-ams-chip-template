@@ -4,24 +4,24 @@ A names IP block for [Johannes Kepler University Linz](https://www.jku.at/), ren
 
 ## Directory Structure
 
-```
-sg13g2_ip__jku_names/
-├── Makefile                            # Build automation
-├── logo/
-│   └── jku_names.png                   # Source PNG image
-├── script/
-│   └── make_gds.py                     # PNG-to-GDS converter
-├── final/
-│   ├── gds/
-│   │   └── sg13g2_ip__jku_names.gds    # Generated GDSII layout
-│   ├── lef/
-│   │   └── sg13g2_ip__jku_names.lef    # LEF macro for place-and-route
-│   ├── lib/
-│   │   └── sg13g2_ip__jku_names.lib    # Liberty timing stub
-│   └── vh/
-│       └── sg13g2_ip__jku_names.v      # Verilog blackbox stub
-└── verification/
-    └── drc/                            # DRC report
+```text
+📁 sg13g2_ip__jku_names/
+├─ Makefile                         # Build automation
+├─ 📁 logo/
+│  └─ jku_names.png                 # Source PNG image
+├─ 📁 script/
+│  └─ make_gds.py                   # PNG-to-GDS converter
+├─ 📁 final/
+│  ├─ 📁 gds/
+│  │  └─ sg13g2_ip__jku_names.gds   # Generated GDSII layout
+│  ├─ 📁 lef/
+│  │  └─ sg13g2_ip__jku_names.lef   # LEF macro for place-and-route
+│  ├─ 📁 lib/
+│  │  └─ sg13g2_ip__jku_names.lib   # Liberty timing stub
+│  └─ 📁 vh/
+│     └─ sg13g2_ip__jku_names.v     # Verilog blackbox stub
+└─ 📁 verification/
+   └─ 📁 drc/                        # DRC reports
 ```
 
 
