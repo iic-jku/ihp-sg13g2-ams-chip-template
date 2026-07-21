@@ -551,28 +551,45 @@ make magic-lvs CELL=chip_top
 
 ## Design Rule Check (DRC)
 
-Runs DRC on the GDS layout in `layout/`. Reports are saved to `verification/drc/`.
+Runs DRC on the GDS layout in `layout/`. Both flows use `sak-drc.sh` and write their reports into per-cell run folders: `verification/drc/<CELL>.magic.drc/` (Magic) and `verification/drc/<CELL>.klayout.drc/` (KLayout, `.lyrdb`). The run folders are wiped at the start of each run, so they always reflect the latest run only.
 
-**KLayout DRC (minimum)** runs a pre-check KLayout DRC on the final top-level layout with logo and fill structures:
+The `DRC_LEVEL` parameter selects the KLayout DRC level (`sak-drc.sh -l`). It is ignored by `magic-drc`, since Magic has no selectable rule decks and always runs the full rule set compiled into the PDK's Magic tech file:
+
+- `precheck` = core FEOL + BEOL manufacturing rules only (fast iteration)
+- `macro` = block-in-isolation sign-off: `precheck` plus off-grid, zero-area, and pin/label checks (default)
+- `regular` = full-chip sign-off: all checks, including density and antenna
+
+| Check | `precheck` | `macro` _(default)_ | `regular` |
+| --- | :---: | :---: | :---: |
+| FEOL + BEOL core rules | ✓ | ✓ | ✓ |
+| Off-grid / angle | – | ✓ | ✓ |
+| Zero-area / geometry | – | ✓ | ✓ |
+| Pin / label | – | ✓ | ✓ |
+| Recommended / extra rules | – | – | ✓ |
+| Density (chip-level fill) | – | – | ✓ |
+| Antenna | – | – | ✓ |
+
+**KLayout DRC (minimum)** runs a pre-check (`precheck`) KLayout DRC on the final top-level layout with logo and fill structures:
 
 ```sh
 make klayout-drc-minimum
 ```
 
-**KLayout DRC (regular)** runs a regular KLayout DRC on the final top-level layout with logo and fill structures:
+**KLayout DRC (regular)** runs a full (`regular`) KLayout DRC on the final top-level layout with logo and fill structures:
 
 ```sh
 make klayout-drc-regular
 ```
 
-**KLayout DRC** uses `run_drc.py` from the IHP Open-PDK with relaxed rules (FEOL, density checks, and extra rules disabled):
+**KLayout DRC** runs a KLayout DRC at the selected `DRC_LEVEL`:
 
 ```sh
 make klayout-drc
 make klayout-drc CELL=chip_top
+make klayout-drc CELL=chip_top DRC_LEVEL=regular
 ```
 
-**Magic DRC** uses `sak-drc.sh`:
+**Magic DRC** runs a Magic DRC with all subcells flattened (`sak-drc.sh -f "*"`):
 
 ```sh
 make magic-drc
@@ -735,7 +752,7 @@ To keep the runtime low while still covering the full toolchain, the regression 
 
 - The counter macro is hardened with `librelane-magicdrc` (only **Magic DRC** enabled, the slower KLayout DRC is skipped). Netgen LVS still runs as part of the flow.
 - The chip top-level runs `librelane-nodrc`. All DRC checks are skipped to save runtime on the large top-level assembly. The macros and IP blocks are DRC-checked individually beforehand, so this only leaves the top-level routing/fill unchecked.
-- KLayout DRC (`run_drc.py`) is skipped inside the LibreLane runs, but is still exercised in the bondpad and logo IP builds, and in the inverter `klayout-verify`.
+- KLayout DRC (`sak-drc.sh`) is skipped inside the LibreLane runs, but is still exercised in the bondpad and logo IP builds, and in the inverter `klayout-verify`.
 - Only **one** logo (`sg13g2_ip__jku`) is regenerated. It is the only step that exercises the PNG to GDS flow. The second logo (`sg13g2_ip__jku_names`) uses an identical toolchain and reuses its committed views.
 - Exactly **one** CACE parameter set is run (the AC VDD sweep `ac_params`, no Monte-Carlo). Swap `ac_params` for `ac_mc_params` / `ac_mm_params` in the target to also exercise the Monte-Carlo flow.
 
@@ -750,7 +767,7 @@ The following tools and flows are checked:
 | PNG to GDS logo generation, KLayout DRC, Magic DRC | `sg13g2_ip__jku all` (single logo) |
 | Xschem + ngspice (analog simulation) | inverter `sim-xschem` (`inverter_tb_dc_vout`) |
 | CACE (+ ngspice) | inverter CACE, single parameter set (`ac_params`) |
-| KLayout LVS (`run_lvs.py`) + KLayout DRC (`run_drc.py`) + KLayout PEX (`kpex`) | inverter `klayout-verify CELL=inverter_top` |
+| KLayout LVS (`run_lvs.py`) + KLayout DRC (`sak-drc.sh`) + KLayout PEX (`kpex`) | inverter `klayout-verify CELL=inverter_top` |
 | Magic extract + Netgen LVS + Magic DRC + Magic PEX (`sak-pex.sh`) | inverter `magic-verify CELL=inverter_top` |
 | Magic LEF export + LIB + Verilog stub + `lay2img` render | inverter `build-top` |
 | Verilator lint | counter `lint-verilog-all` |

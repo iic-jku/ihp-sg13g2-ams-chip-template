@@ -1,5 +1,7 @@
 drc_run_*
 lvs_run_*
+drc_*.tcl
+pex_*.tcl
 *.vcd
 *.raw
 *.log

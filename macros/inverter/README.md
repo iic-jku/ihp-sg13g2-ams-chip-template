@@ -83,10 +83,10 @@
 │  │  ├─ 📁 templates/
 │  │  └─ inverter.yaml
 │  ├─ 📁 drc/
-│  │  ├─ *.magic.drc.rpt
-│  │  ├─ *_full.lyrdb
-│  │  ├─ inverter_top.magic.drc.rpt
-│  │  └─ inverter_top_inverter_top_full.lyrdb
+│  │  ├─ 📁 *.klayout.drc/
+│  │  ├─ 📁 *.magic.drc/
+│  │  ├─ 📁 inverter_top.klayout.drc/
+│  │  └─ 📁 inverter_top.magic.drc/
 │  └─ 📁 lvs/
 │     ├─ *.lvsdb
 │     └─ inverter_top.lvsdb
@@ -109,7 +109,7 @@ For the `sim-xschem` target, `TB=<testbenchname>` is required.
 All targets that operate on a specific cell accept an optional `CELL=<cellname>` parameter. The default is the top-level cell (`inverter_top`).
 
 ```sh
-make <target> [CELL=<cellname>] [EXT_MODE=<1|2|3>] [THRESHOLD=<mOhm>] [MINRES=<mOhm>] [MINDELAY=<ps>] [EV_PRECISION=<digits>]
+make <target> [CELL=<cellname>] [EXT_MODE=<1|2|3>] [THRESHOLD=<mOhm>] [MINRES=<mOhm>] [MINDELAY=<ps>] [DRC_LEVEL=<precheck|macro|regular>] [EV_PRECISION=<digits>]
 ```
 
 
@@ -117,14 +117,14 @@ make <target> [CELL=<cellname>] [EXT_MODE=<1|2|3>] [THRESHOLD=<mOhm>] [MINRES=<m
 
 The Makefile defines a `_GDS_EXT` variable that auto-selects the layout file extension: it prefers `.gds` when available, and falls back to `.klay.gds` otherwise.
 
-- KLayout targets use `layout/<name>.$(_GDS_EXT)` and work with either `.gds` or `.klay.gds`:
+- Targets that use `layout/<name>.$(_GDS_EXT)` and work with either `.gds` or `.klay.gds`:
   - `klayout-lvs`
   - `klayout-drc`
   - `klayout-pex`
+  - `magic-drc` (`sak-drc.sh` derives the GDS top cell name from the `<name>.klay.gds` naming convention)
 
-- Magic targets always use `layout/<name>.gds` (Magic requires standard `.gds`):
+- Magic targets that always use `layout/<name>.gds` (`sak-lvs.sh` and `sak-pex.sh` require standard `.gds`):
   - `magic-lvs`
-  - `magic-drc`
   - `magic-pex`
 
 - Build targets always use `layout/<name>.gds`:
@@ -338,21 +338,37 @@ make magic-lvs CELL=inverter_top
 
 ## Design Rule Check (DRC)
 
-Runs DRC on the layout in `layout/`.
+Runs DRC on the layout in `layout/`. Both flows use `sak-drc.sh`.
 
-- `klayout-drc` uses `layout/<CELL>.$(_GDS_EXT)` (`.gds` if present, otherwise `.klay.gds`)
-- `magic-drc` uses `layout/<CELL>.gds` (Magic requires `.gds`)
+- `klayout-drc` and `magic-drc` use `layout/<CELL>.$(_GDS_EXT)` (`.gds` if present, otherwise `.klay.gds`)
 
-Reports are saved to `verification/drc/`.
+Reports are written into per-cell run folders: `verification/drc/<CELL>.magic.drc/` (Magic) and `verification/drc/<CELL>.klayout.drc/` (KLayout, `.lyrdb`). The run folders are wiped at the start of each run, so they always reflect the latest run only.
 
-**KLayout DRC** uses `run_drc.py` from the IHP Open-PDK with relaxed rules (FEOL, density checks, and extra rules disabled):
+The `DRC_LEVEL` parameter selects the KLayout DRC level (`sak-drc.sh -l`). It is ignored by `magic-drc`, since Magic has no selectable rule decks and always runs the full rule set compiled into the PDK's Magic tech file:
+
+- `precheck` = core FEOL + BEOL manufacturing rules only (fast iteration)
+- `macro` = block-in-isolation sign-off: `precheck` plus off-grid, zero-area, and pin/label checks (default)
+- `regular` = full-chip sign-off: all checks, including density and antenna
+
+| Check | `precheck` | `macro` _(default)_ | `regular` |
+| --- | :---: | :---: | :---: |
+| FEOL + BEOL core rules | ✓ | ✓ | ✓ |
+| Off-grid / angle | – | ✓ | ✓ |
+| Zero-area / geometry | – | ✓ | ✓ |
+| Pin / label | – | ✓ | ✓ |
+| Recommended / extra rules | – | – | ✓ |
+| Density (chip-level fill) | – | – | ✓ |
+| Antenna | – | – | ✓ |
+
+**KLayout DRC** runs a KLayout DRC at the selected `DRC_LEVEL`:
 
 ```sh
 make klayout-drc
 make klayout-drc CELL=inverter_top
+make klayout-drc CELL=inverter_top DRC_LEVEL=regular
 ```
 
-**Magic DRC** uses `sak-drc.sh`:
+**Magic DRC** runs a Magic DRC with all subcells flattened (`sak-drc.sh -f "*"`):
 
 ```sh
 make magic-drc

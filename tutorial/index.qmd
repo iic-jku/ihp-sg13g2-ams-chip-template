@@ -264,7 +264,7 @@ The [inverter Makefile](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/
 | `make sim-xschem TB=<tb>` / `make sim-view-xschem` | Run a specific Xschem testbench and plot its results with Python.          |
 | `make sim-cace`                                   | Run [CACE](https://github.com/fossi-foundation/cace) Monte-Carlo / mismatch characterisations. |
 | `make klayout-lvs` / `magic-lvs`                  | Run LVS using KLayout or Magic + Netgen.                                    |
-| `make klayout-drc` / `magic-drc`                  | Run DRC using KLayout or Magic.                                             |
+| `make klayout-drc` / `magic-drc` (`DRC_LEVEL=<precheck|macro|regular>`) | Run DRC using KLayout or Magic.                       |
 | `make klayout-pex` / `magic-pex` (`EXT_MODE=<1|2|3>`) | Run parasitic extraction in C, CC, or full-RC mode.                     |
 | `make klayout-verify` / `magic-verify`            | Run LVS + DRC + PEX for a given cell.                                       |
 | `make lef` / `make lib` / `make verilog`          | Generate the LEF, the Liberty stub, and the Verilog stub for top-level integration.   |
@@ -670,7 +670,7 @@ The layout is created and edited in KLayout. The container provides the `ke` ali
 ke layout/inverter_top.klay.gds
 ```
 
-After modifying the layout, export a clean `.gds` file (for example `inverter_top.gds`) by pressing `File > Export Layout For Tapeout`. The Magic-based verification flows only work on `.gds` files, while the KLayout-based verification flows accept either `.gds` or `.klay.gds`.
+After modifying the layout, export a clean `.gds` file (for example `inverter_top.gds`) by pressing `File > Export Layout For Tapeout`. The Magic-based LVS and PEX flows only work on `.gds` files, while the KLayout-based verification flows and the Magic DRC flow accept either `.gds` or `.klay.gds`.
 
 ![`inverter_top` layout in KLayout.](fig/inverter_top/inverter_top_black.png){#fig-inverter-top-layout width=75%}
 
@@ -684,14 +684,24 @@ The inverter macro can be verified with two verification flows, either with KLay
 
 ### Design Rule Check
 
-The non-interactive DRC can be run with the following Makefile targets. The `CELL` variable can be set to run DRC on a specific cell, or it defaults to `inverter_top` if not set.
+The non-interactive DRC can be run with the following Makefile targets (both use `sak-drc.sh`). The `CELL` variable can be set to run DRC on a specific cell, or it defaults to `inverter_top` if not set. The `DRC_LEVEL` variable selects the KLayout DRC level — `precheck`, `macro` (default), or `regular` — and is ignored by `magic-drc`, since Magic has no selectable rule decks and always runs the full rule set compiled into the PDK's Magic tech file.
+
+| Check | `precheck` | `macro` _(default)_ | `regular` |
+| --- | :---: | :---: | :---: |
+| FEOL + BEOL core rules | ✓ | ✓ | ✓ |
+| Off-grid / angle | – | ✓ | ✓ |
+| Zero-area / geometry | – | ✓ | ✓ |
+| Pin / label | – | ✓ | ✓ |
+| Recommended / extra rules | – | – | ✓ |
+| Density (chip-level fill) | – | – | ✓ |
+| Antenna | – | – | ✓ |
 
 ```sh
-make klayout-drc [CELL=<cellname>]  # default CELL=inverter_top
+make klayout-drc [CELL=<cellname>] [DRC_LEVEL=<precheck|macro|regular>]   # default CELL=inverter_top, default DRC_LEVEL=macro
 make magic-drc [CELL=<cellname>]    # default CELL=inverter_top
 ```
 
-Reports are saved to [`verification/drc/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/inverter/verification/drc/).
+Reports are written into per-cell run folders (`<CELL>.magic.drc/` for Magic, `<CELL>.klayout.drc/` for KLayout) inside [`verification/drc/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/inverter/verification/drc/). The run folders are wiped at the start of each run, so they always reflect the latest run only.
 
 ::: {.callout-tip}
 In KLayout, a non-interactive DRC run can be launched from the GUI by pressing **`F9`**. The DRC options can be modified by pressing **`F10`**.
@@ -832,7 +842,7 @@ The available Makefile targets for the bondpad are summarised below.
 | ------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `bondpad`     | Generate GDS and LEF via [`bondpad.py`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/ip/sg13g2_ip__bondpad_70x70/script/bondpad.py) (`make bondpad [DIAMETER=<um>] [SHAPE=<square\|octagon\|circle>] [BOTTOM_METAL=<1-6>]`). |
 | `verilog`     | Generate a Verilog blackbox stub.                                                                                                                                                                       |
-| `klayout-drc` | Run KLayout DRC (`make klayout-drc [CELL=<cellname>]`).                                                                                                                                                 |
+| `klayout-drc` | Run KLayout DRC (`make klayout-drc [CELL=<cellname>] [DRC_LEVEL=<precheck|macro|regular>]`).                                                                                                                                                 |
 | `magic-drc`   | Run Magic DRC (`make magic-drc [CELL=<cellname>]`).                                                                                                                                                     |
 | `clean`       | Remove the `final/` and `verification/drc/` output directories.                                                                                                                                         |
 
@@ -890,7 +900,7 @@ The available Makefile targets for the logos are summarised below.
 | `lef`         | Emit a minimal LEF macro (`CLASS BLOCK`, full-area `OBS` on `LAYER_NAME`).                         |
 | `lib`         | Emit a Liberty timing stub (empty cell) so the LibreLane flow can pick the cell up.                |
 | `verilog`     | Emit a Verilog blackbox stub (`module sg13g2_ip__jku;`) with no ports.                             |
-| `klayout-drc` | Run KLayout DRC (same relaxed rule-set as the bondpad).                                            |
+| `klayout-drc` | Run KLayout DRC (same `DRC_LEVEL` selection as the bondpad).                                            |
 | `magic-drc`   | Run Magic DRC.                                                                                     |
 | `clean`       | Remove `final/` and `verification/drc/`.                                                           |
 

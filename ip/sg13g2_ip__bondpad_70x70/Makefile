@@ -12,6 +12,10 @@ TOP = sg13g2_ip__bondpad_70x70
 # Override with: make <target> CELL=<cellname>
 CELL ?= $(TOP)
 
+# KLayout DRC level: precheck, macro, or regular (sak-drc.sh -l, only used by klayout-drc; default: macro)
+# Override with: make <target> DRC_LEVEL=<precheck|macro|regular>
+DRC_LEVEL ?= macro
+
 # Folder structure
 GDS_DIR   	:= final/gds
 LEF_DIR   	:= final/lef
@@ -57,24 +61,15 @@ bondpad: ## Generate bondpad GDS and LEF (usage: make bondpad [DIAMETER=<um>] [S
 
 
 # DRC Targets
-klayout-drc: ## Run KLayout DRC of the CELL cell (usage: make klayout-drc [CELL=<cellname>])
+klayout-drc: ## Run KLayout DRC of the CELL cell (usage: make klayout-drc [CELL=<cellname>] [DRC_LEVEL=<precheck|macro|regular>])
 	mkdir -p $(DRC_RPT_DIR)
-	python3 $(PDK_ROOT)/$(PDK)/libs.tech/klayout/tech/drc/run_drc.py \
-		--path=$(GDS_DIR)/$(CELL).gds \
-		--topcell=$(CELL) \
-		--run_dir=$(DRC_RPT_DIR) \
-		--no_feol \
-		--no_density \
-		--disable_extra_rules \
-		--mp=32 \
-		--density_thr=32
+	sak-drc.sh -d -k -l $(DRC_LEVEL) -w $(DRC_RPT_DIR) $(GDS_DIR)/$(CELL).gds
 	sleep 4
 .PHONY: klayout-drc
 
 magic-drc: ## Run Magic DRC of the CELL cell (usage: make magic-drc [CELL=<cellname>])
 	mkdir -p $(DRC_RPT_DIR)
-	sak-drc.sh -d -m -f "*" -w $(DRC_RPT_DIR) $(GDS_DIR)/$(CELL).gds $(CELL)
-	rm -f $(DRC_RPT_DIR)/drc_$(CELL).tcl
+	sak-drc.sh -d -m -f "*" -w $(DRC_RPT_DIR) $(GDS_DIR)/$(CELL).gds
 	sleep 4
 .PHONY: magic-drc
 # ================================================================================================

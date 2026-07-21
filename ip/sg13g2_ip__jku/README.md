@@ -41,8 +41,8 @@ make all
 | `lef`         | Generate LEF macro (CLASS BLOCK, OBS on `$(LAYER_NAME)`) |
 | `lib`         | Generate Liberty timing stub (empty cell)                |
 | `verilog`     | Generate Verilog blackbox stub (no ports)                |
-| `klayout-drc` | Run KLayout DRC using `run_drc.py`                       |
-| `magic-drc`   | Run Magic DRC using `sak-drc.sh`                         |
+| `klayout-drc` | Run KLayout DRC using `sak-drc.sh` (usage: `make klayout-drc [CELL=<cellname>] [DRC_LEVEL=<precheck|macro|regular>]`) |
+| `magic-drc`   | Run Magic DRC using `sak-drc.sh` (usage: `make magic-drc [CELL=<cellname>]`)                                         |
 | `clean`       | Remove all generated output directories                  |
 
 ### Parameters
@@ -79,13 +79,14 @@ The `script/make_gds.py` script converts a PNG image into a GDSII layout:
 
 ## Design Rule Check (DRC)
 
-Runs DRC on the GDS layout in `final/gds/`. Reports are saved to `verification/drc/`.
+Runs DRC on the GDS layout in `final/gds/`. Both flows use `sak-drc.sh` and write their reports into per-cell run folders: `verification/drc/<CELL>.magic.drc/` (Magic) and `verification/drc/<CELL>.klayout.drc/` (KLayout, `.lyrdb`).
 
-**KLayout DRC** uses `run_drc.py` from the IHP Open-PDK with relaxed rules (FEOL, density checks, and extra rules disabled):
+**KLayout DRC** uses `sak-drc.sh` at the selected `DRC_LEVEL` (`precheck`, `macro` [default], or `regular`):
 
 ```sh
 make klayout-drc
 make klayout-drc CELL=sg13g2_ip__jku
+make klayout-drc DRC_LEVEL=regular
 ```
 
 **Magic DRC** uses `sak-drc.sh`:
