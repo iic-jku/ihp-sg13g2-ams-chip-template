@@ -6,9 +6,9 @@ A 70 µm × 70 µm square bondpad for the IHP SG13G2 130 nm CMOS process, genera
 
 ```text
 📁 sg13g2_ip__bondpad_70x70/
-├─ Makefile                              # Build automation
+├─ Makefile                             # Build automation
 ├─ 📁 script/
-│  └─ bondpad.py                         # KLayout PCell-based bondpad generator
+│  └─ bondpad.py                        # KLayout PCell-based bondpad generator
 ├─ 📁 final/
 │  ├─ 📁 gds/
 │  │  └─ sg13g2_ip__bondpad_70x70.gds   # Generated GDSII layout
@@ -17,7 +17,7 @@ A 70 µm × 70 µm square bondpad for the IHP SG13G2 130 nm CMOS process, genera
 │  └─ 📁 vh/
 │     └─ sg13g2_ip__bondpad_70x70.v     # Verilog blackbox stub
 └─ 📁 verification/
-   └─ 📁 drc/                            # DRC reports
+   └─ 📁 drc/                           # DRC reports
 ```
 
 
