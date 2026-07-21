@@ -625,7 +625,7 @@ make klayout-pex CELL=chip_top
 make klayout-pex CELL=chip_top EXT_MODE=3
 ```
 
-**Magic PEX** uses `sak-pex.sh`:
+**Magic PEX** uses `sak-pex.sh`, which extracts the parasitics with Magic (C-decoupled, C-coupled, or full-RC):
 
 ```sh
 make magic-pex
