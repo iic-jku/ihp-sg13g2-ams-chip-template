@@ -28,8 +28,6 @@ Circuit 1: sg13_lv_pmos                    |Circuit 2: sg13_lv_pmos
 ---------------------------------------------------------------------------------------
 Cell pin lists are equivalent.
 Device classes sg13_lv_pmos and sg13_lv_pmos are equivalent.
-Flattening unmatched subcell nmos in circuit inverter (0)(1 instance)
-Flattening unmatched subcell pmos in circuit inverter (0)(1 instance)
 
 Class inverter (0):  Merged 40 parallel devices.
 Subcircuit summary:
@@ -40,18 +38,29 @@ sg13_lv_pmos (22->2)                       |sg13_lv_pmos (2)
 Number of devices: 4                       |Number of devices: 4                       
 Number of nets: 4                          |Number of nets: 4                          
 ---------------------------------------------------------------------------------------
-Netlists match uniquely.
+Netlists match uniquely with property errors.
+sg13_lv_pmos:23 vs. sg13_lv_pmos:Mdummy2:
+Property mm_ok in circuit2 has no matching property in circuit1
+sg13_lv_pmos:2 vs. sg13_lv_pmos:M2:
+Property mm_ok in circuit2 has no matching property in circuit1
+sg13_lv_nmos:1 vs. sg13_lv_nmos:Mdummy1:
+Property mm_ok in circuit2 has no matching property in circuit1
+sg13_lv_nmos:0 vs. sg13_lv_nmos:M1:
+Property mm_ok in circuit2 has no matching property in circuit1
 
 Subcircuit pins:
 Circuit 1: inverter                        |Circuit 2: inverter                        
 -------------------------------------------|-------------------------------------------
-VSS                                        |VSS                                        
-VDD                                        |VDD                                        
 vout                                       |vout                                       
 vin                                        |vin                                        
+VSS                                        |VSS                                        
+VDD                                        |VDD                                        
 ---------------------------------------------------------------------------------------
 Cell pin lists are equivalent.
 Device classes inverter and inverter are equivalent.
 
 Final result: Circuits match uniquely.
-.
+Property errors were found.
+
+The following cells had property errors:
+ inverter

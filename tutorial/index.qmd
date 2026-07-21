@@ -670,7 +670,7 @@ The layout is created and edited in KLayout. The container provides the `ke` ali
 ke layout/inverter_top.klay.gds
 ```
 
-After modifying the layout, export a clean `.gds` file (for example `inverter_top.gds`) by pressing `File > Export Layout For Tapeout`. The Magic-based LVS flow only works on `.gds` files, while the KLayout-based verification flows as well as the Magic DRC and PEX flows accept either `.gds` or `.klay.gds`.
+After modifying the layout, export a clean `.gds` file (for example `inverter_top.gds`) by pressing `File > Export Layout For Tapeout`. All verification flows (LVS, DRC, and PEX with both KLayout and Magic) accept either `.gds` or `.klay.gds`, while the build targets (LEF export, GDS copy, and rendering) use the exported `.gds`.
 
 ![`inverter_top` layout in KLayout.](fig/inverter_top/inverter_top_black.png){#fig-inverter-top-layout width=75%}
 
@@ -719,7 +719,7 @@ make magic-lvs [CELL=<cellname>]    # default CELL=inverter_top, uses SPICE netl
 ```
 
 The schematic netlist is exported automatically by the matching `*-lvs-netlist` sub-target and moved to [`netlist/schematic/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/inverter/netlist/schematic/). The extracted layout netlist is moved to
-[`netlist/layout/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/inverter/netlist/layout/) and the reports are saved to [`verification/lvs/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/inverter/verification/lvs/).
+[`netlist/layout/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/inverter/netlist/layout/) and the reports are written into per-cell run folders (`<CELL>.magic.lvs/` for Magic + Netgen, `<CELL>.klayout.lvs/` for KLayout) inside [`verification/lvs/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/inverter/verification/lvs/). The run folders are wiped at the start of each run, so they always reflect the latest run only.
 
 ::: {.callout-tip}
 In KLayout, a non-interactive LVS run can be launched from the GUI by pressing **`F11`**. The LVS options can be modified by pressing **`F12`**, where the schematic netlist `inverter_top_klayout.cdl` has to be selected manually. Set `deep` as the run mode.

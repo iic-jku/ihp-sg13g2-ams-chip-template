@@ -88,8 +88,10 @@
 │  │  ├─ 📁 inverter_top.klayout.drc/
 │  │  └─ 📁 inverter_top.magic.drc/
 │  └─ 📁 lvs/
-│     ├─ *.lvsdb
-│     └─ inverter_top.lvsdb
+│     ├─ 📁 *.klayout.lvs/
+│     ├─ 📁 *.magic.lvs/
+│     ├─ 📁 inverter_top.klayout.lvs/
+│     └─ 📁 inverter_top.magic.lvs/
 ├─ Makefile
 └─ README.md
 ```
@@ -121,11 +123,9 @@ The Makefile defines a `_GDS_EXT` variable that auto-selects the layout file ext
   - `klayout-lvs`
   - `klayout-drc`
   - `klayout-pex`
+  - `magic-lvs`
   - `magic-drc`
   - `magic-pex`
-
-- Targets that always use `layout/<name>.gds` (`sak-lvs.sh` requires standard `.gds`):
-  - `magic-lvs`
 
 - Build targets always use `layout/<name>.gds`:
   - `lef`
@@ -293,7 +293,7 @@ Exports the schematic netlist for LVS from Xschem and places it in `netlist/sche
 
 The `EV_PRECISION` parameter sets the number of significant digits used by Xschem's `ev` function when calculating device properties (default: 5). Increase this to avoid LVS mismatches caused by floating-point rounding differences between Xschem and KLayout (see [xschem#465](https://github.com/StefanSchippers/xschem/issues/465)).
 
-The `ntap` and `ptap` substrate contacts are ignored during LVS in both flows. KLayout LVS has to be run with the `--disable_tap_extraction` option so it does not extract `ntap` and `ptap` devices from the layout (matching Magic + Netgen LVS).
+The `ntap` and `ptap` substrate contacts are ignored during LVS in both flows. `sak-lvs.sh` runs KLayout LVS with the `--disable_tap_extraction` option so it does not extract `ntap` and `ptap` devices from the layout (matching Magic + Netgen LVS).
 
 KLayout uses CDL netlists, while Magic uses SPICE netlists. Accordingly, `klayout-lvs-netlist` uses the Xschem commands `set spiceprefix 1`, `set lvs_netlist 1`, `set top_is_subckt 1`, and `set lvs_ignore 1`, while `magic-lvs-netlist` uses `set spiceprefix 1`, `set lvs_netlist 0`, `set top_is_subckt 1`, and `set lvs_ignore 1`. Hence, switching between CDL and SPICE netlists can be done with `lvs_netlist`.
 
@@ -316,19 +316,18 @@ make magic-lvs-netlist EV_PRECISION=5
 
 Exports the schematic netlist from Xschem, then runs LVS. Compares the layout in `layout/` against the schematic netlist in `netlist/schematic/`.
 
-- `klayout-lvs` uses `layout/<CELL>.$(_GDS_EXT)` (`.gds` if present, otherwise `.klay.gds`)
-- `magic-lvs` uses `layout/<CELL>.gds` (Magic requires `.gds`)
+- `klayout-lvs` and `magic-lvs` use `layout/<CELL>.$(_GDS_EXT)` (`.gds` if present, otherwise `.klay.gds`)
 
-Reports are saved to `verification/lvs/`. The extracted layout netlist is moved to `netlist/layout/`.
+Both flows use `sak-lvs.sh` and write their reports into per-cell run folders: `verification/lvs/<CELL>.magic.lvs/` (Magic + Netgen) and `verification/lvs/<CELL>.klayout.lvs/` (KLayout, `.lvsdb`). The run folders are wiped at the start of each run, so they always reflect the latest run only. The extracted layout netlist is moved to `netlist/layout/`.
 
-**KLayout LVS** uses `run_lvs.py` from the IHP Open-PDK:
+**KLayout LVS** uses `sak-lvs.sh` (KLayout mode `-k`), which wraps `run_lvs.py` from the IHP Open-PDK:
 
 ```sh
 make klayout-lvs
 make klayout-lvs CELL=inverter_top
 ```
 
-**Magic + Netgen LVS** uses `sak-lvs.sh`:
+**Magic + Netgen LVS** uses `sak-lvs.sh` (Magic + Netgen mode `-m`, the default), which extracts the layout netlist with Magic and compares it against the schematic netlist with Netgen, using the Netgen setup from the IHP Open-PDK:
 
 ```sh
 make magic-lvs

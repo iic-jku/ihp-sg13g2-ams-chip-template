@@ -28,41 +28,41 @@ Circuit 1: sg13_lv_pmos                    |Circuit 2: sg13_lv_pmos
 ---------------------------------------------------------------------------------------
 Cell pin lists are equivalent.
 Device classes sg13_lv_pmos and sg13_lv_pmos are equivalent.
-Flattening unmatched subcell nmos in circuit inverter (0)(1 instance)
-Flattening unmatched subcell pmos in circuit inverter (0)(1 instance)
+Flattening unmatched subcell inverter in circuit inverter_top (1)(4 instances)
 
-Class inverter (0):  Merged 40 parallel devices.
-Subcircuit summary:
-Circuit 1: inverter                        |Circuit 2: inverter                        
--------------------------------------------|-------------------------------------------
-sg13_lv_nmos (22->2)                       |sg13_lv_nmos (2)                           
-sg13_lv_pmos (22->2)                       |sg13_lv_pmos (2)                           
-Number of devices: 4                       |Number of devices: 4                       
-Number of nets: 4                          |Number of nets: 4                          
----------------------------------------------------------------------------------------
-Netlists match uniquely.
-
-Subcircuit pins:
-Circuit 1: inverter                        |Circuit 2: inverter                        
--------------------------------------------|-------------------------------------------
-VSS                                        |VSS                                        
-VDD                                        |VDD                                        
-vout                                       |vout                                       
-vin                                        |vin                                        
----------------------------------------------------------------------------------------
-Cell pin lists are equivalent.
-Device classes inverter and inverter are equivalent.
-
+Class inverter_top (0):  Merged 166 parallel devices.
+Class inverter_top (1):  Merged 6 parallel devices.
 Subcircuit summary:
 Circuit 1: inverter_top                    |Circuit 2: inverter_top                    
 -------------------------------------------|-------------------------------------------
-inverter (4)                               |inverter (4)                               
-Number of devices: 4                       |Number of devices: 4                       
+sg13_lv_nmos (88->5)                       |sg13_lv_nmos (8->5)                        
+sg13_lv_pmos (88->5)                       |sg13_lv_pmos (8->5)                        
+Number of devices: 10                      |Number of devices: 10                      
 Number of nets: 10                         |Number of nets: 10                         
 ---------------------------------------------------------------------------------------
 Resolving symmetries by property value.
 Resolving symmetries by pin name.
-Netlists match uniquely.
+Netlists match uniquely with property errors.
+sg13_lv_pmos:1 vs. inverter:1/sg13_lv_pmos:Mdummy2:
+Property mm_ok in circuit2 has no matching property in circuit1
+sg13_lv_pmos:34 vs. inverter:1/sg13_lv_pmos:M2:
+Property mm_ok in circuit2 has no matching property in circuit1
+sg13_lv_pmos:11 vs. inverter:2/sg13_lv_pmos:M2:
+Property mm_ok in circuit2 has no matching property in circuit1
+sg13_lv_pmos:6 vs. inverter:3/sg13_lv_pmos:M2:
+Property mm_ok in circuit2 has no matching property in circuit1
+sg13_lv_pmos:4 vs. inverter:4/sg13_lv_pmos:M2:
+Property mm_ok in circuit2 has no matching property in circuit1
+sg13_lv_nmos:2 vs. inverter:1/sg13_lv_nmos:Mdummy1:
+Property mm_ok in circuit2 has no matching property in circuit1
+sg13_lv_nmos:16 vs. inverter:1/sg13_lv_nmos:M1:
+Property mm_ok in circuit2 has no matching property in circuit1
+sg13_lv_nmos:5 vs. inverter:2/sg13_lv_nmos:M1:
+Property mm_ok in circuit2 has no matching property in circuit1
+sg13_lv_nmos:0 vs. inverter:3/sg13_lv_nmos:M1:
+Property mm_ok in circuit2 has no matching property in circuit1
+sg13_lv_nmos:7 vs. inverter:4/sg13_lv_nmos:M1:
+Property mm_ok in circuit2 has no matching property in circuit1
 
 Subcircuit pins:
 Circuit 1: inverter_top                    |Circuit 2: inverter_top                    
@@ -71,15 +71,18 @@ VDD                                        |VDD
 VSS                                        |VSS                                        
 vin1                                       |vin1                                       
 vin2                                       |vin2                                       
-vin3                                       |vin3                                       
 vin4                                       |vin4                                       
+vin3                                       |vin3                                       
 vout1                                      |vout1                                      
 vout2                                      |vout2                                      
-vout3                                      |vout3                                      
 vout4                                      |vout4                                      
+vout3                                      |vout3                                      
 ---------------------------------------------------------------------------------------
 Cell pin lists are equivalent.
 Device classes inverter_top and inverter_top are equivalent.
 
 Final result: Circuits match uniquely.
-.
+Property errors were found.
+
+The following cells had property errors:
+ inverter_top

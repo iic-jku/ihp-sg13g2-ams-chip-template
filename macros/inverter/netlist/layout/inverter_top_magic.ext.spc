@@ -1,78 +1,181 @@
 * NGSPICE file created from inverter_top.ext - technology: ihp-sg13g2
 
-.subckt nmos a_3656_n36# a_268_0# a_896_n36# a_4484_n36# a_3104_n36# a_68_n36# a_3932_n36#
-+ a_344_n36# a_5512_0# a_1648_0# a_1172_n36# a_n202_n238# a_2476_0# a_1372_0# a_4760_n36#
-+ a_620_n36# a_820_0# a_5588_n36# a_4208_n36# a_1448_n36# a_5236_0# a_4408_0# a_3304_0#
-+ a_5036_n36# a_6064_0# a_4132_0# a_2200_0# a_2276_n36# a_5864_n36# a_1724_n36# a_4960_0#
-+ a_1096_0# a_5312_n36# a_2552_n36# a_544_0# a_0_0# a_3380_n36# a_2000_n36# a_3028_0#
-+ a_2828_n36# a_5788_0# a_4684_0# a_3856_0# a_2752_0# a_1924_0# a_3580_0#
-X0 a_820_0# a_620_n36# a_544_0# a_n202_n238# sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
-X1 a_3856_0# a_3656_n36# a_3580_0# a_n202_n238# sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
-X2 a_3028_0# a_2828_n36# a_2752_0# a_n202_n238# sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
-X3 a_544_0# a_344_n36# a_268_0# a_n202_n238# sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
-X4 a_2200_0# a_2000_n36# a_1924_0# a_n202_n238# sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
-X5 a_3580_0# a_3380_n36# a_3304_0# a_n202_n238# sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
-X6 a_1096_0# a_896_n36# a_820_0# a_n202_n238# sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
-X7 a_2752_0# a_2552_n36# a_2476_0# a_n202_n238# sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
-X8 a_5512_0# a_5312_n36# a_5236_0# a_n202_n238# sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
-X9 a_1924_0# a_1724_n36# a_1648_0# a_n202_n238# sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
-X10 a_6064_0# a_5864_n36# a_5788_0# a_n202_n238# sg13_lv_nmos ad=0.34p pd=2.68u as=0.19p ps=1.38u w=1u l=1u
-X11 a_2476_0# a_2276_n36# a_2200_0# a_n202_n238# sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
-X12 a_5236_0# a_5036_n36# a_4960_0# a_n202_n238# sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
-X13 a_1648_0# a_1448_n36# a_1372_0# a_n202_n238# sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
-X14 a_4408_0# a_4208_n36# a_4132_0# a_n202_n238# sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
-X15 a_5788_0# a_5588_n36# a_5512_0# a_n202_n238# sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
-X16 a_4960_0# a_4760_n36# a_4684_0# a_n202_n238# sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
-X17 a_268_0# a_68_n36# a_0_0# a_n202_n238# sg13_lv_nmos ad=0.19p pd=1.38u as=0.34p ps=2.68u w=1u l=1u
-X18 a_1372_0# a_1172_n36# a_1096_0# a_n202_n238# sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
-X19 a_4132_0# a_3932_n36# a_3856_0# a_n202_n238# sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
-X20 a_3304_0# a_3104_n36# a_3028_0# a_n202_n238# sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
-X21 a_4684_0# a_4484_n36# a_4408_0# a_n202_n238# sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
-.ends
-
-.subckt pmos a_3656_n36# a_268_0# a_896_n36# a_4484_n36# a_3104_n36# a_68_n36# a_3932_n36#
-+ a_344_n36# a_5512_0# a_1648_0# a_1172_n36# dw_n272_n272# a_2476_0# a_1372_0# a_4760_n36#
-+ a_620_n36# a_820_0# a_5588_n36# a_4208_n36# a_1448_n36# a_5236_0# a_4408_0# a_3304_0#
-+ a_5036_n36# a_6064_0# a_4132_0# a_2200_0# a_2276_n36# a_5864_n36# a_1724_n36# a_4960_0#
-+ a_1096_0# a_5312_n36# a_2552_n36# a_544_0# a_0_0# a_3380_n36# a_2000_n36# a_3028_0#
-+ a_2828_n36# a_5788_0# a_4684_0# a_3856_0# a_2752_0# a_1924_0# a_3580_0#
-X0 a_820_0# a_620_n36# a_544_0# dw_n272_n272# sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
-X1 a_3856_0# a_3656_n36# a_3580_0# dw_n272_n272# sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
-X2 a_3028_0# a_2828_n36# a_2752_0# dw_n272_n272# sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
-X3 a_544_0# a_344_n36# a_268_0# dw_n272_n272# sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
-X4 a_3580_0# a_3380_n36# a_3304_0# dw_n272_n272# sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
-X5 a_2200_0# a_2000_n36# a_1924_0# dw_n272_n272# sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
-X6 a_1096_0# a_896_n36# a_820_0# dw_n272_n272# sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
-X7 a_2752_0# a_2552_n36# a_2476_0# dw_n272_n272# sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
-X8 a_5512_0# a_5312_n36# a_5236_0# dw_n272_n272# sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
-X9 a_1924_0# a_1724_n36# a_1648_0# dw_n272_n272# sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
-X10 a_6064_0# a_5864_n36# a_5788_0# dw_n272_n272# sg13_lv_pmos ad=2.04p pd=12.68u as=1.14p ps=6.38u w=6u l=1u
-X11 a_2476_0# a_2276_n36# a_2200_0# dw_n272_n272# sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
-X12 a_5236_0# a_5036_n36# a_4960_0# dw_n272_n272# sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
-X13 a_1648_0# a_1448_n36# a_1372_0# dw_n272_n272# sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
-X14 a_4408_0# a_4208_n36# a_4132_0# dw_n272_n272# sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
-X15 a_5788_0# a_5588_n36# a_5512_0# dw_n272_n272# sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
-X16 a_4960_0# a_4760_n36# a_4684_0# dw_n272_n272# sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
-X17 a_268_0# a_68_n36# a_0_0# dw_n272_n272# sg13_lv_pmos ad=1.14p pd=6.38u as=2.04p ps=12.68u w=6u l=1u
-X18 a_1372_0# a_1172_n36# a_1096_0# dw_n272_n272# sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
-X19 a_4132_0# a_3932_n36# a_3856_0# dw_n272_n272# sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
-X20 a_4684_0# a_4484_n36# a_4408_0# dw_n272_n272# sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
-X21 a_3304_0# a_3104_n36# a_3028_0# dw_n272_n272# sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
-.ends
-
-.subckt inverter vin VSS VDD vout
-Xnmos_0 vin VSS vin vin vin VSS vin vin vout vout vin VSS VSS VSS vin vin VSS vin
-+ vin vin VSS vout vout vin VSS VSS vout vin VSS vin vout vout vin vin vout VSS vin
-+ vin VSS vin VSS VSS vout vout VSS VSS nmos
-Xpmos_0 vin VDD vin vin vin VDD vin vin vout vout vin VDD VDD VDD vin vin VDD vin
-+ vin vin VDD vout vout vin VDD VDD vout vin VDD vin vout vout vin vin vout VDD vin
-+ vin VDD vin VDD VDD vout vout VDD VDD pmos
-.ends
-
 .subckt inverter_top vin1 vin2 vin3 vin4 vout1 vout2 vout3 vout4 VSS VDD
-Xinverter_0 vin4 VSS VDD vout4 inverter
-Xinverter_1 vin3 VSS VDD vout3 inverter
-Xinverter_2 vin2 VSS VDD vout2 inverter
-Xinverter_3 vin1 VSS VDD vout1 inverter
+X0 vout3 vin3 VSS VSS sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
+X1 VDD VDD VDD VDD sg13_lv_pmos ad=1.14p pd=6.38u as=0.56797n ps=1.006m w=6u l=1u
+X2 VSS VSS VSS VSS sg13_lv_nmos ad=0.34p pd=2.68u as=0.36427n ps=0.65008m w=1u l=1u
+X3 VDD VDD VDD VDD sg13_lv_pmos ad=1.14p pd=6.38u as=0 ps=0 w=6u l=1u
+X4 VDD vin4 vout4 VDD sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
+X5 vout2 vin2 VSS VSS sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
+X6 vout3 vin3 VDD VDD sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
+X7 vout4 vin4 VSS VSS sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
+X8 vout3 vin3 VSS VSS sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
+X9 vout2 vin2 VSS VSS sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
+X10 vout4 vin4 VDD VDD sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
+X11 VDD vin2 vout2 VDD sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
+X12 VSS vin2 vout2 VSS sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
+X13 vout2 vin2 VSS VSS sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
+X14 vout2 vin2 VDD VDD sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
+X15 VSS vin4 vout4 VSS sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
+X16 vout1 vin1 VSS VSS sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
+X17 VDD vin2 vout2 VDD sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
+X18 vout4 vin4 VSS VSS sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
+X19 VDD vin2 vout2 VDD sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
+X20 VSS vin3 vout3 VSS sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
+X21 vout4 vin4 VSS VSS sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
+X22 VSS vin4 vout4 VSS sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
+X23 VDD vin3 vout3 VDD sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
+X24 VDD vin2 vout2 VDD sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
+X25 vout3 vin3 VDD VDD sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
+X26 VSS vin2 vout2 VSS sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
+X27 VDD vin3 vout3 VDD sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
+X28 VSS VSS VSS VSS sg13_lv_nmos ad=0.34p pd=2.68u as=0 ps=0 w=1u l=1u
+X29 vout2 vin2 VDD VDD sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
+X30 vout2 vin2 VSS VSS sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
+X31 vout1 vin1 VSS VSS sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
+X32 VSS vin2 vout2 VSS sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
+X33 vout4 vin4 VSS VSS sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
+X34 vout1 vin1 VDD VDD sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
+X35 vout1 vin1 VSS VSS sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
+X36 VSS vin4 vout4 VSS sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
+X37 VDD VDD VDD VDD sg13_lv_pmos ad=1.14p pd=6.38u as=0 ps=0 w=6u l=1u
+X38 VSS vin1 vout1 VSS sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
+X39 vout2 vin2 VDD VDD sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
+X40 VDD vin4 vout4 VDD sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
+X41 vout1 vin1 VSS VSS sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
+X42 vout3 vin3 VSS VSS sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
+X43 VDD vin3 vout3 VDD sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
+X44 vout4 vin4 VDD VDD sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
+X45 VDD vin4 vout4 VDD sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
+X46 vout3 vin3 VDD VDD sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
+X47 VDD vin3 vout3 VDD sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
+X48 VSS VSS VSS VSS sg13_lv_nmos ad=0.19p pd=1.38u as=0 ps=0 w=1u l=1u
+X49 VDD vin4 vout4 VDD sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
+X50 VDD vin2 vout2 VDD sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
+X51 VSS vin4 vout4 VSS sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
+X52 VDD vin3 vout3 VDD sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
+X53 VSS vin1 vout1 VSS sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
+X54 VDD vin1 vout1 VDD sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
+X55 vout4 vin4 VSS VSS sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
+X56 vout1 vin1 VDD VDD sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
+X57 vout4 vin4 VDD VDD sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
+X58 vout1 vin1 VSS VSS sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
+X59 VDD vin1 vout1 VDD sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
+X60 vout3 vin3 VSS VSS sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
+X61 VSS vin1 vout1 VSS sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
+X62 VDD VDD VDD VDD sg13_lv_pmos ad=2.04p pd=12.68u as=0 ps=0 w=6u l=1u
+X63 vout4 vin4 VDD VDD sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
+X64 VDD vin3 vout3 VDD sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
+X65 VDD vin4 vout4 VDD sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
+X66 vout3 vin3 VDD VDD sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
+X67 vout3 vin3 VSS VSS sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
+X68 VSS vin3 vout3 VSS sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
+X69 VDD VDD VDD VDD sg13_lv_pmos ad=1.14p pd=6.38u as=0 ps=0 w=6u l=1u
+X70 vout3 vin3 VSS VSS sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
+X71 vout4 vin4 VDD VDD sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
+X72 vout3 vin3 VDD VDD sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
+X73 VDD vin1 vout1 VDD sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
+X74 vout2 vin2 VDD VDD sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
+X75 vout1 vin1 VDD VDD sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
+X76 vout2 vin2 VSS VSS sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
+X77 VDD vin1 vout1 VDD sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
+X78 VDD vin1 vout1 VDD sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
+X79 VDD vin3 vout3 VDD sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
+X80 VSS vin3 vout3 VSS sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
+X81 vout3 vin3 VSS VSS sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
+X82 VSS vin4 vout4 VSS sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
+X83 VDD vin4 vout4 VDD sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
+X84 VSS vin3 vout3 VSS sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
+X85 vout4 vin4 VSS VSS sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
+X86 VDD vin1 vout1 VDD sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
+X87 vout2 vin2 VDD VDD sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
+X88 vout1 vin1 VDD VDD sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
+X89 VSS vin4 vout4 VSS sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
+X90 VDD VDD VDD VDD sg13_lv_pmos ad=2.04p pd=12.68u as=0 ps=0 w=6u l=1u
+X91 vout2 vin2 VDD VDD sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
+X92 VDD vin2 vout2 VDD sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
+X93 VSS vin2 vout2 VSS sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
+X94 VSS vin4 vout4 VSS sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
+X95 vout2 vin2 VDD VDD sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
+X96 VDD VDD VDD VDD sg13_lv_pmos ad=2.04p pd=12.68u as=0 ps=0 w=6u l=1u
+X97 vout2 vin2 VSS VSS sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
+X98 VSS vin2 vout2 VSS sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
+X99 vout1 vin1 VDD VDD sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
+X100 vout1 vin1 VSS VSS sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
+X101 vout4 vin4 VSS VSS sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
+X102 vout3 vin3 VDD VDD sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
+X103 vout4 vin4 VSS VSS sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
+X104 VSS VSS VSS VSS sg13_lv_nmos ad=0.19p pd=1.38u as=0 ps=0 w=1u l=1u
+X105 VSS vin4 vout4 VSS sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
+X106 VDD vin1 vout1 VDD sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
+X107 VSS vin2 vout2 VSS sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
+X108 VDD vin2 vout2 VDD sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
+X109 vout4 vin4 VSS VSS sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
+X110 vout4 vin4 VDD VDD sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
+X111 vout2 vin2 VDD VDD sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
+X112 vout2 vin2 VSS VSS sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
+X113 VDD vin2 vout2 VDD sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
+X114 VSS vin2 vout2 VSS sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
+X115 VDD vin4 vout4 VDD sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
+X116 VDD VDD VDD VDD sg13_lv_pmos ad=2.04p pd=12.68u as=0 ps=0 w=6u l=1u
+X117 VSS vin2 vout2 VSS sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
+X118 VSS vin1 vout1 VSS sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
+X119 vout3 vin3 VDD VDD sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
+X120 vout1 vin1 VSS VSS sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
+X121 VSS vin1 vout1 VSS sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
+X122 vout3 vin3 VDD VDD sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
+X123 VDD vin3 vout3 VDD sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
+X124 vout3 vin3 VDD VDD sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
+X125 vout3 vin3 VSS VSS sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
+X126 VSS vin2 vout2 VSS sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
+X127 vout1 vin1 VDD VDD sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
+X128 vout2 vin2 VSS VSS sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
+X129 VSS vin4 vout4 VSS sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
+X130 VSS VSS VSS VSS sg13_lv_nmos ad=0.19p pd=1.38u as=0 ps=0 w=1u l=1u
+X131 VSS vin1 vout1 VSS sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
+X132 vout2 vin2 VSS VSS sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
+X133 VSS VSS VSS VSS sg13_lv_nmos ad=0.34p pd=2.68u as=0 ps=0 w=1u l=1u
+X134 vout1 vin1 VSS VSS sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
+X135 VSS vin1 vout1 VSS sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
+X136 VDD vin3 vout3 VDD sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
+X137 VSS vin1 vout1 VSS sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
+X138 vout4 vin4 VDD VDD sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
+X139 vout3 vin3 VDD VDD sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
+X140 VDD vin3 vout3 VDD sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
+X141 VSS vin3 vout3 VSS sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
+X142 vout3 vin3 VSS VSS sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
+X143 vout1 vin1 VDD VDD sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
+X144 VSS vin2 vout2 VSS sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
+X145 VSS vin3 vout3 VSS sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
+X146 VDD vin4 vout4 VDD sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
+X147 vout1 vin1 VDD VDD sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
+X148 VDD vin1 vout1 VDD sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
+X149 vout4 vin4 VDD VDD sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
+X150 VSS vin1 vout1 VSS sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
+X151 vout1 vin1 VSS VSS sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
+X152 vout1 vin1 VDD VDD sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
+X153 vout2 vin2 VDD VDD sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
+X154 vout4 vin4 VSS VSS sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
+X155 VSS VSS VSS VSS sg13_lv_nmos ad=0.34p pd=2.68u as=0 ps=0 w=1u l=1u
+X156 VSS VSS VSS VSS sg13_lv_nmos ad=0.19p pd=1.38u as=0 ps=0 w=1u l=1u
+X157 vout4 vin4 VDD VDD sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
+X158 VSS vin3 vout3 VSS sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
+X159 VSS vin4 vout4 VSS sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
+X160 VDD vin4 vout4 VDD sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
+X161 vout1 vin1 VSS VSS sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
+X162 vout3 vin3 VSS VSS sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
+X163 VSS vin3 vout3 VSS sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
+X164 vout4 vin4 VDD VDD sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
+X165 vout2 vin2 VSS VSS sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
+X166 VSS vin3 vout3 VSS sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
+X167 VDD vin1 vout1 VDD sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
+X168 vout1 vin1 VDD VDD sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
+X169 VDD vin1 vout1 VDD sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
+X170 VDD vin4 vout4 VDD sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
+X171 VSS vin1 vout1 VSS sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
+X172 VDD vin2 vout2 VDD sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
+X173 vout2 vin2 VDD VDD sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
+X174 VDD vin2 vout2 VDD sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
+X175 VSS vin3 vout3 VSS sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
 .ends
 
