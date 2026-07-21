@@ -117,15 +117,15 @@ make <target> [CELL=<cellname>] [EXT_MODE=<1|2|3>] [THRESHOLD=<mOhm>] [MINRES=<m
 
 The Makefile defines a `_GDS_EXT` variable that auto-selects the layout file extension: it prefers `.gds` when available, and falls back to `.klay.gds` otherwise.
 
-- Targets that use `layout/<name>.$(_GDS_EXT)` and work with either `.gds` or `.klay.gds`:
+- Targets that use `layout/<name>.$(_GDS_EXT)` and work with either `.gds` or `.klay.gds` (the `sak` scripts derive the GDS top cell name from the `<name>.klay.gds` naming convention):
   - `klayout-lvs`
   - `klayout-drc`
   - `klayout-pex`
-  - `magic-drc` (`sak-drc.sh` derives the GDS top cell name from the `<name>.klay.gds` naming convention)
-
-- Magic targets that always use `layout/<name>.gds` (`sak-lvs.sh` and `sak-pex.sh` require standard `.gds`):
-  - `magic-lvs`
+  - `magic-drc`
   - `magic-pex`
+
+- Targets that always use `layout/<name>.gds` (`sak-lvs.sh` requires standard `.gds`):
+  - `magic-lvs`
 
 - Build targets always use `layout/<name>.gds`:
   - `lef`
@@ -380,8 +380,7 @@ make magic-drc CELL=inverter_top
 
 Runs parasitic extraction on the layout in `layout/`. The extracted SPICE netlist is written to `netlist/pex/`.
 
-- `klayout-pex` uses `layout/<CELL>.$(_GDS_EXT)` (`.gds` if present, otherwise `.klay.gds`)
-- `magic-pex` uses `layout/<CELL>.gds` (Magic requires `.gds`)
+- `klayout-pex` and `magic-pex` use `layout/<CELL>.$(_GDS_EXT)` (`.gds` if present, otherwise `.klay.gds`)
 
 The extracted SPICE filenames include the selected extraction mode:
 - `klayout-pex` writes `netlist/pex/<CELL>_klayout_pex_<EXT_MODE>.spice`

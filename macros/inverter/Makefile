@@ -38,7 +38,7 @@ EV_PRECISION ?= 5
 
 # Preferred GDS extension: use .gds when available, otherwise .klay.gds
 # This checks both TOP and CELL names so it can be used as: $(LAY_DIR)/$(TOP).$(_GDS_EXT) or $(LAY_DIR)/$(CELL).$(_GDS_EXT)
-# KLayout LVS, DRC and PEX as well as Magic DRC work with either .gds or .klay.gds, but Magic LVS and PEX require .gds.
+# KLayout LVS, DRC and PEX as well as Magic DRC and PEX work with either .gds or .klay.gds, but Magic LVS requires .gds.
 _GDS_EXT = $(if $(wildcard $(LAY_DIR)/$(TOP).gds)$(wildcard $(LAY_DIR)/$(CELL).gds),gds,klay.gds)
 
 # Folder structure
@@ -340,7 +340,7 @@ klayout-pex: ## Run Parasitic Extraction with KPEX of the CELL cell (usage: make
 
 magic-pex: ## Run Parasitic Extraction with Magic of the CELL cell (usage: make magic-pex [CELL=<cellname>] [EXT_MODE=<1|2|3>] [THRESHOLD=<mOhm>] [MINRES=<mOhm>] [MINDELAY=<ps>])
 	mkdir -p $(NET_PEX_DIR)
-	sak-pex.sh -d -m $(EXT_MODE) -n $(CELL)_pex -t $(THRESHOLD) -r $(MINRES) -y $(MINDELAY) -w $(NET_PEX_DIR) $(LAY_DIR)/$(CELL).gds
+	sak-pex.sh -d -m $(EXT_MODE) -n $(CELL)_pex -t $(THRESHOLD) -r $(MINRES) -y $(MINDELAY) -w $(NET_PEX_DIR) $(LAY_DIR)/$(CELL).$(_GDS_EXT)
 	mv $(NET_PEX_DIR)/$(CELL).pex.spice $(NET_PEX_DIR)/$(CELL)_magic_pex_$(EXT_MODE).spice
 	rm -f $(NET_PEX_DIR)/pex_$(CELL).tcl
 	@if [ -f $(XSCHEM_SCH_DIR)/$(CELL)_pex.sym ]; then \

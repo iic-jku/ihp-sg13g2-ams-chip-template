@@ -670,7 +670,7 @@ The layout is created and edited in KLayout. The container provides the `ke` ali
 ke layout/inverter_top.klay.gds
 ```
 
-After modifying the layout, export a clean `.gds` file (for example `inverter_top.gds`) by pressing `File > Export Layout For Tapeout`. The Magic-based LVS and PEX flows only work on `.gds` files, while the KLayout-based verification flows and the Magic DRC flow accept either `.gds` or `.klay.gds`.
+After modifying the layout, export a clean `.gds` file (for example `inverter_top.gds`) by pressing `File > Export Layout For Tapeout`. The Magic-based LVS flow only works on `.gds` files, while the KLayout-based verification flows as well as the Magic DRC and PEX flows accept either `.gds` or `.klay.gds`.
 
 ![`inverter_top` layout in KLayout.](fig/inverter_top/inverter_top_black.png){#fig-inverter-top-layout width=75%}
 
