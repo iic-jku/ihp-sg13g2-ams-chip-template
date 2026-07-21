@@ -8,7 +8,7 @@
 
 <meta name="author" content="Simon Dorrer">
 <meta name="author" content="Harald Pretl">
-<meta name="dcterms.date" content="2026-07-20">
+<meta name="dcterms.date" content="2026-07-21">
 
 <title>A Tutorial on Open-Source Analog-Mixed Signal Chip Design with the ihp-sg13g2 Open-PDK – Open-Source Analog-Mixed Signal Chip Design Tutorial</title>
 <style>
@@ -485,7 +485,7 @@ window.Quarto = {
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">July 20, 2026</p>
+      <p class="date">July 21, 2026</p>
     </div>
   </div>
   
@@ -987,7 +987,7 @@ Figure&nbsp;2: Overview of the Makefile targets that <code>make all</code> resol
 <td>Run LVS using KLayout or Magic + Netgen.</td>
 </tr>
 <tr class="even">
-<td><code>make klayout-drc</code> / <code>magic-drc</code></td>
+<td><code>make klayout-drc</code> / <code>magic-drc</code> (<code>DRC_LEVEL=&lt;precheck|macro|regular&gt;</code>)</td>
 <td>Run DRC using KLayout or Magic.</td>
 </tr>
 <tr class="odd">
@@ -1920,7 +1920,7 @@ Tip
 <p>After the schematic is finalised and the design targets are met, the layout can be created. The layout of the <code>inverter</code> cell is hierarchical, and the top-level cell <code>inverter_top</code> contains four instances of the <code>inverter</code> cell. Around the four-channel inverter layout, a power ring is drawn on <code>Metal5</code> and <code>TopMetal1</code> layers, which is connected to the <code>VDD</code> and <code>VSS</code> pins of the four inverters. This power ring is required for top-level integration, connecting the macro power to the chip’s PDN.</p>
 <p>The layout is created and edited in KLayout. The container provides the <code>ke</code> alias for <code>klayout -e</code> (edit mode). With the following command, the GDS of the four-channel inverter is opened in KLayout as shown <a href="#fig-inverter-top-layout" class="quarto-xref">Figure&nbsp;21</a>. With the keys <code>0</code>, <code>1</code>, <code>2</code>, …, <code>9</code> you can view different layers as explained in the <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/doc/klayout/klayout_cheatsheet.md">KLayout cheatsheet</a> or in the <a href="https://github.com/iic-jku/klayout-layer-shortcuts">klayout-layer-shortcuts</a> plugin.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb17"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="ex">ke</span> layout/inverter_top.klay.gds</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>After modifying the layout, export a clean <code>.gds</code> file (for example <code>inverter_top.gds</code>) by pressing <code>File &gt; Export Layout For Tapeout</code>. The Magic-based verification flows only work on <code>.gds</code> files, while the KLayout-based verification flows accept either <code>.gds</code> or <code>.klay.gds</code>.</p>
+<p>After modifying the layout, export a clean <code>.gds</code> file (for example <code>inverter_top.gds</code>) by pressing <code>File &gt; Export Layout For Tapeout</code>. The Magic-based LVS and PEX flows only work on <code>.gds</code> files, while the KLayout-based verification flows and the Magic DRC flow accept either <code>.gds</code> or <code>.klay.gds</code>.</p>
 <div id="fig-inverter-top-layout" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-inverter-top-layout-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
@@ -1948,10 +1948,64 @@ Figure&nbsp;22: <code>inverter_top</code> layout in KLayout 2.5D viewer.
 <p>The inverter macro can be verified with two verification flows, either with KLayout or with Magic + Netgen. Each flow covers DRC, LVS, and PEX. Magic + Netgen provides only non-interactive command-line flows, while KLayout also has interactive GUI-based DRC and LVS.</p>
 <section id="design-rule-check" class="level3" data-number="5.7.1">
 <h3 data-number="5.7.1" class="anchored" data-anchor-id="design-rule-check"><span class="header-section-number">5.7.1</span> Design Rule Check</h3>
-<p>The non-interactive DRC can be run with the following Makefile targets. The <code>CELL</code> variable can be set to run DRC on a specific cell, or it defaults to <code>inverter_top</code> if not set.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb18"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> klayout-drc [CELL=<span class="op">&lt;</span>cellname<span class="op">&gt;</span>]  <span class="co"># default CELL=inverter_top</span></span>
+<p>The non-interactive DRC can be run with the following Makefile targets (both use <code>sak-drc.sh</code>). The <code>CELL</code> variable can be set to run DRC on a specific cell, or it defaults to <code>inverter_top</code> if not set. The <code>DRC_LEVEL</code> variable selects the KLayout DRC level — <code>precheck</code>, <code>macro</code> (default), or <code>regular</code> — and is ignored by <code>magic-drc</code>, since Magic has no selectable rule decks and always runs the full rule set compiled into the PDK’s Magic tech file.</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Check</th>
+<th style="text-align: center;"><code>precheck</code></th>
+<th style="text-align: center;"><code>macro</code> <em>(default)</em></th>
+<th style="text-align: center;"><code>regular</code></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>FEOL + BEOL core rules</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr class="even">
+<td>Off-grid / angle</td>
+<td style="text-align: center;">–</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr class="odd">
+<td>Zero-area / geometry</td>
+<td style="text-align: center;">–</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr class="even">
+<td>Pin / label</td>
+<td style="text-align: center;">–</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr class="odd">
+<td>Recommended / extra rules</td>
+<td style="text-align: center;">–</td>
+<td style="text-align: center;">–</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr class="even">
+<td>Density (chip-level fill)</td>
+<td style="text-align: center;">–</td>
+<td style="text-align: center;">–</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr class="odd">
+<td>Antenna</td>
+<td style="text-align: center;">–</td>
+<td style="text-align: center;">–</td>
+<td style="text-align: center;">✓</td>
+</tr>
+</tbody>
+</table>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb18"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> klayout-drc [CELL=<span class="op">&lt;</span>cellname<span class="op">&gt;</span>] [DRC_LEVEL=<span class="op">&lt;</span>precheck<span class="kw">|</span><span class="ex">macro</span><span class="kw">|</span><span class="ex">regular</span><span class="op">&gt;</span>]   <span class="co"># default CELL=inverter_top, default DRC_LEVEL=macro</span></span>
 <span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> magic-drc [CELL=<span class="op">&lt;</span>cellname<span class="op">&gt;</span>]    <span class="co"># default CELL=inverter_top</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>Reports are saved to <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/inverter/verification/drc/"><code>verification/drc/</code></a>.</p>
+<p>Reports are written into per-cell run folders (<code>&lt;CELL&gt;.magic.drc/</code> for Magic, <code>&lt;CELL&gt;.klayout.drc/</code> for KLayout) inside <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/inverter/verification/drc/"><code>verification/drc/</code></a>. The run folders are wiped at the start of each run, so they always reflect the latest run only.</p>
 <div class="callout callout-style-default callout-tip callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -2178,7 +2232,7 @@ Tip
 </tr>
 <tr class="odd">
 <td><code>klayout-drc</code></td>
-<td>Run KLayout DRC (<code>make klayout-drc [CELL=&lt;cellname&gt;]</code>).</td>
+<td>Run KLayout DRC (<code>make klayout-drc [CELL=&lt;cellname&gt;] [DRC_LEVEL=&lt;precheck|macro|regular&gt;]</code>).</td>
 </tr>
 <tr class="even">
 <td><code>magic-drc</code></td>
@@ -2285,7 +2339,7 @@ Figure&nbsp;23: <code>sg13g2_ip__bondpad_70x70</code> layout in KLayout.
 </tr>
 <tr class="odd">
 <td><code>klayout-drc</code></td>
-<td>Run KLayout DRC (same relaxed rule-set as the bondpad).</td>
+<td>Run KLayout DRC (same <code>DRC_LEVEL</code> selection as the bondpad).</td>
 </tr>
 <tr class="even">
 <td><code>magic-drc</code></td>
