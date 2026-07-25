@@ -13,12 +13,12 @@ L 4 0 -100 0 -80 {}
 L 4 0 80 0 100 {}
 L 4 -100 0 -80 0 {}
 L 7 80 0 100 0 {}
-B 5 -2.5 -102.5 2.5 -97.5 {name=VDD dir=inout}
-B 5 -2.5 97.5 2.5 102.5 {name=VSS dir=inout}
-B 5 -102.5 -62.5 -97.5 -57.5 {name=di_clock dir=in}
-B 5 -102.5 57.5 -97.5 62.5 {name=di_reset_n dir=in}
-B 5 -102.5 -2.5 -97.5 2.5 {name=di_enable dir=in}
-B 5 97.5 -2.5 102.5 2.5 {name=do_b[0..7] dir=out}
+B 5 -2.5 -102.5 2.5 -97.5 {name=VDD dir=inout sim_pinname=VDD}
+B 5 -2.5 97.5 2.5 102.5 {name=VSS dir=inout sim_pinname=VSS}
+B 5 -102.5 -62.5 -97.5 -57.5 {name=di_clock dir=in sim_pinname=clock_i}
+B 5 -102.5 57.5 -97.5 62.5 {name=di_reset_n dir=in sim_pinname=reset_n_i}
+B 5 -102.5 -2.5 -97.5 2.5 {name=di_enable dir=in sim_pinname=enable_i}
+B 5 97.5 -2.5 102.5 2.5 {name=do_b[0..7] dir=out sim_pinname=counter_value_o}
 P 4 5 -80 -80 80 -80 80 80 -80 80 -80 -80 {}
 T {@symname} 21 -101 0 0 0.2 0.2 {}
 T {@name} 20 -117 0 0 0.2 0.2 {}

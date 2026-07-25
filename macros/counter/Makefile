@@ -273,17 +273,10 @@ all: ## Simulate, build and verify the macro
 # ================================================================================================
 
 
-# The following commands are for generating an XSPICE file for mixed-signal simulation in Xschem.
-# Note that these commands should not be run in `all`, since this XSPICE file is generated once with specific CPU settings for a more convenient simulation.
-# Note that this method does not work with the .pnl.v file in the flow/final/ folder. The .nl.v file from the LibreLane step yosys-synthesis has to be used.
-# Conversion pipeline: Copy gate-level Verilog (.nl.v) -> Verilog with power pins (.vp) -> SPICE (.spice) -> XSPICE (.xspice) -> Reorder pins in XSPICE file according to the Xschem symbol
-generate-xspice: ## Generate XSPICE model from gate-level Verilog netlist
+# Generate XSPICE Target
+generate-xspice: ## Generate XSPICE model from the LibreLane-extracted SPICE netlist
 	mkdir -p $(XSPICE_DIR)
-	cp $(LIBRELANE_DIR)/runs/${RUN_TAG}/*-yosys-synthesis/${TOP}.nl.v $(XSPICE_DIR)/${TOP}_xspice.nl.v
-	vlog2Verilog $(XSPICE_DIR)/${TOP}_xspice.nl.v -o $(XSPICE_DIR)/${TOP}.vp -l $(PDK_ROOT)/$(PDK)/libs.ref/sg13g2_stdcell/lef/sg13g2_stdcell.lef -v "VPWR,VPB" -g "VGND,VNB"
-	vlog2Spice $(XSPICE_DIR)/${TOP}.vp -l $(PDK_ROOT)/$(PDK)/libs.ref/sg13g2_stdcell/spice/sg13g2_stdcell.spice -o $(XSPICE_DIR)/${TOP}.spice
-	python3 $(SCRIPTS_DIR)/spi2xspice.py $(PDK_ROOT)/$(PDK)/libs.ref/sg13g2_stdcell/lib/sg13g2_stdcell_typ_1p50V_25C.lib -io_time=500p -time=50p -idelay=5p -odelay=50p -cload=250f $(XSPICE_DIR)/${TOP}.spice $(XSPICE_DIR)/${TOP}.xspice
+	python3 $(SCRIPTS_DIR)/spi2xspice.py $(PDK_ROOT)/$(PDK)/libs.ref/sg13g2_stdcell/lib/sg13g2_stdcell_typ_1p50V_25C.lib -io_time=500p -time=50p -idelay=5p -odelay=50p -cload=250f $(NET_SPICE_DIR)/${TOP}.spice $(XSPICE_DIR)/${TOP}.xspice
 	python3 $(SCRIPTS_DIR)/reorder_xspice_pins.py $(XSCHEM_SCH_DIR)/${TOP}.sym $(XSPICE_DIR)/${TOP}.xspice
-	rm -f $(XSPICE_DIR)/${TOP}_xspice.nl.v $(XSPICE_DIR)/${TOP}.vp $(XSPICE_DIR)/${TOP}.spice
 .PHONY: generate-xspice
 # ================================================================================================

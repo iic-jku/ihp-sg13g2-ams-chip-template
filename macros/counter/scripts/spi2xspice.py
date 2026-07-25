@@ -637,11 +637,22 @@ def read_spice(filein, fileout, celldefs, debug, modelfile, timing):
                         if pindefs[pinname] == 'output':
                             onum += 1
                             print("AD2A" + str(onum) + " [" + pinname + "] [a_" + pinname + "] toana_" + vddname, file=ofile)
-                        # (Previously 'input': this makes sure that even unused
-                        # power and ground nets are not left floating.)
-                        else:
+                        elif pindefs[pinname] == 'input':
                             inum += 1
                             print("AA2D" + str(inum) + " [a_" + pinname + "] [" + pinname + "] todig_" + vddname, file=ofile)
+                        else:
+                            # 'unknown' direction: power/ground or otherwise
+                            # unused boundary nets. No digital gate references
+                            # these, so the digital-side node name is arbitrary.
+                            # Give it a private "dig_" prefix so that a net named
+                            # e.g. VDD/VSS cannot merge with a same-named .GLOBAL
+                            # net in the surrounding testbench (that merge makes
+                            # ngspice auto-insert a conflicting bridge and fail
+                            # with a singular matrix). Bridging (rather than
+                            # dropping) still keeps the analog a_<pin> port from
+                            # floating.
+                            inum += 1
+                            print("AA2D" + str(inum) + " [a_" + pinname + "] [dig_" + pinname + "] todig_" + vddname, file=ofile)
                     print("", file=ofile)
 
                 echoout =  True

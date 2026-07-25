@@ -426,8 +426,39 @@ To generate an XSPICE file of the macro for mixed-signal simulation in Xschem, r
 make generate-xspice
 ```
 
+This builds the XSPICE model **directly from the LibreLane-extracted SPICE netlist** in `netlist/spice/<TOP>.spice` (copied from the last run by `make copy-netlist`). Two scripts do the work:
+
+1. `spi2xspice.py` replaces every standard cell with an XSPICE primitive (`d_lut`, `d_dff`, …), taking the pin order from the inline black-box `.subckt` stubs in the extracted netlist and the logic functions from the liberty file.
+2. `reorder_xspice_pins.py` reorders the resulting `.subckt` ports to match the Xschem symbol in `schematic/xschem/<TOP>.sym`.
+
 > [!NOTE]
 > This command should not be run as part of `all`, since this XSPICE file is generated once with specific CPU settings for a more convenient simulation.
-> This method does not work with the `.pnl.v` file in `flow/final/`. The `.nl.v` file from the LibreLane step `yosys-synthesis` must be used.
-> Pin reordering uses the symbol file in `schematic/xschem/<TOP>.sym`.
-> Conversion pipeline: Copy gate-level Verilog (`.nl.v`) → Verilog with power pins (`.vp`) → SPICE (`.spice`) → XSPICE (`.xspice`) → Reorder pins in XSPICE file according to the Xschem symbol.
+> Conversion pipeline: extracted SPICE (`.spice`) → XSPICE (`.xspice`) → reorder pins according to the Xschem symbol.
+
+### What You Must Consider
+
+To get a working gate-level Xschem simulation from a LibreLane-generated netlist, two things must line up:
+
+**1. Power nets must not collide with the testbench `.GLOBAL` nets.**
+The extracted netlist names its supplies `VDD`/`VSS`, and the Xschem testbench declares `.GLOBAL VDD`. If the digital block exposed a node literally named `VDD`, ngspice would merge it with the analog global supply and abort with `singular matrix: check node auto_dac...`. `spi2xspice.py` avoids this by bridging every power (and otherwise unused) boundary net to a private `dig_<net>` node. Nothing is required from you here, but keep it in mind if you adapt the script or rename supplies.
+
+**2. Symbol pins must declare their netlist name via `sim_pinname`.**
+Magic sorts the top-level ports alphabetically, so their order in the extracted netlist does **not** match the symbol. `reorder_xspice_pins.py` therefore maps pins **by name**: every pin in `schematic/xschem/<TOP>.sym` must carry a `sim_pinname=<netlist_name>` property, where the name is the RTL/netlist signal name, e.g.
+
+```
+B 5 ... {name=di_clock   dir=in    sim_pinname=clock_i}
+B 5 ... {name=do_b[0..7] dir=out   sim_pinname=counter_value_o}
+B 5 ... {name=VDD        dir=inout sim_pinname=VDD}
+```
+
+The script derives the XSPICE pin from that name (`clock_i` → `a_clock_i`, `counter_value_o[0]` → `a_counter_value_o_0_`) and matches by it, independent of port order. A bus `sim_pinname` may be given as a bare base (`counter_value_o`). The symbol bus indices are applied to it.
+
+> [!NOTE]
+> When you add a port to the design, add the matching pin to the symbol **and** give it a `sim_pinname` equal to the netlist signal name. A mismatch is caught: the script aborts with a clear `expects XSPICE pin ... which is not in the .subckt` error instead of silently mis-wiring.
+> If any pin lacks `sim_pinname`, the script falls back to positional matching (power by a fixed name-map, signals by position), which is only correct when the netlist keeps the symbol's port order (e.g. a yosys `.nl.v` fed through `vlog2Verilog`).
+
+Then run the gate-level simulation as usual (see [Gate-Level Xschem Simulation](#gate-level-xschem-simulation)):
+
+```sh
+make sim-gl-xschem
+```

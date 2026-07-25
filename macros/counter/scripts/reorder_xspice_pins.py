@@ -6,18 +6,31 @@ Reorder the .subckt pin list in an XSPICE file to match the pin order
 of an Xschem .sym symbol file.
 
 Symbol and XSPICE pin names do not need to follow a shared naming
-convention. The mapping is built with two rules:
+convention. Two matching modes are supported:
 
-  - Power pins are matched by name: ``VDD`` <-> ``a_VPWR``,
-    ``VSS`` <-> ``a_VGND``.
-  - All other pins are matched by *position*: the i-th non-power pin
-    in the symbol maps to the i-th non-power pin in the XSPICE
-    .subckt. This way the symbol may rename pins (e.g. ``di_clock``
-    while XSPICE has ``a_clock_i``) without breaking the script.
+  - **Name mode (preferred, order-independent):** if *every* symbol pin
+    carries a ``sim_pinname=<netlist_name>`` property, that property is
+    the pin's real name in the source netlist. The XSPICE pin is derived
+    by prefixing ``a_`` and replacing ``[``/``]`` with ``_`` (matching
+    what ``spi2xspice.py`` does), e.g. ``sim_pinname=clock_i`` ->
+    ``a_clock_i`` and ``sim_pinname=counter_value_o[0]`` ->
+    ``a_counter_value_o_0_``. Because pins are matched by name, this mode
+    is immune to how the netlister ordered the ``.subckt`` ports (Magic,
+    for instance, sorts them alphabetically). Use this mode when feeding a
+    LibreLane-extracted / place-and-routed netlist whose port order does
+    not match the symbol.
+  - **Positional mode (fallback):** if the pins do *not* all carry
+    ``sim_pinname``, power pins are matched by name (``VDD`` <->
+    ``a_VPWR``, ``VSS`` <-> ``a_VGND``) and every other pin is matched by
+    *position*: the i-th non-power symbol pin maps to the i-th non-power
+    XSPICE pin. This is only correct when the netlist keeps the symbol's
+    port order (e.g. the yosys ``.nl.v`` via ``vlog2Verilog``).
 
 Bus pins in the symbol use the xschem range syntax ``name[A..B]`` and
 are expanded into individual indexed pins (``name[A]``, ``name[A+1]``,
-..., ``name[B]``) before matching.
+..., ``name[B]``) before matching. A bus ``sim_pinname`` may be given as
+a bare base (``counter_value_o``) or with a range; the symbol bus indices
+are applied to it.
 
 Pin ordering from the symbol supports two modes:
 
@@ -43,12 +56,19 @@ POWER_MAP = {'VDD': 'a_VPWR', 'VSS': 'a_VGND'}
 XSPICE_POWER = set(POWER_MAP.values())
 
 
-def parse_sym_pins(sym_path: str) -> list[str]:
-    """Extract pin names from .sym file in order of appearance.
+def parse_sym_pins(sym_path: str) -> list[tuple[str, str | None]]:
+    """Extract pins from a .sym file as ``(display_name, real_name)`` pairs.
 
-    Pins are defined as: B 5 ... {name=<pin_name> dir=<dir> [sim_pinnumber=<n>]}
-    A bus pin written as ``name[A..B]`` is expanded into individual
-    indexed pins. ``A`` and ``B`` may be in either order.
+    Pins are defined as:
+    ``B 5 ... {name=<pin_name> dir=<dir> [sim_pinnumber=<n>] [sim_pinname=<net>]}``
+
+    ``real_name`` is the netlist-side name declared by ``sim_pinname=`` (or
+    ``None`` when the pin has no such property). A bus pin written as
+    ``name[A..B]`` is expanded into individual indexed pins; ``A`` and ``B``
+    may be in either order. A bus ``sim_pinname`` may be a bare base or carry
+    its own range - either way the display bus indices are applied to it, so
+    ``name[A..B]`` with ``sim_pinname=net`` yields ``net[A]..net[B]``.
+
     If every pin (or bus group) carries a ``sim_pinnumber`` property, the
     entries are sorted by that number instead of by order of appearance;
     expanded bus pins keep their intra-bus order.
@@ -56,7 +76,8 @@ def parse_sym_pins(sym_path: str) -> list[str]:
     pin_pattern = re.compile(r'^B\s+5\s+.*\{name=(\S+)\s+dir=\w+[^}]*\}')
     bus_range_pattern = re.compile(r'^(.+)\[(\d+)\.\.(\d+)\]$')
     sim_num_pattern = re.compile(r'sim_pinnumber=(\d+)')
-    raw = []  # list of (sim_pinnumber | None, [expanded pin names])
+    sim_name_pattern = re.compile(r'sim_pinname=([^\s}]+)')
+    raw = []  # list of (sim_pinnumber | None, [(display, real|None), ...])
     with open(sym_path, 'r') as f:
         for line in f:
             stripped = line.strip()
@@ -66,14 +87,22 @@ def parse_sym_pins(sym_path: str) -> list[str]:
             name = m.group(1)
             sn = sim_num_pattern.search(stripped)
             sim_num = int(sn.group(1)) if sn else None
+            pn = sim_name_pattern.search(stripped)
+            real = pn.group(1) if pn else None
             bm = bus_range_pattern.match(name)
             if bm:
                 base = bm.group(1)
                 a, b = int(bm.group(2)), int(bm.group(3))
                 step = 1 if a <= b else -1
-                expanded = [f'{base}[{i}]' for i in range(a, b + step, step)]
+                idxs = list(range(a, b + step, step))
+                if real is not None:
+                    rbm = bus_range_pattern.match(real)
+                    rbase = rbm.group(1) if rbm else real
+                    expanded = [(f'{base}[{i}]', f'{rbase}[{i}]') for i in idxs]
+                else:
+                    expanded = [(f'{base}[{i}]', None) for i in idxs]
             else:
-                expanded = [name]
+                expanded = [(name, real)]
             raw.append((sim_num, expanded))
     if raw and all(n is not None for n, _ in raw):
         raw.sort(key=lambda x: x[0])
@@ -109,13 +138,24 @@ def parse_xspice_subckt(xspice_path: str) -> tuple[str, list[str], int, int]:
     raise ValueError(f"No .subckt line found in {xspice_path}")
 
 
-def build_mapping(sym_pins: list[str],
-                  xspice_pins: list[str]) -> list[tuple[str, str]]:
-    """Pair each sym pin with an XSPICE pin.
+def sim_pinname_to_xspice(real: str) -> str:
+    """Derive the XSPICE .subckt pin name from a netlist name.
 
-    VDD/VSS are matched to a_VPWR/a_VGND by name. All other sym pins
-    are matched to the remaining XSPICE pins in the order they appear
-    in the .subckt line.
+    Mirrors ``spi2xspice.py``: prefix ``a_`` and flatten bus brackets,
+    so ``clock_i`` -> ``a_clock_i`` and ``counter_value_o[0]`` ->
+    ``a_counter_value_o_0_``.
+    """
+    return 'a_' + real.replace('[', '_').replace(']', '_')
+
+
+def build_mapping(sym_pins: list[tuple[str, str | None]],
+                  xspice_pins: list[str]) -> list[tuple[str, str]]:
+    """Pair each sym pin (``(display, real)``) with an XSPICE pin.
+
+    If every sym pin declares a real name (``sim_pinname``), pins are
+    matched by name (order-independent). Otherwise the legacy positional
+    scheme is used: VDD/VSS by the power name-map, all others by position.
+    Returns a list of ``(display_name, xspice_pin)`` pairs in sym order.
     """
     if len(sym_pins) != len(xspice_pins):
         raise ValueError(
@@ -123,7 +163,31 @@ def build_mapping(sym_pins: list[str],
             f"xspice has {len(xspice_pins)} (after bus expansion)"
         )
 
-    sym_power = {p for p in sym_pins if p in POWER_MAP}
+    # Name mode: every symbol pin carries a sim_pinname property.
+    if all(real is not None for _, real in sym_pins):
+        xspice_set = set(xspice_pins)
+        mapping = []
+        for display, real in sym_pins:
+            xp = sim_pinname_to_xspice(real)
+            if xp not in xspice_set:
+                raise ValueError(
+                    f"Symbol pin '{display}' (sim_pinname={real}) expects "
+                    f"XSPICE pin '{xp}', which is not in the .subckt. "
+                    f"XSPICE pins: {sorted(xspice_pins)}"
+                )
+            mapping.append((display, xp))
+        mapped = [xp for _, xp in mapping]
+        if len(set(mapped)) != len(mapped):
+            dupes = sorted({xp for xp in mapped if mapped.count(xp) > 1})
+            raise ValueError(
+                f"sim_pinname mapping is not one-to-one; "
+                f"multiple symbol pins map to: {dupes}"
+            )
+        return mapping
+
+    # Positional fallback (some pins lack sim_pinname).
+    display_names = [d for d, _ in sym_pins]
+    sym_power = {p for p in display_names if p in POWER_MAP}
     xspice_power = {p for p in xspice_pins if p in XSPICE_POWER}
     expected_xspice_power = {POWER_MAP[p] for p in sym_power}
     if expected_xspice_power != xspice_power:
@@ -137,11 +201,11 @@ def build_mapping(sym_pins: list[str],
     sig_iter = iter(signal_xspice)
 
     mapping = []
-    for sp in sym_pins:
-        if sp in POWER_MAP:
-            mapping.append((sp, POWER_MAP[sp]))
+    for display in display_names:
+        if display in POWER_MAP:
+            mapping.append((display, POWER_MAP[display]))
         else:
-            mapping.append((sp, next(sig_iter)))
+            mapping.append((display, next(sig_iter)))
     return mapping
 
 
@@ -196,13 +260,15 @@ def main():
     sym_pins = parse_sym_pins(args.sym_file)
     subckt_name, xspice_pins, _, _ = parse_xspice_subckt(args.xspice_file)
 
+    mode = "name" if sym_pins and all(r is not None for _, r in sym_pins) else "positional"
     print(f"Symbol file:  {args.sym_file}")
     print(f"XSPICE file:  {args.xspice_file}")
     print(f"Subcircuit:   {subckt_name}")
     print(f"Sym pins:     {len(sym_pins)}")
     print(f"XSPICE pins:  {len(xspice_pins)}")
+    print(f"Match mode:   {mode}")
 
-    # 2. Pair sym pins with xspice pins (power by name, others by position)
+    # 2. Pair sym pins with xspice pins (by sim_pinname, or positionally)
     mapping = build_mapping(sym_pins, xspice_pins)
     ordered_xspice = [xp for _, xp in mapping]
 
