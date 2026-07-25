@@ -36,10 +36,10 @@ DRC_LEVEL ?= macro
 # Override with: make <target> EV_PRECISION=<digits>
 EV_PRECISION ?= 5
 
-# Preferred GDS extension: use .gds when available, otherwise .klay.gds
-# This checks both TOP and CELL names so it can be used as: $(LAY_DIR)/$(TOP).$(_GDS_EXT) or $(LAY_DIR)/$(CELL).$(_GDS_EXT)
+# Preferred GDS extension: use .gds when available for the CELL, otherwise .klay.gds
+# Resolved per CELL (CELL defaults to TOP), so cells can mix .gds and .klay.gds within one macro.
 # All LVS, DRC and PEX targets (KLayout and Magic) work with either .gds or .klay.gds.
-_GDS_EXT = $(if $(wildcard $(LAY_DIR)/$(TOP).gds)$(wildcard $(LAY_DIR)/$(CELL).gds),gds,klay.gds)
+_GDS_EXT = $(if $(wildcard $(LAY_DIR)/$(CELL).gds),gds,klay.gds)
 
 # Folder structure
 XSCHEM_SCH_DIR  := schematic/xschem
