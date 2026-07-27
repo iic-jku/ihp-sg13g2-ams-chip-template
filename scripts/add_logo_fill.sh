@@ -27,6 +27,18 @@ CORE_URY=1235  # Core upper-right Y coordinate
 LOGO_CORE_MARGIN_LEFT=35
 LOGO_CORE_MARGIN_BOTTOM=165
 
+# Fill distances in um between the generated filler shapes (smaller distance = higher fill density).
+# The PDK defaults (M1/M2: 1.5, M3-M5: 2.0, TM1/TM2: 3.05) leave the top level too sparse and the
+# KLayout DRC min-density checks fail. The values below fix these filler errors.
+# DRC limits: M1Fil.b-M5Fil.b min filler space = 0.42 um; TM1Fil.c/TM2Fil.c (filler to drawn
+# TopMetal, 3.0 um) is unaffected as it is handled by the exclusion sizing in the fill macro.
+FILL_DIST_M1=0.75
+FILL_DIST_M2=0.75
+FILL_DIST_M3=0.75
+FILL_DIST_M4=0.75
+FILL_DIST_M5=0.75
+FILL_DIST_TM=2.0   # shared by TopMetal1 and TopMetal2
+
 # meerkat.py expects die-relative margins from layout origin (0,0)
 LOGO_MARGIN_LEFT=$((CORE_LLX + LOGO_CORE_MARGIN_LEFT))
 LOGO_MARGIN_BOTTOM=$((CORE_LLY + LOGO_CORE_MARGIN_BOTTOM))
@@ -127,13 +139,50 @@ klayout -zz -rm "${SCRIPTS_DIR}/merge_logo.py"
 
 echo "[INFO] Logo added. Now adding fill patterns..."
 
-# Add fill patterns
-klayout -zz \
+# Add fill patterns with adjusted fill distances.
+# The PDK filler macros hard-code the distances (only a GUI dialog can change them, which is
+# unavailable in batch mode). Therefore copy the macros into a temporary fake PDK tree, patch
+# the distances in the copies, and run the unmodified PDK filler.py with PDK_ROOT pointing at
+# the fake tree (filler.py locates the macros via $PDK_ROOT/$PDK).
+FILL_PDK_DIR="${PWD}/fill_pdk_patched"
+MACRO_SRC="${PDKPATH}/libs.tech/klayout/tech/macros"
+MACRO_DST="${FILL_PDK_DIR}/${PDK}/libs.tech/klayout/tech/macros"
+rm -rf "$FILL_PDK_DIR"
+mkdir -p "$MACRO_DST"
+cp "${MACRO_SRC}/sg13g2_filler_ActGatP.lym" \
+   "${MACRO_SRC}/sg13g2_filler_Metal.lym" \
+   "${MACRO_SRC}/sg13g2_filler_TopMetal.lym" \
+   "$MACRO_DST/"
+
+# Patch the batch-mode fill distances (Metal: per-layer map, TopMetal: shared variable)
+sed -i \
+    -e "s/'distance_m1' => [0-9.]*/'distance_m1' => ${FILL_DIST_M1}/" \
+    -e "s/'distance_m2' => [0-9.]*/'distance_m2' => ${FILL_DIST_M2}/" \
+    -e "s/'distance_m3' => [0-9.]*/'distance_m3' => ${FILL_DIST_M3}/" \
+    -e "s/'distance_m4' => [0-9.]*/'distance_m4' => ${FILL_DIST_M4}/" \
+    -e "s/'distance_m5' => [0-9.]*/'distance_m5' => ${FILL_DIST_M5}/" \
+    "${MACRO_DST}/sg13g2_filler_Metal.lym"
+sed -i \
+    -e "s/^\(\s*\)distance = [0-9.]*/\1distance = ${FILL_DIST_TM}/" \
+    "${MACRO_DST}/sg13g2_filler_TopMetal.lym"
+
+# Guard: fail loudly if the PDK macro text changed and the patches did not apply
+for PATCHED in "'distance_m1' => ${FILL_DIST_M1}" "'distance_m5' => ${FILL_DIST_M5}"; do
+    grep -qF "$PATCHED" "${MACRO_DST}/sg13g2_filler_Metal.lym" || {
+        echo "[ERROR] Failed to patch Metal fill distances (PDK macro changed?)"; exit 1; }
+done
+grep -qE "^\s*distance = ${FILL_DIST_TM}" "${MACRO_DST}/sg13g2_filler_TopMetal.lym" || {
+    echo "[ERROR] Failed to patch TopMetal fill distance (PDK macro changed?)"; exit 1; }
+
+echo "[INFO] Fill distances: M1-M5 = ${FILL_DIST_M1}/${FILL_DIST_M2}/${FILL_DIST_M3}/${FILL_DIST_M4}/${FILL_DIST_M5} um, TM1/TM2 = ${FILL_DIST_TM} um"
+
+PDK_ROOT="$FILL_PDK_DIR" klayout -zz \
     -rd output_file="${GDS_OUT_FILL}" \
     -r $PDKPATH/libs.tech/klayout/tech/scripts/filler.py \
     "${GDS_OUT}"
 
 # Cleanup intermediate files
+rm -rf "$FILL_PDK_DIR"
 rm -f "$GDS_TM2" "$GDS_LOGO" "$GDS_OUT" meerkat_design.py
 
 echo "[INFO] Finished. Output GDS: ${GDS_OUT_FILL}"
