@@ -465,7 +465,7 @@ release: ## Copy the gds, netlist files and chip renders to the release folder (
 regression: ## Regression test target for IIC-OSIC-TOOLS
 # 	Analog macro: inverter (Xschem + CACE + LVS/DRC/PEX + build-top)
 	$(MAKE) -C $(MACROS_DIR)/inverter sim-xschem TB=inverter_tb_dc_vout
-	# ONE CACE run: the lightweight AC VDD sweep (no Monte-Carlo) to keep runtime short.
+# 	ONE CACE run: the lightweight AC VDD sweep (no Monte-Carlo) to keep runtime short.
 	cd $(MACROS_DIR)/inverter/verification/cace && cace inverter.yaml -p ac_params && rm -rf _runs _docs netlist
 # 	KLayout & Magic LVS, DRC and PEX of the inverter_top cell.
 	$(MAKE) -C $(MACROS_DIR)/inverter klayout-verify CELL=inverter_top
@@ -489,7 +489,7 @@ regression: ## Regression test target for IIC-OSIC-TOOLS
 	$(MAKE) init-submodules
 	$(MAKE) build-bondpad
 	$(MAKE) -C $(IP_DIR)/sg13g2_ip__jku all
-	# librelane-nodrc: full RTL-to-GDS. DRC is skipped for runtime.
+# 	librelane-nodrc: full RTL-to-GDS. DRC is skipped for runtime.
 	$(MAKE) librelane-nodrc
 .PHONY: regression
 # ================================================================================================
