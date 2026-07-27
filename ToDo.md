@@ -1,5 +1,6 @@
 ﻿# ToDo List
 
+- [ ] `ngspice` & `verilog` RTL Co-Simulation using `Xschem`: https://www.youtube.com/watch?v=PPd7jkcHOgA
 - [ ] add further open-source FPGAs to `counter` macro from HeiChips 2026 template: https://github.com/HeiChips/heichips26-template
 - [ ] clean up top-level LVS (Magic + Netgen, KLayout ?) --> see / merge `top-level-lvs` branch
 - [ ] merge `fixed-auto-taper` branch
@@ -16,7 +17,6 @@
 - [ ] add sg13g2_io_custom to iic-jku/IHP-Open-PDK
 - [ ] add YouTube tutorial
 - [ ] PR IHP sizing scripts
-- [ ] `ngspice` & `verilog` RTL Co-Simulation using `Xschem`: https://www.youtube.com/watch?v=PPd7jkcHOgA
 - [ ] RTL Co-Simulation using `SpiceBind`
 - [ ] add PF SimulatePARALLEL testbench
 - [ ] double check make build-all --> do not simulate (only build) macros.
