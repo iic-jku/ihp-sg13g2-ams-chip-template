@@ -316,7 +316,7 @@ klayout-pex: ## Run Parasitic Extraction with KPEX of the CELL cell (usage: make
 	rm -f $(CELL).nodes $(CELL).sim
 	@if [ -f $(XSCHEM_SCH_DIR)/$(CELL)_pex.sym ]; then \
 		echo "Reordering pins in $(CELL)_klayout_pex_$(EXT_MODE).spice to match $(CELL)_pex.sym..."; \
-		python3 $(SCRIPTS_DIR)/reorder_spice_pins.py $(XSCHEM_SCH_DIR)/$(CELL)_pex.sym $(NET_PEX_DIR)/$(CELL)_klayout_pex_$(EXT_MODE).spice; \
+		sak-pin-reorder.py $(XSCHEM_SCH_DIR)/$(CELL)_pex.sym $(NET_PEX_DIR)/$(CELL)_klayout_pex_$(EXT_MODE).spice --format spice; \
 	else \
 		echo "No symbol $(XSCHEM_SCH_DIR)/$(CELL)_pex.sym found, skipping pin reorder."; \
 	fi
@@ -329,7 +329,7 @@ magic-pex: ## Run Parasitic Extraction with Magic of the CELL cell (usage: make 
 	rm -f $(NET_PEX_DIR)/pex_$(CELL).tcl
 	@if [ -f $(XSCHEM_SCH_DIR)/$(CELL)_pex.sym ]; then \
 		echo "Reordering pins in $(CELL)_magic_pex_$(EXT_MODE).spice to match $(CELL)_pex.sym..."; \
-		python3 $(SCRIPTS_DIR)/reorder_spice_pins.py $(XSCHEM_SCH_DIR)/$(CELL)_pex.sym $(NET_PEX_DIR)/$(CELL)_magic_pex_$(EXT_MODE).spice; \
+		sak-pin-reorder.py $(XSCHEM_SCH_DIR)/$(CELL)_pex.sym $(NET_PEX_DIR)/$(CELL)_magic_pex_$(EXT_MODE).spice --format spice; \
 	else \
 		echo "No symbol $(XSCHEM_SCH_DIR)/$(CELL)_pex.sym found, skipping pin reorder."; \
 	fi

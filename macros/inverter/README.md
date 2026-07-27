@@ -66,7 +66,6 @@
 │  │  ├─ 📁 figures/
 │  │  ├─ lookup_commands.ipynb
 │  │  └─ sizing_inverter.ipynb
-│  ├─ reorder_spice_pins.py
 │  └─ lay2img.py
 ├─ 📁 testbenches/
 │  └─ 📁 xschem/
@@ -395,7 +394,7 @@ The `EXT_MODE` parameter selects the extraction mode:
 
 The `.subckt` name in the extracted SPICE file is `<CELL>_pex`: `magic-pex` sets it directly via the `sak-pex.sh` option `-n <CELL>_pex`, while for `klayout-pex` it is automatically renamed from `<CELL>_flat` (kpex).
 
-If a matching Xschem symbol (`schematic/xschem/<CELL>_pex.sym`) exists, the `.subckt` pin order in the extracted SPICE file is automatically reordered to match the symbol's pin positions. This ensures the PEX netlist can be used directly with the corresponding Xschem symbol for simulation regardless of the selected `EXT_MODE`.
+If a matching Xschem symbol (`schematic/xschem/<CELL>_pex.sym`) exists, the `.subckt` pin order in the extracted SPICE file is automatically reordered with `sak-pin-reorder.py` (installed in the IIC-OSIC-TOOLS container) to match the symbol's pin positions. This ensures the PEX netlist can be used directly with the corresponding Xschem symbol for simulation regardless of the selected `EXT_MODE`.
 
 **KLayout PEX** uses `kpex` with the Magic extraction engine currently (2.5D engine is work in progress):
 

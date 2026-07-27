@@ -88,7 +88,6 @@
 │     └─ xschemrc
 ├─ 📁 scripts/
 │  ├─ lay2img.py
-│  ├─ reorder_xspice_pins.py
 │  ├─ spi2xspice.py
 │  └─ 📁 plot_simulations/
 │     ├─ ngspice2python.py
@@ -429,7 +428,7 @@ make generate-xspice
 This builds the XSPICE model **directly from the LibreLane-extracted SPICE netlist** in `netlist/spice/<TOP>.spice` (copied from the last run by `make copy-netlist`). Two scripts do the work:
 
 1. `spi2xspice.py` replaces every standard cell with an XSPICE primitive (`d_lut`, `d_dff`, …), taking the pin order from the inline black-box `.subckt` stubs in the extracted netlist and the logic functions from the liberty file.
-2. `reorder_xspice_pins.py` reorders the resulting `.subckt` ports to match the Xschem symbol in `schematic/xschem/<TOP>.sym`.
+2. `sak-pin-reorder.py` (installed in the IIC-OSIC-TOOLS container) reorders the resulting `.subckt` ports to match the Xschem symbol in `schematic/xschem/<TOP>.sym`.
 
 > [!NOTE]
 > This command should not be run as part of `all`, since this XSPICE file is generated once with specific CPU settings for a more convenient simulation.
@@ -443,7 +442,7 @@ To get a working gate-level Xschem simulation from a LibreLane-generated netlist
 The extracted netlist names its supplies `VDD`/`VSS`, and the Xschem testbench declares `.GLOBAL VDD`. If the digital block exposed a node literally named `VDD`, ngspice would merge it with the analog global supply and abort with `singular matrix: check node auto_dac...`. `spi2xspice.py` avoids this by bridging every power (and otherwise unused) boundary net to a private `dig_<net>` node. Nothing is required from you here, but keep it in mind if you adapt the script or rename supplies.
 
 **2. Symbol pins must declare their netlist name via `sim_pinname`.**
-Magic sorts the top-level ports alphabetically, so their order in the extracted netlist does **not** match the symbol. `reorder_xspice_pins.py` therefore maps pins **by name**: every pin in `schematic/xschem/<TOP>.sym` must carry a `sim_pinname=<netlist_name>` property, where the name is the RTL/netlist signal name, e.g.
+Magic sorts the top-level ports alphabetically, so their order in the extracted netlist does **not** match the symbol. `sak-pin-reorder.py` therefore maps pins **by name**: every pin in `schematic/xschem/<TOP>.sym` must carry a `sim_pinname=<netlist_name>` property, where the name is the RTL/netlist signal name, e.g.
 
 ```
 B 5 ... {name=di_clock   dir=in    sim_pinname=clock_i}
