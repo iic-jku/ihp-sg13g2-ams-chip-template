@@ -128,6 +128,14 @@ PAD_EAST: [
     "g_outputs\\[15\\].output_pad"      # output_PAD[15] = inv1_dout4
 ]
 
+# Pad spacing: each side offers 960 um between the corner cells for 8 x 80 um pads, leaving 320 um of fill.
+# OpenROAD.PadRing floors the pad-to-pad gap to a multiple of PAD_SPACING_MULTIPLE and centers the row.
+# The leftover at the two row ends must land on the 1 um IO site grid.
+# The ideal gap between the 8 pads is fill / (pads + 1) = 320/9 = 35.56 um, floored to the multiple: gap = floor(35.56 / multiple) * multiple.
+# With the default multiple of 1 um: gap = floor(35.56/1)*1 = 35 um and the ends get (320 - 7*35)/2 = 37.5 um --> off-grid error.
+# With a multiple of 2 um: gap = floor(35.56/2)*2 = 34 um and the ends get (320 - 7*34)/2 = 41 um --> on-grid.
+PAD_SPACING_MULTIPLE: 2
+
 # SDC files
 PNR_SDC_FILE:     dir::chip_top.sdc
 SIGNOFF_SDC_FILE: dir::chip_top.sdc
