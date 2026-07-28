@@ -455,10 +455,12 @@ make magic-verify-all
 ```
 
 
-## Build All
+## Verify, Build and Simulate All
 
-Runs the full flow in sequence: simulations, KLayout verification, Magic verification, and top-level build deliverables (`sim-all`, `klayout-verify-all`, `magic-verify-all`, `build-top`):
+Runs the full flow in sequence: KLayout verification, Magic verification, top-level build deliverables, and simulations (`klayout-verify-all`, `magic-verify-all`, `build-top`, `sim-all`):
 
 ```sh
 make all
 ```
+
+Verification runs first because LVS/DRC/PEX produce the fresh, pin-reordered PEX netlists from the current layout. The build follows, since the Verilog stub reads its pins from a PEX netlist. The simulations run **last**, so the `inverter_top` testbench includes the PEX netlist produced by this run, not by a previous one.

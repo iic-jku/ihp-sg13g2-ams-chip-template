@@ -362,10 +362,10 @@ magic-verify-all: ## Verify all main subcells with Magic (LVS, DRC, PEX)
 # ================================================================================================
 
 
-# Simulate, Build and Verify All Target
-all: ## Simulate, build and verify the TOP cell
-	$(MAKE) sim-all
+# Verify, Build and Simulate All Target
+all: ## Verify, build and simulate the TOP cell
 	$(MAKE) klayout-verify-all
 	$(MAKE) magic-verify-all
 	$(MAKE) build-top
+	$(MAKE) sim-all
 .PHONY: all
