@@ -428,14 +428,14 @@ bondplan: ## Generate the bondplan (die in package + bondwires + pin table) in p
 # ================================================================================================
 
 
-# Simulate, Build and Verify All Target
-all: ## Simulate, build, verify and package the whole chip
-	$(MAKE) sim-all
+# Build, Verify, Simulate and Package All Target
+all: ## Build, verify, simulate and package the whole chip
 	$(MAKE) build-all
 	$(MAKE) magic-drc CELL=$(TOP)
 	$(MAKE) magic-drc CELL=$(TOP)_logo_fill
 #	$(MAKE) klayout-verify
 #	$(MAKE) magic-verify
+	$(MAKE) sim-all
 	$(MAKE) bondplan
 .PHONY: all
 # ================================================================================================

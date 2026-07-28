@@ -452,7 +452,7 @@ The following command builds the `counter` digital macro:
 make build-counter
 ```
 
-For each digital macro this dispatches to its in-tree `make all`, which lints, simulates, runs LibreLane, copies the reports, and renders the final GDS.
+For each digital macro this dispatches to its in-tree `make all`, which runs the macro's full flow: lint, build (FPGA and LibreLane, including netlists and the XSPICE model), verify (LVS and DRC within the LibreLane flow) and simulate. The simulations run after the build, so the gate-level simulations run on the netlists produced by this build.
 
 > [!TIP]
 > Each macro has its own `Makefile` and `README.md` with additional targets, such as linting, simulation, and verification.
@@ -467,6 +467,8 @@ To build the inverter macro:
 ```sh
 make build-inverter
 ```
+
+For each analog macro this dispatches to its in-tree `make all`, which runs the macro's full flow: verify (LVS, DRC, PEX), build, and simulate. The simulations run after the verification, so the top-level testbench includes the PEX netlist produced by this run.
 
 All analog macros are included in `build-macros` alongside the digital macros.
 
@@ -694,9 +696,9 @@ See [packaging/README.md](packaging/README.md) for the full flow documentation a
 </p>
 
 
-## Build and Verify All
+## Build, Verify and Simulate All
 
-Runs full simulation (`sim-all`), then `build-all`, followed by Magic DRC for both `chip_top` and `chip_top_logo_fill`, and finally generates the bondplan (`bondplan`):
+Runs `build-all` first, followed by Magic DRC for both `chip_top` and `chip_top_logo_fill`, then the chip simulations (`sim-all`) and finally generates the bondplan (`bondplan`) once all checks have passed:
 
 ```sh
 make all
