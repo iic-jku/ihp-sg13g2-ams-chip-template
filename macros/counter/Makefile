@@ -242,16 +242,28 @@ render-gds: ## Render an image from the final GDS using lay2img.py
 # ================================================================================================
 
 
+# Generate XSPICE Target
+# Runs as part of `build-top` (after `copy-netlist`) so the XSPICE model always matches the
+# netlists of the current LibreLane run. Can also be run standalone to regenerate the model.
+generate-xspice: ## Generate XSPICE model from the LibreLane-extracted SPICE netlist
+	mkdir -p $(XSPICE_DIR)
+	python3 $(SCRIPTS_DIR)/spi2xspice.py $(PDK_ROOT)/$(PDK)/libs.ref/sg13g2_stdcell/lib/sg13g2_stdcell_typ_1p50V_25C.lib -io_time=500p -time=50p -idelay=5p -odelay=50p -cload=250f $(NET_SPICE_DIR)/${TOP}.spice $(XSPICE_DIR)/${TOP}.xspice
+	sak-pin-reorder.py $(XSCHEM_SCH_DIR)/${TOP}.sym $(XSPICE_DIR)/${TOP}.xspice --format xspice
+.PHONY: generate-xspice
+# ================================================================================================
+
+
 # Build Targets
 build-fpga: ## Build target for FPGA usage
 	@$(MAKE) -C fpga all
 .PHONY: build-fpga
 
-build-top: ## Build macro (run LibreLane with KLayout & Magic DRC checks, copy reports, copy final files, copy netlists, copy render, and render final GDS)
+build-top: ## Build macro (run LibreLane with KLayout & Magic DRC checks, copy reports, copy final files, copy netlists, generate XSPICE model, copy render, and render final GDS)
 	$(MAKE) librelane
 	$(MAKE) copy-reports
 	$(MAKE) copy-final
 	$(MAKE) copy-netlist
+	$(MAKE) generate-xspice
 	$(MAKE) copy-render
 	$(MAKE) render-gds
 #	$(MAKE) librelane-openroad
@@ -264,20 +276,15 @@ build-top: ## Build macro (run LibreLane with KLayout & Magic DRC checks, copy r
 # ================================================================================================
 
 
-# Simulate, Build and Verify All Target
-all: ## Simulate, build and verify the macro
+# Lint, Build, Verify and Simulate All Target
+# Order: lint first (fast fail on structural RTL issues), then build (FPGA + LibreLane macro
+# with fresh netlists and XSPICE model; the LibreLane flow verifies with LVS & DRC), then
+# simulate — so the gate-level simulations (sim-gl-cocotb, sim-gl-xschem) run on the netlists
+# produced by THIS build, not a previous one.
+all: ## Lint, build, verify and simulate the macro
 	$(MAKE) lint-verilog-all
-	$(MAKE) sim-all
 	$(MAKE) build-fpga
 	$(MAKE) build-top
+	$(MAKE) sim-all
 .PHONY: all
-# ================================================================================================
-
-
-# Generate XSPICE Target
-generate-xspice: ## Generate XSPICE model from the LibreLane-extracted SPICE netlist
-	mkdir -p $(XSPICE_DIR)
-	python3 $(SCRIPTS_DIR)/spi2xspice.py $(PDK_ROOT)/$(PDK)/libs.ref/sg13g2_stdcell/lib/sg13g2_stdcell_typ_1p50V_25C.lib -io_time=500p -time=50p -idelay=5p -odelay=50p -cload=250f $(NET_SPICE_DIR)/${TOP}.spice $(XSPICE_DIR)/${TOP}.xspice
-	sak-pin-reorder.py $(XSCHEM_SCH_DIR)/${TOP}.sym $(XSPICE_DIR)/${TOP}.xspice --format xspice
-.PHONY: generate-xspice
 # ================================================================================================

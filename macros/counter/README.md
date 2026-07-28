@@ -234,7 +234,7 @@ make sim-gl-xschem CELL=<cell>    # run gate-level Xschem simulation for another
 ```
 
 > [!NOTE]
-> This flow expects the generated XSPICE model in `netlist/xspice/`. If needed, generate it first with:
+> This flow expects the generated XSPICE model in `netlist/xspice/`. It is generated automatically by `make build-top` (right after `copy-netlist`), so it always matches the current LibreLane run. To regenerate it manually, run:
 >
 > ```sh
 > make generate-xspice
@@ -389,7 +389,7 @@ make -C fpga flash_bitstream # flash via dfu-util
 
 ## Build Top
 
-To build the macro with LibreLane, copy its reports, copy final folders, copy netlists, copy the render, and render the final GDS, run:
+To build the macro with LibreLane, copy its reports, copy final folders, copy netlists, generate the XSPICE model, copy the render, and render the final GDS, run:
 
 ```sh
 make build-top
@@ -401,16 +401,16 @@ make build-top
 The LibreLane flow already includes LVS and DRC checks with Magic and KLayout, and they are saved in the `verification/` folder.
 
 
-## Build and Verify All
+## Lint, Build, Verify and Simulate All
 
-Builds and verifies the whole macro by running both simulation and build steps:
+Lints, builds, verifies and simulates the whole macro:
 
 - `lint-verilog-all`
-- `sim-all`
 - `build-fpga`
 - `build-top`
+- `sim-all`
 
-The LVS and DRC verification is done within the LibreLane flow.
+Linting runs first to fail fast on structural RTL issues. The simulations run **after** the build, so the gate-level simulations (`sim-gl-cocotb`, `sim-gl-xschem`) run on the netlists and the XSPICE model produced by this build, not on those of a previous one. The LVS and DRC verification is done within the LibreLane flow.
 
 ```sh
 make all
@@ -431,7 +431,7 @@ This builds the XSPICE model **directly from the LibreLane-extracted SPICE netli
 2. `sak-pin-reorder.py` (installed in the IIC-OSIC-TOOLS container) reorders the resulting `.subckt` ports to match the Xschem symbol in `schematic/xschem/<TOP>.sym`.
 
 > [!NOTE]
-> This command should not be run as part of `all`, since this XSPICE file is generated once with specific CPU settings for a more convenient simulation.
+> This target runs automatically as part of `make build-top` (right after `copy-netlist`), so the XSPICE model always matches the netlists of the current LibreLane run. The simulation timing parameters (`-io_time`, `-time`, `-idelay`, `-odelay`, `-cload`) are pinned in the Makefile, so regeneration is deterministic.
 > Conversion pipeline: extracted SPICE (`.spice`) → XSPICE (`.xspice`) → reorder pins according to the Xschem symbol.
 
 ### What You Must Consider
