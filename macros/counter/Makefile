@@ -203,7 +203,8 @@ copy-reports: ## Copy yosys, antenna violations, hold & setup timing and manufac
 .PHONY: copy-reports
 
 copy-final: ## Copy final output gds, lef, lib, nl, pnl, spef, and vh folders from the last LibreLane run to final/
-	rm -rf $(FINAL_DIR)/gds $(FINAL_DIR)/lef $(FINAL_DIR)/lib $(FINAL_DIR)/nl $(FINAL_DIR)/pnl $(FINAL_DIR)/spef $(FINAL_DIR)/vh
+	rm -rf $(FINAL_DIR)/
+	mkdir -p $(FINAL_DIR)/
 	cp -r $(FLOW_FINAL_DIR)/gds  $(FINAL_DIR)/gds
 	cp -r $(FLOW_FINAL_DIR)/lef  $(FINAL_DIR)/lef
 	cp -r $(FLOW_FINAL_DIR)/lib  $(FINAL_DIR)/lib
