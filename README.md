@@ -33,14 +33,16 @@ Institute for Integrated Circuits and Quantum Computing, Johannes Kepler Univers
 
 ## Overview
 
-This Makefile-driven repository simulates, builds, and fully verifies (LVS, DRC, PEX) a complete analog mixed-signal chip for the ihp-sg13g2 130nm Open-PDK, including padframe generation and top-level assembly. It uses:
+Developing high-performance open-source silicon requires both the availability of tapeout-ready open-PDKs and robust, user-friendly EDA flows. While digital RTL-to-GDS flows offer an easy entry with documentation and examples, analog mixed-signal (AMS) design still suffers from a steep learning curve and the lack of examples and instructions. This repository provides a comprehensive template and tutorial for AMS chip design using the ihp-sg13g2 Open-PDK, guiding the designer from initial system-level specifications to the tapeout-ready chip.
 
-- [**LibreLane**](https://github.com/librelane/librelane) for digital macro hardening, padframe generation and top-level assembly
+This Makefile-driven repository simulates, builds, and fully verifies (DRC, LVS, PEX) a complete analog mixed-signal chip for the ihp-sg13g2 Open-PDK, including padframe generation, top-level assembly and bondplan generation. The flow uses:
+
+- [**LibreLane**](https://github.com/librelane/librelane) for digital macro hardening, padframe generation, top-level assembly, filler and logo insertion
 - [**Xschem**](https://github.com/StefanSchippers/xschem) for schematic entry
 - [**Ngspice**](https://github.com/danchitnis/ngspice-sf-mirror), [**VACASK**](https://codeberg.org/arpadbuermen/VACASK) and [**CACE**](https://github.com/fossi-foundation/cace) for analog simulation
 - [**KLayout**](https://github.com/KLayout/klayout) for viewing and routing of the layout
-- [**Magic**](https://github.com/rtimothyedwards/magic) + [**Netgen**](https://github.com/rtimothyedwards/netgen) and [**KLayout**](https://github.com/KLayout/klayout) for LVS, DRC and PEX verification
-- **SystemVerilog**, [**cocotb**](https://github.com/cocotb/cocotb), [**GTKWave**](https://github.com/gtkwave/gtkwave) and [**Surfer**](https://gitlab.com/surfer-project/surfer) for digital simulation
+- [**Magic**](https://github.com/rtimothyedwards/magic) + [**Netgen**](https://github.com/rtimothyedwards/netgen) and [**KLayout**](https://github.com/KLayout/klayout) for DRC, LVS and PEX verification
+- **SystemVerilog**, [Verilator](https://github.com/verilator/verilator), [iverilog](https://github.com/steveicarus/iverilog), [**cocotb**](https://github.com/cocotb/cocotb), [**GTKWave**](https://github.com/gtkwave/gtkwave) and [**Surfer**](https://gitlab.com/surfer-project/surfer) for linting and simulation of digital macros
 
 The repository is the starting point for your own custom silicon and provides a universal design flow solution: Just clone the repo, enter the IIC-OSIC-TOOLS container, and run `make all` to get a tapeout-ready analog-mixed signal chip. Focus on your design and do not care about the tools and the design flow!
 
