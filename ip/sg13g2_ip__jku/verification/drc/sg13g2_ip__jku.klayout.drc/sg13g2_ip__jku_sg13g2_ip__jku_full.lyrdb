@@ -8,144 +8,6 @@
  </tags>
  <categories>
   <category>
-   <name>GFil.d</name>
-   <description>5.9. GFil.d : Min. GatPoly:filler space to Activ, GatPoly, Cont, pSD, nSD:block, SalBlock is 1.1 um</description>
-   <categories>
-   </categories>
-  </category>
-  <category>
-   <name>GFil.e</name>
-   <description>5.9. GFil.e Min. GatPoly:filler space to NWell, nBuLay is 1.1 um</description>
-   <categories>
-   </categories>
-  </category>
-  <category>
-   <name>GFil.i</name>
-   <description>5.9. GFil.i Max. GatPoly:nofill area (µm²) is 400.0 um x 400.0 um</description>
-   <categories>
-   </categories>
-  </category>
- <category>
-   <name>LU.b</name>
-   <description>7.2. LU.b : Max. space from any portion of N+Activ inside PWell to an pSD-PWell tie is 20.0 um</description>
-   <categories>
-   </categories>
-  </category>
- <category>
-   <name>TGO.f</name>
-   <description>5.7. TGO.f : Min. ThickGateOx width: 0.86 µm</description>
-   <categories>
-   </categories>
-  </category>
- <category>
-   <name>NBL.b</name>
-   <description>5.3.NBL.b : Min. nBuLay space or notch (same net) is 1.5 um</description>
-   <categories>
-   </categories>
-  </category>
-  <category>
-   <name>NBL.c</name>
-   <description>5.3.NBL.c : Min. PWell width between nBuLay regions (different net) is 3.2 um</description>
-   <categories>
-   </categories>
-  </category>
-  <category>
-   <name>NBL.d</name>
-   <description>5.3.NBL.d : Min. PWell width between nBuLay and NWell (different net) is 2.2 um</description>
-   <categories>
-   </categories>
-  </category>
-  <category>
-   <name>NBL.e</name>
-   <description>5.3.NBL.e : Min. nBuLay space to unrelated N+Activ is 1.0 um</description>
-   <categories>
-   </categories>
-  </category>
-  <category>
-   <name>NBL.f</name>
-   <description>5.3.NBL.f : Min. nBuLay space to unrelated P+Activ is 0.5 um</description>
-   <categories>
-   </categories>
-  </category>
- <category>
-   <name>PWB.e</name>
-   <description>5.2. PWB.e Min. PWell:block space to (N+Activ not inside ThickGateOx) in PWell is 0.31 um</description>
-   <categories>
-   </categories>
-  </category>
-  <category>
-   <name>PWB.e1</name>
-   <description>5.2. PWB.e1 Min. PWell:block space to (N+Activ inside ThickGateOx) in PWell is 0.62 um</description>
-   <categories>
-   </categories>
-  </category>
-  <category>
-   <name>PWB.f</name>
-   <description>5.2. PWB.f Min. PWell:block space to (P+Activ not inside ThickGateOx) in PWell is 0.24 um</description>
-   <categories>
-   </categories>
-  </category>
-  <category>
-   <name>PWB.f1</name>
-   <description>5.2. PWB.f1 Min. PWell:block space to (P+Activ inside ThickGateOx) in PWell 0.62 um</description>
-   <categories>
-   </categories>
-  </category>
- <category>
-   <name>Sdiod.b</name>
-   <description>6.7. Sdiod.b : Min. and max. nSD:block enclosure of ContBar = 0.4 um</description>
-   <categories>
-   </categories>
-  </category>
-  <category>
-   <name>Sdiod.c</name>
-   <description>6.7. Sdiod.c : Min. and max. SalBlock enclosure of ContBar = 0.45 um</description>
-   <categories>
-   </categories>
-  </category>
-  <category>
-   <name>Sdiod.d</name>
-   <description>6.7. Sdiod.d : Min. and max. ContBar width inside nBuLay is 0.3 um</description>
-   <categories>
-   </categories>
-  </category>
-  <category>
-   <name>Sdiod.e</name>
-   <description>6.7. Sdiod.e : Min. and max. ContBar length inside nBuLay is 1.0 um</description>
-   <categories>
-   </categories>
-  </category>
- <category>
-   <name>pSD.c1</name>
-   <description>5.10. pSD.c1 Min. pSD enclosure of P+Activ in PWell is 0.03 um</description>
-   <categories>
-   </categories>
-  </category>
- <category>
-   <name>NW.b</name>
-   <description>5.1.NW.b : Min. NWell space or notch (same net). NWell regions separated by less than this value will be merged. is 0.62 um</description>
-   <categories>
-   </categories>
-  </category>
-  <category>
-   <name>NW.b1</name>
-   <description>5.1.NW.b1 : Min. PWell width between NWell regions (different net)  is 1.8 um</description>
-   <categories>
-   </categories>
-  </category>
-  <category>
-   <name>NW.f1</name>
-   <description>5.1.NW.f1 : Min. NWell space to substrate tie in P+Activ inside ThickGateOx = 0.62 um</description>
-   <categories>
-   </categories>
-  </category>
-  <category>
-   <name>NW.f1.digibnd</name>
-   <description>5.1.NW.f1.digibnd : Min. NWell space to substrate tie in P+Activ inside ThickGateOx (Inside DigiBnd) = 0.24 um</description>
-   <categories>
-   </categories>
-  </category>
- <category>
    <name>Cnt.a</name>
    <description>5.14. Cnt.a : Min. and max. Cont width: 0.16 µm</description>
    <categories>
@@ -200,6 +62,204 @@
    </categories>
   </category>
  <category>
+   <name>pSD.c1</name>
+   <description>5.10. pSD.c1 Min. pSD enclosure of P+Activ in PWell is 0.03 um</description>
+   <categories>
+   </categories>
+  </category>
+ <category>
+   <name>GFil.d</name>
+   <description>5.9. GFil.d : Min. GatPoly:filler space to Activ, GatPoly, Cont, pSD, nSD:block, SalBlock is 1.1 um</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>GFil.e</name>
+   <description>5.9. GFil.e Min. GatPoly:filler space to NWell, nBuLay is 1.1 um</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>GFil.i</name>
+   <description>5.9. GFil.i Max. GatPoly:nofill area (µm²) is 400.0 um x 400.0 um</description>
+   <categories>
+   </categories>
+  </category>
+ <category>
+   <name>TGO.f</name>
+   <description>5.7. TGO.f : Min. ThickGateOx width: 0.86 µm</description>
+   <categories>
+   </categories>
+  </category>
+ <category>
+   <name>NW.b</name>
+   <description>5.1.NW.b : Min. NWell space or notch (same net). NWell regions separated by less than this value will be merged. is 0.62 um</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>NW.b1</name>
+   <description>5.1.NW.b1 : Min. PWell width between NWell regions (different net)  is 1.8 um</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>NW.f1</name>
+   <description>5.1.NW.f1 : Min. NWell space to substrate tie in P+Activ inside ThickGateOx = 0.62 um</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>NW.f1.digibnd</name>
+   <description>5.1.NW.f1.digibnd : Min. NWell space to substrate tie in P+Activ inside ThickGateOx (Inside DigiBnd) = 0.24 um</description>
+   <categories>
+   </categories>
+  </category>
+ <category>
+   <name>PWB.e</name>
+   <description>5.2. PWB.e Min. PWell:block space to (N+Activ not inside ThickGateOx) in PWell is 0.31 um</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>PWB.e1</name>
+   <description>5.2. PWB.e1 Min. PWell:block space to (N+Activ inside ThickGateOx) in PWell is 0.62 um</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>PWB.f</name>
+   <description>5.2. PWB.f Min. PWell:block space to (P+Activ not inside ThickGateOx) in PWell is 0.24 um</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>PWB.f1</name>
+   <description>5.2. PWB.f1 Min. PWell:block space to (P+Activ inside ThickGateOx) in PWell 0.62 um</description>
+   <categories>
+   </categories>
+  </category>
+ <category>
+   <name>LU.b</name>
+   <description>7.2. LU.b : Max. space from any portion of N+Activ inside PWell to an pSD-PWell tie is 20.0 um</description>
+   <categories>
+   </categories>
+  </category>
+ <category>
+   <name>Sdiod.b</name>
+   <description>6.7. Sdiod.b : Min. and max. nSD:block enclosure of ContBar = 0.4 um</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>Sdiod.c</name>
+   <description>6.7. Sdiod.c : Min. and max. SalBlock enclosure of ContBar = 0.45 um</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>Sdiod.d</name>
+   <description>6.7. Sdiod.d : Min. and max. ContBar width inside nBuLay is 0.3 um</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>Sdiod.e</name>
+   <description>6.7. Sdiod.e : Min. and max. ContBar length inside nBuLay is 1.0 um</description>
+   <categories>
+   </categories>
+  </category>
+ <category>
+   <name>NBL.b</name>
+   <description>5.3.NBL.b : Min. nBuLay space or notch (same net) is 1.5 um</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>NBL.c</name>
+   <description>5.3.NBL.c : Min. PWell width between nBuLay regions (different net) is 3.2 um</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>NBL.d</name>
+   <description>5.3.NBL.d : Min. PWell width between nBuLay and NWell (different net) is 2.2 um</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>NBL.e</name>
+   <description>5.3.NBL.e : Min. nBuLay space to unrelated N+Activ is 1.0 um</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>NBL.f</name>
+   <description>5.3.NBL.f : Min. nBuLay space to unrelated P+Activ is 0.5 um</description>
+   <categories>
+   </categories>
+  </category>
+ <category>
+   <name>Act.a</name>
+   <description>5.5. Act.a : Min. Activ width : 0.15 µm</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>Act.b</name>
+   <description>5.5. Act.b : Min. Activ (drawing + filler) space or notch: 0.21 µm.</description>
+   <categories>
+   </categories>
+  </category>
+ <category>
+   <name>MIM.c</name>
+   <description>6.11. MIM.c : Min. Metal5 enclosure of MIM is 0.6 um</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>MIM.d</name>
+   <description>6.11. MIM.d : Min. MIM enclosure of TopVia1 is 0.36 um</description>
+   <categories>
+   </categories>
+  </category>
+ <category>
+   <name>LBE.a</name>
+   <description>9.1. LBE.a: Min. LBE width: 100.0 µm</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>LBE.b</name>
+   <description>9.1. LBE.b: Max. LBE width: 1500.0 µm.</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>LBE.b1</name>
+   <description>9.1. LBE.b1: Max. LBE area (µm²): 250000.0 .um</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>LBE.c</name>
+   <description>9.1. LBE.c: Min. LBE space or notch: 100.0 µm</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>LBE.d</name>
+   <description>9.1. LBE.d: Min. LBE space to inner edge of EdgeSeal: 150.0 µm</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>LBE.h</name>
+   <description>9.1. LBE.h: No LBE ring allowed.</description>
+   <categories>
+   </categories>
+  </category>
+ <category>
    <name>npn13G2.bR</name>
    <description>6.1.3. npn13G2.bR : Max. recommended total number of npn13G2 emitters per chip is 4000</description>
    <categories>
@@ -218,50 +278,32 @@
    </categories>
   </category>
  <category>
-   <name>Act.a</name>
-   <description>5.5. Act.a : Min. Activ width : 0.15 µm</description>
+   <name>AFil.c1</name>
+   <description>5.6. AFil.c1 Min. Activ:filler space to Activ is 0.42 um</description>
    <categories>
    </categories>
   </category>
   <category>
-   <name>Act.b</name>
-   <description>5.5. Act.b : Min. Activ (drawing + filler) space or notch: 0.21 µm.</description>
-   <categories>
-   </categories>
-  </category>
- <category>
-   <name>Gat.a</name>
-   <description>5.8. Gat.a : Min. GatPoly width: 0.13 µm</description>
+   <name>AFil.c</name>
+   <description>5.6. AFil.c Min. Activ:filler space to Cont, GatPoly is 1.1 um</description>
    <categories>
    </categories>
   </category>
   <category>
-   <name>Gat.b</name>
-   <description>5.8. Gat.b : Min. GatPoly (drawing + filler) space or notch: 0.18 µm.</description>
+   <name>AFil.d</name>
+   <description>5.6. AFil.d Min. Activ:filler space to NWell, nBuLay is 1.0 um</description>
    <categories>
    </categories>
   </category>
   <category>
-   <name>Gat.d</name>
-   <description>5.8. Gat.d :Min. GatPoly space to Activ: 0.07 µm.</description>
+   <name>AFil.e</name>
+   <description>5.6. AFil.e Min. Activ:filler space to TRANS is 1.0 um</description>
    <categories>
    </categories>
   </category>
   <category>
-   <name>Gat.a1</name>
-   <description>5.8. Gat.a1 Min. GatPoly width for channel length of 1.2V NFET is 0.13 um</description>
-   <categories>
-   </categories>
-  </category>
-  <category>
-   <name>Gat.a2</name>
-   <description>5.8. Gat.a2 Min. GatPoly width for channel length of 1.2V PFET is 0.13 um</description>
-   <categories>
-   </categories>
-  </category>
-  <category>
-   <name>Gat.g</name>
-   <description>5.8. Gat.g Min. GatPoly width for 45-degree bent shapes if the bend GatPoly,length is &gt; 0.39 µm is 0.16 um</description>
+   <name>AFil.j</name>
+   <description>5.6. AFil.j Min. nSD:block and SalBlock enclosure of Activ:filler inside PWell:block is 0.25 um</description>
    <categories>
    </categories>
   </category>
@@ -308,48 +350,6 @@
    </categories>
   </category>
  <category>
-   <name>MIM.c</name>
-   <description>6.11. MIM.c : Min. Metal5 enclosure of MIM is 0.6 um</description>
-   <categories>
-   </categories>
-  </category>
-  <category>
-   <name>MIM.d</name>
-   <description>6.11. MIM.d : Min. MIM enclosure of TopVia1 is 0.36 um</description>
-   <categories>
-   </categories>
-  </category>
- <category>
-   <name>AFil.c1</name>
-   <description>5.6. AFil.c1 Min. Activ:filler space to Activ is 0.42 um</description>
-   <categories>
-   </categories>
-  </category>
-  <category>
-   <name>AFil.c</name>
-   <description>5.6. AFil.c Min. Activ:filler space to Cont, GatPoly is 1.1 um</description>
-   <categories>
-   </categories>
-  </category>
-  <category>
-   <name>AFil.d</name>
-   <description>5.6. AFil.d Min. Activ:filler space to NWell, nBuLay is 1.0 um</description>
-   <categories>
-   </categories>
-  </category>
-  <category>
-   <name>AFil.e</name>
-   <description>5.6. AFil.e Min. Activ:filler space to TRANS is 1.0 um</description>
-   <categories>
-   </categories>
-  </category>
-  <category>
-   <name>AFil.j</name>
-   <description>5.6. AFil.j Min. nSD:block and SalBlock enclosure of Activ:filler inside PWell:block is 0.25 um</description>
-   <categories>
-   </categories>
-  </category>
- <category>
    <name>M1.a</name>
    <description>5.16. M1.a: Min. Metal1 width: 0.16 μm.</description>
    <categories>
@@ -386,38 +386,38 @@
    </categories>
   </category>
  <category>
-   <name>LBE.a</name>
-   <description>9.1. LBE.a: Min. LBE width: 100.0 µm</description>
+   <name>Gat.a</name>
+   <description>5.8. Gat.a : Min. GatPoly width: 0.13 µm</description>
    <categories>
    </categories>
   </category>
   <category>
-   <name>LBE.b</name>
-   <description>9.1. LBE.b: Max. LBE width: 1500.0 µm.</description>
+   <name>Gat.b</name>
+   <description>5.8. Gat.b : Min. GatPoly (drawing + filler) space or notch: 0.18 µm.</description>
    <categories>
    </categories>
   </category>
   <category>
-   <name>LBE.b1</name>
-   <description>9.1. LBE.b1: Max. LBE area (µm²): 250000.0 .um</description>
+   <name>Gat.d</name>
+   <description>5.8. Gat.d :Min. GatPoly space to Activ: 0.07 µm.</description>
    <categories>
    </categories>
   </category>
   <category>
-   <name>LBE.c</name>
-   <description>9.1. LBE.c: Min. LBE space or notch: 100.0 µm</description>
+   <name>Gat.a1</name>
+   <description>5.8. Gat.a1 Min. GatPoly width for channel length of 1.2V NFET is 0.13 um</description>
    <categories>
    </categories>
   </category>
   <category>
-   <name>LBE.d</name>
-   <description>9.1. LBE.d: Min. LBE space to inner edge of EdgeSeal: 150.0 µm</description>
+   <name>Gat.a2</name>
+   <description>5.8. Gat.a2 Min. GatPoly width for channel length of 1.2V PFET is 0.13 um</description>
    <categories>
    </categories>
   </category>
   <category>
-   <name>LBE.h</name>
-   <description>9.1. LBE.h: No LBE ring allowed.</description>
+   <name>Gat.g</name>
+   <description>5.8. Gat.g Min. GatPoly width for 45-degree bent shapes if the bend GatPoly,length is &gt; 0.39 µm is 0.16 um</description>
    <categories>
    </categories>
   </category>
@@ -446,24 +446,6 @@
    </categories>
   </category>
  <category>
-   <name>Pas.a</name>
-   <description>5.27. Pas.a:Min. Passiv width: 2.1 µm</description>
-   <categories>
-   </categories>
-  </category>
-  <category>
-   <name>Pas.b</name>
-   <description>5.27. Pas.b: Min. Passiv space or notch: 3.5 µm</description>
-   <categories>
-   </categories>
-  </category>
-  <category>
-   <name>Pas.c</name>
-   <description>5.27. Pas.c : Min. TopMetal2 enclosure of Passiv [Not checked outside of sealring (edge-seal-passive)] is 2.1 um </description>
-   <categories>
-   </categories>
-  </category>
- <category>
    <name>TM1.a</name>
    <description>5.22. TM1.a: Min. TopMetal1 width: 1.64 μm.</description>
    <categories>
@@ -472,150 +454,6 @@
   <category>
    <name>TM1.b</name>
    <description>5.22. TM1.b: Min. TopMetal1 (drawing + filler) space or notch: 1.64 μm.</description>
-   <categories>
-   </categories>
-  </category>
- <category>
-   <name>Padc.a</name>
-   <description>6.9. Padc.a : CuPillarPad size is 35.0 um</description>
-   <categories>
-   </categories>
-  </category>
-  <category>
-   <name>Padc.b</name>
-   <description>6.9. Padc.b : Min. CuPillarPad space is 40.0 um</description>
-   <categories>
-   </categories>
-  </category>
-  <category>
-   <name>Padc.c</name>
-   <description>6.9. Padc.c : Min. TopMetal2 (within dfpad) enclosure of CuPillarPad is 7.5 um</description>
-   <categories>
-   </categories>
-  </category>
-  <category>
-   <name>padc.f</name>
-   <description>6.9.2. Padc.f: Allowed passivation opening shape Circle</description>
-   <categories>
-   </categories>
-  </category>
- <category>
-   <name>TM2Fil.c</name>
-   <description>5.26. TM2Fil.c : Min. TopMetal2:filler space to TopMetal2 is 3.0 um</description>
-   <categories>
-   </categories>
-  </category>
-  <category>
-   <name>TM2Fil.a1</name>
-   <description>5.26. TM2Fil.a1 : Max. TopMetal2:filler width is 10.0 um</description>
-   <categories>
-   </categories>
-  </category>
- <category>
-   <name>M1Fil.c</name>
-   <description>5.18. M1Fil.c : Min. Metal1:filler space to Metal1 is 0.42 um</description>
-   <categories>
-   </categories>
-  </category>
-  <category>
-   <name>M1Fil.a2</name>
-   <description>5.18. M1Fil.a2 : Max. Metal1:filler width is 5.0 um</description>
-   <categories>
-   </categories>
-  </category>
-  <category>
-   <name>M2Fil.c</name>
-   <description>5.18. M2Fil.c : Min. Metal2:filler space to Metal2 is 0.42 um</description>
-   <categories>
-   </categories>
-  </category>
-  <category>
-   <name>M2Fil.a2</name>
-   <description>5.18. M2Fil.a2 : Max. Metal2:filler width is 5.0 um</description>
-   <categories>
-   </categories>
-  </category>
-  <category>
-   <name>M3Fil.c</name>
-   <description>5.18. M3Fil.c : Min. Metal3:filler space to Metal3 is 0.42 um</description>
-   <categories>
-   </categories>
-  </category>
-  <category>
-   <name>M3Fil.a2</name>
-   <description>5.18. M3Fil.a2 : Max. Metal3:filler width is 5.0 um</description>
-   <categories>
-   </categories>
-  </category>
-  <category>
-   <name>M4Fil.c</name>
-   <description>5.18. M4Fil.c : Min. Metal4:filler space to Metal4 is 0.42 um</description>
-   <categories>
-   </categories>
-  </category>
-  <category>
-   <name>M4Fil.a2</name>
-   <description>5.18. M4Fil.a2 : Max. Metal4:filler width is 5.0 um</description>
-   <categories>
-   </categories>
-  </category>
-  <category>
-   <name>M5Fil.c</name>
-   <description>5.18. M5Fil.c : Min. Metal5:filler space to Metal5 is 0.42 um</description>
-   <categories>
-   </categories>
-  </category>
-  <category>
-   <name>M5Fil.a2</name>
-   <description>5.18. M5Fil.a2 : Max. Metal5:filler width is 5.0 um</description>
-   <categories>
-   </categories>
-  </category>
- <category>
-   <name>TV2.a</name>
-   <description>5.24. TV2.a : Min. and max. TopVia2 width: 0.9 µm</description>
-   <categories>
-   </categories>
-  </category>
-  <category>
-   <name>TV2.b</name>
-   <description>5.24. TV2.b : Min. TopVia2 space: 1.06 µm</description>
-   <categories>
-   </categories>
-  </category>
-  <category>
-   <name>TV2.c</name>
-   <description>5.24. TV2.c : Min. TopMetal1 enclosure of TopVia2 is 0.5 um</description>
-   <categories>
-   </categories>
-  </category>
-  <category>
-   <name>TV2.d</name>
-   <description>5.24. TV2.d : Min. TopMetal2 enclosure of TopVia2 is 0.5 um</description>
-   <categories>
-   </categories>
-  </category>
- <category>
-   <name>TV1.a</name>
-   <description>5.21. TV1.a : Min. and max. TopVia1 width: 0.42 µm</description>
-   <categories>
-   </categories>
-  </category>
-  <category>
-   <name>TV1.b</name>
-   <description>5.21. TV1.b : Min. TopVia1 space: 0.42 µm</description>
-   <categories>
-   </categories>
-  </category>
-  <category>
-   <name>TV1.c</name>
-   <description>5.21. TV1.c : Min. Metal5 enclosure of TopVia1 is 0.1 um</description>
-   <categories>
-   </categories>
-  </category>
-  <category>
-   <name>TV1.d</name>
-   <description>5.21. TV1.d : Min. TopMetal1 enclosure of TopVia1 is 0.42 um</description>
    <categories>
    </categories>
   </category>
@@ -692,6 +530,42 @@
    </categories>
   </category>
  <category>
+   <name>TV2.a</name>
+   <description>5.24. TV2.a : Min. and max. TopVia2 width: 0.9 µm</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>TV2.b</name>
+   <description>5.24. TV2.b : Min. TopVia2 space: 1.06 µm</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>TV2.c</name>
+   <description>5.24. TV2.c : Min. TopMetal1 enclosure of TopVia2 is 0.5 um</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>TV2.d</name>
+   <description>5.24. TV2.d : Min. TopMetal2 enclosure of TopVia2 is 0.5 um</description>
+   <categories>
+   </categories>
+  </category>
+ <category>
+   <name>TM2Fil.c</name>
+   <description>5.26. TM2Fil.c : Min. TopMetal2:filler space to TopMetal2 is 3.0 um</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>TM2Fil.a1</name>
+   <description>5.26. TM2Fil.a1 : Max. TopMetal2:filler width is 10.0 um</description>
+   <categories>
+   </categories>
+  </category>
+ <category>
    <name>Pad.m</name>
    <description>6.9. Pad.m : SBumpPad and CuPillarPad in same layout not allowed</description>
    <categories>
@@ -746,6 +620,132 @@
    </categories>
   </category>
  <category>
+   <name>Pas.a</name>
+   <description>5.27. Pas.a:Min. Passiv width: 2.1 µm</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>Pas.b</name>
+   <description>5.27. Pas.b: Min. Passiv space or notch: 3.5 µm</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>Pas.c</name>
+   <description>5.27. Pas.c : Min. TopMetal2 enclosure of Passiv [Not checked outside of sealring (edge-seal-passive)] is 2.1 um </description>
+   <categories>
+   </categories>
+  </category>
+ <category>
+   <name>TV1.a</name>
+   <description>5.21. TV1.a : Min. and max. TopVia1 width: 0.42 µm</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>TV1.b</name>
+   <description>5.21. TV1.b : Min. TopVia1 space: 0.42 µm</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>TV1.c</name>
+   <description>5.21. TV1.c : Min. Metal5 enclosure of TopVia1 is 0.1 um</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>TV1.d</name>
+   <description>5.21. TV1.d : Min. TopMetal1 enclosure of TopVia1 is 0.42 um</description>
+   <categories>
+   </categories>
+  </category>
+ <category>
+   <name>M1Fil.c</name>
+   <description>5.18. M1Fil.c : Min. Metal1:filler space to Metal1 is 0.42 um</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>M1Fil.a2</name>
+   <description>5.18. M1Fil.a2 : Max. Metal1:filler width is 5.0 um</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>M2Fil.c</name>
+   <description>5.18. M2Fil.c : Min. Metal2:filler space to Metal2 is 0.42 um</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>M2Fil.a2</name>
+   <description>5.18. M2Fil.a2 : Max. Metal2:filler width is 5.0 um</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>M3Fil.c</name>
+   <description>5.18. M3Fil.c : Min. Metal3:filler space to Metal3 is 0.42 um</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>M3Fil.a2</name>
+   <description>5.18. M3Fil.a2 : Max. Metal3:filler width is 5.0 um</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>M4Fil.c</name>
+   <description>5.18. M4Fil.c : Min. Metal4:filler space to Metal4 is 0.42 um</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>M4Fil.a2</name>
+   <description>5.18. M4Fil.a2 : Max. Metal4:filler width is 5.0 um</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>M5Fil.c</name>
+   <description>5.18. M5Fil.c : Min. Metal5:filler space to Metal5 is 0.42 um</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>M5Fil.a2</name>
+   <description>5.18. M5Fil.a2 : Max. Metal5:filler width is 5.0 um</description>
+   <categories>
+   </categories>
+  </category>
+ <category>
+   <name>Padc.a</name>
+   <description>6.9. Padc.a : CuPillarPad size is 35.0 um</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>Padc.b</name>
+   <description>6.9. Padc.b : Min. CuPillarPad space is 40.0 um</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>Padc.c</name>
+   <description>6.9. Padc.c : Min. TopMetal2 (within dfpad) enclosure of CuPillarPad is 7.5 um</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>padc.f</name>
+   <description>6.9.2. Padc.f: Allowed passivation opening shape Circle</description>
+   <categories>
+   </categories>
+  </category>
+ <category>
    <name>Padb.a</name>
    <description>6.9. Padb.a : SBumpPad size is 60.0 um</description>
    <categories>
@@ -776,24 +776,6 @@
    </categories>
   </category>
  <category>
-   <name>V1.a</name>
-   <description>5.19. V1.a : Min. and max. Via1 width: 0.19 µm</description>
-   <categories>
-   </categories>
-  </category>
-  <category>
-   <name>V1.b</name>
-   <description>5.19. V1.b : Min. Via1 space: 0.22 µm</description>
-   <categories>
-   </categories>
-  </category>
-  <category>
-   <name>V1.c</name>
-   <description>5.19.  V1.c Min. Metal1 enclosure of Via1 is 0.01 um</description>
-   <categories>
-   </categories>
-  </category>
- <category>
    <name>TM2.a</name>
    <description>5.25. TM2.a: Min. TopMetal2 width: 2.0 μm.</description>
    <categories>
@@ -809,6 +791,24 @@
    <name>TM2.bR</name>
    <description>5.25. TM2.bR : Min. space of TopMetal2 lines if, at least one line is wider than 2.5 µm
                     and the parallel run is more than 50.0 µm is 5.0 um</description>
+   <categories>
+   </categories>
+  </category>
+ <category>
+   <name>V1.a</name>
+   <description>5.19. V1.a : Min. and max. Via1 width: 0.19 µm</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>V1.b</name>
+   <description>5.19. V1.b : Min. Via1 space: 0.22 µm</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>V1.c</name>
+   <description>5.19.  V1.c Min. Metal1 enclosure of Via1 is 0.01 um</description>
    <categories>
    </categories>
   </category>
@@ -1095,12 +1095,6 @@
    </categories>
   </category>
   <category>
-   <name>activ_pin_Offgrid</name>
-   <description>3.1 activ_pin_Offgrid: activ_pin layer is Offgrid (All features are on a drawing grid of 5 nm)</description>
-   <categories>
-   </categories>
-  </category>
-  <category>
    <name>activ_mask_Offgrid</name>
    <description>3.1 activ_mask_Offgrid: activ_mask layer is Offgrid (All features are on a drawing grid of 5 nm)</description>
    <categories>
@@ -1113,12 +1107,6 @@
    </categories>
   </category>
   <category>
-   <name>activ_nofill_Offgrid</name>
-   <description>3.1 activ_nofill_Offgrid: activ_nofill layer is Offgrid (All features are on a drawing grid of 5 nm)</description>
-   <categories>
-   </categories>
-  </category>
-  <category>
    <name>activ_opc_Offgrid</name>
    <description>3.1 activ_opc_Offgrid: activ_opc layer is Offgrid (All features are on a drawing grid of 5 nm)</description>
    <categories>
@@ -1127,12 +1115,6 @@
   <category>
    <name>activ_iopc_Offgrid</name>
    <description>3.1 activ_iopc_Offgrid: activ_iopc layer is Offgrid (All features are on a drawing grid of 5 nm)</description>
-   <categories>
-   </categories>
-  </category>
-  <category>
-   <name>activ_noqrc_Offgrid</name>
-   <description>3.1 activ_noqrc_Offgrid: activ_noqrc layer is Offgrid (All features are on a drawing grid of 5 nm)</description>
    <categories>
    </categories>
   </category>
@@ -1161,20 +1143,8 @@
    </categories>
   </category>
   <category>
-   <name>gatpoly_pin_Offgrid</name>
-   <description>3.1 gatpoly_pin_Offgrid: gatpoly_pin layer is Offgrid (All features are on a drawing grid of 5 nm)</description>
-   <categories>
-   </categories>
-  </category>
-  <category>
    <name>gatpoly_filler_Offgrid</name>
    <description>3.1 gatpoly_filler_Offgrid: gatpoly_filler layer is Offgrid (All features are on a drawing grid of 5 nm)</description>
-   <categories>
-   </categories>
-  </category>
-  <category>
-   <name>gatpoly_nofill_Offgrid</name>
-   <description>3.1 gatpoly_nofill_Offgrid: gatpoly_nofill layer is Offgrid (All features are on a drawing grid of 5 nm)</description>
    <categories>
    </categories>
   </category>
@@ -1227,12 +1197,6 @@
    </categories>
   </category>
   <category>
-   <name>metal1_pin_Offgrid</name>
-   <description>3.1 metal1_pin_Offgrid: metal1_pin layer is Offgrid (All features are on a drawing grid of 5 nm)</description>
-   <categories>
-   </categories>
-  </category>
-  <category>
    <name>metal1_mask_Offgrid</name>
    <description>3.1 metal1_mask_Offgrid: metal1_mask layer is Offgrid (All features are on a drawing grid of 5 nm)</description>
    <categories>
@@ -1241,12 +1205,6 @@
   <category>
    <name>metal1_filler_Offgrid</name>
    <description>3.1 metal1_filler_Offgrid: metal1_filler layer is Offgrid (All features are on a drawing grid of 5 nm)</description>
-   <categories>
-   </categories>
-  </category>
-  <category>
-   <name>metal1_nofill_Offgrid</name>
-   <description>3.1 metal1_nofill_Offgrid: metal1_nofill layer is Offgrid (All features are on a drawing grid of 5 nm)</description>
    <categories>
    </categories>
   </category>
@@ -1293,12 +1251,6 @@
    </categories>
   </category>
   <category>
-   <name>passiv_pin_Offgrid</name>
-   <description>3.1 passiv_pin_Offgrid: passiv_pin layer is Offgrid (All features are on a drawing grid of 5 nm)</description>
-   <categories>
-   </categories>
-  </category>
-  <category>
    <name>passiv_pillar_Offgrid</name>
    <description>3.1 passiv_pillar_Offgrid: passiv_pillar layer is Offgrid (All features are on a drawing grid of 5 nm)</description>
    <categories>
@@ -1323,12 +1275,6 @@
    </categories>
   </category>
   <category>
-   <name>metal2_pin_Offgrid</name>
-   <description>3.1 metal2_pin_Offgrid: metal2_pin layer is Offgrid (All features are on a drawing grid of 5 nm)</description>
-   <categories>
-   </categories>
-  </category>
-  <category>
    <name>metal2_mask_Offgrid</name>
    <description>3.1 metal2_mask_Offgrid: metal2_mask layer is Offgrid (All features are on a drawing grid of 5 nm)</description>
    <categories>
@@ -1337,12 +1283,6 @@
   <category>
    <name>metal2_filler_Offgrid</name>
    <description>3.1 metal2_filler_Offgrid: metal2_filler layer is Offgrid (All features are on a drawing grid of 5 nm)</description>
-   <categories>
-   </categories>
-  </category>
-  <category>
-   <name>metal2_nofill_Offgrid</name>
-   <description>3.1 metal2_nofill_Offgrid: metal2_nofill layer is Offgrid (All features are on a drawing grid of 5 nm)</description>
    <categories>
    </categories>
   </category>
@@ -1389,12 +1329,6 @@
    </categories>
   </category>
   <category>
-   <name>baspoly_pin_Offgrid</name>
-   <description>3.1 baspoly_pin_Offgrid: baspoly_pin layer is Offgrid (All features are on a drawing grid of 5 nm)</description>
-   <categories>
-   </categories>
-  </category>
-  <category>
    <name>psd_drw_Offgrid</name>
    <description>3.1 psd_drw_Offgrid: psd_drw layer is Offgrid (All features are on a drawing grid of 5 nm)</description>
    <categories>
@@ -1419,12 +1353,6 @@
    </categories>
   </category>
   <category>
-   <name>backmetal1_pin_Offgrid</name>
-   <description>3.1 backmetal1_pin_Offgrid: backmetal1_pin layer is Offgrid (All features are on a drawing grid of 5 nm)</description>
-   <categories>
-   </categories>
-  </category>
-  <category>
    <name>backmetal1_mask_Offgrid</name>
    <description>3.1 backmetal1_mask_Offgrid: backmetal1_mask layer is Offgrid (All features are on a drawing grid of 5 nm)</description>
    <categories>
@@ -1433,12 +1361,6 @@
   <category>
    <name>backmetal1_filler_Offgrid</name>
    <description>3.1 backmetal1_filler_Offgrid: backmetal1_filler layer is Offgrid (All features are on a drawing grid of 5 nm)</description>
-   <categories>
-   </categories>
-  </category>
-  <category>
-   <name>backmetal1_nofill_Offgrid</name>
-   <description>3.1 backmetal1_nofill_Offgrid: backmetal1_nofill layer is Offgrid (All features are on a drawing grid of 5 nm)</description>
    <categories>
    </categories>
   </category>
@@ -1503,12 +1425,6 @@
    </categories>
   </category>
   <category>
-   <name>metal3_pin_Offgrid</name>
-   <description>3.1 metal3_pin_Offgrid: metal3_pin layer is Offgrid (All features are on a drawing grid of 5 nm)</description>
-   <categories>
-   </categories>
-  </category>
-  <category>
    <name>metal3_mask_Offgrid</name>
    <description>3.1 metal3_mask_Offgrid: metal3_mask layer is Offgrid (All features are on a drawing grid of 5 nm)</description>
    <categories>
@@ -1517,12 +1433,6 @@
   <category>
    <name>metal3_filler_Offgrid</name>
    <description>3.1 metal3_filler_Offgrid: metal3_filler layer is Offgrid (All features are on a drawing grid of 5 nm)</description>
-   <categories>
-   </categories>
-  </category>
-  <category>
-   <name>metal3_nofill_Offgrid</name>
-   <description>3.1 metal3_nofill_Offgrid: metal3_nofill layer is Offgrid (All features are on a drawing grid of 5 nm)</description>
    <categories>
    </categories>
   </category>
@@ -1569,20 +1479,8 @@
    </categories>
   </category>
   <category>
-   <name>nwell_pin_Offgrid</name>
-   <description>3.1 nwell_pin_Offgrid: nwell_pin layer is Offgrid (All features are on a drawing grid of 5 nm)</description>
-   <categories>
-   </categories>
-  </category>
-  <category>
    <name>nbulay_drw_Offgrid</name>
    <description>3.1 nbulay_drw_Offgrid: nbulay_drw layer is Offgrid (All features are on a drawing grid of 5 nm)</description>
-   <categories>
-   </categories>
-  </category>
-  <category>
-   <name>nbulay_pin_Offgrid</name>
-   <description>3.1 nbulay_pin_Offgrid: nbulay_pin layer is Offgrid (All features are on a drawing grid of 5 nm)</description>
    <categories>
    </categories>
   </category>
@@ -1595,12 +1493,6 @@
   <category>
    <name>pwell_drw_Offgrid</name>
    <description>3.1 pwell_drw_Offgrid: pwell_drw layer is Offgrid (All features are on a drawing grid of 5 nm)</description>
-   <categories>
-   </categories>
-  </category>
-  <category>
-   <name>pwell_pin_Offgrid</name>
-   <description>3.1 pwell_pin_Offgrid: pwell_pin layer is Offgrid (All features are on a drawing grid of 5 nm)</description>
    <categories>
    </categories>
   </category>
@@ -1665,12 +1557,6 @@
    </categories>
   </category>
   <category>
-   <name>metal4_pin_Offgrid</name>
-   <description>3.1 metal4_pin_Offgrid: metal4_pin layer is Offgrid (All features are on a drawing grid of 5 nm)</description>
-   <categories>
-   </categories>
-  </category>
-  <category>
    <name>metal4_mask_Offgrid</name>
    <description>3.1 metal4_mask_Offgrid: metal4_mask layer is Offgrid (All features are on a drawing grid of 5 nm)</description>
    <categories>
@@ -1679,12 +1565,6 @@
   <category>
    <name>metal4_filler_Offgrid</name>
    <description>3.1 metal4_filler_Offgrid: metal4_filler layer is Offgrid (All features are on a drawing grid of 5 nm)</description>
-   <categories>
-   </categories>
-  </category>
-  <category>
-   <name>metal4_nofill_Offgrid</name>
-   <description>3.1 metal4_nofill_Offgrid: metal4_nofill layer is Offgrid (All features are on a drawing grid of 5 nm)</description>
    <categories>
    </categories>
   </category>
@@ -1737,12 +1617,6 @@
    </categories>
   </category>
   <category>
-   <name>metal5_pin_Offgrid</name>
-   <description>3.1 metal5_pin_Offgrid: metal5_pin layer is Offgrid (All features are on a drawing grid of 5 nm)</description>
-   <categories>
-   </categories>
-  </category>
-  <category>
    <name>metal5_mask_Offgrid</name>
    <description>3.1 metal5_mask_Offgrid: metal5_mask layer is Offgrid (All features are on a drawing grid of 5 nm)</description>
    <categories>
@@ -1751,12 +1625,6 @@
   <category>
    <name>metal5_filler_Offgrid</name>
    <description>3.1 metal5_filler_Offgrid: metal5_filler layer is Offgrid (All features are on a drawing grid of 5 nm)</description>
-   <categories>
-   </categories>
-  </category>
-  <category>
-   <name>metal5_nofill_Offgrid</name>
-   <description>3.1 metal5_nofill_Offgrid: metal5_nofill layer is Offgrid (All features are on a drawing grid of 5 nm)</description>
    <categories>
    </categories>
   </category>
@@ -1809,20 +1677,8 @@
    </categories>
   </category>
   <category>
-   <name>exchange0_pin_Offgrid</name>
-   <description>3.1 exchange0_pin_Offgrid: exchange0_pin layer is Offgrid (All features are on a drawing grid of 5 nm)</description>
-   <categories>
-   </categories>
-  </category>
-  <category>
    <name>exchange1_drw_Offgrid</name>
    <description>3.1 exchange1_drw_Offgrid: exchange1_drw layer is Offgrid (All features are on a drawing grid of 5 nm)</description>
-   <categories>
-   </categories>
-  </category>
-  <category>
-   <name>exchange1_pin_Offgrid</name>
-   <description>3.1 exchange1_pin_Offgrid: exchange1_pin layer is Offgrid (All features are on a drawing grid of 5 nm)</description>
    <categories>
    </categories>
   </category>
@@ -1833,32 +1689,14 @@
    </categories>
   </category>
   <category>
-   <name>exchange2_pin_Offgrid</name>
-   <description>3.1 exchange2_pin_Offgrid: exchange2_pin layer is Offgrid (All features are on a drawing grid of 5 nm)</description>
-   <categories>
-   </categories>
-  </category>
-  <category>
    <name>exchange3_drw_Offgrid</name>
    <description>3.1 exchange3_drw_Offgrid: exchange3_drw layer is Offgrid (All features are on a drawing grid of 5 nm)</description>
    <categories>
    </categories>
   </category>
   <category>
-   <name>exchange3_pin_Offgrid</name>
-   <description>3.1 exchange3_pin_Offgrid: exchange3_pin layer is Offgrid (All features are on a drawing grid of 5 nm)</description>
-   <categories>
-   </categories>
-  </category>
-  <category>
    <name>exchange4_drw_Offgrid</name>
    <description>3.1 exchange4_drw_Offgrid: exchange4_drw layer is Offgrid (All features are on a drawing grid of 5 nm)</description>
-   <categories>
-   </categories>
-  </category>
-  <category>
-   <name>exchange4_pin_Offgrid</name>
-   <description>3.1 exchange4_pin_Offgrid: exchange4_pin layer is Offgrid (All features are on a drawing grid of 5 nm)</description>
    <categories>
    </categories>
   </category>
@@ -1977,12 +1815,6 @@
    </categories>
   </category>
   <category>
-   <name>topmetal1_pin_Offgrid</name>
-   <description>3.1 topmetal1_pin_Offgrid: topmetal1_pin layer is Offgrid (All features are on a drawing grid of 5 nm)</description>
-   <categories>
-   </categories>
-  </category>
-  <category>
    <name>topmetal1_mask_Offgrid</name>
    <description>3.1 topmetal1_mask_Offgrid: topmetal1_mask layer is Offgrid (All features are on a drawing grid of 5 nm)</description>
    <categories>
@@ -1991,12 +1823,6 @@
   <category>
    <name>topmetal1_filler_Offgrid</name>
    <description>3.1 topmetal1_filler_Offgrid: topmetal1_filler layer is Offgrid (All features are on a drawing grid of 5 nm)</description>
-   <categories>
-   </categories>
-  </category>
-  <category>
-   <name>topmetal1_nofill_Offgrid</name>
-   <description>3.1 topmetal1_nofill_Offgrid: topmetal1_nofill layer is Offgrid (All features are on a drawing grid of 5 nm)</description>
    <categories>
    </categories>
   </category>
@@ -2043,12 +1869,6 @@
    </categories>
   </category>
   <category>
-   <name>polyres_pin_Offgrid</name>
-   <description>3.1 polyres_pin_Offgrid: polyres_pin layer is Offgrid (All features are on a drawing grid of 5 nm)</description>
-   <categories>
-   </categories>
-  </category>
-  <category>
    <name>vmim_drw_Offgrid</name>
    <description>3.1 vmim_drw_Offgrid: vmim_drw layer is Offgrid (All features are on a drawing grid of 5 nm)</description>
    <categories>
@@ -2079,12 +1899,6 @@
    </categories>
   </category>
   <category>
-   <name>topmetal2_pin_Offgrid</name>
-   <description>3.1 topmetal2_pin_Offgrid: topmetal2_pin layer is Offgrid (All features are on a drawing grid of 5 nm)</description>
-   <categories>
-   </categories>
-  </category>
-  <category>
    <name>topmetal2_mask_Offgrid</name>
    <description>3.1 topmetal2_mask_Offgrid: topmetal2_mask layer is Offgrid (All features are on a drawing grid of 5 nm)</description>
    <categories>
@@ -2093,12 +1907,6 @@
   <category>
    <name>topmetal2_filler_Offgrid</name>
    <description>3.1 topmetal2_filler_Offgrid: topmetal2_filler layer is Offgrid (All features are on a drawing grid of 5 nm)</description>
-   <categories>
-   </categories>
-  </category>
-  <category>
-   <name>topmetal2_nofill_Offgrid</name>
-   <description>3.1 topmetal2_nofill_Offgrid: topmetal2_nofill layer is Offgrid (All features are on a drawing grid of 5 nm)</description>
    <categories>
    </categories>
   </category>

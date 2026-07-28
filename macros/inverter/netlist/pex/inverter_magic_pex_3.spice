@@ -1,4 +1,4 @@
-* PEX produced on Tue Jul 21 03:56:38 AM CEST 2026 using /foss/tools/sak/sak-pex.sh with m=3 and s=1 (extresist threshold=10000 mOhm, minres=1000 mOhm, mindelay=1 ps)
+* PEX produced on Wed Jul 29 01:28:35 AM CEST 2026 using /foss/tools/sak/sak-pex.sh with m=3 and s=1 (extresist threshold=10000 mOhm, minres=1000 mOhm, mindelay=1 ps)
 * NGSPICE file created from inverter_pex.ext - technology: ihp-sg13g2
 
 .subckt inverter_pex vin VSS VDD vout
@@ -46,37 +46,37 @@ X40 vout vin VDD VDD sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
 X41 VDD vin vout VDD sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
 X42 vout vin VSS.t3 VSS.t8 sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
 X43 vout vin VSS.t3 VSS.t14 sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
-R0 VSS.t21 VSS.t3 17.4346
-R1 VSS.t3 VSS.t18 39.0518
-R2 VSS.t3 VSS.t16 47.4573
-R3 VSS.t3 VSS.t15 49.8634
-R4 VSS.t3 VSS.t12 49.8589
-R5 VSS.t3 VSS.t5 39.0522
-R6 VSS.t3 VSS.t4 33.0458
-R7 VSS.t3 VSS.t11 49.8618
-R8 VSS.t3 VSS.t20 25.8411
-R9 VSS.t3 VSS.t19 33.0468
-R10 VSS.t3 VSS.t13 51.06
-R11 VSS.t3 VSS.t9 51.0601
-R12 VSS.t3 VSS.t8 49.8607
-R13 VSS.t3 VSS.t27 5.66087
-R14 VSS.t22 VSS.t3 5.73468
-R15 VSS.t3 VSS.t24 5.65915
-R16 VSS.t3 VSS.t17 43.8545
-R17 VSS.t3 VSS.t23 7.82644
-R18 VSS.t3 VSS.t0 17.4354
-R19 VSS.t3 VSS.t2 25.8418
-R20 VSS.t3 VSS.t6 43.8545
-R21 VSS.t3 VSS.t7 47.4573
-R22 VSS.t3 VSS.t10 51.0597
-R23 VSS.t25 VSS.t3 7.8269
-R24 VSS.t3 VSS.t14 51.0596
-R25 VSS.t1 VSS.t3 5.65861
-C0 vin vout 18.1624f
-C1 VDD vout 15.0304f
-C2 VDD vin 28.614f
+R0 VSS.t21 VSS.t3 17.4347
+R1 VSS.t3 VSS.t20 25.8414
+R2 VSS.t3 VSS.t11 49.9648
+R3 VSS.t3 VSS.t14 51.124
+R4 VSS.t3 VSS.t19 33.0469
+R5 VSS.t3 VSS.t17 43.8551
+R6 VSS.t3 VSS.t16 47.4578
+R7 VSS.t3 VSS.t15 49.8596
+R8 VSS.t3 VSS.t12 49.8592
+R9 VSS.t3 VSS.t9 51.0604
+R10 VSS.t3 VSS.t8 49.86
+R11 VSS.t3 VSS.t4 33.0467
+R12 VSS.t22 VSS.t3 5.66889
+R13 VSS.t1 VSS.t3 5.668
+R14 VSS.t3 VSS.t24 5.66889
+R15 VSS.t3 VSS.t25 7.82646
+R16 VSS.t3 VSS.t23 7.82721
+R17 VSS.t3 VSS.t2 25.8412
+R18 VSS.t3 VSS.t5 39.0514
+R19 VSS.t3 VSS.t7 47.4577
+R20 VSS.t3 VSS.t18 39.0518
+R21 VSS.t3 VSS.t0 17.4339
+R22 VSS.t3 VSS.t13 51.0311
+R23 VSS.t3 VSS.t6 43.855
+R24 VSS.t3 VSS.t10 51.0056
+R25 VSS.t3 VSS.t27 5.668
+C0 VDD vout 15.0304f
+C1 VDD vin 28.614f
+C2 vout vin 18.1624f
 C3 vout 0 12.00912f
-C4 VSS.t22 0 3.74205f
-C5 VSS.t27 0 3.74205f
+C4 VSS.t27 0 3.74205f
+C5 VSS.t22 0 3.74205f
 .ends
 
