@@ -4,6 +4,7 @@
 - [ ] add further open-source FPGAs to `counter` macro from HeiChips 2026 template: https://github.com/HeiChips/heichips26-template
 - [ ] clean up top-level LVS (Magic + Netgen, KLayout ?) --> see / merge `top-level-lvs` branch
 - [ ] merge `fixed-auto-taper` branch
+- [ ] finish and merge `exercise-solution` branch
 - [ ] add custom LibreLane step for filler insertion after ArtistIC added logo --> see / merge `custom-librelane-steps` branch
     - flow without filler (GDS streamout + DRC check) --> default
     - add logo with ArtistIC --> custom
@@ -19,11 +20,9 @@
 - [ ] PR IHP sizing scripts
 - [ ] RTL Co-Simulation using `SpiceBind`
 - [ ] add PF SimulatePARALLEL testbench
-- [ ] double check make build-all --> do not simulate (only build) macros.
 - [ ] add VACASK testbenches
 - [ ] save markdown report of CACE
 - [ ] update table "Folder" column width
-- [ ] add exercise-solution branch and finish the exercises there
 - [ ] build same template for ihp-sg13cmos5l
 - [ ] build same template for gf180mcuD
 - [ ] build same template for sky130A
