@@ -1,5 +1,6 @@
 # SPDX-FileCopyrightText: 2024 Leo Moser, 2026 Simon Dorrer and Harald Pretl
 # SPDX-License-Identifier: Apache-2.0 WITH SHL-2.1
+# Description: Convert an image to a GDS layout.
 
 import klayout.db as db
 import argparse
@@ -103,7 +104,7 @@ def convert_to_gds(
 if __name__ == "__main__":
 
     parser = argparse.ArgumentParser(
-        prog="img2gds", description="Convert an image to GDS format"
+        prog="img2lay", description="Convert an image to GDS format"
     )
 
     parser.add_argument("image_path")

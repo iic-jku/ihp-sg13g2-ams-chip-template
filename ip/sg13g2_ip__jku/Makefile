@@ -77,7 +77,7 @@ clean: ## Remove generated outputs and reports
 # Boundary layers: 189/0 (prBoundary), 160/0 (NoMetFiller).
 logo: ## Generate GDS from image using Python script
 	mkdir -p $(GDS_DIR)
-	python3 script/make_gds.py $(IMG_FILE) $(GDS_DIR)/$(TOP).gds --cellname $(TOP) --invert --merge --pixel-size $(PIXEL_SIZE) --scale $(SCALE) --foreground "$(LAYER_NUM)" --boundary "189/0" "160/0"
+	python3 script/img2lay.py $(IMG_FILE) $(GDS_DIR)/$(TOP).gds --cellname $(TOP) --invert --merge --pixel-size $(PIXEL_SIZE) --scale $(SCALE) --foreground "$(LAYER_NUM)" --boundary "189/0" "160/0"
 .PHONY: logo
 # ================================================================================================
 
