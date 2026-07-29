@@ -271,14 +271,14 @@ build-top: ## Build macro (run LibreLane with KLayout & Magic DRC checks, copy r
 # ================================================================================================
 
 
-# LVS & DRC Verification Targets
-# The LibreLane flow already includes LVS and DRC checks with Magic and KLayout, and they are saved in the verification/ folder.
+# DRC & LVS Verification Targets
+# The LibreLane flow already includes DRC and LVS checks with Magic and KLayout, and they are saved in the verification/ folder.
 # ================================================================================================
 
 
 # Lint, Build, Verify and Simulate All Target
 # Order: lint first (fast fail on structural RTL issues), then build (FPGA + LibreLane macro
-# with fresh netlists and XSPICE model; the LibreLane flow verifies with LVS & DRC), then
+# with fresh netlists and XSPICE model; the LibreLane flow verifies with DRC & LVS), then
 # simulate — so the gate-level simulations (sim-gl-cocotb, sim-gl-xschem) run on the netlists
 # produced by THIS build, not a previous one.
 all: ## Lint, build, verify and simulate the macro

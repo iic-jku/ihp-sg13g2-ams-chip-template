@@ -286,6 +286,46 @@ make render-gds
 ```
 
 
+## Design Rule Check (DRC)
+
+Runs DRC on the layout in `layout/`. Both flows use `sak-drc.sh`.
+
+- `klayout-drc` and `magic-drc` use `layout/<CELL>.$(_GDS_EXT)` (`.gds` if present, otherwise `.klay.gds`)
+
+Reports are written into per-cell run folders: `verification/drc/<CELL>.magic.drc/` (Magic) and `verification/drc/<CELL>.klayout.drc/` (KLayout, `.lyrdb`). The run folders are wiped at the start of each run, so they always reflect the latest run only.
+
+The `DRC_LEVEL` parameter selects the KLayout DRC level (`sak-drc.sh -l`). It is ignored by `magic-drc`, since Magic has no selectable rule decks and always runs the full rule set compiled into the PDK's Magic tech file:
+
+- `precheck` = core FEOL + BEOL manufacturing rules only (fast iteration)
+- `macro` = block-in-isolation sign-off: `precheck` plus off-grid, zero-area, and pin/label checks (default)
+- `regular` = full-chip sign-off: all checks, including density and antenna
+
+| Check | `precheck` | `macro` _(default)_ | `regular` |
+| --- | :---: | :---: | :---: |
+| FEOL + BEOL core rules | ✓ | ✓ | ✓ |
+| Off-grid / angle | – | ✓ | ✓ |
+| Zero-area / geometry | – | ✓ | ✓ |
+| Pin / label | – | ✓ | ✓ |
+| Recommended / extra rules | – | – | ✓ |
+| Density (chip-level fill) | – | – | ✓ |
+| Antenna | – | – | ✓ |
+
+**KLayout DRC** runs a KLayout DRC at the selected `DRC_LEVEL`:
+
+```sh
+make klayout-drc
+make klayout-drc CELL=inverter_top
+make klayout-drc CELL=inverter_top DRC_LEVEL=regular
+```
+
+**Magic DRC** runs a Magic DRC with all subcells flattened (`sak-drc.sh -f "*"`):
+
+```sh
+make magic-drc
+make magic-drc CELL=inverter_top
+```
+
+
 ## Export Schematic Netlist for LVS
 
 Exports the schematic netlist for LVS from Xschem and places it in `netlist/schematic/`.
@@ -331,46 +371,6 @@ make klayout-lvs CELL=inverter_top
 ```sh
 make magic-lvs
 make magic-lvs CELL=inverter_top
-```
-
-
-## Design Rule Check (DRC)
-
-Runs DRC on the layout in `layout/`. Both flows use `sak-drc.sh`.
-
-- `klayout-drc` and `magic-drc` use `layout/<CELL>.$(_GDS_EXT)` (`.gds` if present, otherwise `.klay.gds`)
-
-Reports are written into per-cell run folders: `verification/drc/<CELL>.magic.drc/` (Magic) and `verification/drc/<CELL>.klayout.drc/` (KLayout, `.lyrdb`). The run folders are wiped at the start of each run, so they always reflect the latest run only.
-
-The `DRC_LEVEL` parameter selects the KLayout DRC level (`sak-drc.sh -l`). It is ignored by `magic-drc`, since Magic has no selectable rule decks and always runs the full rule set compiled into the PDK's Magic tech file:
-
-- `precheck` = core FEOL + BEOL manufacturing rules only (fast iteration)
-- `macro` = block-in-isolation sign-off: `precheck` plus off-grid, zero-area, and pin/label checks (default)
-- `regular` = full-chip sign-off: all checks, including density and antenna
-
-| Check | `precheck` | `macro` _(default)_ | `regular` |
-| --- | :---: | :---: | :---: |
-| FEOL + BEOL core rules | ✓ | ✓ | ✓ |
-| Off-grid / angle | – | ✓ | ✓ |
-| Zero-area / geometry | – | ✓ | ✓ |
-| Pin / label | – | ✓ | ✓ |
-| Recommended / extra rules | – | – | ✓ |
-| Density (chip-level fill) | – | – | ✓ |
-| Antenna | – | – | ✓ |
-
-**KLayout DRC** runs a KLayout DRC at the selected `DRC_LEVEL`:
-
-```sh
-make klayout-drc
-make klayout-drc CELL=inverter_top
-make klayout-drc CELL=inverter_top DRC_LEVEL=regular
-```
-
-**Magic DRC** runs a Magic DRC with all subcells flattened (`sak-drc.sh -f "*"`):
-
-```sh
-make magic-drc
-make magic-drc CELL=inverter_top
 ```
 
 
@@ -425,7 +425,7 @@ make magic-pex CELL=inverter_top EXT_MODE=3 THRESHOLD=5000 MINRES=500 MINDELAY=2
 
 ## Verify with KLayout
 
-**Verify a single cell** by running LVS, DRC, and PEX in sequence:
+**Verify a single cell** by running DRC, LVS, and PEX in sequence:
 
 ```sh
 make klayout-verify
@@ -441,7 +441,7 @@ make klayout-verify-all
 
 ## Verify with Magic
 
-**Verify a single cell** by running LVS, DRC, and PEX in sequence:
+**Verify a single cell** by running DRC, LVS, and PEX in sequence:
 
 ```sh
 make magic-verify
@@ -463,4 +463,4 @@ Runs the full flow in sequence: KLayout verification, Magic verification, top-le
 make all
 ```
 
-Verification runs first because LVS/DRC/PEX produce the fresh, pin-reordered PEX netlists from the current layout. The build follows, since the Verilog stub reads its pins from a PEX netlist. The simulations run **last**, so the `inverter_top` testbench includes the PEX netlist produced by this run, not by a previous one.
+Verification runs first because DRC/LVS/PEX produce the fresh, pin-reordered PEX netlists from the current layout. The build follows, since the Verilog stub reads its pins from a PEX netlist. The simulations run **last**, so the `inverter_top` testbench includes the PEX netlist produced by this run, not by a previous one.

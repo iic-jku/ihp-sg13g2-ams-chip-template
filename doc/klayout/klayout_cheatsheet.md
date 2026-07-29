@@ -210,6 +210,6 @@ Common SG13_dev PCells:
 
 ## Makefiles
 
-- Every macro folder contains Makefile targets for common verification and extraction flows, including LVS, DRC, and PEX with KLayout or Magic & Netgen.
+- Every macro folder contains Makefile targets for common verification and extraction flows, including DRC, LVS, and PEX with KLayout or Magic & Netgen.
 
 ---

@@ -452,7 +452,7 @@ The following command builds the `counter` digital macro:
 make build-counter
 ```
 
-For each digital macro this dispatches to its in-tree `make all`, which runs the macro's full flow: lint, build (FPGA and LibreLane, including netlists and the XSPICE model), verify (LVS and DRC within the LibreLane flow) and simulate. The simulations run after the build, so the gate-level simulations run on the netlists produced by this build.
+For each digital macro this dispatches to its in-tree `make all`, which runs the macro's full flow: lint, build (FPGA and LibreLane, including netlists and the XSPICE model), verify (DRC and LVS within the LibreLane flow) and simulate. The simulations run after the build, so the gate-level simulations run on the netlists produced by this build.
 
 > [!TIP]
 > Each macro has its own `Makefile` and `README.md` with additional targets, such as linting, simulation, and verification.
@@ -460,7 +460,7 @@ For each digital macro this dispatches to its in-tree `make all`, which runs the
 
 ### Build Analog Macros
 
-Each analog macro has its own `klayout-verify` and `magic-verify` targets that run LVS, DRC, and PEX for the top-level cell.
+Each analog macro has its own `klayout-verify` and `magic-verify` targets that run DRC, LVS, and PEX for the top-level cell.
 
 To build the inverter macro:
 
@@ -468,7 +468,7 @@ To build the inverter macro:
 make build-inverter
 ```
 
-For each analog macro this dispatches to its in-tree `make all`, which runs the macro's full flow: verify (LVS, DRC, PEX), build, and simulate. The simulations run after the verification, so the top-level testbench includes the PEX netlist produced by this run.
+For each analog macro this dispatches to its in-tree `make all`, which runs the macro's full flow: verify (DRC, LVS, PEX), build, and simulate. The simulations run after the verification, so the top-level testbench includes the PEX netlist produced by this run.
 
 All analog macros are included in `build-macros` alongside the digital macros.
 
@@ -507,50 +507,6 @@ This calls `scripts/add_logo_fill.sh` and writes `layout/chip_top_logo_fill.gds.
 
 > [!NOTE]
 > In the future, it is planned to replace this script and Makefile target with a custom librelane step.
-
-
-## Export Schematic Netlist for LVS
-
-Exports the schematic netlist for LVS from Xschem and places it in `netlist/schematic/`.
-
-The `EV_PRECISION` parameter sets the number of significant digits used by Xschem's `ev` function when calculating device properties (default: 5). Increase this to avoid LVS mismatches caused by floating-point rounding differences between Xschem and KLayout (see [xschem#465](https://github.com/StefanSchippers/xschem/issues/465)).
-
-The `ntap` and `ptap` substrate contacts are ignored during LVS in both flows. `sak-lvs.sh` runs KLayout LVS with the `--disable_tap_extraction` option so it does not extract `ntap` and `ptap` devices from the layout (matching Magic + Netgen LVS).
-
-KLayout uses CDL netlists, while Magic uses SPICE netlists. Accordingly, `klayout-lvs-netlist` uses the Xschem commands `set spiceprefix 1`, `set lvs_netlist 1`, `set top_is_subckt 1`, and `set lvs_ignore 1`, while `magic-lvs-netlist` uses `set spiceprefix 1`, `set lvs_netlist 0`, `set top_is_subckt 1`, and `set lvs_ignore 1`. Hence, switching between CDL and SPICE netlists can be done with `lvs_netlist`.
-
-To extract a CDL schematic netlist for KLayout LVS, use:
-```sh
-make klayout-lvs-netlist
-make klayout-lvs-netlist CELL=chip_top
-make klayout-lvs-netlist EV_PRECISION=5
-```
-
-To extract a SPICE schematic netlist for Magic + Netgen LVS, use:
-```sh
-make magic-lvs-netlist
-make magic-lvs-netlist CELL=chip_top
-make magic-lvs-netlist EV_PRECISION=5
-```
-
-
-## Layout Versus Schematic (LVS)
-
-Exports the schematic netlist from Xschem, then runs LVS. Compares the GDS layout in `layout/` against the schematic netlist in `netlist/schematic/`. Both flows use `sak-lvs.sh` and write their reports into per-cell run folders: `verification/lvs/<CELL>.magic.lvs/` (Magic + Netgen) and `verification/lvs/<CELL>.klayout.lvs/` (KLayout, `.lvsdb`). The run folders are wiped at the start of each run, so they always reflect the latest run only. The extracted layout netlist is moved to `netlist/layout/`.
-
-**KLayout LVS** uses `sak-lvs.sh` (KLayout mode `-k`), which wraps `run_lvs.py` from the IHP Open-PDK:
-
-```sh
-make klayout-lvs
-make klayout-lvs CELL=chip_top
-```
-
-**Magic + Netgen LVS** uses `sak-lvs.sh` (Magic + Netgen mode `-m`, the default), which extracts the layout netlist with Magic and compares it against the schematic netlist with Netgen, using the Netgen setup from the IHP Open-PDK:
-
-```sh
-make magic-lvs
-make magic-lvs CELL=chip_top
-```
 
 
 ## Design Rule Check (DRC)
@@ -598,6 +554,50 @@ make klayout-drc CELL=chip_top DRC_LEVEL=regular
 ```sh
 make magic-drc
 make magic-drc CELL=chip_top
+```
+
+
+## Export Schematic Netlist for LVS
+
+Exports the schematic netlist for LVS from Xschem and places it in `netlist/schematic/`.
+
+The `EV_PRECISION` parameter sets the number of significant digits used by Xschem's `ev` function when calculating device properties (default: 5). Increase this to avoid LVS mismatches caused by floating-point rounding differences between Xschem and KLayout (see [xschem#465](https://github.com/StefanSchippers/xschem/issues/465)).
+
+The `ntap` and `ptap` substrate contacts are ignored during LVS in both flows. `sak-lvs.sh` runs KLayout LVS with the `--disable_tap_extraction` option so it does not extract `ntap` and `ptap` devices from the layout (matching Magic + Netgen LVS).
+
+KLayout uses CDL netlists, while Magic uses SPICE netlists. Accordingly, `klayout-lvs-netlist` uses the Xschem commands `set spiceprefix 1`, `set lvs_netlist 1`, `set top_is_subckt 1`, and `set lvs_ignore 1`, while `magic-lvs-netlist` uses `set spiceprefix 1`, `set lvs_netlist 0`, `set top_is_subckt 1`, and `set lvs_ignore 1`. Hence, switching between CDL and SPICE netlists can be done with `lvs_netlist`.
+
+To extract a CDL schematic netlist for KLayout LVS, use:
+```sh
+make klayout-lvs-netlist
+make klayout-lvs-netlist CELL=chip_top
+make klayout-lvs-netlist EV_PRECISION=5
+```
+
+To extract a SPICE schematic netlist for Magic + Netgen LVS, use:
+```sh
+make magic-lvs-netlist
+make magic-lvs-netlist CELL=chip_top
+make magic-lvs-netlist EV_PRECISION=5
+```
+
+
+## Layout Versus Schematic (LVS)
+
+Exports the schematic netlist from Xschem, then runs LVS. Compares the GDS layout in `layout/` against the schematic netlist in `netlist/schematic/`. Both flows use `sak-lvs.sh` and write their reports into per-cell run folders: `verification/lvs/<CELL>.magic.lvs/` (Magic + Netgen) and `verification/lvs/<CELL>.klayout.lvs/` (KLayout, `.lvsdb`). The run folders are wiped at the start of each run, so they always reflect the latest run only. The extracted layout netlist is moved to `netlist/layout/`.
+
+**KLayout LVS** uses `sak-lvs.sh` (KLayout mode `-k`), which wraps `run_lvs.py` from the IHP Open-PDK:
+
+```sh
+make klayout-lvs
+make klayout-lvs CELL=chip_top
+```
+
+**Magic + Netgen LVS** uses `sak-lvs.sh` (Magic + Netgen mode `-m`, the default), which extracts the layout netlist with Magic and compares it against the schematic netlist with Netgen, using the Netgen setup from the IHP Open-PDK:
+
+```sh
+make magic-lvs
+make magic-lvs CELL=chip_top
 ```
 
 
@@ -650,7 +650,7 @@ make magic-pex CELL=chip_top EXT_MODE=3 THRESHOLD=5000 MINRES=500 MINDELAY=2
 
 ## Verify a Specific Cell
 
-Runs LVS, DRC, and PEX for a specific cell (e.g. `chip_top`):
+Runs DRC, LVS, and PEX for a specific cell (e.g. `chip_top`):
 
 ```sh
 make klayout-verify CELL=chip_top
@@ -660,7 +660,7 @@ make magic-verify CELL=chip_top
 
 ## Verify Top Cell
 
-Runs LVS, DRC, and PEX for the top cell:
+Runs DRC, LVS, and PEX for the top cell:
 
 ```sh
 make klayout-verify
@@ -771,8 +771,8 @@ The following tools and flows are checked:
 | PNG to GDS logo generation, KLayout DRC, Magic DRC | `sg13g2_ip__jku all` (single logo) |
 | Xschem + ngspice (analog simulation) | inverter `sim-xschem` (`inverter_tb_dc_vout`) |
 | CACE (+ ngspice) | inverter CACE, single parameter set (`ac_params`) |
-| KLayout LVS (`sak-lvs.sh`) + KLayout DRC (`sak-drc.sh`) + KLayout PEX (`kpex`) | inverter `klayout-verify CELL=inverter_top` |
-| Magic extract + Netgen LVS (`sak-lvs.sh`) + Magic DRC (`sak-drc.sh`) + Magic PEX (`sak-pex.sh`) | inverter `magic-verify CELL=inverter_top` |
+| KLayout DRC (`sak-drc.sh`) + KLayout LVS (`sak-lvs.sh`) + KLayout PEX (`kpex`) | inverter `klayout-verify CELL=inverter_top` |
+| Magic DRC (`sak-drc.sh`) + Magic extract + Netgen LVS (`sak-lvs.sh`) + Magic PEX (`sak-pex.sh`) | inverter `magic-verify CELL=inverter_top` |
 | Magic LEF export + LIB + Verilog stub + `lay2img` render | inverter `build-top` |
 | Verilator lint | counter `lint-verilog-all` |
 | Icarus Verilog (`iverilog`/`vvp`) | counter `sim-rtl-verilog` |

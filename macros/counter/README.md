@@ -396,9 +396,9 @@ make build-top
 ```
 
 
-## Layout Versus Schematic (LVS) & Design Rule Check (DRC)
+## Design Rule Check (DRC) & Layout Versus Schematic (LVS)
 
-The LibreLane flow already includes LVS and DRC checks with Magic and KLayout, and they are saved in the `verification/` folder.
+The LibreLane flow already includes DRC and LVS checks with Magic and KLayout, and they are saved in the `verification/` folder.
 
 
 ## Lint, Build, Verify and Simulate All
@@ -410,7 +410,7 @@ Lints, builds, verifies and simulates the whole macro:
 - `build-top`
 - `sim-all`
 
-Linting runs first to fail fast on structural RTL issues. The simulations run **after** the build, so the gate-level simulations (`sim-gl-cocotb`, `sim-gl-xschem`) run on the netlists and the XSPICE model produced by this build, not on those of a previous one. The LVS and DRC verification is done within the LibreLane flow.
+Linting runs first to fail fast on structural RTL issues. The simulations run **after** the build, so the gate-level simulations (`sim-gl-cocotb`, `sim-gl-xschem`) run on the netlists and the XSPICE model produced by this build, not on those of a previous one. The DRC and LVS verification is done within the LibreLane flow.
 
 ```sh
 make all

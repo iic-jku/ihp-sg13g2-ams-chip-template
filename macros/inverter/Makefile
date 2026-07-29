@@ -38,7 +38,7 @@ EV_PRECISION ?= 5
 
 # Preferred GDS extension: use .gds when available for the CELL, otherwise .klay.gds
 # Resolved per CELL (CELL defaults to TOP), so cells can mix .gds and .klay.gds within one macro.
-# All LVS, DRC and PEX targets (KLayout and Magic) work with either .gds or .klay.gds.
+# All DRC, LVS and PEX targets (KLayout and Magic) work with either .gds or .klay.gds.
 _GDS_EXT = $(if $(wildcard $(LAY_DIR)/$(CELL).gds),gds,klay.gds)
 
 # Folder structure
@@ -230,6 +230,19 @@ render-gds: ## Render an image from the final GDS using lay2img.py
 # ================================================================================================
 
 
+# DRC Targets
+klayout-drc: ## Run KLayout DRC of the CELL cell (usage: make klayout-drc [CELL=<cellname>] [DRC_LEVEL=<precheck|macro|regular>])
+	mkdir -p $(DRC_RPT_DIR)
+	sak-drc.sh -d -k -l $(DRC_LEVEL) -w $(DRC_RPT_DIR) $(LAY_DIR)/$(CELL).$(_GDS_EXT)
+.PHONY: klayout-drc
+
+magic-drc: ## Run Magic DRC of the CELL cell (usage: make magic-drc [CELL=<cellname>])
+	mkdir -p $(DRC_RPT_DIR)
+	sak-drc.sh -d -m -f "*" -w $(DRC_RPT_DIR) $(LAY_DIR)/$(CELL).$(_GDS_EXT)
+.PHONY: magic-drc
+# ================================================================================================
+
+
 # LVS Targets
 klayout-lvs-netlist: ## Export CDL schematic netlist from Xschem for KLayout LVS (usage: make klayout-lvs-netlist [CELL=<cellname>] [EV_PRECISION=<digits>])
 	mkdir -p $(NET_SCH_DIR)
@@ -274,19 +287,6 @@ magic-lvs: ## Run Magic + Netgen LVS of the CELL cell (usage: make magic-lvs [CE
 	sak-lvs.sh -d -w $(LVS_RPT_DIR) -s $(NET_SCH_DIR)/$(CELL)_magic.spice -l $(LAY_DIR)/$(CELL).$(_GDS_EXT) -c $(CELL)
 	mv $(LVS_RPT_DIR)/$(CELL).magic.lvs/$(CELL).ext.spc $(NET_LAY_DIR)/$(CELL)_magic.ext.spc
 .PHONY: magic-lvs
-# ================================================================================================
-
-
-# DRC Targets
-klayout-drc: ## Run KLayout DRC of the CELL cell (usage: make klayout-drc [CELL=<cellname>] [DRC_LEVEL=<precheck|macro|regular>])
-	mkdir -p $(DRC_RPT_DIR)
-	sak-drc.sh -d -k -l $(DRC_LEVEL) -w $(DRC_RPT_DIR) $(LAY_DIR)/$(CELL).$(_GDS_EXT)
-.PHONY: klayout-drc
-
-magic-drc: ## Run Magic DRC of the CELL cell (usage: make magic-drc [CELL=<cellname>])
-	mkdir -p $(DRC_RPT_DIR)
-	sak-drc.sh -d -m -f "*" -w $(DRC_RPT_DIR) $(LAY_DIR)/$(CELL).$(_GDS_EXT)
-.PHONY: magic-drc
 # ================================================================================================
 
 
@@ -339,23 +339,23 @@ magic-pex: ## Run Parasitic Extraction with Magic of the CELL cell (usage: make 
 
 # Verify Targets
 klayout-verify: ## Verify CELL cell with KLayout (usage: make klayout-verify [CELL=<cellname>])
-	$(MAKE) klayout-lvs CELL=$(CELL)
 	$(MAKE) klayout-drc CELL=$(CELL)
+	$(MAKE) klayout-lvs CELL=$(CELL)
 	$(MAKE) klayout-pex CELL=$(CELL)
 .PHONY: klayout-verify
 
-klayout-verify-all: ## Verify all main subcells with KLayout (LVS, DRC, PEX)
+klayout-verify-all: ## Verify all main subcells with KLayout (DRC, LVS, PEX)
 #	$(MAKE) klayout-verify CELL=inverter
 	$(MAKE) klayout-verify CELL=inverter_top
 .PHONY: klayout-verify-all
 
 magic-verify: ## Verify CELL cell with Magic (usage: make magic-verify [CELL=<cellname>])
-	$(MAKE) magic-lvs CELL=$(CELL)
 	$(MAKE) magic-drc CELL=$(CELL)
+	$(MAKE) magic-lvs CELL=$(CELL)
 	$(MAKE) magic-pex CELL=$(CELL)
 .PHONY: magic-verify
 
-magic-verify-all: ## Verify all main subcells with Magic (LVS, DRC, PEX)
+magic-verify-all: ## Verify all main subcells with Magic (DRC, LVS, PEX)
 	$(MAKE) magic-verify CELL=inverter
 	$(MAKE) magic-verify CELL=inverter_top
 .PHONY: magic-verify-all

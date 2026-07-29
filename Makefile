@@ -289,6 +289,29 @@ build-all: ## Build the bondpad, logos, macros and the chip top-level
 # ================================================================================================
 
 
+# DRC Targets
+klayout-drc-minimum: ## Run minimum pre-check KLayout DRC of the TOP cell with logo and filler
+	mkdir -p $(DRC_RPT_DIR)
+	sak-drc.sh -d -k -l precheck -w $(DRC_RPT_DIR) $(LAY_DIR)/$(TOP)_logo_fill.gds.gz
+.PHONY: klayout-drc-minimum
+
+klayout-drc-regular: ## Run regular KLayout DRC of the TOP cell with logo and filler
+	mkdir -p $(DRC_RPT_DIR)
+	sak-drc.sh -d -k -l regular -w $(DRC_RPT_DIR) $(LAY_DIR)/$(TOP)_logo_fill.gds.gz
+.PHONY: klayout-drc-regular
+
+klayout-drc: ## Run KLayout DRC of the CELL cell (usage: make klayout-drc [CELL=<cellname>] [DRC_LEVEL=<precheck|macro|regular>])
+	mkdir -p $(DRC_RPT_DIR)
+	sak-drc.sh -d -k -l $(DRC_LEVEL) -w $(DRC_RPT_DIR) $(LAY_DIR)/$(CELL).gds.gz
+.PHONY: klayout-drc
+
+magic-drc: ## Run Magic DRC of the CELL cell (usage: make magic-drc [CELL=<cellname>])
+	mkdir -p $(DRC_RPT_DIR)
+	sak-drc.sh -d -m -f "*" -w $(DRC_RPT_DIR) $(LAY_DIR)/$(CELL).gds.gz
+.PHONY: magic-drc
+# ================================================================================================
+
+
 # LVS Targets
 klayout-lvs-netlist: ## Export CDL schematic netlist from Xschem for KLayout LVS (usage: make klayout-lvs-netlist [CELL=<cellname>] [EV_PRECISION=<digits>])
 	mkdir -p $(NET_SCH_DIR)
@@ -333,29 +356,6 @@ magic-lvs: ## Run Magic + Netgen LVS of the CELL cell (usage: make magic-lvs [CE
 	sak-lvs.sh -d -w $(LVS_RPT_DIR) -s $(NET_SCH_DIR)/$(CELL)_magic.spice -l $(LAY_DIR)/$(CELL).gds.gz -c $(CELL)
 	mv $(LVS_RPT_DIR)/$(CELL).magic.lvs/$(CELL).ext.spc $(NET_LAY_DIR)/$(CELL)_magic.ext.spc
 .PHONY: magic-lvs
-# ================================================================================================
-
-
-# DRC Targets
-klayout-drc-minimum: ## Run minimum pre-check KLayout DRC of the TOP cell with logo and filler
-	mkdir -p $(DRC_RPT_DIR)
-	sak-drc.sh -d -k -l precheck -w $(DRC_RPT_DIR) $(LAY_DIR)/$(TOP)_logo_fill.gds.gz
-.PHONY: klayout-drc-minimum
-
-klayout-drc-regular: ## Run regular KLayout DRC of the TOP cell with logo and filler
-	mkdir -p $(DRC_RPT_DIR)
-	sak-drc.sh -d -k -l regular -w $(DRC_RPT_DIR) $(LAY_DIR)/$(TOP)_logo_fill.gds.gz
-.PHONY: klayout-drc-regular
-
-klayout-drc: ## Run KLayout DRC of the CELL cell (usage: make klayout-drc [CELL=<cellname>] [DRC_LEVEL=<precheck|macro|regular>])
-	mkdir -p $(DRC_RPT_DIR)
-	sak-drc.sh -d -k -l $(DRC_LEVEL) -w $(DRC_RPT_DIR) $(LAY_DIR)/$(CELL).gds.gz
-.PHONY: klayout-drc
-
-magic-drc: ## Run Magic DRC of the CELL cell (usage: make magic-drc [CELL=<cellname>])
-	mkdir -p $(DRC_RPT_DIR)
-	sak-drc.sh -d -m -f "*" -w $(DRC_RPT_DIR) $(LAY_DIR)/$(CELL).gds.gz
-.PHONY: magic-drc
 # ================================================================================================
 
 
@@ -408,14 +408,14 @@ magic-pex: ## Run Parasitic Extraction with Magic of the CELL cell (usage: make 
 
 # Verify Targets
 klayout-verify: ## Verify CELL cell with KLayout (usage: make klayout-verify [CELL=<cellname>])
-	$(MAKE) klayout-lvs CELL=$(CELL)
 	$(MAKE) klayout-drc CELL=$(CELL)
+	$(MAKE) klayout-lvs CELL=$(CELL)
 	$(MAKE) klayout-pex CELL=$(CELL)
 .PHONY: klayout-verify
 
 magic-verify: ## Verify CELL cell with Magic (usage: make magic-verify [CELL=<cellname>])
-	$(MAKE) magic-lvs CELL=$(CELL)
 	$(MAKE) magic-drc CELL=$(CELL)
+	$(MAKE) magic-lvs CELL=$(CELL)
 	$(MAKE) magic-pex CELL=$(CELL)
 .PHONY: magic-verify
 # ================================================================================================
@@ -463,11 +463,11 @@ release: ## Copy the gds, netlist files and chip renders to the release folder (
 
 # Regression Target
 regression: ## Regression test target for IIC-OSIC-TOOLS
-# 	Analog macro: inverter (Xschem + CACE + LVS/DRC/PEX + build-top)
+# 	Analog macro: inverter (Xschem + CACE + DRC/LVS/PEX + build-top)
 	$(MAKE) -C $(MACROS_DIR)/inverter sim-xschem TB=inverter_tb_dc_vout
 # 	ONE CACE run: the lightweight AC VDD sweep (no Monte-Carlo) to keep runtime short.
 	cd $(MACROS_DIR)/inverter/verification/cace && cace inverter.yaml -p ac_params && rm -rf _runs _docs netlist
-# 	KLayout & Magic LVS, DRC and PEX of the inverter_top cell.
+# 	KLayout & Magic DRC, LVS and PEX of the inverter_top cell.
 	$(MAKE) -C $(MACROS_DIR)/inverter klayout-verify CELL=inverter_top
 	$(MAKE) -C $(MACROS_DIR)/inverter magic-verify CELL=inverter_top
 	$(MAKE) -C $(MACROS_DIR)/inverter build-top
