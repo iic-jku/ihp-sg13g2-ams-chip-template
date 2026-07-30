@@ -266,15 +266,15 @@ add-logo-fill: ## Run scripts/add_logo_fill.sh to add the chip logo and fill str
 	cd $(SCRIPTS_DIR) && ./add_logo_fill.sh
 .PHONY: add-logo-fill
 
-# TODO: `make librelane-nodrc` is used for now until IHP fixes the `metal1_pin_offgrid` errors.
-# Once fixed, switch back to `make librelane`.
+# TODO: Switch back to `make librelane` once IHP fixes the metal1_pin_offgrid errors.
+# TODO: add `make add-logo-fill` again, when sealring is fixed upstream.
 build-top: ## Build the chip (LibreLane, copy reports/GDS/netlist/render, add logo & filler, render final GDS)
 	$(MAKE) librelane-nodrc
 	$(MAKE) copy-reports
 	$(MAKE) copy-gds
 	$(MAKE) copy-netlist
 	$(MAKE) copy-render
-	$(MAKE) add-logo-fill
+#	$(MAKE) add-logo-fill
 	$(MAKE) render-gds
 #	$(MAKE) librelane-openroad
 .PHONY: build-top

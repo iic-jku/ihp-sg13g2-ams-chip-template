@@ -11,6 +11,12 @@
 
 Institute for Integrated Circuits and Quantum Computing, Johannes Kepler University (JKU), Linz, Austria
 
+> [!WARNING]
+> `make add-logo-fill` currently fails in the IIC-OSIC-TOOLS `2026.07` release. A PDK issue corrupts the
+> seal ring, which makes the KLayout filler abort with an internal error in `Region::holes`. The target is
+> therefore commented out in `Makefile :: build-top`. This will be fixed with the `2026.08` release of
+> IIC-OSIC-TOOLS.
+
 > [!IMPORTANT]
 > This repository requires the [IIC-OSIC-TOOLS](https://github.com/iic-jku/IIC-OSIC-TOOLS) container with tag `2026.07` or later.
 
