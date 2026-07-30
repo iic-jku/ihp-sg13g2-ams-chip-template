@@ -4,6 +4,9 @@ A names IP block for [Johannes Kepler University Linz](https://www.jku.at/), ren
 
 ## Directory Structure
 
+<details>
+<summary>Show Directory Structure</summary>
+
 ```text
 📁 sg13g2_ip__jku_names/
 ├─ Makefile                         # Build automation
@@ -23,6 +26,8 @@ A names IP block for [Johannes Kepler University Linz](https://www.jku.at/), ren
 └─ 📁 verification/
    └─ 📁 drc/                       # DRC reports
 ```
+
+</details>
 
 
 ## Usage

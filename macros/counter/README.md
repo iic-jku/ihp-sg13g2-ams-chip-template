@@ -11,6 +11,9 @@
 
 ## Directory Structure
 
+<details>
+<summary>Show Directory Structure</summary>
+
 ```text
 📁 counter/
 ├─ 📁 final/
@@ -128,6 +131,8 @@
 ├─ Makefile
 └─ README.md
 ```
+
+</details>
 
 
 ## Show Available Targets

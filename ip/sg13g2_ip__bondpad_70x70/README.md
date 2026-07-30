@@ -4,6 +4,9 @@ A 70 µm × 70 µm square bondpad for the IHP SG13G2 130 nm CMOS process, genera
 
 ## Directory Structure
 
+<details>
+<summary>Show Directory Structure</summary>
+
 ```text
 📁 sg13g2_ip__bondpad_70x70/
 ├─ Makefile                             # Build automation
@@ -19,6 +22,8 @@ A 70 µm × 70 µm square bondpad for the IHP SG13G2 130 nm CMOS process, genera
 └─ 📁 verification/
    └─ 📁 drc/                           # DRC reports
 ```
+
+</details>
 
 
 ## Usage

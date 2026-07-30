@@ -77,6 +77,9 @@ A designer-oriented description of this chip can be found in [doc/](doc/):
 
 ## Directory Structure
 
+<details>
+<summary>Show Directory Structure</summary>
+
 ```text
 📁 ihp-sg13g2-ams-chip-template/
 ├─ 📁 .github/
@@ -238,6 +241,7 @@ A designer-oriented description of this chip can be found in [doc/](doc/):
 └─ ToDo.md
 ```
 
+</details>
 
 ## Show Available Targets
 

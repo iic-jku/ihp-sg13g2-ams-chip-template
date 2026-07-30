@@ -4,6 +4,9 @@ A logo IP block for [Johannes Kepler University Linz](https://www.jku.at/), rend
 
 ## Directory Structure
 
+<details>
+<summary>Show Directory Structure</summary>
+
 ```text
 📁 sg13g2_ip__jku/
 ├─ Makefile                   # Build automation
@@ -23,6 +26,8 @@ A logo IP block for [Johannes Kepler University Linz](https://www.jku.at/), rend
 └─ 📁 verification/
    └─ 📁 drc/                 # DRC reports
 ```
+
+</details>
 
 
 ## Usage

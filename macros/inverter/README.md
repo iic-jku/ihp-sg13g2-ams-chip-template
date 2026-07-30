@@ -11,6 +11,9 @@
 
 ## Directory Structure
 
+<details>
+<summary>Show Directory Structure</summary>
+
 ```text
 📁 inverter/
 ├─ 📁 final/
@@ -94,6 +97,8 @@
 ├─ Makefile
 └─ README.md
 ```
+
+</details>
 
 
 ## Show Available Targets
