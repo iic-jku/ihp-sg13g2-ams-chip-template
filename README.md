@@ -193,7 +193,6 @@ A designer-oriented description of this chip can be found in [doc/](doc/):
 │     ├─ chip_top_pex.sym
 │     └─ xschemrc
 ├─ 📁 scripts/
-│  ├─ 📁 plot_simulations/
 │  ├─ add_logo_fill.sh
 │  ├─ add_rectangle.py
 │  └─ lay2img.py
@@ -203,6 +202,11 @@ A designer-oriented description of this chip can be found in [doc/](doc/):
 │  │  ├─ chip_top_tb.py
 │  │  └─ chip_top_tb.surf.ron
 │  └─ 📁 xschem/
+│     ├─ 📁 plot_simulations/
+│     │  ├─ 📁 data/
+│     │  ├─ 📁 figures/
+│     │  ├─ ngspice2python.py
+│     │  └─ plot_chip_top.py
 │     ├─ chip_top_tb_tran.sch
 │     └─ xschemrc
 ├─ 📁 tutorial/

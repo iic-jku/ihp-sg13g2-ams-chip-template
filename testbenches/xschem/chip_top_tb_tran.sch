@@ -312,7 +312,7 @@ plot counter1_value4_inv1_din1 counter1_value5_inv1_din2
 unset appendwrite
 set wr_vecnames
 set wr_singlescale
-wrdata ../../../scripts/plot_simulations/data/chip_top_tb_tran.txt
+wrdata ../plot_simulations/data/chip_top_tb_tran.txt
 + v(clock) v(reset_n) v(enable) v(sram_0_out)
 + v(inv2_vin1) v(inv2_vout1) v(inv2_vin2) v(inv2_vout2)
 + v(inv1_dout1) v(inv1_dout2) v(inv1_dout3) v(inv1_dout4)
