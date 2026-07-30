@@ -1,11 +1,13 @@
+#!/bin/bash
 # SPDX-FileCopyrightText: 2026 Simon Dorrer and Harald Pretl
 # SPDX-License-Identifier: Apache-2.0 WITH SHL-2.1
-
-#!/bin/bash
 #
 # Chip top finishing script: Logo addition and fill pattern generation
 # Input is a top GDS without filling
 # Output is a top GDS with the logo added and filling on all layers
+
+# Abort on the first failing step instead of reporting success at the end.
+set -eo pipefail
 
 DESIGN="chip_top"
 SCRIPTS_DIR="../flow/artistic/scripts"
