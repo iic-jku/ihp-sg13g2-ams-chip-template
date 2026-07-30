@@ -1872,7 +1872,7 @@ oqcSp9GYSQAAAABJRU5ErkJggg=="/>
 <text fill="#222222"  xml:space="preserve" font-size="15.6" style="font-family:Monospace;" transform="translate(15, 792.786)" >unset appendwrite</text>
 <text fill="#222222"  xml:space="preserve" font-size="15.6" style="font-family:Monospace;" transform="translate(15, 810.679)" >set wr_vecnames</text>
 <text fill="#222222"  xml:space="preserve" font-size="15.6" style="font-family:Monospace;" transform="translate(15, 828.572)" >set wr_singlescale</text>
-<text fill="#222222"  xml:space="preserve" font-size="15.6" style="font-family:Monospace;" transform="translate(15, 846.466)" >wrdata ../../../scripts/plot_simulations/data/inverter_top_tb_tran.txt</text>
+<text fill="#222222"  xml:space="preserve" font-size="15.6" style="font-family:Monospace;" transform="translate(15, 846.466)" >wrdata ../plot_simulations/data/inverter_top_tb_tran.txt</text>
 <text fill="#222222"  xml:space="preserve" font-size="15.6" style="font-family:Monospace;" transform="translate(15, 864.359)" >+ v(vin) v(vout1) v(vout2) v(vout3) v(vout4)</text>
 <text fill="#222222"  xml:space="preserve" font-size="15.6" style="font-family:Monospace;" transform="translate(15, 900.145)" >*quit</text>
 <text fill="#222222"  xml:space="preserve" font-size="15.6" style="font-family:Monospace;" transform="translate(15, 918.038)" >.endc</text>
