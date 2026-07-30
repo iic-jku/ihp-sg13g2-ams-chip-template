@@ -405,7 +405,7 @@ window.Quarto = {
   <li><a href="#viewing-the-macro" id="toc-viewing-the-macro" class="nav-link" data-scroll-target="#viewing-the-macro"><span class="header-section-number">4.6</span> Viewing the Macro</a></li>
   <li><a href="#rtl-mixed-signal-simulation-with-xschem" id="toc-rtl-mixed-signal-simulation-with-xschem" class="nav-link" data-scroll-target="#rtl-mixed-signal-simulation-with-xschem"><span class="header-section-number">4.7</span> RTL Mixed-Signal Simulation with Xschem</a></li>
   <li><a href="#gate-level-mixed-signal-simulation-with-xschem" id="toc-gate-level-mixed-signal-simulation-with-xschem" class="nav-link" data-scroll-target="#gate-level-mixed-signal-simulation-with-xschem"><span class="header-section-number">4.8</span> Gate-Level Mixed-Signal Simulation with Xschem</a></li>
-  <li><a href="#build-and-verify-everything" id="toc-build-and-verify-everything" class="nav-link" data-scroll-target="#build-and-verify-everything"><span class="header-section-number">4.9</span> Build and Verify Everything</a></li>
+  <li><a href="#lint-build-verify-and-simulate-everything" id="toc-lint-build-verify-and-simulate-everything" class="nav-link" data-scroll-target="#lint-build-verify-and-simulate-everything"><span class="header-section-number">4.9</span> Lint, Build, Verify and Simulate Everything</a></li>
   </ul></li>
   <li><a href="#sec-analog" id="toc-sec-analog" class="nav-link" data-scroll-target="#sec-analog"><span class="header-section-number">5</span> Analog Macro Implementation</a>
   <ul class="collapse">
@@ -444,8 +444,8 @@ window.Quarto = {
   <li><a href="#chip-level-verification" id="toc-chip-level-verification" class="nav-link" data-scroll-target="#chip-level-verification"><span class="header-section-number">7.8</span> Chip-Level Verification</a>
   <ul class="collapse">
   <li><a href="#drc" id="toc-drc" class="nav-link" data-scroll-target="#drc"><span class="header-section-number">7.8.1</span> DRC</a></li>
-  <li><a href="#pex" id="toc-pex" class="nav-link" data-scroll-target="#pex"><span class="header-section-number">7.8.2</span> PEX</a></li>
-  <li><a href="#lvs" id="toc-lvs" class="nav-link" data-scroll-target="#lvs"><span class="header-section-number">7.8.3</span> LVS</a></li>
+  <li><a href="#lvs" id="toc-lvs" class="nav-link" data-scroll-target="#lvs"><span class="header-section-number">7.8.2</span> LVS</a></li>
+  <li><a href="#pex" id="toc-pex" class="nav-link" data-scroll-target="#pex"><span class="header-section-number">7.8.3</span> PEX</a></li>
   </ul></li>
   <li><a href="#sec-packaging" id="toc-sec-packaging" class="nav-link" data-scroll-target="#sec-packaging"><span class="header-section-number">7.9</span> Packaging</a></li>
   <li><a href="#full-flow-at-once" id="toc-full-flow-at-once" class="nav-link" data-scroll-target="#full-flow-at-once"><span class="header-section-number">7.10</span> Full Flow at Once</a></li>
@@ -545,7 +545,7 @@ Note
 <li>Simulation with <a href="https://github.com/danchitnis/ngspice-sf-mirror">Ngspice</a> and <a href="https://codeberg.org/arpadbuermen/VACASK">VACASK</a></li>
 <li>Monte Carlo / mismatch characterisation with <a href="https://github.com/fossi-foundation/cace">CACE</a></li>
 <li>Layout in <a href="https://github.com/KLayout/klayout">KLayout</a></li>
-<li>Verification with LVS, DRC, PEX using <a href="https://github.com/KLayout/klayout">KLayout</a>, <a href="https://github.com/rtimothyedwards/magic">Magic</a> + <a href="https://github.com/rtimothyedwards/netgen">Netgen</a></li>
+<li>Verification with DRC, LVS, PEX using <a href="https://github.com/KLayout/klayout">KLayout</a>, <a href="https://github.com/rtimothyedwards/magic">Magic</a> + <a href="https://github.com/rtimothyedwards/netgen">Netgen</a></li>
 </ul></li>
 <li><a href="#sec-top">Top-level assembly and padframe generation</a> with logos and fill structures using SystemVerilog and the <a href="https://github.com/librelane/librelane">LibreLane</a> flow.</li>
 </ul>
@@ -688,13 +688,13 @@ Tip
 <h1 data-number="3"><span class="header-section-number">3</span> Repository Overview</h1>
 <section id="purpose" class="level2" data-number="3.1">
 <h2 data-number="3.1" class="anchored" data-anchor-id="purpose"><span class="header-section-number">3.1</span> Purpose</h2>
-<p>This Makefile-driven repository simulates, builds, and fully verifies (LVS, DRC, PEX) a complete analog mixed-signal chip for the ihp-sg13g2 130nm Open-PDK, including padframe generation and top-level assembly. It uses:</p>
+<p>This Makefile-driven repository simulates, builds, and fully verifies (DRC, LVS, PEX) a complete analog mixed-signal chip for the ihp-sg13g2 130nm Open-PDK, including padframe generation and top-level assembly. It uses:</p>
 <ul>
 <li><a href="https://github.com/librelane/librelane"><strong>LibreLane</strong></a> for digital macro hardening, padframe generation and top-level assembly</li>
 <li><a href="https://github.com/StefanSchippers/xschem"><strong>Xschem</strong></a> for schematic entry</li>
 <li><a href="https://github.com/danchitnis/ngspice-sf-mirror"><strong>Ngspice</strong></a>, <a href="https://codeberg.org/arpadbuermen/VACASK"><strong>VACASK</strong></a> and <a href="https://github.com/fossi-foundation/cace"><strong>CACE</strong></a> for analog simulation</li>
 <li><a href="https://github.com/KLayout/klayout"><strong>KLayout</strong></a> for viewing and routing of the layout</li>
-<li><a href="https://github.com/rtimothyedwards/magic"><strong>Magic</strong></a> + <a href="https://github.com/rtimothyedwards/netgen"><strong>Netgen</strong></a> and <a href="https://github.com/KLayout/klayout"><strong>KLayout</strong></a> for LVS, DRC and PEX verification</li>
+<li><a href="https://github.com/rtimothyedwards/magic"><strong>Magic</strong></a> + <a href="https://github.com/rtimothyedwards/netgen"><strong>Netgen</strong></a> and <a href="https://github.com/KLayout/klayout"><strong>KLayout</strong></a> for DRC, LVS and PEX verification</li>
 <li><strong>SystemVerilog</strong>, <a href="https://github.com/cocotb/cocotb"><strong>cocotb</strong></a>, <a href="https://github.com/gtkwave/gtkwave"><strong>GTKWave</strong></a> and <a href="https://gitlab.com/surfer-project/surfer"><strong>Surfer</strong></a> for digital simulation</li>
 </ul>
 <p>The repository is the starting point for your own custom silicon and provides a universal design flow solution: Just clone the repo, enter the IIC-OSIC-TOOLS container, and run <code>make all</code> to get a tapeout-ready analog-mixed signal chip. Focus on your design and do not care about the tools and the design flow!</p>
@@ -705,7 +705,7 @@ Tip
 <p>Examples based on this template are:</p>
 <ul>
 <li><a href="https://github.com/iic-jku/TinyWhisper">TinyWhisper</a>: An Open-Source Fully-Integrated Multi-Mode Short-Wave Transmitter for Amateur Radio Applications in 130-nm CMOS</li>
-<li><a href="https://github.com/iic-jku/SG13G2_SPARX">SPARX</a>: An Open-Source, Automated, Programmatically Generated, Frequency-Scalable Six-Port Receiver in 130-nm CMOS</li>
+<li><a href="https://github.com/iic-jku/SG13CMOS_SPARX">SPARX</a>: An Open-Source, Automated, Programmatically Generated, Frequency-Scalable Six-Port Receiver in 130-nm CMOS</li>
 <li>wafer.space gf180mcuD MPW <a href="https://github.com/iic-jku/gf180mcu-jku-projects">Multi-Project Chip</a></li>
 </ul>
 </section>
@@ -817,7 +817,7 @@ Tip
 <li><strong>Red — packaging</strong>: This branch includes <code>bondplan</code> and the automated bondplan flow in <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/packaging/"><code>packaging/</code></a> (see <a href="#sec-packaging" class="quarto-xref">Section&nbsp;7.9</a>).</li>
 <li><strong>Grey — simulation and verification</strong>: This branch includes intermediate targets that feed the coloured deliverables (<code>sim-all</code>, <code>build-all</code>, <code>build-macros</code>, <code>init-submodules</code>, <code>sim-*-cocotb</code>).</li>
 </ul>
-<p>Solid arrows represent direct <code>$(MAKE) &lt;target&gt;</code> calls within a single Makefile. Dashed arrows represent calls that descend into a subdirectory: recursive <code>$(MAKE) -C &lt;dir&gt; all</code> calls into a sub-Makefile (one per coloured deliverable), or the Python bondplan flow in <code>packaging/</code>.</p>
+<p>Solid arrows represent direct <code>$(MAKE) &lt;target&gt;</code> calls within a single Makefile. Dashed arrows represent calls that descend into a subdirectory: recursive <code>$(MAKE) -C &lt;dir&gt; all</code> calls into a sub-Makefile (one per coloured deliverable), or the Python bondplan flow in <code>packaging/</code>. The numbers on the second level indicate the execution order of <code>make all</code> (build, verify, simulate, package), and the vertical order inside the coloured boxes reflects the execution order of each sub-Makefile’s <code>all</code> target.</p>
 <div id="fig-targets-overview" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-targets-overview-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
@@ -857,7 +857,7 @@ Figure&nbsp;2: Overview of the Makefile targets that <code>make all</code> resol
 </tr>
 <tr class="even">
 <td><code>make sim-gl-xschem</code></td>
-<td>Run the gate-level Xschem testbench. Converges, but it may take a long time depending on the hardware used and is therefore not included in <code>sim-all</code>.</td>
+<td>Run the gate-level Xschem testbench in batch mode. Part of <code>sim-all</code>, but it may take a long time depending on the hardware used.</td>
 </tr>
 <tr class="odd">
 <td><code>make sim-view-cocotb</code></td>
@@ -889,7 +889,7 @@ Figure&nbsp;2: Overview of the Makefile targets that <code>make all</code> resol
 </tr>
 <tr class="even">
 <td><code>make klayout-verify</code> / <code>magic-verify</code></td>
-<td>Run LVS, DRC, and PEX for a given cell with KLayout or Magic.</td>
+<td>Run DRC, LVS, and PEX for a given cell with KLayout or Magic.</td>
 </tr>
 <tr class="odd">
 <td><code>make bondplan</code></td>
@@ -897,7 +897,7 @@ Figure&nbsp;2: Overview of the Makefile targets that <code>make all</code> resol
 </tr>
 <tr class="even">
 <td><code>make all</code></td>
-<td>Full simulation, build, verification, and bondplan generation.</td>
+<td>Full build, DRC verification, simulation, and bondplan generation.</td>
 </tr>
 <tr class="odd">
 <td><code>make release VERSION=2.1.0</code></td>
@@ -944,11 +944,11 @@ Figure&nbsp;2: Overview of the Makefile targets that <code>make all</code> resol
 </tr>
 <tr class="even">
 <td><code>make generate-xspice</code></td>
-<td>Convert the gate-level netlist into an XSPICE model for Xschem.</td>
+<td>Convert the LibreLane-extracted SPICE netlist into an XSPICE model for Xschem.</td>
 </tr>
 <tr class="odd">
-<td><code>make sim-gl-xschem</code> / <code>sim-view-xschem</code></td>
-<td>Run the mixed-signal XSPICE simulation in Xschem and plot the results.</td>
+<td><code>make sim-gl-xschem</code> / <code>sim-view-xschem SCRIPT=&lt;script&gt;</code></td>
+<td>Run the mixed-signal XSPICE simulation in Xschem (batch mode) and plot the results.</td>
 </tr>
 <tr class="even">
 <td><code>make build-fpga</code></td>
@@ -956,11 +956,11 @@ Figure&nbsp;2: Overview of the Makefile targets that <code>make all</code> resol
 </tr>
 <tr class="odd">
 <td><code>make build-top</code></td>
-<td>Run LibreLane, copy reports, netlists, and final views, and render the final GDS.</td>
+<td>Run LibreLane, copy reports, netlists, and final views, generate the XSPICE model, and render the final GDS.</td>
 </tr>
 <tr class="even">
 <td><code>make all</code></td>
-<td>Run lint, all simulations, the FPGA build, and the full macro build flow.</td>
+<td>Run lint, the FPGA build, the full macro build flow, and all simulations.</td>
 </tr>
 </tbody>
 </table>
@@ -978,20 +978,20 @@ Figure&nbsp;2: Overview of the Makefile targets that <code>make all</code> resol
 </thead>
 <tbody>
 <tr class="odd">
-<td><code>make sim-xschem TB=&lt;tb&gt;</code> / <code>make sim-view-xschem</code></td>
-<td>Run a specific Xschem testbench and plot its results with Python.</td>
+<td><code>make sim-xschem TB=&lt;tb&gt;</code> / <code>make sim-view-xschem SCRIPT=&lt;script&gt;</code></td>
+<td>Run a specific Xschem testbench (batch mode) and plot its results with Python.</td>
 </tr>
 <tr class="even">
 <td><code>make sim-cace</code></td>
 <td>Run <a href="https://github.com/fossi-foundation/cace">CACE</a> Monte-Carlo / mismatch characterisations.</td>
 </tr>
 <tr class="odd">
-<td><code>make klayout-lvs</code> / <code>magic-lvs</code></td>
-<td>Run LVS using KLayout or Magic + Netgen.</td>
-</tr>
-<tr class="even">
 <td><code>make klayout-drc</code> / <code>magic-drc</code> (<code>DRC_LEVEL=&lt;precheck|macro|regular&gt;</code>)</td>
 <td>Run DRC using KLayout or Magic.</td>
+</tr>
+<tr class="even">
+<td><code>make klayout-lvs</code> / <code>magic-lvs</code></td>
+<td>Run LVS using KLayout or Magic + Netgen.</td>
 </tr>
 <tr class="odd">
 <td><code>make klayout-pex</code> / <code>magic-pex</code> (<code>EXT_MODE=&lt;1|2|3&gt;</code>)</td>
@@ -999,7 +999,7 @@ Figure&nbsp;2: Overview of the Makefile targets that <code>make all</code> resol
 </tr>
 <tr class="even">
 <td><code>make klayout-verify</code> / <code>magic-verify</code></td>
-<td>Run LVS + DRC + PEX for a given cell.</td>
+<td>Run DRC + LVS + PEX for a given cell.</td>
 </tr>
 <tr class="odd">
 <td><code>make lef</code> / <code>make lib</code> / <code>make verilog</code></td>
@@ -1011,7 +1011,7 @@ Figure&nbsp;2: Overview of the Makefile targets that <code>make all</code> resol
 </tr>
 <tr class="odd">
 <td><code>make all</code></td>
-<td>Run all simulations, the analog macro build flow and KLayout / Magic verification.</td>
+<td>Run KLayout / Magic verification, the analog macro build flow, and all simulations.</td>
 </tr>
 </tbody>
 </table>
@@ -1247,7 +1247,7 @@ Figure&nbsp;4: Gate-level cocotb waveform of <code>counter_top</code> in GTKWave
 </figcaption>
 </figure>
 </div>
-<p>The gate-level cocotb run uses the gate-level Verilog netlist produced after synthesis: <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/counter/netlist/nl/"><code>netlist/nl/counter_top.nl.v</code></a>. In this tutorial, this netlist for the counter already exists. For new designs, run <code>make build-top</code> first to execute the LibreLane flow, then run <code>make copy-netlist</code> to copy the netlists from the latest LibreLane run.</p>
+<p>The gate-level cocotb run uses the gate-level Verilog netlist produced after synthesis: <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/counter/netlist/nl/"><code>netlist/nl/counter_top.nl.v</code></a>. In this tutorial, this netlist for the counter already exists. For new designs, run <code>make build-top</code> first to execute the LibreLane flow. It also copies the netlists from the latest LibreLane run back into the source tree with <code>make copy-netlist</code>.</p>
 </section>
 </section>
 <section id="librelane-hardening" class="level2" data-number="4.5">
@@ -1290,9 +1290,9 @@ Figure&nbsp;5: <code>counter_top</code> layout in KLayout (200 µm x 100 µm).
 </section>
 <section id="gate-level-mixed-signal-simulation-with-xschem" class="level2" data-number="4.8">
 <h2 data-number="4.8" class="anchored" data-anchor-id="gate-level-mixed-signal-simulation-with-xschem"><span class="header-section-number">4.8</span> Gate-Level Mixed-Signal Simulation with Xschem</h2>
-<p>A more accurate validation step is the gate-level mixed-signal simulation in Xschem with the Ngspice XSPICE event-driven engine. The gate-level Verilog netlist produced after synthesis (<code>runs/RUN_*/*-yosys-synthesis/&lt;TOP&gt;.nl.v</code>) is converted into an XSPICE model with the following command.</p>
+<p>A more accurate validation step is the gate-level mixed-signal simulation in Xschem with the Ngspice XSPICE event-driven engine. The LibreLane-extracted SPICE netlist (<code>netlist/spice/&lt;TOP&gt;.spice</code>, copied from the latest run by <code>copy-netlist</code>) is converted into an XSPICE model with the following command, which is also executed automatically as part of <code>make build-top</code>.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> generate-xspice</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>The conversion pipeline is <code>.nl.v → .vp → .spice → .xspice</code>, followed by a pin-reorder pass to match the Xschem symbol (<a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/counter/schematic/xschem/"><code>schematic/xschem/counter_top.sym</code></a>).</p>
+<p>The conversion pipeline is <code>.spice → .xspice</code> (<code>spi2xspice.py</code>), followed by a pin-reorder pass with <code>sak-pin-reorder.py</code> (a SAK tool installed in the IIC-OSIC-TOOLS container) to match the Xschem symbol (<a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/counter/schematic/xschem/"><code>schematic/xschem/counter_top.sym</code></a>).</p>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -1303,7 +1303,7 @@ Note
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p><code>.vp</code> is the gate-level Verilog netlist with power pins. Hence, one might think that the conversion could be done directly from the <code>.pnl.v</code> netlist in the <code>flow/final/</code> folder. However, the <code>.nl.v</code> file from the LibreLane <code>yosys-synthesis</code> step must be used. The target <code>make generate-xspice</code> is not executed by <code>make all</code>.</p>
+<p>The pins are matched <strong>by name</strong>: every pin in the Xschem symbol carries a <code>sim_pinname=&lt;netlist_name&gt;</code> property, so the alphabetically sorted ports of the extracted netlist are mapped correctly regardless of their order. Since <code>make build-top</code> regenerates the XSPICE model right after copying the netlists, the model always matches the current LibreLane run.</p>
 </div>
 </div>
 <p>The Xschem testbench (<a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/counter/testbenches/xschem/"><code>counter_top_tb_tran.sch</code></a>) can be opened and simulated interactively.</p>
@@ -1348,23 +1348,23 @@ Note
 </div>
 <p>The same simulation can also be run non-interactively from the Makefile, and the result can be plotted from Python.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> sim-gl-xschem</span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> sim-view-xschem</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> sim-view-xschem SCRIPT=plot_counter_top</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div id="fig-counter-top-tb-tran-sim" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-counter-top-tb-tran-sim-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<a href="fig/counter_top/counter_top_tb_tran_sim.svg" class="lightbox" data-gallery="quarto-lightbox-gallery-7" title="Figure&nbsp;7: Plotted Xschem simulation results of counter_top_tb_tran from scripts/plot_simulations/plot_counter_top.py."><img src="fig/counter_top/counter_top_tb_tran_sim.svg" class="img-fluid figure-img"></a>
+<a href="fig/counter_top/counter_top_tb_tran_sim.svg" class="lightbox" data-gallery="quarto-lightbox-gallery-7" title="Figure&nbsp;7: Plotted Xschem simulation results of counter_top_tb_tran from testbenches/xschem/plot_simulations/plot_counter_top.py."><img src="fig/counter_top/counter_top_tb_tran_sim.svg" class="img-fluid figure-img"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-counter-top-tb-tran-sim-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;7: Plotted Xschem simulation results of <code>counter_top_tb_tran</code> from <code>scripts/plot_simulations/plot_counter_top.py</code>.
+Figure&nbsp;7: Plotted Xschem simulation results of <code>counter_top_tb_tran</code> from <code>testbenches/xschem/plot_simulations/plot_counter_top.py</code>.
 </figcaption>
 </figure>
 </div>
 </section>
-<section id="build-and-verify-everything" class="level2" data-number="4.9">
-<h2 data-number="4.9" class="anchored" data-anchor-id="build-and-verify-everything"><span class="header-section-number">4.9</span> Build and Verify Everything</h2>
-<p>The full lint, simulation, and build chain is run with the following command.</p>
+<section id="lint-build-verify-and-simulate-everything" class="level2" data-number="4.9">
+<h2 data-number="4.9" class="anchored" data-anchor-id="lint-build-verify-and-simulate-everything"><span class="header-section-number">4.9</span> Lint, Build, Verify and Simulate Everything</h2>
+<p>The full lint, build, verification, and simulation chain is run with the following command.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> all</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>This calls <code>lint-verilog-all</code>, <code>sim-all</code>, <code>build-fpga</code>, and <code>build-top</code> in sequence. LVS and DRC are already covered by the LibreLane verification steps, so no extra verification target is needed for the digital macro.</p>
+<p>This calls <code>lint-verilog-all</code>, <code>build-fpga</code>, <code>build-top</code>, and <code>sim-all</code> in sequence. The simulations run after the build, so the gate-level simulations run on the netlists and the XSPICE model produced by this build. DRC and LVS are already covered by the LibreLane verification steps, so no extra verification target is needed for the digital macro.</p>
 </section>
 </section>
 <section id="sec-analog" class="level1" data-number="5">
@@ -1419,7 +1419,7 @@ Note
 </tr>
 <tr class="odd">
 <td><a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/inverter/scripts/"><code>scripts/</code></a></td>
-<td>Python plotters, sizing notebooks, layout rendering, PEX pin reordering.</td>
+<td>Sizing notebooks, layout rendering.</td>
 </tr>
 <tr class="even">
 <td><a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/inverter/verification/"><code>verification/</code></a></td>
@@ -1506,9 +1506,9 @@ Figure&nbsp;11: Xschem top-level testbench <code>inverter_top_tb_tran</code> (tr
 <p>Non-interactive runs and post-processing are also available through the Makefile.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb15"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> macros/inverter</span>
 <span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> sim-xschem TB=<span class="op">&lt;</span>testbench_name<span class="op">&gt;</span>     <span class="co"># run a specific testbench non-interactively</span></span>
-<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> sim-view-xschem CELL=inverter      <span class="co"># plot results of inverter with Python</span></span>
-<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> sim-view-xschem CELL=inverter_top  <span class="co"># plot results of inverter_top with Python</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>The Makefile target <code>sim-view-xschem</code> calls the Python plotters in <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/inverter/scripts/plot_simulations"><code>scripts/plot_simulations/</code></a> to parse the raw simulation output and plot the results with Matplotlib. The following figures show some of these plotted results.</p>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> sim-view-xschem SCRIPT=plot_inverter      <span class="co"># plot results of inverter with Python</span></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> sim-view-xschem SCRIPT=plot_inverter_top  <span class="co"># plot results of inverter_top with Python</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>The Makefile target <code>sim-view-xschem</code> calls the Python plotters in <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/inverter/testbenches/xschem/plot_simulations"><code>testbenches/xschem/plot_simulations/</code></a>, selected with the <code>SCRIPT</code> variable, to parse the raw simulation output and plot the results with Matplotlib. The following figures show some of these plotted results.</p>
 <div id="fig-inverter-tb-ac-ol-sim" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-inverter-tb-ac-ol-sim-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
@@ -1923,7 +1923,7 @@ Tip
 <p>After the schematic is finalised and the design targets are met, the layout can be created. The layout of the <code>inverter</code> cell is hierarchical, and the top-level cell <code>inverter_top</code> contains four instances of the <code>inverter</code> cell. Around the four-channel inverter layout, a power ring is drawn on <code>Metal5</code> and <code>TopMetal1</code> layers, which is connected to the <code>VDD</code> and <code>VSS</code> pins of the four inverters. This power ring is required for top-level integration, connecting the macro power to the chip’s PDN.</p>
 <p>The layout is created and edited in KLayout. The container provides the <code>ke</code> alias for <code>klayout -e</code> (edit mode). With the following command, the GDS of the four-channel inverter is opened in KLayout as shown <a href="#fig-inverter-top-layout" class="quarto-xref">Figure&nbsp;21</a>. With the keys <code>0</code>, <code>1</code>, <code>2</code>, …, <code>9</code> you can view different layers as explained in the <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/doc/klayout/klayout_cheatsheet.md">KLayout cheatsheet</a> or in the <a href="https://github.com/iic-jku/klayout-layer-shortcuts">klayout-layer-shortcuts</a> plugin.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb17"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="ex">ke</span> layout/inverter_top.klay.gds</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>After modifying the layout, export a clean <code>.gds</code> file (for example <code>inverter_top.gds</code>) by pressing <code>File &gt; Export Layout For Tapeout</code>. All verification flows (LVS, DRC, and PEX with both KLayout and Magic) accept either <code>.gds</code> or <code>.klay.gds</code>, while the build targets (LEF export, GDS copy, and rendering) use the exported <code>.gds</code>.</p>
+<p>After modifying the layout, export a clean <code>.gds</code> file (for example <code>inverter_top.gds</code>) by pressing <code>File &gt; Export Layout For Tapeout</code>. All verification flows (DRC, LVS, and PEX with both KLayout and Magic) accept either <code>.gds</code> or <code>.klay.gds</code>, while the build targets (LEF export, GDS copy, and rendering) use the exported <code>.gds</code>.</p>
 <div id="fig-inverter-top-layout" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-inverter-top-layout-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
@@ -2102,7 +2102,7 @@ Note
 </section>
 <section id="run-full-verification-flow-at-once" class="level3" data-number="5.7.4">
 <h3 data-number="5.7.4" class="anchored" data-anchor-id="run-full-verification-flow-at-once"><span class="header-section-number">5.7.4</span> Run Full Verification Flow at Once</h3>
-<p>If you want to run the full verification flow at once, the verify targets bundle LVS, DRC, and PEX in one command.</p>
+<p>If you want to run the full verification flow at once, the verify targets bundle DRC, LVS, and PEX in one command.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb21"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> klayout-verify [CELL=<span class="op">&lt;</span>cellname<span class="op">&gt;</span>]   <span class="co"># default CELL=inverter_top</span></span>
 <span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> magic-verify [CELL=<span class="op">&lt;</span>cellname<span class="op">&gt;</span>]     <span class="co"># default CELL=inverter_top</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
@@ -2118,9 +2118,9 @@ Note
 </section>
 <section id="full-analog-macro-flow" class="level2" data-number="5.9">
 <h2 data-number="5.9" class="anchored" data-anchor-id="full-analog-macro-flow"><span class="header-section-number">5.9</span> Full Analog Macro Flow</h2>
-<p>The full simulation, build, and verification chain is run with the following command.</p>
+<p>The full verification, build, and simulation chain is run with the following command.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb23"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> all</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>This calls <code>sim-all</code> (Xschem + CACE), <code>klayout-verify-all</code>, <code>magic-verify-all</code>, and <code>build-top</code> in sequence. Depending on the hardware used, a full pass can take a few minutes, especially the CACE simulation step.</p>
+<p>This calls <code>klayout-verify-all</code>, <code>magic-verify-all</code>, <code>build-top</code>, and <code>sim-all</code> (Xschem + CACE) in sequence. The simulations run last, so the <code>inverter_top</code> testbench includes the PEX netlist produced by this run. Depending on the hardware used, a full pass can take a few minutes, especially the CACE simulation step.</p>
 </section>
 </section>
 <section id="sec-ip" class="level1" data-number="6">
@@ -2154,7 +2154,7 @@ Note
 </tr>
 <tr class="odd">
 <td><a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/ip/sg13g2_ip__jku/script/"><code>sg13g2_ip__jku/script/</code></a> and <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/ip/sg13g2_ip__jku_names/script/"><code>sg13g2_ip__jku_names/script/</code></a></td>
-<td>PNG-to-GDS converter (<a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/ip/sg13g2_ip__jku/script/make_gds.py"><code>make_gds.py</code></a>) shared by both logos.</td>
+<td>PNG-to-GDS converter (<a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/ip/sg13g2_ip__jku/script/img2lay.py"><code>img2lay.py</code></a>) shared by both logos.</td>
 </tr>
 <tr class="even">
 <td><code>final/gds/</code>, <code>final/lef/</code>, <code>final/lib/</code>, <code>final/vh/</code></td>
@@ -2268,7 +2268,7 @@ Figure&nbsp;23: <code>sg13g2_ip__bondpad_70x70</code> layout in KLayout.
 </section>
 <section id="logo-generation" class="level2" data-number="6.3">
 <h2 data-number="6.3" class="anchored" data-anchor-id="logo-generation"><span class="header-section-number">6.3</span> Logo Generation</h2>
-<p>Both logo IPs share the same Makefile targets and PNG-to-GDS converter <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/ip/sg13g2_ip__jku/script/make_gds.py"><code>script/make_gds.py</code></a>, built on the <code>klayout.db</code> Python module. The conversion proceeds in five steps:</p>
+<p>Both logo IPs share the same Makefile targets and PNG-to-GDS converter <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/ip/sg13g2_ip__jku/script/img2lay.py"><code>script/img2lay.py</code></a>, built on the <code>klayout.db</code> Python module. The conversion proceeds in five steps:</p>
 <ol type="1">
 <li>Open the source PNG (<code>logo/jku_logo.png</code> or <code>logo/jku_names.png</code>) and convert it to a binary mask using a brightness threshold (default <code>128</code>).</li>
 <li>Optionally invert the mask (<code>--invert</code>) so that the dark logo regions become the foreground.</li>
@@ -2326,7 +2326,7 @@ Figure&nbsp;23: <code>sg13g2_ip__bondpad_70x70</code> layout in KLayout.
 <tbody>
 <tr class="odd">
 <td><code>logo</code></td>
-<td>Convert the PNG into a GDSII layout using <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/ip/sg13g2_ip__jku/script/make_gds.py"><code>make_gds.py</code></a>.</td>
+<td>Convert the PNG into a GDSII layout using <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/ip/sg13g2_ip__jku/script/img2lay.py"><code>img2lay.py</code></a>.</td>
 </tr>
 <tr class="even">
 <td><code>lef</code></td>
@@ -2705,7 +2705,7 @@ Figure&nbsp;26: Xschem top-level mixed-signal testbench <code>chip_top_tb_tran</
 </div>
 <p>Again, the simulation and plotting can be run non-interactive from the command line with the following targets.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb38"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> sim-gl-xschem</span>
-<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> plot-xschem-sim TESTBENCH=chip_top_tb_tran</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> sim-view-xschem SCRIPT=plot_chip_top</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -2716,7 +2716,7 @@ Note
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>The top-level Xschem testbench converges, but it may take a long time depending on the hardware used. <code>make sim-gl-xschem</code> is therefore not part of <code>sim-all</code> and must be called manually when needed. For this tutorial, the simulation data is already available in the repository in <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/scripts/plot_simulations/data/chip_top_tb_tran.txt"><code>scripts/plot_simulations/data/chip_top_tb_tran.txt</code></a>, so <code>make plot-xschem-sim TESTBENCH=chip_top_tb_tran</code> can be run without running the simulation first.</p>
+<p>The top-level Xschem testbench converges, but it may take a long time depending on the hardware used. <code>make sim-gl-xschem</code> is part of <code>sim-all</code>, so a full <code>make sim-all</code> includes it. For this tutorial, the simulation data is already available in the repository in <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/testbenches/xschem/plot_simulations/data/chip_top_tb_tran.txt"><code>testbenches/xschem/plot_simulations/data/chip_top_tb_tran.txt</code></a>, so <code>make sim-view-xschem SCRIPT=plot_chip_top</code> can be run without running the simulation first.</p>
 </div>
 </div>
 <p>The following plots show the results of the top-level transient simulation. The first plot shows the analog inverter response, while the other three plots show the digital outputs of the two counters, the digital inverter, and the bidirs.</p>
@@ -2858,11 +2858,30 @@ Figure&nbsp;34: <code>chip_top_logo_fill</code> layout in KLayout with only <cod
 <span id="cb43-4"><a href="#cb43-4" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> klayout-drc-regular                  <span class="co"># full KLayout DRC on chip_top_logo_fill.gds.gz (slower)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><code>klayout-drc-minimum</code> is a quick pre-check on the final top-level layout including the logo and the fill structures. <code>klayout-drc-regular</code> does the full check, but takes longer. <code>magic-drc</code> is faster than <code>klayout-drc</code>, but it does not support the full set of DRC rules and is less accurate on the complex top-level layout, so it is recommended to use both.</p>
 </section>
-<section id="pex" class="level3" data-number="7.8.2">
-<h3 data-number="7.8.2" class="anchored" data-anchor-id="pex"><span class="header-section-number">7.8.2</span> PEX</h3>
+<section id="lvs" class="level3" data-number="7.8.2">
+<h3 data-number="7.8.2" class="anchored" data-anchor-id="lvs"><span class="header-section-number">7.8.2</span> LVS</h3>
+<p>The following LVS target is available for the top-level.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb44"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> klayout-lvs                          <span class="co"># top-level KLayout LVS</span></span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> magic-lvs                            <span class="co"># top-level Magic + Netgen LVS</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Warning
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The top-level LVS is currently under construction. The flow is in place, but some issues and limitations in the ihp-sg13g2 PDK must be fixed before it can run successfully.</p>
+</div>
+</div>
+</section>
+<section id="pex" class="level3" data-number="7.8.3">
+<h3 data-number="7.8.3" class="anchored" data-anchor-id="pex"><span class="header-section-number">7.8.3</span> PEX</h3>
 <p>The following PEX target is available for the top-level.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb44"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> magic-pex                            <span class="co"># only chip_top (without logo and filler), default EXT_MODE=1</span></span>
-<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> magic-pex EXT_MODE=3 THRESHOLD=5000 MINRES=500 MINDELAY=2   <span class="co"># full-RC with custom extresist settings</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb45"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> magic-pex                            <span class="co"># only chip_top (without logo and filler), default EXT_MODE=1</span></span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> magic-pex EXT_MODE=3 THRESHOLD=5000 MINRES=500 MINDELAY=2   <span class="co"># full-RC with custom extresist settings</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>For full-RC extraction (<code>EXT_MODE=3</code>), <code>magic-pex</code> also exposes the <code>sak-pex.sh</code> <code>extresist</code> tuning parameters <code>THRESHOLD</code> (<code>-t</code>, default <code>10000</code> mOhm), <code>MINRES</code> (<code>-r</code>, default <code>1000</code> mOhm) and <code>MINDELAY</code> (<code>-y</code>, default <code>1</code> ps; <code>0</code> = gate by resistance). They are ignored in <code>EXT_MODE=1</code>/<code>2</code>.</p>
 <div class="callout callout-style-default callout-warning callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -2875,25 +2894,6 @@ Warning
 </div>
 <div class="callout-body-container callout-body">
 <p>At the top level, PEX is only run on <code>chip_top</code> (without logo and filler), and the default <code>EXT_MODE=1</code> (C-decoupled) is used to keep the runtime manageable. However, the extracted netlist <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/netlist/pex/chip_top_magic_pex_1.spice"><code>chip_top_magic_pex_1.spice</code></a> is still huge (~75 MB, ~566k lines), and the post-layout simulation must be run on a powerful server.</p>
-</div>
-</div>
-</section>
-<section id="lvs" class="level3" data-number="7.8.3">
-<h3 data-number="7.8.3" class="anchored" data-anchor-id="lvs"><span class="header-section-number">7.8.3</span> LVS</h3>
-<p>The following LVS target is available for the top-level.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb45"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> klayout-lvs                          <span class="co"># top-level KLayout LVS</span></span>
-<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> magic-lvs                            <span class="co"># top-level Magic + Netgen LVS</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="callout callout-style-default callout-warning callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Warning
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>The top-level LVS is currently under construction. The flow is in place, but some issues and limitations in the ihp-sg13g2 PDK must be fixed before it can run successfully.</p>
 </div>
 </div>
 </section>
@@ -2966,7 +2966,7 @@ Important
 <li>Update the testbenches in <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/counter/testbenches/verilog/"><code>testbenches/verilog/</code></a>, <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/counter/testbenches/cocotb/"><code>testbenches/cocotb/</code></a>, and <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/counter/testbenches/xschem/"><code>testbenches/xschem/</code></a> to cover the new behaviour. Adjust the bus width in the waveform view files (<code>*.gtkw</code>, <code>*.surf.ron</code>) as well.</li>
 <li>Run <code>make sim-all</code> to validate the new RTL.</li>
 <li>Re-run the LibreLane flow with <code>make build-top</code>. Check the timing reports. A 16-bit counter at 50 MHz must still pass timing constraints.</li>
-<li>Regenerate the XSPICE model with <code>make generate-xspice</code>, and re-run the gate-level Xschem simulation.</li>
+<li>Update the bus range of the output pin in the Xschem symbol (<a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/counter/schematic/xschem/"><code>counter_top.sym</code></a>), and re-run the gate-level Xschem simulation. The XSPICE model itself is regenerated automatically by <code>make build-top</code> (or manually with <code>make generate-xspice</code>).</li>
 </ol>
 <div class="callout callout-style-default callout-tip callout-titled">
 <div class="callout-header d-flex align-content-center">
