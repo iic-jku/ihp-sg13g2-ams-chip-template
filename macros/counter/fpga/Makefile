@@ -39,7 +39,7 @@ help: ## Show this help message
 
 # Clean Target
 clean: ## Remove generated files
-	rm -f test_pre *.vcd $(TOP).json* $(TOP).asc $(TOP).bin $(TOP).pdf $(TOP).svg
+	rm -f *.vcd $(TOP).json* $(TOP)_viz.json $(TOP)_generic_viz.json $(TOP).asc $(TOP).bin $(TOP).pdf $(TOP).svg
 	rm -f $(TOP)_generic.json* $(TOP)_generic.pdf $(TOP)_generic.svg
 	rm -f $(TOP)_yosys.svg $(TOP)_yosys.dot $(TOP)_generic_yosys.svg $(TOP)_generic_yosys.dot
 	rm -rf $(TOP) $(TOP)_basic $(TOP)_cover
@@ -78,9 +78,11 @@ $(TOP)_generic.json: $(MODULES_SYNTH)
 visualize_ice40: $(TOP).pdf ## Generate visualization PDF from iCE40 netlist
 .PHONY: visualize_ice40
 
+# netlistsvg cannot render inout ports, so visualise a COPY of the netlist:
+# rewriting $(TOP).json in place would corrupt the netlist that nextpnr uses in `pr`.
 $(TOP).pdf: $(TOP).json
-	sed -i -e 's/inout/output/g' $(TOP).json
-	netlistsvg $(TOP).json -o $(TOP).svg
+	sed -e 's/inout/output/g' $(TOP).json > $(TOP)_viz.json
+	netlistsvg $(TOP)_viz.json -o $(TOP).svg
 	svgo $(TOP).svg
 	rsvg-convert -f pdf -o $(TOP).pdf $(TOP).svg
 
@@ -88,8 +90,8 @@ visualize_generic: $(TOP)_generic.pdf ## Generate visualization PDF from generic
 .PHONY: visualize_generic
 
 $(TOP)_generic.pdf: $(TOP)_generic.json
-	sed -i -e 's/inout/output/g' $(TOP)_generic.json
-	netlistsvg $(TOP)_generic.json -o $(TOP)_generic.svg
+	sed -e 's/inout/output/g' $(TOP)_generic.json > $(TOP)_generic_viz.json
+	netlistsvg $(TOP)_generic_viz.json -o $(TOP)_generic.svg
 	svgo $(TOP)_generic.svg
 	rsvg-convert -f pdf -o $(TOP)_generic.pdf $(TOP)_generic.svg
 # ================================================================================================
