@@ -46,7 +46,7 @@ This tutorial is a step-by-step walk-through of the open-source analog-mixed sig
   - Simulation with [Ngspice](https://github.com/danchitnis/ngspice-sf-mirror) and [VACASK](https://codeberg.org/arpadbuermen/VACASK)
   - Monte Carlo / mismatch characterisation with [CACE](https://github.com/fossi-foundation/cace)
   - Layout in [KLayout](https://github.com/KLayout/klayout)
-  - Verification with LVS, DRC, PEX using [KLayout](https://github.com/KLayout/klayout), [Magic](https://github.com/rtimothyedwards/magic) + [Netgen](https://github.com/rtimothyedwards/netgen)
+  - Verification with DRC, LVS, PEX using [KLayout](https://github.com/KLayout/klayout), [Magic](https://github.com/rtimothyedwards/magic) + [Netgen](https://github.com/rtimothyedwards/netgen)
 - [Top-level assembly and padframe generation](#sec-top) with logos and fill structures using SystemVerilog and the [LibreLane](https://github.com/librelane/librelane) flow.
 
 The example design used throughout the tutorial contains:
@@ -137,13 +137,13 @@ By default, the container is already configured for `ihp-sg13g2`, so both option
 
 ## Purpose
 
-This Makefile-driven repository simulates, builds, and fully verifies (LVS, DRC, PEX) a complete analog mixed-signal chip for the ihp-sg13g2 130nm Open-PDK, including padframe generation and top-level assembly. It uses:
+This Makefile-driven repository simulates, builds, and fully verifies (DRC, LVS, PEX) a complete analog mixed-signal chip for the ihp-sg13g2 130nm Open-PDK, including padframe generation and top-level assembly. It uses:
 
 - [**LibreLane**](https://github.com/librelane/librelane) for digital macro hardening, padframe generation and top-level assembly
 - [**Xschem**](https://github.com/StefanSchippers/xschem) for schematic entry
 - [**Ngspice**](https://github.com/danchitnis/ngspice-sf-mirror), [**VACASK**](https://codeberg.org/arpadbuermen/VACASK) and [**CACE**](https://github.com/fossi-foundation/cace) for analog simulation
 - [**KLayout**](https://github.com/KLayout/klayout) for viewing and routing of the layout
-- [**Magic**](https://github.com/rtimothyedwards/magic) + [**Netgen**](https://github.com/rtimothyedwards/netgen) and [**KLayout**](https://github.com/KLayout/klayout) for LVS, DRC and PEX verification
+- [**Magic**](https://github.com/rtimothyedwards/magic) + [**Netgen**](https://github.com/rtimothyedwards/netgen) and [**KLayout**](https://github.com/KLayout/klayout) for DRC, LVS and PEX verification
 - **SystemVerilog**, [**cocotb**](https://github.com/cocotb/cocotb), [**GTKWave**](https://github.com/gtkwave/gtkwave) and [**Surfer**](https://gitlab.com/surfer-project/surfer) for digital simulation
 
 The repository is the starting point for your own custom silicon and provides a universal design flow solution: Just clone the repo, enter the IIC-OSIC-TOOLS container, and run `make all` to get a tapeout-ready analog-mixed signal chip. Focus on your design and do not care about the tools and the design flow!
@@ -155,7 +155,7 @@ Furthermore, it serves as a regression test for the above-mentioned open-source 
 Examples based on this template are:
 
 - [TinyWhisper](https://github.com/iic-jku/TinyWhisper): An Open-Source Fully-Integrated Multi-Mode Short-Wave Transmitter for Amateur Radio Applications in 130-nm CMOS
-- [SPARX](https://github.com/iic-jku/SG13G2_SPARX): An Open-Source, Automated, Programmatically Generated, Frequency-Scalable Six-Port Receiver in 130-nm CMOS
+- [SPARX](https://github.com/iic-jku/SG13CMOS_SPARX): An Open-Source, Automated, Programmatically Generated, Frequency-Scalable Six-Port Receiver in 130-nm CMOS
 - wafer.space gf180mcuD MPW [Multi-Project Chip](https://github.com/iic-jku/gf180mcu-jku-projects)
 
 
@@ -208,7 +208,7 @@ The colour scheme groups targets by the final deliverable they produce, so begin
 - **Red — packaging**: This branch includes `bondplan` and the automated bondplan flow in [`packaging/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/packaging/) (see @sec-packaging).
 - **Grey — simulation and verification**: This branch includes intermediate targets that feed the coloured deliverables (`sim-all`, `build-all`, `build-macros`, `init-submodules`, `sim-*-cocotb`).
 
-Solid arrows represent direct `$(MAKE) <target>` calls within a single Makefile. Dashed arrows represent calls that descend into a subdirectory: recursive `$(MAKE) -C <dir> all` calls into a sub-Makefile (one per coloured deliverable), or the Python bondplan flow in `packaging/`.
+Solid arrows represent direct `$(MAKE) <target>` calls within a single Makefile. Dashed arrows represent calls that descend into a subdirectory: recursive `$(MAKE) -C <dir> all` calls into a sub-Makefile (one per coloured deliverable), or the Python bondplan flow in `packaging/`. The numbers on the second level indicate the execution order of `make all` (build, verify, simulate, package), and the vertical order inside the coloured boxes reflects the execution order of each sub-Makefile's `all` target.
 
 ![Overview of the Makefile targets that `make all` resolves to. Every coloured branch corresponds to one deliverable (top chip, bondpad, logos, digital macro, analog macro, packaging). The grey targets connect `make all` to those branches.](fig/targets_overview/targets_overview.svg){#fig-targets-overview}
 
@@ -221,7 +221,7 @@ The [top-level Makefile](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template
 | `make help`         | Print the help banner and list every target with its description.                                     |
 | `make init-submodules` | Initialise and update git submodules (for example the ArtistIC logo flow).                         |
 | `make sim-rtl-cocotb` / `sim-gl-cocotb` | Run the RTL / gate-level (GL) cocotb testbench for the top-level.                       |
-| `make sim-gl-xschem` | Run the gate-level Xschem testbench. Converges, but it may take a long time depending on the hardware used and is therefore not included in `sim-all`. |
+| `make sim-gl-xschem` | Run the gate-level Xschem testbench in batch mode. Part of `sim-all`, but it may take a long time depending on the hardware used. |
 | `make sim-view-cocotb` | Open the latest cocotb waveform in GTKWave (or Surfer with `WAVEFORM_VIEWER=surfer`).              |
 | `make librelane` / `librelane-nodrc` | Run the LibreLane flow for the top-level (with / without DRC steps).                  |
 | `make copy-reports` / `copy-gds` / `copy-netlist` / `copy-render` | Copy the latest LibreLane artifacts back into the source tree. |
@@ -229,9 +229,9 @@ The [top-level Makefile](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template
 | `make build-counter` / `build-inverter` / `make build-macros` | Build the digital and analog macros individually or together. |
 | `make build-top`    | Run LibreLane on the top-level, copy back all artifacts, add logos and fill structures, and render the final GDS. |
 | `make build-all`    | Init submodules, build bondpad, build logos, build macros, and build top-level.                           |
-| `make klayout-verify` / `magic-verify` | Run LVS, DRC, and PEX for a given cell with KLayout or Magic.                      |
+| `make klayout-verify` / `magic-verify` | Run DRC, LVS, and PEX for a given cell with KLayout or Magic.                      |
 | `make bondplan`     | Generate the bondplan (die in package, bondwires, pin table) in `packaging/` (see @sec-packaging).        |
-| `make all`          | Full simulation, build, verification, and bondplan generation.                                            |
+| `make all`          | Full build, DRC verification, simulation, and bondplan generation.                        |
 | `make release VERSION=2.1.0` | Copy GDS, netlists, and renders into `release/v.<VERSION>/` for tapeout submission.          |
 
 See the [top-level README](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/README.md) for more details and how to use the Makefile targets.
@@ -247,11 +247,11 @@ The [counter Makefile](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/b
 | `make sim-rtl-cocotb` / `sim-gl-cocotb`           | Run the cocotb RTL / gate-level simulation.                                 |
 | `make sim-view-verilog` / `sim-view-cocotb`       | Open the latest waveform in GTKWave or Surfer.                              |
 | `make librelane` (and `-nodrc`, `-magicdrc`, …)   | Run the LibreLane flow for the counter macro.                               |
-| `make generate-xspice`                            | Convert the gate-level netlist into an XSPICE model for Xschem.             |
-| `make sim-gl-xschem` / `sim-view-xschem`          | Run the mixed-signal XSPICE simulation in Xschem and plot the results.      |
+| `make generate-xspice`                            | Convert the LibreLane-extracted SPICE netlist into an XSPICE model for Xschem. |
+| `make sim-gl-xschem` / `sim-view-xschem SCRIPT=<script>` | Run the mixed-signal XSPICE simulation in Xschem (batch mode) and plot the results. |
 | `make build-fpga`                                 | Run the full FPGA flow: lint, synthesis, P&R, and bitstream generation.     |
-| `make build-top`                                  | Run LibreLane, copy reports, netlists, and final views, and render the final GDS. |
-| `make all`                                        | Run lint, all simulations, the FPGA build, and the full macro build flow.   |
+| `make build-top`                                  | Run LibreLane, copy reports, netlists, and final views, generate the XSPICE model, and render the final GDS. |
+| `make all`                                        | Run lint, the FPGA build, the full macro build flow, and all simulations. |
 
 See the [counter README](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/counter/README.md) for more details and how to use the Makefile targets.
 
@@ -261,15 +261,15 @@ The [inverter Makefile](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/
 
 | Target                                            | What it does                                                                |
 | ----------------------------------- | ----------------------------------------------------------------- |
-| `make sim-xschem TB=<tb>` / `make sim-view-xschem` | Run a specific Xschem testbench and plot its results with Python.          |
+| `make sim-xschem TB=<tb>` / `make sim-view-xschem SCRIPT=<script>` | Run a specific Xschem testbench (batch mode) and plot its results with Python. |
 | `make sim-cace`                                   | Run [CACE](https://github.com/fossi-foundation/cace) Monte-Carlo / mismatch characterisations. |
-| `make klayout-lvs` / `magic-lvs`                  | Run LVS using KLayout or Magic + Netgen.                                    |
 | `make klayout-drc` / `magic-drc` (`DRC_LEVEL=<precheck|macro|regular>`) | Run DRC using KLayout or Magic.                       |
+| `make klayout-lvs` / `magic-lvs`                  | Run LVS using KLayout or Magic + Netgen.                                    |
 | `make klayout-pex` / `magic-pex` (`EXT_MODE=<1|2|3>`) | Run parasitic extraction in C, CC, or full-RC mode.                     |
-| `make klayout-verify` / `magic-verify`            | Run LVS + DRC + PEX for a given cell.                                       |
+| `make klayout-verify` / `magic-verify`            | Run DRC + LVS + PEX for a given cell.                                       |
 | `make lef` / `make lib` / `make verilog`          | Generate the LEF, the Liberty stub, and the Verilog stub for top-level integration.   |
 | `make build-top`                                  | Build the analog macro deliverables: LEF, LIB, Verilog stub, GDS and rendered layout image. |
-| `make all`                                        | Run all simulations, the analog macro build flow and KLayout / Magic verification. |
+| `make all`                                        | Run KLayout / Magic verification, the analog macro build flow, and all simulations. |
 
 See the [inverter README](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/inverter/README.md) for more details and how to use the Makefile targets.
 
@@ -365,7 +365,7 @@ make sim-view-cocotb WAVEFORM_VIEWER=surfer
 
 ![Gate-level cocotb waveform of `counter_top` in GTKWave.](fig/counter_top/counter_top_cocotb_gtkwave.png){#fig-counter-top-cocotb-gtkwave}
 
-The gate-level cocotb run uses the gate-level Verilog netlist produced after synthesis: [`netlist/nl/counter_top.nl.v`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/counter/netlist/nl/). In this tutorial, this netlist for the counter already exists. For new designs, run `make build-top` first to execute the LibreLane flow, then run `make copy-netlist` to copy the netlists from the latest LibreLane run.
+The gate-level cocotb run uses the gate-level Verilog netlist produced after synthesis: [`netlist/nl/counter_top.nl.v`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/counter/netlist/nl/). In this tutorial, this netlist for the counter already exists. For new designs, run `make build-top` first to execute the LibreLane flow. It also copies the netlists from the latest LibreLane run back into the source tree with `make copy-netlist`.
 
 ## LibreLane Hardening
 
@@ -397,17 +397,17 @@ For an introduction to Ngspice and Verilog RTL co-simulation with Xschem, see St
 
 ## Gate-Level Mixed-Signal Simulation with Xschem
 
-A more accurate validation step is the gate-level mixed-signal simulation in Xschem with the Ngspice XSPICE event-driven engine. The gate-level Verilog netlist produced after synthesis (`runs/RUN_*/*-yosys-synthesis/<TOP>.nl.v`) is converted into an XSPICE model with the following command.
+A more accurate validation step is the gate-level mixed-signal simulation in Xschem with the Ngspice XSPICE event-driven engine. The LibreLane-extracted SPICE netlist (`netlist/spice/<TOP>.spice`, copied from the latest run by `copy-netlist`) is converted into an XSPICE model with the following command, which is also executed automatically as part of `make build-top`.
 
 ```sh
 make generate-xspice
 ```
 
-The conversion pipeline is `.nl.v → .vp → .spice → .xspice`, followed by a pin-reorder pass to match the Xschem symbol
+The conversion pipeline is `.spice → .xspice` (`spi2xspice.py`), followed by a pin-reorder pass with `sak-pin-reorder.py` (a SAK tool installed in the IIC-OSIC-TOOLS container) to match the Xschem symbol
 ([`schematic/xschem/counter_top.sym`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/counter/schematic/xschem/)).
 
 ::: {.callout-note}
-`.vp` is the gate-level Verilog netlist with power pins. Hence, one might think that the conversion could be done directly from the `.pnl.v` netlist in the `flow/final/` folder. However, the `.nl.v` file from the LibreLane `yosys-synthesis` step must be used. The target `make generate-xspice` is not executed by `make all`.
+The pins are matched **by name**: every pin in the Xschem symbol carries a `sim_pinname=<netlist_name>` property, so the alphabetically sorted ports of the extracted netlist are mapped correctly regardless of their order. Since `make build-top` regenerates the XSPICE model right after copying the netlists, the model always matches the current LibreLane run.
 :::
 
 The Xschem testbench ([`counter_top_tb_tran.sch`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/counter/testbenches/xschem/)) can be opened and simulated interactively.
@@ -433,20 +433,20 @@ The same simulation can also be run non-interactively from the Makefile, and the
 
 ```sh
 make sim-gl-xschem
-make sim-view-xschem
+make sim-view-xschem SCRIPT=plot_counter_top
 ```
 
-![Plotted Xschem simulation results of `counter_top_tb_tran` from `scripts/plot_simulations/plot_counter_top.py`.](fig/counter_top/counter_top_tb_tran_sim.svg){#fig-counter-top-tb-tran-sim}
+![Plotted Xschem simulation results of `counter_top_tb_tran` from `testbenches/xschem/plot_simulations/plot_counter_top.py`.](fig/counter_top/counter_top_tb_tran_sim.svg){#fig-counter-top-tb-tran-sim}
 
-## Build and Verify Everything
+## Lint, Build, Verify and Simulate Everything
 
-The full lint, simulation, and build chain is run with the following command.
+The full lint, build, verification, and simulation chain is run with the following command.
 
 ```sh
 make all
 ```
 
-This calls `lint-verilog-all`, `sim-all`, `build-fpga`, and `build-top` in sequence. LVS and DRC are already covered by the LibreLane verification steps, so no extra verification target is needed for the digital macro.
+This calls `lint-verilog-all`, `build-fpga`, `build-top`, and `sim-all` in sequence. The simulations run after the build, so the gate-level simulations run on the netlists and the XSPICE model produced by this build. DRC and LVS are already covered by the LibreLane verification steps, so no extra verification target is needed for the digital macro.
 
 # Analog Macro Implementation {#sec-analog}
 
@@ -473,7 +473,7 @@ The inverter design files are located in [`macros/inverter/`](https://github.com
 | [`layout/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/inverter/layout/)         | KLayout GDS files (`*.klay.gds`) and the exported `inverter_top.gds`.           |
 | [`testbenches/xschem/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/inverter/testbenches/xschem/) | Transient, ac open-loop, dc input sweep, and top-level transient testbenches.      |
 | [`netlist/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/inverter/netlist/)       | `schematic/` (CDL for KLayout LVS / SPICE for Magic + Netgen LVS), `layout/` (extracted for LVS), `pex/` (SPICE).           |
-| [`scripts/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/inverter/scripts/)       | Python plotters, sizing notebooks, layout rendering, PEX pin reordering.                 |
+| [`scripts/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/inverter/scripts/)       | Sizing notebooks, layout rendering.                 |
 | [`verification/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/inverter/verification/) | `drc/`, `lvs/`, and `cace/` (process, mismatch, supply sweeps).                       |
 | [`final/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/inverter/final/)           | Build deliverables for the top-level integration (LEF, LIB, Verilog stub, GDS).          |
 | [`render/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/inverter/render/)         | Macro renders for documentation.                                                         |
@@ -515,11 +515,11 @@ Non-interactive runs and post-processing are also available through the Makefile
 ```sh
 cd macros/inverter
 make sim-xschem TB=<testbench_name>     # run a specific testbench non-interactively
-make sim-view-xschem CELL=inverter      # plot results of inverter with Python
-make sim-view-xschem CELL=inverter_top  # plot results of inverter_top with Python
+make sim-view-xschem SCRIPT=plot_inverter      # plot results of inverter with Python
+make sim-view-xschem SCRIPT=plot_inverter_top  # plot results of inverter_top with Python
 ```
 
-The Makefile target `sim-view-xschem` calls the Python plotters in [`scripts/plot_simulations/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/inverter/scripts/plot_simulations) to parse the raw simulation output and plot the results with Matplotlib. The following figures show some of these plotted results.
+The Makefile target `sim-view-xschem` calls the Python plotters in [`testbenches/xschem/plot_simulations/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/inverter/testbenches/xschem/plot_simulations), selected with the `SCRIPT` variable, to parse the raw simulation output and plot the results with Matplotlib. The following figures show some of these plotted results.
 
 ![Plotted simulation result of `inverter_tb_ac_ol`.](fig/inverter_top/inverter_tb_ac_ol_sim.svg){#fig-inverter-tb-ac-ol-sim width=90%}
 
@@ -670,7 +670,7 @@ The layout is created and edited in KLayout. The container provides the `ke` ali
 ke layout/inverter_top.klay.gds
 ```
 
-After modifying the layout, export a clean `.gds` file (for example `inverter_top.gds`) by pressing `File > Export Layout For Tapeout`. All verification flows (LVS, DRC, and PEX with both KLayout and Magic) accept either `.gds` or `.klay.gds`, while the build targets (LEF export, GDS copy, and rendering) use the exported `.gds`.
+After modifying the layout, export a clean `.gds` file (for example `inverter_top.gds`) by pressing `File > Export Layout For Tapeout`. All verification flows (DRC, LVS, and PEX with both KLayout and Magic) accept either `.gds` or `.klay.gds`, while the build targets (LEF export, GDS copy, and rendering) use the exported `.gds`.
 
 ![`inverter_top` layout in KLayout.](fig/inverter_top/inverter_top_black.png){#fig-inverter-top-layout width=75%}
 
@@ -760,7 +760,7 @@ Note that [KLayout-PEX (KPEX)](https://github.com/iic-jku/klayout-pex) is curren
 
 ### Run Full Verification Flow at Once
 
-If you want to run the full verification flow at once, the verify targets bundle LVS, DRC, and PEX in one command.
+If you want to run the full verification flow at once, the verify targets bundle DRC, LVS, and PEX in one command.
 
 ```sh
 make klayout-verify [CELL=<cellname>]   # default CELL=inverter_top
@@ -782,13 +782,13 @@ make build-top    # the three steps above plus copy-gds and render-gds
 
 ## Full Analog Macro Flow
 
-The full simulation, build, and verification chain is run with the following command.
+The full verification, build, and simulation chain is run with the following command.
 
 ```sh
 make all
 ```
 
-This calls `sim-all` (Xschem + CACE), `klayout-verify-all`, `magic-verify-all`, and `build-top` in sequence. Depending on the hardware used, a full pass can take a few minutes, especially the CACE simulation step.
+This calls `klayout-verify-all`, `magic-verify-all`, `build-top`, and `sim-all` (Xschem + CACE) in sequence. The simulations run last, so the `inverter_top` testbench includes the PEX netlist produced by this run. Depending on the hardware used, a full pass can take a few minutes, especially the CACE simulation step.
 
 
 # Bondpad and Logo Implementation {#sec-ip}
@@ -811,7 +811,7 @@ The IP design files are located in [`ip/`](https://github.com/iic-jku/ihp-sg13g2
 | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------ |
 | [`sg13g2_ip__bondpad_70x70/script/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/ip/sg13g2_ip__bondpad_70x70/script/) | KLayout Python script ([`bondpad.py`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/ip/sg13g2_ip__bondpad_70x70/script/bondpad.py)) that instantiates the `SG13_dev::bondpad` PCell and writes the GDS and LEF. |
 | [`sg13g2_ip__jku/logo/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/ip/sg13g2_ip__jku/logo/) and [`sg13g2_ip__jku_names/logo/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/ip/sg13g2_ip__jku_names/logo/) | Source PNG images (`jku_logo.png`, `jku_names.png`) for the two logos. |
-| [`sg13g2_ip__jku/script/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/ip/sg13g2_ip__jku/script/) and [`sg13g2_ip__jku_names/script/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/ip/sg13g2_ip__jku_names/script/) | PNG-to-GDS converter ([`make_gds.py`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/ip/sg13g2_ip__jku/script/make_gds.py)) shared by both logos. |
+| [`sg13g2_ip__jku/script/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/ip/sg13g2_ip__jku/script/) and [`sg13g2_ip__jku_names/script/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/ip/sg13g2_ip__jku_names/script/) | PNG-to-GDS converter ([`img2lay.py`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/ip/sg13g2_ip__jku/script/img2lay.py)) shared by both logos. |
 | `final/gds/`, `final/lef/`, `final/lib/`, `final/vh/` | Build deliverables for top-level integration: GDS, LEF, Liberty, and Verilog blackbox stubs. |
 | `verification/drc/` | DRC reports produced by `make klayout-drc` and `make magic-drc`. |
 
@@ -871,7 +871,7 @@ make bondpad DIAMETER=80 SHAPE=octagon BOTTOM_METAL=2
 
 ## Logo Generation
 
-Both logo IPs share the same Makefile targets and PNG-to-GDS converter [`script/make_gds.py`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/ip/sg13g2_ip__jku/script/make_gds.py), built on the `klayout.db` Python module. The conversion proceeds in five steps:
+Both logo IPs share the same Makefile targets and PNG-to-GDS converter [`script/img2lay.py`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/ip/sg13g2_ip__jku/script/img2lay.py), built on the `klayout.db` Python module. The conversion proceeds in five steps:
 
 1. Open the source PNG (`logo/jku_logo.png` or `logo/jku_names.png`) and convert it to a binary mask using a brightness threshold (default `128`).
 2. Optionally invert the mask (`--invert`) so that the dark logo regions become the foreground.
@@ -896,7 +896,7 @@ The available Makefile targets for the logos are summarised below.
 
 | Target        | What it does                                                                                       |
 | ------------- | -------------------------------------------------------------------------------------------------- |
-| `logo`        | Convert the PNG into a GDSII layout using [`make_gds.py`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/ip/sg13g2_ip__jku/script/make_gds.py). |
+| `logo`        | Convert the PNG into a GDSII layout using [`img2lay.py`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/ip/sg13g2_ip__jku/script/img2lay.py). |
 | `lef`         | Emit a minimal LEF macro (`CLASS BLOCK`, full-area `OBS` on `LAYER_NAME`).                         |
 | `lib`         | Emit a Liberty timing stub (empty cell) so the LibreLane flow can pick the cell up.                |
 | `verilog`     | Emit a Verilog blackbox stub (`module sg13g2_ip__jku;`) with no ports.                             |
@@ -1190,11 +1190,11 @@ Again, the simulation and plotting can be run non-interactive from the command l
 
 ```sh
 make sim-gl-xschem
-make plot-xschem-sim TESTBENCH=chip_top_tb_tran
+make sim-view-xschem SCRIPT=plot_chip_top
 ```
 
 ::: {.callout-note}
-The top-level Xschem testbench converges, but it may take a long time depending on the hardware used. `make sim-gl-xschem` is therefore not part of `sim-all` and must be called manually when needed. For this tutorial, the simulation data is already available in the repository in [`scripts/plot_simulations/data/chip_top_tb_tran.txt`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/scripts/plot_simulations/data/chip_top_tb_tran.txt), so `make plot-xschem-sim TESTBENCH=chip_top_tb_tran` can be run without running the simulation first.
+The top-level Xschem testbench converges, but it may take a long time depending on the hardware used. `make sim-gl-xschem` is part of `sim-all`, so a full `make sim-all` includes it. For this tutorial, the simulation data is already available in the repository in [`testbenches/xschem/plot_simulations/data/chip_top_tb_tran.txt`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/testbenches/xschem/plot_simulations/data/chip_top_tb_tran.txt), so `make sim-view-xschem SCRIPT=plot_chip_top` can be run without running the simulation first.
 :::
 
 The following plots show the results of the top-level transient simulation. The first plot shows the analog inverter response, while the other three plots show the digital outputs of the two counters, the digital inverter, and the bidirs.
@@ -1278,6 +1278,19 @@ make klayout-drc-regular                  # full KLayout DRC on chip_top_logo_fi
 
 `klayout-drc-minimum` is a quick pre-check on the final top-level layout including the logo and the fill structures. `klayout-drc-regular` does the full check, but takes longer. `magic-drc` is faster than `klayout-drc`, but it does not support the full set of DRC rules and is less accurate on the complex top-level layout, so it is recommended to use both.
 
+### LVS
+
+The following LVS target is available for the top-level.
+
+```sh
+make klayout-lvs                          # top-level KLayout LVS
+make magic-lvs                            # top-level Magic + Netgen LVS
+```
+
+::: {.callout-warning}
+The top-level LVS is currently under construction. The flow is in place, but some issues and limitations in the ihp-sg13g2 PDK must be fixed before it can run successfully.
+:::
+
 ### PEX
 
 The following PEX target is available for the top-level.
@@ -1291,19 +1304,6 @@ For full-RC extraction (`EXT_MODE=3`), `magic-pex` also exposes the `sak-pex.sh`
 
 ::: {.callout-warning}
 At the top level, PEX is only run on `chip_top` (without logo and filler), and the default `EXT_MODE=1` (C-decoupled) is used to keep the runtime manageable. However, the extracted netlist [`chip_top_magic_pex_1.spice`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/netlist/pex/chip_top_magic_pex_1.spice) is still huge (~75 MB, ~566k lines), and the post-layout simulation must be run on a powerful server.
-:::
-
-### LVS
-
-The following LVS target is available for the top-level.
-
-```sh
-make klayout-lvs                          # top-level KLayout LVS
-make magic-lvs                            # top-level Magic + Netgen LVS
-```
-
-::: {.callout-warning}
-The top-level LVS is currently under construction. The flow is in place, but some issues and limitations in the ihp-sg13g2 PDK must be fixed before it can run successfully.
 :::
 
 ## Packaging {#sec-packaging}
@@ -1362,7 +1362,7 @@ Repeat @sec-digital for a 16-bit synchronous down-counter that wraps from 0 back
 2. Update the testbenches in [`testbenches/verilog/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/counter/testbenches/verilog/), [`testbenches/cocotb/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/counter/testbenches/cocotb/), and [`testbenches/xschem/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/counter/testbenches/xschem/) to cover the new behaviour. Adjust the bus width in the waveform view files (`*.gtkw`, `*.surf.ron`) as well.
 3. Run `make sim-all` to validate the new RTL.
 4. Re-run the LibreLane flow with `make build-top`. Check the timing reports. A 16-bit counter at 50 MHz must still pass timing constraints.
-5. Regenerate the XSPICE model with `make generate-xspice`, and re-run the gate-level Xschem simulation.
+5. Update the bus range of the output pin in the Xschem symbol ([`counter_top.sym`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/counter/schematic/xschem/)), and re-run the gate-level Xschem simulation. The XSPICE model itself is regenerated automatically by `make build-top` (or manually with `make generate-xspice`).
 
 ::: {.callout-tip}
 ## Bonus for advanced designers
