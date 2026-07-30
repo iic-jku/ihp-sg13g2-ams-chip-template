@@ -27,7 +27,7 @@ python3 scripts/run_bondplan.py config.yaml VERSION=1.0.0
 
 Any config key can be overridden with `KEY=VALUE` on the command line. The Makefile passes its `VERSION` this way, so the version number lives in the Makefile only and never has to be maintained in `config.yaml`. It is available as the `{version}` placeholder (used in the `Die` title block field).
 
-### Folder Structure
+### Directory Structure
 
 | Path | Content |
 |---|---|
