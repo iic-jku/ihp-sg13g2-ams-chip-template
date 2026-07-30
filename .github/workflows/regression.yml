@@ -134,5 +134,4 @@ jobs:
             **/runs/**
             **/flow/**/*.log
             **/*.log
-            **/simulation_logs/**
           if-no-files-found: ignore
