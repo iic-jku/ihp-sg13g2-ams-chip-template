@@ -89,9 +89,6 @@
 ├─ 📁 scripts/
 │  ├─ lay2img.py
 │  ├─ spi2xspice.py
-│  └─ 📁 plot_simulations/
-│     ├─ ngspice2python.py
-│     └─ plot_counter_top.py
 ├─ 📁 testbenches/
 │  ├─ 📁 cocotb/
 │  │  ├─ counter_top_tb.gtkw
@@ -102,6 +99,11 @@
 │  │  ├─ counter_top_tb.surf.ron
 │  │  └─ counter_top_tb.sv
 │  └─ 📁 xschem/
+│     ├─ 📁 plot_simulations/
+│     │  ├─ 📁 data/
+│     │  ├─ 📁 figures/
+│     │  ├─ ngspice2python.py
+│     │  └─ plot_counter_top.py
 │     ├─ counter_top_tb_tran.sch
 │     └─ xschemrc
 ├─ 📁 verification/
@@ -249,7 +251,7 @@ make sim-view-xschem              # plot counter_top simulation results
 make sim-view-xschem CELL=<cell>  # plot results for another cell
 ```
 
-This runs `scripts/plot_simulations/plot_<CELL>.py` and exports the figures and a CSV to `scripts/plot_simulations/figures/`.
+This runs `testbenches/xschem/plot_simulations/<SCRIPT>.py` and exports the figures and a CSV to `testbenches/xschem/plot_simulations/figures/`. The `SCRIPT` variable is given without the `.py` extension.
 
 > [!NOTE]
 > `sim-view-xschem` is intentionally **not** called by `sim-all`. It opens an interactive plot window and must be called manually after the simulation has completed.

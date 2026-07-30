@@ -181,7 +181,7 @@ plot v(b7) v(b6) v(b5) v(b4) v(b3) v(b2) v(b1) v(b0)
 unset appendwrite
 set wr_vecnames
 set wr_singlescale
-wrdata ../../../scripts/plot_simulations/data/@schname\\\\.txt clock enable reset_n b0 b1 b2 b3 b4 b5 b6 b7
+wrdata ../plot_simulations/data/@schname\\\\.txt clock enable reset_n b0 b1 b2 b3 b4 b5 b6 b7
 
 *quit
 .endc"}
