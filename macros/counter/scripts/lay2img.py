@@ -83,6 +83,9 @@ def main(input_layout, output_image, width, height, oversampling, pdk_root, pdk)
     if not height:
         height = max(1, round(width / aspect_ratio))
 
+    if not width:
+        width = max(1, round(height * aspect_ratio))
+
     # Save the images
     base_name = os.path.splitext(os.path.basename(output_image))[0]
     directory = os.path.dirname(output_image)
