@@ -52,7 +52,7 @@ SPDX-FileCopyrightText = "2026 Simon Dorrer and Harald Pretl"
 SPDX-License-Identifier = "Apache-2.0 WITH SHL-2.1"
 
 [[annotations]]
-path = ["scripts/plot_simulations/data/**", "scripts/plot_simulations/figures/**", "macros/*/scripts/plot_simulations/data/**", "macros/*/scripts/plot_simulations/figures/**", "macros/inverter/scripts/sizing/data/**", "macros/inverter/scripts/sizing/figures/**"]
+path = ["testbenches/xschem/plot_simulations/data/**", "testbenches/xschem/plot_simulations/figures/**", "macros/*/testbenches/xschem/plot_simulations/data/**", "macros/*/testbenches/xschem/plot_simulations/figures/**", "macros/inverter/scripts/sizing/data/**", "macros/inverter/scripts/sizing/figures/**"]
 SPDX-FileCopyrightText = "2026 Simon Dorrer and Harald Pretl"
 SPDX-License-Identifier = "Apache-2.0 WITH SHL-2.1"
 
