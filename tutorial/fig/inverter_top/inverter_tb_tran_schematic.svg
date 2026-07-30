@@ -1598,7 +1598,7 @@ xcXFxcUZO6IoiqJImzZt2rRp06ZNmzZt2rRp06ZNmzZt2rRp06ZNmzbthtoWBOH/AMSJMtWlqDM5AAAA
 <text fill="#222222"  xml:space="preserve" font-size="15.6" style="font-family:Monospace;" transform="translate(15, 894.893)" >unset appendwrite</text>
 <text fill="#222222"  xml:space="preserve" font-size="15.6" style="font-family:Monospace;" transform="translate(15, 912.786)" >set wr_vecnames</text>
 <text fill="#222222"  xml:space="preserve" font-size="15.6" style="font-family:Monospace;" transform="translate(15, 930.679)" >set wr_singlescale</text>
-<text fill="#222222"  xml:space="preserve" font-size="15.6" style="font-family:Monospace;" transform="translate(15, 948.572)" >wrdata ../../../scripts/plot_simulations/data/inverter_tb_tran.txt v(vin) v(vout)</text>
+<text fill="#222222"  xml:space="preserve" font-size="15.6" style="font-family:Monospace;" transform="translate(15, 948.572)" >wrdata ../plot_simulations/data/inverter_tb_tran.txt v(vin) v(vout)</text>
 <text fill="#222222"  xml:space="preserve" font-size="15.6" style="font-family:Monospace;" transform="translate(15, 984.359)" >*quit</text>
 <text fill="#222222"  xml:space="preserve" font-size="15.6" style="font-family:Monospace;" transform="translate(15, 1002.25)" >.endc</text>
 <text fill="#222222"  xml:space="preserve" font-size="20.8" transform="translate(1630, 136.886)" >Simulate</text>
