@@ -16,8 +16,9 @@ from pathlib import Path
 
 # Plotting Configuration
 # ============================================
-# Enable interactive mode so plots do not block execution
-plt.ion()
+# Interactive mode stays off: the plt.show() at the end of main() then blocks in the GUI
+# event loop, which is what draws the windows in the first place. With plt.ion() the call
+# returns immediately and nothing pumps that loop afterwards, so no window ever appears.
 plt.close("all")
 
 # Matplotlib Settings
@@ -106,7 +107,6 @@ def main():
 
     axs[-1].set_xlabel(r'$t$ ($\mu$s)')
     fig1.tight_layout(rect=[0, 0, 1, 0.98], pad=0.5, w_pad=0.1, h_pad=0.1)
-    plt.show()
 
     # ------------------------------------------------------------------
     # 3. Export transient figures and CSV
@@ -124,12 +124,14 @@ def main():
         header="time,clock,reset_n,enable,b0,b1,b2,b3,b4,b5,b6,b7",
         delimiter=",",
     )
+
+    # ------------------------------------------------------------------
+    # 4. Open the plot window (blocks until it is closed)
+    # ------------------------------------------------------------------
+    plt.show()
     # =========================================================================
 
 # Main Execution
 if __name__ == '__main__':
     main()
-
-    # Keep plots open
-    input("\nPress Enter to close plots and exit...")
 # =========================================================================

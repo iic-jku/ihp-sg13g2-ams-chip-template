@@ -16,8 +16,9 @@ from pathlib import Path
 
 # Plotting Configuration
 # ============================================
-# Enable interactive mode so plots do not block execution
-plt.ion()
+# Interactive mode stays off: the plt.show() at the end of main() then blocks in the GUI
+# event loop, which is what draws the windows in the first place. With plt.ion() the call
+# returns immediately and nothing pumps that loop afterwards, so no window ever appears.
 plt.close("all")
 
 # Matplotlib Settings
@@ -54,7 +55,6 @@ def plot_digital(fig_title, signals, data_time, figures_dir, filename, fig_heigh
 
     axs[-1].set_xlabel(r'$t$ ($\mu$s)')
     fig.tight_layout(rect=[0, 0, 1, 0.98], pad=0.5, w_pad=0.1, h_pad=0.1)
-    plt.show()
     fig.savefig(str(figures_dir / f"{filename}.svg"), bbox_inches='tight')
     fig.savefig(str(figures_dir / f"{filename}.pdf"), bbox_inches='tight')
     return fig
@@ -180,7 +180,6 @@ def main():
     ax2.grid(True, alpha=0.4)
 
     fig4.tight_layout(rect=[0, 0, 1, 0.98])
-    plt.show()
     fig4.savefig(str(figures_dir / "chip_top_tb_tran_analog_inv.svg"), bbox_inches='tight')
     fig4.savefig(str(figures_dir / "chip_top_tb_tran_analog_inv.pdf"), bbox_inches='tight')
 
@@ -207,12 +206,14 @@ def main():
         ),
         delimiter=",",
     )
+
+    # ------------------------------------------------------------------
+    # 7. Open the plot windows (blocks until they are closed)
+    # ------------------------------------------------------------------
+    plt.show()
     # ============================================
 
 # Main Execution
 if __name__ == '__main__':
     main()
-
-    # Keep plots open
-    input("\nPress Enter to close plots and exit...")
 # =========================================================================

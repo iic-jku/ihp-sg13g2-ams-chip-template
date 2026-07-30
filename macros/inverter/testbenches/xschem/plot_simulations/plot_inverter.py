@@ -16,8 +16,9 @@ from pathlib import Path
 
 # Plotting Configuration
 # ============================================
-# Enable interactive mode so plots do not block execution
-plt.ion()
+# Interactive mode stays off: the plt.show() at the end of main() then blocks in the GUI
+# event loop, which is what draws the windows in the first place. With plt.ion() the call
+# returns immediately and nothing pumps that loop afterwards, so no window ever appears.
 plt.close("all")
 
 # Matplotlib Settings
@@ -147,7 +148,6 @@ def main():
                 zorder=6)
 
     plt.tight_layout()
-    plt.show()
 
     # ------------------------------------------------------------------
     # 3. Export AC figures and CSV
@@ -199,7 +199,6 @@ def main():
     h2, l2 = ax2.get_legend_handles_labels()
     ax1.legend(h1 + h2, l1 + l2, loc='center left')
     plt.tight_layout()
-    plt.show()
 
     # ------------------------------------------------------------------
     # 6. Export DC figures and CSV
@@ -209,12 +208,14 @@ def main():
     np.savetxt(str(figures_dir / "inverter_tb_dc_vout.csv"),
                np.column_stack((vin, vout, gain)), comments="",
                header="vin,vout,dvout_dvin", delimiter=",")
+
+    # ------------------------------------------------------------------
+    # 7. Open the plot windows (blocks until they are closed)
+    # ------------------------------------------------------------------
+    plt.show()
     # =========================================================================
 
 # Main Execution
 if __name__ == '__main__':
     main()
-
-    # Keep plots open
-    input("\nPress Enter to close plots and exit...")
 # =========================================================================
