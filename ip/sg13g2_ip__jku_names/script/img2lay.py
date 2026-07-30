@@ -127,12 +127,14 @@ if __name__ == "__main__":
     parser.add_argument(
         "--foreground",
         type=str,
+        default="1/0",
         help="gds layer/datatype pair for foreground pixels e.g. 0/0",
     )
     parser.add_argument(
         "--boundary",
         nargs="*",
         type=str,
+        default=["0/0"],
         help="gds layer/datatype pairs for boundary e.g. 0/0",
     )
     parser.add_argument("--smooth", action="store_true", help="smooth the edges")
