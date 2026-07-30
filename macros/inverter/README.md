@@ -55,12 +55,6 @@
 │     ├─ inverter_top_pex.sym
 │     └─ xschemrc
 ├─ 📁 scripts/
-│  ├─ 📁 plot_simulations/
-│  │  ├─ 📁 data/
-│  │  ├─ 📁 figures/
-│  │  ├─ ngspice2python.py
-│  │  ├─ plot_inverter.py
-│  │  └─ plot_inverter_top.py
 │  ├─ 📁 sizing/
 │  │  ├─ 📁 data/
 │  │  ├─ 📁 figures/
@@ -69,6 +63,12 @@
 │  └─ lay2img.py
 ├─ 📁 testbenches/
 │  └─ 📁 xschem/
+│     ├─ 📁 plot_simulations/
+│     │  ├─ 📁 data/
+│     │  ├─ 📁 figures/
+│     │  ├─ ngspice2python.py
+│     │  ├─ plot_inverter.py
+│     │  └─ plot_inverter_top.py
 │     ├─ *_tb_*.sch
 │     ├─ inverter_tb_ac_ol.sch
 │     ├─ inverter_tb_tran.sch

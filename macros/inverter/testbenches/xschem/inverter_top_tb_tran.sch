@@ -150,7 +150,7 @@ print vout_pp
 unset appendwrite
 set wr_vecnames
 set wr_singlescale
-wrdata ../../../scripts/plot_simulations/data/@schname\\\\.txt
+wrdata ../plot_simulations/data/@schname\\\\.txt
 + v(vin) v(vout1) v(vout2) v(vout3) v(vout4)
 
 *quit
