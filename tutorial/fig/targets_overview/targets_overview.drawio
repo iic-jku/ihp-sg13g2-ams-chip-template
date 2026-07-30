@@ -1,25 +1,25 @@
 <mxfile host="Electron" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/29.0.3 Chrome/140.0.7339.249 Electron/38.7.0 Safari/537.36" version="29.0.3">
   <diagram id="targetsOverviewV2" name="Page-1">
-    <mxGraphModel dx="4120" dy="1716" grid="1" gridSize="5" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
+    <mxGraphModel dx="1858" dy="400" grid="1" gridSize="5" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
         <mxCell id="all" value="&lt;font face=&quot;Courier New&quot; style=&quot;font-size: 20px;&quot;&gt;&lt;b&gt;make all&lt;/b&gt;&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fontSize=18;fillColor=#ffe6cc;strokeColor=#d79b00;strokeWidth=3;shadow=1;fontStyle=1;verticalAlign=middle;sketch=0;" parent="1" vertex="1">
           <mxGeometry x="-390" y="20" width="200" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="simAll" value="&lt;font face=&quot;Courier New&quot;&gt;&lt;b&gt;make sim-all&lt;/b&gt;&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fontSize=14;fillColor=#f5f5f5;strokeColor=#666666;strokeWidth=2;fontStyle=1;verticalAlign=middle;sketch=0;" parent="1" vertex="1">
+        <mxCell id="simAll" value="&lt;font face=&quot;Courier New&quot;&gt;&lt;b&gt;3. make sim-all&lt;/b&gt;&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fontSize=14;fillColor=#f5f5f5;strokeColor=#666666;strokeWidth=2;fontStyle=1;verticalAlign=middle;sketch=0;" parent="1" vertex="1">
           <mxGeometry x="-1060" y="160" width="180" height="40" as="geometry" />
         </mxCell>
-        <mxCell id="buildAll" value="&lt;font face=&quot;Courier New&quot;&gt;&lt;b&gt;make build-all&lt;/b&gt;&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fontSize=14;fillColor=#f5f5f5;strokeColor=#666666;strokeWidth=2;fontStyle=1;verticalAlign=middle;sketch=0;" parent="1" vertex="1">
+        <mxCell id="buildAll" value="&lt;font face=&quot;Courier New&quot;&gt;&lt;b&gt;1. make build-all&lt;/b&gt;&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fontSize=14;fillColor=#f5f5f5;strokeColor=#666666;strokeWidth=2;fontStyle=1;verticalAlign=middle;sketch=0;" parent="1" vertex="1">
           <mxGeometry x="-380" y="160" width="180" height="40" as="geometry" />
         </mxCell>
-        <mxCell id="magicDrcTop" value="&lt;font face=&quot;Courier New&quot;&gt;&lt;b&gt;make magic-drc&lt;/b&gt;&lt;/font&gt;&lt;font style=&quot;font-size: 11px;&quot;&gt;&lt;br&gt;&lt;/font&gt;&lt;div&gt;&lt;font face=&quot;Courier New&quot;&gt;&lt;b&gt;make klayout-drc&lt;/b&gt;&lt;/font&gt;&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;fontSize=14;fillColor=#f5f5f5;strokeColor=#666666;strokeWidth=2;fontStyle=1;verticalAlign=middle;sketch=0;" parent="1" vertex="1">
+        <mxCell id="magicDrcTop" value="&lt;font face=&quot;Courier New&quot;&gt;&lt;b&gt;2. make magic-drc&lt;/b&gt;&lt;/font&gt;&lt;div&gt;&lt;font face=&quot;Courier New&quot;&gt;&lt;b&gt;make klayout-drc&lt;/b&gt;&lt;/font&gt;&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;fontSize=14;fillColor=#f5f5f5;strokeColor=#666666;strokeWidth=2;fontStyle=1;verticalAlign=middle;sketch=0;" parent="1" vertex="1">
           <mxGeometry x="30" y="160" width="180" height="40" as="geometry" />
         </mxCell>
-        <mxCell id="simRtl" value="&lt;font face=&quot;Courier New&quot; style=&quot;font-size: 12px;&quot;&gt;&lt;b&gt;sim-rtl-cocotb&lt;/b&gt;&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fontSize=12;fillColor=#f5f5f5;strokeColor=#666666;strokeWidth=2;fontStyle=1;verticalAlign=middle;sketch=0;" parent="1" vertex="1">
+        <mxCell id="simGl" value="&lt;font face=&quot;Courier New&quot; style=&quot;font-size: 12px;&quot;&gt;&lt;b&gt;sim-rtl/gl-cocotb&lt;/b&gt;&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fontSize=12;fillColor=#f5f5f5;strokeColor=#666666;strokeWidth=2;fontStyle=1;verticalAlign=middle;sketch=0;" parent="1" vertex="1">
           <mxGeometry x="-1140" y="280" width="160" height="40" as="geometry" />
         </mxCell>
-        <mxCell id="simGl" value="&lt;font face=&quot;Courier New&quot; style=&quot;font-size: 12px;&quot;&gt;&lt;b&gt;sim-gl-cocotb&lt;/b&gt;&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fontSize=12;fillColor=#f5f5f5;strokeColor=#666666;strokeWidth=2;fontStyle=1;verticalAlign=middle;sketch=0;" parent="1" vertex="1">
+        <mxCell id="simGlXschem" value="&lt;font face=&quot;Courier New&quot; style=&quot;font-size: 12px;&quot;&gt;&lt;b&gt;sim-gl-xschem&lt;/b&gt;&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fontSize=12;fillColor=#f5f5f5;strokeColor=#666666;strokeWidth=2;fontStyle=1;verticalAlign=middle;sketch=0;" parent="1" vertex="1">
           <mxGeometry x="-960" y="280" width="160" height="40" as="geometry" />
         </mxCell>
         <mxCell id="initSubs" value="&lt;font face=&quot;Courier New&quot; style=&quot;font-size: 12px;&quot;&gt;&lt;b&gt;init-submodules&lt;/b&gt;&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fontSize=12;fillColor=#f5f5f5;strokeColor=#666666;strokeWidth=2;fontStyle=1;verticalAlign=middle;sketch=0;" parent="1" vertex="1">
@@ -43,7 +43,7 @@
         <mxCell id="buildInverter" value="&lt;font face=&quot;Courier New&quot; style=&quot;font-size: 12px;&quot;&gt;&lt;b&gt;build-inverter&lt;/b&gt;&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fontSize=12;fillColor=#d5e8d4;strokeColor=#82b366;strokeWidth=2;fontStyle=1;verticalAlign=middle;sketch=0;" parent="1" vertex="1">
           <mxGeometry x="40" y="360" width="180" height="40" as="geometry" />
         </mxCell>
-        <mxCell id="bondplanTop" value="&lt;font face=&quot;Courier New&quot;&gt;&lt;b&gt;make bondplan&lt;/b&gt;&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fontSize=14;fillColor=#f8cecc;strokeColor=#b85450;strokeWidth=2;fontStyle=1;verticalAlign=middle;sketch=0;" parent="1" vertex="1">
+        <mxCell id="bondplanTop" value="&lt;font face=&quot;Courier New&quot;&gt;&lt;b&gt;4. make bondplan&lt;/b&gt;&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fontSize=14;fillColor=#f8cecc;strokeColor=#b85450;strokeWidth=2;fontStyle=1;verticalAlign=middle;sketch=0;" parent="1" vertex="1">
           <mxGeometry x="440" y="160" width="180" height="40" as="geometry" />
         </mxCell>
         <mxCell id="hdrPackaging" value="&lt;b style=&quot;font-size: 16px;&quot;&gt;PACKAGING&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size: 10px;font-family: Courier New;&quot;&gt;packaging/&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fontSize=14;fillColor=#f8cecc;strokeColor=#b85450;strokeWidth=3;fontStyle=1;verticalAlign=middle;sketch=0;" parent="1" vertex="1">
@@ -97,25 +97,25 @@
         <mxCell id="dgL1" value="&lt;font face=&quot;Courier New&quot; style=&quot;font-size: 11px;&quot;&gt;&lt;b&gt;lint-verilog-all&lt;/b&gt;&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fontSize=11;fillColor=#dae8fc;strokeColor=#6c8ebf;strokeWidth=1;fontStyle=0;verticalAlign=middle;sketch=0;" parent="1" vertex="1">
           <mxGeometry x="-160" y="510" width="140" height="30" as="geometry" />
         </mxCell>
-        <mxCell id="dgL2" value="&lt;font face=&quot;Courier New&quot; style=&quot;font-size: 11px;&quot;&gt;&lt;b&gt;sim-all&lt;/b&gt;&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fontSize=11;fillColor=#dae8fc;strokeColor=#6c8ebf;strokeWidth=1;fontStyle=0;verticalAlign=middle;sketch=0;" parent="1" vertex="1">
+        <mxCell id="dgL2" value="&lt;font face=&quot;Courier New&quot; style=&quot;font-size: 11px;&quot;&gt;&lt;b&gt;build-fpga&lt;/b&gt;&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fontSize=11;fillColor=#dae8fc;strokeColor=#6c8ebf;strokeWidth=1;fontStyle=0;verticalAlign=middle;sketch=0;" parent="1" vertex="1">
           <mxGeometry x="-160" y="545" width="140" height="30" as="geometry" />
         </mxCell>
-        <mxCell id="dgL3" value="&lt;font face=&quot;Courier New&quot; style=&quot;font-size: 11px;&quot;&gt;&lt;b&gt;build-fpga&lt;/b&gt;&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fontSize=11;fillColor=#dae8fc;strokeColor=#6c8ebf;strokeWidth=1;fontStyle=0;verticalAlign=middle;sketch=0;" parent="1" vertex="1">
+        <mxCell id="dgL3" value="&lt;font face=&quot;Courier New&quot; style=&quot;font-size: 11px;&quot;&gt;&lt;b&gt;build-top&lt;/b&gt;&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fontSize=11;fillColor=#dae8fc;strokeColor=#6c8ebf;strokeWidth=1;fontStyle=0;verticalAlign=middle;sketch=0;" parent="1" vertex="1">
           <mxGeometry x="-160" y="580" width="140" height="30" as="geometry" />
         </mxCell>
-        <mxCell id="dgL4" value="&lt;font face=&quot;Courier New&quot; style=&quot;font-size: 11px;&quot;&gt;&lt;b&gt;build-top&lt;/b&gt;&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fontSize=11;fillColor=#dae8fc;strokeColor=#6c8ebf;strokeWidth=1;fontStyle=0;verticalAlign=middle;sketch=0;" parent="1" vertex="1">
+        <mxCell id="dgL4" value="&lt;font face=&quot;Courier New&quot; style=&quot;font-size: 11px;&quot;&gt;&lt;b&gt;sim-all&lt;/b&gt;&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fontSize=11;fillColor=#dae8fc;strokeColor=#6c8ebf;strokeWidth=1;fontStyle=0;verticalAlign=middle;sketch=0;" parent="1" vertex="1">
           <mxGeometry x="-160" y="615" width="140" height="30" as="geometry" />
         </mxCell>
-        <mxCell id="anL1" value="&lt;font face=&quot;Courier New&quot; style=&quot;font-size: 11px;&quot;&gt;&lt;b&gt;sim-all&lt;/b&gt;&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fontSize=11;fillColor=#d5e8d4;strokeColor=#82b366;strokeWidth=1;fontStyle=0;verticalAlign=middle;sketch=0;" parent="1" vertex="1">
+        <mxCell id="anL1" value="&lt;font face=&quot;Courier New&quot; style=&quot;font-size: 11px;&quot;&gt;&lt;b&gt;klayout-verify-all&lt;/b&gt;&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fontSize=11;fillColor=#d5e8d4;strokeColor=#82b366;strokeWidth=1;fontStyle=0;verticalAlign=middle;sketch=0;" parent="1" vertex="1">
           <mxGeometry x="60" y="510" width="140" height="30" as="geometry" />
         </mxCell>
-        <mxCell id="anL2" value="&lt;font face=&quot;Courier New&quot; style=&quot;font-size: 11px;&quot;&gt;&lt;b&gt;klayout-verify-all&lt;/b&gt;&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fontSize=11;fillColor=#d5e8d4;strokeColor=#82b366;strokeWidth=1;fontStyle=0;verticalAlign=middle;sketch=0;" parent="1" vertex="1">
+        <mxCell id="anL2" value="&lt;font face=&quot;Courier New&quot; style=&quot;font-size: 11px;&quot;&gt;&lt;b&gt;magic-verify-all&lt;/b&gt;&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fontSize=11;fillColor=#d5e8d4;strokeColor=#82b366;strokeWidth=1;fontStyle=0;verticalAlign=middle;sketch=0;" parent="1" vertex="1">
           <mxGeometry x="60" y="545" width="140" height="30" as="geometry" />
         </mxCell>
-        <mxCell id="anL3" value="&lt;font face=&quot;Courier New&quot; style=&quot;font-size: 11px;&quot;&gt;&lt;b&gt;magic-verify-all&lt;/b&gt;&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fontSize=11;fillColor=#d5e8d4;strokeColor=#82b366;strokeWidth=1;fontStyle=0;verticalAlign=middle;sketch=0;" parent="1" vertex="1">
+        <mxCell id="anL3" value="&lt;font face=&quot;Courier New&quot; style=&quot;font-size: 11px;&quot;&gt;&lt;b&gt;build-top&lt;/b&gt;&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fontSize=11;fillColor=#d5e8d4;strokeColor=#82b366;strokeWidth=1;fontStyle=0;verticalAlign=middle;sketch=0;" parent="1" vertex="1">
           <mxGeometry x="60" y="580" width="140" height="30" as="geometry" />
         </mxCell>
-        <mxCell id="anL4" value="&lt;font face=&quot;Courier New&quot; style=&quot;font-size: 11px;&quot;&gt;&lt;b&gt;build-top&lt;/b&gt;&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fontSize=11;fillColor=#d5e8d4;strokeColor=#82b366;strokeWidth=1;fontStyle=0;verticalAlign=middle;sketch=0;" parent="1" vertex="1">
+        <mxCell id="anL4" value="&lt;font face=&quot;Courier New&quot; style=&quot;font-size: 11px;&quot;&gt;&lt;b&gt;sim-all&lt;/b&gt;&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fontSize=11;fillColor=#d5e8d4;strokeColor=#82b366;strokeWidth=1;fontStyle=0;verticalAlign=middle;sketch=0;" parent="1" vertex="1">
           <mxGeometry x="60" y="615" width="140" height="30" as="geometry" />
         </mxCell>
         <mxCell id="mnL1" value="&lt;font face=&quot;Courier New&quot; style=&quot;font-size: 11px;&quot;&gt;&lt;b&gt;librelane-nodrc&lt;/b&gt;&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fontSize=11;fillColor=#ffe6cc;strokeColor=#d79b00;strokeWidth=1;fontStyle=0;verticalAlign=middle;sketch=0;" parent="1" vertex="1">
@@ -164,10 +164,10 @@
             </Array>
           </mxGeometry>
         </mxCell>
-        <mxCell id="e_simAll_simRtl" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;strokeColor=#666666;strokeWidth=2;endArrow=classic;endFill=1;" parent="1" source="simAll" target="simRtl" edge="1">
+        <mxCell id="e_simAll_simGl" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;strokeColor=#666666;strokeWidth=2;endArrow=classic;endFill=1;" parent="1" source="simAll" target="simGl" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="e_simAll_simGl" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;strokeColor=#666666;strokeWidth=2;endArrow=classic;endFill=1;" parent="1" source="simAll" target="simGl" edge="1">
+        <mxCell id="e_simAll_simGlXschem" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;strokeColor=#666666;strokeWidth=2;endArrow=classic;endFill=1;" parent="1" source="simAll" target="simGlXschem" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="e_buildAll_init" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;strokeColor=#666666;strokeWidth=2;endArrow=classic;endFill=1;" parent="1" source="buildAll" target="initSubs" edge="1">
