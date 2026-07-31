@@ -310,6 +310,14 @@ Additional targets are available for different DRC configurations:
 
 After the LibreLane flow completes successfully, the generated views are saved under `flow/final/`. `flow/final/` is included in `.gitignore`.
 
+Every one of these targets first runs `make librelane-config`, which generates `flow/librelane/config.resolved.yaml` from the tracked `flow/librelane/config.yaml` and rewrites the PDK Liberty references to the extension that the installed PDK provides. The PDK may ship the timing libraries either uncompressed (`*.lib`) or gzipped (`*.lib.gz`). The extension is auto-detected and can be overridden:
+
+```sh
+make librelane PDK_STDCELL_LIB_EXT=.lib.gz
+```
+
+LibreLane is always run on the generated `config.resolved.yaml`, so `config.yaml` stays the single hand-edited source and the working tree stays clean. `config.resolved.yaml` is included in `.gitignore`. See [`doc/librelane/gzipped_liberty.md`](../../doc/librelane/gzipped_liberty.md) for the mechanism and for the PDK-side caveat that gzipped libraries additionally require.
+
 
 ### View the Design
 
