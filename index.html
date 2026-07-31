@@ -809,13 +809,13 @@ Tip
 <p>Each macro under <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/"><code>macros/</code></a> has its own <code>Makefile</code> and <code>README.md</code>, including macro-specific targets. These targets are invoked by the top-level build flow, but you can also run them directly from inside each macro folder. <a href="#fig-targets-overview" class="quarto-xref">Figure&nbsp;2</a> shows how the Makefile targets across the repository are connected.</p>
 <p>The colour scheme groups targets by the final deliverable they produce, so beginners can follow one colour from <code>make all</code> to the generated outputs:</p>
 <ul>
-<li><strong>Orange — top chip / main</strong>: This branch includes <code>make all</code> and all targets that contribute to the top-level chip GDS. In the <code>build-top</code> chain of the <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/Makefile">top-level Makefile</a>, these are <code>librelane-nodrc</code>, <code>copy-*</code>, <code>add-logo-fill</code>, and <code>render-gds</code>.</li>
-<li><strong>Yellow — bondpad IP</strong>: This branch includes <code>build-bondpad</code> and all targets inside <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/ip/sg13g2_ip__bondpad_70x70/"><code>ip/sg13g2_ip__bondpad_70x70/</code></a>.</li>
-<li><strong>Purple — logos IP</strong>: This branch includes <code>build-logos</code> and the two sub-Makefiles under <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/ip/sg13g2_ip__jku/"><code>ip/sg13g2_ip__jku/</code></a> and <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/ip/sg13g2_ip__jku_names/"><code>ip/sg13g2_ip__jku_names/</code></a>.</li>
-<li><strong>Blue — digital macro</strong>: This branch includes <code>build-counter</code> and the <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/counter/"><code>macros/counter/</code></a> Makefile.</li>
-<li><strong>Green — analog macro</strong>: This branch includes <code>build-inverter</code> and the <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/inverter/"><code>macros/inverter/</code></a> Makefile.</li>
-<li><strong>Red — packaging</strong>: This branch includes <code>bondplan</code> and the automated bondplan flow in <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/packaging/"><code>packaging/</code></a> (see <a href="#sec-packaging" class="quarto-xref">Section&nbsp;7.9</a>).</li>
-<li><strong>Grey — simulation and verification</strong>: This branch includes intermediate targets that feed the coloured deliverables (<code>sim-all</code>, <code>build-all</code>, <code>build-macros</code>, <code>init-submodules</code>, <code>sim-*-cocotb</code>).</li>
+<li><strong>Orange (top chip / main)</strong>: This branch includes <code>make all</code> and all targets that contribute to the top-level chip GDS. In the <code>build-top</code> chain of the <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/Makefile">top-level Makefile</a>, these are <code>librelane-nodrc</code>, <code>copy-*</code>, <code>add-logo-fill</code>, and <code>render-gds</code>.</li>
+<li><strong>Yellow (bondpad IP)</strong>: This branch includes <code>build-bondpad</code> and all targets inside <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/ip/sg13g2_ip__bondpad_70x70/"><code>ip/sg13g2_ip__bondpad_70x70/</code></a>.</li>
+<li><strong>Purple (logos IP)</strong>: This branch includes <code>build-logos</code> and the two sub-Makefiles under <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/ip/sg13g2_ip__jku/"><code>ip/sg13g2_ip__jku/</code></a> and <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/ip/sg13g2_ip__jku_names/"><code>ip/sg13g2_ip__jku_names/</code></a>.</li>
+<li><strong>Blue (digital macro)</strong>: This branch includes <code>build-counter</code> and the <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/counter/"><code>macros/counter/</code></a> Makefile.</li>
+<li><strong>Green (analog macro)</strong>: This branch includes <code>build-inverter</code> and the <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/inverter/"><code>macros/inverter/</code></a> Makefile.</li>
+<li><strong>Red (packaging)</strong>: This branch includes <code>bondplan</code> and the automated bondplan flow in <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/packaging/"><code>packaging/</code></a> (see <a href="#sec-packaging" class="quarto-xref">Section&nbsp;7.9</a>).</li>
+<li><strong>Grey (simulation and verification)</strong>: This branch includes intermediate targets that feed the coloured deliverables (<code>sim-all</code>, <code>build-all</code>, <code>build-macros</code>, <code>init-submodules</code>, <code>sim-*-cocotb</code>).</li>
 </ul>
 <p>Solid arrows represent direct <code>$(MAKE) &lt;target&gt;</code> calls within a single Makefile. Dashed arrows represent calls that descend into a subdirectory: recursive <code>$(MAKE) -C &lt;dir&gt; all</code> calls into a sub-Makefile (one per coloured deliverable), or the Python bondplan flow in <code>packaging/</code>. The numbers on the second level indicate the execution order of <code>make all</code> (build, verify, simulate, package), and the vertical order inside the coloured boxes reflects the execution order of each sub-Makefile’s <code>all</code> target.</p>
 <div id="fig-targets-overview" class="quarto-float quarto-figure quarto-figure-center anchored">
@@ -1953,7 +1953,7 @@ Figure&nbsp;22: <code>inverter_top</code> layout in KLayout 2.5D viewer.
 <p>The inverter macro can be verified with two verification flows, either with KLayout or with Magic + Netgen. Each flow covers DRC, LVS, and PEX. Magic + Netgen provides only non-interactive command-line flows, while KLayout also has interactive GUI-based DRC and LVS.</p>
 <section id="design-rule-check" class="level3" data-number="5.7.1">
 <h3 data-number="5.7.1" class="anchored" data-anchor-id="design-rule-check"><span class="header-section-number">5.7.1</span> Design Rule Check</h3>
-<p>The non-interactive DRC can be run with the following Makefile targets (both use <code>sak-drc.sh</code>). The <code>CELL</code> variable can be set to run DRC on a specific cell, or it defaults to <code>inverter_top</code> if not set. The <code>DRC_LEVEL</code> variable selects the KLayout DRC level — <code>precheck</code>, <code>macro</code> (default), or <code>regular</code> — and is ignored by <code>magic-drc</code>, since Magic has no selectable rule decks and always runs the full rule set compiled into the PDK’s Magic tech file.</p>
+<p>The non-interactive DRC can be run with the following Makefile targets (both use <code>sak-drc.sh</code>). The <code>CELL</code> variable can be set to run DRC on a specific cell, or it defaults to <code>inverter_top</code> if not set. The <code>DRC_LEVEL</code> variable selects the KLayout DRC level: <code>precheck</code>, <code>macro</code> (default), or <code>regular</code>. It is ignored by <code>magic-drc</code>, since Magic has no selectable rule decks and always runs the full rule set compiled into the PDK’s Magic tech file.</p>
 <table class="caption-top table">
 <thead>
 <tr class="header">
@@ -2068,9 +2068,9 @@ Tip
 <p>If not set, it defaults to <code>EXT_MODE=3</code>.</p>
 <p>For full-RC extraction (<code>EXT_MODE=3</code>), <code>magic-pex</code> also exposes the <code>sak-pex.sh</code> <code>extresist</code> tuning parameters (ignored in <code>EXT_MODE=1</code>/<code>2</code>):</p>
 <ul>
-<li><code>THRESHOLD</code> — extresist threshold in mOhm (<code>-t</code>, default <code>10000</code> = 10 Ohm),</li>
-<li><code>MINRES</code> — extresist minimum resistance in mOhm (<code>-r</code>, default <code>1000</code> = 1 Ohm),</li>
-<li><code>MINDELAY</code> — extresist minimum delay in ps (<code>-y</code>, default <code>1</code>; <code>0</code> = gate by resistance).</li>
+<li><code>THRESHOLD</code> - extresist threshold in mOhm (<code>-t</code>, default <code>10000</code> = 10 Ohm),</li>
+<li><code>MINRES</code> - extresist minimum resistance in mOhm (<code>-r</code>, default <code>1000</code> = 1 Ohm),</li>
+<li><code>MINDELAY</code> - extresist minimum delay in ps (<code>-y</code>, default <code>1</code>; <code>0</code> = gate by resistance).</li>
 </ul>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb20"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> klayout-pex [CELL=<span class="op">&lt;</span>cellname<span class="op">&gt;</span>] [EXT_MODE=<span class="op">&lt;</span>1<span class="kw">|</span><span class="ex">2</span><span class="kw">|</span><span class="dv">3</span><span class="op">&gt;</span>]   <span class="co"># default CELL=inverter_top, default EXT_MODE=3 (full-RC)</span></span>
 <span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> magic-pex [CELL=<span class="op">&lt;</span>cellname<span class="op">&gt;</span>] [EXT_MODE=<span class="op">&lt;</span>1<span class="kw">|</span><span class="ex">2</span><span class="kw">|</span><span class="dv">3</span><span class="op">&gt;</span>] <span class="ex">[THRESHOLD=</span><span class="op">&lt;</span>mOhm<span class="op">&gt;</span>] [MINRES=<span class="op">&lt;</span>mOhm<span class="op">&gt;</span>] [MINDELAY=<span class="op">&lt;</span>ps<span class="op">&gt;</span>]   <span class="co"># default CELL=inverter_top, default EXT_MODE=3 (full-RC)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -2726,40 +2726,40 @@ Note
 <div id="fig-chip-top-tb-tran-analog-inv-sim" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-chip-top-tb-tran-analog-inv-sim-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<a href="fig/chip_top/chip_top_tb_tran_analog_inv_sim.svg" class="lightbox" data-gallery="quarto-lightbox-gallery-32" title="Figure&nbsp;27: Plotted simulation result of chip_top_tb_tran — analog inverter 1 response."><img src="fig/chip_top/chip_top_tb_tran_analog_inv_sim.svg" class="img-fluid figure-img" style="width:75.0%"></a>
+<a href="fig/chip_top/chip_top_tb_tran_analog_inv_sim.svg" class="lightbox" data-gallery="quarto-lightbox-gallery-32" title="Figure&nbsp;27: Plotted simulation result of chip_top_tb_tran: analog inverter 1 response."><img src="fig/chip_top/chip_top_tb_tran_analog_inv_sim.svg" class="img-fluid figure-img" style="width:75.0%"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-chip-top-tb-tran-analog-inv-sim-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;27: Plotted simulation result of <code>chip_top_tb_tran</code> — analog inverter 1 response.
+Figure&nbsp;27: Plotted simulation result of <code>chip_top_tb_tran</code>: analog inverter 1 response.
 </figcaption>
 </figure>
 </div>
 <div id="fig-chip-top-tb-tran-digital1-sim" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-chip-top-tb-tran-digital1-sim-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<a href="fig/chip_top/chip_top_tb_tran_digital1_sim.svg" class="lightbox" data-gallery="quarto-lightbox-gallery-33" title="Figure&nbsp;28: Plotted simulation result of chip_top_tb_tran — digital inverter 2 outputs."><img src="fig/chip_top/chip_top_tb_tran_digital1_sim.svg" class="img-fluid figure-img"></a>
+<a href="fig/chip_top/chip_top_tb_tran_digital1_sim.svg" class="lightbox" data-gallery="quarto-lightbox-gallery-33" title="Figure&nbsp;28: Plotted simulation result of chip_top_tb_tran: digital inverter 2 outputs."><img src="fig/chip_top/chip_top_tb_tran_digital1_sim.svg" class="img-fluid figure-img"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-chip-top-tb-tran-digital1-sim-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;28: Plotted simulation result of <code>chip_top_tb_tran</code> — digital inverter 2 outputs.
+Figure&nbsp;28: Plotted simulation result of <code>chip_top_tb_tran</code>: digital inverter 2 outputs.
 </figcaption>
 </figure>
 </div>
 <div id="fig-chip-top-tb-tran-digital2-sim" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-chip-top-tb-tran-digital2-sim-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<a href="fig/chip_top/chip_top_tb_tran_digital2_sim.svg" class="lightbox" data-gallery="quarto-lightbox-gallery-34" title="Figure&nbsp;29: Plotted simulation result of chip_top_tb_tran — digital counter 2 outputs."><img src="fig/chip_top/chip_top_tb_tran_digital2_sim.svg" class="img-fluid figure-img"></a>
+<a href="fig/chip_top/chip_top_tb_tran_digital2_sim.svg" class="lightbox" data-gallery="quarto-lightbox-gallery-34" title="Figure&nbsp;29: Plotted simulation result of chip_top_tb_tran: digital counter 2 outputs."><img src="fig/chip_top/chip_top_tb_tran_digital2_sim.svg" class="img-fluid figure-img"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-chip-top-tb-tran-digital2-sim-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;29: Plotted simulation result of <code>chip_top_tb_tran</code> — digital counter 2 outputs.
+Figure&nbsp;29: Plotted simulation result of <code>chip_top_tb_tran</code>: digital counter 2 outputs.
 </figcaption>
 </figure>
 </div>
 <div id="fig-chip-top-tb-tran-digital3-sim" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-chip-top-tb-tran-digital3-sim-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<a href="fig/chip_top/chip_top_tb_tran_digital3_sim.svg" class="lightbox" data-gallery="quarto-lightbox-gallery-35" title="Figure&nbsp;30: Plotted simulation result of chip_top_tb_tran — digital counter 1 / inverter 1 bidirs."><img src="fig/chip_top/chip_top_tb_tran_digital3_sim.svg" class="img-fluid figure-img"></a>
+<a href="fig/chip_top/chip_top_tb_tran_digital3_sim.svg" class="lightbox" data-gallery="quarto-lightbox-gallery-35" title="Figure&nbsp;30: Plotted simulation result of chip_top_tb_tran: digital counter 1 / inverter 1 bidirs."><img src="fig/chip_top/chip_top_tb_tran_digital3_sim.svg" class="img-fluid figure-img"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-chip-top-tb-tran-digital3-sim-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;30: Plotted simulation result of <code>chip_top_tb_tran</code> — digital counter 1 / inverter 1 bidirs.
+Figure&nbsp;30: Plotted simulation result of <code>chip_top_tb_tran</code>: digital counter 1 / inverter 1 bidirs.
 </figcaption>
 </figure>
 </div>
@@ -2936,7 +2936,7 @@ Tip
 <h2 data-number="7.10" class="anchored" data-anchor-id="full-flow-at-once"><span class="header-section-number">7.10</span> Full Flow at Once</h2>
 <p>The comprehensive simulation, build, and DRC pass for the complete chip is run with the following command.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb47"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> all</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>This calls <code>sim-all</code> (RTL/GL cocotb, GL Xschem when available), then <code>build-all</code>, then Magic DRC on both <code>chip_top</code> and <code>chip_top_logo_fill</code>. To shorten the runtime, the KLayout DRC is currently not included in <code>make all</code>. However, depending on the hardware used, <code>make all</code> can still take a while.</p>
+<p>This calls <code>build-all</code> first, then Magic DRC on both <code>chip_top</code> and <code>chip_top_logo_fill</code>, then <code>sim-all</code> (RTL and gate-level cocotb plus the gate-level Xschem run), and finally <code>bondplan</code>. The simulations therefore run on the netlists that this build has just produced. To shorten the runtime, the KLayout DRC is currently not included in <code>make all</code>. However, depending on the hardware used, <code>make all</code> can still take a while.</p>
 </section>
 <section id="releasing-for-tapeout" class="level2" data-number="7.11">
 <h2 data-number="7.11" class="anchored" data-anchor-id="releasing-for-tapeout"><span class="header-section-number">7.11</span> Releasing for Tapeout</h2>
