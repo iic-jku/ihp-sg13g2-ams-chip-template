@@ -248,7 +248,7 @@ The [counter Makefile](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/b
 | `make sim-view-verilog` / `sim-view-cocotb`       | Open the latest waveform in GTKWave or Surfer.                              |
 | `make librelane` (and `-nodrc`, `-magicdrc`, …)   | Run the LibreLane flow for the counter macro.                               |
 | `make generate-xspice`                            | Convert the LibreLane-extracted SPICE netlist into an XSPICE model for Xschem. |
-| `make sim-gl-xschem [TB=<tb>]` / `sim-view-xschem SCRIPT=<script>` | Run the mixed-signal XSPICE simulation in Xschem (batch mode with ngspice) and plot the results. |
+| `make sim-gl-xschem` / `sim-view-xschem`          | Run the mixed-signal XSPICE simulation in Xschem (batch mode) and plot the results. |
 | `make build-fpga`                                 | Run the full FPGA flow: lint, synthesis, P&R, and bitstream generation.     |
 | `make build-top`                                  | Run LibreLane, copy reports, netlists, and final views, generate the XSPICE model, and render the final GDS. |
 | `make all`                                        | Run lint, the FPGA build, the full macro build flow, and all simulations. |
@@ -1196,6 +1196,8 @@ Again, the simulation and plotting can be run non-interactive from the command l
 make sim-gl-xschem
 make sim-view-xschem SCRIPT=plot_chip_top
 ```
+
+`sim-gl-xschem` runs in batch mode: it netlists the testbench with `xschem netlist` and then calls `ngspice -b` directly, so `make` blocks until the run finishes and sees its exit status. The testbench is selected with `TB=<testbench_name>` (default: `<CELL>_tb_tran`). Since the run is headless, the `plot` commands in the testbench's `.control` block are a no-op. The testbench exports its results with `wrdata` to [`testbenches/xschem/plot_simulations/data/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/testbenches/xschem/plot_simulations/data), from where `sim-view-xschem` plots them with Matplotlib.
 
 ::: {.callout-note}
 The top-level Xschem testbench converges, but it may take a long time depending on the hardware used. `make sim-gl-xschem` is part of `sim-all`, so a full `make sim-all` includes it. For this tutorial, the simulation data is already available in the repository in [`testbenches/xschem/plot_simulations/data/chip_top_tb_tran.txt`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/testbenches/xschem/plot_simulations/data/chip_top_tb_tran.txt), so `make sim-view-xschem SCRIPT=plot_chip_top` can be run without running the simulation first.

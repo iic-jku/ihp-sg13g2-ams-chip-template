@@ -90,6 +90,8 @@ help: ## Show this help message
 	@echo 'DRC_LEVEL defaults to macro. Sets the KLayout DRC level for klayout-drc (precheck|macro|regular).'
 	@echo 'EV_PRECISION defaults to 5 significant digits for Xschem ev function.'
 	@echo 'WAVEFORM_VIEWER defaults to gtkwave. Use surfer to launch Surfer instead.'
+	@echo 'TB selects the Xschem testbench for sim-gl-xschem (default: <CELL>_tb_tran).'
+	@echo 'SCRIPT selects the plotting script for sim-view-xschem (e.g. plot_chip_top).'
 	@echo 'VERSION defaults to $(VERSION). Used by the release target.'
 .PHONY: help
 # ================================================================================================
@@ -103,6 +105,11 @@ init-submodules: ## Initialize and update git submodules (e.g. flow/artistic)
 
 
 # Simulation Targets
+# Testbench for the Xschem simulation targets (default: <CELL>_tb_tran)
+# Override with: make <target> TB=<testbenchname>
+TB ?= $(CELL)_tb_tran
+SCRIPT ?= $(error SCRIPT is not set. Usage: make sim-view-xschem SCRIPT=<scriptname>)
+
 sim-rtl-cocotb: ## Run RTL simulation of CELL cell with cocotb (usage: make sim-rtl-cocotb [CELL=<cellname>])
 	cd $(COCOTB_DIR) && python3 $(CELL)_tb.py
 .PHONY: sim-rtl-cocotb
@@ -121,26 +128,25 @@ sim-view-cocotb: ## View CELL cell cocotb simulation waveforms (usage: make sim-
 	fi
 .PHONY: sim-view-cocotb
 
-sim-gl-xschem: ## Run gate-level simulation of CELL cell with Xschem (usage: make sim-gl-xschem [CELL=<cellname>])
-	cd $(XSCHEM_TB_DIR) && xschem -s -r -x -q --rcfile xschemrc --command ' \
+sim-gl-xschem: ## Run gate-level simulation of CELL cell with Xschem in batch mode (usage: make sim-gl-xschem [CELL=<cellname>] [TB=<testbenchname>])
+	mkdir -p $(XSCHEM_TB_DIR)/simulations
+	cd $(XSCHEM_TB_DIR) && xschem -r -x -q --rcfile xschemrc --command ' \
+		xschem set netlist_type spice; \
 		set netlist_dir $(abspath $(XSCHEM_TB_DIR)/simulations); \
 		xschem save; \
-		xschem netlist; \
-		xschem simulate \
-	' $(CELL)_tb_tran.sch
+		xschem netlist \
+	' $(TB).sch
+	cd $(XSCHEM_TB_DIR)/simulations && ngspice -b $(TB).spice
 .PHONY: sim-gl-xschem
 
-sim-view-xschem: ## Plot Xschem simulation results (usage: make sim-view-xschem CELL=<cellname>)
-	python3 $(SIM_PLOT_DIR)/plot_$(CELL).py
+sim-view-xschem: ## Plot Xschem simulation results (usage: make sim-view-xschem SCRIPT=<scriptname>)
+	SHOW_PLOTS=1 python3 $(SIM_PLOT_DIR)/$(SCRIPT).py
 .PHONY: sim-view-xschem
 
 sim-all: ## Simulate the chip (RTL/GL cocotb + GL Xschem)
 	$(MAKE) sim-rtl-cocotb
-#	$(MAKE) sim-view-cocotb
 	$(MAKE) sim-gl-cocotb
-#	$(MAKE) sim-view-cocotb
-#	$(MAKE) sim-gl-xschem
-#	$(MAKE) sim-view-xschem
+	$(MAKE) sim-gl-xschem
 .PHONY: sim-all
 # ================================================================================================
 
@@ -176,17 +182,16 @@ librelane-klayout: ## Open the last LibreLane run in KLayout
 # TODO: KLayout antenna and DRC reports are temporarily commented out until
 # IHP fixes the `metal1_pin_offgrid` errors. For now, `make librelane-nodrc` must be used.
 # https://github.com/IHP-GmbH/IHP-Open-PDK/issues/683#issuecomment-4065791975
-copy-reports: ## Copy yosys, antenna, hold & setup timing, LVS and manufacturability reports from the last LibreLane run to verification/reports/
+# Using * wildcard to ignore step numbers
+copy-reports: ## Copy yosys, antenna, STA, power, IR-drop, LVS and manufacturability reports from the last LibreLane run to verification/reports/
 	rm -rf $(REPORT_DIR)/
 	mkdir -p $(REPORT_DIR)/
-	# Using * wildcard to ignore step numbers
 	cp $(LIBRELANE_DIR)/runs/${RUN_TAG}/*-yosys-synthesis/reports/pre_synth_chk.rpt $(REPORT_DIR)/yosys_synth_check.rpt
 	cp $(LIBRELANE_DIR)/runs/${RUN_TAG}/*-yosys-synthesis/reports/pre_techmap.rpt $(REPORT_DIR)/yosys_pre_techmap.rpt
 	cp $(LIBRELANE_DIR)/runs/${RUN_TAG}/*-yosys-synthesis/reports/post_dff.rpt $(REPORT_DIR)/yosys_post_dff.rpt
 	cp $(LIBRELANE_DIR)/runs/${RUN_TAG}/*-yosys-synthesis/reports/stat.rpt $(REPORT_DIR)/stat.rpt
 	cp $(LIBRELANE_DIR)/runs/${RUN_TAG}/*-openroad-checkantennas-1/reports/antenna.rpt $(REPORT_DIR)/antenna_violations.rpt
 	cp $(LIBRELANE_DIR)/runs/${RUN_TAG}/*-openroad-checkantennas-1/reports/antenna_summary.rpt $(REPORT_DIR)/antenna_summary.rpt
-	cp $(LIBRELANE_DIR)/runs/${RUN_TAG}/*-openroad-stapostpnr/summary.rpt $(REPORT_DIR)/hold_setup_timing.rpt
 	cp $(LIBRELANE_DIR)/runs/${RUN_TAG}/*-openroad-stapostpnr/summary.rpt $(REPORT_DIR)/stapostpnr_summary.rpt
 	cp $(LIBRELANE_DIR)/runs/${RUN_TAG}/*-openroad-stapostpnr/nom_fast_1p32V_m40C/power.rpt $(REPORT_DIR)/stapostpnr_nom_fast_1p32V_m40C_power.rpt
 	cp $(LIBRELANE_DIR)/runs/${RUN_TAG}/*-openroad-stapostpnr/nom_fast_1p65V_m40C/power.rpt $(REPORT_DIR)/stapostpnr_nom_fast_1p65V_m40C_power.rpt
@@ -422,7 +427,7 @@ magic-verify: ## Verify CELL cell with Magic (usage: make magic-verify [CELL=<ce
 
 
 # Packaging Target
-bondplan: ## Generate the bondplan (die in package + bondwires + pin table) in packaging/ (usage: make bondplan VERSION=<version>)
+bondplan: ## Generate the bondplan (die in package + bondwires + pin table) in packaging/ (usage: make bondplan [VERSION=<version>])
 	cd $(PACKAGING_DIR) && python3 scripts/run_bondplan.py config.yaml VERSION=$(VERSION)
 .PHONY: bondplan
 # ================================================================================================
@@ -449,7 +454,6 @@ release: ## Copy the gds, netlist files and chip renders to the release folder (
 	cp -f $(LAY_DIR)/$(TOP)_logo_fill.gds.gz $(RELEASE_DIR)/v.$(VERSION)/gds/$(TOP)_logo_fill.gds.gz
 #	cp -r $(NET_SCH_DIR)/. $(RELEASE_DIR)/v.$(VERSION)/netlist/schematic
 	cp -r $(NET_LAY_DIR)/. $(RELEASE_DIR)/v.$(VERSION)/netlist/layout
-#	cp -r $(NET_PEX_DIR)/. $(RELEASE_DIR)/v.$(VERSION)/netlist/pex
 	cp -r $(NET_PNL_DIR)/. $(RELEASE_DIR)/v.$(VERSION)/netlist/pnl
 	cp -r $(NET_SPICE_DIR)/. $(RELEASE_DIR)/v.$(VERSION)/netlist/spice
 	cp -f $(RENDER_IMG_DIR)/$(TOP)_black.png $(RELEASE_DIR)/v.$(VERSION)/img/$(TOP)_black.png

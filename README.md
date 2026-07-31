@@ -68,7 +68,7 @@ Are you interested in an open-source RFIC flow? Check it out [here](https://gith
 
 Examples based on this template are:
 - [TinyWhisper](https://github.com/iic-jku/TinyWhisper): An Open-Source Fully-Integrated Multi-Mode Short-Wave Transmitter for Amateur Radio Applications in 130-nm CMOS
-- [SPARX](https://github.com/iic-jku/SG13G2_SPARX): An Open-Source, Automated, Programmatically Generated, Frequency-Scalable Six-Port Receiver in 130-nm CMOS
+- [SPARX](https://github.com/iic-jku/SG13CMOS_SPARX): An Open-Source, Automated, Programmatically Generated, Frequency-Scalable Six-Port Receiver in 130-nm CMOS
 - wafer.space gf180mcuD MPW [Multi-Project Chip](https://github.com/iic-jku/gf180mcu-jku-projects)
 
 
@@ -230,7 +230,6 @@ A designer-oriented description of this chip can be found in [doc/](doc/):
 │  └─ 📁 reports/
 │     ├─ antenna_summary.rpt
 │     ├─ antenna_violations.rpt
-│     ├─ hold_setup_timing.rpt
 │     ├─ irdrop.rpt
 │     ├─ lvs.netgen.rpt
 │     ├─ manufacturability.rpt
@@ -249,7 +248,45 @@ A designer-oriented description of this chip can be found in [doc/](doc/):
 
 </details>
 
-## Show Available Targets
+
+## Makefile Structure
+
+The whole flow is driven by Makefiles. The top-level `Makefile` builds the chip, and every component under [`macros/`](macros/) and [`ip/`](ip/) has its own `Makefile` and `README.md` following the same conventions (`make help`, `make all`, and so on). You can run each component from the top level or directly from inside its own folder. The figure below shows how the targets are connected when you run `make all` at the top level.
+
+<p align="center">
+  <a href="tutorial/fig/targets_overview/targets_overview.png">
+    <img src="tutorial/fig/targets_overview/targets_overview.png" alt="Overview of the Makefile targets" width=100%>
+  </a>
+  <br>
+  <em>Overview of the Makefile targets.</em>
+</p>
+
+Every coloured branch corresponds to one deliverable (top chip, bondpad, logos, digital macro, analog macro, packaging). The grey targets connect `make all` to those branches.
+
+Solid arrows are direct `$(MAKE) <target>` calls within a single Makefile. Dashed arrows descend into a subdirectory, either as a recursive `$(MAKE) -C <dir> all` call into a sub-Makefile or as the Python bondplan flow in `packaging/`. The numbers on the second level give the execution order of `make all`, and the vertical order inside the coloured boxes gives the execution order of each sub-Makefile.
+
+At the top level, `make all` runs four steps in this order:
+
+1. `build-all` initializes the submodules and builds every component by calling its own `all` target: bondpad, logos, digital macro, analog macro, and finally the chip assembly with `build-top` (LibreLane, copy-back of all artifacts, logo and fill insertion, final GDS render).
+2. `magic-drc` and `klayout-drc` run the DRC of the final `chip_top` and `chip_top_logo_fill` GDS.
+3. `sim-all` runs the chip-level RTL and gate-level simulations on the netlists produced by this build.
+4. `bondplan` generates the bonding diagram, the bondwires, and the pin table.
+
+Every component follows the same principle. The simulations always run last, so they use the artifacts that the same invocation has just produced.
+
+| Makefile | `all` flow |
+| --- | --- |
+| [`macros/counter/`](macros/counter/) (digital) | lint -> build (FPGA and LibreLane, including the XSPICE model) -> simulate. DRC and LVS run inside the LibreLane flow. |
+| [`macros/inverter/`](macros/inverter/) (analog) | verify (DRC, LVS, PEX) -> build (LEF, LIB, Verilog stub, GDS, render) -> simulate |
+| [`ip/*`](ip/) (bondpad, logos) | build -> verify (DRC) |
+| top level | build -> verify (DRC) -> simulate -> package |
+
+The following sections describe the top-level targets in detail. The macro and IP targets are documented in the `README.md` of the respective subfolder.
+
+
+## Makefile Targets
+
+### Show Available Targets
 
 The default Make target is `help`, so running `make` prints usage and all available targets with short descriptions.
 
@@ -259,7 +296,7 @@ make help
 ```
 
 
-## Initialize Git Submodules
+### Initialize Git Submodules
 
 Initializes and updates the repository submodules (for example [ArtistIC](https://github.com/pulp-platform/artistic)):
 
@@ -270,7 +307,7 @@ make init-submodules
 Run this after cloning the repository, or whenever submodule pointers are updated.
 
 
-## Simulation
+### Simulation
 
 We use [cocotb](https://www.cocotb.org/), a Python-based testbench environment, for the verification of the chip.
 The underlying simulator is [Icarus Verilog](https://github.com/steveicarus/iverilog).
@@ -292,20 +329,25 @@ To run the gate-level simulation with Xschem, use:
 
 ```sh
 make sim-gl-xschem
+make sim-gl-xschem TB=<testbenchname>
 ```
+
+The testbench is selected with the `TB` variable, given without the `.sch` extension (default: `<CELL>_tb_tran`). All testbench schematics are located in `testbenches/xschem/`, and the generated netlists are written to `testbenches/xschem/simulations/`.
+
+The simulation runs in **batch mode**: the target netlists the testbench with `xschem netlist` and then invokes `ngspice -b` directly instead of using `xschem simulate`. `xschem simulate` would spawn an interactive ngspice in a terminal detached from `make`: the target would return immediately, the result would never be checked, and the process (with its X server) would leak. Running the simulator directly makes `make` block until the run finishes and see its exit status.
+
+Because the run is headless, the `plot` commands in a testbench's `.control` block are a no-op and no plot windows appear. Every testbench instead exports its results with `wrdata` to `testbenches/xschem/plot_simulations/data/`, from where they are plotted with `sim-view-xschem`.
 
 > [!NOTE]
-> `sim-gl-xschem` is available and converges, but it may take a long time depending on the hardware used.
-> It is therefore **not** included in `sim-all` and must be called manually.
+> `sim-gl-xschem` is part of `sim-all`, but it may take a long time depending on the hardware used.
 
-To plot the Xschem simulation results using the Python script in `scripts/plot_simulations/`, use:
+To plot the Xschem simulation results, use `sim-view-xschem`. It runs a plotting script from `testbenches/xschem/plot_simulations/` (`SIM_PLOT_DIR`), selected with the `SCRIPT` variable (given without the `.py` extension), and reproduces the plots of the testbench's `.control` block with matplotlib from the exported data in `plot_simulations/data/`:
 
 ```sh
-make sim-view-xschem
-make sim-view-xschem CELL=chip_top
+make sim-view-xschem SCRIPT=plot_chip_top
 ```
 
-The target runs `python3 scripts/plot_simulations/plot_<CELL>.py`. `CELL` defaults to `chip_top`.
+The target runs `SHOW_PLOTS=1 python3 testbenches/xschem/plot_simulations/$(SCRIPT).py`. Every script writes its figures to `testbenches/xschem/plot_simulations/figures/`. Run through `sim-view-xschem`, the plot windows additionally open when a display is available (i.e. the container's X/VNC session). Headless, only the figures are written.
 
 > [!NOTE]
 > `sim-view-xschem` is intentionally **not** called by `sim-all`.
@@ -324,7 +366,7 @@ make sim-view-cocotb WAVEFORM_VIEWER=surfer                   # use Surfer inste
 Each cocotb simulation folder contains a pre-configured waveform layout file (`<CELL>_tb.gtkw` for GTKWave, `<CELL>_tb.surf.ron` for Surfer).
 The view target loads it automatically together with the current `.fst`, so signal formatting is preserved across runs.
 
-To run all non-interactive simulation targets in sequence (RTL cocotb and GL cocotb), use:
+To run all non-interactive simulation targets in sequence (RTL cocotb, GL cocotb and GL Xschem), use:
 
 ```sh
 make sim-all
@@ -336,11 +378,11 @@ make sim-all
 > It is designed for interactive use and must be called manually after the simulation has completed.
 
 > [!NOTE]
-> `sim-gl-xschem` and `sim-view-xschem` are also **not** included in `sim-all` because `sim-gl-xschem` may take a long time depending on the hardware used.
-> Run them manually with `make sim-gl-xschem` followed by `make sim-view-xschem` when needed.
+> `sim-view-xschem` is intentionally **not** called by `sim-all` either. Run it manually with
+> `make sim-view-xschem SCRIPT=plot_chip_top` after the simulation has completed.
 
 
-## LibreLane Flow
+### LibreLane Flow
 
 Run the LibreLane flow with:
 
@@ -357,7 +399,7 @@ Additional targets are available for different DRC configurations:
 These targets are also available for the digital macros. After the LibreLane flow completes successfully, the generated views are saved under `flow/final/`.
 
 
-## View the Design
+### View the Design
 
 After completion, you can view the design using the OpenROAD GUI:
 
@@ -374,9 +416,9 @@ make librelane-klayout
 These commands are also available for the digital macros.
 
 
-## Copy Important Reports
+### Copy Important Reports
 
-To copy the Yosys synthesis checks, antenna-violation reports, post-PnR hold & setup timing summary, LVS report, and manufacturability report from the latest LibreLane run into `verification/reports/`, run:
+To copy the Yosys synthesis checks, antenna reports, post-PnR timing summary, per-corner power reports, IR-drop report, LVS report, and manufacturability report from the latest LibreLane run into `verification/reports/`, run:
 
 ```sh
 make copy-reports
@@ -386,11 +428,11 @@ This only works if the latest run completed without errors. This command is also
 
 > [!NOTE]
 > The Magic and KLayout DRC reports are temporarily not copied because IHP's
-> `metal1_pin_offgrid` rule trips on the pad ring. Once it is fixed upstream
-> the corresponding `cp` lines in `Makefile :: copy-reports` will be re-enabled.
+> `metal1_pin_offgrid` rule trips on the pad ring (see [IHP-Open-PDK#683](https://github.com/IHP-GmbH/IHP-Open-PDK/issues/683#issuecomment-4065791975)).
+> Once it is fixed upstream, the corresponding `cp` lines in `Makefile :: copy-reports` will be re-enabled.
 
 
-## Copy the Final GDS
+### Copy the Final GDS
 
 To copy and compress the latest GDS from `flow/final/gds/` into `layout/`, run:
 
@@ -399,7 +441,7 @@ make copy-gds
 ```
 
 
-## Copy the Final Netlist
+### Copy the Final Netlist
 
 To copy the latest SPICE, PnL, and NL netlists from `flow/final/spice/` into `netlist/spice/`, from `flow/final/pnl/` into `netlist/pnl/`, and from `flow/final/nl/` into `netlist/nl/`, run:
 
@@ -410,7 +452,7 @@ make copy-netlist
 This only works if the latest run completed without errors.
 
 
-## Copy the Final Render
+### Copy the Final Render
 
 To copy the latest LibreLane chip render from `flow/final/render/` into `render/img/`, run:
 
@@ -421,7 +463,7 @@ make copy-render
 This creates `render/img/chip_top_librelane.png`. This only works if the latest run completed without errors.
 
 
-## Render Top Layout
+### Render Top Layout
 
 Renders the top-level GDS from `layout/` and saves it in the `render/img/` folder:
 
@@ -432,7 +474,7 @@ make render-gds
 This only works if the latest run completed without errors. This command is also available for the digital macros.
 
 
-## Build Bondpad
+### Build Bondpad
 
 To build the bondpad in the `ip` folder, run the following command:
 
@@ -441,7 +483,7 @@ make build-bondpad
 ```
 
 
-## Build Logos
+### Build Logos
 
 To build the logos in the `ip` folder, run the following command:
 
@@ -450,7 +492,7 @@ make build-logos
 ```
 
 
-## Build Macros
+### Build Macros
 
 To build a specific macro, run the corresponding target from the `Makefile`. To build all currently enabled macros, run:
 
@@ -458,7 +500,7 @@ To build a specific macro, run the corresponding target from the `Makefile`. To 
 make build-macros
 ```
 
-### Build Digital Macros
+#### Build Digital Macros
 
 The following command builds the `counter` digital macro:
 
@@ -472,7 +514,7 @@ For each digital macro this dispatches to its in-tree `make all`, which runs the
 > Each macro has its own `Makefile` and `README.md` with additional targets, such as linting, simulation, and verification.
 > For example, to lint the counter or run its simulation, refer to [macros/counter/README.md](macros/counter/README.md).
 
-### Build Analog Macros
+#### Build Analog Macros
 
 Each analog macro has its own `klayout-verify` and `magic-verify` targets that run DRC, LVS, and PEX for the top-level cell.
 
@@ -487,7 +529,7 @@ For each analog macro this dispatches to its in-tree `make all`, which runs the 
 All analog macros are included in `build-macros` alongside the digital macros.
 
 
-## Build Top
+### Build Top
 
 To run LibreLane for the top-level chip and copy the resulting reports, GDS, netlist, and chip render back into the source tree, then add the logo + fill structures and render the final GDS, run:
 
@@ -497,8 +539,12 @@ make build-top
 
 Internally this executes (in order): `librelane-nodrc` → `copy-reports` → `copy-gds` → `copy-netlist` → `copy-render` → `add-logo-fill` → `render-gds`.
 
+> [!NOTE]
+> `build-top` runs `librelane-nodrc` instead of `librelane` for the same reason the DRC reports are not copied: IHP's `metal1_pin_offgrid` rule trips on the pad ring (see [IHP-Open-PDK#683](https://github.com/IHP-GmbH/IHP-Open-PDK/issues/683#issuecomment-4065791975)).
+> Once it is fixed upstream, `Makefile :: build-top` switches back to `librelane`.
 
-## Build All
+
+### Build All
 
 To initialise submodules, build the bondpad, build the logos, build the macros, and run the full `build-top` flow, run:
 
@@ -509,7 +555,7 @@ make build-all
 This is useful if you want to rebuild the chip from scratch. Clone the repository, enter the IIC-OSIC-TOOLS environment, and run `make build-all`.
 
 
-## Add Logo and Fill
+### Add Logo and Fill
 
 To add the chip logo (PNG → GDS) and the fill structures on top of the LibreLane output (so the final GDS in `layout/` includes the artwork), run:
 
@@ -523,7 +569,7 @@ This calls `scripts/add_logo_fill.sh` and writes `layout/chip_top_logo_fill.gds.
 > In the future, it is planned to replace this script and Makefile target with a custom librelane step.
 
 
-## Design Rule Check (DRC)
+### Design Rule Check (DRC)
 
 Runs DRC on the GDS layout in `layout/`. Both flows use `sak-drc.sh` and write their reports into per-cell run folders: `verification/drc/<CELL>.magic.drc/` (Magic) and `verification/drc/<CELL>.klayout.drc/` (KLayout, `.lyrdb`). The run folders are wiped at the start of each run, so they always reflect the latest run only.
 
@@ -571,7 +617,7 @@ make magic-drc CELL=chip_top
 ```
 
 
-## Export Schematic Netlist for LVS
+### Export Schematic Netlist for LVS
 
 Exports the schematic netlist for LVS from Xschem and places it in `netlist/schematic/`.
 
@@ -596,7 +642,7 @@ make magic-lvs-netlist EV_PRECISION=5
 ```
 
 
-## Layout Versus Schematic (LVS)
+### Layout Versus Schematic (LVS)
 
 Exports the schematic netlist from Xschem, then runs LVS. Compares the GDS layout in `layout/` against the schematic netlist in `netlist/schematic/`. Both flows use `sak-lvs.sh` and write their reports into per-cell run folders: `verification/lvs/<CELL>.magic.lvs/` (Magic + Netgen) and `verification/lvs/<CELL>.klayout.lvs/` (KLayout, `.lvsdb`). The run folders are wiped at the start of each run, so they always reflect the latest run only. The extracted layout netlist is moved to `netlist/layout/`.
 
@@ -615,7 +661,7 @@ make magic-lvs CELL=chip_top
 ```
 
 
-## Parasitic Extraction (PEX)
+### Parasitic Extraction (PEX)
 
 Runs parasitic extraction on the GDS layout in `layout/`. The extracted SPICE netlist is written to `netlist/pex/`.
 
@@ -662,7 +708,7 @@ make magic-pex CELL=chip_top EXT_MODE=3 THRESHOLD=5000 MINRES=500 MINDELAY=2
 ```
 
 
-## Verify a Specific Cell
+### Verify a Specific Cell
 
 Runs DRC, LVS, and PEX for a specific cell (e.g. `chip_top`):
 
@@ -672,7 +718,7 @@ make magic-verify CELL=chip_top
 ```
 
 
-## Verify Top Cell
+### Verify Top Cell
 
 Runs DRC, LVS, and PEX for the top cell:
 
@@ -682,7 +728,7 @@ make magic-verify
 ```
 
 
-## Packaging (Bondplan Generation)
+### Packaging (Bondplan Generation)
 
 Generates the bondplan fully automatically: the die placed in the package cavity, all bondwires, a pin table, and the filled EUROPRACTICE title block. Inputs are the final chip GDS (`layout/chip_top_logo_fill.gds.gz`) and the EUROPRACTICE package library, from which the QFN32 drawing sheet is extracted:
 
@@ -710,7 +756,7 @@ See [packaging/README.md](packaging/README.md) for the full flow documentation a
 </p>
 
 
-## Build, Verify and Simulate All
+### Build, Verify and Simulate All
 
 Runs `build-all` first, followed by Magic DRC for both `chip_top` and `chip_top_logo_fill`, then the chip simulations (`sim-all`) and finally generates the bondplan (`bondplan`) once all checks have passed:
 
@@ -719,7 +765,7 @@ make all
 ```
 
 
-## Release
+### Release
 
 Copies the final top-level GDS with logo and fill structures from `layout/` to `release/v.<VERSION>/gds/`, copies the generated netlists into `release/v.<VERSION>/netlist/`, and copies the chip renders and the bonding diagram into `release/v.<VERSION>/img/`.
 
@@ -741,7 +787,10 @@ The bonding diagram is exported as well (see `make bondplan`):
 - `packaging/render/chip_top_bondplan_white.png` -> `release/v.<VERSION>/img/chip_top_bondplan_white.png`
 
 > [!NOTE]
-> `netlist/schematic` and `netlist/pex` are currently not copied by the `release` target.
+> `netlist/schematic` and `netlist/pex` are currently **not** copied by the `release` target:
+>
+> - `netlist/pex` holds the Magic-extracted top-level netlist (`chip_top_magic_pex_1.spice`, ~73 MB and ~566k lines even in the C-decoupled `EXT_MODE=1`). Since `release/` is committed to the repository, copying it would add those ~73 MB to every released version. The netlist stays available in `netlist/pex/` (see [Parasitic Extraction (PEX)](#parasitic-extraction-pex)).
+> - `netlist/schematic` is still empty because it is written by `klayout-lvs-netlist` / `magic-lvs-netlist`, and the top-level LVS is not finished yet (see [Layout Versus Schematic (LVS)](#layout-versus-schematic-lvs)). The schematic netlist will be added to the release once the top-level LVS runs through.
 
 Run with default version (`1.0.0`):
 
@@ -756,7 +805,7 @@ make release VERSION=2.1.0
 ```
 
 
-## Regression
+### Regression
 
 The `regression` target is the project's end-to-end smoke test for the [IIC-OSIC-TOOLS](https://github.com/iic-jku/iic-osic-tools) environment. Its goal is to exercise **every tool and flow** in the template at least once with the **shortest possible runtime**. It is a tool/flow regression, not a design sign-off.
 
