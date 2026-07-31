@@ -1,6 +1,8 @@
 ﻿# ToDo List
 
 - [ ] `ngspice` & `verilog` RTL Co-Simulation using `Xschem`: https://www.youtube.com/watch?v=PPd7jkcHOgA
+- [ ] add VACASK testbenches to inverter macro (update Makefile + README, see SPARX)
+- [ ] add VACASK mixed-signal GL testbenches to counter macro (update Makefile + README, see SPARX)
 - [ ] add further open-source FPGAs to `counter` macro from HeiChips 2026 template: https://github.com/HeiChips/heichips26-template
 - [ ] clean up top-level LVS (Magic + Netgen, KLayout ?) --> see / merge `top-level-lvs` branch
 - [ ] merge `fixed-auto-taper` branch
@@ -20,7 +22,6 @@
 - [ ] PR IHP sizing scripts
 - [ ] RTL Co-Simulation using `SpiceBind`
 - [ ] add PF SimulatePARALLEL testbench
-- [ ] add VACASK testbenches
 - [ ] save markdown report of CACE
 - [ ] update table "Folder" column width
 - [ ] build same template for ihp-sg13cmos5l
