@@ -788,8 +788,8 @@ The bonding diagram is exported as well (see `make bondplan`):
 > [!NOTE]
 > `netlist/schematic` and `netlist/pex` are currently **not** copied by the `release` target:
 >
-> - `netlist/pex` holds the Magic-extracted top-level netlist (`chip_top_magic_pex_1.spice`, ~73 MB and ~566k lines even in the C-decoupled `EXT_MODE=1`). Since `release/` is committed to the repository, copying it would add those ~73 MB to every released version. The netlist stays available in `netlist/pex/` (see [Parasitic Extraction (PEX)](#parasitic-extraction-pex)).
-> - `netlist/schematic` is still empty because it is written by `klayout-lvs-netlist` / `magic-lvs-netlist`, and the top-level LVS is not finished yet (see [Layout Versus Schematic (LVS)](#layout-versus-schematic-lvs)). The schematic netlist will be added to the release once the top-level LVS runs through.
+> - `netlist/pex` holds the Magic-extracted top-level netlist (`chip_top_magic_pex_1.spice`, ~73 MB and ~566k lines even in the C-decoupled `EXT_MODE=1`). Since `release/` is committed to the repository, copying it would add those ~73 MB to every released version. The netlist stays available in `netlist/pex/`.
+> - `netlist/schematic` is still empty because it is written by `klayout-lvs-netlist` / `magic-lvs-netlist`, and the top-level LVS is not finished yet. The schematic netlist will be added to the release once the top-level LVS runs through.
 
 Run with default version (`1.0.0`):
 
