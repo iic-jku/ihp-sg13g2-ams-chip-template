@@ -599,7 +599,7 @@ The full sizing flow for the inverter is implemented in the Jupyter notebook [`s
 
 The Jupyter notebook `sizing_inverter.ipynb` runs through the following steps:
 
-1. Define the design targets: $V_\mathrm{DD} = 1.5\,\mathrm{V}$, $V_\mathrm{cm,in} = V_\mathrm{cm,out} = V_\mathrm{DD}/2 = 0.75\,\mathrm{V}$, $I_\mathrm{out} = 0.75\,\mathrm{mA}$, $C_\mathrm{load} = 10\,\mathrm{pF}$ and $L = 1\,\mathrm{\upmu m}$. $L$ is chosen longer than the minimum to increase intrinsic gain and reduce mismatch, but at the cost of increased area and reduced bandwidth.
+1. Define the design targets: $V_\mathrm{DD} = 1.5\,\mathrm{V}$, $V_\mathrm{cm,in} = V_\mathrm{cm,out} = V_\mathrm{DD}/2 = 0.75\,\mathrm{V}$, $I_\mathrm{out} = 0.75\,\mathrm{mA}$, $C_\mathrm{load} = 10\,\mathrm{pF}$ and $L = 1\,\mathrm{\mu m}$. $L$ is chosen longer than the minimum to increase intrinsic gain and reduce mismatch, but at the cost of increased area and reduced bandwidth.
 2. Look up $g_\mathrm{m}/I_\mathrm{D}$, $g_\mathrm{m}/g_\mathrm{ds}$, $g_\mathrm{m}/C_\mathrm{gg}$ and $I_\mathrm{D}/W$ based on $L$ and the operating-point voltages.
 3. Compute the required widths $W = I_\mathrm{D} / (I_\mathrm{D}/W)$ for NMOS and PMOS, and derive the resulting $W_\mathrm{PMOS}/W_\mathrm{NMOS}$ ratio.
 4. Round the continuous widths to a practical finger configuration with equal finger counts for NMOS and PMOS (for better layout matching) and recompute the small-signal parameters with the final widths.
@@ -607,7 +607,7 @@ The Jupyter notebook `sizing_inverter.ipynb` runs through the following steps:
 
 The resulting device geometry is summarised in @tbl-inverter-sizing-geom.
 
-| Device  | $L$ ($\mathrm{\upmu m}$) | Fingers ($\mathrm{NF}$) | $W$ / Finger ($\mathrm{\upmu m}$) | Total $W$ ($\mathrm{\upmu m}$) |
+| Device  | $L$ ($\mathrm{\mu m}$) | Fingers ($\mathrm{NF}$) | $W$ / Finger ($\mathrm{\mu m}$) | Total $W$ ($\mathrm{\mu m}$) |
 | :------ | :----------------------: | :-----------------: | :-------------------------------: | :----------------------------: |
 | NMOS $M_1$ | 1.0                   | 20              | 1.0                               | 20.0                           |
 | PMOS $M_2$ | 1.0                   | 20              | 6.0                               | 120.0                          |
@@ -622,24 +622,24 @@ With these final widths the notebook computes the small-signal parameters listed
 | Transconductance efficiency $g_\mathrm{m}/I_\mathrm{D}$ ($\mathrm{V^{-1}}$)            | 3.76       | 3.76       | --                               |
 | Inversion level                                                                        | strong     | strong     | --                               |
 | Transconductance $g_\mathrm{m}$ ($\mathrm{mS}$)                                        | 3.35       | 2.92       | --                               |
-| Output conductance $g_\mathrm{ds}$ ($\mathrm{\upmu S}$)                                | 116        | 29         | --                               |
+| Output conductance $g_\mathrm{ds}$ ($\mathrm{\mu S}$)                                | 116        | 29         | --                               |
 | Gate capacitance $C_\mathrm{gg}$ ($\mathrm{fF}$)                                        | 154.32     | 824.86     | --                               |
 | Transit frequency $f_\mathrm{T} = g_\mathrm{m}/(2\pi\,C_\mathrm{gg})$ ($\mathrm{GHz}$)  | 2.91       | 0.54       | --                               |
 | Thermal noise PSD $S_\mathrm{TH}$ at $1\,\mathrm{Hz}$ ($\mathrm{pV^2/Hz}$)              | 38.95      | 73.98      | --                               |
 | Flicker corner frequency $f_\mathrm{co}$ ($\mathrm{MHz}$)                               | 3.87       | 2.28       | --                               |
 | $g_\mathrm{m,tot} = g_\mathrm{m,NMOS} + g_\mathrm{m,PMOS}$ ($\mathrm{mS}$)              | --         | --         | 6.28                             |
-| $g_\mathrm{ds,tot} = g_\mathrm{ds,NMOS} + g_\mathrm{ds,PMOS}$ ($\mathrm{\upmu S}$)      | --         | --         | 145                              |
+| $g_\mathrm{ds,tot} = g_\mathrm{ds,NMOS} + g_\mathrm{ds,PMOS}$ ($\mathrm{\mu S}$)      | --         | --         | 145                              |
 
 : Calculated small-signal parameters with final widths. {#tbl-inverter-sizing-ss}
 
 From these values, the open-loop dc gain $A_\mathrm{ol}$, the output resistance $R_\mathrm{out}$, the open-loop cut-off frequency $f_\mathrm{cu}$, and the unity-gain frequency $f_\mathrm{T}$ with a dominant capacitive load $C_\mathrm{load} = 10\,\mathrm{pF}$ can be estimated as
 
 $$
-|A_\mathrm{ol}| = \frac{g_\mathrm{m,tot}}{g_\mathrm{ds,tot}} = \frac{6.28\,\mathrm{mS}}{145\,\mathrm{\upmu S}} = 43.2 = 32.72\,\mathrm{dB},
+|A_\mathrm{ol}| = \frac{g_\mathrm{m,tot}}{g_\mathrm{ds,tot}} = \frac{6.28\,\mathrm{mS}}{145\,\mathrm{\mu S}} = 43.2 = 32.72\,\mathrm{dB},
 $$
 
 $$
-R_\mathrm{out} = \frac{1}{g_\mathrm{ds,tot}} = \frac{1}{145\,\mathrm{\upmu S}} = 6.89\,\mathrm{k\Omega},
+R_\mathrm{out} = \frac{1}{g_\mathrm{ds,tot}} = \frac{1}{145\,\mathrm{\mu S}} = 6.89\,\mathrm{k\Omega},
 $$
 
 $$
@@ -661,7 +661,7 @@ $$
 : Calculated vs. simulated open-loop characteristics of the inverter. {#tbl-inverter-sizing-vs-ac}
 
 ::: {.callout-tip}
-The notebook is fully parametric. Changing $L$, the target $g_\mathrm{m}/I_\mathrm{D}$ or $I_\mathrm{out}$ and re-running the cells immediately produces a new sizing point, so it can be used as a starting template for sizing other simple analog blocks with the ihp-sg13g2 lookup tables. Try it out yourself by decreasing the transistor length to $L = 0.5\,\mathrm{\upmu m}$ and see how the small-signal parameters and the resulting open-loop gain and cut-off frequency change. What would you expect based on the tradeoffs above?
+The notebook is fully parametric. Changing $L$, the target $g_\mathrm{m}/I_\mathrm{D}$ or $I_\mathrm{out}$ and re-running the cells immediately produces a new sizing point, so it can be used as a starting template for sizing other simple analog blocks with the ihp-sg13g2 lookup tables. Try it out yourself by decreasing the transistor length to $L = 0.5\,\mathrm{\mu m}$ and see how the small-signal parameters and the resulting open-loop gain and cut-off frequency change. What would you expect based on the tradeoffs above?
 :::
 
 ## Inspect / Edit the Layout
