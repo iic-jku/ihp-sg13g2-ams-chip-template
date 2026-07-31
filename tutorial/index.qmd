@@ -248,7 +248,7 @@ The [counter Makefile](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/b
 | `make sim-view-verilog` / `sim-view-cocotb`       | Open the latest waveform in GTKWave or Surfer.                              |
 | `make librelane` (and `-nodrc`, `-magicdrc`, …)   | Run the LibreLane flow for the counter macro.                               |
 | `make generate-xspice`                            | Convert the LibreLane-extracted SPICE netlist into an XSPICE model for Xschem. |
-| `make sim-gl-xschem` / `sim-view-xschem SCRIPT=<script>` | Run the mixed-signal XSPICE simulation in Xschem (batch mode) and plot the results. |
+| `make sim-gl-xschem [TB=<tb>]` / `sim-view-xschem SCRIPT=<script>` | Run the mixed-signal XSPICE simulation in Xschem (batch mode with ngspice) and plot the results. |
 | `make build-fpga`                                 | Run the full FPGA flow: lint, synthesis, P&R, and bitstream generation.     |
 | `make build-top`                                  | Run LibreLane, copy reports, netlists, and final views, generate the XSPICE model, and render the final GDS. |
 | `make all`                                        | Run lint, the FPGA build, the full macro build flow, and all simulations. |
@@ -435,6 +435,8 @@ The same simulation can also be run non-interactively from the Makefile, and the
 make sim-gl-xschem
 make sim-view-xschem SCRIPT=plot_counter_top
 ```
+
+`sim-gl-xschem` runs in batch mode: it netlists the testbench with `xschem netlist` and then calls `ngspice -b` directly, so `make` blocks until the run finishes and sees its exit status. The testbench is selected with `TB=<testbench_name>` (default: `<CELL>_tb_tran`). Since the run is headless, the `plot` commands in the testbench's `.control` block are a no-op. The testbench exports its results with `wrdata` to [`testbenches/xschem/plot_simulations/data/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/counter/testbenches/xschem/plot_simulations/data), from where `sim-view-xschem` plots them with Matplotlib.
 
 ![Plotted Xschem simulation results of `counter_top_tb_tran` from `testbenches/xschem/plot_simulations/plot_counter_top.py`.](fig/counter_top/counter_top_tb_tran_sim.svg){#fig-counter-top-tb-tran-sim}
 
