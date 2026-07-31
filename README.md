@@ -334,7 +334,26 @@ make sim-gl-xschem TB=<testbenchname>
 
 The testbench is selected with the `TB` variable, given without the `.sch` extension (default: `<CELL>_tb_tran`). All testbench schematics are located in `testbenches/xschem/`, and the generated netlists are written to `testbenches/xschem/simulations/`.
 
-The simulation runs in **batch mode**: the target netlists the testbench with `xschem netlist` and then invokes `ngspice -b` directly instead of using `xschem simulate`. `xschem simulate` would spawn an interactive ngspice in a terminal detached from `make`: the target would return immediately, the result would never be checked, and the process (with its X server) would leak. Running the simulator directly makes `make` block until the run finishes and see its exit status.
+The simulation runs in **batch mode**: the target netlists the testbench with `xschem netlist` and then invokes the simulator directly (`ngspice -b` for SPICE netlists, `vacask` for Spectre netlists) instead of using `xschem simulate`. `xschem simulate` would spawn an interactive simulator in a terminal detached from `make`: the target would return immediately, the result would never be checked, and the process (with its X server) would leak. Running the simulator directly makes `make` block until the run finishes and see its exit status.
+
+The netlist format and the simulator are derived from the testbench name: names ending in `_vacask` are netlisted as Spectre and simulated with [VACASK](https://codeberg.org/arpadbuermen/VACASK), all others are netlisted as SPICE and simulated with ngspice.
+
+VACASK is run with `-qp` (quiet progress, appropriate for a batch run) and `-sp` (skip postprocessing): the postprocess scripts that a VACASK testbench declares are meant to be run from the Makefile right after the simulation instead. This bypasses VACASK's own subprocess launcher, which aborts with a `boost::asio` "Bad file descriptor" error on hosts whose kernel or container runtime blocks the syscalls it uses to spawn and await a child process. The `postprocess(PYTHON, ...)` lines stay in the testbenches, so running them from the Xschem GUI still postprocesses as usual.
+
+Because of `-sp`, the target runs the testbench's postprocess script itself, right after the VACASK run. By convention it is `plot_simulations/plot_<TB>.py` (matching the testbench's `postprocess(PYTHON, ...)` line); if that file does not exist, the step is skipped with a note. There it runs **headless**, so it only writes its figures. To open the plot windows, run the same script through `sim-view-xschem`, which sets `SHOW_PLOTS=1`. A VACASK postprocess script therefore has to honour that variable:
+
+```python
+import os
+import matplotlib
+if not os.environ.get("SHOW_PLOTS"):        # headless when run from the Makefile
+    matplotlib.use("Agg")
+import matplotlib.pyplot as plt
+...
+if os.environ.get("SHOW_PLOTS"):
+    plt.show()
+```
+
+For the VACASK testbenches, the target also writes the operating-point save file `simulations/<TB>.save` (`write_data [save_params]`) while netlisting. The VACASK testbenches contain the same call in their Xschem launcher, but that runs only when the testbench is started from the Xschem GUI, and `simulations/` is not tracked by git. Without this step, a testbench that includes its save file (`include "<TB>.save"`) aborts with `File not found` on a fresh clone.
 
 Because the run is headless, the `plot` commands in a testbench's `.control` block are a no-op and no plot windows appear. Every testbench instead exports its results with `wrdata` to `testbenches/xschem/plot_simulations/data/`, from where they are plotted with `sim-view-xschem`.
 

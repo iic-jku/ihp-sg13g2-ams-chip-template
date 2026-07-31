@@ -131,12 +131,15 @@ sim-view-cocotb: ## View CELL cell cocotb simulation waveforms (usage: make sim-
 sim-gl-xschem: ## Run gate-level simulation of CELL cell with Xschem in batch mode (usage: make sim-gl-xschem [CELL=<cellname>] [TB=<testbenchname>])
 	mkdir -p $(XSCHEM_TB_DIR)/simulations
 	cd $(XSCHEM_TB_DIR) && xschem -r -x -q --rcfile xschemrc --command ' \
-		xschem set netlist_type spice; \
+		xschem set netlist_type $(if $(findstring _vacask,$(TB)),spectre,spice); \
 		set netlist_dir $(abspath $(XSCHEM_TB_DIR)/simulations); \
 		xschem save; \
+		$(if $(findstring _vacask,$(TB)),write_data [save_params] $(abspath $(XSCHEM_TB_DIR)/simulations)/$(TB).save;) \
 		xschem netlist \
 	' $(TB).sch
-	cd $(XSCHEM_TB_DIR)/simulations && ngspice -b $(TB).spice
+	cd $(XSCHEM_TB_DIR)/simulations && $(if $(findstring _vacask,$(TB)),vacask -qp -sp $(TB).spectre </dev/null,ngspice -b $(TB).spice)
+# 	VACASK is run with -sp, so the testbench's postprocess script is run here instead.
+	$(if $(findstring _vacask,$(TB)),if [ -f $(SIM_PLOT_DIR)/plot_$(TB).py ]; then python3 $(SIM_PLOT_DIR)/plot_$(TB).py; else echo "[INFO] No postprocess script $(SIM_PLOT_DIR)/plot_$(TB).py found - skipping."; fi)
 .PHONY: sim-gl-xschem
 
 sim-view-xschem: ## Plot Xschem simulation results (usage: make sim-view-xschem SCRIPT=<scriptname>)
