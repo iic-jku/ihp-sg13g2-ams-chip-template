@@ -13,6 +13,7 @@ __pycache__/
 runs/
 backups/
 sim_build/
+config.resolved.yaml
 /tutorial/.quarto/
 /tutorial/_site/
 /doc/ihp-structure-proposals/gen_structure.py
