@@ -70,6 +70,7 @@ N 1100 -800 1100 -740 {lab=GND}
 C {devices/code_shown.sym} 80 -1370 0 0 {name=NGSPICE
 only_toplevel=true 
 value="
+.include ../../../netlist/pex/inverter_magic_pex_3.spice
 .param VDD=1.5
 .csparam VDD=VDD
 .param Vcm=VDD/2
@@ -169,3 +170,7 @@ C {devices/code_shown.sym} 1630 -1510 0 0 {name=SAVE only_toplevel=true
 format="tcleval( @value )"
 value=".include [file rootname [xschem get schname]].save
 "}
+C {inverter.sym} 1100 -1260 0 0 {name=x2
+spice_ignore=true}
+C {inverter_pex.sym} 1340 -1260 0 0 {name=x3
+spice_ignore=true}
