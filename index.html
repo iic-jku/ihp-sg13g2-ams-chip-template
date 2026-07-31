@@ -8,7 +8,7 @@
 
 <meta name="author" content="Simon Dorrer">
 <meta name="author" content="Harald Pretl">
-<meta name="dcterms.date" content="2026-07-30">
+<meta name="dcterms.date" content="2026-07-31">
 
 <title>A Tutorial on Open-Source Analog-Mixed Signal Chip Design with the ihp-sg13g2 Open-PDK – Open-Source Analog-Mixed Signal Chip Design Tutorial</title>
 <style>
@@ -488,7 +488,7 @@ window.Quarto = {
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">July 30, 2026</p>
+      <p class="date">July 31, 2026</p>
     </div>
   </div>
   
@@ -947,8 +947,8 @@ Figure&nbsp;2: Overview of the Makefile targets that <code>make all</code> resol
 <td>Convert the LibreLane-extracted SPICE netlist into an XSPICE model for Xschem.</td>
 </tr>
 <tr class="odd">
-<td><code>make sim-gl-xschem</code> / <code>sim-view-xschem SCRIPT=&lt;script&gt;</code></td>
-<td>Run the mixed-signal XSPICE simulation in Xschem (batch mode) and plot the results.</td>
+<td><code>make sim-gl-xschem [TB=&lt;tb&gt;]</code> / <code>sim-view-xschem SCRIPT=&lt;script&gt;</code></td>
+<td>Run the mixed-signal XSPICE simulation in Xschem (batch mode with ngspice) and plot the results.</td>
 </tr>
 <tr class="even">
 <td><code>make build-fpga</code></td>
@@ -1349,6 +1349,7 @@ Note
 <p>The same simulation can also be run non-interactively from the Makefile, and the result can be plotted from Python.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> sim-gl-xschem</span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> sim-view-xschem SCRIPT=plot_counter_top</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><code>sim-gl-xschem</code> runs in batch mode: it netlists the testbench with <code>xschem netlist</code> and then calls <code>ngspice -b</code> directly, so <code>make</code> blocks until the run finishes and sees its exit status. The testbench is selected with <code>TB=&lt;testbench_name&gt;</code> (default: <code>&lt;CELL&gt;_tb_tran</code>). Since the run is headless, the <code>plot</code> commands in the testbench’s <code>.control</code> block are a no-op. The testbench exports its results with <code>wrdata</code> to <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/counter/testbenches/xschem/plot_simulations/data"><code>testbenches/xschem/plot_simulations/data/</code></a>, from where <code>sim-view-xschem</code> plots them with Matplotlib.</p>
 <div id="fig-counter-top-tb-tran-sim" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-counter-top-tb-tran-sim-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
