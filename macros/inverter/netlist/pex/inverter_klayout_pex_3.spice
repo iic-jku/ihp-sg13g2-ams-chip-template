@@ -1,86 +1,208 @@
 * NGSPICE file created from inverter_pex.ext - technology: ihp-sg13g2
 
-.subckt inverter_pex vin VSS VDD vout
-X0 VSS.t8 vin vout VSS.t14 sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
-X1 VSS.t29 VSS.t8 VSS.t24 VSS.t27 sg13_lv_nmos ad=0.19p pd=1.38u as=0 ps=0 w=1u l=1u
+.subckt inverter_pex VDD vin vout VSS
+X0 VSS.t18 vin vout VSS.t17 sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
+X1 VSS.t36 VSS.t34 VSS.t30 VSS.t35 sg13_lv_nmos ad=0.19p pd=1.38u as=0 ps=0 w=1u l=1u
 X2 vout vin VDD VDD sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
 X3 VDD vin vout VDD sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
 X4 vout vin VDD VDD sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
-X5 vout vin VSS.t8 VSS.t13 sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
+X5 vout vin VSS.t15 VSS.t16 sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
 X6 vout vin VSS.t1 VSS.t0 sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
 X7 vout vin VDD VDD sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
-X8 VSS.t1 VSS.t3 VSS.t26 VSS.t25 sg13_lv_nmos ad=0.34p pd=2.68u as=0 ps=0 w=1u l=1u
-X9 VSS.t19 vin vout VSS.t18 sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
-X10 vout vin VSS.t8 VSS.t17 sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
+X8 VSS.t1 VSS.t31 VSS.t33 VSS.t32 sg13_lv_nmos ad=0.34p pd=2.68u as=0 ps=0 w=1u l=1u
+X9 VSS.t24 vin vout VSS.t23 sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
+X10 vout vin VSS.t21 VSS.t22 sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
 X11 VDD vin vout VDD sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
 X12 vout vin VDD VDD sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
-X13 VSS.t8 vin vout VSS.t7 sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
-X14 VSS.t24 vin vout VSS.t23 sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
+X13 VSS.t9 vin vout VSS.t8 sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
+X14 VSS.t30 vin vout VSS.t29 sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
 X15 VDD vin vout VDD sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
 X16 vout vin VDD VDD sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
 X17 VDD vin vout VDD sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
 X18 vout vin VDD VDD sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
-X19 VSS.t8 vin vout VSS.t12 sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
-X20 vout vin VSS.t8 VSS.t22 sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
+X19 VSS.t15 vin vout VSS.t14 sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
+X20 vout vin VSS.t27 VSS.t28 sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
 X21 VDD vin vout VDD sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
 X22 vout vin VDD VDD sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
 X23 VDD VDD VDD VDD sg13_lv_pmos ad=2.04p pd=12.68u as=0.14199n ps=0.28418m w=6u l=1u
-X24 vout vin VSS.t3 VSS.t6 sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
-X25 VSS.t8 vin vout VSS.t16 sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
+X24 vout vin VSS.t6 VSS.t7 sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
+X25 VSS.t21 vin vout VSS.t20 sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
 X26 VDD vin vout VDD sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
 X27 VDD vin vout VDD sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
-X28 VSS.t3 vin vout VSS.t5 sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
+X28 VSS.t6 vin vout VSS.t5 sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
 X29 vout vin VDD VDD sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
-X30 VSS.t8 vin vout VSS.t21 sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
+X30 VSS.t27 vin vout VSS.t26 sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
 X31 VSS.t3 vin vout VSS.t2 sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
-X32 vout vin VSS.t8 VSS.t11 sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
+X32 vout vin VSS.t12 VSS.t13 sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
 X33 vout vin VSS.t3 VSS.t4 sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
-X34 vout vin VSS.t19 VSS.t20 sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
+X34 vout vin VSS.t24 VSS.t25 sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
 X35 VDD vin vout VDD sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
 X36 vout vin VDD VDD sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
-X37 VSS.t8 vin vout VSS.t10 sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
+X37 VSS.t12 vin vout VSS.t11 sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
 X38 VDD vin vout VDD sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
 X39 VDD VDD VDD VDD sg13_lv_pmos ad=1.14p pd=6.38u as=0 ps=0 w=6u l=1u
 X40 vout vin VDD VDD sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
 X41 VDD vin vout VDD sg13_lv_pmos ad=1.14p pd=6.38u as=1.14p ps=6.38u w=6u l=1u
-X42 vout vin VSS.t8 VSS.t9 sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
-X43 vout vin VSS.t8 VSS.t15 sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
-C0 VDD vout 15.0304f
-C1 VDD vin 28.614f
-C2 vin vout 18.1624f
-R0 VSS.n1 VSS.t20 39.0506
-R1 VSS.t12 VSS.n0 49.8601
-R2 VSS.n1 VSS.t15 51.0603
-R3 VSS.n1 VSS.t4 33.0481
-R4 VSS.n1 VSS.t2 25.8395
-R5 VSS.n1 VSS.t9 49.8593
-R6 VSS.n1 VSS.t7 47.4583
-R7 VSS.n1 VSS.t5 39.0505
-R8 VSS.n1 VSS.t0 17.4347
-R9 VSS.t8 VSS.t29 5.668
-R10 VSS.t24 VSS.t8 5.66889
-R11 VSS.t1 VSS.t3 5.668
-R12 VSS.t3 VSS.t26 5.66889
-R13 VSS.n3 VSS.t23 17.4346
-R14 VSS.n1 VSS.t25 7.8271
-R15 VSS.n1 VSS.t6 43.8544
-R16 VSS.n1 VSS.t10 51.0612
-R17 VSS.n1 VSS.t11 51.0603
-R18 VSS.n1 VSS.t14 51.0599
-R19 VSS.n1 VSS.t16 49.8591
-R20 VSS.n2 VSS.t17 47.4621
-R21 VSS.n1 VSS.t21 33.0467
-R22 VSS.n1 VSS.t22 25.8408
-R23 VSS.n1 VSS.n4 0.0783083
-R24 VSS.t8 VSS.n4 0.154629
-R25 VSS.t8 VSS.t19 0.621113
-R26 VSS.t3 VSS.n4 0.498501
-R27 VSS.t27 VSS.n3 7.8269
-R28 VSS.n1 VSS.n2 0.00305553
-R29 VSS.n0 VSS.t13 49.8601
-R30 VSS.n1 VSS.n0 0.00577656
-R31 VSS.n3 VSS.n1 0.00534947
-R32 VSS.n2 VSS.t18 43.8545
+X42 vout vin VSS.t9 VSS.t10 sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
+X43 vout vin VSS.t18 VSS.t19 sg13_lv_nmos ad=0.19p pd=1.38u as=0.19p ps=1.38u w=1u l=1u
+C0 vin vout 18.1624f
+C1 VDD vout 15.0304f
+C2 VDD vin 28.614f
+R0 VSS.t29 VSS.n5 185.599
+R1 VSS.n8 VSS.t28 174.508
+R2 VSS.n15 VSS.t26 163.417
+R3 VSS.n14 VSS.t25 152.327
+R4 VSS.n17 VSS.t22 130.147
+R5 VSS.n7 VSS.t14 119.055
+R6 VSS.n16 VSS.t20 119.055
+R7 VSS.n21 VSS.t13 107.965
+R8 VSS.n13 VSS.t19 107.965
+R9 VSS.n3 VSS.t11 96.8748
+R10 VSS.n1 VSS.t17 96.8741
+R11 VSS.n18 VSS.t10 85.7835
+R12 VSS.n19 VSS.t16 85.7845
+R13 VSS.n6 VSS.t7 63.6024
+R14 VSS.n12 VSS.t5 52.5125
+R15 VSS.n4 VSS.t4 41.4212
+R16 VSS.t14 VSS.n19 85.783
+R17 VSS.n2 VSS.t8 74.6939
+R18 VSS.t4 VSS.n12 163.417
+R19 VSS.t10 VSS.n3 119.055
+R20 VSS.t19 VSS.n16 96.8734
+R21 VSS.t20 VSS.n17 85.7828
+R22 VSS.n20 VSS.t23 141.238
+R23 VSS.n0 VSS.n5 0.00162059
+R24 VSS.n5 VSS.t28 30.3309
+R25 VSS.n0 VSS.n8 0.00162059
+R26 VSS.n8 VSS.t26 41.4215
+R27 VSS.n0 VSS.n14 0.00161544
+R28 VSS.n0 VSS.n20 0.00161544
+R29 VSS.n0 VSS.n17 0.00187013
+R30 VSS.n0 VSS.n16 0.00187013
+R31 VSS.n13 VSS.t17 107.965
+R32 VSS.n0 VSS.n1 0.00162059
+R33 VSS.n1 VSS.t16 119.055
+R34 VSS.n0 VSS.n19 0.00176257
+R35 VSS.n0 VSS.n7 0.00162059
+R36 VSS.n7 VSS.t13 96.8744
+R37 VSS.n0 VSS.n21 0.00162059
+R38 VSS.n21 VSS.t11 107.965
+R39 VSS.n0 VSS.n3 0.00187013
+R40 VSS.n0 VSS.n18 0.00162059
+R41 VSS.n18 VSS.t8 130.147
+R42 VSS.n0 VSS.n12 0.00187013
+R43 VSS.n10 VSS.t0 185.599
+R44 VSS.n24 VSS.n0 0.859865
+R45 VSS.n0 VSS.n61 17.0005
+R46 VSS.n0 VSS.n34 17.0005
+R47 VSS.n60 VSS.t36 17.0005
+R48 VSS.t36 VSS.n59 17.0005
+R49 VSS.t30 VSS.n35 17.0005
+R50 VSS.n59 VSS.t30 17.0005
+R51 VSS.t36 VSS.n35 17.0005
+R52 VSS.n60 VSS.t30 17.0005
+R53 VSS.n0 VSS.n22 0.0139747
+R54 VSS.n0 VSS.n46 17.0005
+R55 VSS.n43 VSS.n0 17.0005
+R56 VSS.n0 VSS.n25 17.0005
+R57 VSS.n45 VSS.t1 17.0005
+R58 VSS.t1 VSS.n44 17.0005
+R59 VSS.t1 VSS.n42 17.0005
+R60 VSS.n44 VSS.t33 17.0005
+R61 VSS.t33 VSS.n42 17.0005
+R62 VSS.n45 VSS.t33 17.0005
+R63 VSS.n9 VSS.t29 19.2417
+R64 VSS.n10 VSS.t2 30.3307
+R65 VSS.n9 VSS.t35 7.82624
+R66 VSS.n11 VSS.t32 7.82745
+R67 VSS.n4 VSS.t2 174.51
+R68 VSS.n6 VSS.t5 152.327
+R69 VSS.n2 VSS.t7 141.237
+R70 VSS.n20 VSS.t22 74.6929
+R71 VSS.n14 VSS.t23 63.6034
+R72 VSS.n15 VSS.t25 52.5128
+R73 VSS.n23 VSS.n0 0.909393
+R74 VSS.t34 VSS.n58 3.0005
+R75 VSS.n47 VSS.t31 3.0005
+R76 VSS.n49 VSS.t3 2.4821
+R77 VSS.n50 VSS.t6 2.4821
+R78 VSS.n51 VSS.t9 2.4821
+R79 VSS.n52 VSS.t12 2.4821
+R80 VSS.n54 VSS.t18 2.4821
+R81 VSS.n55 VSS.t21 2.4821
+R82 VSS.n56 VSS.t24 2.4821
+R83 VSS.n57 VSS.t27 2.4821
+R84 VSS.n0 VSS.n33 2.09947
+R85 VSS.n0 VSS.n32 2.09947
+R86 VSS.n0 VSS.n31 2.09947
+R87 VSS.n0 VSS.n30 2.09947
+R88 VSS.n62 VSS.n0 2.09947
+R89 VSS.n0 VSS.n29 2.09947
+R90 VSS.n0 VSS.n28 2.09947
+R91 VSS.n0 VSS.n27 2.09947
+R92 VSS.n45 VSS.n22 1.37884
+R93 VSS.n58 VSS.n35 1.52811
+R94 VSS.n47 VSS.n42 1.52811
+R95 VSS.n0 VSS.n10 0.00162059
+R96 VSS.n0 VSS.n4 0.00161544
+R97 VSS.n0 VSS.n6 0.00161544
+R98 VSS.n0 VSS.n2 0.00161544
+R99 VSS.n0 VSS.n13 0.00162059
+R100 VSS.n0 VSS.n15 0.00161544
+R101 VSS.n0 VSS.n9 0.00103465
+R102 VSS.n11 VSS.t0 19.241
+R103 VSS.n0 VSS.n11 0.00102515
+R104 VSS.n24 VSS.t34 0.00573464
+R105 VSS.n58 VSS.n57 0.209825
+R106 VSS.n49 VSS.n47 0.209825
+R107 VSS.t3 VSS.n48 0.201663
+R108 VSS.t6 VSS.n41 0.201663
+R109 VSS.t9 VSS.n40 0.201663
+R110 VSS.t12 VSS.n26 0.201663
+R111 VSS.t18 VSS.n39 0.201663
+R112 VSS.t21 VSS.n38 0.201663
+R113 VSS.t24 VSS.n37 0.201663
+R114 VSS.t27 VSS.n36 0.201663
+R115 VSS.n50 VSS.n49 0.16242
+R116 VSS.n51 VSS.n50 0.16242
+R117 VSS.n52 VSS.n51 0.16242
+R118 VSS.n53 VSS.n52 0.16242
+R119 VSS.n54 VSS.n53 0.16242
+R120 VSS.n55 VSS.n54 0.16242
+R121 VSS.n56 VSS.n55 0.16242
+R122 VSS.n57 VSS.n56 0.16242
+R123 VSS.n36 VSS.t34 0.147554
+R124 VSS.n23 VSS.n48 0.147253
+R125 VSS.n48 VSS.n27 0.0952183
+R126 VSS.n41 VSS.n28 0.0927738
+R127 VSS.n36 VSS.n33 0.0925656
+R128 VSS.n40 VSS.n29 0.0903294
+R129 VSS.n30 VSS.t15 0.0903294
+R130 VSS.n37 VSS.n32 0.0901212
+R131 VSS.n62 VSS.n26 0.0878849
+R132 VSS.n39 VSS.n31 0.0878849
+R133 VSS.n38 VSS.n31 0.0876767
+R134 VSS.n62 VSS.t15 0.0876767
+R135 VSS.n38 VSS.n32 0.0854405
+R136 VSS.n29 VSS.n26 0.0852323
+R137 VSS.n39 VSS.n30 0.0852323
+R138 VSS.n37 VSS.n33 0.082996
+R139 VSS.n40 VSS.n28 0.0827878
+R140 VSS.n41 VSS.n27 0.0803434
+R141 VSS.n53 VSS.t15 0.0394179
+R142 VSS.t31 VSS.n23 0.0824607
+R143 VSS.t31 VSS.n25 0.0133922
+R144 VSS.n61 VSS.n35 0.00798582
+R145 VSS.n35 VSS.n34 0.00798582
+R146 VSS.n43 VSS.n42 0.00798582
+R147 VSS.n46 VSS.n42 0.00798582
+R148 VSS.n60 VSS.n24 0.0965628
+R149 VSS.n61 VSS.n60 0.00756994
+R150 VSS.n59 VSS.n34 0.00756994
+R151 VSS.n44 VSS.n25 0.00756994
+R152 VSS.n44 VSS.n43 0.00756994
+R153 VSS.n46 VSS.n45 0.00756994
+R154 VSS.n22 VSS.n59 1.43593
 C3 vout 0 4.52502f
 C4 vin 0 14.9682f
 C5 VDD 0 3.5945f
