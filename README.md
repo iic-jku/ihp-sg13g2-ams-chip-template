@@ -204,6 +204,7 @@ A designer-oriented description of this chip can be found in [doc/](doc/):
 ├─ 📁 scripts/
 │  ├─ add_logo_fill.sh
 │  ├─ add_rectangle.py
+│  ├─ check_pex_ports.py
 │  └─ lay2img.py
 ├─ 📁 testbenches/
 │  ├─ 📁 cocotb/
@@ -680,6 +681,18 @@ The `EXT_MODE` parameter selects the extraction mode:
 The `.subckt` name in the extracted SPICE file is `<CELL>_pex`: `magic-pex` sets it directly via the `sak-pex.sh` option `-n <CELL>_pex`, while for `klayout-pex` it is automatically renamed from `<CELL>` (kpex).
 
 If a matching Xschem symbol (`schematic/xschem/<CELL>_pex.sym`) exists, the `.subckt` pin order in the extracted SPICE file is automatically reordered with `sak-pin-reorder.py` (installed in the IIC-OSIC-TOOLS container) to match the symbol's pin positions. This ensures the PEX netlist can be used directly with the corresponding Xschem symbol for simulation regardless of the selected `EXT_MODE`.
+
+Both targets finish by running [`scripts/check_pex_ports.py`](scripts/check_pex_ports.py) on the netlist they just wrote. It verifies that every pin of the `.subckt` really reaches the circuit, and fails the target otherwise. Two cases are caught:
+
+- A port that is declared in the `.subckt` line but referenced by no element at all. Whatever is wired to that pin from outside is then left floating.
+- A port whose net was split into `<port>.t<n>` and `<port>.n<n>` fragments by `extresist` (`EXT_MODE=3`), where none of the fragments is connected back to the port. The pin is then dangling even though the fragments themselves are wired up.
+
+Both produce a netlist that ngspice reads without a single warning while the cell behaves completely differently in simulation, so the check is worth the two seconds it costs. It can also be run by hand on any SPICE netlist:
+
+```sh
+python3 scripts/check_pex_ports.py netlist/pex/chip_top_magic_pex_1.spice
+python3 scripts/check_pex_ports.py -v netlist/pex/*.spice     # -v also prints the size of each subcircuit
+```
 
 **KLayout PEX** uses `kpex` with the Magic extraction engine currently (2.5D engine is work in progress):
 
