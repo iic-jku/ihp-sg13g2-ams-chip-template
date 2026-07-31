@@ -50,6 +50,13 @@ WAVEFORM_VIEWER ?= gtkwave
 # Override with: make <target> VERSION=<version>
 VERSION ?= 1.0.0
 
+# PDK Liberty extension, auto-detected per library family (see doc/librelane/gzipped_liberty.md)
+# Override with: make <target> PDK_STDCELL_LIB_EXT=<.lib|.lib.gz> PDK_SRAM_LIB_EXT=<.lib|.lib.gz>
+PDK_LIBS_REF_DIR := $(PDK_ROOT)/$(PDK)/libs.ref
+
+PDK_STDCELL_LIB_EXT ?= $(if $(wildcard $(PDK_LIBS_REF_DIR)/sg13g2_stdcell/lib/*.lib.gz),.lib.gz,.lib)
+PDK_SRAM_LIB_EXT    ?= $(if $(wildcard $(PDK_LIBS_REF_DIR)/sg13g2_sram/lib/*.lib.gz),.lib.gz,.lib)
+
 # Folder structure
 XSCHEM_SCH_DIR  		:= schematic/xschem
 XSCHEM_TB_DIR   		:= testbenches/xschem
@@ -76,10 +83,14 @@ REPORT_DIR      		:= verification/reports
 LIBRELANE_DIR   		:= flow/librelane
 FLOW_FINAL_DIR  		:= flow/final
 
+# Tracked LibreLane config and the generated one that LibreLane is actually run with
+LIBRELANE_CFG     		:= $(LIBRELANE_DIR)/config.yaml
+LIBRELANE_CFG_GEN 		:= $(LIBRELANE_DIR)/config.resolved.yaml
+
 
 # Help Target
 help: ## Show this help message
-	@echo 'Usage: make <target> [CELL=<cellname>] [EXT_MODE=<1|2|3>] [THRESHOLD=<mOhm>] [MINRES=<mOhm>] [MINDELAY=<ps>] [DRC_LEVEL=<precheck|macro|regular>] [EV_PRECISION=<digits>] [WAVEFORM_VIEWER=<gtkwave|surfer>] [VERSION=<version>]'
+	@echo 'Usage: make <target> [CELL=<cellname>] [EXT_MODE=<1|2|3>] [THRESHOLD=<mOhm>] [MINRES=<mOhm>] [MINDELAY=<ps>] [DRC_LEVEL=<precheck|macro|regular>] [EV_PRECISION=<digits>] [WAVEFORM_VIEWER=<gtkwave|surfer>] [VERSION=<version>] [PDK_STDCELL_LIB_EXT=<.lib|.lib.gz>] [PDK_SRAM_LIB_EXT=<.lib|.lib.gz>]'
 	@echo ''
 	@echo 'Available targets:'
 	@grep -E '^[a-zA-Z0-9_.-]+:.*## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*## "}; {printf "  %-20s %s\n", $$1, $$2}'
@@ -93,6 +104,7 @@ help: ## Show this help message
 	@echo 'TB selects the Xschem testbench for sim-gl-xschem (default: <CELL>_tb_tran).'
 	@echo 'SCRIPT selects the plotting script for sim-view-xschem (e.g. plot_chip_top).'
 	@echo 'VERSION defaults to $(VERSION). Used by the release target.'
+	@echo 'PDK_STDCELL_LIB_EXT/PDK_SRAM_LIB_EXT are auto-detected from the installed PDK (currently $(PDK_STDCELL_LIB_EXT) / $(PDK_SRAM_LIB_EXT)). Override to force uncompressed or gzipped Liberty files.'
 .PHONY: help
 # ================================================================================================
 
@@ -152,28 +164,44 @@ sim-all: ## Simulate the chip (RTL/GL cocotb + GL Xschem)
 
 
 # LibreLane Targets
+# Rewrites the PDK Liberty references to the extension that is installed. The generated file must stay next to config.yaml, so that `dir::` paths and runs/ resolve identically.
+# See doc/librelane/gzipped_liberty.md.
+librelane-config: ## Generate the LibreLane config with the PDK Liberty extension that is installed
+	@sed -E \
+		-e 's@(pdk_dir::libs\.ref/sg13g2_stdcell/lib/[^[:space:]"/]*)\.lib(\.gz)?@\1$(PDK_STDCELL_LIB_EXT)@' \
+		-e 's@(pdk_dir::libs\.ref/sg13g2_sram/lib/[^[:space:]"/]*)\.lib(\.gz)?@\1$(PDK_SRAM_LIB_EXT)@' \
+		$(LIBRELANE_CFG) > $(LIBRELANE_CFG_GEN)
+	@echo "Generated $(LIBRELANE_CFG_GEN) (stdcell: *$(PDK_STDCELL_LIB_EXT), SRAM: *$(PDK_SRAM_LIB_EXT))."
+.PHONY: librelane-config
+
 librelane: ## Run LibreLane with Magic and KLayout DRC checks
-	librelane $(LIBRELANE_DIR)/config.yaml --pdk ${PDK} --pdk-root ${PDK_ROOT} --manual-pdk --save-views-to $(FLOW_FINAL_DIR)/
+	$(MAKE) librelane-config
+	librelane $(LIBRELANE_CFG_GEN) --pdk ${PDK} --pdk-root ${PDK_ROOT} --manual-pdk --save-views-to $(FLOW_FINAL_DIR)/
 .PHONY: librelane
 
 librelane-nodrc: ## Run LibreLane without DRC checks
-	librelane $(LIBRELANE_DIR)/config.yaml --pdk ${PDK} --pdk-root ${PDK_ROOT} --manual-pdk --save-views-to $(FLOW_FINAL_DIR)/ --skip KLayout.DRC --skip Magic.DRC --skip KLayout.Antenna --skip KLayout.Density
+	$(MAKE) librelane-config
+	librelane $(LIBRELANE_CFG_GEN) --pdk ${PDK} --pdk-root ${PDK_ROOT} --manual-pdk --save-views-to $(FLOW_FINAL_DIR)/ --skip KLayout.DRC --skip Magic.DRC --skip KLayout.Antenna --skip KLayout.Density
 .PHONY: librelane-nodrc
 
 librelane-magicdrc: ## Run LibreLane with only Magic DRC checks
-	librelane $(LIBRELANE_DIR)/config.yaml --pdk ${PDK} --pdk-root ${PDK_ROOT} --manual-pdk --save-views-to $(FLOW_FINAL_DIR)/ --skip KLayout.DRC
+	$(MAKE) librelane-config
+	librelane $(LIBRELANE_CFG_GEN) --pdk ${PDK} --pdk-root ${PDK_ROOT} --manual-pdk --save-views-to $(FLOW_FINAL_DIR)/ --skip KLayout.DRC
 .PHONY: librelane-magicdrc
 
 librelane-klayoutdrc: ## Run LibreLane with only KLayout DRC checks
-	librelane $(LIBRELANE_DIR)/config.yaml --pdk ${PDK} --pdk-root ${PDK_ROOT} --manual-pdk --save-views-to $(FLOW_FINAL_DIR)/ --skip Magic.DRC
+	$(MAKE) librelane-config
+	librelane $(LIBRELANE_CFG_GEN) --pdk ${PDK} --pdk-root ${PDK_ROOT} --manual-pdk --save-views-to $(FLOW_FINAL_DIR)/ --skip Magic.DRC
 .PHONY: librelane-klayoutdrc
 
 librelane-openroad: ## Open the last LibreLane run in OpenROAD GUI
-	librelane $(LIBRELANE_DIR)/config.yaml --pdk ${PDK} --pdk-root ${PDK_ROOT} --manual-pdk --last-run --flow OpenInOpenROAD
+	$(MAKE) librelane-config
+	librelane $(LIBRELANE_CFG_GEN) --pdk ${PDK} --pdk-root ${PDK_ROOT} --manual-pdk --last-run --flow OpenInOpenROAD
 .PHONY: librelane-openroad
 
 librelane-klayout: ## Open the last LibreLane run in KLayout
-	librelane $(LIBRELANE_DIR)/config.yaml --pdk ${PDK} --pdk-root ${PDK_ROOT} --manual-pdk --last-run --flow OpenInKLayout
+	$(MAKE) librelane-config
+	librelane $(LIBRELANE_CFG_GEN) --pdk ${PDK} --pdk-root ${PDK_ROOT} --manual-pdk --last-run --flow OpenInKLayout
 .PHONY: librelane-klayout
 # ================================================================================================
 
