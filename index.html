@@ -947,8 +947,8 @@ Figure&nbsp;2: Overview of the Makefile targets that <code>make all</code> resol
 <td>Convert the LibreLane-extracted SPICE netlist into an XSPICE model for Xschem.</td>
 </tr>
 <tr class="odd">
-<td><code>make sim-gl-xschem [TB=&lt;tb&gt;]</code> / <code>sim-view-xschem SCRIPT=&lt;script&gt;</code></td>
-<td>Run the mixed-signal XSPICE simulation in Xschem (batch mode with ngspice) and plot the results.</td>
+<td><code>make sim-gl-xschem</code> / <code>sim-view-xschem</code></td>
+<td>Run the mixed-signal XSPICE simulation in Xschem (batch mode) and plot the results.</td>
 </tr>
 <tr class="even">
 <td><code>make build-fpga</code></td>
@@ -2708,6 +2708,7 @@ Figure&nbsp;26: Xschem top-level mixed-signal testbench <code>chip_top_tb_tran</
 <p>Again, the simulation and plotting can be run non-interactive from the command line with the following targets.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb38"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> sim-gl-xschem</span>
 <span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> sim-view-xschem SCRIPT=plot_chip_top</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><code>sim-gl-xschem</code> runs in batch mode: it netlists the testbench with <code>xschem netlist</code> and then calls <code>ngspice -b</code> directly, so <code>make</code> blocks until the run finishes and sees its exit status. The testbench is selected with <code>TB=&lt;testbench_name&gt;</code> (default: <code>&lt;CELL&gt;_tb_tran</code>). Since the run is headless, the <code>plot</code> commands in the testbench’s <code>.control</code> block are a no-op. The testbench exports its results with <code>wrdata</code> to <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/testbenches/xschem/plot_simulations/data"><code>testbenches/xschem/plot_simulations/data/</code></a>, from where <code>sim-view-xschem</code> plots them with Matplotlib.</p>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
