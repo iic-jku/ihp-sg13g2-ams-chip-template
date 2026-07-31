@@ -3,7 +3,7 @@
 // Description: Shared constants for the counter macro.
 //
 // Implemented as `define macros (not a SystemVerilog package) for Yosys 0.64
-// compatibility — its Verilog frontend cannot parse `import pkg::*;` in a
+// compatibility, since its Verilog frontend cannot parse `import pkg::*;` in a
 // module header. Compile constants.sv before any module that references the
 // macros (the Makefiles list it first in MODULES_SIM/MODULES_SYNTH).
 

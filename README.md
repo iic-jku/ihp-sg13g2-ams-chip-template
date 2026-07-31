@@ -187,8 +187,7 @@ A designer-oriented description of this chip can be found in [doc/](doc/):
 │  └─ 📁 v.1.0.0/
 │     ├─ 📁 gds/
 │     ├─ 📁 img/
-│     ├─ 📁 netlist/
-│     └─ README.md
+│     └─ 📁 netlist/
 ├─ 📁 render/
 │  ├─ 📁 blender/
 │  └─ 📁 img/
@@ -465,7 +464,7 @@ This creates `render/img/chip_top_librelane.png`. This only works if the latest 
 
 ### Render Top Layout
 
-Renders the top-level GDS from `layout/` and saves it in the `render/img/` folder:
+Renders the top-level GDS from `layout/` with `scripts/lay2img.py` and saves the two images `chip_top_black.png` and `chip_top_white.png` in the `render/img/` folder:
 
 ```sh
 make render-gds
@@ -677,9 +676,9 @@ The `EXT_MODE` parameter selects the extraction mode:
 > [!NOTE]
 > For `klayout-pex`, `EXT_MODE=1` (C-decoupled) is not yet supported by kpex and automatically falls back to `EXT_MODE=2` (CC) with a warning.
 
-The `.subckt` name in the extracted SPICE file is `<CELL>_pex`: `magic-pex` sets it directly via the `sak-pex.sh` option `-n <CELL>_pex`, while for `klayout-pex` it is automatically renamed from `<CELL>_flat` (kpex).
+The `.subckt` name in the extracted SPICE file is `<CELL>_pex`: `magic-pex` sets it directly via the `sak-pex.sh` option `-n <CELL>_pex`, while for `klayout-pex` it is automatically renamed from `<CELL>` (kpex).
 
-If a matching Xschem symbol (`schematic/<CELL>_pex.sym`) exists, the `.subckt` pin order in the extracted SPICE file is automatically reordered with `sak-pin-reorder.py` (installed in the IIC-OSIC-TOOLS container) to match the symbol's pin positions. This ensures the PEX netlist can be used directly with the corresponding Xschem symbol for simulation regardless of the selected `EXT_MODE`.
+If a matching Xschem symbol (`schematic/xschem/<CELL>_pex.sym`) exists, the `.subckt` pin order in the extracted SPICE file is automatically reordered with `sak-pin-reorder.py` (installed in the IIC-OSIC-TOOLS container) to match the symbol's pin positions. This ensures the PEX netlist can be used directly with the corresponding Xschem symbol for simulation regardless of the selected `EXT_MODE`.
 
 **KLayout PEX** uses `kpex` with the Magic extraction engine currently (2.5D engine is work in progress):
 
@@ -843,7 +842,7 @@ The following tools and flows are checked:
 | yosys + nextpnr-ice40 + icepack (FPGA) | counter `build-fpga` |
 | LibreLane (OpenROAD / yosys / KLayout streamout / Netgen LVS) | counter `librelane-magicdrc`, chip `librelane-nodrc` |
 | Magic DRC (sign-off, run inside LibreLane) | counter `librelane-magicdrc` |
-| `vlog2Verilog` / `vlog2Spice` / `spi2xspice` | counter `generate-xspice` |
+| `spi2xspice.py` + `sak-pin-reorder.py` (XSPICE model) | counter `generate-xspice` |
 | Xschem gate-level | counter `sim-gl-xschem` |
 
 

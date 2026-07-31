@@ -152,7 +152,7 @@ async def test_reset_clears_counters(dut):
 
     # Drive enable high so the bidir pads switch to output mode and the chip
     # drives counter1_value[7:4] onto bidir_PAD. `bidir_oe[i]` is wired to
-    # `input_in[0]` combinationally, so this happens without a clock edge —
+    # `input_in[0]` combinationally, so this happens without a clock edge,
     # which is important here: stepping a rising edge with enable=1 would
     # increment the counter, defeating the purpose of this test.
     dut.input_PAD.value = 1
@@ -259,7 +259,7 @@ async def test_sram_path_alive(dut):
     """Smoke test: clock the SRAM for a number of cycles and verify the
     sram_out path (output_PAD[16]) doesn't get stuck (it may be X in RTL
     since the SRAM behavioural model returns the uninitialised contents of
-    address 0 — but the path must exist and the simulator must not have
+    address 0, but the path must exist and the simulator must not have
     optimised the signal away)."""
     logger = logging.getLogger("chip_top_tb")
     logger.info("Startup sequence...")
@@ -268,7 +268,7 @@ async def test_sram_path_alive(dut):
     dut.input_PAD.value = 1
     await ClockCycles(dut.clk_PAD, 64)
 
-    # Just touch the signal — convert via binstr so X/Z don't raise.
+    # Just touch the signal: convert via binstr so X/Z don't raise.
     val = dut.output_PAD.value[16]
     logger.info("output_PAD[16] (sram_out) after 64 cycles = %s", val)
     logger.info("Done!")

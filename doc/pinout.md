@@ -72,10 +72,10 @@ The `output_PAD` bit-to-role mapping is fixed inside [chip_core.sv](../rtl/chip_
 | # | Top-level port      | Pad-cell instance         | Type            | Direction | Domain | Role                                            |
 | - | ------------------- | ------------------------- | --------------- | --------- | ------ | ----------------------------------------------- |
 | 1 | `output_PAD[16]`    | `g_outputs[16].output_pad`  | digital         | out       | 1.5 V  | XOR-reduced SRAM `A_DOUT[31:0]` (`sram_0_out`)  |
-| 2 | —                   | `g_vss_pads[0].vss_pad`     | power           | inout     | gnd    | core ground (VSS)                               |
-| 3 | —                   | `g_vdd_pads[0].vdd_pad`     | power           | inout     | 1.5 V  | core supply (VDD)                               |
-| 4 | —                   | `g_iovss_pads[0].iovss_pad` | power           | inout     | gnd    | I/O ground (IOVSS / IOGND)                      |
-| 5 | —                   | `g_iovdd_pads[0].iovdd_pad` | power           | inout     | 3.3 V  | I/O supply (IOVDD)                              |
+| 2 | `VSS`               | `g_vss_pads[0].vss_pad`     | power           | inout     | gnd    | core ground (VSS)                               |
+| 3 | `VDD`               | `g_vdd_pads[0].vdd_pad`     | power           | inout     | 1.5 V  | core supply (VDD)                               |
+| 4 | `IOVSS`             | `g_iovss_pads[0].iovss_pad` | power           | inout     | gnd    | I/O ground (IOVSS / IOGND)                      |
+| 5 | `IOVDD`             | `g_iovdd_pads[0].iovdd_pad` | power           | inout     | 3.3 V  | I/O supply (IOVDD)                              |
 | 6 | `input_PAD[0]`      | `g_inputs[0].input_pad`     | digital         | in        | 1.5 V  | global `enable` (gates counters and bidir mode) |
 | 7 | `rst_n_PAD`         | `rst_n_pad`               | digital         | in        | 1.5 V  | active-low synchronous reset                    |
 | 8 | `clk_PAD`           | `clk_pad`                 | digital         | in        | 1.5 V  | main clock (50 MHz)                             |

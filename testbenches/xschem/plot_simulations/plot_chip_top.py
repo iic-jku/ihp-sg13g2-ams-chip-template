@@ -159,7 +159,7 @@ def main():
     )
 
     # ------------------------------------------------------------------
-    # 5. Plot 4 (analog): INV2 input / output voltages — both channels
+    # 5. Plot 4 (analog): INV2 input / output voltages for both channels
     # ------------------------------------------------------------------
     fig4, (ax1, ax2) = plt.subplots(2, 1, sharex=True, figsize=(12, 6))
     fig4.suptitle("Chip Top — Analog Inverter (INV2)")

@@ -23,7 +23,7 @@ Optional arguments:
 
 At least one of ``gds_output`` or ``lef_output`` must be specified.
 
-Examples (single-line — copy-paste friendly):
+Examples (single-line, copy-paste friendly):
 
     # GDS only (octagon, default metal stack):
     klayout -n sg13g2 -zz -r bondpad.py -rd diameter=70.0 -rd gds_output=gds/bondpad_70x70.gds

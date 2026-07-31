@@ -137,7 +137,7 @@ def main():
     axs[1].plot([f_cu], [phase_cu], **point_kw)
     axs[1].plot([f_T], [phase_T], **point_kw)
 
-    # Phase info box (lower-left corner — empty for an inverting stage
+    # Phase info box (lower-left corner, empty for an inverting stage
     # whose phase starts near 180 deg and falls with frequency)
     phase_text = '\n'.join((
         rf'$\angle A_\mathrm{{ol}}(f_\mathrm{{cu}}) = {phase_cu:.1f}^\circ$',

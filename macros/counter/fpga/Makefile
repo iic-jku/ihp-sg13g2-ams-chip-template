@@ -17,7 +17,7 @@ PCF_FILE    := pico-ice.pcf
 # Variables for linting and synthesis targets
 # constants.sv defines the `COUNTER_MAX_DEFAULT / `CLK_FREQ_DEFAULT macros and must
 # compile before any module that references them, so it is the first entry in MODULES_SYNTH
-# (Yosys 0.64 cannot parse `import pkg::*` in a module header — see rtl/constants.sv).
+# (Yosys 0.64 cannot parse `import pkg::*` in a module header, see rtl/constants.sv).
 MODULES_SYNTH := \
 	$(SRC_DIR)/constants.sv \
 	$(SRC_DIR)/counter.sv \

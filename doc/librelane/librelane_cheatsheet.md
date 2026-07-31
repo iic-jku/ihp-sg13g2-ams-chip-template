@@ -2,7 +2,7 @@
 
 ## LibreLane Final Directory Structure Explanation
 
-The `final` directory in a LibreLane (or OpenLane-based) ASIC design flow contains the "golden" output files produced after the hardening process. These files represent various views of the design—from logical netlists to the final physical layout ready for manufacturing.
+The `final` directory in a LibreLane (or OpenLane-based) ASIC design flow contains the "golden" output files produced after the hardening process. These files represent various views of the design, from logical netlists to the final physical layout ready for manufacturing.
 
 ### 1. Physical Layout
 * **`gds/`**: Contains the **GDSII** (.gds) file. This is the industry-standard binary format for the final integrated circuit layout, used for "tape out" and sent to the foundry for fabrication.
@@ -120,12 +120,12 @@ The technology provides **70 fixed vias** plus **6 `GENERATE` array rules**, acr
 | Metal5 → TopMetal1 | `TopVia1` | 1 (`TopVia1EWNS`) | `viaTop1Array` | symmetric only |
 | TopMetal1 → TopMetal2 | `TopVia2` | 1 (`TopVia2EWNS`) | `viaTop2Array` | symmetric only |
 
-**Naming key** — fixed vias are named `<transition>_<variant>`:
+**Naming key**: fixed vias are named `<transition>_<variant>`:
 
-- `ViaN_XX` / `XY` / `YX` / `YY` — **single-cut**; the two letters are the enclosure orientation of the metal **below** then **above** (`X` = horizontal / east–west, `Y` = vertical / north–south). Pick the one whose two orientations match the wire directions on each side.
-- `ViaN_..._s` and `ViaN_s` — single-cut with a **wider** metal enclosure (`ViaN_s` is a square/symmetric enclosure).
-- `ViaN_DC{1,2}{B,T,L,R}` — **double-cut** (two cuts → ~2× current capacity and cut redundancy). `1`/`2` = above-metal enclosure aligned / perpendicular to the cut pair; `B/T/L/R` = direction the second cut is placed (`B`=+Y, `T`=−Y, `L`=+X, `R`=−X).
-- `TopViaN_EWNS` — symmetric enclosure on all four sides (**E**ast-**W**est-**N**orth-**S**outh), so it is orientation-independent — the only variant needed for the top metals.
+- `ViaN_XX` / `XY` / `YX` / `YY`: **single-cut**; the two letters are the enclosure orientation of the metal **below** then **above** (`X` = horizontal / east–west, `Y` = vertical / north–south). Pick the one whose two orientations match the wire directions on each side.
+- `ViaN_..._s` and `ViaN_s`: single-cut with a **wider** metal enclosure (`ViaN_s` is a square/symmetric enclosure).
+- `ViaN_DC{1,2}{B,T,L,R}`: **double-cut** (two cuts → ~2× current capacity and cut redundancy). `1`/`2` = above-metal enclosure aligned / perpendicular to the cut pair; `B/T/L/R` = direction the second cut is placed (`B`=+Y, `T`=−Y, `L`=+X, `R`=−X).
+- `TopViaN_EWNS`: symmetric enclosure on all four sides (**E**ast-**W**est-**N**orth-**S**outh), so it is orientation-independent and the only variant needed for the top metals.
 
 > **Choosing vias for a wide analog NDR:** prefer the **double-cut** (`DC*`) variants for reliability, and add the single-cut orientations (`XX/XY/YX/YY`) so the router can still place a via in tight spots. The top-metal transitions only have the one `EWNS` via each. If you omit the `via` field entirely, the router falls back to the `GENERATE` array rules and automatically sizes a multi-cut array to the wire width.
 
@@ -145,7 +145,7 @@ The technology provides **70 fixed vias** plus **6 `GENERATE` array rules**, acr
 
 | Cut Layer | Connects | Cut Size | Min Spacing | Resistance | DC Current (per cut) |
 |---|---|---|---|---|---|
-| Cont | GatPoly → Metal1 | 0.16 µm | 0.18 µm | 22 Ω | — |
+| Cont | GatPoly → Metal1 | 0.16 µm | 0.18 µm | 22 Ω | n/a |
 | Via1 | Metal1 → Metal2 | 0.19 µm | 0.22 µm | 20 Ω | 0.4 mA |
 | Via2 | Metal2 → Metal3 | 0.19 µm | 0.22 µm | 20 Ω | 0.4 mA |
 | Via3 | Metal3 → Metal4 | 0.19 µm | 0.22 µm | 20 Ω | 0.4 mA |
@@ -180,7 +180,7 @@ Each via layer (Via1 through Via4) has 9 single-cut variants with different meta
 | `ViaN_YY_s` | Vertical | Vertical (wide) | Wider above-metal enclosure |
 | `ViaN_s` | Symmetric | Symmetric | Equal enclosure in all directions |
 
-Example: `Via1_XY` — Metal1 enclosure extends horizontally, Metal2 enclosure extends vertically. Useful when routing transitions from horizontal Metal1 to vertical Metal2.
+Example: `Via1_XY`. Metal1 enclosure extends horizontally, Metal2 enclosure extends vertically. Useful when routing transitions from horizontal Metal1 to vertical Metal2.
 
 ##### Double-Cut Vias (Via1–Via4)
 
@@ -209,7 +209,7 @@ Double-cut vias contain **two cut rectangles** in a single via instance, providi
 | `ViaN_DC2L` | Horizontal (+X) | Perpendicular | Second cut right of center |
 | `ViaN_DC2R` | Horizontal (−X) | Perpendicular | Second cut left of center |
 
-Example: `Via1_DC1B` — two Via1 cuts arranged vertically (second cut at +Y), Metal2 enclosure tall/narrow (aligned with the vertical arrangement). Provides 0.8 mA DC current capacity.
+Example: `Via1_DC1B`. Two Via1 cuts arranged vertically (second cut at +Y), Metal2 enclosure tall/narrow (aligned with the vertical arrangement). Provides 0.8 mA DC current capacity.
 
 ##### TopVia Fixed Vias
 
@@ -218,7 +218,7 @@ Example: `Via1_DC1B` — two Via1 cuts arranged vertically (second cut at +Y), M
 | `TopVia1EWNS` | Metal5 → TopMetal1 | 0.42 µm | Metal5: 0.31 µm, TopMetal1: 0.75 µm | 4 Ω |
 | `TopVia2EWNS` | TopMetal1 → TopMetal2 | 0.9 µm | TopMetal1: 0.95 µm, TopMetal2: 0.95 µm | 2.2 Ω |
 
-`EWNS` = East-West-North-South — symmetric enclosure in all four directions. These are the only fixed via variants for the top metal transitions because TopMetal1/TopMetal2 have large minimum widths that inherently require symmetric enclosures.
+`EWNS` = East-West-North-South, symmetric enclosure in all four directions. These are the only fixed via variants for the top metal transitions because TopMetal1/TopMetal2 have large minimum widths that inherently require symmetric enclosures.
 
 #### GENERATE Via Rules (Automatic Arrays)
 

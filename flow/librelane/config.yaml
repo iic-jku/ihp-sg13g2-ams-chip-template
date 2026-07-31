@@ -69,7 +69,7 @@ VERILOG_DEFINES: [FUNCTIONAL]
 PRIMARY_GDSII_STREAMOUT_TOOL: klayout
 
 # ================================================================
-# Padframe layout — 8 pads per side, 32 user bondpads in total.
+# Padframe layout: 8 pads per side, 32 user bondpads in total.
 # Order convention:
 #   - PAD_WEST  : bottom to top
 #   - PAD_EAST  : bottom to top
@@ -80,7 +80,7 @@ PRIMARY_GDSII_STREAMOUT_TOOL: klayout
 # See doc/pinout.md for the full pin table.
 # ================================================================
 
-# West (bottom to top): SRAM_out, GND, VDD, IOGND, IOVDD, enable, rst_n, clk
+# West (bottom to top): SRAM_out, VSS, VDD, IOVSS, IOVDD, enable, rst_n, clk
 PAD_WEST: [
     "g_outputs\\[16\\].output_pad",     # output_PAD[16] = sram_0_out
     "g_vss_pads\\[0\\].vss_pad",        # VSS  (core ground)
@@ -297,11 +297,11 @@ MACROS:
       nom_typ_1p20V_25C:   dir::../../macros/counter/final/lib/nom_typ_1p20V_25C/counter_top__nom_typ_1p20V_25C.lib
       nom_typ_1p50V_25C:   dir::../../macros/counter/final/lib/nom_typ_1p50V_25C/counter_top__nom_typ_1p50V_25C.lib
     instances:
-      # counter1 — upper west position (drives output_PAD[3:0] / bidir_PAD[3:0])
+      # counter1: upper position in the mid-right core (drives output_PAD[3:0] / bidir_PAD[3:0])
       i_chip_core.counter1:
         location: ["expr::365 + 70 + 500", "expr::365 + 130 + 500"]
         orientation: N
-      # counter2 — lower west position (drives output_PAD[11:4] = south pads)
+      # counter2: lower position in the mid-right core (drives output_PAD[11:4] = south pads)
       i_chip_core.counter2:
         location: ["expr::365 + 70 + 500", "expr::365 + 130"]
         orientation: FS
@@ -353,11 +353,11 @@ MACROS:
 #     "*":
 #       - dir::../../macros/inverter/final/lib/inverter_top.lib
     instances:
-      # inverter1 — upper east position (digital outputs to east pads)
+      # inverter1: upper east position (digital outputs to east pads)
       i_chip_core.inverter1:
         location: [expr::(0.48 * 2250), expr::(0.42 * 2024)]   # x = 1080.00, y = 850.08
         orientation: N
-      # inverter2 — lower east position (analog channels to east pads)
+      # inverter2: lower east position (analog channels to east pads)
       i_chip_core.inverter2:
         location: [expr::(0.48 * 2250), expr::(0.42 * 1567)]   # x = 1080.00, y = 658.14
         orientation: N

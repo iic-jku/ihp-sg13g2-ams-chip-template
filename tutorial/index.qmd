@@ -200,13 +200,13 @@ Each macro under [`macros/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-temp
 
 The colour scheme groups targets by the final deliverable they produce, so beginners can follow one colour from `make all` to the generated outputs:
 
-- **Orange — top chip / main**: This branch includes `make all` and all targets that contribute to the top-level chip GDS. In the `build-top` chain of the [top-level Makefile](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/Makefile), these are `librelane-nodrc`, `copy-*`, `add-logo-fill`, and `render-gds`.
-- **Yellow — bondpad IP**: This branch includes `build-bondpad` and all targets inside [`ip/sg13g2_ip__bondpad_70x70/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/ip/sg13g2_ip__bondpad_70x70/).
-- **Purple — logos IP**: This branch includes `build-logos` and the two sub-Makefiles under [`ip/sg13g2_ip__jku/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/ip/sg13g2_ip__jku/) and [`ip/sg13g2_ip__jku_names/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/ip/sg13g2_ip__jku_names/).
-- **Blue — digital macro**: This branch includes `build-counter` and the [`macros/counter/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/counter/) Makefile.
-- **Green — analog macro**: This branch includes `build-inverter` and the [`macros/inverter/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/inverter/) Makefile.
-- **Red — packaging**: This branch includes `bondplan` and the automated bondplan flow in [`packaging/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/packaging/) (see @sec-packaging).
-- **Grey — simulation and verification**: This branch includes intermediate targets that feed the coloured deliverables (`sim-all`, `build-all`, `build-macros`, `init-submodules`, `sim-*-cocotb`).
+- **Orange (top chip / main)**: This branch includes `make all` and all targets that contribute to the top-level chip GDS. In the `build-top` chain of the [top-level Makefile](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/Makefile), these are `librelane-nodrc`, `copy-*`, `add-logo-fill`, and `render-gds`.
+- **Yellow (bondpad IP)**: This branch includes `build-bondpad` and all targets inside [`ip/sg13g2_ip__bondpad_70x70/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/ip/sg13g2_ip__bondpad_70x70/).
+- **Purple (logos IP)**: This branch includes `build-logos` and the two sub-Makefiles under [`ip/sg13g2_ip__jku/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/ip/sg13g2_ip__jku/) and [`ip/sg13g2_ip__jku_names/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/ip/sg13g2_ip__jku_names/).
+- **Blue (digital macro)**: This branch includes `build-counter` and the [`macros/counter/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/counter/) Makefile.
+- **Green (analog macro)**: This branch includes `build-inverter` and the [`macros/inverter/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/inverter/) Makefile.
+- **Red (packaging)**: This branch includes `bondplan` and the automated bondplan flow in [`packaging/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/packaging/) (see @sec-packaging).
+- **Grey (simulation and verification)**: This branch includes intermediate targets that feed the coloured deliverables (`sim-all`, `build-all`, `build-macros`, `init-submodules`, `sim-*-cocotb`).
 
 Solid arrows represent direct `$(MAKE) <target>` calls within a single Makefile. Dashed arrows represent calls that descend into a subdirectory: recursive `$(MAKE) -C <dir> all` calls into a sub-Makefile (one per coloured deliverable), or the Python bondplan flow in `packaging/`. The numbers on the second level indicate the execution order of `make all` (build, verify, simulate, package), and the vertical order inside the coloured boxes reflects the execution order of each sub-Makefile's `all` target.
 
@@ -688,7 +688,7 @@ The inverter macro can be verified with two verification flows, either with KLay
 
 ### Design Rule Check
 
-The non-interactive DRC can be run with the following Makefile targets (both use `sak-drc.sh`). The `CELL` variable can be set to run DRC on a specific cell, or it defaults to `inverter_top` if not set. The `DRC_LEVEL` variable selects the KLayout DRC level — `precheck`, `macro` (default), or `regular` — and is ignored by `magic-drc`, since Magic has no selectable rule decks and always runs the full rule set compiled into the PDK's Magic tech file.
+The non-interactive DRC can be run with the following Makefile targets (both use `sak-drc.sh`). The `CELL` variable can be set to run DRC on a specific cell, or it defaults to `inverter_top` if not set. The `DRC_LEVEL` variable selects the KLayout DRC level: `precheck`, `macro` (default), or `regular`. It is ignored by `magic-drc`, since Magic has no selectable rule decks and always runs the full rule set compiled into the PDK's Magic tech file.
 
 | Check | `precheck` | `macro` _(default)_ | `regular` |
 | --- | :---: | :---: | :---: |
@@ -743,9 +743,9 @@ If not set, it defaults to `EXT_MODE=3`.
 
 For full-RC extraction (`EXT_MODE=3`), `magic-pex` also exposes the `sak-pex.sh` `extresist` tuning parameters (ignored in `EXT_MODE=1`/`2`):
 
-- `THRESHOLD` — extresist threshold in mOhm (`-t`, default `10000` = 10 Ohm),
-- `MINRES` — extresist minimum resistance in mOhm (`-r`, default `1000` = 1 Ohm),
-- `MINDELAY` — extresist minimum delay in ps (`-y`, default `1`; `0` = gate by resistance).
+- `THRESHOLD` - extresist threshold in mOhm (`-t`, default `10000` = 10 Ohm),
+- `MINRES` - extresist minimum resistance in mOhm (`-r`, default `1000` = 1 Ohm),
+- `MINDELAY` - extresist minimum delay in ps (`-y`, default `1`; `0` = gate by resistance).
 
 ```sh
 make klayout-pex [CELL=<cellname>] [EXT_MODE=<1|2|3>]   # default CELL=inverter_top, default EXT_MODE=3 (full-RC)
@@ -1205,13 +1205,13 @@ The top-level Xschem testbench converges, but it may take a long time depending 
 
 The following plots show the results of the top-level transient simulation. The first plot shows the analog inverter response, while the other three plots show the digital outputs of the two counters, the digital inverter, and the bidirs.
 
-![Plotted simulation result of `chip_top_tb_tran` — analog inverter 1 response.](fig/chip_top/chip_top_tb_tran_analog_inv_sim.svg){#fig-chip-top-tb-tran-analog-inv-sim width=75%}
+![Plotted simulation result of `chip_top_tb_tran`: analog inverter 1 response.](fig/chip_top/chip_top_tb_tran_analog_inv_sim.svg){#fig-chip-top-tb-tran-analog-inv-sim width=75%}
 
-![Plotted simulation result of `chip_top_tb_tran` — digital inverter 2 outputs.](fig/chip_top/chip_top_tb_tran_digital1_sim.svg){#fig-chip-top-tb-tran-digital1-sim}
+![Plotted simulation result of `chip_top_tb_tran`: digital inverter 2 outputs.](fig/chip_top/chip_top_tb_tran_digital1_sim.svg){#fig-chip-top-tb-tran-digital1-sim}
 
-![Plotted simulation result of `chip_top_tb_tran` — digital counter 2 outputs.](fig/chip_top/chip_top_tb_tran_digital2_sim.svg){#fig-chip-top-tb-tran-digital2-sim}
+![Plotted simulation result of `chip_top_tb_tran`: digital counter 2 outputs.](fig/chip_top/chip_top_tb_tran_digital2_sim.svg){#fig-chip-top-tb-tran-digital2-sim}
 
-![Plotted simulation result of `chip_top_tb_tran` — digital counter 1 / inverter 1 bidirs.](fig/chip_top/chip_top_tb_tran_digital3_sim.svg){#fig-chip-top-tb-tran-digital3-sim}
+![Plotted simulation result of `chip_top_tb_tran`: digital counter 1 / inverter 1 bidirs.](fig/chip_top/chip_top_tb_tran_digital3_sim.svg){#fig-chip-top-tb-tran-digital3-sim}
 
 When the testbench is opened in Xschem, the schematic of `chip_top` can be inspected with the shortcuts **`e`** / **`Ctrl + e`**, and the symbol can be shown with **`i`** / **`Ctrl + i`** as explained in @sec-analog. The schematic and symbol are shown in @fig-chip-top-symbol and @fig-chip-top-schematic, respectively. The schematic shows the connections between the padframe and the core macros, while the symbol shows the pinout of the chip. The SRAM is not included in the schematic, since IHP does not ship a SPICE model or an Xschem symbol for the `RM_IHPSG13_1P_1024x32_c2_bm_bist` macro.
 
@@ -1339,7 +1339,7 @@ The comprehensive simulation, build, and DRC pass for the complete chip is run w
 make all
 ```
 
-This calls `sim-all` (RTL/GL cocotb, GL Xschem when available), then `build-all`, then Magic DRC on both `chip_top` and `chip_top_logo_fill`. To shorten the runtime, the KLayout DRC is currently not included in `make all`. However, depending on the hardware used, `make all` can still take a while.
+This calls `build-all` first, then Magic DRC on both `chip_top` and `chip_top_logo_fill`, then `sim-all` (RTL and gate-level cocotb plus the gate-level Xschem run), and finally `bondplan`. The simulations therefore run on the netlists that this build has just produced. To shorten the runtime, the KLayout DRC is currently not included in `make all`. However, depending on the hardware used, `make all` can still take a while.
 
 ## Releasing for Tapeout
 

@@ -20,7 +20,7 @@ gl       = os.getenv("GL", "0").strip().lower() in ("1", "true", "yes", "on")
 
 hdl_toplevel = "counter_top"
 
-# Defaults sourced from rtl/constants.sv — single source of truth shared with the SV testbench and the DUT.
+# Defaults sourced from rtl/constants.sv, the single source of truth shared with the SV testbench and the DUT.
 _CONSTANTS_SV = Path(__file__).resolve().parent / "../../rtl/constants.sv"
 
 

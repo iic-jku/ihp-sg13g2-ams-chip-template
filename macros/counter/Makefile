@@ -48,7 +48,7 @@ FINAL_DIR      	:= final
 # constants.sv defines the `COUNTER_MAX_DEFAULT / `CLK_FREQ_DEFAULT macros and must
 # compile before any module that references them, so it is the first entry in MODULES_SIM
 # and in both branches of _SIM_SRCS / _LINT_SRCS below (Yosys 0.64 cannot parse
-# `import pkg::*` in a module header — see rtl/constants.sv).
+# `import pkg::*` in a module header, see rtl/constants.sv).
 MODULES_SYNTH := \
 	$(SRC_DIR)/counter.sv \
 	$(SRC_DIR)/counter_top.sv
@@ -288,7 +288,7 @@ build-top: ## Build macro (run LibreLane with KLayout & Magic DRC checks, copy r
 # Lint, Build, Verify and Simulate All Target
 # Order: lint first (fast fail on structural RTL issues), then build (FPGA + LibreLane macro
 # with fresh netlists and XSPICE model; the LibreLane flow verifies with DRC & LVS), then
-# simulate — so the gate-level simulations (sim-gl-cocotb, sim-gl-xschem) run on the netlists
+# simulate, so the gate-level simulations (sim-gl-cocotb, sim-gl-xschem) run on the netlists
 # produced by THIS build, not a previous one.
 all: ## Lint, build, verify and simulate the macro
 	$(MAKE) lint-verilog-all

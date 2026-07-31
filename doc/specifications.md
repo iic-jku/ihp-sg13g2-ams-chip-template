@@ -18,7 +18,7 @@ Related documents:
 | Timing constraints       | [flow/librelane/chip_top.sdc](../flow/librelane/chip_top.sdc)                       |
 | Cocotb testbench         | [testbenches/cocotb/chip_top_tb.py](../testbenches/cocotb/chip_top_tb.py)           |
 | Xschem mixed-signal TB   | [testbenches/xschem/chip_top_tb_tran.sch](../testbenches/xschem/chip_top_tb_tran.sch) |
-| Build automation         | [Makefile](../Makefile) (see `make help`)   
+| Build automation         | [Makefile](../Makefile) (see `make help`)                                           |
 
 ## Overview
 
@@ -30,7 +30,7 @@ Related documents:
 | Clock frequency     | 50 MHz (`CLOCK_PERIOD: 20` ns in [config.yaml](../flow/librelane/config.yaml))                                   |
 | Core supply         | 1.5 V                                                                                                            |
 | I/O supply          | 3.3 V                                                                                                            |
-| Total bondpads      | 32 (8 per side) — see [pinout.md](pinout.md)                                                                     |
+| Total bondpads      | 32 (8 per side), see [pinout.md](pinout.md)                                                                     |
 | Packaging           | QFN-32                                                                                                           |
 | Temperature range   | -40 °C to +125 °C                                                                                                |
 | STA corners         | nom_fast_1p32V_m40C · nom_fast_1p65V_m40C · nom_slow_1p08V_125C · nom_slow_1p35V_125C · nom_typ_1p20V_25C · nom_typ_1p50V_25C |

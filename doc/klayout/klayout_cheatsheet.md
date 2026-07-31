@@ -30,7 +30,7 @@
 2. **File → New Layout**:
     - Choose top cell name
     - Set **Data Base Unit (DBU)** to **0.001 µm** → IMPORTANT for IHP Open-PDK*
-3. **File → Open** a hierarchical layout (`.klay.gds`) — this allows sub-cells / sub-cell trees.
+3. **File → Open** a hierarchical layout (`.klay.gds`), which allows sub-cells / sub-cell trees.
 4. Hide empty layers.
 5. Place instances by selecting and dragging them in.
 
@@ -63,7 +63,7 @@
 
 ---
 
-## Libraries (`.klib` File — Hierarchical Layout Only)
+## Libraries (`.klib` File, Hierarchical Layout Only)
 
 - Add entries in the `.klib` file:
   - Manually directly to the `.klib` file
@@ -118,7 +118,7 @@ Common SG13_dev PCells:
 | `Shift + U` | Redo                                             |
 | `F`         | Zoom full                                        |
 | `R`         | Draw rectangle                                   |
-| `A`         | Align tool — click on dot (middle / corner / edge)    |
+| `A`         | Align tool: click on dot (middle / corner / edge)     |
 | `C`         | Copy object                                      |
 | `M`         | Move quickly (connections & movements: diagonal) |
 | `T`         | Place text                                       |

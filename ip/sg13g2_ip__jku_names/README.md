@@ -32,6 +32,13 @@ A names IP block for [Johannes Kepler University Linz](https://www.jku.at/), ren
 
 ## Usage
 
+The default Make target is `help`, so running `make` prints usage and all available targets with short descriptions.
+
+```bash
+make
+make help
+```
+
 Build everything (clean, generate logo GDS, LEF, Liberty, Verilog stub, run DRC):
 
 ```bash
@@ -61,7 +68,7 @@ The following Makefile variables can be overridden:
 | `PIXEL_SIZE`  | `0.25`   | Pixel size in µm (must be ≥ M5 min width of 0.21 µm to avoid DRC violations)          |
 | `LAYER`       | `Metal5` | Metal layer the logo is drawn on; one of `Metal1`..`Metal5`, `TopMetal1`, `TopMetal2` |
 
-Setting `LAYER` keeps the GDS artwork (`logo` target) and the LEF obstruction (`lef` target) consistent — the Makefile derives both `LAYER_NUM` (e.g. `67/0`) and `LAYER_NAME` (e.g. `Metal5`) from it.
+Setting `LAYER` keeps the GDS artwork (`logo` target) and the LEF obstruction (`lef` target) consistent. The Makefile derives both `LAYER_NUM` (e.g. `67/0`) and `LAYER_NAME` (e.g. `Metal5`) from it.
 
 ```sh
 make all LAYER=TopMetal1

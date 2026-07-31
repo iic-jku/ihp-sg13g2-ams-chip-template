@@ -37,26 +37,26 @@
 │  └─ 📁 vh/
 │     └─ counter_top.vh
 ├─ 📁 flow/
-│  ├─ 📁 final/               # .gitignore'd — important files are copied to counter/final/ (listed here to document LibreLane output folders)
-│  │  ├─ 📁 def/              # Design Exchange Format — cell placement & routing (text-based)
-│  │  ├─ 📁 gds/              # GDSII layout — final tape-out file
-│  │  ├─ 📁 json_h/           # Yosys JSON headers — machine-readable netlist for internal scripts
-│  │  ├─ 📁 klayout_gds/      # KLayout GDS — with extra visual-debug metadata
-│  │  ├─ 📁 lef/              # Library Exchange Format — abstract pin & blockage view for P&R
-│  │  ├─ 📁 lib/              # Liberty timing files — timing, power & area models
-│  │  ├─ 📁 mag/              # Magic layout files — used for DRC & GDS generation
+│  ├─ 📁 final/               # .gitignore'd: important files are copied to counter/final/ (listed here to document LibreLane output folders)
+│  │  ├─ 📁 def/              # Design Exchange Format: cell placement & routing (text-based)
+│  │  ├─ 📁 gds/              # GDSII layout: final tape-out file
+│  │  ├─ 📁 json_h/           # Yosys JSON headers: machine-readable netlist for internal scripts
+│  │  ├─ 📁 klayout_gds/      # KLayout GDS: with extra visual-debug metadata
+│  │  ├─ 📁 lef/              # Library Exchange Format: abstract pin & blockage view for P&R
+│  │  ├─ 📁 lib/              # Liberty timing files: timing, power & area models
+│  │  ├─ 📁 mag/              # Magic layout files: used for DRC & GDS generation
 │  │  ├─ 📁 mag_gds/          # GDS generated/processed by Magic
-│  │  ├─ 📁 nl/               # Netlist — gate-level Verilog after synthesis
-│  │  ├─ 📁 odb/              # OpenDB — internal OpenROAD binary database (LEF+DEF combined)
-│  │  ├─ 📁 pnl/              # Powered Netlist — gate-level Verilog with explicit VDD/VSS (for LVS)
+│  │  ├─ 📁 nl/               # Netlist: gate-level Verilog after synthesis
+│  │  ├─ 📁 odb/              # OpenDB: internal OpenROAD binary database (LEF+DEF combined)
+│  │  ├─ 📁 pnl/              # Powered Netlist: gate-level Verilog with explicit VDD/VSS (for LVS)
 │  │  ├─ 📁 render/           # Layout render images
-│  │  ├─ 📁 sdc/              # Synopsys Design Constraints — clock periods & timing requirements
-│  │  ├─ 📁 sdf/              # Standard Delay Format — timing delays for gate-level simulation
-│  │  ├─ 📁 spef/             # Standard Parasitic Exchange Format — RC parasitics from layout
-│  │  ├─ 📁 spice/            # SPICE netlist — for LVS & transistor-level simulation
-│  │  ├─ 📁 vh/               # Verilog headers — for hierarchy management & simulation inclusion
-│  │  ├─ metrics.csv          # Design metrics (area, power, timing slack, DRC/LVS) — spreadsheet
-│  │  └─ metrics.json         # Design metrics (area, power, timing slack, DRC/LVS) — JSON summary
+│  │  ├─ 📁 sdc/              # Synopsys Design Constraints: clock periods & timing requirements
+│  │  ├─ 📁 sdf/              # Standard Delay Format: timing delays for gate-level simulation
+│  │  ├─ 📁 spef/             # Standard Parasitic Exchange Format: RC parasitics from layout
+│  │  ├─ 📁 spice/            # SPICE netlist: for LVS & transistor-level simulation
+│  │  ├─ 📁 vh/               # Verilog headers: for hierarchy management & simulation inclusion
+│  │  ├─ metrics.csv          # Design metrics (area, power, timing slack, DRC/LVS): spreadsheet
+│  │  └─ metrics.json         # Design metrics (area, power, timing slack, DRC/LVS): JSON summary
 │  ├─ 📁 librelane/
 │  │  ├─ config.yaml
 │  │  ├─ impl.sdc
@@ -372,7 +372,7 @@ This only works if the final render exists in `flow/final/render/`.
 
 ### Render Top Layout
 
-Renders the final GDS from `final/gds/` with `scripts/lay2img.py` and saves it in the `render/img/` folder:
+Renders the final GDS from `final/gds/` with `scripts/lay2img.py` and saves the two images `counter_top_black.png` and `counter_top_white.png` in the `render/img/` folder:
 
 ```sh
 make render-gds
@@ -403,7 +403,7 @@ make -C fpga flash_bitstream # flash via dfu-util
 > [!NOTE]
 > Flashing uses `dfu-util`, not `iceprog`. Both flash iCE40 bitstreams, but they target different interfaces:
 > - **`iceprog`** speaks directly over SPI via an FTDI USB bridge (iCEstick, iCEBreaker, …).
-> - **`dfu-util`** uses the USB DFU standard — the pico-ice's RP2040 co-processor acts as the DFU bootloader and forwards the bitstream to the iCE40 flash. `iceprog` does not work on this board.
+> - **`dfu-util`** uses the USB DFU standard. The pico-ice's RP2040 co-processor acts as the DFU bootloader and forwards the bitstream to the iCE40 flash. `iceprog` does not work on this board.
 
 
 ### Build Top
