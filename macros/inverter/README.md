@@ -101,7 +101,9 @@
 </details>
 
 
-## Show Available Targets
+## Makefile Targets
+
+### Show Available Targets
 
 The default Make target is `help`, so running `make` prints usage and all available targets with short descriptions.
 
@@ -119,7 +121,7 @@ make <target> [CELL=<cellname>] [EXT_MODE=<1|2|3>] [THRESHOLD=<mOhm>] [MINRES=<m
 ```
 
 
-## Layout File Extension Usage
+### Layout File Extension Usage
 
 The Makefile defines a `_GDS_EXT` variable that auto-selects the layout file extension: it prefers `.gds` when available, and falls back to `.klay.gds` otherwise.
 
@@ -137,9 +139,15 @@ The Makefile defines a `_GDS_EXT` variable that auto-selects the layout file ext
   - `render-gds`
 
 
-## Run Xschem Testbench Simulation
+### Run Xschem Testbench Simulation
 
-Runs a single Xschem testbench in batch mode (no display): saves the schematic, exports the netlist to `testbenches/xschem/simulations/`, and runs the simulator. The testbench name **must** be specified via the `TB` variable:
+Runs a single Xschem testbench in batch mode (no display): saves the schematic, exports the netlist to `testbenches/xschem/simulations/`, and runs the simulator.
+
+The target netlists the testbench with `xschem netlist` and then invokes `ngspice -b` directly instead of using `xschem simulate`. `xschem simulate` would spawn an interactive ngspice in a terminal detached from `make`: the target would return immediately, the result would never be checked, and the process (with its X server) would leak. Running the simulator directly makes `make` block until the run finishes and see its exit status.
+
+Because the run is headless, the `plot` commands in a testbench's `.control` block are a no-op and no plot windows appear. Every testbench instead exports its results with `wrdata` to `testbenches/xschem/plot_simulations/data/`, from where they are plotted with `sim-view-xschem`.
+
+The testbench name **must** be specified via the `TB` variable:
 
 ```sh
 make sim-xschem TB=<testbenchname>
@@ -157,29 +165,25 @@ make sim-xschem TB=inverter_top_tb_tran
 All available testbench schematics are located in `testbenches/xschem/`. Generated netlists are written to `testbenches/xschem/simulations/`.
 
 
-## Plot Xschem Simulation Results
+### Plot Xschem Simulation Results
 
-Plots simulation results using the Python script selected by `CELL`:
+Plots simulation results using the Python script selected by `SCRIPT` (given without the `.py` extension):
 
 ```sh
-make sim-view-xschem [CELL=<cellname>]
+make sim-view-xschem SCRIPT=<scriptname>
 ```
 
-The target runs:
-- `python3 scripts/plot_simulations/plot_<CELL>.py`
-
-`CELL` defaults to `inverter_top`, so running without `CELL` uses `plot_inverter_top.py`.
+The target runs `SHOW_PLOTS=1 python3 testbenches/xschem/plot_simulations/<SCRIPT>.py`. Every script writes its figures to `testbenches/xschem/plot_simulations/figures/`. Run through `sim-view-xschem`, the plot windows additionally open when a display is available (i.e. the container's X/VNC session). Headless, only the figures are written.
 
 Examples:
 
 ```sh
-make sim-view-xschem
-make sim-view-xschem CELL=inverter_top
-make sim-view-xschem CELL=inverter
+make sim-view-xschem SCRIPT=plot_inverter_top
+make sim-view-xschem SCRIPT=plot_inverter
 ```
 
 
-## CACE Simulations
+### CACE Simulations
 
 Runs [CACE](https://github.com/fossi-foundation/cace) characterization for the inverter macro using `verification/cace/inverter.yaml`.
 
@@ -203,7 +207,7 @@ Result plots are saved to:
   - `Adc_ol_dB_vs_vdd.png`, `fcu_vs_vdd.png`
 
 
-## Simulate All
+### Simulate All
 
 Runs all simulation steps in sequence:
 - `make sim-xschem TB=inverter_tb_ac_ol`
@@ -224,7 +228,7 @@ make sim-all
 > They are designed for interactive use and must be called manually after the simulation has completed.
 
 
-## Build Top Cell
+### Build Top Cell
 
 Builds the top-level cell deliverables in sequence: LEF export, LIB generation, Verilog stub generation, GDS copy, and layout image rendering:
 
@@ -233,7 +237,7 @@ make build-top
 ```
 
 
-## Export LEF
+### Export LEF
 
 Exports a LEF file (`final/lef/<TOP>.lef`) from the top-level layout GDS in `layout/` using Magic with the `-hide` option:
 
@@ -242,7 +246,7 @@ make lef
 ```
 
 
-## Liberty Timing Library
+### Liberty Timing Library
 
 Generates a Liberty timing library stub (`final/lib/<TOP>.lib`) with default threshold settings for the top-level cell:
 
@@ -251,7 +255,7 @@ make lib
 ```
 
 
-## Verilog Stub
+### Verilog Stub
 
 Generates a Verilog stub (`final/vh/<TOP>.v`) for top-level integration into the LibreLane flow by parsing pins from an extracted PEX netlist in `netlist/pex/`.
 
@@ -273,7 +277,7 @@ make verilog
 ```
 
 
-## Copy GDS
+### Copy GDS
 
 Copies the top-level GDS from `layout/` to `final/gds/`:
 
@@ -282,7 +286,7 @@ make copy-gds
 ```
 
 
-## Render Layout Image
+### Render Layout Image
 
 Renders the top-level layout GDS using `lay2img.py` and saves the image to `render/img/`:
 
@@ -291,7 +295,7 @@ make render-gds
 ```
 
 
-## Design Rule Check (DRC)
+### Design Rule Check (DRC)
 
 Runs DRC on the layout in `layout/`. Both flows use `sak-drc.sh`.
 
@@ -331,7 +335,7 @@ make magic-drc CELL=inverter_top
 ```
 
 
-## Export Schematic Netlist for LVS
+### Export Schematic Netlist for LVS
 
 Exports the schematic netlist for LVS from Xschem and places it in `netlist/schematic/`.
 
@@ -356,7 +360,7 @@ make magic-lvs-netlist EV_PRECISION=5
 ```
 
 
-## Layout Versus Schematic (LVS)
+### Layout Versus Schematic (LVS)
 
 Exports the schematic netlist from Xschem, then runs LVS. Compares the layout in `layout/` against the schematic netlist in `netlist/schematic/`.
 
@@ -379,7 +383,7 @@ make magic-lvs CELL=inverter_top
 ```
 
 
-## Parasitic Extraction (PEX)
+### Parasitic Extraction (PEX)
 
 Runs parasitic extraction on the layout in `layout/`. The extracted SPICE netlist is written to `netlist/pex/`.
 
@@ -428,7 +432,7 @@ make magic-pex CELL=inverter_top EXT_MODE=3 THRESHOLD=5000 MINRES=500 MINDELAY=2
 ```
 
 
-## Verify with KLayout
+### Verify with KLayout
 
 **Verify a single cell** by running DRC, LVS, and PEX in sequence:
 
@@ -444,7 +448,7 @@ make klayout-verify-all
 ```
 
 
-## Verify with Magic
+### Verify with Magic
 
 **Verify a single cell** by running DRC, LVS, and PEX in sequence:
 
@@ -460,7 +464,7 @@ make magic-verify-all
 ```
 
 
-## Verify, Build and Simulate All
+### Verify, Build and Simulate All
 
 Runs the full flow in sequence: KLayout verification, Magic verification, top-level build deliverables, and simulations (`klayout-verify-all`, `magic-verify-all`, `build-top`, `sim-all`):
 

@@ -65,13 +65,15 @@ help: ## Show this help message
 	@echo 'Usage: make <target> [CELL=<cellname>] [EXT_MODE=<1|2|3>] [THRESHOLD=<mOhm>] [MINRES=<mOhm>] [MINDELAY=<ps>] [DRC_LEVEL=<precheck|macro|regular>] [EV_PRECISION=<digits>]'
 	@echo ''
 	@echo 'Available targets:'
-	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "  %-20s %s\n", $$1, $$2}'
+	@grep -E '^[a-zA-Z0-9_.-]+:.*## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*## "}; {printf "  %-20s %s\n", $$1, $$2}'
 	@echo ''
 	@echo 'CELL defaults to $(TOP). Override to verify subcells.'
 	@echo 'EXT_MODE defaults to 3 (full-RC). 1=C-decoupled, 2=C-coupled.'
 	@echo 'THRESHOLD/MINRES/MINDELAY are full-RC (EXT_MODE=3) extresist settings for magic-pex (defaults 10000 mOhm / 1000 mOhm / 1 ps).'
 	@echo 'DRC_LEVEL defaults to macro. Sets the KLayout DRC level for klayout-drc (precheck|macro|regular).'
 	@echo 'EV_PRECISION defaults to 5 significant digits for xschem ev function.'
+	@echo 'TB selects the Xschem testbench for sim-xschem (e.g. inverter_tb_tran).'
+	@echo 'SCRIPT selects the plotting script for sim-view-xschem (e.g. plot_inverter_top).'
 .PHONY: help
 # ================================================================================================
 
@@ -79,18 +81,21 @@ help: ## Show this help message
 # Simulation Targets
 # Testbench name for sim-xschem target (required: make sim-xschem TB=<testbenchname>)
 TB ?= $(error TB is not set. Usage: make sim-xschem TB=<testbenchname>)
+SCRIPT ?= $(error SCRIPT is not set. Usage: make sim-view-xschem SCRIPT=<scriptname>)
 
-sim-xschem: ## Run TB simulation with Xschem (usage: make sim-xschem TB=<testbenchname>)
-	cd $(XSCHEM_TB_DIR) && xschem -x -q --rcfile xschemrc --command ' \
+sim-xschem: ## Run TB simulation with Xschem in batch mode (usage: make sim-xschem TB=<testbenchname>)
+	mkdir -p $(XSCHEM_TB_DIR)/simulations
+	cd $(XSCHEM_TB_DIR) && xschem -r -x -q --rcfile xschemrc --command ' \
+		xschem set netlist_type spice; \
 		set netlist_dir $(abspath $(XSCHEM_TB_DIR)/simulations); \
 		xschem save; \
-		xschem netlist; \
-		xschem simulate \
+		xschem netlist \
 	' $(TB).sch
+	cd $(XSCHEM_TB_DIR)/simulations && ngspice -b $(TB).spice
 .PHONY: sim-xschem
 
-sim-view-xschem: ## Plot Xschem simulation results (usage: make sim-view-xschem CELL=<cellname>)
-	python3 $(SIM_PLOT_DIR)/plot_$(CELL).py
+sim-view-xschem: ## Plot Xschem simulation results (usage: make sim-view-xschem SCRIPT=<scriptname>)
+	SHOW_PLOTS=1 python3 $(SIM_PLOT_DIR)/$(SCRIPT).py
 .PHONY: sim-view-xschem
 
 sim-cace: ## Run CACE simulations and collect result plots
@@ -120,8 +125,6 @@ sim-all: ## Simulate the macro
 	$(MAKE) sim-xschem TB=inverter_tb_tran
 	$(MAKE) sim-xschem TB=inverter_tb_dc_vout
 	$(MAKE) sim-xschem TB=inverter_top_tb_tran
-#	$(MAKE) sim-view-xschem CELL=inverter
-#	$(MAKE) sim-view-xschem CELL=inverter_top
 	$(MAKE) sim-cace
 .PHONY: sim-all
 # ================================================================================================
@@ -345,7 +348,7 @@ klayout-verify: ## Verify CELL cell with KLayout (usage: make klayout-verify [CE
 .PHONY: klayout-verify
 
 klayout-verify-all: ## Verify all main subcells with KLayout (DRC, LVS, PEX)
-#	$(MAKE) klayout-verify CELL=inverter
+	$(MAKE) klayout-verify CELL=inverter
 	$(MAKE) klayout-verify CELL=inverter_top
 .PHONY: klayout-verify-all
 
@@ -369,3 +372,4 @@ all: ## Verify, build and simulate the TOP cell
 	$(MAKE) build-top
 	$(MAKE) sim-all
 .PHONY: all
+# ================================================================================================

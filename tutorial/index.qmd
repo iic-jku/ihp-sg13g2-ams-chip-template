@@ -521,6 +521,8 @@ make sim-view-xschem SCRIPT=plot_inverter      # plot results of inverter with P
 make sim-view-xschem SCRIPT=plot_inverter_top  # plot results of inverter_top with Python
 ```
 
+`sim-xschem` runs in batch mode: it netlists the testbench with `xschem netlist` and then calls `ngspice -b` directly, so `make` blocks until the run finishes and sees its exit status. The testbench is selected with `TB=<testbench_name>`. Since the run is headless, the `plot` commands in the testbench's `.control` block are a no-op. Every testbench exports its results with `wrdata` to [`testbenches/xschem/plot_simulations/data/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/inverter/testbenches/xschem/plot_simulations/data) instead.
+
 The Makefile target `sim-view-xschem` calls the Python plotters in [`testbenches/xschem/plot_simulations/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/inverter/testbenches/xschem/plot_simulations), selected with the `SCRIPT` variable, to parse the raw simulation output and plot the results with Matplotlib. The following figures show some of these plotted results.
 
 ![Plotted simulation result of `inverter_tb_ac_ol`.](fig/inverter_top/inverter_tb_ac_ol_sim.svg){#fig-inverter-tb-ac-ol-sim width=90%}
