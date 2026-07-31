@@ -169,6 +169,7 @@ A designer-oriented description of this chip can be found in [doc/](doc/):
 │  ├─ 📁 nl/
 │  ├─ 📁 pex/
 │  ├─ 📁 pnl/
+│  ├─ 📁 schematic/
 │  └─ 📁 spice/
 ├─ 📁 packaging/
 │  ├─ 📁 layout/
@@ -770,9 +771,16 @@ Copies the final top-level GDS with logo and fill structures from `layout/` to `
 
 The following netlist folders are exported:
 
+- `netlist/schematic` -> `release/v.<VERSION>/netlist/schematic`
 - `netlist/layout` -> `release/v.<VERSION>/netlist/layout`
 - `netlist/pnl` -> `release/v.<VERSION>/netlist/pnl`
 - `netlist/spice` -> `release/v.<VERSION>/netlist/spice`
+
+> [!NOTE]
+> `netlist/pex` is **not** copied by the `release` target. It holds the Magic-extracted top-level netlist (`chip_top_magic_pex_1.spice`, ~73 MB and ~566k lines even in the C-decoupled `EXT_MODE=1`). Since `release/` is committed to the repository, copying it would add those ~73 MB to every released version. The netlist stays available in `netlist/pex/`.
+
+> [!NOTE]
+> `netlist/schematic` and `netlist/layout` still hold a `TBD.txt` placeholder only. The schematic netlist is written by `klayout-lvs-netlist` / `magic-lvs-netlist` and the extracted layout netlist by `klayout-lvs` / `magic-lvs`, and the top-level LVS is not finished yet. Both folders fill up once it runs through.
 
 The following chip renders are exported:
 
@@ -784,12 +792,6 @@ The bonding diagram is exported as well (see `make bondplan`):
 
 - `packaging/render/chip_top_bondplan_black.png` -> `release/v.<VERSION>/img/chip_top_bondplan_black.png`
 - `packaging/render/chip_top_bondplan_white.png` -> `release/v.<VERSION>/img/chip_top_bondplan_white.png`
-
-> [!NOTE]
-> `netlist/schematic` and `netlist/pex` are currently **not** copied by the `release` target:
->
-> - `netlist/pex` holds the Magic-extracted top-level netlist (`chip_top_magic_pex_1.spice`, ~73 MB and ~566k lines even in the C-decoupled `EXT_MODE=1`). Since `release/` is committed to the repository, copying it would add those ~73 MB to every released version. The netlist stays available in `netlist/pex/`.
-> - `netlist/schematic` is still empty because it is written by `klayout-lvs-netlist` / `magic-lvs-netlist`, and the top-level LVS is not finished yet. The schematic netlist will be added to the release once the top-level LVS runs through.
 
 Run with default version (`1.0.0`):
 
