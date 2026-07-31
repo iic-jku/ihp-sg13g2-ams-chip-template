@@ -1708,7 +1708,7 @@ Tip
 <p>The full sizing flow for the inverter is implemented in the Jupyter notebook <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/inverter/scripts/sizing/sizing_inverter.ipynb"><code>scripts/sizing/sizing_inverter.ipynb</code></a>. The notebook uses <a href="https://github.com/dreoilin/pygmid"><code>pygmid</code></a> to query the pre-characterised ihp-sg13g2 NMOS/PMOS lookup tables (<a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/inverter/scripts/sizing/data/sg13g2_lv_nmos.mat"><code>sg13g2_lv_nmos.mat</code></a> and <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/inverter/scripts/sizing/data/sg13g2_lv_pmos.mat"><code>sg13g2_lv_pmos.mat</code></a>). An overview of the <span class="math inline">\(g_\mathrm{m}/I_\mathrm{D}\)</span> MOSFET characterization procedure can be found <a href="https://iic-jku.github.io/analog-circuit-design/aicd.html#sec-techsweep-testbench">here</a>.</p>
 <p>The Jupyter notebook <code>sizing_inverter.ipynb</code> runs through the following steps:</p>
 <ol type="1">
-<li>Define the design targets: <span class="math inline">\(V_\mathrm{DD} = 1.5\,\mathrm{V}\)</span>, <span class="math inline">\(V_\mathrm{cm,in} = V_\mathrm{cm,out} = V_\mathrm{DD}/2 = 0.75\,\mathrm{V}\)</span>, <span class="math inline">\(I_\mathrm{out} = 0.75\,\mathrm{mA}\)</span>, <span class="math inline">\(C_\mathrm{load} = 10\,\mathrm{pF}\)</span> and <span class="math inline">\(L = 1\,\mathrm{\upmu m}\)</span>. <span class="math inline">\(L\)</span> is chosen longer than the minimum to increase intrinsic gain and reduce mismatch, but at the cost of increased area and reduced bandwidth.</li>
+<li>Define the design targets: <span class="math inline">\(V_\mathrm{DD} = 1.5\,\mathrm{V}\)</span>, <span class="math inline">\(V_\mathrm{cm,in} = V_\mathrm{cm,out} = V_\mathrm{DD}/2 = 0.75\,\mathrm{V}\)</span>, <span class="math inline">\(I_\mathrm{out} = 0.75\,\mathrm{mA}\)</span>, <span class="math inline">\(C_\mathrm{load} = 10\,\mathrm{pF}\)</span> and <span class="math inline">\(L = 1\,\mathrm{\mu m}\)</span>. <span class="math inline">\(L\)</span> is chosen longer than the minimum to increase intrinsic gain and reduce mismatch, but at the cost of increased area and reduced bandwidth.</li>
 <li>Look up <span class="math inline">\(g_\mathrm{m}/I_\mathrm{D}\)</span>, <span class="math inline">\(g_\mathrm{m}/g_\mathrm{ds}\)</span>, <span class="math inline">\(g_\mathrm{m}/C_\mathrm{gg}\)</span> and <span class="math inline">\(I_\mathrm{D}/W\)</span> based on <span class="math inline">\(L\)</span> and the operating-point voltages.</li>
 <li>Compute the required widths <span class="math inline">\(W = I_\mathrm{D} / (I_\mathrm{D}/W)\)</span> for NMOS and PMOS, and derive the resulting <span class="math inline">\(W_\mathrm{PMOS}/W_\mathrm{NMOS}\)</span> ratio.</li>
 <li>Round the continuous widths to a practical finger configuration with equal finger counts for NMOS and PMOS (for better layout matching) and recompute the small-signal parameters with the final widths.</li>
@@ -1732,10 +1732,10 @@ Table&nbsp;1: Sized device geometry of the complementary inverter.
 <thead>
 <tr class="header">
 <th style="text-align: left;">Device</th>
-<th style="text-align: center;"><span class="math inline">\(L\)</span> (<span class="math inline">\(\mathrm{\upmu m}\)</span>)</th>
+<th style="text-align: center;"><span class="math inline">\(L\)</span> (<span class="math inline">\(\mathrm{\mu m}\)</span>)</th>
 <th style="text-align: center;">Fingers (<span class="math inline">\(\mathrm{NF}\)</span>)</th>
-<th style="text-align: center;"><span class="math inline">\(W\)</span> / Finger (<span class="math inline">\(\mathrm{\upmu m}\)</span>)</th>
-<th style="text-align: center;">Total <span class="math inline">\(W\)</span> (<span class="math inline">\(\mathrm{\upmu m}\)</span>)</th>
+<th style="text-align: center;"><span class="math inline">\(W\)</span> / Finger (<span class="math inline">\(\mathrm{\mu m}\)</span>)</th>
+<th style="text-align: center;">Total <span class="math inline">\(W\)</span> (<span class="math inline">\(\mathrm{\mu m}\)</span>)</th>
 </tr>
 </thead>
 <tbody>
@@ -1806,7 +1806,7 @@ Table&nbsp;2: Calculated small-signal parameters with final widths.
 <td style="text-align: center;">–</td>
 </tr>
 <tr class="odd">
-<td style="text-align: left;">Output conductance <span class="math inline">\(g_\mathrm{ds}\)</span> (<span class="math inline">\(\mathrm{\upmu S}\)</span>)</td>
+<td style="text-align: left;">Output conductance <span class="math inline">\(g_\mathrm{ds}\)</span> (<span class="math inline">\(\mathrm{\mu S}\)</span>)</td>
 <td style="text-align: center;">116</td>
 <td style="text-align: center;">29</td>
 <td style="text-align: center;">–</td>
@@ -1842,7 +1842,7 @@ Table&nbsp;2: Calculated small-signal parameters with final widths.
 <td style="text-align: center;">6.28</td>
 </tr>
 <tr class="odd">
-<td style="text-align: left;"><span class="math inline">\(g_\mathrm{ds,tot} = g_\mathrm{ds,NMOS} + g_\mathrm{ds,PMOS}\)</span> (<span class="math inline">\(\mathrm{\upmu S}\)</span>)</td>
+<td style="text-align: left;"><span class="math inline">\(g_\mathrm{ds,tot} = g_\mathrm{ds,NMOS} + g_\mathrm{ds,PMOS}\)</span> (<span class="math inline">\(\mathrm{\mu S}\)</span>)</td>
 <td style="text-align: center;">–</td>
 <td style="text-align: center;">–</td>
 <td style="text-align: center;">145</td>
@@ -1854,10 +1854,10 @@ Table&nbsp;2: Calculated small-signal parameters with final widths.
 </div>
 <p>From these values, the open-loop dc gain <span class="math inline">\(A_\mathrm{ol}\)</span>, the output resistance <span class="math inline">\(R_\mathrm{out}\)</span>, the open-loop cut-off frequency <span class="math inline">\(f_\mathrm{cu}\)</span>, and the unity-gain frequency <span class="math inline">\(f_\mathrm{T}\)</span> with a dominant capacitive load <span class="math inline">\(C_\mathrm{load} = 10\,\mathrm{pF}\)</span> can be estimated as</p>
 <p><span class="math display">\[
-|A_\mathrm{ol}| = \frac{g_\mathrm{m,tot}}{g_\mathrm{ds,tot}} = \frac{6.28\,\mathrm{mS}}{145\,\mathrm{\upmu S}} = 43.2 = 32.72\,\mathrm{dB},
+|A_\mathrm{ol}| = \frac{g_\mathrm{m,tot}}{g_\mathrm{ds,tot}} = \frac{6.28\,\mathrm{mS}}{145\,\mathrm{\mu S}} = 43.2 = 32.72\,\mathrm{dB},
 \]</span></p>
 <p><span class="math display">\[
-R_\mathrm{out} = \frac{1}{g_\mathrm{ds,tot}} = \frac{1}{145\,\mathrm{\upmu S}} = 6.89\,\mathrm{k\Omega},
+R_\mathrm{out} = \frac{1}{g_\mathrm{ds,tot}} = \frac{1}{145\,\mathrm{\mu S}} = 6.89\,\mathrm{k\Omega},
 \]</span></p>
 <p><span class="math display">\[
 f_\mathrm{cu} = \frac{1}{2\pi\,R_\mathrm{out}\,C_\mathrm{load}} = \frac{1}{2\pi \cdot 6.89\,\mathrm{k\Omega} \cdot 10\,\mathrm{pF}} = 2.31\,\mathrm{MHz},
@@ -1916,7 +1916,7 @@ Tip
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>The notebook is fully parametric. Changing <span class="math inline">\(L\)</span>, the target <span class="math inline">\(g_\mathrm{m}/I_\mathrm{D}\)</span> or <span class="math inline">\(I_\mathrm{out}\)</span> and re-running the cells immediately produces a new sizing point, so it can be used as a starting template for sizing other simple analog blocks with the ihp-sg13g2 lookup tables. Try it out yourself by decreasing the transistor length to <span class="math inline">\(L = 0.5\,\mathrm{\upmu m}\)</span> and see how the small-signal parameters and the resulting open-loop gain and cut-off frequency change. What would you expect based on the tradeoffs above?</p>
+<p>The notebook is fully parametric. Changing <span class="math inline">\(L\)</span>, the target <span class="math inline">\(g_\mathrm{m}/I_\mathrm{D}\)</span> or <span class="math inline">\(I_\mathrm{out}\)</span> and re-running the cells immediately produces a new sizing point, so it can be used as a starting template for sizing other simple analog blocks with the ihp-sg13g2 lookup tables. Try it out yourself by decreasing the transistor length to <span class="math inline">\(L = 0.5\,\mathrm{\mu m}\)</span> and see how the small-signal parameters and the resulting open-loop gain and cut-off frequency change. What would you expect based on the tradeoffs above?</p>
 </div>
 </div>
 </section>
