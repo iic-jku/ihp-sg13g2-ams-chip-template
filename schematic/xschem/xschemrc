@@ -46,3 +46,6 @@ append_xschem_library_path_unique [file join [file dirname [info script]] ../../
 # Source project xschemrc
 source [file dirname [info script]]/../../macros/inverter/schematic/xschem/xschemrc
 source [file dirname [info script]]/../../macros/counter/schematic/xschem/xschemrc
+
+# Pin all simulation output of the chip level to the top testbenches folder, overriding the macro pins the sourced xschemrc files just set
+set netlist_dir [file normalize [file join [file dirname [info script]] ../../testbenches/xschem/simulations]]

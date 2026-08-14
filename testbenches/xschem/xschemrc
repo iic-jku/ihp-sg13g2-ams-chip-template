@@ -22,3 +22,6 @@ if {![info exists PDK]} {
 
 # Source top-level schematic xschemrc to pull in canonical library paths and macro libraries.
 source [file normalize [file join [file dirname [info script]] ../../schematic/xschem/xschemrc]]
+
+# Pin all simulation output of the chip level to this folder, overriding the macro pins pulled in through the sourced xschemrc files
+set netlist_dir [file normalize [file join [file dirname [info script]] simulations]]
