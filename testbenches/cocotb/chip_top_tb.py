@@ -57,8 +57,8 @@ gl       = os.getenv("GL", "0").strip().lower() in ("1", "true", "yes", "on")
 
 hdl_toplevel = "chip_top"
 
-# Main clock frequency. Matches CLOCK_PERIOD = 17 ns in flow/librelane/config.yaml.
-CPU_CLK_FREQ_MHZ = 56
+# Main clock frequency. Matches CLOCK_PERIOD = 20 ns in flow/librelane/config.yaml.
+CPU_CLK_FREQ_MHZ = 50
 
 # Counter wraps from 255 -> 0 (8-bit, default CTR_MAX).
 CTR_MAX = 255
