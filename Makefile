@@ -235,9 +235,10 @@ copy-render: ## Copy chip render from the last LibreLane run (no logo & fillers)
 
 
 # Render Target
-render-gds: ## Render an image from the final GDS (with logo and filler) using lay2img.py
+render-gds: ## Render images from the final GDS (with logo and filler) using sak-render.py
 	mkdir -p $(RENDER_IMG_DIR)/
-	python3 $(SCRIPTS_DIR)/lay2img.py $(LAY_DIR)/$(TOP)_logo_fill.gds.gz $(RENDER_IMG_DIR)/$(TOP).png --width 2048 --oversampling 4
+	sak-render.py -t ihp-sg13g2 -w 2048 -s 4 -o $(RENDER_IMG_DIR)/$(TOP) $(LAY_DIR)/$(TOP)_logo_fill.gds.gz
+	sak-render.py -t ihp-sg13g2 -w 2048 -s 4 -b black -l tm2,tv2,TopMetal2.filler,passiv -o $(RENDER_IMG_DIR)/$(TOP)_black_TM2 $(LAY_DIR)/$(TOP)_logo_fill.gds.gz
 .PHONY: render-gds
 # ================================================================================================
 
