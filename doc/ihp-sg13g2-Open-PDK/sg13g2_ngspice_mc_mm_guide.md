@@ -99,14 +99,16 @@ flowchart LR
     MODMM --> PARM
 ```
 
-The same shape repeats for the other families:
+The same shape repeats for every family:
 
-| Section flavor | RES | CAP | HBT | MOS HV |
-|---|---|---|---|---|
-| plain corner | `resistors_mod.lib` | `capacitors_mod.lib` | `sg13g2_hbt_mod.lib` | `sg13g2_moshv_mod.lib` + `sg13g2_svaricaphv_mod.lib` |
-| `*_mismatch` | `resistors_mod_mismatch.lib` | `capacitors_mod_mismatch.lib` | `sg13g2_hbt_mod_mismatch.lib` | `sg13g2_moshv_mismatch.lib` + `sg13g2_moshv_mod_mismatch.lib` + `sg13g2_svaricaphv_mod_mismatch.lib` |
-| `*_stat` | `resistors_stat.lib` + `resistors_mod.lib` | `capacitors_stat.lib` + `capacitors_mod.lib` | `sg13g2_hbt_stat.lib` + `sg13g2_hbt_mod.lib` | `sg13g2_moshv_stat.lib` + `sg13g2_moshv_mod.lib` + `sg13g2_svaricaphv_mod.lib` |
-| `res_stat_mismatch` | `resistors_stat.lib` + `resistors_mod_mismatch.lib` | not available | not available | not available |
+| Section flavor | MOS LV | MOS HV | RES | CAP | HBT |
+|---|---|---|---|---|---|
+| plain corner | `sg13g2_moslv_mod.lib` | `sg13g2_moshv_mod.lib` + `sg13g2_svaricaphv_mod.lib` | `resistors_mod.lib` | `capacitors_mod.lib` | `sg13g2_hbt_mod.lib` |
+| `*_mismatch` | `sg13g2_moslv_mismatch.lib` + `sg13g2_moslv_mod_mismatch.lib` | `sg13g2_moshv_mismatch.lib` + `sg13g2_moshv_mod_mismatch.lib` + `sg13g2_svaricaphv_mod_mismatch.lib` | `resistors_mod_mismatch.lib` | `capacitors_mod_mismatch.lib` | `sg13g2_hbt_mod_mismatch.lib` |
+| `*_stat` | `sg13g2_moslv_stat.lib` + `sg13g2_moslv_mod.lib` | `sg13g2_moshv_stat.lib` + `sg13g2_moshv_mod.lib` + `sg13g2_svaricaphv_mod.lib` | `resistors_stat.lib` + `resistors_mod.lib` | `capacitors_stat.lib` + `capacitors_mod.lib` | `sg13g2_hbt_stat.lib` + `sg13g2_hbt_mod.lib` |
+| `res_stat_mismatch` | not available | not available | `resistors_stat.lib` + `resistors_mod_mismatch.lib` | not available | not available |
+
+The MOS columns additionally pull in their `*_parm.lib` PSP model cards through the `_mod` and `_mod_mismatch` files.
 
 `cornerDIO.lib` is simpler: `dio_tt` loads `diodes.lib`, `sg13g2_esd.lib` and the Schottky model, `dio_tt_stat` swaps in the Schottky stat file on top. Only the Schottky diode has statistical data, the other diodes and the ESD devices are always deterministic.
 
@@ -130,7 +132,7 @@ The stated sigma values are one-sigma deviations (one third of the min-max corne
 
 `mc_ok` was the original name of the third `gauss()` argument in the stat files, used as a global on/off switch (`.param mc_ok=1`). In May 2025 it was renamed to `num_sigmas` in all ngspice stat files (commit `f0e3d00b`, "introduce num_sigmas instead mc_ok for statistical models"). Same position, same default of 1, but the name now reflects what the argument really is: it tells ngspice at how many sigmas the given deviation is specified.
 
-So to answer the question directly: **`mc_ok` no longer exists in the ngspice models.** You will still find it in three places:
+In short: **`mc_ok` no longer exists in the ngspice models.** It still appears in three places:
 
 1. The **Xyce** model files (`libs.tech/xyce/models/*_stat.lib`) were never renamed and still use `mc_ok`.
 2. Some older xschem test schematics (for example `sg13g2_tests/mc_lv_nmos_cs_loop.sch`) still contain a leftover `.param mc_ok=1`. Against the current ngspice models this line defines an unused parameter and has no effect.
@@ -173,11 +175,11 @@ The defaults are set at two levels, and they differ on purpose:
 | ngspice subcircuit (`.param` / subckt line) | **`mm_ok=0`** | A netlist that does not pass `mm_ok` gets deterministic devices |
 | Qucs-S symbols | `mm_ok=1` (hidden) | Same convention as xschem |
 
-During the PR the defaults moved around: the first commits set the symbol templates to 0 and the final commit `d4c61ce6` ("set mm_ok=1 by default at the symbol level") flipped them to 1. So yes, **as merged, the designer-facing default is `mm_ok=1`**, and mismatch runs behave the way most designers expect out of the box. The subcircuit fallback of 0 protects hand-written or third-party netlists from silently becoming random.
+During the PR the defaults moved around: the first commits set the symbol templates to 0 and the final commit `d4c61ce6` ("set mm_ok=1 by default at the symbol level") flipped them to 1. **As merged, the designer-facing default is `mm_ok=1`**, and mismatch runs behave the way most designers expect out of the box. The subcircuit fallback of 0 protects hand-written or third-party netlists from silently becoming random.
 
 ### What about schematics created before PR #993?
 
-Instances placed before the PR carry no `mm_ok` attribute in the `.sch` file. This is not a problem. When xschem netlists an instance, any `@param` token in the symbol's format string that the instance does not define falls back to the value in the symbol's `template` attribute. Since the installed PDK symbols now say `mm_ok=1`, old schematics netlist with `mm_ok=1` exactly like new ones. So your assumption is correct, `mm_ok=1` is applied in the background.
+Instances placed before the PR carry no `mm_ok` attribute in the `.sch` file. This is not a problem. When xschem netlists an instance, any `@param` token in the symbol's format string that the instance does not define falls back to the value in the symbol's `template` attribute. Since the installed PDK symbols now say `mm_ok=1`, old schematics netlist with `mm_ok=1` exactly like new ones. The default is applied in the background.
 
 Two situations where this fallback does **not** save you:
 
@@ -203,7 +205,7 @@ The corner section chooses the mechanism. `mm_ok` only acts inside `*_mismatch` 
 | **HBT** (`cornerHBT.lib`) | `hbt_typ`, `hbt_bcs`, `hbt_wcs` | all three as `*_mismatch` | `hbt_typ_stat` | not available |
 | **Diodes** (`cornerDIO.lib`) | `dio_tt` | not available | `dio_tt_stat` (Schottky only) | not available |
 
-### Result matrix in the notation of the earlier discussion
+### Result matrix
 
 ```
 MC only (global process variation):
@@ -226,11 +228,11 @@ Three points worth spelling out:
 
 * **Corner plus mismatch is supported everywhere.** The `_mismatch` flavor exists for every corner of MOS, RES, CAP and HBT, not just typical. Mismatch around SS or WCS is a normal use case.
 * **Global MC exists only at the typical corner.** There is no `mos_ss_stat` or similar. That is by design, the corners themselves already bound the global spread.
-* **Stat plus mismatch in one run exists only for resistors** (`res_stat_mismatch`). Your observation is correct. For MOS, CAP and HBT the two mechanisms cannot be combined with the shipped sections, because the stat sections always include the non-mismatch model file. If you need it, you can write your own section following the `res_stat_mismatch` pattern (combine `*_stat.lib`, `*_mismatch.lib` and `*_mod_mismatch.lib`), but that is a user extension and not qualified by IHP.
+* **Stat plus mismatch in one run exists only for resistors** (`res_stat_mismatch`). For MOS, CAP and HBT the two mechanisms cannot be combined with the shipped sections, because the stat sections always include the non-mismatch model file. If you need it, you can write your own section following the `res_stat_mismatch` pattern (combine `*_stat.lib`, `*_mismatch.lib` and `*_mod_mismatch.lib`), but that is a user extension and not qualified by IHP.
 
 ### Is `mos_tt_mismatch` with `mm_ok=0` the same as `mos_tt`?
 
-Yes, numerically identical, and this was verified against the current files:
+Yes, the two are numerically identical. Verified against the current files:
 
 * The fixed parameter blocks of the `mos_tt` and `mos_tt_mismatch` sections in `cornerMOSlv.lib` are line-for-line the same.
 * With the draws disabled, the mismatch subcircuit passes `w`, `l`, `delvto=0`, `factuo=1` to the PSP model. The non-mismatch subcircuit in `sg13g2_moslv_mod.lib` passes exactly `delvto=0` and `factuo=1` explicitly.
