@@ -1,0 +1,34 @@
+111. Printing statistics.
+
+=== counter_top ===
+
+        +----------Local Count, excluding submodules.
+        |        +-Local Area, excluding submodules.
+        |        | 
+       45        - wires
+       52        - wire bits
+        4        - public wires
+       11        - public wire bits
+        4        - ports
+       11        - port bits
+       49 2.31E+03 cells
+        3   71.971   sg13g2_hv_a21oi_1
+        5  119.952   sg13g2_hv_and2_1
+        1   30.845   sg13g2_hv_and2_2
+        2   82.253   sg13g2_hv_and4_1
+        1   71.971   sg13g2_hv_buf_8
+        8 1.18E+03   sg13g2_hv_dfrbpq_1
+        3   41.126   sg13g2_hv_inv_1
+        1   54.835   sg13g2_hv_mux2_1
+        4   82.253   sg13g2_hv_nand2_1
+        3   71.971   sg13g2_hv_nand2b_1
+        2   47.981   sg13g2_hv_nand3_1
+        3   92.534   sg13g2_hv_nand4_1
+        1   30.845   sg13g2_hv_nor2b_1
+        8   109.67   sg13g2_hv_tiehi
+        2   109.67   sg13g2_hv_xnor2_1
+        2   109.67   sg13g2_hv_xor2_1
+
+   Chip area for module '\counter_top': 2306.505600
+     of which used for sequential elements: 1178.956800 (51.11%)
+

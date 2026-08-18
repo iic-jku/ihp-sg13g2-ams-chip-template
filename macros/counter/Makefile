@@ -26,6 +26,25 @@ EV_PRECISION ?= 5
 # Override with: make <target> WAVEFORM_VIEWER=<gtkwave|surfer>
 WAVEFORM_VIEWER ?= gtkwave
 
+# Hardening flavor: lv (thin-oxide 1.2/1.5 V, default) or hv (thick-oxide 3.3 V)
+# Override with: make <target> FLAVOR=hv, or use the -hv convenience targets.
+# Selects the LibreLane config, the run/output directories, the STA corner list
+# and the standard-cell Liberty used for the XSPICE model.
+FLAVOR ?= lv
+
+ifeq ($(FLAVOR),lv)
+  SFX         :=
+  STDCELL_LIB := sg13g2_stdcell/lib/sg13g2_stdcell_typ_1p50V_25C.lib
+  STA_CORNERS := nom_fast_1p32V_m40C nom_fast_1p65V_m40C nom_slow_1p08V_125C
+  STA_CORNERS += nom_slow_1p35V_125C nom_typ_1p20V_25C nom_typ_1p50V_25C
+else ifeq ($(FLAVOR),hv)
+  SFX         := _hv
+  STDCELL_LIB := sg13g2_stdcell_hv/lib/sg13g2_stdcell_hv_typ_3p30V_25C.lib
+  STA_CORNERS := nom_typ_3p30V_25C
+else
+  $(error FLAVOR must be lv or hv, got '$(FLAVOR)')
+endif
+
 # Folder structure
 COCOTB_DIR      := testbenches/cocotb
 VERILOG_TB_DIR 	:= testbenches/verilog
@@ -34,15 +53,16 @@ XSCHEM_SCH_DIR  := schematic/xschem
 SCRIPTS_DIR   	:= scripts
 SIM_PLOT_DIR  	:= testbenches/xschem/plot_simulations
 RENDER_IMG_DIR 	:= render/img
-REPORT_DIR     	:= verification
 SRC_DIR 		:= rtl
-NET_NL_DIR    	:= netlist/nl
-NET_PNL_DIR  	:= netlist/pnl
-NET_SPICE_DIR 	:= netlist/spice
-XSPICE_DIR  	:= netlist/xspice
-LIBRELANE_DIR 	:= flow/librelane
-FLOW_FINAL_DIR 	:= flow/final
-FINAL_DIR      	:= final
+# Flavor-dependent (see FLAVOR above): lv writes the unsuffixed paths, hv the _hv ones
+REPORT_DIR     	:= verification$(SFX)
+NET_NL_DIR    	:= netlist$(SFX)/nl
+NET_PNL_DIR  	:= netlist$(SFX)/pnl
+NET_SPICE_DIR 	:= netlist$(SFX)/spice
+XSPICE_DIR  	:= netlist$(SFX)/xspice
+LIBRELANE_DIR 	:= flow/librelane$(SFX)
+FLOW_FINAL_DIR 	:= flow/final$(SFX)
+FINAL_DIR      	:= final$(SFX)
 
 # Variables for simulation and linting targets
 # constants.sv defines the `COUNTER_MAX_DEFAULT / `CLK_FREQ_DEFAULT macros and must
@@ -74,6 +94,8 @@ help: ## Show this help message
 	@echo 'Available targets:'
 	@grep -E '^[a-zA-Z0-9_.-]+:.*## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*## "}; {printf "  %-20s %s\n", $$1, $$2}'
 	@echo ''
+	@echo 'FLAVOR defaults to lv (thin-oxide). Use FLAVOR=hv, or the -hv targets,'
+	@echo 'to harden on the 3.3 V sg13g2_stdcell_hv library into the _hv directories.'
 	@echo 'CELL defaults to $(TOP). Override to lint or simulate subcells.'
 	@echo 'WAVEFORM_VIEWER defaults to gtkwave. Use surfer to launch Surfer instead.'
 	@echo 'TB selects the Xschem testbench for sim-gl-xschem (default: <CELL>_tb_tran).'
@@ -182,6 +204,20 @@ librelane-openroad: ## Open the last LibreLane run in OpenROAD GUI
 librelane-klayout: ## Open the last LibreLane run in KLayout
 	librelane $(LIBRELANE_DIR)/config.yaml --pdk ${PDK} --pdk-root ${PDK_ROOT} --manual-pdk --last-run --flow OpenInKLayout
 .PHONY: librelane-klayout
+
+# HV convenience targets. Same recipes with FLAVOR=hv, which switches the config,
+# the runs/ history and every output directory to the _hv variants.
+librelane-hv: ## Run LibreLane with the HV (3.3 V) standard cells
+	$(MAKE) librelane FLAVOR=hv
+.PHONY: librelane-hv
+
+librelane-openroad-hv: ## Open the last HV LibreLane run in OpenROAD GUI
+	$(MAKE) librelane-openroad FLAVOR=hv
+.PHONY: librelane-openroad-hv
+
+librelane-klayout-hv: ## Open the last HV LibreLane run in KLayout
+	$(MAKE) librelane-klayout FLAVOR=hv
+.PHONY: librelane-klayout-hv
 # ================================================================================================
 
 
@@ -197,12 +233,7 @@ copy-reports: ## Copy yosys, antenna, STA, power, IR-drop, DRC, LVS and manufact
 	cp $(LIBRELANE_DIR)/runs/${RUN_TAG}/*-openroad-checkantennas-1/reports/antenna.rpt $(REPORT_DIR)/antenna_violations.rpt
 	cp $(LIBRELANE_DIR)/runs/${RUN_TAG}/*-openroad-checkantennas-1/reports/antenna_summary.rpt $(REPORT_DIR)/antenna_summary.rpt
 	cp $(LIBRELANE_DIR)/runs/${RUN_TAG}/*-openroad-stapostpnr/summary.rpt $(REPORT_DIR)/stapostpnr_summary.rpt
-	cp $(LIBRELANE_DIR)/runs/${RUN_TAG}/*-openroad-stapostpnr/nom_fast_1p32V_m40C/power.rpt $(REPORT_DIR)/stapostpnr_nom_fast_1p32V_m40C_power.rpt
-	cp $(LIBRELANE_DIR)/runs/${RUN_TAG}/*-openroad-stapostpnr/nom_fast_1p65V_m40C/power.rpt $(REPORT_DIR)/stapostpnr_nom_fast_1p65V_m40C_power.rpt
-	cp $(LIBRELANE_DIR)/runs/${RUN_TAG}/*-openroad-stapostpnr/nom_slow_1p08V_125C/power.rpt $(REPORT_DIR)/stapostpnr_nom_slow_1p08V_125C_power.rpt
-	cp $(LIBRELANE_DIR)/runs/${RUN_TAG}/*-openroad-stapostpnr/nom_slow_1p35V_125C/power.rpt $(REPORT_DIR)/stapostpnr_nom_slow_1p35V_125C_power.rpt
-	cp $(LIBRELANE_DIR)/runs/${RUN_TAG}/*-openroad-stapostpnr/nom_typ_1p20V_25C/power.rpt $(REPORT_DIR)/stapostpnr_nom_typ_1p20V_25C_power.rpt
-	cp $(LIBRELANE_DIR)/runs/${RUN_TAG}/*-openroad-stapostpnr/nom_typ_1p50V_25C/power.rpt $(REPORT_DIR)/stapostpnr_nom_typ_1p50V_25C_power.rpt
+	@for c in $(STA_CORNERS); do cp $(LIBRELANE_DIR)/runs/${RUN_TAG}/*-openroad-stapostpnr/$$c/power.rpt $(REPORT_DIR)/stapostpnr_$${c}_power.rpt; done
 	cp $(LIBRELANE_DIR)/runs/${RUN_TAG}/*-openroad-irdropreport/irdrop.rpt $(REPORT_DIR)/irdrop.rpt
 	cp $(LIBRELANE_DIR)/runs/${RUN_TAG}/*-magic-drc/reports/drc.magic.rpt $(REPORT_DIR)/drc.magic.rpt
 	cp $(LIBRELANE_DIR)/runs/${RUN_TAG}/*-klayout-drc/reports/drc.klayout.json $(REPORT_DIR)/drc.klayout.json
@@ -238,7 +269,7 @@ copy-netlist: ## Copy final output spice, pnl and nl netlists from the last Libr
 
 copy-render: ## Copy macro render from the last LibreLane run to render/img/
 	mkdir -p $(RENDER_IMG_DIR)/
-	cp -r $(FLOW_FINAL_DIR)/render/${TOP}.png $(RENDER_IMG_DIR)/${TOP}_librelane.png
+	cp -r $(FLOW_FINAL_DIR)/render/${TOP}.png $(RENDER_IMG_DIR)/${TOP}$(SFX)_librelane.png
 .PHONY: copy-render
 # ================================================================================================
 
@@ -246,7 +277,7 @@ copy-render: ## Copy macro render from the last LibreLane run to render/img/
 # Render Target
 render-gds: ## Render an image from the final GDS using lay2img.py
 	mkdir -p $(RENDER_IMG_DIR)/
-	python3 $(SCRIPTS_DIR)/lay2img.py $(FINAL_DIR)/gds/${TOP}.gds $(RENDER_IMG_DIR)/${TOP}.png --width 2048 --oversampling 4
+	python3 $(SCRIPTS_DIR)/lay2img.py $(FINAL_DIR)/gds/${TOP}.gds $(RENDER_IMG_DIR)/${TOP}$(SFX).png --width 2048 --oversampling 4
 .PHONY: render-gds
 # ================================================================================================
 
@@ -256,7 +287,7 @@ render-gds: ## Render an image from the final GDS using lay2img.py
 # netlists of the current LibreLane run. Can also be run standalone to regenerate the model.
 generate-xspice: ## Generate XSPICE model from the LibreLane-extracted SPICE netlist
 	mkdir -p $(XSPICE_DIR)
-	python3 $(SCRIPTS_DIR)/spi2xspice.py $(PDK_ROOT)/$(PDK)/libs.ref/sg13g2_stdcell/lib/sg13g2_stdcell_typ_1p50V_25C.lib -io_time=500p -time=50p -idelay=5p -odelay=50p -cload=250f $(NET_SPICE_DIR)/${TOP}.spice $(XSPICE_DIR)/${TOP}.xspice
+	python3 $(SCRIPTS_DIR)/spi2xspice.py $(PDK_ROOT)/$(PDK)/libs.ref/$(STDCELL_LIB) -io_time=500p -time=50p -idelay=5p -odelay=50p -cload=250f $(NET_SPICE_DIR)/${TOP}.spice $(XSPICE_DIR)/${TOP}.xspice
 	sak-pin-reorder.py $(XSCHEM_SCH_DIR)/${TOP}.sym $(XSPICE_DIR)/${TOP}.xspice --format xspice
 .PHONY: generate-xspice
 # ================================================================================================
@@ -266,6 +297,10 @@ generate-xspice: ## Generate XSPICE model from the LibreLane-extracted SPICE net
 build-fpga: ## Build target for FPGA usage
 	@$(MAKE) -C fpga all
 .PHONY: build-fpga
+
+build-top-hv: ## Build the macro with the HV (3.3 V) standard cells
+	$(MAKE) build-top FLAVOR=hv
+.PHONY: build-top-hv
 
 build-top: ## Build macro (run LibreLane with KLayout & Magic DRC checks, copy reports, copy final files, copy netlists, generate XSPICE model, copy render, and render final GDS)
 	$(MAKE) librelane

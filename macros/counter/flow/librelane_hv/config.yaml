@@ -1,9 +1,18 @@
 # SPDX-FileCopyrightText: 2026 Simon Dorrer and Harald Pretl
 # SPDX-License-Identifier: Apache-2.0 WITH SHL-2.1
 #
-# HV variant of config.yaml: uses the thick-oxide 3.3 V sg13g2_stdcell_hv
-# library from IHP-Open-PDK PR #1103 (draft). The HV library currently ships
-# only one liberty corner (typ, 3.30 V, 25 C), so STA runs on that corner only.
+# HV hardening flavor of the counter: same RTL as flow/librelane/config.yaml,
+# built on the thick-oxide 3.3 V sg13g2_stdcell_hv library (IHP-Open-PDK
+# PR #1103). Build it with `make librelane-hv` or `make build-top-hv`.
+#
+# This config lives in its own directory so LibreLane keeps a separate runs/
+# history per flavor, which is what makes RUN_TAG and --last-run unambiguous.
+# The SDC and pin order are shared with the LV flavor rather than copied, so
+# the constraints stay a single source of truth.
+#
+# The HV library ships one characterized corner (typ, 3.30 V, 25 C), so STA
+# runs on that corner alone. Multi-corner signoff is not possible yet, and the
+# library carries no internal_power tables, so power reports are not meaningful.
 
 meta:
   version: 3
@@ -46,13 +55,13 @@ RUN_CTS: true
 SYNTH_STRATEGY: DELAY 4
 # MAX_FANOUT_CONSTRAINT: 6
 # RT_MAX_LAYER: Metal5
-FP_PIN_ORDER_CFG: dir::pin_order.cfg
+FP_PIN_ORDER_CFG: dir::../librelane/pin_order.cfg
 FP_PDN_MULTILAYER: false
 FP_SIZING: absolute
 
 # SDC files
-PNR_SDC_FILE: dir::impl.sdc
-SIGNOFF_SDC_FILE: dir::signoff.sdc
+PNR_SDC_FILE: dir::../librelane/impl.sdc
+SIGNOFF_SDC_FILE: dir::../librelane/signoff.sdc
 
 # Power / ground nets
 VDD_NETS: ["VDD"]

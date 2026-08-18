@@ -11,14 +11,14 @@
        11        - public wire bits
         4        - ports
        11        - port bits
-       38   391.91 cells
+       38 1.18E+03 cells
         5        -   $_AND_
        16        -   $_MUX_
         1        -   $_NAND_
         1        -   $_NOT_
         1        -   $_XNOR_
         6        -   $_XOR_
-        8   391.91   sg13g2_dfrbpq_1
+        8 1.18E+03   sg13g2_hv_dfrbpq_1
 
    Area for cell type $_AND_ is unknown!
    Area for cell type $_MUX_ is unknown!
@@ -27,6 +27,6 @@
    Area for cell type $_XNOR_ is unknown!
    Area for cell type $_XOR_ is unknown!
 
-   Chip area for module '\counter_top': 391.910400
-     of which used for sequential elements: 391.910400 (100.00%)
+   Chip area for module '\counter_top': 1178.956800
+     of which used for sequential elements: 1178.956800 (100.00%)
 

@@ -62,6 +62,8 @@
 │  │  ├─ impl.sdc
 │  │  ├─ pin_order.cfg
 │  │  └─ signoff.sdc
+│  ├─ 📁 librelane_hv/        # HV (3.3 V) hardening flavor, shares the SDC and pin order above
+│  │  └─ config.yaml
 ├─ 📁 fpga/
 │  ├─ Makefile
 │  ├─ pico-ice.pcf
@@ -309,6 +311,19 @@ Additional targets are available for different DRC configurations:
 - `make librelane-klayoutdrc` – run LibreLane with only KLayout DRC checks
 
 After the LibreLane flow completes successfully, the generated views are saved under `flow/final/`. `flow/final/` is included in `.gitignore`.
+
+#### HV (3.3 V) Hardening Flavor
+
+The same RTL can be hardened on the thick-oxide 3.3 V `sg13g2_stdcell_hv` standard cells instead of the default thin-oxide ones:
+
+```sh
+make librelane-hv
+make build-top-hv
+```
+
+Every target accepts `FLAVOR=hv` (the `-hv` targets are just shorthand for it). The flavor switches the config to `flow/librelane_hv/config.yaml`, the STA corner list, and the standard-cell Liberty used for the XSPICE model, and it writes every output to an `_hv` sibling directory: `flow/final_hv/`, `final_hv/`, `netlist_hv/`, `verification_hv/`, plus `_hv`-suffixed images in `render/img/`. LibreLane keeps its run history in `flow/librelane_hv/runs/`, so `make librelane-klayout-hv` and `make copy-reports FLAVOR=hv` always act on HV runs and never on LV ones.
+
+The HV library ships a single characterized corner (typ, 3.30 V, 25 C), so HV runs perform single-corner STA only, and the library carries no `internal_power` tables, so its power reports are not meaningful. The HV cells are roughly 3x the area of their thin-oxide counterparts.
 
 
 ### View the Design

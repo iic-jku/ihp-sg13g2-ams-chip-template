@@ -1,0 +1,173 @@
+* XSpice netlist created from SPICE and liberty sources by spi2xspice.py
+* NGSPICE file created from counter_top.ext - technology: ihp-sg13g2
+* Black-box entry subcircuit for sg13g2_hv_fill_8 abstract view
+* Black-box entry subcircuit for sg13g2_hv_nand2b_1 abstract view
+* Black-box entry subcircuit for sg13g2_hv_xor2_1 abstract view
+* Black-box entry subcircuit for sg13g2_hv_buf_1 abstract view
+* Black-box entry subcircuit for sg13g2_hv_decap_4 abstract view
+* Black-box entry subcircuit for sg13g2_hv_fill_1 abstract view
+* Black-box entry subcircuit for sg13g2_hv_nand4_1 abstract view
+* Black-box entry subcircuit for sg13g2_hv_dfrbpq_1 abstract view
+* Black-box entry subcircuit for sg13g2_hv_tiehi abstract view
+* Black-box entry subcircuit for sg13g2_hv_inv_1 abstract view
+* Black-box entry subcircuit for sg13g2_hv_fill_2 abstract view
+* Black-box entry subcircuit for sg13g2_hv_decap_8 abstract view
+* Black-box entry subcircuit for sg13g2_hv_a21oi_1 abstract view
+* Black-box entry subcircuit for sg13g2_hv_nand2_1 abstract view
+* Black-box entry subcircuit for sg13g2_hv_and2_1 abstract view
+* Black-box entry subcircuit for sg13g2_hv_and4_1 abstract view
+* Black-box entry subcircuit for sg13g2_hv_buf_8 abstract view
+* Black-box entry subcircuit for sg13g2_hv_buf_16 abstract view
+* Black-box entry subcircuit for sg13g2_hv_mux2_1 abstract view
+* Black-box entry subcircuit for sg13g2_hv_nand3_1 abstract view
+* Black-box entry subcircuit for sg13g2_hv_nor2b_1 abstract view
+* Black-box entry subcircuit for sg13g2_hv_xnor2_1 abstract view
+* Black-box entry subcircuit for sg13g2_hv_and2_2 abstract view
+.subckt counter_top a_VDD a_VSS a_clock_i a_reset_n_i a_enable_i
++ a_counter_value_o_0_ a_counter_value_o_1_ a_counter_value_o_2_
++ a_counter_value_o_3_ a_counter_value_o_4_ a_counter_value_o_5_
++ a_counter_value_o_6_ a_counter_value_o_7_
+A_49_ [_46_/Y _49_/B] _81_/D d_lut_sg13g2_hv_nand2b_1
+A_66_ [_71_/A _77_/Q] _67_/B d_lut_sg13g2_hv_xor2_1
+Aoutput7 [_81_/Q] counter_value_o_4_ d_lut_sg13g2_hv_buf_1
+A_65_ [_62_/Y _65_/B] _76_/D d_lut_sg13g2_hv_nand2b_1
+A_48_ [_48_/A _80_/Q _73_/A _64_/C] _49_/B d_lut_sg13g2_hv_nand4_1
+Aoutput10 [_76_/Q] counter_value_o_7_ d_lut_sg13g2_hv_buf_1
+Aoutput8 [_74_/Q] counter_value_o_5_ d_lut_sg13g2_hv_buf_1
+A_81_ _81_/D _81_/CLK NULL ~_81__11/L_HI _81_/Q NULL ddflop
+A_75__15 _75__15/L_HI done
+A_64_ [_64_/A _73_/A _64_/C _64_/D] _65_/B d_lut_sg13g2_hv_nand4_1
+A_47_ [_81_/Q] _48_/A d_lut_sg13g2_hv_inv_1
+Aoutput9 [_75_/Q] counter_value_o_6_ d_lut_sg13g2_hv_buf_1
+A_63_ [_76_/Q] _64_/A d_lut_sg13g2_hv_inv_1
+A_80_ _80_/D _80_/CLK NULL ~_80__12/L_HI _80_/Q NULL ddflop
+A_46_ [_80_/Q _64_/C _45_/Y] _46_/Y d_lut_sg13g2_hv_a21oi_1
+A_78__14 _78__14/L_HI done
+A_62_ [_64_/C _64_/D _61_/Y] _62_/Y d_lut_sg13g2_hv_a21oi_1
+A_45_ [_81_/Q _73_/A] _45_/Y d_lut_sg13g2_hv_nand2_1
+A_61_ [_76_/Q _73_/A] _61_/Y d_lut_sg13g2_hv_nand2_1
+A_44_ [_73_/A _44_/B] _80_/D d_lut_sg13g2_hv_and2_1
+A_60_ [_75_/Q _74_/Q _81_/Q _80_/Q] _64_/D d_lut_sg13g2_hv_and4_1
+A_43_ [_80_/Q _64_/C] _44_/B d_lut_sg13g2_hv_xor2_1
+A_80__12 _80__12/L_HI done
+A_42_ [_42_/A] _64_/C d_lut_sg13g2_hv_buf_8
+A_41_ [_79_/Q _71_/A _78_/Q _77_/Q] _42_/A d_lut_sg13g2_hv_and4_1
+Aclkbuf_1_1__f_clock_i [clkbuf_0_clock_i/X] _81_/CLK d_lut_sg13g2_hv_buf_16
+Ainput1 [enable_i] _71_/A d_lut_sg13g2_hv_buf_1
+A_79_ _79_/D _80_/CLK NULL ~_79__16/L_HI _79_/Q NULL ddflop
+Ainput2 [reset_n_i] _73_/A d_lut_sg13g2_hv_buf_1
+Aclkbuf_1_0__f_clock_i [clkbuf_0_clock_i/X] _80_/CLK d_lut_sg13g2_hv_buf_16
+A_78_ _78_/D _80_/CLK NULL ~_78__14/L_HI _78_/Q NULL ddflop
+A_74__17 _74__17/L_HI done
+A_77_ _77_/D _80_/CLK NULL ~_77__18/L_HI _77_/Q NULL ddflop
+A_76_ _76_/D _81_/CLK NULL ~_76__13/L_HI _76_/Q NULL ddflop
+A_59_ [_56_/Y _57_/X _59_/S] _75_/D d_lut_sg13g2_hv_mux2_1
+A_58_ [_74_/Q _64_/C _58_/C] _59_/S d_lut_sg13g2_hv_nand3_1
+A_75_ _75_/D _81_/CLK NULL ~_75__15/L_HI _75_/Q NULL ddflop
+A_74_ _74_/D _81_/CLK NULL ~_74__17/L_HI _74_/Q NULL ddflop
+A_77__18 _77__18/L_HI done
+A_57_ [_75_/Q _73_/A] _57_/X d_lut_sg13g2_hv_and2_1
+A_73_ [_73_/A _73_/B] _79_/D d_lut_sg13g2_hv_and2_1
+A_56_ [_75_/Q _73_/A] _56_/Y d_lut_sg13g2_hv_nor2b_1
+A_72_ [_79_/Q _72_/B] _73_/B d_lut_sg13g2_hv_xnor2_1
+A_55_ [_52_/Y _55_/B] _74_/D d_lut_sg13g2_hv_nand2b_1
+A_71_ [_71_/A _78_/Q _77_/Q] _72_/B d_lut_sg13g2_hv_nand3_1
+A_54_ [_54_/A _73_/A _64_/C _58_/C] _55_/B d_lut_sg13g2_hv_nand4_1
+A_70_ [_73_/A _70_/B] _78_/D d_lut_sg13g2_hv_and2_1
+A_53_ [_74_/Q] _54_/A d_lut_sg13g2_hv_inv_1
+A_52_ [_64_/C _58_/C _51_/Y] _52_/Y d_lut_sg13g2_hv_a21oi_1
+A_76__13 _76__13/L_HI done
+A_51_ [_74_/Q _73_/A] _51_/Y d_lut_sg13g2_hv_nand2_1
+A_50_ [_81_/Q _80_/Q] _58_/C d_lut_sg13g2_hv_and2_2
+A_79__16 _79__16/L_HI done
+A_81__11 _81__11/L_HI done
+Aoutput3 [_77_/Q] counter_value_o_0_ d_lut_sg13g2_hv_buf_1
+A_69_ [_78_/Q _69_/B] _70_/B d_lut_sg13g2_hv_xnor2_1
+Aoutput4 [_78_/Q] counter_value_o_1_ d_lut_sg13g2_hv_buf_1
+A_68_ [_71_/A _77_/Q] _69_/B d_lut_sg13g2_hv_nand2_1
+Aclkbuf_0_clock_i [clock_i] clkbuf_0_clock_i/X d_lut_sg13g2_hv_buf_16
+Aoutput5 [_79_/Q] counter_value_o_2_ d_lut_sg13g2_hv_buf_1
+A_67_ [_73_/A _67_/B] _77_/D d_lut_sg13g2_hv_and2_1
+Aoutput6 [_80_/Q] counter_value_o_3_ d_lut_sg13g2_hv_buf_1
+
+.model todig_3v3 adc_bridge(in_high=2.1999999999999997 in_low=1.0999999999999999 rise_delay=500p fall_delay=500p)
+.model toana_3v3 dac_bridge(out_high=3.3 out_low=0)
+
+.model ddflop d_dff(ic=0 rise_delay=50p fall_delay=50p)
+.model dlatch d_dlatch(ic=0 rise_delay=50p fall_delay=50p)
+.model dzero d_pulldown(load=250f)
+.model done d_pullup(load=250f)
+
+AA2D1 [a_VDD] [dig_VDD] todig_3v3
+AA2D2 [a_VSS] [dig_VSS] todig_3v3
+AA2D3 [a_clock_i] [clock_i] todig_3v3
+AD2A1 [counter_value_o_0_] [a_counter_value_o_0_] toana_3v3
+AD2A2 [counter_value_o_1_] [a_counter_value_o_1_] toana_3v3
+AD2A3 [counter_value_o_2_] [a_counter_value_o_2_] toana_3v3
+AD2A4 [counter_value_o_3_] [a_counter_value_o_3_] toana_3v3
+AD2A5 [counter_value_o_4_] [a_counter_value_o_4_] toana_3v3
+AD2A6 [counter_value_o_5_] [a_counter_value_o_5_] toana_3v3
+AD2A7 [counter_value_o_6_] [a_counter_value_o_6_] toana_3v3
+AD2A8 [counter_value_o_7_] [a_counter_value_o_7_] toana_3v3
+AA2D4 [a_enable_i] [enable_i] todig_3v3
+AA2D5 [a_reset_n_i] [reset_n_i] todig_3v3
+
+.ends
+
+
+* sg13g2_hv_fill_8 (no function)
+* sg13g2_hv_nand2b_1 !((!(A_N) & B))
+.model d_lut_sg13g2_hv_nand2b_1 d_lut (rise_delay=50p fall_delay=50p input_load=250f
++ table_values "1101")
+* sg13g2_hv_xor2_1 ((A & !(B)) | (!(A) & B))
+.model d_lut_sg13g2_hv_xor2_1 d_lut (rise_delay=50p fall_delay=50p input_load=250f
++ table_values "0110")
+* sg13g2_hv_buf_1 A
+.model d_lut_sg13g2_hv_buf_1 d_lut (rise_delay=50p fall_delay=50p input_load=250f
++ table_values "01")
+* sg13g2_hv_decap_4 (no function)
+* sg13g2_hv_fill_1 (no function)
+* sg13g2_hv_nand4_1 !((((A & B) & C) & D))
+.model d_lut_sg13g2_hv_nand4_1 d_lut (rise_delay=50p fall_delay=50p input_load=250f
++ table_values "1111111111111110")
+* sg13g2_hv_dfrbpq_1 IQ
+* sg13g2_hv_tiehi 1
+* sg13g2_hv_inv_1 !(A)
+.model d_lut_sg13g2_hv_inv_1 d_lut (rise_delay=50p fall_delay=50p input_load=250f
++ table_values "10")
+* sg13g2_hv_fill_2 (no function)
+* sg13g2_hv_decap_8 (no function)
+* sg13g2_hv_a21oi_1 !(((A1 & A2) | B1))
+.model d_lut_sg13g2_hv_a21oi_1 d_lut (rise_delay=50p fall_delay=50p input_load=250f
++ table_values "11100000")
+* sg13g2_hv_nand2_1 !((A & B))
+.model d_lut_sg13g2_hv_nand2_1 d_lut (rise_delay=50p fall_delay=50p input_load=250f
++ table_values "1110")
+* sg13g2_hv_and2_1 (A & B)
+.model d_lut_sg13g2_hv_and2_1 d_lut (rise_delay=50p fall_delay=50p input_load=250f
++ table_values "0001")
+* sg13g2_hv_and4_1 (((A & B) & C) & D)
+.model d_lut_sg13g2_hv_and4_1 d_lut (rise_delay=50p fall_delay=50p input_load=250f
++ table_values "0000000000000001")
+* sg13g2_hv_buf_8 A
+.model d_lut_sg13g2_hv_buf_8 d_lut (rise_delay=50p fall_delay=50p input_load=250f
++ table_values "01")
+* sg13g2_hv_buf_16 A
+.model d_lut_sg13g2_hv_buf_16 d_lut (rise_delay=50p fall_delay=50p input_load=250f
++ table_values "01")
+* sg13g2_hv_mux2_1 ((!(S) & A0) | (S & A1))
+.model d_lut_sg13g2_hv_mux2_1 d_lut (rise_delay=50p fall_delay=50p input_load=250f
++ table_values "01010011")
+* sg13g2_hv_nand3_1 !(((A & B) & C))
+.model d_lut_sg13g2_hv_nand3_1 d_lut (rise_delay=50p fall_delay=50p input_load=250f
++ table_values "11111110")
+* sg13g2_hv_nor2b_1 !((A | !(B_N)))
+.model d_lut_sg13g2_hv_nor2b_1 d_lut (rise_delay=50p fall_delay=50p input_load=250f
++ table_values "0010")
+* sg13g2_hv_xnor2_1 !(((A & !(B)) | (!(A) & B)))
+.model d_lut_sg13g2_hv_xnor2_1 d_lut (rise_delay=50p fall_delay=50p input_load=250f
++ table_values "1001")
+* sg13g2_hv_and2_2 (A & B)
+.model d_lut_sg13g2_hv_and2_2 d_lut (rise_delay=50p fall_delay=50p input_load=250f
++ table_values "0001")
+.end
