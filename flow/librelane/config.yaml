@@ -247,6 +247,13 @@ DEFAULT_CORNER: nom_typ_1p50V_25C
 # DRT_OPT_ITERS: 10
 
 # Non-Default Rules (NDRs) for the following analog traces
+# Note for the AUTO_TAPER_NDR_NETS variable:
+# OpenROAD needs to be recompiled with the following patch when the AUTO_TAPER_NDR_NETS variable is changed from true (default) to false:
+# https://github.com/FPGA-Research/heichips25-tapeout/blob/main/nix/disable_auto_taper.patch
+# The AUTO_TAPER_NDR_NETS variable tells the detailed router whether it is allowed to automatically "shrink" those wide NDR wires to fit onto small pins.
+# When Enabled (1 or true - Default): The router will automatically taper the wide wire down to the minimum width of the pin's metal layer as it makes the final connection.
+# When Disabled (0 or false): The router will attempt to maintain the full NDR width all the way into the pin.
+# Pending issue to change AUTO_TAPER_NDR_NETS in the LibreLane `config.yaml`: https://github.com/The-OpenROAD-Project/OpenROAD/issues/10032
 NON_DEFAULT_RULES:
   # Rules for analog traces (inverter2 vin/vout pairs).
   # 0.5 um width and 0.5 um spacing on Metal1 through Metal5.
@@ -259,13 +266,6 @@ NON_DEFAULT_RULES:
 DRT_ASSIGN_NDR:
   "^.*PADRES.*$":  NDR_analog
   "^.*PADBARE.*$": NDR_analog
-
-# Disable AUTO_TAPER_NDR_NETS
-# When Enabled (1 or true - Default): The router will automatically taper the wide wire down to the minimum width of the pin's metal layer as it makes the final connection.
-# When Disabled (0 or false): The router will attempt to maintain the full NDR width all the way into the pin.
-DRT_DISABLE_AUTO_TAPER:
-- "^.*PADRES.*$"
-- "^.*PADBARE.*$"
 
 # Do not touch analog traces --> no optimization or buffering
 RSZ_DONT_TOUCH_LIST:
