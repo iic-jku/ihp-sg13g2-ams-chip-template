@@ -67,12 +67,6 @@ CLOCK_PERIOD: 20 # in ns == 50 MHz
 # Define Standard Cells
 STD_CELL_LIBRARY: sg13g2_stdcell_hv
 
-# Draft-PR workaround: the only flip-flop with both liberty and layout views
-# in sg13g2_stdcell_hv is the scan cell sg13g2_hv_sdfbbp_1, which dfflibmap
-# cannot target. Map the internal FF cells onto it (scan/set pins tied off).
-# SYNTH_EXTRA_MAPPING_FILE is not PDK-scoped, so it must be set here.
-SYNTH_EXTRA_MAPPING_FILE: pdk_dir::libs.tech/librelane/sg13g2_stdcell_hv/sdfbbp_map.v
-
 # Technology LIBs
 # The HV library is characterized for a single corner so far
 LIB:
