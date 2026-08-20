@@ -10,9 +10,10 @@
 # The SDC and pin order are shared with the LV flavor rather than copied, so
 # the constraints stay a single source of truth.
 #
-# The HV library ships one characterized corner (typ, 3.30 V, 25 C), so STA
-# runs on that corner alone. Multi-corner signoff is not possible yet, and the
-# library carries no internal_power tables, so power reports are not meaningful.
+# The HV library ships three characterized corners (typ 3.30 V/25 C,
+# fast 3.60 V/-40 C, slow 3.00 V/125 C), so setup and hold are both signed off
+# across process/voltage/temperature. It still carries no internal_power
+# tables, so the power reports it produces are not meaningful.
 
 meta:
   version: 3
@@ -77,14 +78,21 @@ CLOCK_PERIOD: 20 # in ns == 50 MHz
 STD_CELL_LIBRARY: sg13g2_stdcell_hv
 
 # Technology LIBs
-# The HV library is characterized for a single corner so far
 LIB:
   "*_typ_3p30V_25C":
     - pdk_dir::libs.ref/sg13g2_stdcell_hv/lib/sg13g2_stdcell_hv_typ_3p30V_25C.lib
 
+  "*_fast_3p60V_m40C":
+    - pdk_dir::libs.ref/sg13g2_stdcell_hv/lib/sg13g2_stdcell_hv_fast_3p60V_m40C.lib
+
+  "*_slow_3p00V_125C":
+    - pdk_dir::libs.ref/sg13g2_stdcell_hv/lib/sg13g2_stdcell_hv_slow_3p00V_125C.lib
+
 # Corners
 STA_CORNERS:
   - nom_typ_3p30V_25C
+  - nom_fast_3p60V_m40C
+  - nom_slow_3p00V_125C
 
 DEFAULT_CORNER: nom_typ_3p30V_25C
 

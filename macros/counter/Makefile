@@ -40,7 +40,7 @@ ifeq ($(FLAVOR),lv)
 else ifeq ($(FLAVOR),hv)
   SFX         := _hv
   STDCELL_LIB := sg13g2_stdcell_hv/lib/sg13g2_stdcell_hv_typ_3p30V_25C.lib
-  STA_CORNERS := nom_typ_3p30V_25C
+  STA_CORNERS := nom_typ_3p30V_25C nom_fast_3p60V_m40C nom_slow_3p00V_125C
 else
   $(error FLAVOR must be lv or hv, got '$(FLAVOR)')
 endif
