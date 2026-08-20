@@ -53,6 +53,7 @@ l=1.0u
 w=2.0u
 ng=2
 m=1
+mm_ok=1
 model=sg13_lv_nmos
 spiceprefix=X
 }
@@ -61,6 +62,7 @@ l=1.0u
 w=12.0u
 ng=2
 m=1
+mm_ok=1
 model=sg13_lv_pmos
 spiceprefix=X
 }
@@ -69,6 +71,7 @@ l=1.0u
 w=20.0u
 ng=20
 m=1
+mm_ok=1
 model=sg13_lv_nmos
 spiceprefix=X
 }
@@ -77,6 +80,7 @@ l=1.0u
 w=120.0u
 ng=20
 m=1
+mm_ok=1
 model=sg13_lv_pmos
 spiceprefix=X
 }
