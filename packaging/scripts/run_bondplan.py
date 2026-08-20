@@ -1257,7 +1257,7 @@ def _write_markdown_report(cfg, rows, stats, out):
 
 
 # ---------------------------------------------------------------------------
-# Step 7: PNG / SVG export (PNG follows ihp130/scripts/lay2img.py)
+# Step 7: PNG / SVG export (PNG follows sak-render.py)
 # ---------------------------------------------------------------------------
 
 def image_size(cfg, crop):

@@ -244,9 +244,9 @@ copy-render: ## Copy macro render from the last LibreLane run to render/img/
 
 
 # Render Target
-render-gds: ## Render an image from the final GDS using lay2img.py
+render-gds: ## Render images from the final GDS using sak-render.py
 	mkdir -p $(RENDER_IMG_DIR)/
-	python3 $(SCRIPTS_DIR)/lay2img.py $(FINAL_DIR)/gds/${TOP}.gds $(RENDER_IMG_DIR)/${TOP}.png --width 2048 --oversampling 4
+	sak-render.py -t ihp-sg13g2 -w 2048 -s 4 -o $(RENDER_IMG_DIR)/${TOP} $(FINAL_DIR)/gds/${TOP}.gds
 .PHONY: render-gds
 # ================================================================================================
 

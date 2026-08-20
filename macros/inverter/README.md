@@ -63,8 +63,7 @@
 │  │  ├─ 📁 figures/
 │  │  ├─ lookup_commands.ipynb
 │  │  └─ sizing_inverter.ipynb
-│  ├─ check_pex_ports.py
-│  └─ lay2img.py
+│  └─ check_pex_ports.py
 ├─ 📁 testbenches/
 │  └─ 📁 xschem/
 │     ├─ 📁 plot_simulations/
@@ -289,7 +288,7 @@ make copy-gds
 
 ### Render Layout Image
 
-Renders the top-level layout GDS with `scripts/lay2img.py` and saves the two images `inverter_top_black.png` and `inverter_top_white.png` in `render/img/`:
+Renders the top-level layout GDS with `sak-render.py` from the [IIC-OSIC-TOOLS](https://github.com/iic-jku/IIC-OSIC-TOOLS) and saves the two images `inverter_top_black.png` and `inverter_top_white.png` (2048 px wide, 4x oversampling) in `render/img/`:
 
 ```sh
 make render-gds

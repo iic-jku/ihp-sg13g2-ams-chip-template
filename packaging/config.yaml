@@ -92,7 +92,7 @@ BONDPLAN_DELETE_LAYERS: ["207/0", "134/25"]
 # Bond report: .md -> Markdown (summary + bond table), .csv -> raw CSV
 BONDPLAN_REPORT: dir::result.md
 
-# PNG follows scripts/lay2img.py conventions: writes *_white / *_black
+# PNG follows sak-render.py conventions: writes *_white / *_black
 BONDPLAN_PNG: dir::render/{design}_bondplan.png
 BONDPLAN_SVG: dir::render/{design}_bondplan.svg
 IMAGE_WIDTH: 2000                 # px

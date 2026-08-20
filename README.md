@@ -198,8 +198,7 @@ A designer-oriented description of this chip can be found in [doc/](doc/):
 ├─ 📁 scripts/
 │  ├─ add_logo_fill.sh
 │  ├─ add_rectangle.py
-│  ├─ check_pex_ports.py
-│  └─ lay2img.py
+│  └─ check_pex_ports.py
 ├─ 📁 testbenches/
 │  ├─ 📁 cocotb/
 │  │  ├─ chip_top_tb.gtkw
@@ -460,11 +459,18 @@ This creates `render/img/chip_top_librelane.png`. This only works if the latest 
 
 ### Render Top Layout
 
-Renders the top-level GDS from `layout/` with `scripts/lay2img.py` and saves the two images `chip_top_black.png` and `chip_top_white.png` in the `render/img/` folder:
+Renders the final top-level GDS `layout/chip_top_logo_fill.gds.gz` (with logo and filler) with `sak-render.py` from the [IIC-OSIC-TOOLS](https://github.com/iic-jku/IIC-OSIC-TOOLS):
 
 ```sh
 make render-gds
 ```
+
+Three images are written to the `render/img/` folder:
+
+- `chip_top_white.png` and `chip_top_black.png`: all physical mask layers, on a white and on a black background.
+- `chip_top_black_TM2.png`: only `TopMetal2`, `TopVia2`, the `TopMetal2` filler and `Passiv` on a black background, which shows the chip logo and the pad frame.
+
+All three images are 2048 px wide and rendered with 4x oversampling. `sak-render.py` reads the layer colors from the PDK's own KLayout layer properties and crops to the drawn geometry, so the images have no border margin.
 
 This only works if the latest run completed without errors. This command is also available for the digital macros.
 
@@ -797,6 +803,7 @@ The following chip renders are exported:
 
 - `render/img/chip_top_black.png` -> `release/v.<VERSION>/img/chip_top_black.png`
 - `render/img/chip_top_white.png` -> `release/v.<VERSION>/img/chip_top_white.png`
+- `render/img/chip_top_black_TM2.png` -> `release/v.<VERSION>/img/chip_top_black_TM2.png`
 - `render/img/chip_top_librelane.png` -> `release/v.<VERSION>/img/chip_top_librelane.png`
 
 The bonding diagram is exported as well (see `make bondplan`):
@@ -848,7 +855,7 @@ The following tools and flows are checked:
 | CACE (+ ngspice) | inverter CACE, single parameter set (`ac_params`) |
 | KLayout DRC (`sak-drc.sh`) + KLayout LVS (`sak-lvs.sh`) + KLayout PEX (`kpex`) | inverter `klayout-verify CELL=inverter_top` |
 | Magic DRC (`sak-drc.sh`) + Magic extract + Netgen LVS (`sak-lvs.sh`) + Magic PEX (`sak-pex.sh`) | inverter `magic-verify CELL=inverter_top` |
-| Magic LEF export + LIB + Verilog stub + `lay2img` render | inverter `build-top` |
+| Magic LEF export + LIB + Verilog stub + `sak-render` render | inverter `build-top` |
 | Verilator lint | counter `lint-verilog-all` |
 | Icarus Verilog (`iverilog`/`vvp`) | counter `sim-rtl-verilog` |
 | cocotb (RTL + gate-level) | counter `sim-rtl-cocotb`, `sim-gl-cocotb` |

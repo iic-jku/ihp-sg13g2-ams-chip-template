@@ -90,8 +90,7 @@
 │     ├─ counter_top.sym
 │     └─ xschemrc
 ├─ 📁 scripts/
-│  ├─ lay2img.py
-│  ├─ spi2xspice.py
+│  └─ spi2xspice.py
 ├─ 📁 testbenches/
 │  ├─ 📁 cocotb/
 │  │  ├─ counter_top_tb.gtkw
@@ -372,7 +371,7 @@ This only works if the final render exists in `flow/final/render/`.
 
 ### Render Top Layout
 
-Renders the final GDS from `final/gds/` with `scripts/lay2img.py` and saves the two images `counter_top_black.png` and `counter_top_white.png` in the `render/img/` folder:
+Renders the final GDS from `final/gds/` with `sak-render.py` from the [IIC-OSIC-TOOLS](https://github.com/iic-jku/IIC-OSIC-TOOLS) and saves the two images `counter_top_black.png` and `counter_top_white.png` (2048 px wide, 4x oversampling) in the `render/img/` folder:
 
 ```sh
 make render-gds

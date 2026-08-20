@@ -131,7 +131,7 @@ sim-all: ## Simulate the macro
 
 
 # Build Target
-build-top: ## Build TOP cell (Verilog, LEF, LIB, copy GDS, and render image)
+build-top: ## Build TOP cell (Verilog, LEF, LIB, copy GDS, and render images)
 	$(MAKE) lef
 	$(MAKE) lib
 	$(MAKE) verilog
@@ -225,10 +225,10 @@ copy-gds: ## Copy the TOP cell GDS from layout/ to final/gds/
 
 
 # Render Target
-render-gds: ## Render an image from the final GDS using lay2img.py
+render-gds: ## Render images from the final GDS using sak-render.py
 	rm -rf $(RENDER_IMG_DIR)/
 	mkdir -p $(RENDER_IMG_DIR)/
-	python3 $(SCRIPTS_DIR)/lay2img.py $(LAY_DIR)/$(TOP).gds $(RENDER_IMG_DIR)/$(TOP).png --width 2048 --oversampling 4
+	sak-render.py -t ihp-sg13g2 -w 2048 -s 4 -o $(RENDER_IMG_DIR)/$(TOP) $(LAY_DIR)/$(TOP).gds
 .PHONY: render-gds
 # ================================================================================================
 
