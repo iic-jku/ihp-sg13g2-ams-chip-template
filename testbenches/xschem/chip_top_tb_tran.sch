@@ -273,7 +273,7 @@ value="
 .param IOVDD=3.3
 .param VDD=1.5
 .param Vcm=0.75
-.param temp=27
+.temp 27
 .param Cload=10p
 .param Rload=1k
 .param fclk=50e6

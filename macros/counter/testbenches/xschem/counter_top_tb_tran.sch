@@ -150,7 +150,7 @@ value="
 *True Mixed Signal Simulation (.xspice)
 .include ../../../netlist/xspice/counter_top.xspice
 .param VDD=1.5
-.param temp=27
+.temp 27
 .param fclk=50e6
 .csparam fclk=fclk
 .options savecurrents klu method=gear reltol=1e-4 abstol=1e-15 gmin=1e-15
