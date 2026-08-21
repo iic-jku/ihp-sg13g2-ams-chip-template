@@ -76,7 +76,7 @@ magic-drc: ## Run Magic DRC of the CELL cell (usage: make magic-drc [CELL=<celln
 # Verilog Target
 verilog: ## Generate a minimal Verilog wrapper for the bondpad
 	mkdir -p $(VH_DIR)
-	@printf 'module $(TOP) (\n    inout pad\n);\nendmodule\n' > $(VH_DIR)/$(TOP).v
+	@printf 'module $(TOP) (\n    inout pad\n);\nendmodule\n' > $(VH_DIR)/$(TOP).vh
 .PHONY: verilog
 # ================================================================================================
 

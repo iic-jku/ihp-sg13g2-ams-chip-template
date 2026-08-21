@@ -308,21 +308,21 @@ def chip_top_runner():
 
     sources += [
         # Inverter macro stub (analog blackbox)
-        root_path / "macros/inverter/final/vh/inverter_top.v",
+        root_path / "macros/inverter/final/vh/inverter_top.vh",
 
         # SRAM behavioural Verilog models (shipped with the IHP Open-PDK)
         Path(pdk_root) / pdk / "libs.ref/sg13g2_sram/verilog/RM_IHPSG13_1P_1024x32_c2_bm_bist.v",
         Path(pdk_root) / pdk / "libs.ref/sg13g2_sram/verilog/RM_IHPSG13_1P_core_behavioral_bm_bist.v",
 
         # Bondpad stub
-        root_path / "ip/sg13g2_ip__bondpad_70x70/final/vh/sg13g2_ip__bondpad_70x70.v",
+        root_path / "ip/sg13g2_ip__bondpad_70x70/final/vh/sg13g2_ip__bondpad_70x70.vh",
 
         # Custom IO pad models
         root_path / "ip/sg13g2_io_custom/verilog/sg13g2_io.v",
 
         # Logo IPs
-        root_path / "ip/sg13g2_ip__jku/final/vh/sg13g2_ip__jku.v",
-        root_path / "ip/sg13g2_ip__jku_names/final/vh/sg13g2_ip__jku_names.v",
+        root_path / "ip/sg13g2_ip__jku/final/vh/sg13g2_ip__jku.vh",
+        root_path / "ip/sg13g2_ip__jku_names/final/vh/sg13g2_ip__jku_names.vh",
     ]
 
     build_args = []

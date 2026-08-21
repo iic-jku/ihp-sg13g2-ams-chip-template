@@ -22,7 +22,7 @@ A names IP block for [Johannes Kepler University Linz](https://www.jku.at/), ren
 │  ├─ 📁 lib/
 │  │  └─ sg13g2_ip__jku_names.lib   # Liberty timing stub
 │  └─ 📁 vh/
-│     └─ sg13g2_ip__jku_names.v     # Verilog blackbox stub
+│     └─ sg13g2_ip__jku_names.vh    # Verilog blackbox stub
 └─ 📁 verification/
    └─ 📁 drc/                       # DRC reports
 ```

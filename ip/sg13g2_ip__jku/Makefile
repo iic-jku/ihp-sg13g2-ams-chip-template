@@ -114,7 +114,7 @@ lib: ## Generate LIB timing library for the logo
 # Verilog Target
 verilog: ## Generate a minimal Verilog wrapper for the logo
 	mkdir -p $(VH_DIR)
-	@printf 'module $(TOP);\nendmodule\n' > $(VH_DIR)/$(TOP).v
+	@printf 'module $(TOP);\nendmodule\n' > $(VH_DIR)/$(TOP).vh
 .PHONY: verilog
 # ================================================================================================
 

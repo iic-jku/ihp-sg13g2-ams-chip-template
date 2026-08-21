@@ -18,7 +18,7 @@ A 70 µm × 70 µm square bondpad for the IHP SG13G2 130 nm CMOS process, genera
 │  ├─ 📁 lef/
 │  │  └─ sg13g2_ip__bondpad_70x70.lef   # LEF macro for place-and-route
 │  └─ 📁 vh/
-│     └─ sg13g2_ip__bondpad_70x70.v     # Verilog blackbox stub
+│     └─ sg13g2_ip__bondpad_70x70.vh    # Verilog blackbox stub
 └─ 📁 verification/
    └─ 📁 drc/                           # DRC reports
 ```

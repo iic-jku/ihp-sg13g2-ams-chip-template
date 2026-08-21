@@ -24,7 +24,7 @@
 │  ├─ 📁 lib/
 │  │  └─ inverter_top.lib
 │  └─ 📁 vh/
-│     └─ inverter_top.v
+│     └─ inverter_top.vh
 ├─ 📁 layout/
 │  ├─ *.gds
 │  ├─ *.klay.gds
@@ -257,7 +257,7 @@ make lib
 
 ### Verilog Stub
 
-Generates a Verilog stub (`final/vh/<TOP>.v`) for top-level integration into the LibreLane flow by parsing pins from an extracted PEX netlist in `netlist/pex/`.
+Generates a Verilog stub (`final/vh/<TOP>.vh`) for top-level integration into the LibreLane flow by parsing pins from an extracted PEX netlist in `netlist/pex/`.
 
 The `verilog` target:
 - requires one of the following PEX files (run `make magic-pex` or `make klayout-pex` first):

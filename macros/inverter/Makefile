@@ -210,7 +210,7 @@ verilog: ## Generate a Verilog stub of the TOP cell from Magic or KLayout PEX ne
 		done; \
 		echo ');'; \
 		echo 'endmodule'; \
-	} > $(VH_DIR)/$(TOP).v
+	} > $(VH_DIR)/$(TOP).vh
 .PHONY: verilog
 # ================================================================================================
 

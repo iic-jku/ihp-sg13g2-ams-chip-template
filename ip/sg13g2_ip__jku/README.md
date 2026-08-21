@@ -22,7 +22,7 @@ A logo IP block for [Johannes Kepler University Linz](https://www.jku.at/), rend
 │  ├─ 📁 lib/
 │  │  └─ sg13g2_ip__jku.lib   # Liberty timing stub
 │  └─ 📁 vh/
-│     └─ sg13g2_ip__jku.v     # Verilog blackbox stub
+│     └─ sg13g2_ip__jku.vh    # Verilog blackbox stub
 └─ 📁 verification/
    └─ 📁 drc/                 # DRC reports
 ```

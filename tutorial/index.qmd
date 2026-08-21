@@ -778,11 +778,11 @@ For the inverter to be picked up by the top-level LibreLane flow, it must expose
 ```sh
 make lef          # final/lef/inverter_top.lef
 make lib          # final/lib/inverter_top.lib
-make verilog      # final/vh/inverter_top.v
+make verilog      # final/vh/inverter_top.vh
 make build-top    # the three steps above plus copy-gds and render-gds
 ```
 
-`make build-top` also copies the GDS to [`final/gds/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/inverter/final/gds/) and renders the macro to [`render/img/inverter_top.png`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/inverter/render/img/), as displayed in @fig-inverter-top-layout.
+`make build-top` also copies the GDS to [`final/gds/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/inverter/final/gds/) and renders the macro to [`render/img/inverter_top_white.png` and `render/img/inverter_top_black.png`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/inverter/render/img/), as displayed in @fig-inverter-top-layout.
 
 ## Full Analog Macro Flow
 
