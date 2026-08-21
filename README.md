@@ -249,8 +249,8 @@ Xschem reads exactly one `xschemrc` at start-up, and that file decides which sym
 
 | `xschemrc` | Belongs to |
 | --- | --- |
-| [`schematic/xschem/xschemrc`](schematic/xschem/xschemrc) | top-level schematics |
-| [`testbenches/xschem/xschemrc`](testbenches/xschem/xschemrc) | top-level testbenches |
+| [`schematic/xschem/xschemrc`](schematic/xschem/xschemrc) | chip top-level schematics |
+| [`testbenches/xschem/xschemrc`](testbenches/xschem/xschemrc) | chip top-level testbenches |
 | [`macros/inverter/schematic/xschem/xschemrc`](macros/inverter/schematic/xschem/xschemrc) | inverter schematics |
 | [`macros/inverter/testbenches/xschem/xschemrc`](macros/inverter/testbenches/xschem/xschemrc) | inverter testbenches |
 | [`macros/inverter/verification/cace/templates/xschemrc`](macros/inverter/verification/cace/templates/xschemrc) | CACE testbench templates |
@@ -272,7 +272,7 @@ Both helper procedures are defined behind an `[info commands ...]` guard, so sou
 
 ### How the Files Are Chained
 
-The top level pulls in everything below it:
+The chip top-level pulls in everything below it:
 
 ```text
 testbenches/xschem/xschemrc
@@ -284,7 +284,7 @@ macros/inverter/verification/cace/templates/xschemrc
 └─ source macros/inverter/schematic/xschem/xschemrc
 ```
 
-Each schematic folder puts itself and its sibling testbenches folder on the library path, and each testbenches folder does the reverse. Top level therefore sees all six schematic and testbench folders, which is what lets `chip_top.sch` instantiate `inverter.sym` and `counter_top.sym`, and what lets you open a macro testbench from a top-level session. The macro files do not source each other, so a macro can be opened and simulated on its own without the top level being present.
+Each schematic folder puts itself and its sibling testbenches folder on the library path, and each testbenches folder does the reverse. The chip top-level therefore sees all six schematic and testbench folders, which is what lets `chip_top.sch` instantiate `inverter.sym` and `counter_top.sym`, and what lets you open a macro testbench from a chip top-level session. The macro files do not source each other, so a macro can be opened and simulated on its own without the top level being present.
 
 
 ### Where Netlists and Simulation Output Go
@@ -298,7 +298,7 @@ Each schematic folder puts itself and its sibling testbenches folder on the libr
 | `.../cace/templates` | `.../cace/templates/simulations` |
 | anywhere else (a PDK example) | left at the value the `xschemrc` pinned |
 
-It runs twice: once while the `xschemrc` is read, using that file's own folder, and again through Xschem's `load_file_postprocess` hook for every schematic that is opened afterwards. The second call is the important one. Because the top level puts the macro folders on the library path, a macro testbench can be opened from a top-level session, and without the hook its netlist would land in `testbenches/xschem/simulations/`. Its relative includes such as `.include ../../../netlist/pex/inverter_magic_pex_3.spice` are resolved by ngspice relative to the netlist file, so they would then point at the wrong tree and the simulation would abort. With the hook, the netlist always lands next to its own schematic and the includes resolve.
+It runs twice: once while the `xschemrc` is read, using that file's own folder, and again through Xschem's `load_file_postprocess` hook for every schematic that is opened afterwards. The second call is the important one. Because the chip top-level puts the macro folders on the library path, a macro testbench can be opened from a chip top-level session, and without the hook its netlist would land in `testbenches/xschem/simulations/`. Its relative includes such as `.include ../../../netlist/pex/inverter_magic_pex_3.spice` are resolved by ngspice relative to the netlist file, so they would then point at the wrong tree and the simulation would abort. With the hook, the netlist always lands next to its own schematic and the includes resolve.
 
 A `set netlist_dir` passed on the Xschem command line still wins, because `--command` runs after the file is loaded. The LVS netlist targets rely on this to write into `netlist/schematic/` instead.
 
@@ -658,7 +658,7 @@ The `DRC_LEVEL` parameter selects the KLayout DRC level (`sak-drc.sh -l`). It is
 | Zero-area / geometry | – | ✓ | ✓ |
 | Pin / label | – | ✓ | ✓ |
 | Recommended / extra rules | – | – | ✓ |
-| Density (top-level fill) | – | – | ✓ |
+| Density (full-chip fill) | – | – | ✓ |
 | Antenna | – | – | ✓ |
 
 **KLayout DRC (minimum)** runs a pre-check (`precheck`) KLayout DRC on the final top-level layout with logo and fill structures:

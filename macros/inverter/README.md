@@ -318,7 +318,7 @@ The `DRC_LEVEL` parameter selects the KLayout DRC level (`sak-drc.sh -l`). It is
 | Zero-area / geometry | – | ✓ | ✓ |
 | Pin / label | – | ✓ | ✓ |
 | Recommended / extra rules | – | – | ✓ |
-| Density (chip-level fill) | – | – | ✓ |
+| Density (full-chip fill) | – | – | ✓ |
 | Antenna | – | – | ✓ |
 
 **KLayout DRC** runs a KLayout DRC at the selected `DRC_LEVEL`:

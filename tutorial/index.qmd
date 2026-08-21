@@ -697,7 +697,7 @@ The non-interactive DRC can be run with the following Makefile targets (both use
 | Zero-area / geometry | – | ✓ | ✓ |
 | Pin / label | – | ✓ | ✓ |
 | Recommended / extra rules | – | – | ✓ |
-| Density (chip-level fill) | – | – | ✓ |
+| Density (full-chip fill) | – | – | ✓ |
 | Antenna | – | – | ✓ |
 
 ```sh
@@ -1168,7 +1168,7 @@ add_pdn_connect \
 
 ## Top-Level Simulation
 
-The same RTL and gate-level cocotb flow as in @sec-digital is available at chip level.
+The same RTL and gate-level cocotb flow as in @sec-digital is available at top level.
 
 ```sh
 make sim-rtl-cocotb
@@ -1267,7 +1267,7 @@ ke layout/chip_top_logo_fill.gds.gz   # Chip layout with logos and filler
 
 ![`chip_top_logo_fill` layout in KLayout with only `TopMetal2` selected.](fig/chip_top/chip_top_black_TM2.png){#fig-chip-top-layout-tm2 width=75%}
 
-## Chip-Level Verification
+## Top-Level Verification
 
 DRC, LVS, and PEX are also available for the full chip.
 
