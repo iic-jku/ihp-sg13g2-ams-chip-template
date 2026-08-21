@@ -219,6 +219,7 @@ The [top-level Makefile](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template
 | Target              | What it does                                                                                          |
 | ------------------------------ | ---------------------------------------------------------------------- |
 | `make help`         | Print the help banner and list every target with its description.                                     |
+| `make open`         | Open the design files of this folder in the `sak-open.py` file browser (needs the VNC/X11 desktop).    |
 | `make init-submodules` | Initialise and update git submodules (for example the ArtistIC logo flow).                         |
 | `make sim-rtl-cocotb` / `sim-gl-cocotb` | Run the RTL / gate-level (GL) cocotb testbench for the top-level.                       |
 | `make sim-gl-xschem` | Run the gate-level Xschem testbench in batch mode. Part of `sim-all`, but it may take a long time depending on the hardware used. |
@@ -233,6 +234,7 @@ The [top-level Makefile](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template
 | `make bondplan`     | Generate the bondplan (die in package, bondwires, pin table) in `packaging/` (see @sec-packaging).        |
 | `make all`          | Full build, DRC verification, simulation, and bondplan generation.                        |
 | `make release VERSION=2.1.0` | Copy GDS, netlists, and renders into `release/v.<VERSION>/` for tapeout submission.          |
+| `make clean` / `make clean-all` | Delete the generated files of the chip top-level, or of the chip top-level plus the IPs and the macros. |
 
 See the [top-level README](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/README.md) for more details and how to use the Makefile targets.
 
@@ -242,6 +244,7 @@ The [counter Makefile](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/b
 
 | Target                                            | What it does                                                                |
 | ----------------------------------- | ----------------------------------------------------------------- |
+| `make open`                                       | Open the design files of this folder in the `sak-open.py` file browser.     |
 | `make lint-verilog` / `make lint-verilog-all`     | Lint a single cell or the full counter design with Verilator.               |
 | `make sim-rtl-verilog`                            | Run the SystemVerilog testbench with Icarus Verilog.                        |
 | `make sim-rtl-cocotb` / `sim-gl-cocotb`           | Run the cocotb RTL / gate-level simulation.                                 |
@@ -252,6 +255,7 @@ The [counter Makefile](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/b
 | `make build-fpga`                                 | Run the full FPGA flow: lint, synthesis, P&R, and bitstream generation.     |
 | `make build-top`                                  | Run LibreLane, copy reports, netlists, and final views, generate the XSPICE model, and render the final GDS. |
 | `make all`                                        | Run lint, the FPGA build, the full macro build flow, and all simulations. |
+| `make clean`                                      | Delete all generated files and folders of the macro, including the FPGA outputs. |
 
 See the [counter README](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/counter/README.md) for more details and how to use the Makefile targets.
 
@@ -261,6 +265,7 @@ The [inverter Makefile](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/
 
 | Target                                            | What it does                                                                |
 | ----------------------------------- | ----------------------------------------------------------------- |
+| `make open`                                       | Open the design files of this folder in the `sak-open.py` file browser.     |
 | `make sim-xschem TB=<tb>` / `make sim-view-xschem SCRIPT=<script>` | Run a specific Xschem testbench (batch mode) and plot its results with Python. |
 | `make sim-cace`                                   | Run [CACE](https://github.com/fossi-foundation/cace) Monte-Carlo / mismatch characterisations. |
 | `make klayout-drc` / `magic-drc` (`DRC_LEVEL=<precheck|macro|regular>`) | Run DRC using KLayout or Magic.                       |
@@ -270,6 +275,7 @@ The [inverter Makefile](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/
 | `make lef` / `make lib` / `make verilog`          | Generate the LEF, the Liberty stub, and the Verilog stub for top-level integration.   |
 | `make build-top`                                  | Build the analog macro deliverables: LEF, LIB, Verilog stub, GDS and rendered layout image. |
 | `make all`                                        | Run KLayout / Magic verification, the analog macro build flow, and all simulations. |
+| `make clean`                                      | Delete all generated files and folders of the macro, including the CACE outputs. |
 
 See the [inverter README](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/inverter/README.md) for more details and how to use the Makefile targets.
 
@@ -848,6 +854,7 @@ The available Makefile targets for the bondpad are summarised below.
 | `verilog`     | Generate a Verilog blackbox stub.                                                                                                                                                                       |
 | `klayout-drc` | Run KLayout DRC (`make klayout-drc [CELL=<cellname>] [DRC_LEVEL=<precheck|macro|regular>]`).                                                                                                                                                 |
 | `magic-drc`   | Run Magic DRC (`make magic-drc [CELL=<cellname>]`).                                                                                                                                                     |
+| `open`        | Browse this folder with `sak-open.py` and open each file in its tool (needs the VNC/X11 desktop).                                                                                                        |
 | `clean`       | Remove the `final/` and `verification/drc/` output directories.                                                                                                                                         |
 
 To execute the `clean`, `bondpad`, `verilog`, `klayout-drc`, and `magic-drc` targets in sequence, run:
@@ -906,6 +913,7 @@ The available Makefile targets for the logos are summarised below.
 | `verilog`     | Emit a Verilog blackbox stub (`module sg13g2_ip__jku;`) with no ports.                             |
 | `klayout-drc` | Run KLayout DRC (same `DRC_LEVEL` selection as the bondpad).                                            |
 | `magic-drc`   | Run Magic DRC.                                                                                     |
+| `open`        | Browse this folder with `sak-open.py` and open each file in its tool (needs the VNC/X11 desktop).  |
 | `clean`       | Remove `final/` and `verification/drc/`.                                                           |
 
 To execute the `clean`, `logo`, `lef`, `lib`, `verilog`, `klayout-drc`, and `magic-drc` targets in sequence, run:
