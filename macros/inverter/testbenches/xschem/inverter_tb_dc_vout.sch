@@ -113,7 +113,7 @@ wrdata ../plot_simulations/data/@schname\\\\.txt v(vin) v(vout)
 "}
 C {devices/launcher.sym} 1720 -1340 0 0 {name=h2
 descr="Simulate" 
-tclcommand="xschem save; xschem netlist; xschem simulate"
+tclcommand="xschem save; xschem netlist; file mkdir $netlist_dir; write_data [save_params] $netlist_dir/[file rootname [file tail [xschem get current_name]]].save; xschem simulate"
 }
 C {title-3.sym} 0 0 0 0 {name=l2 author="Simon Dorrer" rev=1.0 lock=true}
 C {devices/launcher.sym} 1720 -1220 0 0 {name=h1
@@ -162,7 +162,8 @@ C {inverter.sym} 1080 -860 0 0 {name=x1
 }
 C {devices/code_shown.sym} 1660 -1430 0 0 {name=SAVE only_toplevel=true
 format="tcleval( @value )"
-value=".include [file rootname [xschem get schname]].save
+value="
+.include [file rootname [file tail [xschem get schname]]].save
 "}
 C {inverter.sym} 1080 -1280 0 0 {name=x2
 spice_ignore=true}

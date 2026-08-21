@@ -138,7 +138,7 @@ C {devices/gnd.sym} 120 -320 0 0 {name=l1 lab=GND}
 C {devices/title-3.sym} 0 0 0 0 {name=l3 author="Simon Dorrer" rev=1.0 lock=true}
 C {devices/launcher.sym} 1700 -1580 0 0 {name=h2
 descr="Simulate" 
-tclcommand="xschem save; xschem netlist; xschem simulate"
+tclcommand="xschem save; xschem netlist; file mkdir $netlist_dir; write_data [save_params] $netlist_dir/[file rootname [file tail [xschem get current_name]]].save; xschem simulate"
 }
 C {devices/launcher.sym} 1700 -1480 0 0 {name=h1
 descr="Load waves" 
@@ -270,3 +270,8 @@ value=1k
 footprint=1206
 device=resistor
 m=1}
+C {devices/code_shown.sym} 60 -1630 0 0 {name=SAVE only_toplevel=true
+format="tcleval( @value )"
+value="
+.include [file rootname [file tail [xschem get schname]]].save
+"}

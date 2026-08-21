@@ -283,7 +283,7 @@ value="
 
 set num_threads=32
 
-* save all
+save all
 
 * User Constants
 let tstart = 0
@@ -326,7 +326,7 @@ wrdata ../plot_simulations/data/chip_top_tb_tran.txt
 "}
 C {devices/launcher.sym} 1530 -2060 0 0 {name=h2
 descr="Simulate" 
-tclcommand="xschem save; xschem netlist; xschem simulate"
+tclcommand="xschem save; xschem netlist; file mkdir $netlist_dir; write_data [save_params] $netlist_dir/[file rootname [file tail [xschem get current_name]]].save; xschem simulate"
 }
 C {devices/launcher.sym} 1530 -1940 0 0 {name=h1
 descr="Load waves" 
@@ -416,3 +416,8 @@ C {devices/gnd.sym} 1120 -380 0 1 {name=l26 lab=GND}
 C {devices/vsource.sym} 1300 -470 0 0 {name=vsine2 spice_ignore=False value="sin(\{Vcm\} 10m 400k)"
 }
 C {devices/gnd.sym} 1300 -380 0 1 {name=l1 lab=GND}
+C {devices/code_shown.sym} 2300 -2170 0 0 {name=SAVE only_toplevel=true
+format="tcleval( @value )"
+value="
+.include [file rootname [file tail [xschem get schname]]].save
+"}
