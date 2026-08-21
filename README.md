@@ -243,6 +243,75 @@ A designer-oriented description of this chip can be found in [doc/](doc/):
 </details>
 
 
+## Xschem Configuration
+
+Xschem reads exactly one `xschemrc` at start-up, and that file decides which symbol libraries are visible and where netlists and simulation output are written. This template ships one per folder that holds schematics:
+
+| `xschemrc` | Belongs to |
+| --- | --- |
+| [`schematic/xschem/xschemrc`](schematic/xschem/xschemrc) | top-level schematics |
+| [`testbenches/xschem/xschemrc`](testbenches/xschem/xschemrc) | top-level testbenches |
+| [`macros/inverter/schematic/xschem/xschemrc`](macros/inverter/schematic/xschem/xschemrc) | inverter schematics |
+| [`macros/inverter/testbenches/xschem/xschemrc`](macros/inverter/testbenches/xschem/xschemrc) | inverter testbenches |
+| [`macros/inverter/verification/cace/templates/xschemrc`](macros/inverter/verification/cace/templates/xschemrc) | CACE testbench templates |
+| [`macros/counter/schematic/xschem/xschemrc`](macros/counter/schematic/xschem/xschemrc) | counter schematics |
+| [`macros/counter/testbenches/xschem/xschemrc`](macros/counter/testbenches/xschem/xschemrc) | counter testbenches |
+
+
+### What Every File Does
+
+All of them run the same four steps, in this order:
+
+1. **Pick the PDK.** `PDK_ROOT` is probed in the usual install locations if the environment does not set it, and `PDK` falls back to `ihp-sg13g2`. The container already exports `PDK_ROOT`, and [`.designinit`](.designinit) exports `PDK`, so this step is only a safety net for an Xschem started outside that environment.
+2. **Source the PDK `xschemrc`.** `$PDK_ROOT/$PDK/libs.tech/xschem/xschemrc` brings in the IHP device symbols, the ngspice model paths and the IHP menu. It is guarded by `[info exists PDK]` so it is read once even when several project files are chained.
+3. **Add the project library paths.** `append_xschem_library_path_unique` appends a folder to `XSCHEM_LIBRARY_PATH` only if it is not already there, so the same folder never appears twice no matter how the files are chained. [`testbenches/xschem/xschemrc`](testbenches/xschem/xschemrc) adds none of its own and gets its paths from the file it sources.
+4. **Pin the netlist directory.** `pin_netlist_dir` decides where `xschem netlist` and the simulators write.
+
+Both helper procedures are defined behind an `[info commands ...]` guard, so sourcing one file from another is harmless and the order does not matter.
+
+
+### How the Files Are Chained
+
+The top level pulls in everything below it:
+
+```text
+testbenches/xschem/xschemrc
+└─ source schematic/xschem/xschemrc
+   ├─ source macros/inverter/schematic/xschem/xschemrc
+   └─ source macros/counter/schematic/xschem/xschemrc
+
+macros/inverter/verification/cace/templates/xschemrc
+└─ source macros/inverter/schematic/xschem/xschemrc
+```
+
+Each schematic folder puts itself and its sibling testbenches folder on the library path, and each testbenches folder does the reverse. Top level therefore sees all six schematic and testbench folders, which is what lets `chip_top.sch` instantiate `inverter.sym` and `counter_top.sym`, and what lets you open a macro testbench from a top-level session. The macro files do not source each other, so a macro can be opened and simulated on its own without the top level being present.
+
+
+### Where Netlists and Simulation Output Go
+
+`pin_netlist_dir` maps the folder of the schematic being netlisted to a `simulations/` folder:
+
+| Schematic lives in | `netlist_dir` |
+| --- | --- |
+| `<x>/testbenches/xschem` | `<x>/testbenches/xschem/simulations` |
+| `<x>/schematic/xschem` | `<x>/testbenches/xschem/simulations` |
+| `.../cace/templates` | `.../cace/templates/simulations` |
+| anywhere else (a PDK example) | left at the value the `xschemrc` pinned |
+
+It runs twice: once while the `xschemrc` is read, using that file's own folder, and again through Xschem's `load_file_postprocess` hook for every schematic that is opened afterwards. The second call is the important one. Because the top level puts the macro folders on the library path, a macro testbench can be opened from a top-level session, and without the hook its netlist would land in `testbenches/xschem/simulations/`. Its relative includes such as `.include ../../../netlist/pex/inverter_magic_pex_3.spice` are resolved by ngspice relative to the netlist file, so they would then point at the wrong tree and the simulation would abort. With the hook, the netlist always lands next to its own schematic and the includes resolve.
+
+A `set netlist_dir` passed on the Xschem command line still wins, because `--command` runs after the file is loaded. The LVS netlist targets rely on this to write into `netlist/schematic/` instead.
+
+All `simulations/` folders are generated and git-ignored.
+
+
+### Which File Is Used
+
+- The Makefile targets always name one explicitly with `--rcfile`, so a target behaves the same from any working directory.
+- Inside the container, [`.designinit`](.designinit) wraps `xschem` so that a plain `xschem <file>` from anywhere uses `schematic/xschem/xschemrc`.
+- Starting Xschem from within one of the seven folders picks up that folder's file, which is the normal interactive case.
+
+
 ## Makefile Structure
 
 The whole flow is driven by Makefiles. The top-level `Makefile` builds the chip, and every component under [`macros/`](macros/) and [`ip/`](ip/) has its own `Makefile` and `README.md` following the same conventions (`make help`, `make all`, and so on). You can run each component from the top level or directly from inside its own folder. The figure below shows how the targets are connected when you run `make all` at the top level.
@@ -263,7 +332,7 @@ At the top level, `make all` runs four steps in this order:
 
 1. `build-all` initializes the submodules and builds every component by calling its own `all` target: bondpad, logos, digital macro, analog macro, and finally the chip assembly with `build-top` (LibreLane, copy-back of all artifacts, logo and fill insertion, final GDS render).
 2. `magic-drc` and `klayout-drc` run the DRC of the final `chip_top` and `chip_top_logo_fill` GDS.
-3. `sim-all` runs the chip-level RTL and gate-level simulations on the netlists produced by this build.
+3. `sim-all` runs the top-level RTL and gate-level simulations on the netlists produced by this build.
 4. `bondplan` generates the bonding diagram, the bondwires, and the pin table.
 
 Every component follows the same principle. The simulations always run last, so they use the artifacts that the same invocation has just produced.
@@ -589,7 +658,7 @@ The `DRC_LEVEL` parameter selects the KLayout DRC level (`sak-drc.sh -l`). It is
 | Zero-area / geometry | – | ✓ | ✓ |
 | Pin / label | – | ✓ | ✓ |
 | Recommended / extra rules | – | – | ✓ |
-| Density (chip-level fill) | – | – | ✓ |
+| Density (top-level fill) | – | – | ✓ |
 | Antenna | – | – | ✓ |
 
 **KLayout DRC (minimum)** runs a pre-check (`precheck`) KLayout DRC on the final top-level layout with logo and fill structures:
