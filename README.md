@@ -359,6 +359,41 @@ make help
 ```
 
 
+### Open the Design Files
+
+Opens a file browser for this folder with `sak-open.py` from the [IIC-OSIC-TOOLS](https://github.com/iic-jku/IIC-OSIC-TOOLS), one button per design file, grouped by directory:
+
+```sh
+make open
+```
+
+Clicking a button launches the matching tool in the file's own directory, so Xschem finds its `simulations/` folder and KLayout its run outputs where they belong:
+
+| File type | Tool |
+| --- | --- |
+| `.sch`, `.sym` | Xschem |
+| `.gds`, `.gds.gz`, `.oas`, `.oas.gz` | KLayout in edit mode |
+| `.mag` | Magic |
+| `.vcd`, `.fst`, `.gtkw` | GTKWave |
+| `.raw` | gaw (ngspice rawfile) |
+| `.png`, `.pdf` | the desktop's handler (`xdg-open`) |
+| `.sv`, `.svh`, `.v`, `.vh`, `.vhd`, `.vhdl`, `.spice`, `.cir`, `.sp`, `.cdl`, `.sdc`, `.lef`, `.lib`, `.tcl`, `.mk`, `.yaml`, `.json`, `.py`, `.qmd`, `.tex`, `.md` and `Makefile` | gvim |
+
+Only these types get a button. Files with any other extension (`.sh`, `.svg`, `.pcf`, `.save`, `.rpt`, `.txt`, `.csv` and so on) are not listed.
+
+Schematics and symbols that belong to one design unit share a single tabbed Xschem instance instead of one process per click. The unit is the nearest ancestor holding a `Makefile`, so each macro and the top level get their own instance. Every tab then writes its netlists to the folder that macro's `xschemrc` pins, see [Xschem Configuration](#xschem-configuration).
+
+The tree is rescanned every 15 s, so files a running flow produces appear on their own and are highlighted for a minute. Generated directories are skipped by default: `runs/`, `sim_build/`, `obj_dir/`, `simulations/`, `__pycache__/`, `_freeze/` and `.git/`. The Xschem `simulations/` folder is one of them, so the `.raw` files show up only with `--all`. Pass extra options with `OPEN_ARGS`:
+
+```sh
+make open OPEN_ARGS=--all              # include the build outputs
+make open OPEN_ARGS="--prune backups"  # skip one more directory name
+```
+
+> [!NOTE]
+> This target needs a display. Run it inside the container's VNC/noVNC desktop or over X11 forwarding. In a shell-only container it stops with `cannot open a window`.
+
+
 ### Initialize Git Submodules
 
 Initializes and updates the repository submodules (for example [ArtistIC](https://github.com/pulp-platform/artistic)):
@@ -935,6 +970,62 @@ The following tools and flows are checked:
 | Magic DRC (sign-off, run inside LibreLane) | counter `librelane-magicdrc` |
 | `spi2xspice.py` + `sak-pin-reorder.py` (XSPICE model) | counter `generate-xspice` |
 | Xschem gate-level | counter `sim-gl-xschem` |
+
+
+### Clean
+
+`make clean` deletes everything the chip top-level targets generate. The sources stay untouched: the RTL, the schematics, symbols and testbenches, the scripts, the LibreLane and packaging configurations, the EUROPRACTICE package library `packaging/layout/EP_PACKAGES_08022018.gds`, and `render/blender/`. Deleted are:
+
+- `flow/librelane/runs/` and `flow/final/` (LibreLane run directories and the saved views)
+- `layout/` (`chip_top.gds.gz` and `chip_top_logo_fill.gds.gz`)
+- `netlist/` (schematic, layout, PEX, PnL, NL and SPICE netlists)
+- `render/img/` (the chip renders)
+- `verification/drc/`, `verification/lvs/` and `verification/reports/`
+- `schematic/xschem/simulations/`, `testbenches/xschem/simulations/` and the `plot_simulations/` outputs (`data/`, `figures/`, `__pycache__/`)
+- `testbenches/cocotb/sim_build/` and the `__pycache__` folders under `scripts/`, `packaging/scripts/` and `testbenches/cocotb/`
+- the bondplan outputs in `packaging/` (`render/`, `result.md`, and in `layout/` the generated `chip_top_bondplan.gds`, `chip_top_logo_TM2.gds.gz` and the extracted package footprint `OP_QFN32_A4_FIT.gds`)
+
+The macros under [`macros/`](macros/) and the IPs under [`ip/`](ip/) are left alone. `make clean-all` runs `clean` here and then `make clean` in every IP and macro:
+
+```sh
+make clean        # chip top-level only
+make clean-all    # chip top-level, IPs and macros
+```
+
+[`release/`](release/) is never deleted, so published versions survive a clean. Every target recreates the folders it writes to, so a full rebuild from a clean tree is:
+
+```sh
+make clean-all
+make all
+```
+
+> [!WARNING]
+> Most of these outputs are committed in this repository, so `make clean` leaves a large deletion set in `git status`. Run `git restore .` to get the tracked ones back if you did not mean to remove them. The LibreLane run directories under `flow/librelane/runs/` are **not** tracked and cannot be restored that way.
+
+> [!NOTE]
+> The chip top-level testbench includes the counter XSPICE model `macros/counter/netlist/xspice/counter_top.xspice`, which `clean-all` removes. Run `make build-counter` (or the full `make all`) once before `make sim-gl-xschem`, otherwise the include fails.
+
+
+## Start a New Chip from This Template
+
+This repository is itself the template for a new chip. Fork it or copy it, then work outwards from the top level:
+
+1. Run `make clean-all` so that no output of the example chip is left behind.
+2. Set `TOP` in the `Makefile` and `DESIGN` in [`scripts/add_logo_fill.sh`](scripts/add_logo_fill.sh).
+3. Rename the RTL in [`rtl/`](rtl/), the Xschem schematic, symbols and testbenches in [`schematic/xschem/`](schematic/xschem/) and [`testbenches/`](testbenches/), and the plotting script in `testbenches/xschem/plot_simulations/`.
+4. Update [`flow/librelane/config.yaml`](flow/librelane/config.yaml): `DESIGN_NAME`, `VERILOG_FILES`, `CLOCK_PORT`, `DIE_AREA`, the `MACROS` entries with their instance placements, and the IO pad ring. Rename `flow/librelane/chip_top.sdc` and update the three `*_SDC_FILE` keys that point at it.
+5. Update [`packaging/config.yaml`](packaging/config.yaml): `DESIGN_NAME` and the `PINOUT` map. The `{design}` placeholder expands to `DESIGN_NAME`, so the bondplan output names follow automatically.
+6. Replace or remove the example macros under [`macros/`](macros/) and the logos under [`ip/`](ip/), and adjust `build-macros`, `build-logos` and `clean-all` in the `Makefile` to match.
+7. Update `CITATION.cff`, this `README.md` and the tutorial under [`tutorial/`](tutorial/).
+
+Then build from the clean tree:
+
+```sh
+make clean-all
+make all
+```
+
+The two example macros are themselves templates for the two kinds of block. See [Start a New Analog Macro from This Template](macros/inverter/README.md#start-a-new-analog-macro-from-this-template) for the inverter and [Start a New Digital Macro from This Template](macros/counter/README.md#start-a-new-digital-macro-from-this-template) for the counter.
 
 
 ## Cite This Work

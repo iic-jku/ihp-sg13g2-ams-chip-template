@@ -24,6 +24,20 @@ make help
 ```
 
 
+## Open the Design Files
+
+Opens a file browser for this folder with `sak-open.py` from the [IIC-OSIC-TOOLS](https://github.com/iic-jku/IIC-OSIC-TOOLS), one button per file:
+
+```sh
+make open
+```
+
+Clicking a button launches the matching tool in the file's own directory: gvim for the `Makefile`, the `README.md` and the synthesized `.json` netlist, GTKWave for `.vcd` / `.fst`, and the desktop's handler for the generated `.pdf` visualizations. Only the file types listed in [the top-level README](../../../README.md#open-the-design-files) get a button, so `pico-ice.pcf` and the `.svg` visualizations are not shown, and the RTL lives one level up in [`../rtl/`](../rtl/). Pass extra options with `OPEN_ARGS`, for example `make open OPEN_ARGS=--all` to include the build outputs.
+
+> [!NOTE]
+> This target needs a display. Run it inside the container's VNC/noVNC desktop or over X11 forwarding.
+
+
 ## Clean
 
 Remove generated files:
