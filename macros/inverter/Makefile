@@ -76,8 +76,8 @@ help: ## Show this help message
 	@echo 'THRESHOLD/MINRES/MINDELAY are full-RC (EXT_MODE=3) extresist settings for magic-pex (defaults 10000 mOhm / 1000 mOhm / 1 ps).'
 	@echo 'DRC_LEVEL defaults to macro. Sets the KLayout DRC level for klayout-drc (precheck|macro|regular).'
 	@echo 'EV_PRECISION defaults to 5 significant digits for xschem ev function.'
-	@echo 'TB selects the Xschem testbench for sim-xschem (e.g. inverter_tb_tran).'
-	@echo 'SCRIPT selects the plotting script for sim-view-xschem (e.g. plot_inverter_top).'
+	@echo 'TB selects the Xschem testbench for sim-xschem (default: <CELL>_tb_tran).'
+	@echo 'SCRIPT selects the plotting script for sim-view-xschem (default: plot_<CELL>).'
 	@echo 'OPEN_ARGS passes extra options to sak-open.py for the open target (e.g. --all).'
 .PHONY: help
 # ================================================================================================
@@ -91,11 +91,14 @@ open: ## Open the design files of this folder in the sak-open.py file browser (n
 
 
 # Simulation Targets
-# Testbench name for sim-xschem target (required: make sim-xschem TB=<testbenchname>)
-TB ?= $(error TB is not set. Usage: make sim-xschem TB=<testbenchname>)
-SCRIPT ?= $(error SCRIPT is not set. Usage: make sim-view-xschem SCRIPT=<scriptname>)
+# Testbench for the Xschem simulation targets (default: <CELL>_tb_tran)
+# Override with: make <target> TB=<testbenchname>
+TB ?= $(CELL)_tb_tran
+# Plotting script for sim-view-xschem (default: plot_<CELL>)
+# Override with: make <target> SCRIPT=<scriptname>
+SCRIPT ?= plot_$(CELL)
 
-sim-xschem: ## Run TB simulation with Xschem in batch mode (usage: make sim-xschem TB=<testbenchname>)
+sim-xschem: ## Run TB simulation with Xschem in batch mode (usage: make sim-xschem [TB=<testbenchname>])
 	mkdir -p $(XSCHEM_TB_DIR)/simulations
 	mkdir -p $(SIM_PLOT_DIR)/data
 	cd $(XSCHEM_TB_DIR) && xschem -r -x -q --rcfile xschemrc --command ' \
@@ -108,7 +111,7 @@ sim-xschem: ## Run TB simulation with Xschem in batch mode (usage: make sim-xsch
 	cd $(XSCHEM_TB_DIR)/simulations && ngspice -b $(TB).spice
 .PHONY: sim-xschem
 
-sim-view-xschem: ## Plot Xschem simulation results (usage: make sim-view-xschem SCRIPT=<scriptname>)
+sim-view-xschem: ## Plot Xschem simulation results (usage: make sim-view-xschem [SCRIPT=<scriptname>])
 	SHOW_PLOTS=1 python3 $(SIM_PLOT_DIR)/$(SCRIPT).py
 .PHONY: sim-view-xschem
 

@@ -441,10 +441,11 @@ Because the run is headless, the `plot` commands in a testbench's `.control` blo
 > [!NOTE]
 > `sim-gl-xschem` is part of `sim-all`, but it may take a long time depending on the hardware used.
 
-To plot the Xschem simulation results, use `sim-view-xschem`. It runs a plotting script from `testbenches/xschem/plot_simulations/` (`SIM_PLOT_DIR`), selected with the `SCRIPT` variable (given without the `.py` extension), and reproduces the plots of the testbench's `.control` block with matplotlib from the exported data in `plot_simulations/data/`:
+To plot the Xschem simulation results, use `sim-view-xschem`. It runs a plotting script from `testbenches/xschem/plot_simulations/` (`SIM_PLOT_DIR`), selected with the `SCRIPT` variable, given without the `.py` extension (default: `plot_<CELL>`), and reproduces the plots of the testbench's `.control` block with matplotlib from the exported data in `plot_simulations/data/`:
 
 ```sh
-make sim-view-xschem SCRIPT=plot_chip_top
+make sim-view-xschem                      # run the default plotting script (plot_chip_top)
+make sim-view-xschem SCRIPT=<scriptname>  # run another plotting script
 ```
 
 The target runs `SHOW_PLOTS=1 python3 testbenches/xschem/plot_simulations/$(SCRIPT).py`. Every script writes its figures to `testbenches/xschem/plot_simulations/figures/`. Run through `sim-view-xschem`, the plot windows additionally open when a display is available (i.e. the container's X/VNC session). Headless, only the figures are written.

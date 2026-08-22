@@ -81,7 +81,7 @@ help: ## Show this help message
 	@echo 'CELL defaults to $(TOP). Override to lint or simulate subcells.'
 	@echo 'WAVEFORM_VIEWER defaults to gtkwave. Use surfer to launch Surfer instead.'
 	@echo 'TB selects the Xschem testbench for sim-gl-xschem (default: <CELL>_tb_tran).'
-	@echo 'SCRIPT selects the plotting script for sim-view-xschem (e.g. plot_counter_top).'
+	@echo 'SCRIPT selects the plotting script for sim-view-xschem (default: plot_<CELL>).'
 	@echo 'OPEN_ARGS passes extra options to sak-open.py for the open target (e.g. --all).'
 .PHONY: help
 # ================================================================================================
@@ -110,7 +110,9 @@ lint-verilog-all: ## Lint all Verilog source files (counter, counter_top)
 # Testbench for the Xschem simulation targets (default: <CELL>_tb_tran)
 # Override with: make <target> TB=<testbenchname>
 TB ?= $(CELL)_tb_tran
-SCRIPT ?= $(error SCRIPT is not set. Usage: make sim-view-xschem SCRIPT=<scriptname>)
+# Plotting script for sim-view-xschem (default: plot_<CELL>)
+# Override with: make <target> SCRIPT=<scriptname>
+SCRIPT ?= plot_$(CELL)
 
 sim-rtl-verilog: ## Run RTL simulation of CELL cell with Icarus Verilog (usage: make sim-rtl-verilog [CELL=<cellname>])
 	iverilog -g2012 -DSIM -o $(VERILOG_TB_DIR)/test_$(CELL) $(_SIM_SRCS) $(VERILOG_TB_DIR)/$(CELL)_tb.$(_TB_EXT)
@@ -159,7 +161,7 @@ sim-gl-xschem: ## Run gate-level simulation of CELL cell with Xschem in batch mo
 	cd $(XSCHEM_TB_DIR)/simulations && ngspice -b $(TB).spice
 .PHONY: sim-gl-xschem
 
-sim-view-xschem: ## Plot Xschem simulation results (usage: make sim-view-xschem SCRIPT=<scriptname>)
+sim-view-xschem: ## Plot Xschem simulation results (usage: make sim-view-xschem [SCRIPT=<scriptname>])
 	SHOW_PLOTS=1 python3 $(SIM_PLOT_DIR)/$(SCRIPT).py
 .PHONY: sim-view-xschem
 

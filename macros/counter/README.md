@@ -298,10 +298,11 @@ Because the run is headless, the `plot` commands in a testbench's `.control` blo
 
 #### View Xschem Simulation Results
 
-After the gate-level Xschem simulation has completed, plot the results with:
+After the gate-level Xschem simulation has completed, plot the results with the script selected by `SCRIPT`, given without the `.py` extension (default: `plot_<CELL>`):
 
 ```sh
-make sim-view-xschem SCRIPT=plot_counter_top
+make sim-view-xschem                      # run the default plotting script (plot_counter_top)
+make sim-view-xschem SCRIPT=<scriptname>  # run another plotting script
 ```
 
 The target runs `SHOW_PLOTS=1 python3 testbenches/xschem/plot_simulations/<SCRIPT>.py` and exports the figures and a CSV to `testbenches/xschem/plot_simulations/figures/`. The `SCRIPT` variable is given without the `.py` extension. Run through `sim-view-xschem`, the plot windows additionally open when a display is available (i.e. the container's X/VNC session). Headless, only the figures are written.

@@ -222,7 +222,7 @@ The [top-level Makefile](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template
 | `make open`         | Open the design files of this folder in the `sak-open.py` file browser (needs the VNC/X11 desktop).    |
 | `make init-submodules` | Initialise and update git submodules (for example the ArtistIC logo flow).                         |
 | `make sim-rtl-cocotb` / `sim-gl-cocotb` | Run the RTL / gate-level (GL) cocotb testbench for the top-level.                       |
-| `make sim-gl-xschem` | Run the gate-level Xschem testbench in batch mode. Part of `sim-all`, but it may take a long time depending on the hardware used. |
+| `make sim-gl-xschem` | Run the gate-level Xschem testbench in batch mode (`TB` defaults to `<CELL>_tb_tran`). Part of `sim-all`, but it may take a long time depending on the hardware used. |
 | `make sim-view-cocotb` | Open the latest cocotb waveform in GTKWave (or Surfer with `WAVEFORM_VIEWER=surfer`).              |
 | `make librelane` / `librelane-nodrc` | Run the LibreLane flow for the top-level (with / without DRC steps).                  |
 | `make copy-reports` / `copy-gds` / `copy-netlist` / `copy-render` | Copy the latest LibreLane artifacts back into the source tree. |
@@ -251,7 +251,7 @@ The [counter Makefile](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/b
 | `make sim-view-verilog` / `sim-view-cocotb`       | Open the latest waveform in GTKWave or Surfer.                              |
 | `make librelane` (and `-nodrc`, `-magicdrc`, …)   | Run the LibreLane flow for the counter macro.                               |
 | `make generate-xspice`                            | Convert the LibreLane-extracted SPICE netlist into an XSPICE model for Xschem. |
-| `make sim-gl-xschem` / `sim-view-xschem`          | Run the mixed-signal XSPICE simulation in Xschem (batch mode) and plot the results. |
+| `make sim-gl-xschem` / `sim-view-xschem`          | Run the mixed-signal XSPICE simulation in Xschem (batch mode) and plot the results. `TB` defaults to `<CELL>_tb_tran` and `SCRIPT` to `plot_<CELL>`. |
 | `make build-fpga`                                 | Run the full FPGA flow: lint, synthesis, P&R, and bitstream generation.     |
 | `make build-top`                                  | Run LibreLane, copy reports, netlists, and final views, generate the XSPICE model, and render the final GDS. |
 | `make all`                                        | Run lint, the FPGA build, the full macro build flow, and all simulations. |
@@ -266,7 +266,7 @@ The [inverter Makefile](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/
 | Target                                            | What it does                                                                |
 | ----------------------------------- | ----------------------------------------------------------------- |
 | `make open`                                       | Open the design files of this folder in the `sak-open.py` file browser.     |
-| `make sim-xschem TB=<tb>` / `make sim-view-xschem SCRIPT=<script>` | Run a specific Xschem testbench (batch mode) and plot its results with Python. |
+| `make sim-xschem` / `make sim-view-xschem`        | Run an Xschem testbench (batch mode) and plot its results with Python. `TB` defaults to `<CELL>_tb_tran` and `SCRIPT` to `plot_<CELL>`, override with `TB=<tb>` / `SCRIPT=<script>`. |
 | `make sim-cace`                                   | Run [CACE](https://github.com/fossi-foundation/cace) Monte-Carlo / mismatch characterisations. |
 | `make klayout-drc` / `magic-drc` (`DRC_LEVEL=<precheck|macro|regular>`) | Run DRC using KLayout or Magic.                       |
 | `make klayout-lvs` / `magic-lvs`                  | Run LVS using KLayout or Magic + Netgen.                                    |
@@ -522,14 +522,15 @@ Non-interactive runs and post-processing are also available through the Makefile
 
 ```sh
 cd macros/inverter
-make sim-xschem TB=<testbench_name>     # run a specific testbench non-interactively
+make sim-xschem                         # run the default testbench (inverter_top_tb_tran)
+make sim-xschem TB=<testbench_name>     # run another testbench non-interactively
 make sim-view-xschem SCRIPT=plot_inverter      # plot results of inverter with Python
 make sim-view-xschem SCRIPT=plot_inverter_top  # plot results of inverter_top with Python
 ```
 
-`sim-xschem` runs in batch mode: it netlists the testbench with `xschem netlist` and then calls `ngspice -b` directly, so `make` blocks until the run finishes and sees its exit status. The testbench is selected with `TB=<testbench_name>`. Since the run is headless, the `plot` commands in the testbench's `.control` block are a no-op. Every testbench exports its results with `wrdata` to [`testbenches/xschem/plot_simulations/data/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/inverter/testbenches/xschem/plot_simulations/data) instead.
+`sim-xschem` runs in batch mode: it netlists the testbench with `xschem netlist` and then calls `ngspice -b` directly, so `make` blocks until the run finishes and sees its exit status. The testbench is selected with `TB=<testbench_name>` and defaults to `<CELL>_tb_tran`. Since the run is headless, the `plot` commands in the testbench's `.control` block are a no-op. Every testbench exports its results with `wrdata` to [`testbenches/xschem/plot_simulations/data/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/inverter/testbenches/xschem/plot_simulations/data) instead.
 
-The Makefile target `sim-view-xschem` calls the Python plotters in [`testbenches/xschem/plot_simulations/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/inverter/testbenches/xschem/plot_simulations), selected with the `SCRIPT` variable, to parse the raw simulation output and plot the results with Matplotlib. The following figures show some of these plotted results.
+The Makefile target `sim-view-xschem` calls the Python plotters in [`testbenches/xschem/plot_simulations/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/inverter/testbenches/xschem/plot_simulations), selected with the `SCRIPT` variable (default: `plot_<CELL>`), to parse the raw simulation output and plot the results with Matplotlib. The following figures show some of these plotted results.
 
 ![Plotted simulation result of `inverter_tb_ac_ol`.](fig/inverter_top/inverter_tb_ac_ol_sim.svg){#fig-inverter-tb-ac-ol-sim width=90%}
 

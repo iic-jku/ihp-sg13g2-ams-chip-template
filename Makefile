@@ -97,7 +97,7 @@ help: ## Show this help message
 	@echo 'EV_PRECISION defaults to 5 significant digits for Xschem ev function.'
 	@echo 'WAVEFORM_VIEWER defaults to gtkwave. Use surfer to launch Surfer instead.'
 	@echo 'TB selects the Xschem testbench for sim-gl-xschem (default: <CELL>_tb_tran).'
-	@echo 'SCRIPT selects the plotting script for sim-view-xschem (e.g. plot_chip_top).'
+	@echo 'SCRIPT selects the plotting script for sim-view-xschem (default: plot_<CELL>).'
 	@echo 'VERSION defaults to $(VERSION). Used by the release target.'
 	@echo 'OPEN_ARGS passes extra options to sak-open.py for the open target (e.g. --all).'
 .PHONY: help
@@ -122,7 +122,9 @@ init-submodules: ## Initialize and update git submodules (e.g. flow/artistic)
 # Testbench for the Xschem simulation targets (default: <CELL>_tb_tran)
 # Override with: make <target> TB=<testbenchname>
 TB ?= $(CELL)_tb_tran
-SCRIPT ?= $(error SCRIPT is not set. Usage: make sim-view-xschem SCRIPT=<scriptname>)
+# Plotting script for sim-view-xschem (default: plot_<CELL>)
+# Override with: make <target> SCRIPT=<scriptname>
+SCRIPT ?= plot_$(CELL)
 
 sim-rtl-cocotb: ## Run RTL simulation of CELL cell with cocotb (usage: make sim-rtl-cocotb [CELL=<cellname>])
 	cd $(COCOTB_DIR) && python3 $(CELL)_tb.py
@@ -155,7 +157,7 @@ sim-gl-xschem: ## Run gate-level simulation of CELL cell with Xschem in batch mo
 	cd $(XSCHEM_TB_DIR)/simulations && ngspice -b $(TB).spice
 .PHONY: sim-gl-xschem
 
-sim-view-xschem: ## Plot Xschem simulation results (usage: make sim-view-xschem SCRIPT=<scriptname>)
+sim-view-xschem: ## Plot Xschem simulation results (usage: make sim-view-xschem [SCRIPT=<scriptname>])
 	SHOW_PLOTS=1 python3 $(SIM_PLOT_DIR)/$(SCRIPT).py
 .PHONY: sim-view-xschem
 
