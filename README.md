@@ -339,7 +339,7 @@ Every component follows the same principle. The simulations always run last, so 
 
 | Makefile | `all` flow |
 | --- | --- |
-| [`macros/counter/`](macros/counter/) (digital) | lint -> build (FPGA and LibreLane, including the XSPICE model) -> simulate. DRC and LVS run inside the LibreLane flow. |
+| [`macros/counter/`](macros/counter/) (digital) | lint -> build (FPGA and LibreLane, including the XSPICE model) -> extract (PEX of the hardened GDS) -> simulate. DRC and LVS run inside the LibreLane flow. |
 | [`macros/inverter/`](macros/inverter/) (analog) | verify (DRC, LVS, PEX) -> build (LEF, LIB, Verilog stub, GDS, render) -> simulate |
 | [`ip/*`](ip/) (bondpad, logos) | build -> verify (DRC) |
 | top level | build -> verify (DRC) -> simulate -> package |
@@ -618,7 +618,7 @@ The following command builds the `counter` digital macro:
 make build-counter
 ```
 
-For each digital macro this dispatches to its in-tree `make all`, which runs the macro's full flow: lint, build (FPGA and LibreLane, including netlists and the XSPICE model), verify (DRC and LVS within the LibreLane flow) and simulate. The simulations run after the build, so the gate-level simulations run on the netlists produced by this build.
+For each digital macro this dispatches to its in-tree `make all`, which runs the macro's full flow: lint, build (FPGA and LibreLane, including netlists and the XSPICE model), verify (DRC and LVS within the LibreLane flow), extract (`magic-pex` on the hardened GDS) and simulate. The simulations run after the build, so the gate-level simulations run on the netlists produced by this build.
 
 > [!TIP]
 > Each macro has its own `Makefile` and `README.md` with additional targets, such as linting, simulation, and verification.

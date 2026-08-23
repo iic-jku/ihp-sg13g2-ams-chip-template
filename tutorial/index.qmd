@@ -254,7 +254,9 @@ The [counter Makefile](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/b
 | `make sim-gl-xschem` / `sim-view-xschem`          | Run the mixed-signal XSPICE simulation in Xschem (batch mode) and plot the results. `TB` defaults to `<CELL>_tb_tran` and `SCRIPT` to `plot_<CELL>`. |
 | `make build-fpga`                                 | Run the full FPGA flow: lint, synthesis, P&R, and bitstream generation.     |
 | `make build-top`                                  | Run LibreLane, copy reports, netlists, and final views, generate the XSPICE model, and render the final GDS. |
-| `make all`                                        | Run lint, the FPGA build, the full macro build flow, and all simulations. |
+| `make symbol-pex`                                 | Build the Xschem PEX symbol `<CELL>_pex.sym` from `<CELL>.sym`. Runs automatically before every extraction. |
+| `make klayout-pex` / `magic-pex` (`EXT_MODE=<1|2|3>`) | Extract the parasitics of the hardened macro from `final/gds/` into `netlist/pex/`. |
+| `make all`                                        | Run lint, the FPGA build, the full macro build flow, the parasitic extraction, and all simulations. |
 | `make clean`                                      | Delete all generated files and folders of the macro, including the FPGA outputs. |
 
 See the [counter README](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/counter/README.md) for more details and how to use the Makefile targets.
@@ -447,6 +449,29 @@ make sim-view-xschem SCRIPT=plot_counter_top
 
 ![Plotted Xschem simulation results of `counter_top_tb_tran` from `testbenches/xschem/plot_simulations/plot_counter_top.py`.](fig/counter_top/counter_top_tb_tran_sim.svg){#fig-counter-top-tb-tran-sim}
 
+## Parasitic Extraction (PEX)
+
+The XSPICE model above is a *gate-level* view of the macro: every standard cell becomes an XSPICE primitive driven by its Liberty delay, and the wiring is ideal. Parasitic extraction gives the *transistor-level* view instead. It reads the hardened layout [`final/gds/counter_top.gds`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/counter/final/gds/) and writes a SPICE netlist into [`netlist/pex/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/counter/netlist/pex/) in which every standard cell is flattened to transistors and the wiring carries the resistances and capacitances measured from the layout.
+
+```sh
+make magic-pex                            # full-RC, the default EXT_MODE=3
+make magic-pex EXT_MODE=1                 # C-decoupled, fastest
+make klayout-pex                          # the same with kpex, which runs Magic internally
+make magic-pex EXT_MODE=3 THRESHOLD=5000 MINRES=500 MINDELAY=2   # full-RC with custom extresist settings
+```
+
+Both targets read `final/gds/<CELL>.gds`, so `make build-top` (or at least `make copy-final`) has to have run first, and both abort with a clear message if it is missing. They start by running `make symbol-pex`, which derives `schematic/xschem/counter_top_pex.sym` from `counter_top.sym` so the PEX symbol can never go stale, and they finish by reordering the extracted `.subckt` ports to that symbol's pin order with `sak-pin-reorder.py` and verifying them with `scripts/check_pex_ports.py`. For `counter_top`, the full-RC default extracts 4401 transistors and roughly 2100 capacitors and 4600 resistors. Magic's `extresist` step is not deterministic, so the exact R and C counts move slightly from run to run while the transistor count stays the same.
+
+The transient testbench already `.include`s the extracted netlist next to the XSPICE model, and it carries two spare DUT instances above the schematic, `x2` of `counter_top.sym` and `x3` of `counter_top_pex.sym`, both parked with `spice_ignore=true`. Swapping the wired-up `x1` for `x3` turns the run into a post-layout simulation.
+
+::: {.callout-warning}
+A post-layout run simulates every transistor of the macro. In the IIC-OSIC-TOOLS container, 60 ns of transient take about 80 s, while the full 10 us gate-level XSPICE run of the same testbench finishes in under 2 s. The XSPICE model stays the right tool for functional runs. Use the extracted netlist on short, targeted stimuli to check timing and signal integrity.
+:::
+
+::: {.callout-note}
+The testbench uses looser ngspice tolerances than the analog macro (`reltol=1e-3 abstol=1e-12 gmin=1e-12 rshunt=1e14`). Full-RC extraction splits the nets into fragments, and some of the resulting nodes have no DC path to ground, so with the analog macro's settings the post-layout run aborts at the initial timepoint with `Timestep too small`. The gate-level XSPICE run gives the same result either way.
+:::
+
 ## Lint, Build, Verify and Simulate Everything
 
 The full lint, build, verification, and simulation chain is run with the following command.
@@ -455,7 +480,7 @@ The full lint, build, verification, and simulation chain is run with the followi
 make all
 ```
 
-This calls `lint-verilog-all`, `build-fpga`, `build-top`, and `sim-all` in sequence. The simulations run after the build, so the gate-level simulations run on the netlists and the XSPICE model produced by this build. DRC and LVS are already covered by the LibreLane verification steps, so no extra verification target is needed for the digital macro.
+This calls `lint-verilog-all`, `build-fpga`, `build-top`, `magic-pex`, and `sim-all` in sequence. The simulations run after the build, so the gate-level simulations run on the netlists, the XSPICE model and the extracted netlist produced by this build. `klayout-pex` is commented out in the recipe, since it is a second full extraction that nothing in the flow consumes. DRC and LVS are already covered by the LibreLane verification steps, so no extra verification target is needed for the digital macro.
 
 # Analog Macro Implementation {#sec-analog}
 
@@ -1386,7 +1411,7 @@ Repeat @sec-digital for a 16-bit synchronous down-counter that wraps from 0 back
 2. Update the testbenches in [`testbenches/verilog/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/counter/testbenches/verilog/), [`testbenches/cocotb/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/counter/testbenches/cocotb/), and [`testbenches/xschem/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/counter/testbenches/xschem/) to cover the new behaviour. Adjust the bus width in the waveform view files (`*.gtkw`, `*.surf.ron`) as well.
 3. Run `make sim-all` to validate the new RTL.
 4. Re-run the LibreLane flow with `make build-top`. Check the timing reports. A 16-bit counter at 50 MHz must still pass timing constraints.
-5. Update the bus range of the output pin in the Xschem symbol ([`counter_top.sym`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/counter/schematic/xschem/)), and re-run the gate-level Xschem simulation. The XSPICE model itself is regenerated automatically by `make build-top` (or manually with `make generate-xspice`).
+5. Update the bus range of the output pin in the Xschem symbol ([`counter_top.sym`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/counter/schematic/xschem/)), and re-run the gate-level Xschem simulation. The XSPICE model itself is regenerated automatically by `make build-top` (or manually with `make generate-xspice`), and the PEX symbol `counter_top_pex.sym` together with the extracted netlist by `make magic-pex`.
 
 ::: {.callout-tip}
 ## Bonus for advanced designers

@@ -73,6 +73,9 @@
 │  │  └─ counter_top.pnl.v
 │  ├─ 📁 spice/
 │  │  └─ counter_top.spice
+│  ├─ 📁 pex/
+│  │  ├─ counter_top_klayout_pex_*.spice
+│  │  └─ counter_top_magic_pex_*.spice
 │  └─ 📁 xspice/
 │     └─ counter_top.xspice
 ├─ 📁 render/
@@ -88,8 +91,10 @@
 ├─ 📁 schematic/
 │  └─ 📁 xschem/
 │     ├─ counter_top.sym
+│     ├─ counter_top_pex.sym
 │     └─ xschemrc
 ├─ 📁 scripts/
+│  ├─ check_pex_ports.py
 │  └─ spi2xspice.py
 ├─ 📁 testbenches/
 │  ├─ 📁 cocotb/
@@ -459,6 +464,96 @@ make build-top
 The LibreLane flow already includes DRC and LVS checks with Magic and KLayout, and they are saved in the `verification/` folder.
 
 
+### Build Xschem PEX Symbol
+
+Builds the Xschem symbol the PEX flow needs, `schematic/xschem/<CELL>_pex.sym`, from the regular cell symbol `schematic/xschem/<CELL>.sym`:
+
+```sh
+make symbol-pex                  # build counter_top_pex.sym from counter_top.sym
+make symbol-pex CELL=<cellname>  # build the PEX symbol of another cell
+```
+
+The generated symbol is a verbatim copy of `<CELL>.sym` with a single change: `type=subcircuit` becomes `type=primitive`. `counter_top.sym` is already `type=primitive`, because its subcircuit comes from the included XSPICE model and Xschem must not descend into a schematic of that name, so here the copy differs from its source in nothing but the file name. What carries the meaning is the rest, which is inherited:
+
+- **`format="@name @pinlist @symname"`** makes the instance reference `@symname`, which resolves to `<CELL>_pex`, exactly the `.subckt` name the PEX flow writes.
+- **The pin order and the `sim_pinname` of every pin** are what `sak-pin-reorder.py` sorts the extracted netlist to, so they have to be the ones of the cell symbol. The symbol names its pins `di_clock`, `do_b[0]` and so on, the layout names them `clock_i`, `counter_value_o[0]`, and `sim_pinname` is what connects the two.
+
+`symbol-pex` runs automatically at the start of `klayout-pex` and `magic-pex`, so the symbol is rebuilt from the current `<CELL>.sym` before every extraction and cannot go stale when a pin is added, removed or renamed. Calling it by hand is only needed to refresh the symbol without re-running an extraction. Anything added to the generated file by hand is lost at the next extraction, so make the change in `<CELL>.sym` instead.
+
+> [!NOTE]
+> Every symbol in this project also carries `spectre_format="@name ( @pinlist ) @symname"`. Xschem writes that line itself whenever a symbol is built from a schematic's pin list (key `a`, `make_sym.awk`), and it is read **only** by the Spectre netlister, which is also the one that drives VACASK (`xschem.tcl` configures `vacask "$N"` as the default simulator for `netlist_type spectre`). The SPICE netlister used for ngspice ignores it, so it has no effect on any target in this Makefile.
+> Do not strip it: without it, instances of the symbol are **silently dropped** from a Spectre/VACASK netlist and the `subckt` line of the symbol itself comes out with an empty port list, with no warning at all.
+
+
+### Parasitic Extraction (PEX)
+
+Extracts the parasitics of the hardened macro from the final GDS and writes a post-layout SPICE netlist to `netlist/pex/`. It is the transistor-level counterpart of the gate-level XSPICE model, not a replacement for it:
+
+| | `generate-xspice` | `magic-pex` / `klayout-pex` |
+| --- | --- | --- |
+| input | LibreLane's extracted `netlist/spice/<TOP>.spice` | the final layout `final/gds/<CELL>.gds` |
+| standard cells | replaced by XSPICE primitives (`d_lut`, `d_dff`, ...) | flattened to transistors |
+| parasitics | none, Liberty delays only | R and C from the layout |
+| speed | fast, digital event driven | slow, full analog solve |
+
+The extracted SPICE filenames include the selected extraction mode:
+- `klayout-pex` writes `netlist/pex/<CELL>_klayout_pex_<EXT_MODE>.spice`
+- `magic-pex` writes `netlist/pex/<CELL>_magic_pex_<EXT_MODE>.spice`
+
+The `EXT_MODE` parameter selects the extraction mode:
+- `1` = C-decoupled
+- `2` = C-coupled
+- `3` = full-RC (default)
+
+**Magic PEX** uses `sak-pex.sh` (installed in the IIC-OSIC-TOOLS container):
+
+```sh
+make magic-pex
+make magic-pex CELL=counter_top
+make magic-pex CELL=counter_top EXT_MODE=1
+```
+
+**KPEX** uses `kpex`, which runs Magic internally for the extraction itself:
+
+```sh
+make klayout-pex
+make klayout-pex CELL=counter_top EXT_MODE=1
+```
+
+> [!NOTE]
+> For `klayout-pex`, `EXT_MODE=1` (C-decoupled) is not yet supported by kpex and automatically falls back to `EXT_MODE=2` (CC) with a warning.
+
+Both targets read `final/gds/<CELL>.gds`, so **`make build-top` (or at least `make copy-final`) has to have run first**. They abort with a clear message if the GDS is missing, instead of failing somewhere inside the extractor. Unlike the analog macro there is no Xschem schematic to hand to kpex as the reference netlist, so `klayout-pex` passes the LibreLane-extracted `netlist/spice/<CELL>.spice` instead.
+
+For full-RC extraction (`EXT_MODE=3`), `magic-pex` additionally exposes the three `extresist` tuning parameters of `sak-pex.sh`. They are ignored in `EXT_MODE=1`/`2`:
+
+| Variable | `sak-pex.sh` option | Default | Meaning |
+| --- | --- | --- | --- |
+| `THRESHOLD` | `-t` | `10000` mOhm | only nets above this resistance are split into an RC network |
+| `MINRES` | `-r` | `1000` mOhm | resistors below this value are merged away |
+| `MINDELAY` | `-y` | `1` ps | nets with a smaller RC delay are not split (`0` = gate by resistance only) |
+
+```sh
+make magic-pex CELL=counter_top EXT_MODE=3 THRESHOLD=5000 MINRES=500 MINDELAY=2
+```
+
+The `.subckt` name in the extracted SPICE file is `<CELL>_pex`: `magic-pex` sets it directly via the `sak-pex.sh` option `-n <CELL>_pex`, while for `klayout-pex` it is automatically renamed from `<CELL>` (kpex).
+
+Both targets start by running `symbol-pex` (see above), so `schematic/xschem/<CELL>_pex.sym` always reflects the current cell symbol. The `.subckt` pin order in the extracted SPICE file is then reordered with `sak-pin-reorder.py` (installed in the IIC-OSIC-TOOLS container) to match that symbol's pin positions, matching by `sim_pinname` because the symbol and the layout use different pin names. Both targets finish by running [`scripts/check_pex_ports.py`](scripts/check_pex_ports.py), which verifies that every pin of the `.subckt` really reaches the circuit and fails the target otherwise. It is the same check the analog macro runs, see [`macros/inverter/README.md`](../inverter/README.md) for the two cases it catches.
+
+For `counter_top` the full-RC default extracts 4401 transistors into a 630 KB netlist and takes a few seconds. `klayout-pex` finds the same 4401 transistors and splits the RC network differently.
+
+> [!NOTE]
+> Magic's `extresist` step is not deterministic. Two `make magic-pex` runs on the same GDS give the same 4401 transistors, but the R and C counts move by a fraction of a percent (across four runs, 2079 to 2095 capacitors and 4609 to 4661 resistors), and the internal node names are renumbered. The committed `netlist/pex/counter_top_magic_pex_3.spice` therefore shows up as modified in `git status` after every run, even when nothing about the layout changed.
+
+To run a **post-layout simulation**, open [`testbenches/xschem/counter_top_tb_tran.sch`](testbenches/xschem/counter_top_tb_tran.sch). It already `.include`s both the XSPICE model and `netlist/pex/counter_top_magic_pex_3.spice`, and above the testbench sit two spare instances, `x2` of `counter_top.sym` and `x3` of `counter_top_pex.sym`, both parked with `spice_ignore=true`. Swap the wired-up `x1` for the one you want. This is the same arrangement the analog testbenches use.
+
+The testbench runs with `.options savecurrents klu method=gear reltol=1e-3 abstol=1e-12 gmin=1e-12 rshunt=1e14`. The looser tolerances and `rshunt` are what the extracted netlist needs. Full-RC extraction splits the nets into fragments, and some of the resulting nodes have no DC path to ground, so with the tighter settings the analog macro uses (`reltol=1e-4 abstol=1e-15 gmin=1e-15`) the post-layout run aborts at the initial timepoint with `Timestep too small; trouble with node ...`. The gate-level XSPICE run does not notice the change, its output is identical either way.
+
+> [!WARNING]
+> A post-layout run simulates every transistor of the macro in ngspice. In the IIC-OSIC-TOOLS container, 60 ns of transient take about 80 s, while the full 10 us gate-level XSPICE run of the same testbench finishes in under 2 s. Use the XSPICE model for functional runs, and the PEX netlist on short, targeted stimuli to check timing and signal integrity.
+
+
 ### Lint, Build, Verify and Simulate All
 
 Lints, builds, verifies and simulates the whole macro:
@@ -466,9 +561,10 @@ Lints, builds, verifies and simulates the whole macro:
 - `lint-verilog-all`
 - `build-fpga`
 - `build-top`
+- `magic-pex`
 - `sim-all`
 
-Linting runs first to fail fast on structural RTL issues. The simulations run **after** the build, so the gate-level simulations (`sim-gl-cocotb`, `sim-gl-xschem`) run on the netlists and the XSPICE model produced by this build, not on those of a previous one. The DRC and LVS verification is done within the LibreLane flow.
+Linting runs first to fail fast on structural RTL issues. The simulations run **after** the build, so the gate-level simulations (`sim-gl-cocotb`, `sim-gl-xschem`) run on the netlists and the XSPICE model produced by this build, not on those of a previous one. `magic-pex` sits between the two, so the post-layout netlist the Xschem testbench includes is extracted from the GDS of this build as well. `klayout-pex` is commented out in the recipe: it works (see [Parasitic Extraction (PEX)](#parasitic-extraction-pex)), but it is a second full extraction that nothing in the flow consumes. The DRC and LVS verification is done within the LibreLane flow.
 
 ```sh
 make all
@@ -527,7 +623,7 @@ make sim-gl-xschem
 
 - `flow/librelane/runs/` and `flow/final/` (LibreLane run directories and the saved views)
 - `final/` (GDS, LEF, Liberty, NL, PnL, SPEF and Verilog header deliverables)
-- `netlist/` (NL, PnL, SPICE and XSPICE netlists)
+- `netlist/` (NL, PnL, SPICE, XSPICE and the extracted PEX netlists)
 - `render/img/` (the layout renders)
 - `verification/` (the reports copied from the last LibreLane run)
 - `schematic/xschem/simulations/`, `testbenches/xschem/simulations/` and the `plot_simulations/` outputs (`data/`, `figures/`, `__pycache__/`)
@@ -545,7 +641,7 @@ make all
 > Most of these outputs are committed in this repository, so `make clean` leaves a large deletion set in `git status`. Run `git restore .` to get the tracked ones back if you did not mean to remove them. The LibreLane run directories under `flow/librelane/runs/` are **not** tracked and cannot be restored that way.
 
 > [!NOTE]
-> The Xschem testbench `.include`s the XSPICE model `netlist/xspice/counter_top.xspice`, and the gate-level cocotb run needs the netlists in `netlist/`. Directly after `make clean`, run `make build-top` (or the full `make all`) once before `make sim-gl-xschem` or `make sim-gl-cocotb`, otherwise the include fails.
+> The Xschem testbench `.include`s both the XSPICE model `netlist/xspice/counter_top.xspice` and the extracted netlist `netlist/pex/counter_top_magic_pex_3.spice`, and the gate-level cocotb run needs the netlists in `netlist/`. Directly after `make clean`, run `make build-top` **and** `make magic-pex` (or the full `make all`, which does both) once before `make sim-gl-xschem` or `make sim-gl-cocotb`, otherwise the includes fail.
 
 
 ## Start a New Digital Macro from This Template
@@ -556,11 +652,11 @@ The counter is meant to be the starting point for a new digital macro. It alread
 2. Run `make clean` in the new folder so that no output of the counter is left behind.
 3. Set `TOP` in the `Makefile` and in [`fpga/Makefile`](fpga/Makefile). Every target derives its paths from `TOP` (and from `CELL`, which defaults to `TOP`), so the design files must carry the same name.
 4. Rename the RTL in `rtl/` and adjust `MODULES_SYNTH` and `MODULES_SIM` in the `Makefile` if you add or drop files.
-5. Rename the testbenches in `testbenches/verilog/`, `testbenches/cocotb/` and `testbenches/xschem/`, and the Xschem symbol `schematic/xschem/counter_top.sym`.
+5. Rename the testbenches in `testbenches/verilog/`, `testbenches/cocotb/` and `testbenches/xschem/`, and the Xschem symbol `schematic/xschem/counter_top.sym`. Delete `schematic/xschem/counter_top_pex.sym` instead of renaming it, `make symbol-pex` rebuilds it under the new name.
 6. Update `flow/librelane/config.yaml`: `DESIGN_NAME`, `VERILOG_FILES`, `CLOCK_PORT` and `DIE_AREA`. Adapt the pin placement in `flow/librelane/pin_order.cfg` and the constraints in `impl.sdc` and `signoff.sdc`.
 7. Update the FPGA pin constraints in `fpga/pico-ice.pcf` to the ports of the new design.
 8. Rename the plotting script in `testbenches/xschem/plot_simulations/`.
-9. Search and replace the remaining `counter` references inside the files, in particular the module instantiations, the `COUNTER_MAX_DEFAULT` and `CLK_FREQ_DEFAULT` macros in `rtl/constants.sv` (which keeps its name), the cocotb `hdl_toplevel` and source list, the `.include` of the XSPICE model in the Xschem testbench, and the raw file name in the plot script.
+9. Search and replace the remaining `counter` references inside the files, in particular the module instantiations, the `COUNTER_MAX_DEFAULT` and `CLK_FREQ_DEFAULT` macros in `rtl/constants.sv` (which keeps its name), the cocotb `hdl_toplevel` and source list, the two `.include` lines in the Xschem testbench (the XSPICE model and the extracted PEX netlist), and the raw file name in the plot script.
 10. Register the macro at the chip top-level: add a `build-<name>` target and a `clean-all` entry in the top-level `Makefile`, instantiate the macro in `rtl/chip_core.sv` and `schematic/xschem/chip_top.sch`, and add a `MACROS` entry in `flow/librelane/config.yaml`.
 
 For a new macro named `fifo`, the mechanical part looks as follows:
