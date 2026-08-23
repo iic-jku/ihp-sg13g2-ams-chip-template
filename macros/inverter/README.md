@@ -85,8 +85,10 @@
 │  │  ├─ 📁 templates/
 │  │  └─ inverter.yaml
 │  ├─ 📁 drc/
+│  │  ├─ 📁 *.gdscheck.drc/
 │  │  ├─ 📁 *.klayout.drc/
 │  │  ├─ 📁 *.magic.drc/
+│  │  ├─ 📁 inverter_top.gdscheck.drc/
 │  │  ├─ 📁 inverter_top.klayout.drc/
 │  │  └─ 📁 inverter_top.magic.drc/
 │  └─ 📁 lvs/
@@ -117,7 +119,7 @@ The `sim-xschem` target accepts an optional `TB=<testbenchname>` parameter (defa
 All targets that operate on a specific cell accept an optional `CELL=<cellname>` parameter. The default is the top-level cell (`inverter_top`).
 
 ```sh
-make <target> [CELL=<cellname>] [EXT_MODE=<1|2|3>] [THRESHOLD=<mOhm>] [MINRES=<mOhm>] [MINDELAY=<ps>] [DRC_LEVEL=<precheck|macro|regular>] [EV_PRECISION=<digits>]
+make <target> [CELL=<cellname>] [EXT_MODE=<1|2|3>] [THRESHOLD=<mOhm>] [MINRES=<mOhm>] [MINDELAY=<ps>] [DRC_LEVEL=<precheck|macro|regular>] [GDSCHECK_SUITE=<precheck|core|main|density|antenna>] [EV_PRECISION=<digits>]
 ```
 
 
@@ -169,6 +171,7 @@ The Makefile defines a `_GDS_EXT` variable that auto-selects the layout file ext
   - `magic-lvs`
   - `magic-drc`
   - `magic-pex`
+  - `gdscheck-drc`
 
 - Build targets always use `layout/<name>.gds`:
   - `lef`
@@ -338,13 +341,13 @@ make render-gds
 
 ### Design Rule Check (DRC)
 
-Runs DRC on the layout in `layout/`. Both flows use `sak-drc.sh`.
+Runs DRC on the layout in `layout/`. All three flows use `sak-drc.sh`.
 
-- `klayout-drc` and `magic-drc` use `layout/<CELL>.$(_GDS_EXT)` (`.gds` if present, otherwise `.klay.gds`)
+- `klayout-drc`, `magic-drc` and `gdscheck-drc` use `layout/<CELL>.$(_GDS_EXT)` (`.gds` if present, otherwise `.klay.gds`)
 
-Reports are written into per-cell run folders: `verification/drc/<CELL>.magic.drc/` (Magic) and `verification/drc/<CELL>.klayout.drc/` (KLayout, `.lyrdb`). The run folders are wiped at the start of each run, so they always reflect the latest run only.
+Reports are written into per-cell run folders: `verification/drc/<CELL>.magic.drc/` (Magic), `verification/drc/<CELL>.klayout.drc/` (KLayout, `.lyrdb`) and `verification/drc/<CELL>.gdscheck.drc/` (gdscheck, `.lyrdb`). The run folders are wiped at the start of each run, so they always reflect the latest run only.
 
-The `DRC_LEVEL` parameter selects the KLayout DRC level (`sak-drc.sh -l`). It is ignored by `magic-drc`, since Magic has no selectable rule decks and always runs the full rule set compiled into the PDK's Magic tech file:
+The `DRC_LEVEL` parameter selects the KLayout DRC level and the gdscheck suite (`sak-drc.sh -l`). It is ignored by `magic-drc`, since Magic has no selectable rule decks and always runs the full rule set compiled into the PDK's Magic tech file:
 
 - `precheck` = core FEOL + BEOL manufacturing rules only (fast iteration)
 - `macro` = block-in-isolation sign-off: `precheck` plus off-grid, zero-area, and pin/label checks (default)
@@ -360,6 +363,8 @@ The `DRC_LEVEL` parameter selects the KLayout DRC level (`sak-drc.sh -l`). It is
 | Density (full-chip fill) | – | – | ✓ |
 | Antenna | – | – | ✓ |
 
+For `gdscheck-drc` the levels map onto the rule suites built into the gdscheck binary: `precheck` runs the `precheck` suite (IHP's published open-source precheck subset), `macro` runs `core` (all geometric rules minus the density/fill and antenna rules) and `regular` runs `main` (every per-layer deck, density and antenna included). The `GDSCHECK_SUITE` parameter overrides this mapping (`sak-drc.sh -s`) and also reaches the standalone `density` and `antenna` suites.
+
 **KLayout DRC** runs a KLayout DRC at the selected `DRC_LEVEL`:
 
 ```sh
@@ -374,6 +379,23 @@ make klayout-drc CELL=inverter_top DRC_LEVEL=regular
 make magic-drc
 make magic-drc CELL=inverter_top
 ```
+
+**gdscheck DRC** runs a gdscheck DRC at the selected `DRC_LEVEL` or `GDSCHECK_SUITE`:
+
+```sh
+make gdscheck-drc
+make gdscheck-drc CELL=inverter_top
+make gdscheck-drc CELL=inverter_top DRC_LEVEL=regular
+```
+
+**gdscheck DRC of all main subcells** runs it for `inverter` and `inverter_top`:
+
+```sh
+make gdscheck-drc-all
+```
+
+> [!NOTE]
+> gdscheck is a standalone DRC engine with its own rule decks, so it gives an independent second opinion next to Magic and KLayout. Upstream calls it experimental with incomplete coverage, so treat a clean gdscheck run as additional confidence, not as sign-off on its own.
 
 
 ### Export Schematic Netlist for LVS
@@ -547,7 +569,7 @@ make magic-verify-all
 
 ### Verify, Build and Simulate All
 
-Runs the full flow in sequence: KLayout verification, Magic verification, top-level build deliverables, and simulations (`klayout-verify-all`, `magic-verify-all`, `build-top`, `sim-all`):
+Runs the full flow in sequence: KLayout verification, Magic verification, gdscheck DRC, top-level build deliverables, and simulations (`klayout-verify-all`, `magic-verify-all`, `gdscheck-drc-all`, `build-top`, `sim-all`):
 
 ```sh
 make all

@@ -34,9 +34,14 @@ MINRES ?= 1000
 # Override with: make <target> MINDELAY=<ps>
 MINDELAY ?= 1
 
-# KLayout DRC level: precheck, macro, or regular (sak-drc.sh -l, only used by klayout-drc; default: macro)
+# KLayout/gdscheck DRC level: precheck, macro, or regular (sak-drc.sh -l, only used by klayout-drc and gdscheck-drc; default: macro)
 # Override with: make <target> DRC_LEVEL=<precheck|macro|regular>
 DRC_LEVEL ?= macro
+
+# gdscheck suite (sak-drc.sh -s, only used by gdscheck-drc; default: empty = derived from DRC_LEVEL)
+# precheck maps to precheck, macro to core, regular to main. Set density or antenna to run those suites alone.
+# Override with: make <target> GDSCHECK_SUITE=<precheck|core|main|density|antenna>
+GDSCHECK_SUITE ?=
 
 # Floating-point precision (significant digits) for Xschem's ev function
 # Override with: make <target> EV_PRECISION=<digits>
@@ -85,7 +90,7 @@ FLOW_FINAL_DIR  		:= flow/final
 
 # Help Target
 help: ## Show this help message
-	@echo 'Usage: make <target> [CELL=<cellname>] [EXT_MODE=<1|2|3>] [THRESHOLD=<mOhm>] [MINRES=<mOhm>] [MINDELAY=<ps>] [DRC_LEVEL=<precheck|macro|regular>] [EV_PRECISION=<digits>] [WAVEFORM_VIEWER=<gtkwave|surfer>] [TB=<testbenchname>] [SCRIPT=<scriptname>] [VERSION=<version>] [OPEN_ARGS=<options>]'
+	@echo 'Usage: make <target> [CELL=<cellname>] [EXT_MODE=<1|2|3>] [THRESHOLD=<mOhm>] [MINRES=<mOhm>] [MINDELAY=<ps>] [DRC_LEVEL=<precheck|macro|regular>] [GDSCHECK_SUITE=<precheck|core|main|density|antenna>] [EV_PRECISION=<digits>] [WAVEFORM_VIEWER=<gtkwave|surfer>] [TB=<testbenchname>] [SCRIPT=<scriptname>] [VERSION=<version>] [OPEN_ARGS=<options>]'
 	@echo ''
 	@echo 'Available targets:'
 	@grep -E '^[a-zA-Z0-9_.-]+:.*## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*## "}; {printf "  %-20s %s\n", $$1, $$2}'
@@ -93,7 +98,8 @@ help: ## Show this help message
 	@echo 'CELL defaults to $(TOP). Override to verify subcells.'
 	@echo 'EXT_MODE defaults to 1 (C-decoupled). 2=C-coupled, 3=full-RC.'
 	@echo 'THRESHOLD/MINRES/MINDELAY are full-RC (EXT_MODE=3) extresist settings for magic-pex (defaults 10000 mOhm / 1000 mOhm / 1 ps).'
-	@echo 'DRC_LEVEL defaults to macro. Sets the KLayout DRC level for klayout-drc (precheck|macro|regular).'
+	@echo 'DRC_LEVEL defaults to macro. Sets the DRC level for klayout-drc and gdscheck-drc (precheck|macro|regular).'
+	@echo 'GDSCHECK_SUITE overrides the DRC_LEVEL mapping of gdscheck-drc (precheck|core|main|density|antenna).'
 	@echo 'EV_PRECISION defaults to 5 significant digits for Xschem ev function.'
 	@echo 'WAVEFORM_VIEWER defaults to gtkwave. Use surfer to launch Surfer instead.'
 	@echo 'TB selects the Xschem testbench for sim-gl-xschem (default: <CELL>_tb_tran).'
@@ -332,6 +338,21 @@ magic-drc: ## Run Magic DRC of the CELL cell (usage: make magic-drc [CELL=<celln
 	mkdir -p $(DRC_RPT_DIR)
 	sak-drc.sh -d -m -f "*" -w $(DRC_RPT_DIR) $(LAY_DIR)/$(CELL).gds.gz
 .PHONY: magic-drc
+
+gdscheck-drc-minimum: ## Run minimum pre-check gdscheck DRC of the TOP cell with logo and filler
+	mkdir -p $(DRC_RPT_DIR)
+	sak-drc.sh -d -g -l precheck -w $(DRC_RPT_DIR) $(LAY_DIR)/$(TOP)_logo_fill.gds.gz
+.PHONY: gdscheck-drc-minimum
+
+gdscheck-drc-regular: ## Run regular gdscheck DRC of the TOP cell with logo and filler
+	mkdir -p $(DRC_RPT_DIR)
+	sak-drc.sh -d -g -l regular -w $(DRC_RPT_DIR) $(LAY_DIR)/$(TOP)_logo_fill.gds.gz
+.PHONY: gdscheck-drc-regular
+
+gdscheck-drc: ## Run gdscheck DRC of the CELL cell (usage: make gdscheck-drc [CELL=<cellname>] [DRC_LEVEL=<precheck|macro|regular>] [GDSCHECK_SUITE=<precheck|core|main|density|antenna>])
+	mkdir -p $(DRC_RPT_DIR)
+	sak-drc.sh -d -g -l $(DRC_LEVEL) -s "$(GDSCHECK_SUITE)" -w $(DRC_RPT_DIR) $(LAY_DIR)/$(CELL).gds.gz
+.PHONY: gdscheck-drc
 # ================================================================================================
 
 
@@ -474,6 +495,8 @@ all: ## Build, verify, simulate and package the whole chip
 	$(MAKE) build-all
 	$(MAKE) magic-drc CELL=$(TOP)
 	$(MAKE) magic-drc CELL=$(TOP)_logo_fill
+	$(MAKE) gdscheck-drc CELL=$(TOP)
+	$(MAKE) gdscheck-drc CELL=$(TOP)_logo_fill
 #	$(MAKE) klayout-verify
 #	$(MAKE) magic-verify
 	$(MAKE) sim-all
