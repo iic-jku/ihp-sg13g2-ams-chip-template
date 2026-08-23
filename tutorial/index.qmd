@@ -246,7 +246,7 @@ The [counter Makefile](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/b
 | ----------------------------------- | ----------------------------------------------------------------- |
 | `make open`                                       | Open the design files of this folder in the `sak-open.py` file browser.     |
 | `make lint-verilog` / `make lint-verilog-all`     | Lint a single cell or the full counter design with Verilator.               |
-| `make sim-rtl-verilog`                            | Run the SystemVerilog testbench with Icarus Verilog.                        |
+| `make sim-rtl-verilog`                            | Run the testbench with Icarus Verilog (`<CELL>_tb.sv`, falling back to `<CELL>_tb.v`). |
 | `make sim-rtl-cocotb` / `sim-gl-cocotb`           | Run the cocotb RTL / gate-level simulation.                                 |
 | `make sim-view-verilog` / `sim-view-cocotb`       | Open the latest waveform in GTKWave or Surfer.                              |
 | `make librelane` (and `-nodrc`, `-magicdrc`, …)   | Run the LibreLane flow for the counter macro.                               |

@@ -222,8 +222,8 @@ The waveform viewer can be changed with `WAVEFORM_VIEWER=<gtkwave|surfer>` (defa
 #### RTL Verilog Simulation
 
 Compiles the RTL with Icarus Verilog and runs the simulation.
-When `CELL=counter_top` (the default), the full `MODULES_SIM` source list and the `.sv` testbench are selected automatically.
-For non-top cells, `constants.sv` is included first (so the shared `` `COUNTER_MAX_DEFAULT `` / `` `CLK_FREQ_DEFAULT `` macros are in scope), the RTL source is auto-selected as `rtl/<CELL>.sv` when present, otherwise `rtl/<CELL>.v`, and the testbench is expected as `testbenches/verilog/<CELL>_tb.v`.
+When `CELL=counter_top` (the default), the full `MODULES_SIM` source list is used and `testbenches/verilog/counter_top_tb.sv` is picked up.
+For non-top cells, `constants.sv` is included first (so the shared `` `COUNTER_MAX_DEFAULT `` / `` `CLK_FREQ_DEFAULT `` macros are in scope), the RTL source is auto-selected as `rtl/<CELL>.sv` when present, otherwise `rtl/<CELL>.v`, and the testbench likewise as `testbenches/verilog/<CELL>_tb.sv` when present, otherwise `testbenches/verilog/<CELL>_tb.v`.
 The waveform is written to `testbenches/verilog/` (e.g. `testbenches/verilog/counter_top_tb.vcd`):
 
 ```sh
