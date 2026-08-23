@@ -3,17 +3,17 @@
 
 # Xilinx 7-series: Yosys (synth_xilinx) -> nextpnr-xilinx -> fasm2frames -> xc7frames2bit.
 #
-# Needs the nix-openxc7 toolchain (nextpnr-xilinx + prjxray), which is not part of
-# IIC-OSIC-TOOLS. Enter that shell first, it provides NEXTPNR_XILINX_PYTHON_DIR and
-# PRJXRAY_DB_DIR, then run `make pr`.
+# The toolchain is openXC7 (nextpnr-xilinx + prjxray), shipped in IIC-OSIC-TOOLS,
+# which also exports NEXTPNR_XILINX_PYTHON_DIR and PRJXRAY_DB_DIR.
 
 # synth_xilinx's flags do not fit the "$(TARGET) $(SYNTH_OPTS) -top $(TOP)" shape of fpga.mk.
 SYNTH_CMD ?= yosys -DFPGA -p "synth_xilinx -flatten -abc9 -arch xc7 -top $(TOP); write_json $(BUILD_DIR)/$(TOP).json;" $(MODULES_SYNTH)
 
 # Generated once per package, then kept. Not removed by `clean`, since building it
-# takes minutes and it only depends on the part, not on the design.
+# takes minutes (bbaexport runs on CPython, pypy is not in the container) and it
+# only depends on the part, not on the design.
 $(CHIPDB):
-	pypy3 $${NEXTPNR_XILINX_PYTHON_DIR}/bbaexport.py --device $(PART) --bba $(TOP).bba
+	python3 $${NEXTPNR_XILINX_PYTHON_DIR}/bbaexport.py --device $(PART) --bba $(TOP).bba
 	bbasm -l $(TOP).bba $(CHIPDB)
 	rm -f $(TOP).bba
 

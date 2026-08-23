@@ -11,10 +11,10 @@ The flow is driven by one shared Makefile fragment, [`fpga.mk`](fpga.mk), parame
 | --- | --- | --- | --- | --- |
 | pico-ice | [`pico-ice/`](pico-ice/) | Lattice iCE40UP5K | Yosys -> nextpnr-ice40 -> icepack | Bitstream built, default board |
 | iCEBreaker | [`icebreaker/`](icebreaker/) | Lattice iCE40UP5K | Yosys -> nextpnr-ice40 -> icepack | Bitstream built |
-| ULX3S | [`ulx3s/`](ulx3s/) | Lattice ECP5-85F | Yosys -> nextpnr-ecp5 -> ecppack | Synthesis only, see below |
-| Tang Nano 9K | [`nano9k/`](nano9k/) | Gowin GW1NR-9C | Yosys -> nextpnr-himbaechel -> gowin_pack | Synthesis only, see below |
-| Basys 3 | [`basys3/`](basys3/) | Xilinx Artix-7 xc7a35t | Yosys -> nextpnr-xilinx -> prjxray | Synthesis only, see below |
-| Boolean | [`boolean/`](boolean/) | Xilinx Spartan-7 xc7s50 | Yosys -> nextpnr-xilinx -> prjxray | Synthesis only, see below |
+| ULX3S | [`ulx3s/`](ulx3s/) | Lattice ECP5-85F | Yosys -> nextpnr-ecp5 -> ecppack | Synthesis verified |
+| Tang Nano 9K | [`nano9k/`](nano9k/) | Gowin GW1NR-9C | Yosys -> nextpnr-himbaechel -> gowin_pack | Synthesis verified |
+| Basys 3 | [`basys3/`](basys3/) | Xilinx Artix-7 xc7a35t | Yosys -> nextpnr-xilinx -> prjxray | Synthesis verified |
+| Boolean | [`boolean/`](boolean/) | Xilinx Spartan-7 xc7s50 | Yosys -> nextpnr-xilinx -> prjxray | Synthesis verified |
 
 Pin assignment per board:
 
@@ -33,16 +33,11 @@ Pin assignment per board:
 
 ## Toolchain
 
-[IIC-OSIC-TOOLS](https://github.com/iic-jku/IIC-OSIC-TOOLS) ships `verilator`, `yosys`, `nextpnr-ice40`, `icepack` and `iceprog`, which is the complete chain for the two iCE40 boards. Yosys carries every `synth_*` pass, so `make synthesis` works for all six boards inside the container, but the later steps of the other four need tools that are not part of it:
+[IIC-OSIC-TOOLS](https://github.com/iic-jku/IIC-OSIC-TOOLS) ships the complete build chain for all six boards: `verilator` and `yosys` for every architecture, `nextpnr-ice40` with `icepack` for iCE40, `nextpnr-ecp5` with `ecppack` for ECP5, `nextpnr-himbaechel` with `gowin_pack` for Gowin, and the openXC7 `nextpnr-xilinx` with the `prjxray` bitstream tools for Xilinx 7-series.
 
-| Board | Also needs |
-| --- | --- |
-| pico-ice | `dfu-util` for `load_bitstream`/`flash_bitstream` |
-| ULX3S | `nextpnr-ecp5`, `ecppack`, `openFPGALoader` |
-| Tang Nano 9K | `nextpnr-himbaechel`, `gowin_pack`, `openFPGALoader` |
-| Basys 3, Boolean | `nextpnr-xilinx` and `prjxray`, from the separate [nix-openxc7](https://github.com/openxc7/nix-openxc7) shell, plus `openFPGALoader` |
+On the Xilinx boards, the first `make pr` for a part generates its chip database once with `bbaexport.py` and `bbasm`, using the `NEXTPNR_XILINX_PYTHON_DIR` and `PRJXRAY_DB_DIR` paths the container exports. That step takes some minutes on CPython and its result is kept next to the board Makefile afterwards, so it does not run again.
 
-The `visualize` and `visualize_generic` targets additionally need `netlistsvg`, `svgo` and `rsvg-convert`, which are also not in the container.
+Only the programming tools stay outside the container (`openFPGALoader` and `dfu-util`, of the programmers only `iceprog` is present): the container has no USB access, so build the bitstream inside and run `load_bitstream`/`flash_bitstream` from a host installation of the board's programmer. The `visualize` and `visualize_generic` targets additionally need `netlistsvg`, `svgo` and `rsvg-convert`, which are not in the container either.
 
 
 ## Picking a Board

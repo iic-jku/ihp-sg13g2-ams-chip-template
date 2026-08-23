@@ -32,3 +32,5 @@ sim_build/
 /macros/counter/testbenches/xschem/simulations
 /macros/counter/flow/final
 /macros/counter/fpga/*/build/
+/macros/counter/fpga/*/*.bba
+/macros/counter/fpga/*/xc7*.bin

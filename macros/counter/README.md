@@ -464,7 +464,7 @@ make -C fpga BOARD=ulx3s all            # the whole flow on another board
 ```
 
 > [!NOTE]
-> IIC-OSIC-TOOLS carries the complete iCE40 chain (`yosys`, `nextpnr-ice40`, `icepack`, `iceprog`), so the pico-ice and iCEBreaker boards build end to end inside the container. Yosys knows every `synth_*` pass, so `make synthesis` also works for the other four, but their place-and-route and packing steps need tools that are not part of the container, and the Xilinx boards need the separate `nix-openxc7` shell. See [`fpga/README.md`](fpga/README.md) for the per-board tool list, the pin assignments, and how to add a further board.
+> IIC-OSIC-TOOLS carries the build chain for all six boards, from `yosys` through the four `nextpnr` flavours to the bitstream packers, so every board builds end to end inside the container. Only the programming tools stay outside, since the container has no USB access: build the bitstream inside, then run `load_bitstream`/`flash_bitstream` from the host. See [`fpga/README.md`](fpga/README.md) for the toolchain notes, the pin assignments, and how to add a further board.
 
 
 ### Build Top

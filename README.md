@@ -620,7 +620,7 @@ make build-counter
 
 For each digital macro this dispatches to its in-tree `make all`, which runs the macro's full flow: lint, build (FPGA and LibreLane, including netlists and the XSPICE model), verify (DRC and LVS within the LibreLane flow), extract (`magic-pex` on the hardened GDS) and simulate. The simulations run after the build, so the gate-level simulations run on the netlists produced by this build.
 
-The FPGA part of that build emulates the macro on a board. It covers six boards across four FPGA architectures (iCE40, ECP5, Gowin and Xilinx 7-series), selected with `BOARD=`, and defaults to the pico-ice. See [macros/counter/fpga/README.md](macros/counter/fpga/README.md) for the board list, which of them build with the tools in the container, and how to add a further one.
+The FPGA part of that build emulates the macro on a board. It covers six boards across four FPGA architectures (iCE40, ECP5, Gowin and Xilinx 7-series), selected with `BOARD=`, and defaults to the pico-ice. See [macros/counter/fpga/README.md](macros/counter/fpga/README.md) for the board list, the toolchain notes, and how to add a further one.
 
 > [!TIP]
 > Each macro has its own `Makefile` and `README.md` with additional targets, such as linting, simulation, and verification.
