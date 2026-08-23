@@ -1,30 +1,158 @@
-﻿# ihp-sg13g2 counter FPGA Flow
+# FPGA Emulation Flow
 
-> [!IMPORTANT]
-> This flow is intended to run inside the `ihp-sg13g2-ams-chip-template/macros/counter/fpga/` directory and requires an FPGA toolchain with `verilator`, `yosys`, `nextpnr-ice40`, `icepack`, `dfu-util`, `netlistsvg`, `svgo`, and `rsvg-convert`.
->
-> The default synthesis flow targets iCE40 (`TARGET=synth_ice40`).
+Emulates the `counter` macro on an FPGA, across several boards. The synthesis top is `counter_top` from [`../rtl/`](../rtl/), and its ports (`clock_i`, `reset_n_i`, `enable_i`, `counter_value_o[7:0]`) are mapped straight onto board pins, so no board-top wrapper is needed.
 
-The FPGA flow uses RTL sources from `../rtl/` (`constants.sv`, `counter.sv`, `counter_top.sv`).
+The flow is driven by one shared Makefile fragment, [`fpga.mk`](fpga.mk), parametrized per architecture and per board. Adding a board is a matter of two small files plus its pin constraints, see [Adding a Board](#adding-a-board).
 
-The main Makefile variables are:
 
-- `TOP=counter_top`
-- `CELL=$(TOP)` by default for linting
-- `TARGET=synth_ice40`
-- `PCF_FILE=pico-ice.pcf`
+## Supported Boards
 
-## Show Available Targets
+| Board | Directory | FPGA | Toolchain | Verified here |
+| --- | --- | --- | --- | --- |
+| pico-ice | [`pico-ice/`](pico-ice/) | Lattice iCE40UP5K | Yosys -> nextpnr-ice40 -> icepack | Bitstream built, default board |
+| iCEBreaker | [`icebreaker/`](icebreaker/) | Lattice iCE40UP5K | Yosys -> nextpnr-ice40 -> icepack | Bitstream built |
+| ULX3S | [`ulx3s/`](ulx3s/) | Lattice ECP5-85F | Yosys -> nextpnr-ecp5 -> ecppack | Synthesis only, see below |
+| Tang Nano 9K | [`nano9k/`](nano9k/) | Gowin GW1NR-9C | Yosys -> nextpnr-himbaechel -> gowin_pack | Synthesis only, see below |
+| Basys 3 | [`basys3/`](basys3/) | Xilinx Artix-7 xc7a35t | Yosys -> nextpnr-xilinx -> prjxray | Synthesis only, see below |
+| Boolean | [`boolean/`](boolean/) | Xilinx Spartan-7 xc7s50 | Yosys -> nextpnr-xilinx -> prjxray | Synthesis only, see below |
 
-The default Make target is `help`, so running `make` prints usage and all available targets with short descriptions.
+Pin assignment per board:
+
+| Board | `clock_i` | `reset_n_i` | `enable_i` | `counter_value_o[7:0]` |
+| --- | --- | --- | --- | --- |
+| pico-ice | 12 MHz oscillator | ice push button, active low | GPIO | Bottom left PMOD |
+| iCEBreaker | 12 MHz oscillator | S1 button, active low | PMOD 1A pin 1 | PMOD 2 |
+| ULX3S | 25 MHz oscillator | `BTN_PWRn`, already active low | J1 `gp[0]`, pulled up so it runs by default | The eight on-board LEDs |
+| Tang Nano 9K | 27 MHz oscillator | S1 button, active low | S2 button | PMOD 1 |
+| Basys 3 | 100 MHz oscillator | `sw[0]` toggle | `sw[1]` toggle | The eight rightmost LEDs |
+| Boolean | 100 MHz oscillator | `sw[0]` toggle | `sw[1]` toggle | The eight rightmost LEDs |
+
+> [!NOTE]
+> On Basys 3 and Boolean, `reset_n_i` and `enable_i` are toggle switches rather than the momentary buttons. Both boards' buttons are active high, so a button would hold `reset_n_i` asserted while idle, and there is no wrapper here to invert it.
+
+
+## Toolchain
+
+[IIC-OSIC-TOOLS](https://github.com/iic-jku/IIC-OSIC-TOOLS) ships `verilator`, `yosys`, `nextpnr-ice40`, `icepack` and `iceprog`, which is the complete chain for the two iCE40 boards. Yosys carries every `synth_*` pass, so `make synthesis` works for all six boards inside the container, but the later steps of the other four need tools that are not part of it:
+
+| Board | Also needs |
+| --- | --- |
+| pico-ice | `dfu-util` for `load_bitstream`/`flash_bitstream` |
+| ULX3S | `nextpnr-ecp5`, `ecppack`, `openFPGALoader` |
+| Tang Nano 9K | `nextpnr-himbaechel`, `gowin_pack`, `openFPGALoader` |
+| Basys 3, Boolean | `nextpnr-xilinx` and `prjxray`, from the separate [nix-openxc7](https://github.com/openxc7/nix-openxc7) shell, plus `openFPGALoader` |
+
+The `visualize` and `visualize_generic` targets additionally need `netlistsvg`, `svgo` and `rsvg-convert`, which are also not in the container.
+
+
+## Picking a Board
+
+[`Makefile`](Makefile) in this folder is a dispatcher: it forwards every target it does not handle itself to `<BOARD>/Makefile`, defaulting to `BOARD := pico-ice`. Running the default board, another board, or the board directory directly are all equivalent:
+
+```sh
+make all                     # pico-ice, the default
+make BOARD=icebreaker all
+make -C icebreaker all
+```
+
+`BOARD` is validated against the folders that hold a `Makefile`, so a typo gives a list of what is available instead of a confusing error:
+
+```console
+$ make BOARD=nosuchboard synthesis
+Unknown BOARD 'nosuchboard'. Available: basys3 boolean icebreaker nano9k pico-ice ulx3s.
+```
+
+`help`, `open` and `clean` are handled by the dispatcher itself. `clean` deliberately cleans **every** board, not just `$(BOARD)`, so that `make clean` in the macro removes all FPGA outputs in one go.
+
+
+## How the Flow Is Put Together
+
+The flow is split across four layers, so that a new board touches as little as possible:
+
+| File | One per | Holds |
+| --- | --- | --- |
+| [`fpga.mk`](fpga.mk) | flow | The targets themselves and the defaults common to all boards |
+| [`arch/<arch>.mk`](arch/) | FPGA architecture | The synthesis, place-and-route and packing toolchain |
+| [`boards/<board>.mk`](boards/) | board | Device, package, and how to load and flash it |
+| [`dut.mk`](dut.mk) | design under test | The RTL sources, shared by every board |
+
+A board directory's `Makefile` is thin. It includes `dut.mk` for the sources, names the top module and the pin file, then includes its `boards/` fragment and `fpga.mk`, which in turn pulls in the `arch/` fragment named by the board's `ARCH`:
+
+```make
+TOP := counter_top
+
+include ../dut.mk
+MODULES_SYNTH := $(DUT_SRCS)
+
+PCF_FILE := icebreaker.pcf
+
+include $(TOP_FPGA_DIR)/boards/icebreaker.mk
+include $(TOP_FPGA_DIR)/fpga.mk
+```
+
+### Set by `dut.mk`
+
+| Variable | | Description |
+| --- | --- | --- |
+| `SRC_DIR` | mandatory | RTL source directory |
+| `DUT_SRCS` | mandatory | Ordered source file list of the design under test |
+| `TOP_FPGA_DIR` | mandatory | Path from a board folder back to this one |
+
+### Set by the board `Makefile`
+
+| Variable | | Description |
+| --- | --- | --- |
+| `TOP` | mandatory | Synthesis top module and instance name |
+| `MODULES_SYNTH` | mandatory | Ordered source file list for `TOP`, here just `$(DUT_SRCS)` |
+| `PCF_FILE` | mandatory | Board pin constraint file |
+
+### Set by `boards/<board>.mk`
+
+| Variable | | Description |
+| --- | --- | --- |
+| `ARCH` | mandatory | Selects the `arch/<arch>.mk` fragment |
+| `ICE40_DEVICE`, `ECP5_DEVICE`, `GOWIN_DEVICE`/`GOWIN_FAMILY`, `PART` | mandatory | Device and package, whichever the board's architecture uses |
+| `CHIPDB`, `XRAY_FAMILY` | mandatory | `xilinx7` only |
+| `OPENFPGALOADER_BOARD` | mandatory | openFPGALoader board profile, unless `LOAD_CMD`/`FLASH_CMD` are set instead |
+| `OPENFPGALOADER_FLAGS` | optional | Extra openFPGALoader flags |
+| `LOAD_CMD`, `FLASH_CMD` | optional | Complete load and flash commands, replacing the openFPGALoader default, for boards it has no profile for |
+
+### Set by `arch/<arch>.mk`
+
+| Variable | | Description |
+| --- | --- | --- |
+| `TARGET`, `SYNTH_OPTS` | mandatory | Yosys synth pass and its options |
+| `SYNTH_CMD` | optional | Complete synthesis command, replacing `TARGET`/`SYNTH_OPTS`, for a synth pass that does not fit the `$(TARGET) $(SYNTH_OPTS) -top $(TOP)` shape, such as `synth_xilinx` |
+| `PNR_CMD`, `PNR_OUT` | mandatory | Place-and-route command and its output file |
+| `PNR_ARGS`, `PNR_DEPS` | optional | Place-and-route flags, and extra prerequisites such as a generated chip database |
+| `PNR_GUI_CMD` | optional | Interactive place-and-route command. Left empty where there is none, `pr-gui` then says so and stops |
+| `PACK_CMD`, `BITSTREAM` | mandatory | Bitstream packing command and output file |
+
+Every fragment assigns with `?=`, so a board `Makefile` can still override anything it needs to.
+
+### Adding a Board
+
+1. Create `boards/<board>.mk` with `ARCH` and the device, package and flash variables above.
+2. Create `<board>/` with a `Makefile` (the eight lines shown above) and the pin constraint file it names, mapping `clock_i`, `reset_n_i`, `enable_i` and `counter_value_o[7:0]` onto board pins.
+3. If the FPGA family is new, also create `arch/<arch>.mk` with that family's synthesis, place-and-route and packing commands.
+
+Neither `fpga.mk` nor the dispatcher changes, and the new board shows up in `make help` and in `make clean` on its own, because both derive the board list from the folders that hold a `Makefile`.
+
+
+## Makefile Targets
+
+### Show Available Targets
+
+The default Make target is `help`, so running `make` prints usage and all available targets with short descriptions. Run it in a board folder to see that board's architecture, top cell and constraint file:
 
 ```sh
 make
 make help
+make -C ulx3s help
 ```
 
 
-## Open the Design Files
+### Open the Design Files
 
 Opens a file browser for this folder with `sak-open.py` from the [IIC-OSIC-TOOLS](https://github.com/iic-jku/IIC-OSIC-TOOLS), one button per file:
 
@@ -32,49 +160,42 @@ Opens a file browser for this folder with `sak-open.py` from the [IIC-OSIC-TOOLS
 make open
 ```
 
-Clicking a button launches the matching tool in the file's own directory: gvim for the `Makefile`, the `README.md` and the synthesized `.json` netlist, GTKWave for `.vcd` / `.fst`, and the desktop's handler for the generated `.pdf` visualizations. Only the file types listed in [the top-level README](../../../README.md#open-the-design-files) get a button, so `pico-ice.pcf` and the `.svg` visualizations are not shown, and the RTL lives one level up in [`../rtl/`](../rtl/). Pass extra options with `OPEN_ARGS`, for example `make open OPEN_ARGS=--all` to include the build outputs.
+Clicking a button launches the matching tool in the file's own directory: gvim for the `Makefile` and the `README.md`, and the desktop's handler for a generated `.pdf` visualization. Only the file types listed in [the top-level README](../../../README.md#open-the-design-files) get a button, so the `.mk` fragments and the pin constraint files are not shown, and the RTL lives one level up in [`../rtl/`](../rtl/). Pass extra options with `OPEN_ARGS`, for example `make open OPEN_ARGS=--all` to include the build outputs.
 
 > [!NOTE]
 > This target needs a display. Run it inside the container's VNC/noVNC desktop or over X11 forwarding. The `.pdf` buttons hand the file to the desktop's registered handler, so they need the full VNC/noVNC session and do not work over a bare X forward.
 
 
-## Clean
+### Clean
 
-Remove generated files:
+Remove the generated files of every board, that is each `<board>/build/`:
 
 ```sh
 make clean
+make -C ulx3s clean   # only this board
 ```
 
 
-## Lint
+### Lint
 
 Run Verilator lint checks:
 
 ```sh
 make lint-verilog
 make lint-verilog CELL=counter
-make lint-verilog CELL=<cellname>
 make lint-verilog-all
 ```
 
-`make lint-verilog` defaults to `CELL=counter_top` and checks `constants.sv`, `counter.sv`, and `counter_top.sv`.
-`make lint-verilog CELL=<cellname>` checks `constants.sv` together with `../rtl/<cellname>.sv` or `../rtl/<cellname>.v`.
-`make lint-verilog-all` runs both lint checks in sequence.
+`make lint-verilog` defaults to `CELL=counter_top` and checks `constants.sv`, `counter.sv` and `counter_top.sv`. `make lint-verilog CELL=<cellname>` checks `constants.sv` together with `../rtl/<cellname>.sv` or `../rtl/<cellname>.v`. `make lint-verilog-all` runs both checks in sequence.
 
 
-## Synthesis
+### Synthesis
 
-Run technology-mapped synthesis for iCE40:
+Run technology-mapped synthesis for the board's FPGA architecture. The Yosys `synth_*` pass comes from its `arch/<arch>.mk`:
 
 ```sh
 make synthesis
-```
-
-Override `TARGET` to pass a different Yosys synthesis command:
-
-```sh
-make synthesis TARGET=synth_ice40
+make BOARD=ulx3s synthesis
 ```
 
 Generate a generic synthesis netlist and Yosys graph:
@@ -84,39 +205,36 @@ make synthesis_generic
 ```
 
 
-## Netlist Visualization
+### Netlist Visualization
 
-Generate a PDF from the iCE40 synthesized netlist:
-
-```sh
-make visualize_ice40
-```
-
-Generate a PDF from the generic synthesized netlist:
+Generate a PDF from the technology-mapped netlist, or from the generic one:
 
 ```sh
+make visualize
 make visualize_generic
 ```
 
+Both need `netlistsvg`, `svgo` and `rsvg-convert`, which are not part of IIC-OSIC-TOOLS.
 
-## Place-and-Route
 
-Run place-and-route with nextpnr:
+### Place-and-Route
+
+Run place-and-route:
 
 ```sh
 make pr
 ```
 
-Run place-and-route in GUI mode:
+Run it in the nextpnr GUI:
 
 ```sh
 make pr-gui
 ```
 
-The constraints file used by this flow is `pico-ice.pcf`.
+`pr-gui` works for the iCE40, ECP5 and Gowin boards. The Xilinx place-and-route is a two-step pipeline (`nextpnr-xilinx` then `fasm2frames`) with no single command to attach a GUI flag to, so there the target stops with a message instead.
 
 
-## Bitstream Generation and Flash
+### Bitstream Generation and Flash
 
 Generate a bitstream:
 
@@ -124,18 +242,19 @@ Generate a bitstream:
 make gen_bitstream
 ```
 
-Flash the generated bitstream:
+Load or flash it:
 
 ```sh
-make flash_bitstream
+make load_bitstream    # into SRAM, lost on power cycle
+make flash_bitstream   # into the board's flash, survives a power cycle
 ```
 
 > [!NOTE]
-> `flash_bitstream` is intentionally not part of `make all`.
-> Use `make flash_bitstream` explicitly when you want to program the FPGA.
+> Neither target is part of `make all`, by design. Use them explicitly when you want to program the FPGA.
+> Each board fragment sets `LOAD_CMD`/`FLASH_CMD` to whatever that board needs: `openFPGALoader` for most boards, `iceprog` for the iCEBreaker, and `dfu-util` for the pico-ice, since openFPGALoader has a profile for neither. On the pico-ice the RP2040 co-processor is the DFU bootloader and forwards the bitstream to the iCE40 flash, which is why `iceprog` does not work on that board.
 
 
-## Convert to Verilog
+### Convert to Verilog
 
 Convert the SystemVerilog top module to Verilog:
 
@@ -144,15 +263,15 @@ make convert
 ```
 
 
-## Build All
+### Build All
 
-Run the full FPGA flow target from the Makefile:
+Run the full FPGA flow:
 
 ```sh
 make all
 ```
 
-The current `all` recipe executes these steps in order:
+The `all` recipe executes these steps in order:
 
 1. `make clean`
 2. `make lint-verilog-all`
@@ -160,7 +279,9 @@ The current `all` recipe executes these steps in order:
 4. `make pr`
 5. `make gen_bitstream`
 
-This ensures stale artifacts from previous runs are removed before a fresh build.
+Cleaning first means stale artifacts from a previous run cannot survive into the build.
 
 > [!NOTE]
-> `make all` intentionally stops after bitstream generation and does not call `flash_bitstream`.
+> `make all` intentionally stops after bitstream generation and does not call `load_bitstream` or `flash_bitstream`.
+
+All outputs land in `<board>/build/`, which is git-ignored, so several boards can be built side by side without overwriting each other.

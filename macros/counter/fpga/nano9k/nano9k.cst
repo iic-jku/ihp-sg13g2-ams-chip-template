@@ -1,0 +1,27 @@
+// SPDX-FileCopyrightText: 2026 Simon Dorrer and Harald Pretl
+// SPDX-License-Identifier: Apache-2.0 WITH SHL-2.1
+//
+// Tang Nano 9K pin map for counter_top.
+// See https://wiki.sipeed.com/hardware/en/tang/Tang-Nano-9K/Nano-9K.html for the board pinout.
+
+// CLK, 27 MHz
+IO_LOC "clock_i" 52;
+IO_PORT "clock_i" PULL_MODE=UP;
+
+// Reset, S1 button, active low
+IO_LOC "reset_n_i" 4;
+IO_PORT "reset_n_i" PULL_MODE=UP;
+
+// S2 button
+IO_LOC "enable_i" 3;
+IO_PORT "enable_i" PULL_MODE=UP;
+
+// PMOD 1 (generic GPIO output)
+IO_LOC "counter_value_o[0]" 39;
+IO_LOC "counter_value_o[1]" 36;
+IO_LOC "counter_value_o[2]" 37;
+IO_LOC "counter_value_o[3]" 38;
+IO_LOC "counter_value_o[4]" 49;
+IO_LOC "counter_value_o[5]" 48;
+IO_LOC "counter_value_o[6]" 76;
+IO_LOC "counter_value_o[7]" 77;

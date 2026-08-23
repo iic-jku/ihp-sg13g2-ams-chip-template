@@ -252,7 +252,7 @@ The [counter Makefile](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/b
 | `make librelane` (and `-nodrc`, `-magicdrc`, …)   | Run the LibreLane flow for the counter macro.                               |
 | `make generate-xspice`                            | Convert the LibreLane-extracted SPICE netlist into an XSPICE model for Xschem. |
 | `make sim-gl-xschem` / `sim-view-xschem`          | Run the mixed-signal XSPICE simulation in Xschem (batch mode) and plot the results. `TB` defaults to `<CELL>_tb_tran` and `SCRIPT` to `plot_<CELL>`. |
-| `make build-fpga`                                 | Run the full FPGA flow: lint, synthesis, P&R, and bitstream generation.     |
+| `make build-fpga`                                 | Run the full FPGA flow: lint, synthesis, P&R, and bitstream generation. The board is selected with `BOARD=` and defaults to the pico-ice. |
 | `make build-top`                                  | Run LibreLane, copy reports, netlists, and final views, generate the XSPICE model, and render the final GDS. |
 | `make symbol-pex`                                 | Build the Xschem PEX symbol `<CELL>_pex.sym` from `<CELL>.sym`. Runs automatically before every extraction. |
 | `make klayout-pex` / `magic-pex` (`EXT_MODE=<1|2|3>`) | Extract the parasitics of the hardened macro from `final/gds/` into `netlist/pex/`. |
@@ -297,7 +297,7 @@ The counter design files are located in [`macros/counter/`](https://github.com/i
 | [`testbenches/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/counter/testbenches/) | `verilog/`, `cocotb/`, and `xschem/` testbenches with pre-configured GTKWave and Surfer view files. |
 | [`flow/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/counter/flow/)           | LibreLane configuration (`config.yaml`, `pin_order.cfg`, `impl.sdc`, `signoff.sdc`). |
 | [`final/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/counter/final/)         | Final deliverables (GDS, LEF, LIB per corner, NL, PNL, SPEF, VH) copied from the latest LibreLane run for top-level integration. |
-| [`fpga/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/counter/fpga/)           | Optional FPGA flow for the [pico-ice](https://pico-ice.tinyvision.ai/) board.    |
+| [`fpga/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/counter/fpga/)           | Optional FPGA emulation flow, six boards across four FPGA architectures.    |
 | [`netlist/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/counter/netlist/)     | `nl/`, `pnl/`, `spice/` and `xspice/` netlists (see [LibreLane cheatsheet](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/doc/librelane/librelane_cheatsheet.md#3-netlists--circuit-views) for more details). |
 | [`schematic/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/counter/schematic/) | Xschem symbol of the macro for use in mixed-signal Xschem testbenches.                                       |
 | [`scripts/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/counter/scripts/)     | Helper scripts (XSPICE conversion, plotting, layout rendering).                        |
@@ -385,7 +385,7 @@ make build-top
 ```
 
 ::: {.callout-tip}
-The macro can also be built as an FPGA bitstream ([`fpga/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/counter/fpga/)) for a pico-ice board (or other FPGA boards) with `make build-fpga`. The FPGA flow is not used in this tutorial and is only listed here for reference.
+The macro can also be built as an FPGA bitstream ([`fpga/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/counter/fpga/)) with `make build-fpga`. `counter_top` is synthesized straight onto board pins, without a board-top wrapper, and six boards are supported across four FPGA architectures: pico-ice and iCEBreaker (Lattice iCE40), ULX3S (Lattice ECP5), Tang Nano 9K (Gowin) and Basys 3 and Boolean (Xilinx 7-series). Pick one with `make build-fpga` for the default pico-ice, or `make -C fpga BOARD=ulx3s all` for another. IIC-OSIC-TOOLS carries the complete iCE40 chain, so the two iCE40 boards build end to end inside the container, while the others need extra tools listed in [`fpga/README.md`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/counter/fpga/README.md). The FPGA flow is not used in this tutorial and is only listed here for reference.
 :::
 
 ## Viewing the Macro

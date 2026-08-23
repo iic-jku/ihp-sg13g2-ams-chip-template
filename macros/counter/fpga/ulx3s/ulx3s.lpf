@@ -1,0 +1,35 @@
+# SPDX-FileCopyrightText: 2026 Simon Dorrer and Harald Pretl
+# SPDX-License-Identifier: Apache-2.0 WITH SHL-2.1
+#
+# ULX3S v2.0 pin map for counter_top.
+# See https://github.com/emard/ulx3s for the board pinout.
+
+LOCATE COMP "clock_i" SITE "G2";
+IOBUF  PORT "clock_i" PULLMODE=NONE IO_TYPE=LVCMOS33;
+FREQUENCY PORT "clock_i" 25 MHZ;
+
+# BTN_PWRn, already inverted and therefore active low
+LOCATE COMP "reset_n_i" SITE "D6";
+IOBUF  PORT "reset_n_i" PULLMODE=UP IO_TYPE=LVCMOS33 DRIVE=4;
+
+# J1 header gp[0], pulled up so the counter runs by default
+LOCATE COMP "enable_i" SITE "B11";
+IOBUF  PORT "enable_i" PULLMODE=UP IO_TYPE=LVCMOS33 DRIVE=4;
+
+# The eight on-board LEDs
+LOCATE COMP "counter_value_o[0]" SITE "B2";
+LOCATE COMP "counter_value_o[1]" SITE "C2";
+LOCATE COMP "counter_value_o[2]" SITE "C1";
+LOCATE COMP "counter_value_o[3]" SITE "D2";
+LOCATE COMP "counter_value_o[4]" SITE "D1";
+LOCATE COMP "counter_value_o[5]" SITE "E2";
+LOCATE COMP "counter_value_o[6]" SITE "E1";
+LOCATE COMP "counter_value_o[7]" SITE "H3";
+IOBUF  PORT "counter_value_o[0]" PULLMODE=NONE IO_TYPE=LVCMOS33 DRIVE=4;
+IOBUF  PORT "counter_value_o[1]" PULLMODE=NONE IO_TYPE=LVCMOS33 DRIVE=4;
+IOBUF  PORT "counter_value_o[2]" PULLMODE=NONE IO_TYPE=LVCMOS33 DRIVE=4;
+IOBUF  PORT "counter_value_o[3]" PULLMODE=NONE IO_TYPE=LVCMOS33 DRIVE=4;
+IOBUF  PORT "counter_value_o[4]" PULLMODE=NONE IO_TYPE=LVCMOS33 DRIVE=4;
+IOBUF  PORT "counter_value_o[5]" PULLMODE=NONE IO_TYPE=LVCMOS33 DRIVE=4;
+IOBUF  PORT "counter_value_o[6]" PULLMODE=NONE IO_TYPE=LVCMOS33 DRIVE=4;
+IOBUF  PORT "counter_value_o[7]" PULLMODE=NONE IO_TYPE=LVCMOS33 DRIVE=4;

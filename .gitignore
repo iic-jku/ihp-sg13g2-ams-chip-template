@@ -31,7 +31,4 @@ sim_build/
 /macros/counter/schematic/xschem/simulations
 /macros/counter/testbenches/xschem/simulations
 /macros/counter/flow/final
-/macros/counter/fpga/counter_top_viz.json
-/macros/counter/fpga/counter_top_generic*
-/macros/counter/fpga/counter_top*.svg
-/macros/counter/fpga/counter_top*.pdf
+/macros/counter/fpga/*/build/
