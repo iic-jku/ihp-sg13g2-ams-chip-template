@@ -42,6 +42,7 @@ This Makefile-driven repository simulates, builds, and fully verifies (DRC, LVS,
 - [**Ngspice**](https://github.com/danchitnis/ngspice-sf-mirror), [**VACASK**](https://codeberg.org/arpadbuermen/VACASK) and [**CACE**](https://github.com/fossi-foundation/cace) for analog simulation
 - [**KLayout**](https://github.com/KLayout/klayout) for viewing and routing of the layout
 - [**Magic**](https://github.com/rtimothyedwards/magic) + [**Netgen**](https://github.com/rtimothyedwards/netgen) and [**KLayout**](https://github.com/KLayout/klayout) for DRC, LVS and PEX verification
+- [**gdscheck**](https://github.com/aesc-silicon/gdscheck) as an additional standalone DRC engine with its own rule decks for ihp-sg13g2
 - **SystemVerilog**, [**Verilator**](https://github.com/verilator/verilator), [**iverilog**](https://github.com/steveicarus/iverilog), [**cocotb**](https://github.com/cocotb/cocotb), [**GTKWave**](https://github.com/gtkwave/gtkwave) and [**Surfer**](https://gitlab.com/surfer-project/surfer) for linting and simulation of digital macros
 
 The repository is the starting point for your own custom silicon and provides a universal design flow solution: Just clone the repo, enter the IIC-OSIC-TOOLS container, and run `make all` to get a tapeout-ready analog-mixed signal chip. Focus on your design and do not care about the tools and the design flow!
@@ -331,7 +332,7 @@ Solid arrows are direct `$(MAKE) <target>` calls within a single Makefile. Dashe
 At the top level, `make all` runs four steps in this order:
 
 1. `build-all` initializes the submodules and builds every component by calling its own `all` target: bondpad, logos, digital macro, analog macro, and finally the chip assembly with `build-top` (LibreLane, copy-back of all artifacts, logo and fill insertion, final GDS render).
-2. `magic-drc` and `klayout-drc` run the DRC of the final `chip_top` and `chip_top_logo_fill` GDS.
+2. `magic-drc` and `gdscheck-drc` run the DRC of the final `chip_top` and `chip_top_logo_fill` GDS.
 3. `sim-all` runs the top-level RTL and gate-level simulations on the netlists produced by this build.
 4. `bondplan` generates the bonding diagram, the bondwires, and the pin table.
 
@@ -626,7 +627,7 @@ For each digital macro this dispatches to its in-tree `make all`, which runs the
 
 #### Build Analog Macros
 
-Each analog macro has its own `klayout-verify` and `magic-verify` targets that run DRC, LVS, and PEX for the top-level cell.
+Each analog macro has its own `klayout-verify` and `magic-verify` targets that run DRC, LVS, and PEX for the top-level cell, plus a `gdscheck-drc-all` target that runs the standalone gdscheck DRC on the same cells.
 
 To build the inverter macro:
 
@@ -681,9 +682,9 @@ This calls `scripts/add_logo_fill.sh` and writes `layout/chip_top_logo_fill.gds.
 
 ### Design Rule Check (DRC)
 
-Runs DRC on the GDS layout in `layout/`. Both flows use `sak-drc.sh` and write their reports into per-cell run folders: `verification/drc/<CELL>.magic.drc/` (Magic) and `verification/drc/<CELL>.klayout.drc/` (KLayout, `.lyrdb`). The run folders are wiped at the start of each run, so they always reflect the latest run only.
+Runs DRC on the GDS layout in `layout/`. All three flows use `sak-drc.sh` and write their reports into per-cell run folders: `verification/drc/<CELL>.magic.drc/` (Magic), `verification/drc/<CELL>.klayout.drc/` (KLayout, `.lyrdb`) and `verification/drc/<CELL>.gdscheck.drc/` (gdscheck, `.lyrdb`). The run folders are wiped at the start of each run, so they always reflect the latest run only.
 
-The `DRC_LEVEL` parameter selects the KLayout DRC level (`sak-drc.sh -l`). It is ignored by `magic-drc`, since Magic has no selectable rule decks and always runs the full rule set compiled into the PDK's Magic tech file:
+The `DRC_LEVEL` parameter selects the KLayout DRC level and the gdscheck suite (`sak-drc.sh -l`). It is ignored by `magic-drc`, since Magic has no selectable rule decks and always runs the full rule set compiled into the PDK's Magic tech file:
 
 - `precheck` = core FEOL + BEOL manufacturing rules only (fast iteration)
 - `macro` = block-in-isolation sign-off: `precheck` plus off-grid, zero-area, and pin/label checks (default)
@@ -698,6 +699,8 @@ The `DRC_LEVEL` parameter selects the KLayout DRC level (`sak-drc.sh -l`). It is
 | Recommended / extra rules | – | – | ✓ |
 | Density (full-chip fill) | – | – | ✓ |
 | Antenna | – | – | ✓ |
+
+For `gdscheck-drc` the levels map onto the rule suites built into the gdscheck binary: `precheck` runs the `precheck` suite (IHP's published open-source precheck subset), `macro` runs `core` (all geometric rules minus the density/fill and antenna rules) and `regular` runs `main` (every per-layer deck, density and antenna included). The `GDSCHECK_SUITE` parameter overrides this mapping (`sak-drc.sh -s`) and also reaches the standalone `density` and `antenna` suites, e.g. to check only the fill density of the final layout.
 
 **KLayout DRC (minimum)** runs a pre-check (`precheck`) KLayout DRC on the final top-level layout with logo and fill structures:
 
@@ -725,6 +728,29 @@ make klayout-drc CELL=chip_top DRC_LEVEL=regular
 make magic-drc
 make magic-drc CELL=chip_top
 ```
+
+**gdscheck DRC (minimum)** runs a pre-check (`precheck` suite) gdscheck DRC on the final top-level layout with logo and fill structures:
+
+```sh
+make gdscheck-drc-minimum
+```
+
+**gdscheck DRC (regular)** runs a full (`main` suite) gdscheck DRC on the final top-level layout with logo and fill structures:
+
+```sh
+make gdscheck-drc-regular
+```
+
+**gdscheck DRC** runs a gdscheck DRC at the selected `DRC_LEVEL` or `GDSCHECK_SUITE`:
+
+```sh
+make gdscheck-drc
+make gdscheck-drc CELL=chip_top
+make gdscheck-drc CELL=chip_top_logo_fill GDSCHECK_SUITE=density
+```
+
+> [!NOTE]
+> gdscheck is a standalone DRC engine with its own rule decks, so it gives an independent second opinion next to Magic and KLayout. Upstream calls it experimental with incomplete coverage, so treat a clean gdscheck run as additional confidence, not as sign-off on its own.
 
 
 ### Export Schematic Netlist for LVS
@@ -910,7 +936,7 @@ See [packaging/README.md](packaging/README.md) for the full flow documentation a
 
 ### Build, Verify and Simulate All
 
-Runs `build-all` first, followed by Magic DRC for both `chip_top` and `chip_top_logo_fill`, then the chip simulations (`sim-all`) and finally generates the bondplan (`bondplan`) once all checks have passed:
+Runs `build-all` first, followed by Magic and gdscheck DRC for both `chip_top` and `chip_top_logo_fill`, then the chip simulations (`sim-all`) and finally generates the bondplan (`bondplan`) once all checks have passed:
 
 ```sh
 make all
@@ -974,6 +1000,7 @@ To keep the runtime low while still covering the full toolchain, the regression 
 - The counter macro is hardened with `librelane-magicdrc` (only **Magic DRC** enabled, the slower KLayout DRC is skipped). Netgen LVS still runs as part of the flow.
 - The chip top-level runs `librelane-nodrc`. All DRC checks are skipped to save runtime on the large top-level assembly. The macros and IP blocks are DRC-checked individually beforehand, so this only leaves the top-level routing/fill unchecked.
 - KLayout DRC (`sak-drc.sh`) is skipped inside the LibreLane runs, but is still exercised in the bondpad and logo IP builds, and in the inverter `klayout-verify`.
+- gdscheck DRC (`sak-drc.sh -g`) is not part of the regression. It runs in `make all` on the chip top-level layouts and in the inverter `all` flow.
 - Only **one** logo (`sg13g2_ip__jku`) is regenerated. It is the only step that exercises the PNG to GDS flow. The second logo (`sg13g2_ip__jku_names`) uses an identical toolchain and reuses its committed views.
 - Exactly **one** CACE parameter set is run (the AC VDD sweep `ac_params`, no Monte-Carlo). Swap `ac_params` for `ac_mc_params` / `ac_mm_params` in the target to also exercise the Monte-Carlo flow.
 
