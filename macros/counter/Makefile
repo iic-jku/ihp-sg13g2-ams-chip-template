@@ -87,7 +87,7 @@ _TB_EXT = $(if $(wildcard $(VERILOG_TB_DIR)/$(CELL)_tb.sv),sv,v)
 
 # Help Target
 help: ## Show this help message
-	@echo 'Usage: make <target> [CELL=<cellname>] [EXT_MODE=<1|2|3>] [THRESHOLD=<mOhm>] [MINRES=<mOhm>] [MINDELAY=<ps>] [WAVEFORM_VIEWER=<gtkwave|surfer>] [TB=<testbenchname>] [SCRIPT=<scriptname>] [OPEN_ARGS=<options>]'
+	@echo 'Usage: make <target> [CELL=<cellname>] [EXT_MODE=<1|2|3>] [THRESHOLD=<mOhm>] [MINRES=<mOhm>] [MINDELAY=<ps>] [WAVEFORM_VIEWER=<gtkwave|surfer>] [TB=<testbenchname>] [SCRIPT=<scriptname>] [OPEN_ARGS=<options>] [FORCE=1]'
 	@echo ''
 	@echo 'Available targets:'
 	@grep -E '^[a-zA-Z0-9_.-]+:.*## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*## "}; {printf "  %-20s %s\n", $$1, $$2}'
@@ -99,6 +99,7 @@ help: ## Show this help message
 	@echo 'TB selects the Xschem testbench for sim-gl-xschem (default: <CELL>_tb_tran).'
 	@echo 'SCRIPT selects the plotting script for sim-view-xschem (default: plot_<CELL>).'
 	@echo 'OPEN_ARGS passes extra options to sak-open.py for the open target (e.g. --all).'
+	@echo 'FORCE=1 lets symbol-gl overwrite an existing symbol instead of refusing.'
 .PHONY: help
 # ================================================================================================
 
@@ -283,10 +284,20 @@ render-gds: ## Render images from the final GDS using sak-render.py
 # ================================================================================================
 
 
+# Xschem Symbol Targets
+symbol-gl: ## Scaffold <CELL>.sym for a new macro, once, from the powered netlist ports (usage: make symbol-gl [CELL=<cellname>] [FORCE=1])
+	python3 $(SCRIPTS_DIR)/verilog2sym.py $(NET_PNL_DIR)/$(CELL).pnl.v $(XSCHEM_SCH_DIR)/$(CELL).sym $(if $(FORCE),--force)
+.PHONY: symbol-gl
+
+symbol-check: ## Check <CELL>.sym against the powered netlist ports, runs inside generate-xspice (usage: make symbol-check [CELL=<cellname>])
+	python3 $(SCRIPTS_DIR)/verilog2sym.py $(NET_PNL_DIR)/$(CELL).pnl.v $(XSCHEM_SCH_DIR)/$(CELL).sym --check
+.PHONY: symbol-check
+# ================================================================================================
+
+
 # Generate XSPICE Target
-# Runs as part of `build-top` (after `copy-netlist`) so the XSPICE model always matches the
-# netlists of the current LibreLane run. Can also be run standalone to regenerate the model.
 generate-xspice: ## Generate XSPICE model from the LibreLane-extracted SPICE netlist
+	$(MAKE) symbol-check CELL=$(TOP)
 	mkdir -p $(XSPICE_DIR)
 	python3 $(SCRIPTS_DIR)/spi2xspice.py $(PDK_ROOT)/$(PDK)/libs.ref/sg13g2_stdcell/lib/sg13g2_stdcell_typ_1p50V_25C.lib -io_time=500p -time=50p -idelay=5p -odelay=50p -cload=250f $(NET_SPICE_DIR)/${TOP}.spice $(XSPICE_DIR)/${TOP}.xspice
 	sak-pin-reorder.py $(XSCHEM_SCH_DIR)/${TOP}.sym $(XSPICE_DIR)/${TOP}.xspice --format xspice

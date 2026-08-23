@@ -95,7 +95,8 @@
 │     └─ xschemrc
 ├─ 📁 scripts/
 │  ├─ check_pex_ports.py
-│  └─ spi2xspice.py
+│  ├─ spi2xspice.py
+│  └─ verilog2sym.py
 ├─ 📁 testbenches/
 │  ├─ 📁 cocotb/
 │  │  ├─ counter_top_tb.gtkw
@@ -464,6 +465,73 @@ make build-top
 The LibreLane flow already includes DRC and LVS checks with Magic and KLayout, and they are saved in the `verification/` folder.
 
 
+### Build the Xschem Symbol
+
+The macro is hardened by LibreLane, so it has no schematic, and Xschem's own "make symbol from a schematic" (key `a`) has nothing to work from. `schematic/xschem/<CELL>.sym` is written by hand instead, and the rest of the gate-level flow bends to it: `sak-pin-reorder.py` sorts the ports of the XSPICE model and of the extracted PEX netlists into its pin order, matching them by the `sim_pinname` property of each pin.
+
+That makes the symbol a source file, not a build product, which is why no target regenerates it during a build. The testbench schematics wire to pin **coordinates**, and a pin one grid step off its wire floats silently: Xschem gives the net an auto-generated name, the netlist stays valid, and the simulation runs and produces the wrong answer. A build that moved pins would introduce exactly that failure. The work is therefore split over two targets, one to scaffold a symbol that does not exist yet, one to check the one that does.
+
+#### Scaffold a New Symbol
+
+```sh
+make symbol-gl                  # write schematic/xschem/counter_top.sym
+make symbol-gl CELL=<cellname>  # scaffold the symbol of another cell
+make symbol-gl FORCE=1          # overwrite an existing symbol
+```
+
+`symbol-gl` reads the ports of the powered netlist `netlist/pnl/<CELL>.pnl.v` and writes a first-cut symbol with [`scripts/verilog2sym.py`](scripts/verilog2sym.py). Every port becomes a pin carrying its direction, its bus range and its `sim_pinname`:
+
+```text
+B 5 -2.5 -82.5 2.5 -77.5 {name=VDD dir=inout sim_pinname=VDD}
+B 5 -162.5 -42.5 -157.5 -37.5 {name=clock_i dir=in sim_pinname=clock_i}
+B 5 157.5 -42.5 162.5 -37.5 {name=counter_value_o[0..7] dir=out sim_pinname=counter_value_o}
+```
+
+The powered netlist is the reference rather than the unpowered `netlist/nl/<CELL>.nl.v`, because it is the only one of the two that carries `VDD` and `VSS`, and rather than the RTL, because it is elaborated, so a bus is `[7:0]` instead of `[CTR_BW-1:0]`. Pointing the script at parameterised RTL is refused with that reason rather than guessed at. Both netlists come from `make copy-netlist`, so a new macro reaches its first symbol with `make build-top` followed by `make symbol-gl`.
+
+The geometry follows Xschem's own symbol generator (`make_sym.awk`): inputs on the left edge, outputs and any remaining bidirectional ports on the right, 5x5 pin boxes on 20-unit stubs, and pin labels inside the body at text size 0.2. Two house rules are added on top. Supplies leave the body at the top and at the bottom instead of the sides, and the pin pitch is 40, so every pin lands on a multiple of 20 whatever the pin count. Loading a generated symbol into Xschem and saving it again returns it byte for byte, which is the cheapest evidence that it is written the way Xschem writes symbols itself.
+
+The target refuses to overwrite an existing symbol unless `FORCE=1` is given, because the hand work lives in that file and there is no second copy of it.
+
+What the scaffold gets right is the tedious part: the pin set, the directions, the bus ranges and the `sim_pinname` of every pin. What it cannot know is house style. For the counter, that is the whole of the difference between the scaffold and the committed symbol:
+
+| | scaffold | committed `counter_top.sym` |
+| --- | --- | --- |
+| pin names | `clock_i`, `reset_n_i`, `enable_i`, `counter_value_o[0..7]` | `di_clock`, `di_reset_n`, `di_enable`, `do_b[0..7]` |
+| pin order | netlist order, enable before reset | reset before enable |
+| body | 280 x 120, pins on a 40 pitch | 160 x 160, pins on a 60 pitch |
+
+Renaming the pins is safe because `sim_pinname` carries the binding to the netlist, which is what the property is for. Rename, arrange, redraw the body, then commit the result and treat it as a source file from then on.
+
+#### Check the Symbol
+
+```sh
+make symbol-check                  # check counter_top.sym
+make symbol-check CELL=<cellname>  # check the symbol of another cell
+```
+
+`symbol-check` compares the committed symbol against the same powered netlist and fails if it no longer describes the macro. It runs as the first step of `generate-xspice`, so every build that produces an XSPICE model has verified the symbol first, and a design that grew a port fails there instead of somewhere downstream.
+
+`sak-pin-reorder.py` already refuses to reorder what it cannot map: it fails on a pin count mismatch, on a `sim_pinname` naming a port the netlist does not have, and on two pins claiming the same port. `symbol-check` adds the case it cannot see and two it has no data for:
+
+- **A pin without `sim_pinname`.** This is the one that matters. A single pin missing the property switches `sak-pin-reorder.py` out of name matching for the whole symbol and into matching by position, which is correct only when the netlist keeps the symbol's port order. Magic sorts the ports of an extracted netlist alphabetically, so it does not. On this macro the fallback happens to abort, because the fixed power map it falls back to expects `a_VPWR` and `a_VGND` while the netlist has `a_VDD` and `a_VSS`. Take that accident away by naming the supplies anything else and the reorder exits 0 having mapped `enable_i` onto `counter_value_o[0]` and `counter_value_o[7]` onto `reset_n_i`. `symbol-check` makes the missing property itself the error, so the outcome no longer depends on what the supplies happen to be called.
+- **A direction that disagrees with the netlist.** Nothing downstream reads `dir=`, because a SPICE instance line is positional, so an input drawn as an output survives the whole flow and misleads every reader of the symbol.
+- **A port added to the RTL and forgotten in the symbol**, reported against the netlist before any conversion runs rather than as a pin count in the middle of one.
+
+Every problem names the file, the line and the pin, and the target exits non-zero:
+
+```text
+[ERROR] schematic/xschem/counter_top.sym:19: pin 'di_clock' is dir=out, but 'clock_i' is an input port of module 'counter_top'.
+[ERROR] schematic/xschem/counter_top.sym: module 'counter_top' has the port 'enable_i', but no pin declares sim_pinname=enable_i. Add the pin to the symbol.
+```
+
+The script can also be run by hand on any symbol and netlist pair:
+
+```sh
+python3 scripts/verilog2sym.py netlist/pnl/counter_top.pnl.v schematic/xschem/counter_top.sym --check
+```
+
+
 ### Build Xschem PEX Symbol
 
 Builds the Xschem symbol the PEX flow needs, `schematic/xschem/<CELL>_pex.sym`, from the regular cell symbol `schematic/xschem/<CELL>.sym`:
@@ -579,14 +647,15 @@ To generate an XSPICE file of the macro for mixed-signal simulation in Xschem, r
 make generate-xspice
 ```
 
-This builds the XSPICE model **directly from the LibreLane-extracted SPICE netlist** in `netlist/spice/<TOP>.spice` (copied from the last run by `make copy-netlist`). Two scripts do the work:
+This builds the XSPICE model **directly from the LibreLane-extracted SPICE netlist** in `netlist/spice/<TOP>.spice` (copied from the last run by `make copy-netlist`). Three steps do the work:
 
-1. `spi2xspice.py` replaces every standard cell with an XSPICE primitive (`d_lut`, `d_dff`, …), taking the pin order from the inline black-box `.subckt` stubs in the extracted netlist and the logic functions from the liberty file.
-2. `sak-pin-reorder.py` (installed in the IIC-OSIC-TOOLS container) reorders the resulting `.subckt` ports to match the Xschem symbol in `schematic/xschem/<TOP>.sym`.
+1. `symbol-check` verifies that `schematic/xschem/<TOP>.sym` still describes the ports of the macro, see [Check the Symbol](#check-the-symbol). It runs first so that a symbol which no longer matches the design fails the target before anything is converted.
+2. `spi2xspice.py` replaces every standard cell with an XSPICE primitive (`d_lut`, `d_dff`, …), taking the pin order from the inline black-box `.subckt` stubs in the extracted netlist and the logic functions from the liberty file.
+3. `sak-pin-reorder.py` (installed in the IIC-OSIC-TOOLS container) reorders the resulting `.subckt` ports to match the Xschem symbol in `schematic/xschem/<TOP>.sym`.
 
 > [!NOTE]
 > This target runs automatically as part of `make build-top` (right after `copy-netlist`), so the XSPICE model always matches the netlists of the current LibreLane run. The simulation timing parameters (`-io_time`, `-time`, `-idelay`, `-odelay`, `-cload`) are pinned in the Makefile, so regeneration is deterministic.
-> Conversion pipeline: extracted SPICE (`.spice`) → XSPICE (`.xspice`) → reorder pins according to the Xschem symbol.
+> Conversion pipeline: check the Xschem symbol → extracted SPICE (`.spice`) → XSPICE (`.xspice`) → reorder pins according to the Xschem symbol.
 
 #### What You Must Consider
 
@@ -607,8 +676,8 @@ B 5 ... {name=VDD        dir=inout sim_pinname=VDD}
 The script derives the XSPICE pin from that name (`clock_i` → `a_clock_i`, `counter_value_o[0]` → `a_counter_value_o_0_`) and matches by it, independent of port order. A bus `sim_pinname` may be given as a bare base (`counter_value_o`). The symbol bus indices are applied to it.
 
 > [!NOTE]
-> When you add a port to the design, add the matching pin to the symbol **and** give it a `sim_pinname` equal to the netlist signal name. A mismatch is caught: the script aborts with a clear `expects XSPICE pin ... which is not in the .subckt` error instead of silently mis-wiring.
-> If any pin lacks `sim_pinname`, the script falls back to positional matching (power by a fixed name-map, signals by position), which is only correct when the netlist keeps the symbol's port order (e.g. a yosys `.nl.v` fed through `vlog2Verilog`).
+> When you add a port to the design, add the matching pin to the symbol **and** give it a `sim_pinname` equal to the netlist signal name. `make symbol-check` verifies both on every build, and `sak-pin-reorder.py` aborts with a clear `expects XSPICE pin ... which is not in the .subckt` error for anything that reaches it.
+> If any pin lacks `sim_pinname`, `sak-pin-reorder.py` falls back to positional matching (power by a fixed name-map, signals by position), which is only correct when the netlist keeps the symbol's port order (e.g. a yosys `.nl.v` fed through `vlog2Verilog`). The Magic-extracted netlist used here never does, so `symbol-check` rejects a pin without `sim_pinname` outright rather than leaving the outcome to that fallback.
 
 Then run the gate-level simulation as usual (see [Gate-Level Xschem Simulation](#gate-level-xschem-simulation)):
 
@@ -652,12 +721,23 @@ The counter is meant to be the starting point for a new digital macro. It alread
 2. Run `make clean` in the new folder so that no output of the counter is left behind.
 3. Set `TOP` in the `Makefile` and in [`fpga/Makefile`](fpga/Makefile). Every target derives its paths from `TOP` (and from `CELL`, which defaults to `TOP`), so the design files must carry the same name.
 4. Rename the RTL in `rtl/` and adjust `MODULES_SYNTH` and `MODULES_SIM` in the `Makefile` if you add or drop files.
-5. Rename the testbenches in `testbenches/verilog/`, `testbenches/cocotb/` and `testbenches/xschem/`, and the Xschem symbol `schematic/xschem/counter_top.sym`. Delete `schematic/xschem/counter_top_pex.sym` instead of renaming it, `make symbol-pex` rebuilds it under the new name.
+5. Rename the testbenches in `testbenches/verilog/`, `testbenches/cocotb/` and `testbenches/xschem/`. Delete both symbols in `schematic/xschem/` rather than renaming them: renaming carries the counter's ports into the new macro, and `make symbol-check` rejects that on the first build. `make symbol-gl` scaffolds `<TOP>.sym` from the ports of the new design once it has been hardened (step 11), and `make symbol-pex` rebuilds `<TOP>_pex.sym` from it.
 6. Update `flow/librelane/config.yaml`: `DESIGN_NAME`, `VERILOG_FILES`, `CLOCK_PORT` and `DIE_AREA`. Adapt the pin placement in `flow/librelane/pin_order.cfg` and the constraints in `impl.sdc` and `signoff.sdc`.
 7. Update the FPGA pin constraints in `fpga/pico-ice.pcf` to the ports of the new design.
 8. Rename the plotting script in `testbenches/xschem/plot_simulations/`.
 9. Search and replace the remaining `counter` references inside the files, in particular the module instantiations, the `COUNTER_MAX_DEFAULT` and `CLK_FREQ_DEFAULT` macros in `rtl/constants.sv` (which keeps its name), the cocotb `hdl_toplevel` and source list, the two `.include` lines in the Xschem testbench (the XSPICE model and the extracted PEX netlist), and the raw file name in the plot script.
 10. Register the macro at the chip top-level: add a `build-<name>` target and a `clean-all` entry in the top-level `Makefile`, instantiate the macro in `rtl/chip_core.sv` and `schematic/xschem/chip_top.sch`, and add a `MACROS` entry in `flow/librelane/config.yaml`.
+11. Harden the macro once, then scaffold its Xschem symbol from the ports the hardening produced, arrange it, and only then run the full flow:
+
+    ```sh
+    make librelane        # harden the new design
+    make copy-netlist     # brings netlist/pnl/<TOP>.pnl.v into the tree
+    make symbol-gl        # scaffold schematic/xschem/<TOP>.sym from its ports
+    xschem schematic/xschem/<TOP>.sym   # rename pins to house style, arrange, draw the body
+    make all
+    ```
+
+    The symbol has to exist before `generate-xspice` runs, so a `make all` on a macro that has none stops there and says so. Wire the Xschem testbench to the finished symbol afterwards, because its pins are what the testbench connects to by coordinate.
 
 For a new macro named `fifo`, the mechanical part looks as follows:
 
@@ -666,14 +746,15 @@ cp -r macros/counter macros/fifo
 cd macros/fifo
 make clean
 # set TOP = fifo_top in the Makefile and in fpga/Makefile, then:
-for f in rtl/counter* schematic/xschem/counter* testbenches/verilog/counter* \
+rm -f schematic/xschem/counter*.sym
+for f in rtl/counter* testbenches/verilog/counter* \
          testbenches/cocotb/counter* testbenches/xschem/counter* \
          testbenches/xschem/plot_simulations/plot_counter*; do
     mv "$f" "$(echo "$f" | sed 's/counter/fifo/')"
 done
 ```
 
-The remaining work is steps 6, 7 and 9, which all need real edits rather than renames.
+The remaining work is steps 6, 7, 9 and 11, which all need real edits rather than renames.
 
 > [!NOTE]
-> The Xschem symbol `schematic/xschem/<TOP>.sym` must carry a `sim_pinname` property on every pin, see [Generate XSPICE File](#generate-xspice-file). `sak-pin-reorder.py` maps the ports of the extracted netlist onto the symbol by that name, and gate-level Xschem simulation breaks silently without it.
+> The Xschem symbol `schematic/xschem/<TOP>.sym` must carry a `sim_pinname` property on every pin, see [Generate XSPICE File](#generate-xspice-file). `sak-pin-reorder.py` maps the ports of the extracted netlist onto the symbol by that name, and gate-level Xschem simulation breaks silently without it. `make symbol-gl` writes the property on every pin it scaffolds and `make symbol-check` refuses a symbol that is missing one, so neither the first symbol nor a later port change depends on remembering it.
