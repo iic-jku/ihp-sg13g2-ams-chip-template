@@ -1,4 +1,4 @@
-108. Printing statistics.
+110. Printing statistics.
 
 === chip_top ===
 
@@ -27,8 +27,8 @@
         1        -   sg13g2_ip__jku_names
         3   21.773   sg13g2_tiehi
       158 1.15E+03   sg13g2_tielo
-       22  319.334   sg13g2_xnor2_1
-        9  130.637   sg13g2_xor2_1
+       20  290.304   sg13g2_xnor2_1
+       11  159.667   sg13g2_xor2_1
 
    Area for cell type \RM_IHPSG13_1P_1024x32_c2_bm_bist is unknown!
    Area for cell type \inverter_top is unknown!

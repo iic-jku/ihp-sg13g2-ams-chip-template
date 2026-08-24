@@ -278,7 +278,7 @@ value="
 .param Rload=1k
 .param fclk=50e6
 .csparam fclk=fclk
-.options klu method=gear reltol=3e-3 vntol=1e-5 abstol=1e-11 chgtol=1e-11 cshunt=100f
+.options klu method=gear reltol=3e-3 vntol=1e-5 abstol=1e-11 chgtol=1e-11 cshunt=100f rshunt=1e15
 .control
 
 set num_threads=32
