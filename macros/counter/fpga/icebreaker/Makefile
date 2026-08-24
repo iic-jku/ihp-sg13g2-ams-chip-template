@@ -12,5 +12,12 @@ MODULES_SYNTH := $(DUT_SRCS)
 
 PCF_FILE := icebreaker.pcf
 
-include $(TOP_FPGA_DIR)/boards/icebreaker.mk
+ARCH         := ice40
+ICE40_DEVICE := --up5k --package sg48
+
+# openFPGALoader has no dedicated iCEBreaker board profile.
+# Must be `=`, not `:=`, since BITSTREAM is only defined later, by fpga.mk.
+LOAD_CMD  = iceprog -S $(BITSTREAM)
+FLASH_CMD = iceprog $(BITSTREAM)
+
 include $(TOP_FPGA_DIR)/fpga.mk

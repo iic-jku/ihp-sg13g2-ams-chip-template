@@ -7,7 +7,7 @@
 # compile before any module that references them, so it is the first entry
 # (Yosys 0.64 cannot parse `import pkg::*` in a module header, see rtl/constants.sv).
 
-# Path from a <board>/ folder back to the shared flow (fpga.mk, arch/, boards/)
+# Path from a <board>/ folder back to the shared flow (fpga.mk, arch/)
 TOP_FPGA_DIR := ..
 
 SRC_DIR := ../../rtl

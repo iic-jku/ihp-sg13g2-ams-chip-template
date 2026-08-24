@@ -2,7 +2,7 @@
 
 Emulates the `counter` macro on an FPGA, across three boards. The synthesis top is `counter_top` from [`../rtl/`](../rtl/), and its ports (`clock_i`, `reset_n_i`, `enable_i`, `counter_value_o[7:0]`) are mapped straight onto board pins, so no board-top wrapper is needed.
 
-The flow is driven by one shared Makefile fragment, [`fpga.mk`](fpga.mk), parametrized per architecture and per board. Adding a board is a matter of two small files plus its pin constraints, see [Adding a Board](#adding-a-board).
+The flow is driven by one shared Makefile fragment, [`fpga.mk`](fpga.mk), parametrized per architecture and per board. Adding a board is one folder: its `Makefile` and its pin constraints, see [Adding a Board](#adding-a-board).
 
 
 ## Supported Boards
@@ -57,10 +57,10 @@ The flow is split across four layers, so that a new board touches as little as p
 | --- | --- | --- |
 | [`fpga.mk`](fpga.mk) | flow | The targets themselves and the defaults common to all boards |
 | [`arch/<arch>.mk`](arch/) | FPGA architecture | The synthesis, place-and-route and packing toolchain (`ice40`, `ecp5`) |
-| [`boards/<board>.mk`](boards/) | board | Device, package, and how to load and flash it |
+| `<board>/Makefile` | board | Everything about one board: top module, pin file, device, package, how to load and flash it |
 | [`dut.mk`](dut.mk) | design under test | The RTL sources, shared by every board |
 
-A board directory's `Makefile` is thin. It includes `dut.mk` for the sources, names the top module and the pin file, then includes its `boards/` fragment and `fpga.mk`, which in turn pulls in the `arch/` fragment named by the board's `ARCH`:
+A board directory's `Makefile` holds all of its board's configuration in one place. It includes `dut.mk` for the sources, names the top module and the pin file, sets the device and programmer variables, then includes `fpga.mk` last, which pulls in the `arch/` fragment named by the board's `ARCH`:
 
 ```make
 TOP := counter_top
@@ -70,7 +70,14 @@ MODULES_SYNTH := $(DUT_SRCS)
 
 PCF_FILE := icebreaker.pcf
 
-include $(TOP_FPGA_DIR)/boards/icebreaker.mk
+ARCH         := ice40
+ICE40_DEVICE := --up5k --package sg48
+
+# openFPGALoader has no dedicated iCEBreaker board profile.
+# Must be `=`, not `:=`, since BITSTREAM is only defined later, by fpga.mk.
+LOAD_CMD  = iceprog -S $(BITSTREAM)
+FLASH_CMD = iceprog $(BITSTREAM)
+
 include $(TOP_FPGA_DIR)/fpga.mk
 ```
 
@@ -89,11 +96,6 @@ include $(TOP_FPGA_DIR)/fpga.mk
 | `TOP` | mandatory | Synthesis top module and instance name |
 | `MODULES_SYNTH` | mandatory | Ordered source file list for `TOP`, here just `$(DUT_SRCS)` |
 | `PCF_FILE` | mandatory | Board pin constraint file |
-
-### Set by `boards/<board>.mk`
-
-| Variable | | Description |
-| --- | --- | --- |
 | `ARCH` | mandatory | Selects the `arch/<arch>.mk` fragment |
 | `ICE40_DEVICE`, `ECP5_DEVICE` | mandatory | Device and package, whichever the board's architecture uses |
 | `OPENFPGALOADER_BOARD` | mandatory | openFPGALoader board profile, unless `LOAD_CMD`/`FLASH_CMD` are set instead |
@@ -111,13 +113,12 @@ include $(TOP_FPGA_DIR)/fpga.mk
 | `PNR_GUI_CMD` | optional | Interactive place-and-route command. Left empty where there is none, `pr-gui` then says so and stops |
 | `PACK_CMD`, `BITSTREAM` | mandatory | Bitstream packing command and output file |
 
-Every fragment assigns with `?=`, so a board `Makefile` can still override anything it needs to.
+`fpga.mk` and the `arch/` fragments assign with `?=`, so a board `Makefile` can still override anything it needs to. `fpga.mk` also checks that the mandatory variables are set and errors immediately when its include comes too early or a variable is missing.
 
 ### Adding a Board
 
-1. Create `boards/<board>.mk` with `ARCH` and the device, package and flash variables above.
-2. Create `<board>/` with a `Makefile` (the eight lines shown above) and the pin constraint file it names, mapping `clock_i`, `reset_n_i`, `enable_i` and `counter_value_o[7:0]` onto board pins.
-3. If the FPGA family is new, also create `arch/<arch>.mk` with that family's synthesis, place-and-route and packing commands, and check the container carries its toolchain.
+1. Create `<board>/` with a `Makefile` like the one shown above, setting `ARCH` and the device, package and flash variables, and the pin constraint file it names, mapping `clock_i`, `reset_n_i`, `enable_i` and `counter_value_o[7:0]` onto board pins.
+2. If the FPGA family is new, also create `arch/<arch>.mk` with that family's synthesis, place-and-route and packing commands, and check the container carries its toolchain.
 
 Neither `fpga.mk` nor the dispatcher changes, and the new board shows up in `make help` and in `make clean` on its own, because both derive the board list from the folders that hold a `Makefile`.
 
@@ -232,7 +233,7 @@ make flash_bitstream   # into the board's flash, survives a power cycle
 
 > [!NOTE]
 > Neither target is part of `make all`, by design. Use them explicitly when you want to program the FPGA.
-> Each board fragment sets `LOAD_CMD`/`FLASH_CMD` to whatever that board needs: `openFPGALoader` for the ULX3S, `iceprog` for the iCEBreaker, and `dfu-util` for the pico-ice, since openFPGALoader has a profile for neither iCE40 board. On the pico-ice the RP2040 co-processor is the DFU bootloader and forwards the bitstream to the iCE40 flash, which is why `iceprog` does not work on that board.
+> Each board Makefile sets `LOAD_CMD`/`FLASH_CMD` to whatever that board needs: `openFPGALoader` for the ULX3S, `iceprog` for the iCEBreaker, and `dfu-util` for the pico-ice, since openFPGALoader has a profile for neither iCE40 board. On the pico-ice the RP2040 co-processor is the DFU bootloader and forwards the bitstream to the iCE40 flash, which is why `iceprog` does not work on that board.
 
 
 ### Convert to Verilog

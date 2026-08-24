@@ -3,16 +3,19 @@
 
 # Shared FPGA emulation flow (lint, synthesis, place-and-route, bitstream).
 #
-# Included by the thin per-board Makefiles in <board>/, which set the sources
-# and the pin constraint file and include boards/<board>.mk first. That
-# fragment names the board's ARCH, whose toolchain comes from arch/<arch>.mk,
-# included below.
+# Included last by the per-board Makefiles in <board>/, which set the sources,
+# the pin constraint file and the board configuration first. The board's ARCH
+# names the toolchain, which comes from arch/<arch>.mk, included below.
 #
 # Variables the including Makefile must set:
 #   TOP           - synthesis top module / instance name
 #   MODULES_SYNTH - explicit ordered source file list for TOP
 #   PCF_FILE      - board pin constraint file
-#   ARCH          - FPGA architecture, set by boards/<board>.mk
+#   ARCH          - FPGA architecture, selects arch/<arch>.mk
+
+# Fail fast when a mandatory variable is missing, so a board Makefile with a
+# wrong include order errors here instead of misbehaving further down.
+$(foreach v,TOP MODULES_SYNTH PCF_FILE ARCH,$(if $(strip $($(v))),,$(error $(v) is not set, set it in the board Makefile before including fpga.mk)))
 
 FPGA_MK_DIR := $(dir $(lastword $(MAKEFILE_LIST)))
 

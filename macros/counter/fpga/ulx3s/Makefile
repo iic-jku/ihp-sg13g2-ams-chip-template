@@ -12,5 +12,10 @@ MODULES_SYNTH := $(DUT_SRCS)
 
 PCF_FILE := ulx3s.lpf
 
-include $(TOP_FPGA_DIR)/boards/ulx3s.mk
+ARCH        := ecp5
+ECP5_DEVICE := --85k --package CABGA381
+
+OPENFPGALOADER_BOARD := ulx3s
+OPENFPGALOADER_FLAGS := --unprotect-flash
+
 include $(TOP_FPGA_DIR)/fpga.mk

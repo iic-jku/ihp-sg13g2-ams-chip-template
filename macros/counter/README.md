@@ -64,8 +64,7 @@
 │  │  └─ signoff.sdc
 ├─ 📁 fpga/
 │  ├─ 📁 arch/                # one fragment per FPGA architecture (ice40, ecp5)
-│  ├─ 📁 boards/              # one fragment per board (device, package, how to flash)
-│  ├─ 📁 icebreaker/          # per-board Makefile and pin constraints
+│  ├─ 📁 icebreaker/          # per-board Makefile (device, programmer) and pin constraints
 │  ├─ 📁 pico-ice/
 │  ├─ 📁 ulx3s/
 │  ├─ Makefile                # dispatcher, selects the board with BOARD=
