@@ -11,7 +11,7 @@ The flow is driven by one shared Makefile fragment, [`fpga.mk`](fpga.mk), parame
 | --- | --- | --- | --- | --- |
 | pico-ice | [`pico-ice/`](pico-ice/) | Lattice iCE40UP5K | Yosys -> nextpnr-ice40 -> icepack | Bitstream built, default board |
 | iCEBreaker | [`icebreaker/`](icebreaker/) | Lattice iCE40UP5K | Yosys -> nextpnr-ice40 -> icepack | Bitstream built |
-| ULX3S | [`ulx3s/`](ulx3s/) | Lattice ECP5-85F | Yosys -> nextpnr-ecp5 -> ecppack | Synthesis verified |
+| ULX3S | [`ulx3s/`](ulx3s/) | Lattice ECP5-85F | Yosys -> nextpnr-ecp5 -> ecppack | Bitstream built |
 
 Pin assignment per board:
 
