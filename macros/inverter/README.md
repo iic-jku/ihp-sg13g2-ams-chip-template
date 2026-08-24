@@ -63,6 +63,7 @@
 │  │  ├─ 📁 figures/
 │  │  ├─ lookup_commands.ipynb
 │  │  └─ sizing_inverter.ipynb
+│  ├─ check_boundary.py
 │  └─ check_pex_ports.py
 ├─ 📁 testbenches/
 │  └─ 📁 xschem/
@@ -171,6 +172,7 @@ The Makefile defines a `_GDS_EXT` variable that auto-selects the layout file ext
   - `magic-pex`
 
 - Build targets always use `layout/<name>.gds`:
+  - `check-boundary`
   - `lef`
   - `copy-gds`
   - `render-gds`
@@ -271,11 +273,22 @@ make sim-all
 
 ### Build Top Cell
 
-Builds the top-level cell deliverables in sequence: LEF export, LIB generation, Verilog stub generation, GDS copy, and layout image rendering:
+Builds the top-level cell deliverables in sequence: PR boundary check, LEF export, LIB generation, Verilog stub generation, GDS copy, and layout image rendering:
 
 ```sh
 make build-top
 ```
+
+
+### PR Boundary Check
+
+Checks that the top cell of `layout/<TOP>.gds` draws the PR boundary box on layer 189 (`prBoundary`). `build-top` runs it first:
+
+```sh
+make check-boundary
+```
+
+The chip flow derives the bounding box of every macro from this layer: Magic maps all datatypes of layer 189 to its boundary, and LibreLane's `Magic.StreamOut` runs `get_bbox.tcl` on every macro it places. A layout without the box fails the whole chip build with `Failed to extract PR boundary from GDSII view of macro '<TOP>'`, two flows away from the layout that caused it. Treat the box as part of the layout: never delete it as clutter, keep it in the KLayout editing source (`<TOP>.klay.gds`) so every re-export carries it, and hide it at render time with `sak-render.py -x` if it spoils a chip shot. The check runs [`scripts/check_boundary.py`](scripts/check_boundary.py), which also warns when the drawn geometry extends beyond the boundary box.
 
 
 ### Export LEF

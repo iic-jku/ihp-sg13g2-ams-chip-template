@@ -148,13 +148,21 @@ sim-all: ## Simulate the macro
 
 
 # Build Target
-build-top: ## Build TOP cell (Verilog, LEF, LIB, copy GDS, and render images)
+build-top: ## Build TOP cell (check PR boundary, Verilog, LEF, LIB, copy GDS, and render images)
+	$(MAKE) check-boundary
 	$(MAKE) lef
 	$(MAKE) lib
 	$(MAKE) verilog
 	$(MAKE) copy-gds
 	$(MAKE) render-gds
 .PHONY: build-top
+# ================================================================================================
+
+
+# PR Boundary Check Target
+check-boundary: ## Check that the TOP cell layout carries the PR boundary box on layer 189 that the chip flow needs
+	python3 $(SCRIPTS_DIR)/check_boundary.py $(LAY_DIR)/$(TOP).gds $(TOP)
+.PHONY: check-boundary
 # ================================================================================================
 
 

@@ -3,7 +3,7 @@
 # SPDX-License-Identifier: Apache-2.0 WITH SHL-2.1
 # Author: Simon Dorrer
 # Created: 06.05.2026
-# Last Modified: 06.05.2026
+# Last Modified: 24.08.2026
 # Description: This file reads the data from the inverter AC analysis and saves it to a .csv file.
 # ============================================
 
@@ -23,7 +23,9 @@ def postprocess(results: dict[str, list], conditions: dict[str, Any]) -> dict[st
     Adc_ol_dB_arr = []
     for Adc_ol_dB in results['Adc_ol_dB']:
         Adc_ol_dB_arr.append(Adc_ol_dB)
-    print(f'Adc_ol_dB_arr = {Adc_ol_dB_arr}')
+    # Do not print from this hook. CACE 2.11.0 redirects stdout into its rich logger while the
+    # script runs, and the logger writes back to stdout, so any print recurses without end.
+    # print(f'Adc_ol_dB_arr = {Adc_ol_dB_arr}')
     
     # Delete statistical outliers in Adc_ol_dB_arr
     # Adc_ol_dB_arr = [val for val in Adc_ol_dB_arr if -10 <= val <= 50]
@@ -33,7 +35,7 @@ def postprocess(results: dict[str, list], conditions: dict[str, Any]) -> dict[st
     fcu_arr = []
     for fcu in results['fcu']:
         fcu_arr.append(fcu)
-    print(f'fcu_arr = {fcu_arr}')
+    # print(f'fcu_arr = {fcu_arr}')
     
     # Delete statistical outliers in fcu_arr
     # fcu_arr = [val for val in fcu_arr if 1 <= val <= 1e9]
