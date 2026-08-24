@@ -63,8 +63,14 @@
 │  │  ├─ pin_order.cfg
 │  │  └─ signoff.sdc
 ├─ 📁 fpga/
-│  ├─ Makefile
-│  ├─ pico-ice.pcf
+│  ├─ 📁 arch/                # one fragment per FPGA architecture (ice40, ecp5)
+│  ├─ 📁 boards/              # one fragment per board (device, package, how to flash)
+│  ├─ 📁 icebreaker/          # per-board Makefile and pin constraints
+│  ├─ 📁 pico-ice/
+│  ├─ 📁 ulx3s/
+│  ├─ Makefile                # dispatcher, selects the board with BOARD=
+│  ├─ dut.mk                  # RTL sources shared by all boards
+│  ├─ fpga.mk                 # the shared flow
 │  └─ README.md
 ├─ 📁 netlist/
 │  ├─ 📁 nl/
@@ -428,27 +434,32 @@ This only works if the latest run completed without errors.
 
 ### Build FPGA
 
-The FPGA flow targets a [pico-ice](https://pico-ice.tinyvision.ai/) board (iCE40 UP5K, sg48 package) and uses the open-source iCE40 toolchain: Yosys → nextpnr → icepack.
+Emulates the macro on an FPGA. The flow supports three boards across two FPGA architectures, and `counter_top` is synthesized directly onto board pins, without a board-top wrapper:
 
-To run the full flow (lint → synthesis → place-and-route → bitstream), run:
+| Board | FPGA | Toolchain |
+| --- | --- | --- |
+| pico-ice (default) | Lattice iCE40UP5K | Yosys -> nextpnr-ice40 -> icepack |
+| iCEBreaker | Lattice iCE40UP5K | Yosys -> nextpnr-ice40 -> icepack |
+| ULX3S | Lattice ECP5-85F | Yosys -> nextpnr-ecp5 -> ecppack |
+
+To run the full flow (lint -> synthesis -> place-and-route -> bitstream) on the default board, run:
 
 ```sh
 make build-fpga
 ```
 
-This invokes `make -C fpga all`. Individual steps can also be run from `fpga/`:
+This invokes `make -C fpga all`. `fpga/Makefile` is a dispatcher that forwards to the selected board, so individual steps and other boards are reached from `fpga/`:
 
 ```sh
-make -C fpga synthesis       # Yosys iCE40 synthesis
-make -C fpga pr              # nextpnr place-and-route
-make -C fpga gen_bitstream   # icepack → .bin
-make -C fpga flash_bitstream # flash via dfu-util
+make -C fpga synthesis                  # Yosys synthesis for the default board
+make -C fpga pr                         # nextpnr place-and-route
+make -C fpga gen_bitstream              # bitstream
+make -C fpga flash_bitstream            # write it to the board's flash
+make -C fpga BOARD=ulx3s all            # the whole flow on another board
 ```
 
 > [!NOTE]
-> Flashing uses `dfu-util`, not `iceprog`. Both flash iCE40 bitstreams, but they target different interfaces:
-> - **`iceprog`** speaks directly over SPI via an FTDI USB bridge (iCEstick, iCEBreaker, …).
-> - **`dfu-util`** uses the USB DFU standard. The pico-ice's RP2040 co-processor acts as the DFU bootloader and forwards the bitstream to the iCE40 flash. `iceprog` does not work on this board.
+> IIC-OSIC-TOOLS carries the build chain for all three boards, so the bitstreams build inside the container. Only the programming tools stay outside, since the container has no USB access: build the bitstream inside, then run `load_bitstream`/`flash_bitstream` from the host (`dfu-util` for the pico-ice, `iceprog` for the iCEBreaker, `openFPGALoader` for the ULX3S). See [`fpga/README.md`](fpga/README.md) for the toolchain notes, the pin assignments, and how to add a further board.
 
 
 ### Build Top
@@ -697,7 +708,7 @@ make sim-gl-xschem
 - `verification/` (the reports copied from the last LibreLane run)
 - `schematic/xschem/simulations/`, `testbenches/xschem/simulations/` and the `plot_simulations/` outputs (`data/`, `figures/`, `__pycache__/`)
 - `testbenches/cocotb/sim_build/`, the Icarus Verilog waveforms in `testbenches/verilog/`, and the `__pycache__` folders under `scripts/` and `testbenches/cocotb/`
-- the FPGA outputs, by calling `make clean` in [`fpga/`](fpga/)
+- the FPGA outputs of every board (`fpga/<board>/build/`), by calling `make clean` in [`fpga/`](fpga/)
 
 Every target recreates the folders it writes to, so a clean rebuild is:
 
@@ -715,15 +726,15 @@ make all
 
 ## Start a New Digital Macro from This Template
 
-The counter is meant to be the starting point for a new digital macro. It already carries the full digital flow: SystemVerilog RTL, Verilator lint, Icarus Verilog and cocotb simulation, the LibreLane hardening flow with its SDC files and pin order, the XSPICE model generation for mixed-signal simulation in Xschem, and an FPGA flow for the pico-ice board.
+The counter is meant to be the starting point for a new digital macro. It already carries the full digital flow: SystemVerilog RTL, Verilator lint, Icarus Verilog and cocotb simulation, the LibreLane hardening flow with its SDC files and pin order, the XSPICE model generation for mixed-signal simulation in Xschem, and an FPGA emulation flow for three boards.
 
 1. Copy the folder, for example to `macros/fifo`.
 2. Run `make clean` in the new folder so that no output of the counter is left behind.
-3. Set `TOP` in the `Makefile` and in [`fpga/Makefile`](fpga/Makefile). Every target derives its paths from `TOP` (and from `CELL`, which defaults to `TOP`), so the design files must carry the same name.
+3. Set `TOP` in the `Makefile` and in every [`fpga/<board>/Makefile`](fpga/). Every target derives its paths from `TOP` (and from `CELL`, which defaults to `TOP`), so the design files must carry the same name.
 4. Rename the RTL in `rtl/` and adjust `MODULES_SYNTH` and `MODULES_SIM` in the `Makefile` if you add or drop files.
 5. Rename the testbenches in `testbenches/verilog/`, `testbenches/cocotb/` and `testbenches/xschem/`. Delete both symbols in `schematic/xschem/` rather than renaming them: renaming carries the counter's ports into the new macro, and `make symbol-check` rejects that on the first build. `make symbol-gl` scaffolds `<TOP>.sym` from the ports of the new design once it has been hardened (step 11), and `make symbol-pex` rebuilds `<TOP>_pex.sym` from it.
 6. Update `flow/librelane/config.yaml`: `DESIGN_NAME`, `VERILOG_FILES`, `CLOCK_PORT` and `DIE_AREA`. Adapt the pin placement in `flow/librelane/pin_order.cfg` and the constraints in `impl.sdc` and `signoff.sdc`.
-7. Update the FPGA pin constraints in `fpga/pico-ice.pcf` to the ports of the new design.
+7. Update `DUT_SRCS` in `fpga/dut.mk`, and the pin constraint file in each `fpga/<board>/` you care about, to the ports of the new design. Delete the board folders you do not need, the dispatcher derives its board list from the folders that are there.
 8. Rename the plotting script in `testbenches/xschem/plot_simulations/`.
 9. Search and replace the remaining `counter` references inside the files, in particular the module instantiations, the `COUNTER_MAX_DEFAULT` and `CLK_FREQ_DEFAULT` macros in `rtl/constants.sv` (which keeps its name), the cocotb `hdl_toplevel` and source list, the two `.include` lines in the Xschem testbench (the XSPICE model and the extracted PEX netlist), and the raw file name in the plot script.
 10. Register the macro at the chip top-level: add a `build-<name>` target and a `clean-all` entry in the top-level `Makefile`, instantiate the macro in `rtl/chip_core.sv` and `schematic/xschem/chip_top.sch`, and add a `MACROS` entry in `flow/librelane/config.yaml`.
@@ -745,7 +756,7 @@ For a new macro named `fifo`, the mechanical part looks as follows:
 cp -r macros/counter macros/fifo
 cd macros/fifo
 make clean
-# set TOP = fifo_top in the Makefile and in fpga/Makefile, then:
+# set TOP = fifo_top in the Makefile and in every fpga/<board>/Makefile, then:
 rm -f schematic/xschem/counter*.sym
 for f in rtl/counter* testbenches/verilog/counter* \
          testbenches/cocotb/counter* testbenches/xschem/counter* \

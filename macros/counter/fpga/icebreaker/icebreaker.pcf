@@ -1,0 +1,25 @@
+# SPDX-FileCopyrightText: 2026 Simon Dorrer and Harald Pretl
+# SPDX-License-Identifier: Apache-2.0 WITH SHL-2.1
+#
+# iCEBreaker pin map for counter_top.
+# See https://github.com/icebreaker-fpga/icebreaker for the board pinout.
+
+# 12 MHz clock
+set_frequency  clock_i   12
+set_io         clock_i   35
+
+# S1 button, active low
+set_io -nowarn reset_n_i 10
+
+# PMOD 1A pin 1
+set_io -nowarn enable_i  4
+
+# PMOD 2 (generic GPIO output)
+set_io counter_value_o[0] 27
+set_io counter_value_o[1] 25
+set_io counter_value_o[2] 21
+set_io counter_value_o[3] 19
+set_io counter_value_o[4] 26
+set_io counter_value_o[5] 23
+set_io counter_value_o[6] 20
+set_io counter_value_o[7] 18
