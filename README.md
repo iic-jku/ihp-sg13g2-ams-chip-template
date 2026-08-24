@@ -16,10 +16,10 @@ Institute for Integrated Circuits and Quantum Computing, Johannes Kepler Univers
 
 <p align="center">
   <a href="render/img/chip_top_black.png">
-    <img src="render/img/chip_top_black.png" alt="Chip render of the ihp-sg13g2 analog-mixed signal template chip (1.6 mm x 1.6 mm)" width=70%>
+    <img src="render/img/chip_top_black.png" alt="Chip render of the ihp-sg13g2 analog mixed-signal template chip (1.6 mm x 1.6 mm)" width=70%>
   </a>
   <br>
-  <em>Chip render of the ihp-sg13g2 analog-mixed signal template chip (1.6 mm x 1.6 mm).</em>
+  <em>Chip render of the ihp-sg13g2 analog mixed-signal template chip (1.6 mm x 1.6 mm).</em>
 </p>
 
 <p align="center">
@@ -44,7 +44,7 @@ This Makefile-driven repository simulates, builds, and fully verifies (DRC, LVS,
 - [**Magic**](https://github.com/rtimothyedwards/magic) + [**Netgen**](https://github.com/rtimothyedwards/netgen) and [**KLayout**](https://github.com/KLayout/klayout) for DRC, LVS and PEX verification
 - **SystemVerilog**, [**Verilator**](https://github.com/verilator/verilator), [**iverilog**](https://github.com/steveicarus/iverilog), [**cocotb**](https://github.com/cocotb/cocotb), [**GTKWave**](https://github.com/gtkwave/gtkwave) and [**Surfer**](https://gitlab.com/surfer-project/surfer) for linting and simulation of digital macros
 
-The repository is the starting point for your own custom silicon and provides a universal design flow solution: Just clone the repo, enter the IIC-OSIC-TOOLS container, and run `make all` to get a tapeout-ready analog-mixed signal chip. Focus on your design and do not care about the tools and the design flow!
+The repository is the starting point for your own custom silicon and provides a universal design flow solution: Just clone the repo, enter the IIC-OSIC-TOOLS container, and run `make all` to get a tapeout-ready analog mixed-signal chip. Focus on your design and do not worry about the tools and the design flow!
 
 Furthermore, it serves as a regression test for the above-mentioned open-source tools and their dependencies using the ihp-sg13g2 Open-PDK.
 
@@ -53,7 +53,7 @@ Furthermore, it serves as a regression test for the above-mentioned open-source 
 
 A step-by-step tutorial, including additional exercises, can be found [here](https://iic-jku.github.io/ihp-sg13g2-ams-chip-template/index.html).
 
-An overview of the open source IC design landscape is presented [here](https://ic3.ie/resources/open-source-ic-design-day).
+An overview of the open-source IC design landscape is presented [here](https://ic3.ie/resources/open-source-ic-design-day).
 
 Are you interested in an open-source RFIC flow? Check it out [here](https://github.com/iic-jku/SG13CMOS_SPARX).
 
@@ -63,7 +63,7 @@ Are you interested in an open-source RFIC flow? Check it out [here](https://gith
 Examples based on this template are:
 - [TinyWhisper](https://github.com/iic-jku/TinyWhisper): An Open-Source Fully-Integrated Multi-Mode Short-Wave Transmitter for Amateur Radio Applications in 130-nm CMOS
 - [SPARX](https://github.com/iic-jku/SG13CMOS_SPARX): An Open-Source, Automated, Programmatically Generated, Frequency-Scalable Six-Port Receiver in 130-nm CMOS
-- wafer.space gf180mcuD MPW [Multi-Project Chip](https://github.com/iic-jku/gf180mcu-jku-projects)
+- [Multi-Project Chip](https://github.com/iic-jku/gf180mcu-jku-projects) for the wafer.space gf180mcuD MPW run
 
 
 ## Chip Documentation
@@ -284,7 +284,7 @@ macros/inverter/verification/cace/templates/xschemrc
 └─ source macros/inverter/schematic/xschem/xschemrc
 ```
 
-Each schematic folder puts itself and its sibling testbenches folder on the library path, and each testbenches folder does the reverse. The chip top-level therefore sees all six schematic and testbench folders, which is what lets `chip_top.sch` instantiate `inverter.sym` and `counter_top.sym`, and what lets you open a macro testbench from a chip top-level session. The macro files do not source each other, so a macro can be opened and simulated on its own without the top level being present.
+Each schematic folder puts itself and its sibling testbenches folder on the library path, and each testbenches folder does the reverse. The chip top-level therefore sees all six schematic and testbench folders, which is what lets `chip_top.sch` instantiate `inverter_top.sym` and `counter_top.sym`, and what lets you open a macro testbench from a chip top-level session. The macro files do not source each other, so a macro can be opened and simulated on its own without the top level being present.
 
 
 ### Where Netlists and Simulation Output Go
@@ -330,8 +330,8 @@ Solid arrows are direct `$(MAKE) <target>` calls within a single Makefile. Dashe
 
 At the top level, `make all` runs four steps in this order:
 
-1. `build-all` initializes the submodules and builds every component by calling its own `all` target: bondpad, logos, digital macro, analog macro, and finally the chip assembly with `build-top` (LibreLane, copy-back of all artifacts, logo and fill insertion, final GDS render).
-2. `magic-drc` and `klayout-drc` run the DRC of the final `chip_top` and `chip_top_logo_fill` GDS.
+1. `build-all` initialises the submodules and builds every component by calling its own `all` target: bondpad, logos, digital macro, analog macro, and finally the chip assembly with `build-top` (LibreLane, copy-back of all artifacts, logo and fill insertion, final GDS render).
+2. `magic-drc` runs the DRC of the final `chip_top` and `chip_top_logo_fill` GDS. The KLayout DRC is not part of `make all` to shorten the runtime. Run it separately with `klayout-drc-minimum` or `klayout-drc-regular`.
 3. `sim-all` runs the top-level RTL and gate-level simulations on the netlists produced by this build.
 4. `bondplan` generates the bonding diagram, the bondwires, and the pin table.
 
@@ -396,9 +396,9 @@ At most 400 buttons are drawn at once, because each one is an X window, and what
 > This target needs a display. Run it inside the container's VNC/noVNC desktop or over X11 forwarding. In a shell-only container it stops with `cannot open a window`. The `.png` and `.pdf` buttons hand the file to the desktop's registered handler, so those two need the full VNC/noVNC session and do not work over a bare X forward.
 
 
-### Initialize Git Submodules
+### Initialise Git Submodules
 
-Initializes and updates the repository submodules (for example [ArtistIC](https://github.com/pulp-platform/artistic)):
+Initialises and updates the repository submodules (for example [ArtistIC](https://github.com/pulp-platform/artistic)):
 
 ```sh
 make init-submodules
@@ -450,7 +450,7 @@ make sim-view-xschem                      # run the default plotting script (plo
 make sim-view-xschem SCRIPT=<scriptname>  # run another plotting script
 ```
 
-The target runs `SHOW_PLOTS=1 python3 testbenches/xschem/plot_simulations/$(SCRIPT).py`. Every script writes its figures to `testbenches/xschem/plot_simulations/figures/`. Run through `sim-view-xschem`, the plot windows additionally open when a display is available (i.e. the container's X/VNC session). Headless, only the figures are written.
+The target runs `SHOW_PLOTS=1 python3 testbenches/xschem/plot_simulations/$(SCRIPT).py`. Every script writes its figures to `testbenches/xschem/plot_simulations/figures/`. Run through `sim-view-xschem`, the script additionally opens the plot windows when a display is available (e.g. the container's X/VNC session). Headless, only the figures are written.
 
 > [!NOTE]
 > `sim-view-xschem` is intentionally **not** called by `sim-all`.
@@ -577,9 +577,9 @@ make render-gds
 Three images are written to the `render/img/` folder:
 
 - `chip_top_white.png` and `chip_top_black.png`: all physical mask layers, on a white and on a black background.
-- `chip_top_black_TM2.png`: only `TopMetal2`, `TopVia2`, the `TopMetal2` filler and `Passiv` on a black background, which shows the chip logo and the pad frame.
+- `chip_top_black_TM2.png`: only `TopMetal2`, `TopVia2`, the `TopMetal2` filler and `Passiv` on a black background, which shows the chip logo and the padframe.
 
-All three images are 2048 px wide and rendered with 4x oversampling. `sak-render.py` reads the layer colors from the PDK's own KLayout layer properties and crops to the drawn geometry, so the images have no border margin.
+All three images are 2048 px wide and rendered with 4x oversampling. `sak-render.py` reads the layer colours from the PDK's own KLayout layer properties and crops to the drawn geometry, so the images have no border margin.
 
 This only works if the latest run completed without errors. This command is also available for the digital macros.
 
@@ -649,7 +649,7 @@ To run LibreLane for the top-level chip and copy the resulting reports, GDS, net
 make build-top
 ```
 
-Internally this executes (in order): `librelane-nodrc` → `copy-reports` → `copy-gds` → `copy-netlist` → `copy-render` → `add-logo-fill` → `render-gds`.
+Internally this executes (in order): `librelane-nodrc` -> `copy-reports` -> `copy-gds` -> `copy-netlist` -> `copy-render` -> `add-logo-fill` -> `render-gds`.
 
 > [!NOTE]
 > `build-top` runs `librelane-nodrc` instead of `librelane` for the same reason the DRC reports are not copied: IHP's `metal1_pin_offgrid` rule trips on the pad ring (see [IHP-Open-PDK#683](https://github.com/IHP-GmbH/IHP-Open-PDK/issues/683#issuecomment-4065791975)).
@@ -669,7 +669,7 @@ This is useful if you want to rebuild the chip from scratch. Clone the repositor
 
 ### Add Logo and Fill
 
-To add the chip logo (PNG → GDS) and the fill structures on top of the LibreLane output (so the final GDS in `layout/` includes the artwork), run:
+To add the chip logo (PNG -> GDS) and the fill structures on top of the LibreLane output (so the final GDS in `layout/` includes the artwork), run:
 
 ```sh
 make add-logo-fill
@@ -678,7 +678,7 @@ make add-logo-fill
 This calls `scripts/add_logo_fill.sh` and writes `layout/chip_top_logo_fill.gds.gz`. The step is also called from `make build-top`.
 
 > [!NOTE]
-> In the future, it is planned to replace this script and Makefile target with a custom librelane step.
+> In the future, it is planned to replace this script and Makefile target with a custom LibreLane step.
 
 
 ### Design Rule Check (DRC)
@@ -786,7 +786,7 @@ The generated symbol is a verbatim copy of `<CELL>.sym` with a single change: `t
 
 - **`type=primitive`** stops Xschem from descending into a schematic of the same name. There is no `<CELL>_pex.sch`, so the instance line is emitted as it stands and the subcircuit comes from the `.include`d PEX netlist instead.
 - **`format="@name @pinlist @symname"`** makes the instance reference `@symname`, which resolves to `<CELL>_pex`, exactly the `.subckt` name the PEX flow writes.
-- **The pin order** is what `sak-pin-reorder.py` reorders the extracted netlist to, so it has to be the one of the cell symbol.
+- **The pin order** is what `sak-pin-reorder.py` reorders the extracted netlist to, so it has to be that of the cell symbol.
 
 `symbol-pex` runs automatically at the start of `klayout-pex` and `magic-pex`, so the symbol is rebuilt from the current `<CELL>.sym` before every extraction and cannot go stale when a pin is added, removed or renamed. Calling it by hand is only needed to refresh the symbol without re-running an extraction. Anything added to the generated file by hand is lost at the next extraction, so make the change in `<CELL>.sym` instead.
 
@@ -813,7 +813,7 @@ The `EXT_MODE` parameter selects the extraction mode:
 - `3` = full-RC
 
 > [!NOTE]
-> For `klayout-pex`, `EXT_MODE=1` (C-decoupled) is not yet supported by kpex and automatically falls back to `EXT_MODE=2` (CC) with a warning.
+> For `klayout-pex`, `EXT_MODE=1` (C-decoupled) is not yet supported by kpex and automatically falls back to `EXT_MODE=2` (C-coupled) with a warning.
 
 The `.subckt` name in the extracted SPICE file is `<CELL>_pex`: `magic-pex` sets it directly via the `sak-pex.sh` option `-n <CELL>_pex`, while for `klayout-pex` it is automatically renamed from `<CELL>` (kpex).
 
@@ -831,7 +831,7 @@ python3 scripts/check_pex_ports.py netlist/pex/chip_top_magic_pex_1.spice
 python3 scripts/check_pex_ports.py -v netlist/pex/*.spice     # -v also prints the size of each subcircuit
 ```
 
-**KLayout PEX** uses `kpex` with the Magic extraction engine currently (2.5D engine is work in progress):
+**KLayout PEX** currently uses `kpex` with the Magic extraction engine (the 2.5D engine is work in progress):
 
 ```sh
 make klayout-pex
@@ -851,11 +851,11 @@ For full-RC extraction (`EXT_MODE=3`), `magic-pex` additionally exposes the thre
 
 A full-RC extraction of a whole chip would produce a resistor network far too large to simulate, and most of it would be wires so short that their resistance does not matter. The three parameters are the filters Magic applies to keep only the part of the network that is worth having. They run in this order:
 
-1. **`THRESHOLD`** (`-t`, in mOhm, default `10000` = 10 Ohm) decides **which nets are extracted at all**. Before doing any real work, Magic makes a quick end-to-end resistance guess for every net. The guess is deliberately pessimistic, it is an absolute worst case. Nets that stay below `THRESHOLD` even in that worst case cannot matter, so they are treated as ideal wires and skipped. This is the cheap first pass that removes the many short, low-resistance nets.
+1. **`THRESHOLD`** (`-t`, in mOhm, default `10000` = 10 Ohm) decides **which nets are extracted at all**. Before doing any real work, Magic makes a quick end-to-end resistance guess for every net. The guess is deliberately pessimistic: it is an absolute worst case. Nets that stay below `THRESHOLD` even in that worst case cannot matter, so they are treated as ideal wires and skipped. This is the cheap first pass that removes the many short, low-resistance nets.
 2. **`MINDELAY`** (`-y`, in ps, default `1`) decides **which of the extracted nets are kept**. Because the guess above overestimates, Magic re-checks each net once it has been properly extracted and discards its resistor network again if the RC delay it adds stays below `MINDELAY`. Setting `MINDELAY=0` switches the delay criterion off and applies `THRESHOLD` a second time instead, now against the accurately extracted resistance rather than the initial guess.
 3. **`MINRES`** (`-r`, in mOhm, default `1000` = 1 Ohm) decides **how detailed the kept networks are**. Inside a net, neighbouring resistors below `MINRES` are merged as far as possible, which shrinks the network without changing its overall resistance much.
 
-In short: `THRESHOLD` and `MINDELAY` control *how many* nets carry parasitic resistance, `MINRES` controls *how finely* each of them is modelled. Raising all three gives a smaller netlist that simulates faster with less detail, lowering them gives a more accurate but considerably larger one.
+In short: `THRESHOLD` and `MINDELAY` control *how many* nets carry parasitic resistance, while `MINRES` controls *how finely* each of them is modelled. Raising all three gives a smaller netlist that simulates faster with less detail. Lowering them gives a more accurate but considerably larger one.
 
 ```sh
 make magic-pex CELL=chip_top EXT_MODE=3 THRESHOLD=5000 MINRES=500 MINDELAY=2
@@ -963,7 +963,7 @@ make release VERSION=2.1.0
 
 ### Regression
 
-The `regression` target is the project's end-to-end smoke test for the [IIC-OSIC-TOOLS](https://github.com/iic-jku/iic-osic-tools) environment. Its goal is to exercise **every tool and flow** in the template at least once with the **shortest possible runtime**. It is a tool/flow regression, not a design sign-off.
+The `regression` target is the project's end-to-end smoke test for the [IIC-OSIC-TOOLS](https://github.com/iic-jku/IIC-OSIC-TOOLS) environment. Its goal is to exercise **every tool and flow** in the template at least once with the **shortest possible runtime**. It is a tool/flow regression, not a design sign-off.
 
 ```sh
 make regression
@@ -977,9 +977,9 @@ To keep the runtime low while still covering the full toolchain, the regression 
 - The chip top-level runs `librelane-nodrc`. All DRC checks are skipped to save runtime on the large top-level assembly. The macros and IP blocks are DRC-checked individually beforehand, so this only leaves the top-level routing/fill unchecked.
 - KLayout DRC (`sak-drc.sh`) is skipped inside the LibreLane runs, but is still exercised in the bondpad and logo IP builds, and in the inverter `klayout-verify`.
 - Only **one** logo (`sg13g2_ip__jku`) is regenerated. It is the only step that exercises the PNG to GDS flow. The second logo (`sg13g2_ip__jku_names`) uses an identical toolchain and reuses its committed views.
-- Exactly **one** CACE parameter set is run (the AC VDD sweep `ac_params`, no Monte-Carlo). Swap `ac_params` for `ac_mc_params` / `ac_mm_params` in the target to also exercise the Monte-Carlo flow.
+- Exactly **one** CACE parameter set is run (the AC VDD sweep `ac_params`, no Monte Carlo). Swap `ac_params` for `ac_mc_params` / `ac_mm_params` in the target to also exercise the Monte Carlo flow.
 
-The regression runs bottom-up: first the inverter and counter macros, then the top-level assembly (submodules, bondpad, logo) and finally the chip top-level LibreLane run that integrates the freshly built macros and IP. After the counter is hardened, `copy-final` copies its fresh `flow/final/` views into `macros/counter/final/`, so that the gate-level simulation (`sim-gl-cocotb`) and the chip top-level integration use the freshly built outputs rather than the committed ones.
+The regression runs bottom-up: first the inverter and counter macros, then the top-level prerequisites (submodules, bondpad, logo) and finally the chip top-level LibreLane run that integrates the freshly built macros and IP. After the counter is hardened, `copy-final` copies its fresh `flow/final/` views into `macros/counter/final/`, so that the gate-level simulation (`sim-gl-cocotb`) and the chip top-level integration use the freshly built outputs rather than the committed ones.
 
 The following tools and flows are checked:
 
@@ -992,12 +992,12 @@ The following tools and flows are checked:
 | CACE (+ ngspice) | inverter CACE, single parameter set (`ac_params`) |
 | KLayout DRC (`sak-drc.sh`) + KLayout LVS (`sak-lvs.sh`) + KLayout PEX (`kpex`) | inverter `klayout-verify CELL=inverter_top` |
 | Magic DRC (`sak-drc.sh`) + Magic extract + Netgen LVS (`sak-lvs.sh`) + Magic PEX (`sak-pex.sh`) | inverter `magic-verify CELL=inverter_top` |
-| Magic LEF export + LIB + Verilog stub + `sak-render` render | inverter `build-top` |
+| Magic LEF export + LIB + Verilog stub + `sak-render.py` render | inverter `build-top` |
 | Verilator lint | counter `lint-verilog-all` |
 | Icarus Verilog (`iverilog`/`vvp`) | counter `sim-rtl-verilog` |
 | cocotb (RTL + gate-level) | counter `sim-rtl-cocotb`, `sim-gl-cocotb` |
-| yosys + nextpnr-ice40 + icepack (FPGA) | counter `build-fpga` |
-| LibreLane (OpenROAD / yosys / KLayout streamout / Netgen LVS) | counter `librelane-magicdrc`, chip `librelane-nodrc` |
+| Yosys + nextpnr-ice40 + icepack (FPGA) | counter `build-fpga` |
+| LibreLane (OpenROAD / Yosys / KLayout streamout / Netgen LVS) | counter `librelane-magicdrc`, chip `librelane-nodrc` |
 | Magic DRC (sign-off, run inside LibreLane) | counter `librelane-magicdrc` |
 | `verilog2sym.py` (Xschem symbol check) + `spi2xspice.py` + `sak-pin-reorder.py` (XSPICE model) | counter `generate-xspice` |
 | Xschem gate-level | counter `sim-gl-xschem` |
@@ -1065,8 +1065,8 @@ The two example macros are themselves templates for the two kinds of block. See 
 @software{2026_ams_chip_template,
 	author = {Dorrer, Simon and Pretl, Harald},
 	month = apr,
-    year = {2026},
-	title = {{GitHub Repository of an Open-Source Analog-Mixed Signal Chip Design Template for the ihp-sg13g2 Open-PDK}},
+	year = {2026},
+	title = {{GitHub Repository of an Open-Source Analog Mixed-Signal Chip Design Template for the ihp-sg13g2 Open-PDK}},
 	url = {https://github.com/iic-jku/ihp-sg13g2-ams-chip-template},
 	doi = {10.5281/zenodo.20129233}
 }
@@ -1075,7 +1075,7 @@ The two example macros are themselves templates for the two kinds of block. See 
 
 ## Acknowledgements
 
-First, we would like to thank the open-source chip design community for its valuable input and constructive feedback. We especially thank 
+First, we would like to thank the open-source chip design community for its valuable input and constructive feedback. We especially thank:
 - [Leo Moser](https://github.com/mole99), who initially started [template repositories](https://github.com/IHP-GmbH/ihp-sg13g2-librelane-template) based on the LibreLane flow.
 - [Tim Edwards](https://github.com/RTimothyEdwards) for helping with Magic + Netgen LVS and PEX issues.
 - [Krzysztof Herman](https://github.com/KrzysztofHerman) for discussions about the [directory structure](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/doc/ihp-structure-proposals).

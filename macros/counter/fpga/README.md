@@ -2,7 +2,7 @@
 
 Emulates the `counter` macro on an FPGA, across three boards. The synthesis top is `counter_top` from [`../rtl/`](../rtl/), and its ports (`clock_i`, `reset_n_i`, `enable_i`, `counter_value_o[7:0]`) are mapped straight onto board pins, so no board-top wrapper is needed.
 
-The flow is driven by one shared Makefile fragment, [`fpga.mk`](fpga.mk), parametrized per architecture and per board. Adding a board is one folder: its `Makefile` and its pin constraints, see [Adding a Board](#adding-a-board).
+The flow is driven by one shared Makefile fragment, [`fpga.mk`](fpga.mk), parameterised per architecture and per board. Adding a board is one folder: its `Makefile` and its pin constraints, see [Adding a Board](#adding-a-board).
 
 
 ## Supported Boards
@@ -17,7 +17,7 @@ Pin assignment per board:
 
 | Board | `clock_i` | `reset_n_i` | `enable_i` | `counter_value_o[7:0]` |
 | --- | --- | --- | --- | --- |
-| pico-ice | 12 MHz oscillator | ice push button, active low | GPIO | Bottom left PMOD |
+| pico-ice | 12 MHz oscillator | on-board push button, active low | GPIO | Bottom left PMOD |
 | iCEBreaker | 12 MHz oscillator | S1 button, active low | PMOD 1A pin 1 | PMOD 2 |
 | ULX3S | 25 MHz oscillator | `BTN_PWRn`, already active low | J1 `gp[0]`, pulled up so it runs by default | The eight on-board LEDs |
 
@@ -26,12 +26,12 @@ Pin assignment per board:
 
 [IIC-OSIC-TOOLS](https://github.com/iic-jku/IIC-OSIC-TOOLS) ships the complete build chain for all three boards: `verilator` and `yosys`, `nextpnr-ice40` with `icepack` for the two iCE40 boards, and `nextpnr-ecp5` with `ecppack` for the ULX3S.
 
-Only the programming tools stay outside the container (`openFPGALoader` and `dfu-util`, of the programmers only `iceprog` is present): the container has no USB access, so build the bitstream inside and run `load_bitstream`/`flash_bitstream` from a host installation of the board's programmer. The `visualize` and `visualize_generic` targets additionally need `netlistsvg`, `svgo` and `rsvg-convert`, which are not in the container either.
+Programming the board happens on the host, since the container has no USB access (`openFPGALoader` and `dfu-util` are not installed, and `iceprog`, which is, cannot reach a board): build the bitstream inside and run `load_bitstream`/`flash_bitstream` from a host installation of the board's programmer. The `visualize` and `visualize_generic` targets additionally need `netlistsvg`, `svgo` and `rsvg-convert`, which are not in the container either.
 
 
 ## Picking a Board
 
-[`Makefile`](Makefile) in this folder is a dispatcher: it forwards every target it does not handle itself to `<BOARD>/Makefile`, defaulting to `BOARD := pico-ice`. Running the default board, another board, or the board directory directly are all equivalent:
+[`Makefile`](Makefile) in this folder is a dispatcher: it forwards every target it does not handle itself to `<BOARD>/Makefile`, defaulting to `BOARD ?= pico-ice`. Running the default board, another board, or the board directory directly are all equivalent:
 
 ```sh
 make all                     # pico-ice, the default
@@ -144,7 +144,7 @@ Opens a file browser for this folder with `sak-open.py` from the [IIC-OSIC-TOOLS
 make open
 ```
 
-Clicking a button launches the matching tool in the file's own directory: gvim for the `Makefile` and the `README.md`, and the desktop's handler for a generated `.pdf` visualization. Only the file types listed in [the top-level README](../../../README.md#open-the-design-files) get a button, so the `.mk` fragments and the pin constraint files are not shown, and the RTL lives one level up in [`../rtl/`](../rtl/). Pass extra options with `OPEN_ARGS`, for example `make open OPEN_ARGS=--all` to include the build outputs.
+Clicking a button launches the matching tool in the file's own directory: gvim for the `Makefile` and the `README.md`, and the desktop's handler for a generated `.pdf` visualization. Only the file types listed in [the top-level README](../../../README.md#open-the-design-files) get a button, so the pin constraint files are not shown, and the RTL lives one level up in [`../rtl/`](../rtl/). Pass extra options with `OPEN_ARGS`, for example `make open OPEN_ARGS=--all` to include the build outputs.
 
 > [!NOTE]
 > This target needs a display. Run it inside the container's VNC/noVNC desktop or over X11 forwarding. The `.pdf` buttons hand the file to the desktop's registered handler, so they need the full VNC/noVNC session and do not work over a bare X forward.
@@ -233,7 +233,7 @@ make flash_bitstream   # into the board's flash, survives a power cycle
 
 > [!NOTE]
 > Neither target is part of `make all`, by design. Use them explicitly when you want to program the FPGA.
-> Each board Makefile sets `LOAD_CMD`/`FLASH_CMD` to whatever that board needs: `openFPGALoader` for the ULX3S, `iceprog` for the iCEBreaker, and `dfu-util` for the pico-ice, since openFPGALoader has a profile for neither iCE40 board. On the pico-ice the RP2040 co-processor is the DFU bootloader and forwards the bitstream to the iCE40 flash, which is why `iceprog` does not work on that board.
+> Each board Makefile configures the load and flash commands for whatever that board needs: `openFPGALoader` for the ULX3S, `iceprog` for the iCEBreaker, and `dfu-util` for the pico-ice, since openFPGALoader has a profile for neither iCE40 board. On the pico-ice the RP2040 co-processor is the DFU bootloader and forwards the bitstream to the iCE40 flash, which is why `iceprog` does not work on that board.
 
 
 ### Convert to Verilog

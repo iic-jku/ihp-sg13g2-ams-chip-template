@@ -1,5 +1,5 @@
 ---
-title: "A Tutorial on Open-Source Analog-Mixed Signal Chip Design with the ihp-sg13g2 Open-PDK"
+title: "A Tutorial on Open-Source Analog Mixed-Signal Chip Design with the ihp-sg13g2 Open-PDK"
 author:
   - name: Simon Dorrer
     orcid: 0009-0001-5994-5477
@@ -32,7 +32,7 @@ We happily accept [pull requests](https://github.com/iic-jku/ihp-sg13g2-ams-chip
 
 # Tutorial Overview {#sec-overview}
 
-This tutorial is a step-by-step walk-through of the open-source analog-mixed signal (AMS) chip flow based on the [`ihp-sg13g2-ams-chip-template`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template) repository for the ihp-sg13g2 130nm Open-PDK. It covers:
+This tutorial is a step-by-step walk-through of the open-source analog mixed-signal (AMS) chip flow based on the [`ihp-sg13g2-ams-chip-template`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template) repository for the ihp-sg13g2 130nm Open-PDK. It covers:
 
 - [Overview](#sec-overview) and [Installation](#sec-installation) of [IIC-OSIC-TOOLS](https://github.com/iic-jku/IIC-OSIC-TOOLS)
 - [Digital macro design](#sec-digital)
@@ -69,7 +69,7 @@ After the tutorial, readers should be able to use the template repository for cu
 
 ## Guidelines & Cheatsheets
 
-The following guidelines and cheatsheets should be helpful for the tutorial, the use of the template repository in general and for implementing your own custom silicon projects.
+The following guidelines and cheatsheets should be helpful for the tutorial, for the use of the template repository in general, and for implementing your own custom silicon projects.
 
 - [Designer's Guidelines](https://iic-jku.github.io/analog-circuit-design/aicd.html#sec-designers-etiquette)
 - [Linux Cheatsheet](https://iic-jku.github.io/analog-circuit-design/aicd.html#sec-linux-cheatsheet)
@@ -85,13 +85,13 @@ The following guidelines and cheatsheets should be helpful for the tutorial, the
 
 # Tools {#sec-tools}
 
-Numerous open-source chip design tools cover the entire development workflow for purely digital, purely analog, or mixed analog-digital chips. Managing these many tools regarding installation, updates, and maintenance is complex, especially given the rapid pace of change. Therefore, the [Institute for Integrated Circuits and Quantum Computing](https://www.jku.at/en/institute-for-integrated-circuits-and-quantum-computing/) at [Johannes Kepler University](https://www.jku.at/) (JKU) Linz, Austria decided to build an all-in-one Docker container ([IIC-OSIC-TOOLS](https://github.com/iic-jku/IIC-OSIC-TOOLS)) that is updated monthly and supports all essential tools and PDKs. This eliminates the need for the time-consuming individual installation of many tools, and a reproducible development environment (important for past tapeouts) is available within a GNU/Linux-based virtual machine.
+Numerous open-source chip design tools cover the entire development workflow for purely digital, purely analog, or mixed analog-digital chips. Managing these many tools regarding installation, updates, and maintenance is complex, especially given the rapid pace of change. Therefore, the [Institute for Integrated Circuits and Quantum Computing](https://www.jku.at/en/institute-for-integrated-circuits-and-quantum-computing/) at [Johannes Kepler University](https://www.jku.at/) (JKU) Linz, Austria, decided to build an all-in-one Docker container ([IIC-OSIC-TOOLS](https://github.com/iic-jku/IIC-OSIC-TOOLS)) that is updated monthly and supports all essential tools and PDKs. This eliminates the need for the time-consuming individual installation of many tools, and a reproducible development environment (important for reproducing past tapeouts) is available within a GNU/Linux-based virtual machine.
 
 ## IIC-OSIC-TOOLS Overview
 
 @fig-tools-overview shows a rough overview of the most important tools in the IIC-OSIC-TOOLS container. Additional tools are also included, which are documented on the associated [GitHub page](https://github.com/iic-jku/IIC-OSIC-TOOLS).
 The open-source AMS flow used in this tutorial relies on several tools, namely [Xschem](https://github.com/StefanSchippers/xschem), [Magic](https://github.com/rtimothyedwards/magic), [Netgen](https://github.com/rtimothyedwards/netgen), [KLayout](https://github.com/KLayout/klayout), [Ngspice](https://github.com/danchitnis/ngspice-sf-mirror), [VACASK](https://codeberg.org/arpadbuermen/VACASK), [CACE](https://github.com/fossi-foundation/cace), [LibreLane](https://github.com/librelane/librelane), [Yosys](https://github.com/YosysHQ/yosys), [OpenROAD](https://github.com/The-OpenROAD-Project/OpenROAD), [Verilator](https://github.com/verilator/verilator), [cocotb](https://github.com/cocotb/cocotb), [GTKWave](https://github.com/gtkwave/gtkwave), and [Surfer](https://gitlab.com/surfer-project/surfer).
-The container also ships with four PDKs, including [SkyWater sky130A](https://github.com/rtimothyedwards/open_pdks), [GlobalFoundries gf180mcuD](https://github.com/rtimothyedwards/open_pdks), [IHP ihp-sg13cmos5l](https://github.com/IHP-GmbH/ihp-sg13cmos5l) and [IHP ihp-sg13g2](https://github.com/IHP-GmbH/IHP-Open-PDK) used by this template.
+The container also ships with four PDKs: [SkyWater sky130A](https://github.com/rtimothyedwards/open_pdks), [GlobalFoundries gf180mcuD](https://github.com/rtimothyedwards/open_pdks), [IHP ihp-sg13cmos5l](https://github.com/IHP-GmbH/ihp-sg13cmos5l) and [IHP ihp-sg13g2](https://github.com/IHP-GmbH/IHP-Open-PDK) used by this template.
 
 ![Overview of the most important open-source tools and PDKs shipped with the IIC-OSIC-TOOLS container.](fig/tools_overview/tools_overview.svg){#fig-tools-overview}
 
@@ -127,7 +127,7 @@ As mentioned above, the container includes four Open-PDKs. To activate or switch
    sak-pdk ihp-sg13g2
    ```
 
-  inside the container. This switches the active PDK for the current session without modifying any file. When called without arguments (`sak-pdk`), a list of installed PDKs is shown.
+   inside the container. This switches the active PDK for the current session without modifying any file. When called without arguments (`sak-pdk`), a list of installed PDKs is shown.
 
 ::: {.callout-tip}
 By default, the container is already configured for `ihp-sg13g2`, so both options above are only needed when switching between PDKs. However, since this tutorial can also be used for all other PDKs, it is worth knowing how to switch the active PDK.
@@ -146,7 +146,7 @@ This Makefile-driven repository simulates, builds, and fully verifies (DRC, LVS,
 - [**Magic**](https://github.com/rtimothyedwards/magic) + [**Netgen**](https://github.com/rtimothyedwards/netgen) and [**KLayout**](https://github.com/KLayout/klayout) for DRC, LVS and PEX verification
 - **SystemVerilog**, [**cocotb**](https://github.com/cocotb/cocotb), [**GTKWave**](https://github.com/gtkwave/gtkwave) and [**Surfer**](https://gitlab.com/surfer-project/surfer) for digital simulation
 
-The repository is the starting point for your own custom silicon and provides a universal design flow solution: Just clone the repo, enter the IIC-OSIC-TOOLS container, and run `make all` to get a tapeout-ready analog-mixed signal chip. Focus on your design and do not care about the tools and the design flow!
+The repository is the starting point for your own custom silicon and provides a universal design flow solution: Just clone the repo, enter the IIC-OSIC-TOOLS container, and run `make all` to get a tapeout-ready analog mixed-signal chip. Focus on your design and do not worry about the tools and the design flow!
 
 Furthermore, it serves as a regression test for the above-mentioned open-source tools and their dependencies using the ihp-sg13g2 Open-PDK.
 
@@ -156,7 +156,7 @@ Examples based on this template are:
 
 - [TinyWhisper](https://github.com/iic-jku/TinyWhisper): An Open-Source Fully-Integrated Multi-Mode Short-Wave Transmitter for Amateur Radio Applications in 130-nm CMOS
 - [SPARX](https://github.com/iic-jku/SG13CMOS_SPARX): An Open-Source, Automated, Programmatically Generated, Frequency-Scalable Six-Port Receiver in 130-nm CMOS
-- wafer.space gf180mcuD MPW [Multi-Project Chip](https://github.com/iic-jku/gf180mcu-jku-projects)
+- [Multi-Project Chip](https://github.com/iic-jku/gf180mcu-jku-projects) for the wafer.space gf180mcuD MPW run
 
 
 ## Directory Structure
@@ -184,7 +184,7 @@ The repository is organised into the following top-level folders. The full listi
 
 ## Workflow
 
-The flow is driven by Makefiles. After cloning the repository and entering the IIC-OSIC-TOOLS container, every step is invoked via a `make` target. The default target of every `Makefile` is `help`, so `make` (without arguments) prints the list of available targets. After entering the container, the starting folder is `foss/designs/`.
+The flow is driven by Makefiles. After cloning the repository and entering the IIC-OSIC-TOOLS container, every step is invoked via a `make` target. The default target of every `Makefile` is `help`, so `make` (without arguments) prints the list of available targets. After entering the container, the starting folder is `/foss/designs/`.
 
 ```sh
 git clone https://github.com/iic-jku/ihp-sg13g2-ams-chip-template.git
@@ -227,7 +227,7 @@ The [top-level Makefile](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template
 | `make librelane` / `librelane-nodrc` | Run the LibreLane flow for the top-level (with / without DRC steps).                  |
 | `make copy-reports` / `copy-gds` / `copy-netlist` / `copy-render` | Copy the latest LibreLane artifacts back into the source tree. |
 | `make build-bondpad` / `build-logos` | Build the bondpad and the logos under `ip/`.                                     |
-| `make build-counter` / `build-inverter` / `make build-macros` | Build the digital and analog macros individually or together. |
+| `make build-counter` / `build-inverter` / `build-macros` | Build the digital and analog macros individually or together. |
 | `make build-top`    | Run LibreLane on the top-level, copy back all artifacts, add logos and fill structures, and render the final GDS. |
 | `make build-all`    | Init submodules, build bondpad, build logos, build macros, and build top-level.                           |
 | `make klayout-verify` / `magic-verify` | Run DRC, LVS, and PEX for a given cell with KLayout or Magic.                      |
@@ -257,7 +257,7 @@ The [counter Makefile](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/b
 | `make build-fpga`                                 | Run the full FPGA flow: lint, synthesis, P&R, and bitstream generation. The board is selected with `BOARD=` and defaults to the pico-ice. |
 | `make build-top`                                  | Run LibreLane, copy reports, netlists, and final views, generate the XSPICE model, and render the final GDS. |
 | `make symbol-pex`                                 | Build the Xschem PEX symbol `<CELL>_pex.sym` from `<CELL>.sym`. Runs automatically before every extraction. |
-| `make klayout-pex` / `magic-pex` (`EXT_MODE=<1|2|3>`) | Extract the parasitics of the hardened macro from `final/gds/` into `netlist/pex/`. |
+| `make klayout-pex` / `magic-pex` (`EXT_MODE=<1\|2\|3>`) | Extract the parasitics of the hardened macro from `final/gds/` into `netlist/pex/`. |
 | `make all`                                        | Run lint, the FPGA build, the full macro build flow, the parasitic extraction, and all simulations. |
 | `make clean`                                      | Delete all generated files and folders of the macro, including the FPGA outputs. |
 
@@ -271,11 +271,11 @@ The [inverter Makefile](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/
 | ----------------------------------- | ----------------------------------------------------------------- |
 | `make open`                                       | Open the design files of this folder in the `sak-open.py` file browser.     |
 | `make sim-xschem` / `make sim-view-xschem`        | Run an Xschem testbench (batch mode) and plot its results with Python. `TB` defaults to `<CELL>_tb_tran` and `SCRIPT` to `plot_<CELL>`, override with `TB=<tb>` / `SCRIPT=<script>`. |
-| `make sim-cace`                                   | Run [CACE](https://github.com/fossi-foundation/cace) Monte-Carlo / mismatch characterisations. |
-| `make klayout-drc` / `magic-drc` (`DRC_LEVEL=<precheck|macro|regular>`) | Run DRC using KLayout or Magic.                       |
+| `make sim-cace`                                   | Run [CACE](https://github.com/fossi-foundation/cace) Monte Carlo / mismatch characterisations. |
+| `make klayout-drc` / `magic-drc` (`DRC_LEVEL=<precheck\|macro\|regular>`) | Run DRC using KLayout or Magic.                       |
 | `make klayout-lvs` / `magic-lvs`                  | Run LVS using KLayout or Magic + Netgen.                                    |
 | `make symbol-pex`                                 | Build the Xschem PEX symbol `<CELL>_pex.sym` from `<CELL>.sym`. Runs automatically before every extraction. |
-| `make klayout-pex` / `magic-pex` (`EXT_MODE=<1|2|3>`) | Run parasitic extraction in C, CC, or full-RC mode.                     |
+| `make klayout-pex` / `magic-pex` (`EXT_MODE=<1\|2\|3>`) | Run parasitic extraction in C, CC, or full-RC mode.                     |
 | `make klayout-verify` / `magic-verify`            | Run DRC + LVS + PEX for a given cell.                                       |
 | `make lef` / `make lib` / `make verilog`          | Generate the LEF, the Liberty stub, and the Verilog stub for top-level integration.   |
 | `make build-top`                                  | Build the analog macro deliverables: LEF, LIB, Verilog stub, GDS and rendered layout image. |
@@ -291,7 +291,7 @@ The [`counter`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/mai
 
 ## Directory Structure
 
-The counter design files are located in [`macros/counter/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/counter/), the relevant folders are:
+The counter design files are located in [`macros/counter/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/counter/), and the relevant folders are:
 
 | Folder                                       | Content                                                                                  |
 | ---------------------------------------- | ---------------------------------------------------------------------------------------- |
@@ -387,7 +387,7 @@ make build-top
 ```
 
 ::: {.callout-tip}
-The macro can also be built as an FPGA bitstream ([`fpga/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/counter/fpga/)) with `make build-fpga`. `counter_top` is synthesized straight onto board pins, without a board-top wrapper, and three boards are supported: pico-ice and iCEBreaker (Lattice iCE40) and ULX3S (Lattice ECP5). Pick one with `make build-fpga` for the default pico-ice, or `make -C fpga BOARD=ulx3s all` for another. IIC-OSIC-TOOLS carries the build chain for all three boards, so the bitstreams build inside the container, and only flashing needs the host, since the container has no USB access. Details are in [`fpga/README.md`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/counter/fpga/README.md). The FPGA flow is not used in this tutorial and is only listed here for reference.
+The macro can also be built as an FPGA bitstream ([`fpga/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/counter/fpga/)) with `make build-fpga`. `counter_top` is synthesised straight onto board pins, without a board-top wrapper, and three boards are supported: pico-ice and iCEBreaker (Lattice iCE40) and ULX3S (Lattice ECP5). Pick one with `make build-fpga` for the default pico-ice, or `make -C fpga BOARD=ulx3s all` for another. IIC-OSIC-TOOLS carries the build chain for all three boards, so the bitstreams build inside the container, and only flashing needs the host, since the container has no USB access. Details are in [`fpga/README.md`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/counter/fpga/README.md). The FPGA flow is not used in this tutorial and is only listed here for reference.
 :::
 
 ## Viewing the Macro
@@ -398,7 +398,7 @@ After the flow finishes, the macro layout can be inspected with KLayout. The con
 ke final/gds/counter_top.gds
 ```
 
-![`counter_top` layout in KLayout (200 µm x 100 µm).](fig/counter_top/counter_top_black.png){#fig-counter-top-layout}
+![`counter_top` layout in KLayout (200 µm × 100 µm).](fig/counter_top/counter_top_black.png){#fig-counter-top-layout}
 
 The LibreLane render is copied to [`render/img/counter_top_librelane.png`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/counter/render/img/), and the high-resolution renders from `sak-render.py` are saved as `counter_top_white.png` and `counter_top_black.png` in the same folder. The verification reports are written to [`verification/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/counter/verification/).
 
@@ -408,7 +408,7 @@ For an introduction to Ngspice and Verilog RTL co-simulation with Xschem, see St
 
 ## Gate-Level Mixed-Signal Simulation with Xschem
 
-A more accurate validation step is the gate-level mixed-signal simulation in Xschem with the Ngspice XSPICE event-driven engine. The LibreLane-extracted SPICE netlist (`netlist/spice/<TOP>.spice`, copied from the latest run by `copy-netlist`) is converted into an XSPICE model with the following command, which is also executed automatically as part of `make build-top`.
+A more accurate validation step is the gate-level mixed-signal simulation in Xschem with the Ngspice XSPICE event-driven engine. The LibreLane-extracted SPICE netlist (`netlist/spice/<CELL>.spice`, copied from the latest run by `copy-netlist`) is converted into an XSPICE model with the following command, which is also executed automatically as part of `make build-top`.
 
 ```sh
 make generate-xspice
@@ -428,11 +428,11 @@ The macro is hardened, so it has no schematic, and Xschem's "make symbol from a 
 Two targets support that arrangement without taking ownership of the file away from you.
 
 ```sh
-make symbol-gl      # scaffold schematic/xschem/<TOP>.sym, for a new macro
+make symbol-gl      # scaffold schematic/xschem/<CELL>.sym, for a new macro
 make symbol-check   # verify the committed symbol, runs inside generate-xspice
 ```
 
-`symbol-gl` reads the ports of the powered netlist `netlist/pnl/<TOP>.pnl.v` and writes a first-cut symbol in which every port is a pin with its direction, its bus range and its `sim_pinname`. The geometry follows Xschem's own symbol generator, so loading the result and saving it again returns it unchanged. It is a scaffold: rename the pins to house style (`clock_i` becomes `di_clock`, `counter_value_o[0..7]` becomes `do_b[0..7]`), arrange them, draw the body, then commit it. Renaming is safe because `sim_pinname` holds the binding to the netlist. The target refuses to overwrite an existing symbol, because that is where the hand work lives.
+`symbol-gl` reads the ports of the powered netlist `netlist/pnl/<CELL>.pnl.v` and writes a first-cut symbol in which every port is a pin with its direction, its bus range and its `sim_pinname`. The geometry follows Xschem's own symbol generator, so loading the result and saving it again returns it unchanged. It is a scaffold: rename the pins to house style (`clock_i` becomes `di_clock`, `counter_value_o[0..7]` becomes `do_b[0..7]`), arrange them, draw the body, then commit it. Renaming is safe because `sim_pinname` holds the binding to the netlist. The target refuses to overwrite an existing symbol, because that is where the hand work lives.
 
 `symbol-check` is the half that runs in the build. It compares the committed symbol against the same netlist and fails if a port was added, removed, renamed, given a different width, or drawn with the wrong direction. Its most useful check is that **every pin declares `sim_pinname`**: a single pin missing the property drops `sak-pin-reorder.py` out of name matching and into matching by position, which is wrong for an alphabetically sorted netlist and can mis-wire the macro without any error at all.
 
@@ -488,11 +488,11 @@ Both targets read `final/gds/<CELL>.gds`, so `make build-top` (or at least `make
 The transient testbench already `.include`s the extracted netlist next to the XSPICE model, and it carries two spare DUT instances above the schematic, `x2` of `counter_top.sym` and `x3` of `counter_top_pex.sym`, both parked with `spice_ignore=true`. Swapping the wired-up `x1` for `x3` turns the run into a post-layout simulation.
 
 ::: {.callout-warning}
-A post-layout run simulates every transistor of the macro. In the IIC-OSIC-TOOLS container, 60 ns of transient take about 80 s, while the full 10 us gate-level XSPICE run of the same testbench finishes in under 2 s. The XSPICE model stays the right tool for functional runs. Use the extracted netlist on short, targeted stimuli to check timing and signal integrity.
+A post-layout run simulates every transistor of the macro. In the IIC-OSIC-TOOLS container, 60 ns of transient take about 80 s, while the full 10 µs gate-level XSPICE run of the same testbench finishes in under 2 s. The XSPICE model stays the right tool for functional runs. Use the extracted netlist on short, targeted stimuli to check timing and signal integrity.
 :::
 
 ::: {.callout-note}
-The testbench uses looser ngspice tolerances than the analog macro (`reltol=1e-3 abstol=1e-12 gmin=1e-12 rshunt=1e14`). Full-RC extraction splits the nets into fragments, and some of the resulting nodes have no DC path to ground, so with the analog macro's settings the post-layout run aborts at the initial timepoint with `Timestep too small`. The gate-level XSPICE run gives the same result either way.
+The testbench uses looser Ngspice tolerances than the analog macro (`reltol=1e-3 abstol=1e-12 gmin=1e-12 rshunt=1e14`). Full-RC extraction splits the nets into fragments, and some of the resulting nodes have no DC path to ground, so with the analog macro's settings the post-layout run aborts at the initial timepoint with `Timestep too small`. The gate-level XSPICE run gives the same result either way.
 :::
 
 ## Lint, Build, Verify and Simulate Everything
@@ -507,17 +507,17 @@ This calls `lint-verilog-all`, `build-fpga`, `build-top`, `magic-pex`, and `sim-
 
 # Analog Macro Implementation {#sec-analog}
 
-The [`inverter`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/inverter/) macro is the analog reference macro of the template. It is a four-channel CMOS inverter, drawn at transistor level, and verified with a comprehensive verification chain:
+The [`inverter`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/inverter/) macro is the analog reference macro of the template. It is a 4-channel CMOS inverter, drawn at transistor level, and verified with a comprehensive verification chain:
 
 - Layout vs. Schematic ([LVS](https://en.wikipedia.org/wiki/Layout_versus_schematic)) with KLayout or Magic + Netgen,
 - Design Rule Checking ([DRC](https://en.wikipedia.org/wiki/Design_rule_checking)) with KLayout or Magic,
-- Parasitic Extraction ([PEX](https://en.wikipedia.org/wiki/Parasitic_extraction)) with Magic + Netgen,
+- Parasitic Extraction ([PEX](https://en.wikipedia.org/wiki/Parasitic_extraction)) with KLayout or Magic,
 - [Monte Carlo](https://en.wikipedia.org/wiki/Monte_Carlo_method) simulation of process and mismatch variations with CACE.
 
 Two instances are used in the chip core. One is used as a 4-channel digital inverter (`inverter1`), and the other as a 2-channel analog inverter (`inverter2`). See the [chip specifications](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/doc/specifications.md) for the full picture.
 
 ::: {.callout-note}
-An inverter can act as a digital circuit (when the input is driven by a digital signal and the output is switching between the supply rails). Here, we characterize the inverter as an analog circuit, meaning that we are interested in its continuous voltage transfer characteristic and its small-signal voltage gain.
+An inverter can act as a digital circuit (when the input is driven by a digital signal and the output is switching between the supply rails). Here, we characterise the inverter as an analog circuit, meaning that we are interested in its continuous voltage transfer characteristic and its small-signal voltage gain.
 :::
 
 ## Directory Structure
@@ -596,7 +596,7 @@ The full simulation suite, including all four testbenches plus the CACE flow (se
 To inspect or modify the underlying circuit of a symbol, mark the symbol and press **`e`** to descend into the underlying circuit, then **`Ctrl + e`** to go back up. To inspect or modify the graphical symbol of a device, mark the symbol and press **`i`** to descend into the symbol drawing, then **`Ctrl + e`** to go back up again.
 
 ::: {.callout-tip}
-Since Xschem is a text-based schematic editor, you can also add `*.sch` and `.sym` files in a text editor and modify them there. This is especially useful for search-and-replace operations.
+Since Xschem is a text-based schematic editor, you can also open `*.sch` and `*.sym` files in a text editor and modify them there. This is especially useful for search-and-replace operations.
 :::
 
 @fig-inverter-symbol shows the symbol of the `inverter` cell.
@@ -610,7 +610,7 @@ Since Xschem is a text-based schematic editor, you can also add `*.sch` and `.sy
 ## Process Variation and Mismatch (CACE) {#sec-cace}
 
 [CACE](https://github.com/fossi-foundation/cace) drives Ngspice via a
-characterisation YAML file ([`verification/cace/inverter.yaml`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/inverter/verification/cace/inverter.yaml)) to run Monte-Carlo simulations and produce process and mismatch variation plots.
+characterisation YAML file ([`verification/cace/inverter.yaml`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/inverter/verification/cace/inverter.yaml)) to run Monte Carlo simulations and produce process and mismatch variation plots.
 
 ```sh
 make sim-cace
@@ -649,9 +649,9 @@ In the `inverter.yaml` characterisation file, more parameter sweeps can be added
 
 ## Transistor Sizing
 
-During simulation, it could happen that some specifications are not fulfilled and that the inverter must be resized. In this tutorial, the inverter is sized with the $g_\mathrm{m}/I_\mathrm{D}$ method (see [Transistor Sizing Using $g_\mathrm{m}/I_\mathrm{D}$ Methodology](https://iic-jku.github.io/analog-circuit-design/aicd.html#sec-gmid-method) for theoretical background). Instead of relying on textbook square-law equations, the method looks up the actual device behaviour from pre-characterised SPICE simulations, parametrised by $g_\mathrm{m}/I_\mathrm{D}$. An overview of these techsweeps can be found in the folder [`doc/sizing/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/doc/sizing). The chosen $g_\mathrm{m}/I_\mathrm{D}$ point sets the inversion level of the transistor and therefore the trade-off between intrinsic gain (high $g_\mathrm{m}/I_\mathrm{D}$, weak inversion) and bandwidth (low $g_\mathrm{m}/I_\mathrm{D}$, strong inversion). An overview of the $g_\mathrm{m}/I_\mathrm{D}$ tradeoffs can be found [here](https://iic-jku.github.io/analog-circuit-design/aicd.html#sec-tradeoffs-saturation). For each chosen operating point the lookup tables return all relevant figures of merit ($I_\mathrm{D}/W$, $g_\mathrm{m}/g_\mathrm{ds}$, $g_\mathrm{m}/C_\mathrm{gg}$, $S_\mathrm{TH}$, etc.) at the actual bias condition, which is then used to compute $W$ for a given drain current.
+During simulation, it could happen that some specifications are not fulfilled and that the inverter must be resized. In this tutorial, the inverter is sized with the $g_\mathrm{m}/I_\mathrm{D}$ method (see [Transistor Sizing Using $g_\mathrm{m}/I_\mathrm{D}$ Methodology](https://iic-jku.github.io/analog-circuit-design/aicd.html#sec-gmid-method) for theoretical background). Instead of relying on textbook square-law equations, the method looks up the actual device behaviour from pre-characterised SPICE simulations, parameterised by $g_\mathrm{m}/I_\mathrm{D}$. An overview of these techsweeps can be found in the folder [`doc/sizing/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/doc/sizing). The chosen $g_\mathrm{m}/I_\mathrm{D}$ point sets the inversion level of the transistor and therefore the trade-off between intrinsic gain (high $g_\mathrm{m}/I_\mathrm{D}$, weak inversion) and bandwidth (low $g_\mathrm{m}/I_\mathrm{D}$, strong inversion). An overview of the $g_\mathrm{m}/I_\mathrm{D}$ trade-offs can be found [here](https://iic-jku.github.io/analog-circuit-design/aicd.html#sec-tradeoffs-saturation). For each chosen operating point the lookup tables return all relevant figures of merit ($I_\mathrm{D}/W$, $g_\mathrm{m}/g_\mathrm{ds}$, $g_\mathrm{m}/C_\mathrm{gg}$, $S_\mathrm{TH}$, etc.) at the actual bias condition, which is then used to compute $W$ for a given drain current.
 
-The full sizing flow for the inverter is implemented in the Jupyter notebook [`scripts/sizing/sizing_inverter.ipynb`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/inverter/scripts/sizing/sizing_inverter.ipynb). The notebook uses [`pygmid`](https://github.com/dreoilin/pygmid) to query the pre-characterised ihp-sg13g2 NMOS/PMOS lookup tables ([`sg13g2_lv_nmos.mat`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/inverter/scripts/sizing/data/sg13g2_lv_nmos.mat) and [`sg13g2_lv_pmos.mat`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/inverter/scripts/sizing/data/sg13g2_lv_pmos.mat)). An overview of the $g_\mathrm{m}/I_\mathrm{D}$ MOSFET characterization procedure can be found [here](https://iic-jku.github.io/analog-circuit-design/aicd.html#sec-techsweep-testbench).
+The full sizing flow for the inverter is implemented in the Jupyter notebook [`scripts/sizing/sizing_inverter.ipynb`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/inverter/scripts/sizing/sizing_inverter.ipynb). The notebook uses [`pygmid`](https://github.com/dreoilin/pygmid) to query the pre-characterised ihp-sg13g2 NMOS/PMOS lookup tables ([`sg13g2_lv_nmos.mat`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/inverter/scripts/sizing/data/sg13g2_lv_nmos.mat) and [`sg13g2_lv_pmos.mat`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/inverter/scripts/sizing/data/sg13g2_lv_pmos.mat)). An overview of the $g_\mathrm{m}/I_\mathrm{D}$ MOSFET characterisation procedure can be found [here](https://iic-jku.github.io/analog-circuit-design/aicd.html#sec-techsweep-testbench).
 
 The Jupyter notebook `sizing_inverter.ipynb` runs through the following steps:
 
@@ -717,14 +717,14 @@ $$
 : Calculated vs. simulated open-loop characteristics of the inverter. {#tbl-inverter-sizing-vs-ac}
 
 ::: {.callout-tip}
-The notebook is fully parametric. Changing $L$, the target $g_\mathrm{m}/I_\mathrm{D}$ or $I_\mathrm{out}$ and re-running the cells immediately produces a new sizing point, so it can be used as a starting template for sizing other simple analog blocks with the ihp-sg13g2 lookup tables. Try it out yourself by decreasing the transistor length to $L = 0.5\,\mathrm{\mu m}$ and see how the small-signal parameters and the resulting open-loop gain and cut-off frequency change. What would you expect based on the tradeoffs above?
+The notebook is fully parametric. Changing $L$, the target $g_\mathrm{m}/I_\mathrm{D}$ or $I_\mathrm{out}$ and re-running the cells immediately produces a new sizing point, so it can be used as a starting template for sizing other simple analog blocks with the ihp-sg13g2 lookup tables. Try it out yourself by decreasing the transistor length to $L = 0.5\,\mathrm{\mu m}$ and see how the small-signal parameters and the resulting open-loop gain and cut-off frequency change. What would you expect based on the trade-offs above?
 :::
 
 ## Inspect / Edit the Layout
 
-After the schematic is finalised and the design targets are met, the layout can be created. The layout of the `inverter` cell is hierarchical, and the top-level cell `inverter_top` contains four instances of the `inverter` cell. Around the four-channel inverter layout, a power ring is drawn on `Metal5` and `TopMetal1` layers, which is connected to the `VDD` and `VSS` pins of the four inverters. This power ring is required for top-level integration, connecting the macro power to the chip's PDN.
+After the schematic is finalised and the design targets are met, the layout can be created. The layout of the `inverter` cell is hierarchical, and the top-level cell `inverter_top` contains four instances of the `inverter` cell. Around the 4-channel inverter layout, a power ring is drawn on `Metal5` and `TopMetal1` layers, which is connected to the `VDD` and `VSS` pins of the four inverters. This power ring is required for top-level integration, connecting the macro power to the chip's PDN.
 
-The layout is created and edited in KLayout. The container provides the `ke` alias for `klayout -e` (edit mode). With the following command, the GDS of the four-channel inverter is opened in KLayout as shown @fig-inverter-top-layout. With the keys `0`, `1`, `2`, ..., `9` you can view different layers as explained in the [KLayout cheatsheet](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/doc/klayout/klayout_cheatsheet.md) or in the [klayout-layer-shortcuts](https://github.com/iic-jku/klayout-layer-shortcuts) plugin.
+The layout is created and edited in KLayout. The container provides the `ke` alias for `klayout -e` (edit mode). With the following command, the GDS of the 4-channel inverter is opened in KLayout as shown in @fig-inverter-top-layout. With the keys `0`, `1`, `2`, ..., `9` you can view different layers as explained in the [KLayout cheatsheet](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/doc/klayout/klayout_cheatsheet.md) or in the [klayout-layer-shortcuts](https://github.com/iic-jku/klayout-layer-shortcuts) plugin.
 
 ```sh
 ke layout/inverter_top.klay.gds
@@ -813,7 +813,7 @@ PEX writes a SPICE netlist into [`netlist/pex/`](https://github.com/iic-jku/ihp-
 That PEX symbol is generated, not maintained by hand. Both PEX targets start by running `make symbol-pex`, which copies `schematic/xschem/<CELL>.sym` to `schematic/xschem/<CELL>_pex.sym` and changes `type=subcircuit` into `type=primitive`. Everything else is inherited, above all the pin order that `sak-pin-reorder.py` sorts the extracted netlist to. The `primitive` type keeps Xschem from descending into a schematic of the same name, so the instance is netlisted as it stands and its subcircuit comes from the included PEX netlist instead. Because the symbol is rebuilt before every extraction, it cannot go stale when a pin is added, removed or renamed, and it can be built on its own with `make symbol-pex [CELL=<cellname>]`. Edit `<CELL>.sym`, never the generated `<CELL>_pex.sym`.
 
 ::: {.callout-note}
-Every symbol in this template carries `spectre_format="@name ( @pinlist ) @symname"` next to its `format` line. Xschem writes that line itself whenever a symbol is generated from a schematic's pin list (key `a`), and only the Spectre netlister reads it, which is also the one that drives VACASK. The SPICE netlister used for ngspice ignores it. Do not delete it: without it, instances of that symbol are silently dropped from a Spectre/VACASK netlist and its `subckt` line comes out with an empty port list, with no warning at all.
+Every symbol in this template carries `spectre_format="@name ( @pinlist ) @symname"` next to its `format` line. Xschem writes that line itself whenever a symbol is generated from a schematic's pin list (key `a`), and only the Spectre netlister reads it, which is also the one that drives VACASK. The SPICE netlister used for Ngspice ignores it. Do not delete it: without it, instances of that symbol are silently dropped from a Spectre/VACASK netlist and its `subckt` line comes out with an empty port list, with no warning at all.
 :::
 
 ::: {.callout-tip}
@@ -894,7 +894,7 @@ The bondpad is generated by the Python script [`script/bondpad.py`](https://gith
 3. writes the layout as a GDSII file, and
 4. generates a matching LEF macro description for OpenROAD / LibreLane.
 
-Geometry and metal stack are parametrised through three Makefile variables. The defaults match the chip's padframe and the SG13G2 PDK defaults.
+Geometry and metal stack are parameterised through three Makefile variables. The defaults match the chip's padframe and the SG13G2 PDK defaults.
 
 | Variable       | Default  | Description                                                                                                                                  |
 | -------------- | -------- | -------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -908,7 +908,7 @@ The available Makefile targets for the bondpad are summarised below.
 | ------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `bondpad`     | Generate GDS and LEF via [`bondpad.py`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/ip/sg13g2_ip__bondpad_70x70/script/bondpad.py) (`make bondpad [DIAMETER=<um>] [SHAPE=<square\|octagon\|circle>] [BOTTOM_METAL=<1-6>]`). |
 | `verilog`     | Generate a Verilog blackbox stub.                                                                                                                                                                       |
-| `klayout-drc` | Run KLayout DRC (`make klayout-drc [CELL=<cellname>] [DRC_LEVEL=<precheck|macro|regular>]`).                                                                                                                                                 |
+| `klayout-drc` | Run KLayout DRC (`make klayout-drc [CELL=<cellname>] [DRC_LEVEL=<precheck\|macro\|regular>]`).                                                                                                                                                 |
 | `magic-drc`   | Run Magic DRC (`make magic-drc [CELL=<cellname>]`).                                                                                                                                                     |
 | `open`        | Browse this folder with `sak-open.py` and open each file in its tool (needs the VNC/X11 desktop).                                                                                                        |
 | `clean`       | Remove the `final/` and `verification/drc/` output directories.                                                                                                                                         |
@@ -928,7 +928,7 @@ ke final/gds/sg13g2_ip__bondpad_70x70.gds
 
 ![`sg13g2_ip__bondpad_70x70` layout in KLayout.](fig/bondpad_logo/bondpad_layout.png){#fig-bondpad-layout width=60%}
 
-The bondpad goes from `Metal3` up to `TopMetal2` by default, but the `BOTTOM_METAL` Makefile variable can be set to change the lowest metal in the stack. The pad is surrounded by the pad recognition layer `dfpad (41, 0)`.
+The bondpad goes from `Metal3` up to `TopMetal2` by default, but the `BOTTOM_METAL` Makefile variable can be set to change the lowest metal in the stack. The pad is surrounded by the pad recognition layer `dfpad` (`41/0`).
 
 The `bondpad` target accepts the geometry and metal-stack variables as command-line overrides. For example, to build an octagonal 80 µm bondpad from `Metal2` up to `TopMetal2`, run:
 
@@ -1040,7 +1040,7 @@ module chip_top #(
 ) ( ... );
 ```
 
-The remaining code does not need to be modified for a pinout change, since the `generate` blocks automatically instantiate the correct number of I/O cells based on the parameter values. One `generate` block per pad type (`vdd_pads`, `vss_pads`, `iovdd_pads`, `iovss_pads`, `inputs`, `outputs`, `bidirs`, `analogs`) instantiates the matching IHP I/O cell, plus single instances for the clock and reset pads. An example code snippet of the input pad generation with a `generate` block is shown below. The `input_PAD` signals are exposed as ports of the `chip_top` module and are connected to the pads of the I/O cell, while the `input_PAD2CORE` signals are connected to the internal core logic in `chip_core.sv`. The same structure, or a very similar one, applies to the other pad types.
+The remaining code does not need to be modified for a pinout change, since the `generate` blocks automatically instantiate the correct number of I/O cells based on the parameter values. One `generate` block per pad type (`g_vdd_pads`, `g_vss_pads`, `g_iovdd_pads`, `g_iovss_pads`, `g_inputs`, `g_outputs`, `g_bidirs`, `g_analogs`) instantiates the matching IHP I/O cell, plus single instances for the clock and reset pads. An example code snippet of the input pad generation with a `generate` block is shown below. The `input_PAD` signals are exposed as ports of the `chip_top` module and are connected to the pads of the I/O cell, while the `input_PAD2CORE` signals are connected to the internal core logic in `chip_core.sv`. The same structure, or a very similar one, applies to the other pad types.
 
 ::: {.callout-note}
 Normally, only the parameter counts need to be edited in `chip_top.sv`. Only multi-clock and multi-reset chips would require modifications to the clock and reset pad generation, since the current template supports only one clock and one reset pad.
@@ -1181,12 +1181,12 @@ The top-level LibreLane configuration [`config.yaml`](https://github.com/iic-jku
 2. **PDN core ring.** `PDN_CORE_RING`, `PDN_CORE_RING_VWIDTH`, `PDN_CORE_RING_HWIDTH`, `PDN_CORE_RING_VSPACING`, and `PDN_CORE_RING_HSPACING`.
 3. **Clock settings.** `CLOCK_PORT`, `CLOCK_NET`, and `CLOCK_PERIOD`.
 4. **STA corners.**
-  - `nom_fast_1p32V_m40C`
-  - `nom_fast_1p65V_m40C`
-  - `nom_slow_1p08V_125C`
-  - `nom_slow_1p35V_125C`
-  - `nom_typ_1p20V_25C`
-  - `nom_typ_1p50V_25C`
+   - `nom_fast_1p32V_m40C`
+   - `nom_fast_1p65V_m40C`
+   - `nom_slow_1p08V_125C`
+   - `nom_slow_1p35V_125C`
+   - `nom_typ_1p20V_25C`
+   - `nom_typ_1p50V_25C`
 5. **Non-default routing rules.** `NON_DEFAULT_RULES`, `DRT_ASSIGN_NDR`, and `RSZ_DONT_TOUCH_LIST`.
 6. **Macro, bondpad, and logo placement.** `MACROS` with per-macro files and placement (`location`, `orientation`), plus top-level bondpad and logo placement settings, together with chip area and placement constraints (`DIE_AREA`, `CORE_AREA`, `FP_SIZING`, `PL_TARGET_DENSITY_PCT`).
 
@@ -1254,7 +1254,7 @@ xschem chip_top_tb_tran.sch
 
 ![Xschem top-level mixed-signal testbench `chip_top_tb_tran`.](fig/chip_top/chip_top_tb_tran_schematic.svg){#fig-chip-top-tb-tran-schematic}
 
-Again, the simulation and plotting can be run non-interactive from the command line with the following targets.
+Again, the simulation and plotting can be run non-interactively from the command line with the following targets.
 
 ```sh
 make sim-gl-xschem
@@ -1269,15 +1269,15 @@ The top-level Xschem testbench converges, but it may take a long time depending 
 
 The following plots show the results of the top-level transient simulation. The first plot shows the analog inverter response, while the other three plots show the digital outputs of the two counters, the digital inverter, and the bidirs.
 
-![Plotted simulation result of `chip_top_tb_tran`: analog inverter 1 response.](fig/chip_top/chip_top_tb_tran_analog_inv_sim.svg){#fig-chip-top-tb-tran-analog-inv-sim width=75%}
+![Plotted simulation result of `chip_top_tb_tran`: analog inverter 2 response.](fig/chip_top/chip_top_tb_tran_analog_inv_sim.svg){#fig-chip-top-tb-tran-analog-inv-sim width=75%}
 
-![Plotted simulation result of `chip_top_tb_tran`: digital inverter 2 outputs.](fig/chip_top/chip_top_tb_tran_digital1_sim.svg){#fig-chip-top-tb-tran-digital1-sim}
+![Plotted simulation result of `chip_top_tb_tran`: digital inverter 1 outputs.](fig/chip_top/chip_top_tb_tran_digital1_sim.svg){#fig-chip-top-tb-tran-digital1-sim}
 
 ![Plotted simulation result of `chip_top_tb_tran`: digital counter 2 outputs.](fig/chip_top/chip_top_tb_tran_digital2_sim.svg){#fig-chip-top-tb-tran-digital2-sim}
 
 ![Plotted simulation result of `chip_top_tb_tran`: digital counter 1 / inverter 1 bidirs.](fig/chip_top/chip_top_tb_tran_digital3_sim.svg){#fig-chip-top-tb-tran-digital3-sim}
 
-When the testbench is opened in Xschem, the schematic of `chip_top` can be inspected with the shortcuts **`e`** / **`Ctrl + e`**, and the symbol can be shown with **`i`** / **`Ctrl + i`** as explained in @sec-analog. The schematic and symbol are shown in @fig-chip-top-symbol and @fig-chip-top-schematic, respectively. The schematic shows the connections between the padframe and the core macros, while the symbol shows the pinout of the chip. The SRAM is not included in the schematic, since IHP does not ship a SPICE model or an Xschem symbol for the `RM_IHPSG13_1P_1024x32_c2_bm_bist` macro.
+When the testbench is opened in Xschem, the schematic of `chip_top` can be inspected with the shortcuts **`e`** / **`Ctrl + e`**, and the symbol can be shown with **`i`** / **`Ctrl + e`** as explained in @sec-analog. The symbol and schematic are shown in @fig-chip-top-symbol and @fig-chip-top-schematic, respectively. The schematic shows the connections between the padframe and the core macros, while the symbol shows the pinout of the chip. The SRAM is not included in the schematic, since IHP does not ship a SPICE model or an Xschem symbol for the `RM_IHPSG13_1P_1024x32_c2_bm_bist` macro.
 
 ![Xschem symbol of `chip_top`, showing the pinout of the chip.](fig/chip_top/chip_top_symbol.svg){#fig-chip-top-symbol width=60%}
 
@@ -1350,7 +1350,7 @@ make klayout-drc-regular                  # full KLayout DRC on chip_top_logo_fi
 
 ### LVS
 
-The following LVS target is available for the top-level.
+The following LVS targets are available for the top-level.
 
 ```sh
 make klayout-lvs                          # top-level KLayout LVS
@@ -1380,7 +1380,7 @@ At the top level, PEX is only run on `chip_top` (without logo and filler), and t
 
 ## Packaging {#sec-packaging}
 
-The die is packaged in a QFN-32 (5x5 mm) open-molded plastic package ([OmPP](https://www.qptechnologies.com/products/ompp/)) from the [EUROPRACTICE ASIC packaging](https://europractice-ic.com/services/packaging/asic-packaging/) offering. The package matches the padframe exactly: all 32 bondpads (8 per side, see @sec-top) are wired one-to-one to the 32 package leads (8 per side). Bonding is done with 25 µm gold wire, the longest wire measures 1.70 mm, and the cover is glued on after bonding.
+The die is packaged in a QFN-32 (5 × 5 mm) open-molded plastic package ([OmPP](https://www.qptechnologies.com/products/ompp/)) from the [EUROPRACTICE ASIC packaging](https://europractice-ic.com/services/packaging/asic-packaging/) offering. The package matches the padframe exactly: all 32 bondpads (8 per side, see @sec-top) are wired one-to-one to the 32 package leads (8 per side). Bonding is done with 25 µm gold wire, the longest wire measures 1.70 mm, and the cover is glued on after bonding.
 
 The bonding diagram below is generated fully automatically with `make bondplan` from the final chip GDS ([`layout/chip_top_logo_fill.gds.gz`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/layout/chip_top_logo_fill.gds.gz)) and the EUROPRACTICE package library [`EP_PACKAGES_08022018.gds`](https://europractice-ic.com/wp-content/uploads/2019/07/EP_PACKAGES_08022018.gds_.gz). The flow extracts the die bondpads together with their names, places the die in the package cavity, draws the bondwires, fills in the title block, and checks wire lengths, crossings, spacing, lead skew, and the clearance around the sensitive analog wires. The [pinout](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/packaging/config.yaml) and all flow settings are kept in a single configuration file, so the diagram never goes out of sync with the chip. Details are documented in the [packaging README](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/packaging).
 
@@ -1415,7 +1415,7 @@ When the chip is clean, the `release` target copies the GDS, the netlists, and t
 make release VERSION=2.1.0
 ```
 
-The artifacts are written to [`release/v.2.1.0/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/release/) (`gds/`, `netlist/{layout,pnl,spice}/`, `img/`).
+The artifacts are written to [`release/v.2.1.0/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/release/) (`gds/`, `netlist/{schematic,layout,pnl,spice}/`, `img/`).
 
 ::: {.callout-important}
 Run `make all` before `make release`. The release target only copies files, it does not rebuild or re-verify the chip.
@@ -1446,7 +1446,7 @@ Replace the binary counter with a 16-bit Gray counter (only one bit toggles per 
 
 Repeat @sec-analog with a self-biased single-ended inverter amplifier by adding a feedback resistor $R_\mathrm{f}$ between the output and the input of the inverter. As discussed in @sec-cace, the bare CMOS inverter has poor PVT robustness because nothing pins the gate bias to $V_\mathrm{DD}/2$. A feedback resistor closes a DC loop that forces the operating point to the high-gain crossover ($V_\mathrm{in} \approx V_\mathrm{out} \approx V_\mathrm{DD}/2$) regardless of process corner, which also linearises the small-signal transfer characteristic and turns the inverter into a usable single-ended amplifier. The disadvantage of this technique is the reduced input resistance, which equals $R_\mathrm{in} \approx 1 / (g_\mathrm{m,NMOS} + g_\mathrm{m,PMOS})$. The recommended steps are:
 
-1. Open the inverter schematic ([`inverter.sch`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/inverter/schematic/xschem/inverter.sch)) in Xschem and add a resistor between the `vin` and `vout` nets of the inverter. Start with a value of $R_\mathrm{f} \geq 10\,\mathrm{k\Omega}$ and adjust as needed. What can you observe?
+1. Open the inverter schematic ([`inverter.sch`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/inverter/schematic/xschem/inverter.sch)) in Xschem and add a resistor between the `vin` and `vout` nets of the inverter. Start with a value of $R_\mathrm{f} = 1\,\mathrm{M\Omega}$ and adjust as needed. What can you observe?
 2. Re-run the schematic-level testbenches from @sec-analog and observe the change in behaviour. First, always carefully think about what the expected behaviour would be before running the simulations, and then check if the results match your expectations.
 3. Re-run the full schematic-level simulation suite with `make sim-all` to refresh the plotted results in [`fig/inverter_top/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/tutorial/fig/inverter_top).
 4. Re-run the CACE flow with `make sim-cace` and compare the new process and mismatch plots against @fig-inverter-cace-aol and @fig-inverter-cace-fcu. The spread of $A_\mathrm{ol}$ across corners should be visibly narrower than the open-loop reference.
@@ -1489,7 +1489,7 @@ Building on @sec-exercise4, update the bondplan configuration in [`packaging/con
 
 1. Rebuild the final GDS of the modified chip (`make build-all` from @sec-exercise4), since the bondplan flow reads the die pads and their names directly from [`layout/chip_top_logo_fill.gds.gz`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/layout/chip_top_logo_fill.gds.gz).
 2. Update the `PINOUT` table in [`packaging/config.yaml`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/packaging/config.yaml): the south-side pads now carry `counter1_value[15:8]`, three of the four east-side analog pads became VSS pads, and the fourth carries the ring-oscillator output. Keep the geometric order in mind (pins 1-8 left top→bottom, 9-16 bottom left→right, 17-24 right bottom→top, 25-32 top right→left) so that the bondwires do not cross.
-3. Connect the freed-up VSS pads as downbonds to the exposed pad by adding an `EPAD` list (e.g. `EPAD: ["VSS", "VSS", "VSS"]`) and marking their former leads as NC (`~`). The exposed pad of the QFN32 is the package ground, and the die is attached with conductive epoxy, so ground downbonds are shorter and lower-inductance than wires to leads.
+3. Connect the freed-up VSS pads as downbonds to the exposed pad by adding an `EPAD` list (e.g. `EPAD: ["VSS", "VSS", "VSS"]`) and marking their former leads as NC (`~`). The exposed pad of the QFN-32 is the package ground, and the die is attached with conductive epoxy, so ground downbonds are shorter and lower-inductance than wires to leads.
 4. Re-run `make bondplan` and read the flow log and [`packaging/result.md`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/packaging/result.md) carefully: only the deliberately unbonded pads may appear as *unbonded named pads* (plus the seal-ring artifact), and there must be no wire-length, crossing, spacing, lead-skew, or guard-clearance warnings.
 5. Inspect the generated bonding diagram in [`packaging/render/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/packaging/render/) and the bondplan GDS in KLayout (`ke packaging/layout/chip_top_bondplan.gds`). The title block of the A4 drawing sheet (die size, pad pitch, wire count, maximum wire length) is refilled automatically on every run.
 6. [Optional] Experiment with the die placement: rotate the die with `DIE_PLACEMENT.orientation` (e.g. `E`) or move it off-center with `DIE_PLACEMENT.location`, re-run the flow, and observe how the wire-length, spacing, and skew checks react. Restore a placement where all checks pass.

@@ -13,7 +13,7 @@
         <mxCell id="buildAll" value="&lt;font face=&quot;Courier New&quot;&gt;&lt;b&gt;1. make build-all&lt;/b&gt;&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fontSize=14;fillColor=#f5f5f5;strokeColor=#666666;strokeWidth=2;fontStyle=1;verticalAlign=middle;sketch=0;" parent="1" vertex="1">
           <mxGeometry x="-380" y="160" width="180" height="40" as="geometry" />
         </mxCell>
-        <mxCell id="magicDrcTop" value="&lt;font face=&quot;Courier New&quot;&gt;&lt;b&gt;2. make magic-drc&lt;/b&gt;&lt;/font&gt;&lt;div&gt;&lt;font face=&quot;Courier New&quot;&gt;&lt;b&gt;make klayout-drc&lt;/b&gt;&lt;/font&gt;&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;fontSize=14;fillColor=#f5f5f5;strokeColor=#666666;strokeWidth=2;fontStyle=1;verticalAlign=middle;sketch=0;" parent="1" vertex="1">
+        <mxCell id="magicDrcTop" value="&lt;font face=&quot;Courier New&quot;&gt;&lt;b&gt;2. make magic-drc&lt;/b&gt;&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fontSize=14;fillColor=#f5f5f5;strokeColor=#666666;strokeWidth=2;fontStyle=1;verticalAlign=middle;sketch=0;" parent="1" vertex="1">
           <mxGeometry x="30" y="160" width="180" height="40" as="geometry" />
         </mxCell>
         <mxCell id="simGl" value="&lt;font face=&quot;Courier New&quot; style=&quot;font-size: 12px;&quot;&gt;&lt;b&gt;sim-rtl/gl-cocotb&lt;/b&gt;&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fontSize=12;fillColor=#f5f5f5;strokeColor=#666666;strokeWidth=2;fontStyle=1;verticalAlign=middle;sketch=0;" parent="1" vertex="1">
@@ -103,8 +103,11 @@
         <mxCell id="dgL3" value="&lt;font face=&quot;Courier New&quot; style=&quot;font-size: 11px;&quot;&gt;&lt;b&gt;build-top&lt;/b&gt;&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fontSize=11;fillColor=#dae8fc;strokeColor=#6c8ebf;strokeWidth=1;fontStyle=0;verticalAlign=middle;sketch=0;" parent="1" vertex="1">
           <mxGeometry x="-160" y="580" width="140" height="30" as="geometry" />
         </mxCell>
-        <mxCell id="dgL4" value="&lt;font face=&quot;Courier New&quot; style=&quot;font-size: 11px;&quot;&gt;&lt;b&gt;sim-all&lt;/b&gt;&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fontSize=11;fillColor=#dae8fc;strokeColor=#6c8ebf;strokeWidth=1;fontStyle=0;verticalAlign=middle;sketch=0;" parent="1" vertex="1">
+        <mxCell id="dgL5" value="&lt;font face=&quot;Courier New&quot; style=&quot;font-size: 11px;&quot;&gt;&lt;b&gt;magic-pex&lt;/b&gt;&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fontSize=11;fillColor=#dae8fc;strokeColor=#6c8ebf;strokeWidth=1;fontStyle=0;verticalAlign=middle;sketch=0;" parent="1" vertex="1">
           <mxGeometry x="-160" y="615" width="140" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="dgL4" value="&lt;font face=&quot;Courier New&quot; style=&quot;font-size: 11px;&quot;&gt;&lt;b&gt;sim-all&lt;/b&gt;&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fontSize=11;fillColor=#dae8fc;strokeColor=#6c8ebf;strokeWidth=1;fontStyle=0;verticalAlign=middle;sketch=0;" parent="1" vertex="1">
+          <mxGeometry x="-160" y="650" width="140" height="30" as="geometry" />
         </mxCell>
         <mxCell id="anL1" value="&lt;font face=&quot;Courier New&quot; style=&quot;font-size: 11px;&quot;&gt;&lt;b&gt;klayout-verify-all&lt;/b&gt;&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fontSize=11;fillColor=#d5e8d4;strokeColor=#82b366;strokeWidth=1;fontStyle=0;verticalAlign=middle;sketch=0;" parent="1" vertex="1">
           <mxGeometry x="60" y="510" width="140" height="30" as="geometry" />

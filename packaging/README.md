@@ -81,7 +81,7 @@ PINOUT:
   16: ["VSS", "VSS"]            # a list = several wires to one lead
   17: ~                         # ~ (null) = NC pin
   EPAD: ["VSS", "IOVSS"]        # downbonds to the exposed pad (GND),
-                                #   drawn parallel to neighboring wires
+                                #   drawn parallel to neighbouring wires
 ```
 
 Unlisted pins are reported as NC. Unbonded named pads are reported too, so a forgotten connection is visible in the log.

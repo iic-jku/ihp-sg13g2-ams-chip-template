@@ -57,11 +57,11 @@
 │  │  ├─ 📁 vh/               # Verilog headers: for hierarchy management & simulation inclusion
 │  │  ├─ metrics.csv          # Design metrics (area, power, timing slack, DRC/LVS): spreadsheet
 │  │  └─ metrics.json         # Design metrics (area, power, timing slack, DRC/LVS): JSON summary
-│  ├─ 📁 librelane/
-│  │  ├─ config.yaml
-│  │  ├─ impl.sdc
-│  │  ├─ pin_order.cfg
-│  │  └─ signoff.sdc
+│  └─ 📁 librelane/
+│     ├─ config.yaml
+│     ├─ impl.sdc
+│     ├─ pin_order.cfg
+│     └─ signoff.sdc
 ├─ 📁 fpga/
 │  ├─ 📁 arch/                # one fragment per FPGA architecture (ice40, ecp5)
 │  ├─ 📁 icebreaker/          # per-board Makefile (device, programmer) and pin constraints
@@ -318,7 +318,7 @@ make sim-view-xschem                      # run the default plotting script (plo
 make sim-view-xschem SCRIPT=<scriptname>  # run another plotting script
 ```
 
-The target runs `SHOW_PLOTS=1 python3 testbenches/xschem/plot_simulations/<SCRIPT>.py` and exports the figures and a CSV to `testbenches/xschem/plot_simulations/figures/`. The `SCRIPT` variable is given without the `.py` extension. Run through `sim-view-xschem`, the plot windows additionally open when a display is available (i.e. the container's X/VNC session). Headless, only the figures are written.
+The target runs `SHOW_PLOTS=1 python3 testbenches/xschem/plot_simulations/<SCRIPT>.py` and exports the figures and a CSV to `testbenches/xschem/plot_simulations/figures/`. Run through `sim-view-xschem`, the script additionally opens the plot windows when a display is available (e.g. the container's X/VNC session). Headless, only the figures are written.
 
 > [!NOTE]
 > `sim-view-xschem` is intentionally **not** called by `sim-all`. It opens an interactive plot window and must be called manually after the simulation has completed.
@@ -378,7 +378,7 @@ make librelane-klayout
 
 ### Copy Important Reports
 
-To copy the yosys synthesis checks, antenna reports, post-PnR timing summary, per-corner power reports, IR-drop report, Magic/KLayout DRC results, LVS report, and manufacturability report from the latest run into `verification/`, run:
+To copy the Yosys synthesis checks, antenna reports, post-PnR timing summary, per-corner power reports, IR-drop report, Magic/KLayout DRC results, LVS report, and manufacturability report from the latest run into `verification/`, run:
 
 ```sh
 make copy-reports
@@ -400,7 +400,7 @@ This assumes the final folders exist under `flow/final/` after a successful Libr
 
 ### Copy the Final Netlist
 
-To copy the latest SPICE, PnL, and Netlist files from `flow/final/` into `netlist/`, run:
+To copy the latest SPICE, PNL, and NL files from `flow/final/` into `netlist/`, run:
 
 ```sh
 make copy-netlist
@@ -428,7 +428,7 @@ Renders the final GDS from `final/gds/` with `sak-render.py` from the [IIC-OSIC-
 make render-gds
 ```
 
-This only works if the latest run completed without errors.
+This only works if the final GDS exists in `final/gds/`, so run `make copy-final` first.
 
 
 ### Build FPGA
@@ -441,7 +441,7 @@ Emulates the macro on an FPGA. The flow supports three boards across two FPGA ar
 | iCEBreaker | Lattice iCE40UP5K | Yosys -> nextpnr-ice40 -> icepack |
 | ULX3S | Lattice ECP5-85F | Yosys -> nextpnr-ecp5 -> ecppack |
 
-To run the full flow (lint -> synthesis -> place-and-route -> bitstream) on the default board, run:
+To run the full flow (clean -> lint -> synthesis -> place-and-route -> bitstream) on the default board, run:
 
 ```sh
 make build-fpga
@@ -458,7 +458,7 @@ make -C fpga BOARD=ulx3s all            # the whole flow on another board
 ```
 
 > [!NOTE]
-> IIC-OSIC-TOOLS carries the build chain for all three boards, so the bitstreams build inside the container. Only the programming tools stay outside, since the container has no USB access: build the bitstream inside, then run `load_bitstream`/`flash_bitstream` from the host (`dfu-util` for the pico-ice, `iceprog` for the iCEBreaker, `openFPGALoader` for the ULX3S). See [`fpga/README.md`](fpga/README.md) for the toolchain notes, the pin assignments, and how to add a further board.
+> IIC-OSIC-TOOLS carries the build chain for all three boards, so the bitstreams build inside the container. Only programming the board needs the host, since the container has no USB access: build the bitstream inside, then run `load_bitstream`/`flash_bitstream` from the host (`dfu-util` for the pico-ice, `iceprog` for the iCEBreaker, `openFPGALoader` for the ULX3S). See [`fpga/README.md`](fpga/README.md) for the toolchain notes, the pin assignments, and how to add a further board.
 
 
 ### Build Top
@@ -526,7 +526,7 @@ make symbol-check CELL=<cellname>  # check the symbol of another cell
 
 - **A pin without `sim_pinname`.** This is the one that matters. A single pin missing the property switches `sak-pin-reorder.py` out of name matching for the whole symbol and into matching by position, which is correct only when the netlist keeps the symbol's port order. Magic sorts the ports of an extracted netlist alphabetically, so it does not. On this macro the fallback happens to abort, because the fixed power map it falls back to expects `a_VPWR` and `a_VGND` while the netlist has `a_VDD` and `a_VSS`. Take that accident away by naming the supplies anything else and the reorder exits 0 having mapped `enable_i` onto `counter_value_o[0]` and `counter_value_o[7]` onto `reset_n_i`. `symbol-check` makes the missing property itself the error, so the outcome no longer depends on what the supplies happen to be called.
 - **A direction that disagrees with the netlist.** Nothing downstream reads `dir=`, because a SPICE instance line is positional, so an input drawn as an output survives the whole flow and misleads every reader of the symbol.
-- **A port added to the RTL and forgotten in the symbol**, reported against the netlist before any conversion runs rather than as a pin count in the middle of one.
+- **A port added to the RTL and forgotten in the symbol**, reported against the netlist before any conversion runs rather than as a pin count mismatch in the middle of one.
 
 Every problem names the file, the line and the pin, and the target exits non-zero:
 
@@ -591,7 +591,7 @@ make magic-pex CELL=counter_top
 make magic-pex CELL=counter_top EXT_MODE=1
 ```
 
-**KPEX** uses `kpex`, which runs Magic internally for the extraction itself:
+**KLayout PEX** uses `kpex`, which runs Magic internally for the extraction itself:
 
 ```sh
 make klayout-pex
@@ -615,21 +615,21 @@ For full-RC extraction (`EXT_MODE=3`), `magic-pex` additionally exposes the thre
 make magic-pex CELL=counter_top EXT_MODE=3 THRESHOLD=5000 MINRES=500 MINDELAY=2
 ```
 
-The `.subckt` name in the extracted SPICE file is `<CELL>_pex`: `magic-pex` sets it directly via the `sak-pex.sh` option `-n <CELL>_pex`, while for `klayout-pex` it is automatically renamed from `<CELL>` (kpex).
+The `.subckt` name in the extracted SPICE file is `<CELL>_pex`: `magic-pex` sets it directly via the `sak-pex.sh` option `-n <CELL>_pex`, while for `klayout-pex` it is automatically renamed from `<CELL>`, the name kpex writes.
 
 Both targets start by running `symbol-pex` (see above), so `schematic/xschem/<CELL>_pex.sym` always reflects the current cell symbol. The `.subckt` pin order in the extracted SPICE file is then reordered with `sak-pin-reorder.py` (installed in the IIC-OSIC-TOOLS container) to match that symbol's pin positions, matching by `sim_pinname` because the symbol and the layout use different pin names. Both targets finish by running [`scripts/check_pex_ports.py`](scripts/check_pex_ports.py), which verifies that every pin of the `.subckt` really reaches the circuit and fails the target otherwise. It is the same check the analog macro runs, see [`macros/inverter/README.md`](../inverter/README.md) for the two cases it catches.
 
 For `counter_top` the full-RC default extracts 4401 transistors into a 630 KB netlist and takes a few seconds. `klayout-pex` finds the same 4401 transistors and splits the RC network differently.
 
 > [!NOTE]
-> Magic's `extresist` step is not deterministic. Two `make magic-pex` runs on the same GDS give the same 4401 transistors, but the R and C counts move by a fraction of a percent (across four runs, 2079 to 2095 capacitors and 4609 to 4661 resistors), and the internal node names are renumbered. The committed `netlist/pex/counter_top_magic_pex_3.spice` therefore shows up as modified in `git status` after every run, even when nothing about the layout changed.
+> Magic's `extresist` step is not deterministic. Two `make magic-pex` runs on the same GDS give the same 4401 transistors, but the R and C counts move by around a percent (across four runs, 2079 to 2095 capacitors and 4609 to 4661 resistors), and the internal node names are renumbered. The committed `netlist/pex/counter_top_magic_pex_3.spice` therefore shows up as modified in `git status` after every run, even when nothing about the layout changed.
 
 To run a **post-layout simulation**, open [`testbenches/xschem/counter_top_tb_tran.sch`](testbenches/xschem/counter_top_tb_tran.sch). It already `.include`s both the XSPICE model and `netlist/pex/counter_top_magic_pex_3.spice`, and above the testbench sit two spare instances, `x2` of `counter_top.sym` and `x3` of `counter_top_pex.sym`, both parked with `spice_ignore=true`. Swap the wired-up `x1` for the one you want. This is the same arrangement the analog testbenches use.
 
 The testbench runs with `.options savecurrents klu method=gear reltol=1e-3 abstol=1e-12 gmin=1e-12 rshunt=1e14`. The looser tolerances and `rshunt` are what the extracted netlist needs. Full-RC extraction splits the nets into fragments, and some of the resulting nodes have no DC path to ground, so with the tighter settings the analog macro uses (`reltol=1e-4 abstol=1e-15 gmin=1e-15`) the post-layout run aborts at the initial timepoint with `Timestep too small; trouble with node ...`. The gate-level XSPICE run does not notice the change, its output is identical either way.
 
 > [!WARNING]
-> A post-layout run simulates every transistor of the macro in ngspice. In the IIC-OSIC-TOOLS container, 60 ns of transient take about 80 s, while the full 10 us gate-level XSPICE run of the same testbench finishes in under 2 s. Use the XSPICE model for functional runs, and the PEX netlist on short, targeted stimuli to check timing and signal integrity.
+> A post-layout run simulates every transistor of the macro in ngspice. In the IIC-OSIC-TOOLS container, 60 ns of transient take about 80 s, while the full 10 µs gate-level XSPICE run of the same testbench finishes in under 2 s. Use the XSPICE model for functional runs, and the PEX netlist on short, targeted stimuli to check timing and signal integrity.
 
 
 ### Lint, Build, Verify and Simulate All
@@ -660,7 +660,7 @@ make generate-xspice
 This builds the XSPICE model **directly from the LibreLane-extracted SPICE netlist** in `netlist/spice/<TOP>.spice` (copied from the last run by `make copy-netlist`). Three steps do the work:
 
 1. `symbol-check` verifies that `schematic/xschem/<TOP>.sym` still describes the ports of the macro, see [Check the Symbol](#check-the-symbol). It runs first so that a symbol which no longer matches the design fails the target before anything is converted.
-2. `spi2xspice.py` replaces every standard cell with an XSPICE primitive (`d_lut`, `d_dff`, …), taking the pin order from the inline black-box `.subckt` stubs in the extracted netlist and the logic functions from the liberty file.
+2. `spi2xspice.py` replaces every standard cell with an XSPICE primitive (`d_lut`, `d_dff`, …), taking the pin order from the inline black-box `.subckt` stubs in the extracted netlist and the logic functions from the Liberty file.
 3. `sak-pin-reorder.py` (installed in the IIC-OSIC-TOOLS container) reorders the resulting `.subckt` ports to match the Xschem symbol in `schematic/xschem/<TOP>.sym`.
 
 > [!NOTE]
@@ -687,7 +687,7 @@ The script derives the XSPICE pin from that name (`clock_i` → `a_clock_i`, `co
 
 > [!NOTE]
 > When you add a port to the design, add the matching pin to the symbol **and** give it a `sim_pinname` equal to the netlist signal name. `make symbol-check` verifies both on every build, and `sak-pin-reorder.py` aborts with a clear `expects XSPICE pin ... which is not in the .subckt` error for anything that reaches it.
-> If any pin lacks `sim_pinname`, `sak-pin-reorder.py` falls back to positional matching (power by a fixed name-map, signals by position), which is only correct when the netlist keeps the symbol's port order (e.g. a yosys `.nl.v` fed through `vlog2Verilog`). The Magic-extracted netlist used here never does, so `symbol-check` rejects a pin without `sim_pinname` outright rather than leaving the outcome to that fallback.
+> If any pin lacks `sim_pinname`, `sak-pin-reorder.py` falls back to positional matching (power by a fixed name-map, signals by position), which is only correct when the netlist keeps the symbol's port order (e.g. a Yosys `.nl.v` fed through `vlog2Verilog`). The Magic-extracted netlist used here never does, so `symbol-check` rejects a pin without `sim_pinname` outright rather than leaving the outcome to that fallback.
 
 Then run the gate-level simulation as usual (see [Gate-Level Xschem Simulation](#gate-level-xschem-simulation)):
 
@@ -701,8 +701,8 @@ make sim-gl-xschem
 `make clean` deletes all generated files and folders. The sources stay untouched: the RTL, the schematics, symbols and testbenches, the scripts, the LibreLane and FPGA configurations, and `render/blender/`. Deleted are:
 
 - `flow/librelane/runs/` and `flow/final/` (LibreLane run directories and the saved views)
-- `final/` (GDS, LEF, Liberty, NL, PnL, SPEF and Verilog header deliverables)
-- `netlist/` (NL, PnL, SPICE, XSPICE and the extracted PEX netlists)
+- `final/` (GDS, LEF, Liberty, NL, PNL, SPEF and Verilog header deliverables)
+- `netlist/` (NL, PNL, SPICE, XSPICE and the extracted PEX netlists)
 - `render/img/` (the layout renders)
 - `verification/` (the reports copied from the last LibreLane run)
 - `schematic/xschem/simulations/`, `testbenches/xschem/simulations/` and the `plot_simulations/` outputs (`data/`, `figures/`, `__pycache__/`)
@@ -764,7 +764,7 @@ for f in rtl/counter* testbenches/verilog/counter* \
 done
 ```
 
-The remaining work is steps 6, 7, 9 and 11, which all need real edits rather than renames.
+The remaining work is steps 6, 7, 9, 10 and 11, which all need real edits rather than renames.
 
 > [!NOTE]
 > The Xschem symbol `schematic/xschem/<TOP>.sym` must carry a `sim_pinname` property on every pin, see [Generate XSPICE File](#generate-xspice-file). `sak-pin-reorder.py` maps the ports of the extracted netlist onto the symbol by that name, and gate-level Xschem simulation breaks silently without it. `make symbol-gl` writes the property on every pin it scaffolds and `make symbol-check` refuses a symbol that is missing one, so neither the first symbol nor a later port change depends on remembering it.
