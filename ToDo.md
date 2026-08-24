@@ -1,9 +1,10 @@
 ﻿# ToDo List
 
+- [ ] test and merge `hv-stdcell`: https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/test-hv-stdcell
+- [ ] check and merge `gdscheck-drc`: https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/pull/7
 - [ ] `ngspice` & `verilog` RTL Co-Simulation using `Xschem`: https://www.youtube.com/watch?v=PPd7jkcHOgA
 - [ ] add VACASK testbenches to inverter macro (update Makefile + README, see `add-vacask` branch)
 - [ ] add VACASK mixed-signal GL testbenches to counter macro (update Makefile + README, see `add-vacask` branch)
-- [ ] add further open-source FPGAs to `counter` macro from HeiChips 2026 template: https://github.com/HeiChips/heichips26-template
 - [ ] clean up top-level LVS (Magic + Netgen, KLayout ?) --> see / merge `top-level-lvs` branch
 - [ ] merge `fixed-auto-taper` branch (wait until `librelane-openroad` is updated)
 - [ ] finish and merge `exercise-solution` branch
