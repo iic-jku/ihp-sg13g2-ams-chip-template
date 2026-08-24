@@ -1,33 +1,29 @@
-101. Printing statistics.
+103. Printing statistics.
 
 === counter_top ===
 
         +----------Local Count, excluding submodules.
         |        +-Local Area, excluding submodules.
         |        | 
-       47        - wires
-       54        - wire bits
+       34        - wires
+       41        - wire bits
         4        - public wires
        11        - public wire bits
         4        - ports
        11        - port bits
-       51   391.91 cells
-        8        -   $_ANDNOT_
-        1        -   $_AND_
+       38   391.91 cells
+        5        -   $_AND_
        16        -   $_MUX_
-        5        -   $_NAND_
-        2        -   $_ORNOT_
-        4        -   $_OR_
+        1        -   $_NAND_
+        1        -   $_NOT_
         1        -   $_XNOR_
         6        -   $_XOR_
         8   391.91   sg13g2_dfrbpq_1
 
-   Area for cell type $_ANDNOT_ is unknown!
    Area for cell type $_AND_ is unknown!
    Area for cell type $_MUX_ is unknown!
    Area for cell type $_NAND_ is unknown!
-   Area for cell type $_ORNOT_ is unknown!
-   Area for cell type $_OR_ is unknown!
+   Area for cell type $_NOT_ is unknown!
    Area for cell type $_XNOR_ is unknown!
    Area for cell type $_XOR_ is unknown!
 

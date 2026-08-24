@@ -24,7 +24,7 @@
 │  ├─ 📁 lib/
 │  │  └─ inverter_top.lib
 │  └─ 📁 vh/
-│     └─ inverter_top.v
+│     └─ inverter_top.vh
 ├─ 📁 layout/
 │  ├─ *.gds
 │  ├─ *.klay.gds
@@ -63,8 +63,7 @@
 │  │  ├─ 📁 figures/
 │  │  ├─ lookup_commands.ipynb
 │  │  └─ sizing_inverter.ipynb
-│  ├─ check_pex_ports.py
-│  └─ lay2img.py
+│  └─ check_pex_ports.py
 ├─ 📁 testbenches/
 │  └─ 📁 xschem/
 │     ├─ 📁 plot_simulations/
@@ -113,13 +112,50 @@ make
 make help
 ```
 
-For the `sim-xschem` target, `TB=<testbenchname>` is required.
+The `sim-xschem` target accepts an optional `TB=<testbenchname>` parameter (default: `<CELL>_tb_tran`), and `sim-view-xschem` an optional `SCRIPT=<scriptname>` parameter (default: `plot_<CELL>`).
 
 All targets that operate on a specific cell accept an optional `CELL=<cellname>` parameter. The default is the top-level cell (`inverter_top`).
 
 ```sh
 make <target> [CELL=<cellname>] [EXT_MODE=<1|2|3>] [THRESHOLD=<mOhm>] [MINRES=<mOhm>] [MINDELAY=<ps>] [DRC_LEVEL=<precheck|macro|regular>] [EV_PRECISION=<digits>]
 ```
+
+
+### Open the Design Files
+
+Opens a file browser for this folder with `sak-open.py` from the [IIC-OSIC-TOOLS](https://github.com/iic-jku/IIC-OSIC-TOOLS), one button per design file, grouped by directory:
+
+```sh
+make open
+```
+
+Clicking a button launches the matching tool in the file's own directory, so Xschem finds its `simulations/` folder and KLayout its run outputs where they belong:
+
+| File type | Tool |
+| --- | --- |
+| `.sch`, `.sym` | Xschem |
+| `.gds`, `.gds.gz`, `.oas`, `.oas.gz` | KLayout in edit mode |
+| `.mag` | Magic |
+| `.vcd`, `.fst`, `.gtkw` | GTKWave |
+| `.raw` | gaw (ngspice rawfile) |
+| `.png`, `.pdf` | the desktop's handler (`xdg-open`) |
+| `.sv`, `.svh`, `.v`, `.vh`, `.vhd`, `.vhdl`, `.spice`, `.cir`, `.sp`, `.cdl`, `.sdc`, `.lef`, `.lib`, `.tcl`, `.mk`, `.yaml`, `.json`, `.py`, `.qmd`, `.tex`, `.md` and `Makefile` | gvim |
+
+Only these types get a button. Files with any other extension (`.sh`, `.svg`, `.pcf`, `.save`, `.rpt`, `.txt`, `.csv` and so on) are not listed.
+
+Schematics and symbols that belong to one design unit share a single tabbed Xschem instance instead of one process per click. The unit is the nearest ancestor holding a `Makefile`, so this macro gets its own instance and every tab writes its netlists to the folder this macro's `xschemrc` pins, see [Xschem Configuration](../../README.md#xschem-configuration).
+
+The tree is rescanned every 15 s, so files a running flow produces appear on their own and are highlighted for a minute. Generated directories are skipped by default: `runs/`, `sim_build/`, `obj_dir/`, `simulations/`, `__pycache__/`, `_freeze/` and `.git/`. The Xschem `simulations/` folder is one of them, so the `.raw` files show up only with `--all`. Pass extra options with `OPEN_ARGS`:
+
+```sh
+make open OPEN_ARGS=--all              # include the build outputs
+make open OPEN_ARGS="--prune backups"  # skip one more directory name
+```
+
+At most 400 buttons are drawn at once, because each one is an X window, and what is left out is stated at the end of the list. That cap is easy to hit with `--all`: it pulls in roughly 19000 files at the top level and 5700 in the counter, against 66 in the inverter. Use `--all` from the folder you actually care about, or narrow it with `--prune`, rather than at the top level.
+
+> [!NOTE]
+> This target needs a display. Run it inside the container's VNC/noVNC desktop or over X11 forwarding. In a shell-only container it stops with `cannot open a window`. The `.png` and `.pdf` buttons hand the file to the desktop's registered handler, so those two need the full VNC/noVNC session and do not work over a bare X forward.
 
 
 ### Layout File Extension Usage
@@ -148,10 +184,11 @@ The target netlists the testbench with `xschem netlist` and then invokes `ngspic
 
 Because the run is headless, the `plot` commands in a testbench's `.control` block are a no-op and no plot windows appear. Every testbench instead exports its results with `wrdata` to `testbenches/xschem/plot_simulations/data/`, from where they are plotted with `sim-view-xschem`.
 
-The testbench name **must** be specified via the `TB` variable:
+The testbench is selected with the `TB` variable, given without the `.sch` extension (default: `<CELL>_tb_tran`):
 
 ```sh
-make sim-xschem TB=<testbenchname>
+make sim-xschem                     # run the default testbench (inverter_top_tb_tran)
+make sim-xschem TB=<testbenchname>  # run another testbench
 ```
 
 For example:
@@ -165,16 +202,19 @@ make sim-xschem TB=inverter_top_tb_tran
 
 All available testbench schematics are located in `testbenches/xschem/`. Generated netlists are written to `testbenches/xschem/simulations/`.
 
+Every testbench pulls in a FET `.save` file through its `SAVE` code block (for example `.include inverter_tb_ac_ol.save`). That file lists the operating-point parameters of every transistor (`ids`, `gm`, `gds`, `vth` and so on), which the `annotate_fet_params` symbols and the `Annotate OP` launcher read back from the raw file. The include uses the bare file name, so it resolves inside `testbenches/xschem/simulations/`, where ngspice runs. Both `sim-xschem` and the schematic's `Simulate` launcher write the file on every run, so it always matches the devices currently in the schematic and a fresh clone needs no manual export. Xschem's **IHP > Create FET .save file** menu entry writes the same file by hand.
+
 
 ### Plot Xschem Simulation Results
 
-Plots simulation results using the Python script selected by `SCRIPT` (given without the `.py` extension):
+Plots simulation results using the Python script selected by `SCRIPT`, given without the `.py` extension (default: `plot_<CELL>`):
 
 ```sh
-make sim-view-xschem SCRIPT=<scriptname>
+make sim-view-xschem                      # run the default plotting script (plot_inverter_top)
+make sim-view-xschem SCRIPT=<scriptname>  # run another plotting script
 ```
 
-The target runs `SHOW_PLOTS=1 python3 testbenches/xschem/plot_simulations/<SCRIPT>.py`. Every script writes its figures to `testbenches/xschem/plot_simulations/figures/`. Run through `sim-view-xschem`, the plot windows additionally open when a display is available (i.e. the container's X/VNC session). Headless, only the figures are written.
+The target runs `SHOW_PLOTS=1 python3 testbenches/xschem/plot_simulations/<SCRIPT>.py`. Every script writes its figures to `testbenches/xschem/plot_simulations/figures/`. Run through `sim-view-xschem`, the script additionally opens the plot windows when a display is available (e.g. the container's X/VNC session). Headless, only the figures are written.
 
 Examples:
 
@@ -258,7 +298,7 @@ make lib
 
 ### Verilog Stub
 
-Generates a Verilog stub (`final/vh/<TOP>.v`) for top-level integration into the LibreLane flow by parsing pins from an extracted PEX netlist in `netlist/pex/`.
+Generates a Verilog stub (`final/vh/<TOP>.vh`) for top-level integration into the LibreLane flow by parsing pins from an extracted PEX netlist in `netlist/pex/`.
 
 The `verilog` target:
 - requires one of the following PEX files (run `make magic-pex` or `make klayout-pex` first):
@@ -289,7 +329,7 @@ make copy-gds
 
 ### Render Layout Image
 
-Renders the top-level layout GDS with `scripts/lay2img.py` and saves the two images `inverter_top_black.png` and `inverter_top_white.png` in `render/img/`:
+Renders the top-level layout GDS with `sak-render.py` from the [IIC-OSIC-TOOLS](https://github.com/iic-jku/IIC-OSIC-TOOLS) and saves the two images `inverter_top_black.png` and `inverter_top_white.png` (2048 px wide, 4x oversampling) in `render/img/`:
 
 ```sh
 make render-gds
@@ -317,7 +357,7 @@ The `DRC_LEVEL` parameter selects the KLayout DRC level (`sak-drc.sh -l`). It is
 | Zero-area / geometry | – | ✓ | ✓ |
 | Pin / label | – | ✓ | ✓ |
 | Recommended / extra rules | – | – | ✓ |
-| Density (chip-level fill) | – | – | ✓ |
+| Density (full-chip fill) | – | – | ✓ |
 | Antenna | – | – | ✓ |
 
 **KLayout DRC** runs a KLayout DRC at the selected `DRC_LEVEL`:
@@ -384,6 +424,30 @@ make magic-lvs CELL=inverter_top
 ```
 
 
+### Build Xschem PEX Symbol
+
+Builds the Xschem symbol the PEX flow needs, `schematic/xschem/<CELL>_pex.sym`, from the regular cell symbol `schematic/xschem/<CELL>.sym`:
+
+```sh
+make symbol-pex                  # build inverter_top_pex.sym from inverter_top.sym
+make symbol-pex CELL=<cellname>  # build the PEX symbol of another cell
+```
+
+The generated symbol is a verbatim copy of `<CELL>.sym` with a single change: `type=subcircuit` becomes `type=primitive`. Everything else (pin boxes and their order, `format`, `spectre_format`, `template`, graphics) is inherited, which is exactly what the PEX flow needs:
+
+- **`type=primitive`** stops Xschem from descending into a schematic of the same name. There is no `<CELL>_pex.sch`, so the instance line is emitted as it stands and the subcircuit comes from the `.include`d PEX netlist instead.
+- **`format="@name @pinlist @symname"`** makes the instance reference `@symname`, which resolves to `<CELL>_pex`, exactly the `.subckt` name the PEX flow writes.
+- **The pin order** is what `sak-pin-reorder.py` reorders the extracted netlist to, so it has to be the one of the cell symbol.
+
+`symbol-pex` runs automatically at the start of `klayout-pex` and `magic-pex`, so the symbol is rebuilt from the current `<CELL>.sym` before every extraction and cannot go stale when a pin is added, removed or renamed. Calling it by hand is only needed to refresh the symbol without re-running an extraction. Anything added to the generated file by hand is lost at the next extraction, so make the change in `<CELL>.sym` instead.
+
+If `<CELL>.sym` does not exist, the target prints a note and does nothing, which leaves the PEX targets running without a pin reorder just as before. It fails only when `<CELL>.sym` declares neither `type=subcircuit` nor `type=primitive`.
+
+> [!NOTE]
+> Every symbol in this project also carries `spectre_format="@name ( @pinlist ) @symname"`. Xschem writes that line itself whenever a symbol is built from a schematic's pin list (key `a`, `make_sym.awk`), and it is read **only** by the Spectre netlister, which is also the one that drives VACASK (`xschem.tcl` configures `vacask "$N"` as the default simulator for `netlist_type spectre`). The SPICE netlister used for ngspice ignores it, so it has no effect on any target in this Makefile.
+> Do not strip it: without it, instances of the symbol are **silently dropped** from a Spectre/VACASK netlist and the `subckt` line of the symbol itself comes out with an empty port list, with no warning at all.
+
+
 ### Parasitic Extraction (PEX)
 
 Runs parasitic extraction on the layout in `layout/`. The extracted SPICE netlist is written to `netlist/pex/`.
@@ -404,7 +468,7 @@ The `EXT_MODE` parameter selects the extraction mode:
 
 The `.subckt` name in the extracted SPICE file is `<CELL>_pex`: `magic-pex` sets it directly via the `sak-pex.sh` option `-n <CELL>_pex`, while for `klayout-pex` it is automatically renamed from `<CELL>` (kpex).
 
-If a matching Xschem symbol (`schematic/xschem/<CELL>_pex.sym`) exists, the `.subckt` pin order in the extracted SPICE file is automatically reordered with `sak-pin-reorder.py` (installed in the IIC-OSIC-TOOLS container) to match the symbol's pin positions. This ensures the PEX netlist can be used directly with the corresponding Xschem symbol for simulation regardless of the selected `EXT_MODE`.
+Both targets start by running `symbol-pex` (see above), so `schematic/xschem/<CELL>_pex.sym` always reflects the current cell symbol. The `.subckt` pin order in the extracted SPICE file is then reordered with `sak-pin-reorder.py` (installed in the IIC-OSIC-TOOLS container) to match that symbol's pin positions. This ensures the PEX netlist can be used directly with the corresponding Xschem symbol for simulation regardless of the selected `EXT_MODE`.
 
 Both targets finish by running [`scripts/check_pex_ports.py`](scripts/check_pex_ports.py) on the netlist they just wrote. It verifies that every pin of the `.subckt` really reaches the circuit, and fails the target otherwise. Two cases are caught:
 
@@ -490,3 +554,60 @@ make all
 ```
 
 Verification runs first because DRC/LVS/PEX produce the fresh, pin-reordered PEX netlists from the current layout. The build follows, since the Verilog stub reads its pins from a PEX netlist. The simulations run **last**, so the `inverter_top` testbench includes the PEX netlist produced by this run, not by a previous one.
+
+
+### Clean
+
+`make clean` deletes all generated files and folders. The sources stay untouched: the schematics, symbols and testbenches, the layout in `layout/`, the scripts, the CACE configuration and templates, and `render/blender/`. Deleted are:
+
+- `final/` (GDS, LEF, Liberty and Verilog stub deliverables)
+- `netlist/` (schematic, layout and PEX netlists)
+- `render/img/` (the layout renders)
+- `verification/drc/` and `verification/lvs/` (DRC and LVS reports)
+- `schematic/xschem/simulations/`, `testbenches/xschem/simulations/` and the `plot_simulations/` outputs (`data/`, `figures/`, `__pycache__/`)
+- the CACE outputs under `verification/cace/` (`_runs/`, `_docs/`, `netlist/`, `results/`, `templates/simulations/`)
+
+Every target recreates the folders it writes to, so a clean rebuild is:
+
+```sh
+make clean
+make all
+```
+
+> [!WARNING]
+> Most of these outputs are committed in this repository, so `make clean` leaves a large deletion set in `git status`. Run `git restore .` to get them back if you did not mean to remove them.
+
+> [!NOTE]
+> All four Xschem testbenches `.include` a Magic PEX netlist from `netlist/pex/`, and `make verilog` reads its pin list from one as well. Directly after `make clean`, run `make magic-pex` (or the full `make all`) once before `make sim-xschem`, `make sim-all` or `make build-top`, otherwise the include fails.
+
+
+## Start a New Analog Macro from This Template
+
+The inverter is meant to be the starting point for a new analog macro. It already carries the full analog flow: Xschem schematic and symbol, four testbenches, the KLayout layout, DRC, LVS and PEX, the LEF, Liberty and Verilog stub export, CACE characterization, and the plotting scripts.
+
+1. Copy the folder, for example to `macros/amp`.
+2. Run `make clean` in the new folder so that no output of the inverter is left behind.
+3. Set `TOP` in the `Makefile`. Every target derives its paths from `TOP` (and from `CELL`, which defaults to `TOP`), so the design files must carry the same name.
+4. Rename the Xschem schematics, symbols and testbenches in `schematic/xschem/` and `testbenches/xschem/`. Note that the macro holds two cells, the unit cell `inverter` and the top cell `inverter_top`, so a rename to `amp` gives `amp` and `amp_top`.
+5. Rename the layout files in `layout/` **and the top cell inside each GDS** (open it in KLayout, rename the cell, save). The DRC, LVS and PEX targets pass the file name as the cell name, so the two must match. Note that `inverter_top.klay.gds` is a KLayout-saved layout that pulls in `inverter.gds` as a library through `inverter_top.klay.klib`, so update `lib_name` and `lib_path` in that `.klib` file too. Nothing regenerates these, they are layout sources like the plain `.gds` files.
+6. Rename the CACE files `verification/cace/inverter.yaml`, `verification/cace/templates/inverter_tb_ac.sch` and `verification/cace/scripts/inverter_tb_ac.{py,csv}`, and set `name:` in the yaml.
+7. Rename the plotting scripts in `testbenches/xschem/plot_simulations/`. The sizing notebook `scripts/sizing/sizing_inverter.ipynb` and the figures next to it are specific to the inverter, so adapt or delete them.
+8. Search and replace the remaining `inverter` references inside the renamed files. Xschem schematics, the CACE yaml and the plot scripts are all plain text. The ones that matter are the `inverter.sym` instances in the testbenches, the `.include` of the PEX netlist, the `template:` and `script:` keys in the CACE yaml, and the raw file names in the plot scripts.
+9. Register the macro at the chip top-level: add a `build-<name>` target and a `clean-all` entry in the top-level `Makefile`, instantiate the macro in `rtl/chip_core.sv` and `schematic/xschem/chip_top.sch`, and add a `MACROS` entry in `flow/librelane/config.yaml`.
+
+For a new macro named `amp`, the mechanical part looks as follows:
+
+```sh
+cp -r macros/inverter macros/amp
+cd macros/amp
+make clean
+# set TOP = amp_top in the Makefile, then:
+for f in schematic/xschem/inverter* testbenches/xschem/inverter* layout/inverter* \
+         verification/cace/inverter* verification/cace/templates/inverter* \
+         verification/cace/scripts/inverter* \
+         testbenches/xschem/plot_simulations/plot_inverter*; do
+    mv "$f" "$(echo "$f" | sed 's/inverter/amp/')"
+done
+```
+
+The remaining work is step 5 (the top cell name inside each GDS and the `.klib` library reference) and step 8 (search and replace inside the files).

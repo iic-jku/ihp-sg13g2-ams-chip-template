@@ -353,10 +353,6 @@ C {ngspice_probe.sym} 2130 -2640 1 0 {name=r34}
 C {ngspice_probe.sym} 2120 -2650 1 0 {name=r35}
 C {noconn.sym} 2380 -1520 0 0 {name=l2}
 C {noconn.sym} 2380 -1730 0 0 {name=l3}
-C {counter_top.sym} 1160 -2200 0 0 {name=x32}
-C {counter_top.sym} 1160 -1280 0 0 {name=x33}
-C {inverter_top.sym} 1960 -2160 0 0 {name=x34}
-C {inverter_top.sym} 1900 -1320 0 0 {name=x36}
 C {lab_pin.sym} 1160 -1160 3 0 {name=p30 sig_type=std_logic lab=VSS}
 C {lab_pin.sym} 1900 -1160 3 0 {name=p31 sig_type=std_logic lab=VSS}
 C {lab_pin.sym} 1160 -2080 3 0 {name=p33 sig_type=std_logic lab=VSS}
@@ -393,3 +389,7 @@ value=100k
 footprint=1206
 device=resistor
 m=1}
+C {inverter_top.sym} 1960 -2160 0 0 {name=x32}
+C {inverter_top.sym} 1900 -1320 0 0 {name=x33}
+C {counter_top.sym} 1160 -2200 0 0 {name=x34}
+C {counter_top.sym} 1160 -1280 0 0 {name=x36}

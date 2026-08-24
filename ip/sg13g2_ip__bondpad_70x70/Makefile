@@ -16,6 +16,10 @@ CELL ?= $(TOP)
 # Override with: make <target> DRC_LEVEL=<precheck|macro|regular>
 DRC_LEVEL ?= macro
 
+# Extra options for the sak-open.py file browser (e.g. --all to include build outputs)
+# Override with: make open OPEN_ARGS=<options>
+OPEN_ARGS ?=
+
 # Folder structure
 GDS_DIR   	:= final/gds
 LEF_DIR   	:= final/lef
@@ -43,12 +47,20 @@ help: ## Show this help message
 # ================================================================================================
 
 
+# Open Target
+open: ## Open the design files of this folder in the sak-open.py file browser (needs the VNC/X11 desktop)
+	sak-open.py $(OPEN_ARGS) .
+.PHONY: open
+# ================================================================================================
+
+
 # Clean Target
 clean: ## Remove generated outputs and reports
 	rm -rf $(GDS_DIR)
 	rm -rf $(LEF_DIR)
 	rm -rf $(VH_DIR)
 	rm -rf $(DRC_RPT_DIR)
+	rm -rf script/__pycache__
 .PHONY: clean
 # ================================================================================================
 
@@ -76,7 +88,7 @@ magic-drc: ## Run Magic DRC of the CELL cell (usage: make magic-drc [CELL=<celln
 # Verilog Target
 verilog: ## Generate a minimal Verilog wrapper for the bondpad
 	mkdir -p $(VH_DIR)
-	@printf 'module $(TOP) (\n    inout pad\n);\nendmodule\n' > $(VH_DIR)/$(TOP).v
+	@printf 'module $(TOP) (\n    inout pad\n);\nendmodule\n' > $(VH_DIR)/$(TOP).vh
 .PHONY: verilog
 # ================================================================================================
 

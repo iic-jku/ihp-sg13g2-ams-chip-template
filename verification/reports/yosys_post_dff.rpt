@@ -1,4 +1,4 @@
-100. Printing statistics.
+102. Printing statistics.
 
 === chip_top ===
 
@@ -12,8 +12,8 @@
         6        - ports
        28        - port bits
        70   460800 cells
-       10        -   $_XNOR_
-       21        -   $_XOR_
+       20        -   $_XNOR_
+       11        -   $_XOR_
         1        -   RM_IHPSG13_1P_1024x32_c2_bm_bist
         2        -   counter_top
         2        -   inverter_top

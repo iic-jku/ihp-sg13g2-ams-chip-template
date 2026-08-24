@@ -69,7 +69,7 @@ Infeasible configurations abort with clear messages: an unknown `PACKAGE_NAME` (
 3. **Analyze the package**: inside the lead frame cell (auto-detected, or set via `PACKAGE_FOOTPRINT_CELL`) the lead polygons (210/0) and the pin number texts (211/0) are read. Each pin number is matched to its nearest lead. The bond point lies on the ray from the package center through the lead (`BONDWIRE_LEAD_SITE`: 0 = lead tip, 1 = outer end). The package *inner border* (the square touching the lead tips) is derived from the lead geometry.
 4. **Place the die**: `DIE_PLACEMENT.location` is the lower-left corner of the (oriented) die outline relative to the lower-left corner of the inner border. Omit it to center the die. `orientation` accepts the LibreLane/DEF values `N/S/E/W/FN/FS/FE/FW`.
 5. **Draw the bondwires**: `PINOUT` maps each package pin to a die pad name. Wires are `BONDWIRE_WIDTH` wide paths on `BONDWIRE_LAYER` (`Exchange0.drawing - 190/0`, a documentation-only layer, nothing in the PDK consumes it). A bond table (`pin pad`) is written on `BONDWIRE_TEXT_LAYER` next to the plan. In sheet mode the lead frame is shifted automatically so that plan and table sit inside the drawing frame with equal side margins. The package pin numbers are re-drawn centered on their wire attach points, just outside the package outline (`PACKAGE_PIN_LABEL_OFFSET`).
-6. **Check & export**: wire lengths (`BONDWIRE_MAX_LENGTH`), wire crossings, the minimum wire-to-wire gap, the landing skew of each wire on its lead (`BONDWIRE_MAX_SKEW`) and guard clearances (see below) are checked and reported. Outputs are the bondplan GDS, a bond report and zero-border PNG / SVG images in `_white` / `_black` variants (following `scripts/lay2img.py`). The report (`BONDPLAN_REPORT`) is a Markdown summary plus a bond table with per-wire length, bearing, lead skew and minimum gap. A `.csv` extension writes raw CSV instead.
+6. **Check & export**: wire lengths (`BONDWIRE_MAX_LENGTH`), wire crossings, the minimum wire-to-wire gap, the landing skew of each wire on its lead (`BONDWIRE_MAX_SKEW`) and guard clearances (see below) are checked and reported. Outputs are the bondplan GDS, a bond report and zero-border PNG / SVG images in `_white` / `_black` variants (following the `sak-render.py` naming convention). The report (`BONDPLAN_REPORT`) is a Markdown summary plus a bond table with per-wire length, bearing, lead skew and minimum gap. A `.csv` extension writes raw CSV instead.
 
 ### Pinout Format
 
@@ -81,7 +81,7 @@ PINOUT:
   16: ["VSS", "VSS"]            # a list = several wires to one lead
   17: ~                         # ~ (null) = NC pin
   EPAD: ["VSS", "IOVSS"]        # downbonds to the exposed pad (GND),
-                                #   drawn parallel to neighboring wires
+                                #   drawn parallel to neighbouring wires
 ```
 
 Unlisted pins are reported as NC. Unbonded named pads are reported too, so a forgotten connection is visible in the log.

@@ -18,7 +18,7 @@ A 70 µm × 70 µm square bondpad for the IHP SG13G2 130 nm CMOS process, genera
 │  ├─ 📁 lef/
 │  │  └─ sg13g2_ip__bondpad_70x70.lef   # LEF macro for place-and-route
 │  └─ 📁 vh/
-│     └─ sg13g2_ip__bondpad_70x70.v     # Verilog blackbox stub
+│     └─ sg13g2_ip__bondpad_70x70.vh    # Verilog blackbox stub
 └─ 📁 verification/
    └─ 📁 drc/                           # DRC reports
 ```
@@ -47,8 +47,9 @@ make all
 | ------------- | -------------------------------------------------------------------------------------------------------------------- |
 | `bondpad`     | Generate GDS and LEF via `bondpad.py` (usage: `make bondpad [DIAMETER=<um>] [SHAPE=<square\|octagon\|circle>] [BOTTOM_METAL=<1-6>]`) |
 | `verilog`     | Generate Verilog blackbox stub (`inout pad`)                                                                         |
-| `klayout-drc` | Run KLayout DRC using `sak-drc.sh` (usage: `make klayout-drc [CELL=<cellname>] [DRC_LEVEL=<precheck|macro|regular>]`) |
+| `klayout-drc` | Run KLayout DRC using `sak-drc.sh` (usage: `make klayout-drc [CELL=<cellname>] [DRC_LEVEL=<precheck\|macro\|regular>]`) |
 | `magic-drc`   | Run Magic DRC using `sak-drc.sh` (usage: `make magic-drc [CELL=<cellname>]`)                                         |
+| `open`        | Browse this folder with `sak-open.py` and open each file in its tool                                |
 | `clean`       | Remove all generated output directories                                                                              |
 
 ### Parameters

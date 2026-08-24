@@ -22,3 +22,18 @@ if {![info exists PDK]} {
 
 # Source top-level schematic xschemrc to pull in canonical library paths and macro libraries.
 source [file normalize [file join [file dirname [info script]] ../../schematic/xschem/xschemrc]]
+
+# Pin the netlist directory to the simulations folder of the loaded schematic
+if {![llength [info commands pin_netlist_dir]]} {
+  proc pin_netlist_dir {dir} {
+    set dir [file normalize $dir]
+    if {[string match */schematic/xschem $dir]} {
+      set dir [file join $dir ../../testbenches/xschem]
+    } elseif {![string match */testbenches/xschem $dir] && ![string match */cace/templates $dir]} {
+      return
+    }
+    set ::netlist_dir [file normalize [file join $dir simulations]]
+  }
+}
+pin_netlist_dir [file dirname [info script]]
+set load_file_postprocess {pin_netlist_dir [xschem get current_dirname]}

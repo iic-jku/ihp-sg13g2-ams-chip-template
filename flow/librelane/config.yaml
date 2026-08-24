@@ -348,7 +348,7 @@ MACROS:
     lef:
       - dir::../../macros/inverter/final/lef/inverter_top.lef
     vh:
-      - dir::../../macros/inverter/final/vh/inverter_top.v
+      - dir::../../macros/inverter/final/vh/inverter_top.vh
 #   lib:
 #     "*":
 #       - dir::../../macros/inverter/final/lib/inverter_top.lib
@@ -371,7 +371,7 @@ MACROS:
     lef:
       - dir::../../ip/sg13g2_ip__jku/final/lef/sg13g2_ip__jku.lef
     vh:
-      - dir::../../ip/sg13g2_ip__jku/final/vh/sg13g2_ip__jku.v
+      - dir::../../ip/sg13g2_ip__jku/final/vh/sg13g2_ip__jku.vh
     lib:
       "*":
         - dir::../../ip/sg13g2_ip__jku/final/lib/sg13g2_ip__jku.lib
@@ -386,7 +386,7 @@ MACROS:
     lef:
       - dir::../../ip/sg13g2_ip__jku_names/final/lef/sg13g2_ip__jku_names.lef
     vh:
-      - dir::../../ip/sg13g2_ip__jku_names/final/vh/sg13g2_ip__jku_names.v
+      - dir::../../ip/sg13g2_ip__jku_names/final/vh/sg13g2_ip__jku_names.vh
     lib:
       "*":
         - dir::../../ip/sg13g2_ip__jku_names/final/lib/sg13g2_ip__jku_names.lib

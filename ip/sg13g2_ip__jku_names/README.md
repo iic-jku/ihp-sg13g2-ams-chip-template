@@ -22,7 +22,7 @@ A names IP block for [Johannes Kepler University Linz](https://www.jku.at/), ren
 │  ├─ 📁 lib/
 │  │  └─ sg13g2_ip__jku_names.lib   # Liberty timing stub
 │  └─ 📁 vh/
-│     └─ sg13g2_ip__jku_names.v     # Verilog blackbox stub
+│     └─ sg13g2_ip__jku_names.vh    # Verilog blackbox stub
 └─ 📁 verification/
    └─ 📁 drc/                       # DRC reports
 ```
@@ -53,8 +53,9 @@ make all
 | `lef`         | Generate LEF macro (CLASS BLOCK, OBS on `$(LAYER_NAME)`) |
 | `lib`         | Generate Liberty timing stub (empty cell)                |
 | `verilog`     | Generate Verilog blackbox stub (no ports)                |
-| `klayout-drc` | Run KLayout DRC using `sak-drc.sh` (usage: `make klayout-drc [CELL=<cellname>] [DRC_LEVEL=<precheck|macro|regular>]`) |
+| `klayout-drc` | Run KLayout DRC using `sak-drc.sh` (usage: `make klayout-drc [CELL=<cellname>] [DRC_LEVEL=<precheck\|macro\|regular>]`) |
 | `magic-drc`   | Run Magic DRC using `sak-drc.sh` (usage: `make magic-drc [CELL=<cellname>]`)                                         |
+| `open`        | Browse this folder with `sak-open.py` and open each file in its tool      |
 | `clean`       | Remove all generated output directories                  |
 
 ### Parameters

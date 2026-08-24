@@ -111,7 +111,7 @@ value="
 .param VDD=1.5
 .csparam VDD=VDD
 .param Vcm=VDD/2
-.param temp=27
+.temp 27
 .param Cload=10p
 .param Rload=1k
 .options savecurrents klu method=gear reltol=1e-4 abstol=1e-15 gmin=1e-15
@@ -158,7 +158,7 @@ wrdata ../plot_simulations/data/@schname\\\\.txt
 "}
 C {devices/launcher.sym} 1720 -1330 0 0 {name=h2
 descr="Simulate" 
-tclcommand="xschem save; xschem netlist; xschem simulate"
+tclcommand="xschem save; xschem netlist; file mkdir $netlist_dir; write_data [save_params] $netlist_dir/[file rootname [file tail [xschem get current_name]]].save; xschem simulate"
 }
 C {title-3.sym} 0 0 0 0 {name=l2 author="Simon Dorrer" rev=1.0 lock=true}
 C {devices/launcher.sym} 1720 -1210 0 0 {name=h1
@@ -255,5 +255,6 @@ C {devices/gnd.sym} 1440 -840 0 0 {name=l17 lab=GND}
 C {inverter_top.sym} 1000 -520 0 0 {name=x1}
 C {devices/code_shown.sym} 1650 -1430 0 0 {name=SAVE only_toplevel=true
 format="tcleval( @value )"
-value=".include [file rootname [xschem get schname]].save
+value="
+.include [file rootname [file tail [xschem get schname]]].save
 "}

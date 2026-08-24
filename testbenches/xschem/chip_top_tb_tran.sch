@@ -273,17 +273,17 @@ value="
 .param IOVDD=3.3
 .param VDD=1.5
 .param Vcm=0.75
-.param temp=27
+.temp 27
 .param Cload=10p
 .param Rload=1k
 .param fclk=50e6
 .csparam fclk=fclk
-.options klu method=gear reltol=3e-3 vntol=1e-5 abstol=1e-11 chgtol=1e-11 cshunt=100f
+.options klu method=gear reltol=3e-3 vntol=1e-5 abstol=1e-11 chgtol=1e-11 cshunt=100f rshunt=1e15
 .control
 
 set num_threads=32
 
-* save all
+save all
 
 * User Constants
 let tstart = 0
@@ -326,7 +326,7 @@ wrdata ../plot_simulations/data/chip_top_tb_tran.txt
 "}
 C {devices/launcher.sym} 1530 -2060 0 0 {name=h2
 descr="Simulate" 
-tclcommand="xschem save; xschem netlist; xschem simulate"
+tclcommand="xschem save; xschem netlist; file mkdir $netlist_dir; write_data [save_params] $netlist_dir/[file rootname [file tail [xschem get current_name]]].save; xschem simulate"
 }
 C {devices/launcher.sym} 1530 -1940 0 0 {name=h1
 descr="Load waves" 
@@ -363,11 +363,15 @@ C {title-2.sym} 0 0 0 0 {name=l9 author="Simon Dorrer" rev=1.0 lock=true}
 C {devices/gnd.sym} 460 -380 0 0 {name=l14 lab=GND}
 C {vdd.sym} 420 -1200 0 0 {name=l16 lab=VDD}
 C {devices/lab_wire.sym} 580 -1200 3 1 {name=p3 sig_type=std_logic lab=counter1_value0}
-C {code_shown.sym} 1470 -2170 0 0 {name=PAD_MODELS
+C {code_shown.sym} 1470 -2230 0 0 {name=PAD_MODELS
 only_toplevel=true
-value="tcleval(
-.include $::PDK_ROOT/$::PDK/libs.ref/sg13g2_io/spice/sg13g2_io.spi
-)"
+value="
+* The PDK sg13g2_io.spi changed its subcircuit pin order in May 2026, but the
+* PDK Xschem pad symbols still carry the old order, which mis-wires the whole
+* padframe. Use the repo copy, which matches the symbols and is also the one
+* LibreLane and cocotb use.
+.include ../../../ip/sg13g2_io_custom/spice/sg13g2_io.spi
+"
 spice_ignore=false
       }
 C {devices/vsource.sym} 620 -2130 0 0 {name=VIO value=\{IOVDD\}}
@@ -416,3 +420,8 @@ C {devices/gnd.sym} 1120 -380 0 1 {name=l26 lab=GND}
 C {devices/vsource.sym} 1300 -470 0 0 {name=vsine2 spice_ignore=False value="sin(\{Vcm\} 10m 400k)"
 }
 C {devices/gnd.sym} 1300 -380 0 1 {name=l1 lab=GND}
+C {devices/code_shown.sym} 2320 -2230 0 0 {name=SAVE only_toplevel=true
+format="tcleval( @value )"
+value="
+.include [file rootname [file tail [xschem get schname]]].save
+"}

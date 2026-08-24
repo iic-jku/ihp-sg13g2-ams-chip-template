@@ -138,7 +138,7 @@ C {devices/gnd.sym} 120 -320 0 0 {name=l1 lab=GND}
 C {devices/title-3.sym} 0 0 0 0 {name=l3 author="Simon Dorrer" rev=1.0 lock=true}
 C {devices/launcher.sym} 1700 -1580 0 0 {name=h2
 descr="Simulate" 
-tclcommand="xschem save; xschem netlist; xschem simulate"
+tclcommand="xschem save; xschem netlist; file mkdir $netlist_dir; write_data [save_params] $netlist_dir/[file rootname [file tail [xschem get current_name]]].save; xschem simulate"
 }
 C {devices/launcher.sym} 1700 -1480 0 0 {name=h1
 descr="Load waves" 
@@ -147,13 +147,15 @@ tclcommand="xschem raw_read $netlist_dir/[file rootname [file tail [xschem get c
 C {code_shown.sym} 60 -1510 0 0 {name=NGSPICE
 only_toplevel=false
 value="
+*Post-Layout Simulation (PEX), used by the counter_top_pex DUT
+.include ../../../netlist/pex/counter_top_magic_pex_3.spice
 *True Mixed Signal Simulation (.xspice)
 .include ../../../netlist/xspice/counter_top.xspice
 .param VDD=1.5
-.param temp=27
+.temp 27
 .param fclk=50e6
 .csparam fclk=fclk
-.options savecurrents klu method=gear reltol=1e-4 abstol=1e-15 gmin=1e-15
+.options savecurrents klu method=gear reltol=1e-3 abstol=1e-12 gmin=1e-12 rshunt=1e14
 .control
 
 set num_threads=8
@@ -270,3 +272,12 @@ value=1k
 footprint=1206
 device=resistor
 m=1}
+C {devices/code_shown.sym} 60 -1630 0 0 {name=SAVE only_toplevel=true
+format="tcleval( @value )"
+value="
+.include [file rootname [file tail [xschem get schname]]].save
+"}
+C {counter_top.sym} 1320 -1140 0 0 {name=x2
+spice_ignore=true}
+C {counter_top_pex.sym} 1320 -860 0 0 {name=x3
+spice_ignore=true}
