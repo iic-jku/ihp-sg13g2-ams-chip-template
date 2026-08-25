@@ -278,7 +278,8 @@ The [inverter Makefile](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/
 | `make klayout-pex` / `magic-pex` (`EXT_MODE=<1\|2\|3>`) | Run parasitic extraction in C, CC, or full-RC mode.                     |
 | `make klayout-verify` / `magic-verify`            | Run DRC + LVS + PEX for a given cell.                                       |
 | `make lef` / `make lib` / `make verilog`          | Generate the LEF, the Liberty stub, and the Verilog stub for top-level integration.   |
-| `make build-top`                                  | Build the analog macro deliverables: LEF, LIB, Verilog stub, GDS and rendered layout image. |
+| `make check-boundary`                             | Check that the top cell layout carries the PR boundary box on layer 189 that the chip flow needs. |
+| `make build-top`                                  | Build the analog macro deliverables: PR boundary check, LEF, LIB, Verilog stub, GDS and rendered layout image. |
 | `make all`                                        | Run KLayout / Magic verification, the analog macro build flow, and all simulations. |
 | `make clean`                                      | Delete all generated files and folders of the macro, including the CACE outputs. |
 
@@ -530,7 +531,7 @@ The inverter design files are located in [`macros/inverter/`](https://github.com
 | [`layout/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/inverter/layout/)         | KLayout GDS files (`*.klay.gds`) and the exported `inverter_top.gds`.           |
 | [`testbenches/xschem/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/inverter/testbenches/xschem/) | Transient, ac open-loop, dc input sweep, and top-level transient testbenches.      |
 | [`netlist/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/inverter/netlist/)       | `schematic/` (CDL for KLayout LVS / SPICE for Magic + Netgen LVS), `layout/` (extracted for LVS), `pex/` (SPICE).           |
-| [`scripts/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/inverter/scripts/)       | Sizing notebooks, layout rendering.                 |
+| [`scripts/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/inverter/scripts/)       | Sizing notebooks (`sizing/`), the PR boundary check (`check_boundary.py`), and the PEX port check (`check_pex_ports.py`). |
 | [`verification/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/inverter/verification/) | `drc/`, `lvs/`, and `cace/` (process, mismatch, supply sweeps).                       |
 | [`final/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/inverter/final/)           | Build deliverables for the top-level integration (LEF, LIB, Verilog stub, GDS).          |
 | [`render/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/inverter/render/)         | Macro renders for documentation.                                                         |
@@ -647,6 +648,10 @@ Note that the above process and mismatch variation results are poor for an analo
 In the `inverter.yaml` characterisation file, more parameter sweeps can be added, for example, across temperature, supply voltages or load capacitance.
 :::
 
+::: {.callout-important}
+Do not `print()` from a CACE postprocess hook. The hooks in [`verification/cace/scripts/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/inverter/verification/cace/scripts/) post-process the raw Ngspice results before CACE evaluates them against the specification, and CACE 2.11.0 redirects their stdout into its own rich logger, which writes back to stdout. The first `print()` therefore recurses without end, and `make sim-cace` hangs instead of failing. That is why the debug prints in [`inverter_tb_ac.py`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/inverter/verification/cace/scripts/inverter_tb_ac.py) are commented out. Write intermediate values to a file if you need to inspect them.
+:::
+
 ## Transistor Sizing
 
 During simulation, it could happen that some specifications are not fulfilled and that the inverter must be resized. In this tutorial, the inverter is sized with the $g_\mathrm{m}/I_\mathrm{D}$ method (see [Transistor Sizing Using $g_\mathrm{m}/I_\mathrm{D}$ Methodology](https://iic-jku.github.io/analog-circuit-design/aicd.html#sec-gmid-method) for theoretical background). Instead of relying on textbook square-law equations, the method looks up the actual device behaviour from pre-characterised SPICE simulations, parameterised by $g_\mathrm{m}/I_\mathrm{D}$. An overview of these techsweeps can be found in the folder [`doc/sizing/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/doc/sizing). The chosen $g_\mathrm{m}/I_\mathrm{D}$ point sets the inversion level of the transistor and therefore the trade-off between intrinsic gain (high $g_\mathrm{m}/I_\mathrm{D}$, weak inversion) and bandwidth (low $g_\mathrm{m}/I_\mathrm{D}$, strong inversion). An overview of the $g_\mathrm{m}/I_\mathrm{D}$ trade-offs can be found [here](https://iic-jku.github.io/analog-circuit-design/aicd.html#sec-tradeoffs-saturation). For each chosen operating point the lookup tables return all relevant figures of merit ($I_\mathrm{D}/W$, $g_\mathrm{m}/g_\mathrm{ds}$, $g_\mathrm{m}/C_\mathrm{gg}$, $S_\mathrm{TH}$, etc.) at the actual bias condition, which is then used to compute $W$ for a given drain current.
@@ -720,7 +725,7 @@ $$
 The notebook is fully parametric. Changing $L$, the target $g_\mathrm{m}/I_\mathrm{D}$ or $I_\mathrm{out}$ and re-running the cells immediately produces a new sizing point, so it can be used as a starting template for sizing other simple analog blocks with the ihp-sg13g2 lookup tables. Try it out yourself by decreasing the transistor length to $L = 0.5\,\mathrm{\mu m}$ and see how the small-signal parameters and the resulting open-loop gain and cut-off frequency change. What would you expect based on the trade-offs above?
 :::
 
-## Inspect / Edit the Layout
+## Inspect / Edit the Layout {#sec-inspect-layout}
 
 After the schematic is finalised and the design targets are met, the layout can be created. The layout of the `inverter` cell is hierarchical, and the top-level cell `inverter_top` contains four instances of the `inverter` cell. Around the 4-channel inverter layout, a power ring is drawn on `Metal5` and `TopMetal1` layers, which is connected to the `VDD` and `VSS` pins of the four inverters. This power ring is required for top-level integration, connecting the macro power to the chip's PDN.
 
@@ -731,6 +736,10 @@ ke layout/inverter_top.klay.gds
 ```
 
 After modifying the layout, export a clean `.gds` file (for example `inverter_top.gds`) by pressing `File > Export Layout For Tapeout`. All verification flows (DRC, LVS, and PEX with both KLayout and Magic) accept either `.gds` or `.klay.gds`, while the build targets (LEF export, GDS copy, and rendering) use the exported `.gds`.
+
+::: {.callout-important}
+Never delete the box on the `prBoundary` layer (`189/0`) that frames the macro, and make sure a re-drawn layout still carries it. The chip flow derives the bounding box of every macro from this layer: Magic maps all datatypes of layer 189 to its boundary layer, and LibreLane's `Magic.StreamOut` step reads that boundary back for every macro it places. A layout without the box fails the whole chip build with `Failed to extract PR boundary from GDSII view of macro 'inverter_top'`, two flows away from the layout that caused it. Treat the box as part of the layout: keep it in the KLayout editing source `inverter_top.klay.gds` so every re-export carries it, and hide it at render time with `sak-render.py -x` if it spoils a chip shot. `make check-boundary` catches a missing box in the macro build, see @sec-build-deliverables.
+:::
 
 ![`inverter_top` layout in KLayout.](fig/inverter_top/inverter_top_black.png){#fig-inverter-top-layout width=75%}
 
@@ -833,16 +842,19 @@ make klayout-verify [CELL=<cellname>]   # default CELL=inverter_top
 make magic-verify [CELL=<cellname>]     # default CELL=inverter_top
 ```
 
-## Build Deliverables for Top-Level Integration
+## Build Deliverables for Top-Level Integration {#sec-build-deliverables}
 
 For the inverter to be picked up by the top-level LibreLane flow, it must expose a **[LEF](https://en.wikipedia.org/wiki/LEF/DEF)** (abstract pin / blockage view), a **[Liberty timing library](https://chipverify.com/rtl-synthesis/introduction-to-liberty-format)** stub, and a **Verilog stub**. The Verilog stub is referenced by [`rtl/chip_top.sv`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/rtl/chip_top.sv) for top-level integration. These files can be built with individual Makefile targets or via `build-top`.
 
 ```sh
-make lef          # final/lef/inverter_top.lef
-make lib          # final/lib/inverter_top.lib
-make verilog      # final/vh/inverter_top.vh
-make build-top    # the three steps above plus copy-gds and render-gds
+make check-boundary   # check the PR boundary box on layer 189 in layout/inverter_top.gds
+make lef              # final/lef/inverter_top.lef
+make lib              # final/lib/inverter_top.lib
+make verilog          # final/vh/inverter_top.vh
+make build-top        # the four steps above plus copy-gds and render-gds
 ```
+
+`make build-top` runs `check-boundary` first, so a top cell without the PR boundary box fails the macro build in a second with a message that names the layer, instead of failing the chip flow much later (see the callout in @sec-inspect-layout). The check runs [`scripts/check_boundary.py`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/inverter/scripts/check_boundary.py), which also reports the size of the box and warns when the drawn geometry extends beyond it, because the top-level flow places the macro by the boundary and anything outside it may overlap a neighbour.
 
 `make build-top` also copies the GDS to [`final/gds/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/inverter/final/gds/) and renders the macro to [`render/img/inverter_top_white.png` and `render/img/inverter_top_black.png`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/inverter/render/img/), as displayed in @fig-inverter-top-layout.
 
@@ -1466,7 +1478,7 @@ Repeat @sec-analog for a three-stage ring oscillator with an output buffer, deri
 3. Update the symbol of the macro ([`schematic/xschem/inverter_top.sym`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/inverter/schematic/xschem/inverter_top.sym)) to expose a single output net, instead of `vin1..vin4` and `vout1..vout4`. The PEX symbol `inverter_top_pex.sym` is rebuilt from it by `make symbol-pex`, which the PEX targets run automatically.
 4. Update the transient testbench ([`testbenches/xschem/inverter_top_tb_tran.sch`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/inverter/testbenches/xschem/inverter_top_tb_tran.sch)) to measure the oscillation frequency. Delete testbenches that are no longer relevant.
 5. [Optional] Adapt the CACE [`inverter.yaml`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/inverter/verification/cace/inverter.yaml) to characterise the oscillation frequency across PVT.
-6. Update the layout in KLayout. The existing `inverter_top.klay.gds` can be used as a starting point, but the internal routing has to be modified to form the ring and the buffer stage. After editing, export a clean `ringosc_top.gds`.
+6. Update the layout in KLayout. The existing `inverter_top.klay.gds` can be used as a starting point, but the internal routing has to be modified to form the ring and the buffer stage. After editing, export a clean `ringosc_top.gds`. Keep the box on the `prBoundary` layer (`189/0`) and resize it with the macro, otherwise the top-level flow cannot place it. `make check-boundary` verifies this.
 7. Re-run the verification chain, `make klayout-verify`, `make magic-verify`, and `make build-top`.
 
 ## Exercise 4: Update Pinout and Floorplan of the Top-Level {#sec-exercise4}
