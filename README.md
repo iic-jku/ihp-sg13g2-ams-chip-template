@@ -93,8 +93,10 @@ A designer-oriented description of this chip can be found in [doc/](doc/):
 │  ├─ 📁 klayout/
 │  ├─ 📁 librelane/
 │  ├─ 📁 sizing/
+│  ├─ 📁 verilog/
 │  ├─ floorplan.md
 │  ├─ pinout.md
+│  ├─ README.md
 │  └─ specifications.md
 ├─ 📁 flow/
 │  ├─ 📁 artistic/
