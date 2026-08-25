@@ -5,6 +5,9 @@
 # The layout netlist is written by LibreLane from the RTL port list, so it is the authoritative
 # pin list of the chip. A pad added in the RTL that never reached the symbol (or a pin whose name
 # drifted apart, e.g. IOVSS labelled VSS) shows up here instead of failing much later in PEX.
+#
+# The comparison is by name, not by count: a chip top-level symbol draws one pin per bond pad, so
+# several pads legitimately share one port. Those repeats are reported, not treated as an error.
 
 import argparse
 import os
@@ -101,16 +104,14 @@ def main():
     print(f"Symbol file:   {args.sym_file}")
     print(f"Netlist file:  {args.netlist_file}")
     print(f"Subcircuit:    {cell}")
-    print(f"Sym pins:      {len(pins)}")
+    print(f"Sym pins:      {len(pins)} ({len(set(pins))} unique)")
     print(f"Netlist ports: {len(ports)}")
 
+    for pin in sorted({p for p in pins if pins.count(p) > 1}):
+        print(f"[INFO] {pins.count(pin)} pads share the pin name '{pin}', "
+              f"they are one port and the PEX symbol keeps one of them.")
+
     problems = []
-    duplicates = sorted({p for p in pins if pins.count(p) > 1})
-    if duplicates:
-        problems.append(
-            f"Symbol declares these pins more than once: {duplicates}. A .subckt port list "
-            f"cannot carry a name twice, one pin per net is needed."
-        )
     missing_in_sym = sorted(set(ports) - set(pins))
     if missing_in_sym:
         problems.append(f"Netlist ports without a symbol pin: {missing_in_sym}")
@@ -122,7 +123,7 @@ def main():
         print(f"[ERROR] {problem}", file=sys.stderr)
     if problems:
         return 1
-    print(f"[INFO] Symbol and layout netlist agree on all {len(pins)} ports.")
+    print(f"[INFO] Symbol and layout netlist agree on all {len(ports)} ports.")
     return 0
 
 

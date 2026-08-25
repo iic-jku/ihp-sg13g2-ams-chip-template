@@ -97,6 +97,7 @@ T {AMS Chip} -85 -145 0 0 0.7 0.7 {}
 T {Simon Dorrer
 Harald Pretl} -85 -35 0 0 0.5 0.5 {}
 T {Johannes Kepler University Linz, Austria} -160 50 0 0 0.3 0.3 {}
+T {IOVSS} -240 21 0 0 0.2 0.2 {}
 T {VSS} -240 141 0 0 0.2 0.2 {}
 T {output_PAD[16]} -232.25 242.5 1 1 0.2 0.2 {}
 T {output_PAD[4]} -206 242.5 1 1 0.2 0.2 {}

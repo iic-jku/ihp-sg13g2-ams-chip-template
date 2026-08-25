@@ -784,13 +784,15 @@ make symbol-pex                  # build chip_top_pex.sym from chip_top.sym
 make symbol-pex CELL=<cellname>  # build the PEX symbol of another cell
 ```
 
-The generated symbol is a copy of `<CELL>.sym` with two changes: `type=subcircuit` becomes `type=primitive`, and the pins named in `PEX_MERGED_PINS` are dropped. Everything else (pin boxes and their order, `format`, `spectre_format`, `template`, graphics) is inherited, which is exactly what the PEX flow needs:
+The generated symbol is a copy of `<CELL>.sym` with two changes: `type=subcircuit` becomes `type=primitive`, and the pin boxes the extracted netlist has no port for are dropped. Everything else (the remaining pin boxes and their order, every text label, `format`, `spectre_format`, `template`, graphics) is inherited, which is exactly what the PEX flow needs:
 
 - **`type=primitive`** stops Xschem from descending into a schematic of the same name. There is no `<CELL>_pex.sch`, so the instance line is emitted as it stands and the subcircuit comes from the `.include`d PEX netlist instead.
 - **`format="@name @pinlist @symname"`** makes the instance reference `@symname`, which resolves to `<CELL>_pex`, exactly the `.subckt` name the PEX flow writes.
 - **The pin order** is what `sak-pin-reorder.py` reorders the extracted netlist to, so it has to be that of the cell symbol.
 
-`PEX_MERGED_PINS` (default `IOVSS`) names the supply pins that the extraction does not report as ports of their own. `IOVSS` and `VSS` are separate nets in [chip_top.sv](rtl/chip_top.sv), in the LibreLane netlist `netlist/spice/chip_top.spice` and in the pin labels of the GDS, but both ground rings tap the p-substrate, so the flat Magic extraction sees one ground node and names it `VSS`. The extracted `.subckt` has no `IOVSS` port, and a PEX symbol that still carried the pin would fail the reorder with `[ERROR] Pin count mismatch`. A `.subckt` port list cannot carry a name twice either, so two pads on one ground net are one pin, not two. Set the variable to an empty string for a cell whose supplies do stay separate: `make magic-pex PEX_MERGED_PINS=`.
+`PEX_MERGED_PINS` (default `IOVSS`) names the supply pins that the extraction does not report as ports of their own. `IOVSS` and `VSS` are separate nets in [chip_top.sv](rtl/chip_top.sv), in the LibreLane netlist `netlist/spice/chip_top.spice` and in the pin labels of the GDS, but both ground rings tap the p-substrate, so the flat Magic extraction sees one ground node and names it `VSS`. The extracted `.subckt` has no `IOVSS` port, and a PEX symbol that still carried the pin would fail the reorder with `[ERROR] Pin count mismatch`. Set the variable to an empty string for a cell whose supplies do stay separate: `make magic-pex PEX_MERGED_PINS=`.
+
+[`scripts/prune_pex_symbol.py`](scripts/prune_pex_symbol.py) drops those pins and, for the same reason, every repeat of a pin name after the first: a `.subckt` port list holds one entry per net, so pads that share a supply share a port. Only the pin boxes go and every text label stays, so `<CELL>_pex.sym` still reads as the full pad ring while carrying exactly the pins the netlist has a port for.
 
 `symbol-pex` runs automatically at the start of `klayout-pex` and `magic-pex`, so the symbol is rebuilt from the current `<CELL>.sym` before every extraction and cannot go stale when a pin is added, removed or renamed. Calling it by hand is only needed to refresh the symbol without re-running an extraction. Anything added to the generated file by hand is lost at the next extraction, so make the change in `<CELL>.sym` instead.
 
@@ -812,11 +814,12 @@ make check-ports                  # check chip_top.sym against netlist/spice/chi
 make check-ports CELL=<cellname>  # check the symbol of another cell
 ```
 
-The layout netlist is generated from the port list of [chip_top.sv](rtl/chip_top.sv), so it is the authoritative pin list of the chip, while `chip_top.sym` is hand-drawn. [`scripts/check_top_ports.py`](scripts/check_top_ports.py) reports three kinds of drift and fails the target on each of them:
+The layout netlist is generated from the port list of [chip_top.sv](rtl/chip_top.sv), so it is the authoritative pin list of the chip, while `chip_top.sym` is hand-drawn. [`scripts/check_top_ports.py`](scripts/check_top_ports.py) reports two kinds of drift and fails the target on either of them:
 
-- A pin the symbol declares twice. This cannot be netlisted, because a `.subckt` port list holds one entry per net.
 - A netlist port with no symbol pin, for example a pad added in the RTL that never reached the drawing.
 - A symbol pin with no netlist port, for example a pin whose name drifted apart from the RTL.
+
+A pin name carried by several pads is reported and not rejected, since those pads are one net and therefore one port.
 
 A 1-bit bus is reconciled first: Yosys flattens `input_PAD [0:0]` to the scalar `input_PAD`, which matches the symbol pin `input_PAD[0]`.
 

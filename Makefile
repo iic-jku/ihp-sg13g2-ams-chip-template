@@ -39,7 +39,7 @@ MINDELAY ?= 1
 DRC_LEVEL ?= macro
 
 # Supply pins that the flat PEX extraction merges into one node, they are dropped from the generated <CELL>_pex.sym so it matches the extracted netlist.
-# IOVSS and VSS share the p-substrate, so a flat extraction reports one ground node named VSS and the PEX netlist carries no IOVSS port.
+# IOVSS and VSS share the p-substrate, so a flat extraction reports one ground node named VSS and the PEX netlist carries no IOVSS port. Pads that repeat a pin name are dropped down to one pin the same way, only the pin boxes go and the labels stay.
 # Override with: make <target> PEX_MERGED_PINS="<pin> <pin> ..."
 PEX_MERGED_PINS ?= IOVSS
 
@@ -399,13 +399,7 @@ symbol-pex: ## Build the Xschem PEX symbol <CELL>_pex.sym from <CELL>.sym (usage
 			echo "ERROR: $(XSCHEM_SCH_DIR)/$(CELL).sym declares neither type=subcircuit nor type=primitive!"; \
 			exit 1; \
 		fi; \
-		for pin in $(PEX_MERGED_PINS); do \
-			if grep -q "^B 5 .*{name=$$pin dir=" $(XSCHEM_SCH_DIR)/$(CELL)_pex.sym; then \
-				sed -i "/^B 5 .*{name=$$pin dir=/d" $(XSCHEM_SCH_DIR)/$(CELL)_pex.sym; \
-				sed -i "/^T {$$pin} /d" $(XSCHEM_SCH_DIR)/$(CELL)_pex.sym; \
-				echo "Dropped pin $$pin from $(CELL)_pex.sym, it has no own port in the extracted netlist."; \
-			fi; \
-		done; \
+		python3 $(SCRIPTS_DIR)/prune_pex_symbol.py $(XSCHEM_SCH_DIR)/$(CELL)_pex.sym --merged $(PEX_MERGED_PINS); \
 		echo "Wrote $(XSCHEM_SCH_DIR)/$(CELL)_pex.sym (copy of $(CELL).sym with type=primitive)."; \
 	fi
 .PHONY: symbol-pex
