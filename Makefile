@@ -38,6 +38,11 @@ MINDELAY ?= 1
 # Override with: make <target> DRC_LEVEL=<precheck|macro|regular>
 DRC_LEVEL ?= macro
 
+# Supply pins that the flat PEX extraction merges into one node, they are dropped from the generated <CELL>_pex.sym so it matches the extracted netlist.
+# IOVSS and VSS share the p-substrate, so a flat extraction reports one ground node named VSS and the PEX netlist carries no IOVSS port.
+# Override with: make <target> PEX_MERGED_PINS="<pin> <pin> ..."
+PEX_MERGED_PINS ?= IOVSS
+
 # Floating-point precision (significant digits) for Xschem's ev function
 # Override with: make <target> EV_PRECISION=<digits>
 EV_PRECISION ?= 5
@@ -85,7 +90,7 @@ FLOW_FINAL_DIR  		:= flow/final
 
 # Help Target
 help: ## Show this help message
-	@echo 'Usage: make <target> [CELL=<cellname>] [EXT_MODE=<1|2|3>] [THRESHOLD=<mOhm>] [MINRES=<mOhm>] [MINDELAY=<ps>] [DRC_LEVEL=<precheck|macro|regular>] [EV_PRECISION=<digits>] [WAVEFORM_VIEWER=<gtkwave|surfer>] [TB=<testbenchname>] [SCRIPT=<scriptname>] [VERSION=<version>] [OPEN_ARGS=<options>]'
+	@echo 'Usage: make <target> [CELL=<cellname>] [EXT_MODE=<1|2|3>] [THRESHOLD=<mOhm>] [MINRES=<mOhm>] [MINDELAY=<ps>] [DRC_LEVEL=<precheck|macro|regular>] [PEX_MERGED_PINS="<pin> ..."] [EV_PRECISION=<digits>] [WAVEFORM_VIEWER=<gtkwave|surfer>] [TB=<testbenchname>] [SCRIPT=<scriptname>] [VERSION=<version>] [OPEN_ARGS=<options>]'
 	@echo ''
 	@echo 'Available targets:'
 	@grep -E '^[a-zA-Z0-9_.-]+:.*## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*## "}; {printf "  %-20s %s\n", $$1, $$2}'
@@ -94,6 +99,7 @@ help: ## Show this help message
 	@echo 'EXT_MODE defaults to 1 (C-decoupled). 2=C-coupled, 3=full-RC.'
 	@echo 'THRESHOLD/MINRES/MINDELAY are full-RC (EXT_MODE=3) extresist settings for magic-pex (defaults 10000 mOhm / 1000 mOhm / 1 ps).'
 	@echo 'DRC_LEVEL defaults to macro. Sets the KLayout DRC level for klayout-drc (precheck|macro|regular).'
+	@echo 'PEX_MERGED_PINS defaults to IOVSS. Lists the supply pins that the flat extraction merges, they are dropped from the generated PEX symbol.'
 	@echo 'EV_PRECISION defaults to 5 significant digits for Xschem ev function.'
 	@echo 'WAVEFORM_VIEWER defaults to gtkwave. Use surfer to launch Surfer instead.'
 	@echo 'TB selects the Xschem testbench for sim-gl-xschem (default: <CELL>_tb_tran).'
@@ -393,13 +399,25 @@ symbol-pex: ## Build the Xschem PEX symbol <CELL>_pex.sym from <CELL>.sym (usage
 			echo "ERROR: $(XSCHEM_SCH_DIR)/$(CELL).sym declares neither type=subcircuit nor type=primitive!"; \
 			exit 1; \
 		fi; \
+		for pin in $(PEX_MERGED_PINS); do \
+			if grep -q "^B 5 .*{name=$$pin dir=" $(XSCHEM_SCH_DIR)/$(CELL)_pex.sym; then \
+				sed -i "/^B 5 .*{name=$$pin dir=/d" $(XSCHEM_SCH_DIR)/$(CELL)_pex.sym; \
+				sed -i "/^T {$$pin} /d" $(XSCHEM_SCH_DIR)/$(CELL)_pex.sym; \
+				echo "Dropped pin $$pin from $(CELL)_pex.sym, it has no own port in the extracted netlist."; \
+			fi; \
+		done; \
 		echo "Wrote $(XSCHEM_SCH_DIR)/$(CELL)_pex.sym (copy of $(CELL).sym with type=primitive)."; \
 	fi
 .PHONY: symbol-pex
 
+check-ports: ## Compare the pins of <CELL>.sym with the ports of the layout SPICE netlist (usage: make check-ports [CELL=<cellname>])
+	python3 $(SCRIPTS_DIR)/check_top_ports.py $(XSCHEM_SCH_DIR)/$(CELL).sym $(NET_SPICE_DIR)/$(CELL).spice
+.PHONY: check-ports
+
 klayout-pex: ## Run Parasitic Extraction with KPEX of the CELL cell (usage: make klayout-pex [CELL=<cellname>] [EXT_MODE=<1|2|3>])
 	mkdir -p $(NET_PEX_DIR)
 	$(MAKE) symbol-pex CELL=$(CELL)
+	$(MAKE) check-ports CELL=$(CELL)
 	PDK_UNDERSCORED=$$(echo $$PDK | sed -e 's/-/_/g'); \
 	case $(EXT_MODE) in \
 		1) echo "WARNING: KPEX does not support C-decoupled (C) mode yet, using C-coupled (CC) mode instead."; KPEX_MODE=CC ;; \
@@ -433,6 +451,7 @@ klayout-pex: ## Run Parasitic Extraction with KPEX of the CELL cell (usage: make
 magic-pex: ## Run Parasitic Extraction with Magic of the CELL cell (usage: make magic-pex [CELL=<cellname>] [EXT_MODE=<1|2|3>] [THRESHOLD=<mOhm>] [MINRES=<mOhm>] [MINDELAY=<ps>])
 	mkdir -p $(NET_PEX_DIR)
 	$(MAKE) symbol-pex CELL=$(CELL)
+	$(MAKE) check-ports CELL=$(CELL)
 	sak-pex.sh -d -m $(EXT_MODE) -n $(CELL)_pex -t $(THRESHOLD) -r $(MINRES) -y $(MINDELAY) -w $(NET_PEX_DIR) $(LAY_DIR)/$(CELL).gds.gz
 	mv $(NET_PEX_DIR)/$(CELL).pex.spice $(NET_PEX_DIR)/$(CELL)_magic_pex_$(EXT_MODE).spice
 	rm -f $(NET_PEX_DIR)/pex_$(CELL).tcl
