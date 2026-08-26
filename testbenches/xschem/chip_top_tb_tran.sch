@@ -268,7 +268,7 @@ N 1300 -640 1300 -500 {lab=inv2_vin2}
 C {devices/code.sym} 1760 -2070 0 0 {name=NGSPICE
 only_toplevel=true 
 value="
-.include ../../../verification/pex/chip_top_magic_pex_1.spice
+.include ../../../netlist/pex/chip_top_magic_pex_1.spice
 .include ../../../macros/counter/netlist/xspice/counter_top.xspice
 .param IOVDD=3.3
 .param VDD=1.5
