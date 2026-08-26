@@ -42,7 +42,7 @@ SPDX-FileCopyrightText = "2026 Simon Dorrer and Harald Pretl"
 SPDX-License-Identifier = "Apache-2.0 WITH SHL-2.1"
 
 [[annotations]]
-path = ["macros/counter/fpga/README.md", "macros/counter/fpga/counter_top.asc", "macros/counter/fpga/counter_top.bin", "macros/counter/fpga/counter_top.json", "macros/counter/flow/librelane/pin_order.cfg"]
+path = ["macros/counter/fpga/README.md", "macros/counter/flow/librelane/pin_order.cfg"]
 SPDX-FileCopyrightText = "2026 Simon Dorrer and Harald Pretl"
 SPDX-License-Identifier = "Apache-2.0 WITH SHL-2.1"
 

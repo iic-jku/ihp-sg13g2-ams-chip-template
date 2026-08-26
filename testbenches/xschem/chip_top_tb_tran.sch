@@ -214,7 +214,7 @@ logy=0
 linewidth_mult=3
 autoload=0
 digital=1}
-T {Testbench for transient analysis - AMS Chip} 1105 -2385 0 0 1 1 {}
+T {Testbench for transient analysis - AMS Chip - IHP G2 PDK} 1005 -2385 0 0 1 1 {}
 N 420 -2200 420 -2160 {lab=VDD}
 N 420 -2100 420 -2060 {lab=GND}
 N 420 -1600 420 -1560 {lab=GND}
@@ -268,7 +268,7 @@ N 1300 -640 1300 -500 {lab=inv2_vin2}
 C {devices/code.sym} 1760 -2070 0 0 {name=NGSPICE
 only_toplevel=true 
 value="
-*.include ../../../verification/pex/chip_top_pex.spice
+.include ../../../netlist/pex/chip_top_magic_pex_1.spice
 .include ../../../macros/counter/netlist/xspice/counter_top.xspice
 .param IOVDD=3.3
 .param VDD=1.5
