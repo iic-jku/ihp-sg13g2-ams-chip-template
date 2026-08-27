@@ -26,9 +26,14 @@
 │  └─ 📁 vh/
 │     └─ inverter_top.vh
 ├─ 📁 layout/
-│  ├─ *.gds
-│  ├─ *.klay.gds
-│  └─ inverter_top.gds
+│  ├─ 📁 klayout/
+│  │  ├─ *.gds
+│  │  ├─ *.klay.gds
+│  │  ├─ *.klay.klib
+│  │  └─ inverter_top.gds
+│  └─ 📁 magic/
+│     ├─ *.mag
+│     └─ README.md
 ├─ 📁 netlist/
 │  ├─ 📁 layout/
 │  │  ├─ *.cir
@@ -161,19 +166,25 @@ At most 400 buttons are drawn at once, because each one is an X window, and what
 
 ### Layout Sources and the Exported Tapeout GDS
 
-`layout/<TOP>.klay.gds` is the source of truth. It is the KLayout editing source: it references the PDK PCells and pulls the `inverter` cell in as a library through `layout/<TOP>.klay.klib`, so every device is still live and editable. `layout/<TOP>.gds` is exported from it with `File > Export Layout For Tapeout`, which resolves every PCell and library reference into a static cell, and it is what every build and sign-off target reads.
+The layout sources live in one folder per drawing tool, `layout/klayout/` and `layout/magic/`, the same way the schematics live in `schematic/xschem/`. A cell is drawn in one of the two, the Makefile finds it in either, and nothing else in the flow depends on the choice. The tools get a folder each because a Magic hierarchy also carries the device cells Magic generates for every placed device (`sg13g2_*_<random>.mag`), which in a shared folder would bury the handful of files that are actually the design. The inverter of this template is drawn in KLayout, so `layout/magic/` holds only its [README](layout/magic/README.md).
+
+Whichever tool draws it, the rule is the same: the editing source is the source of truth, and the `<TOP>.gds` exported next to it is what the build targets read.
+
+**KLayout.** `layout/klayout/<TOP>.klay.gds` is the editing source. It references the PDK PCells and pulls the `inverter` cell in as a library through `layout/klayout/<TOP>.klay.klib`, so every device is still live and editable. `layout/klayout/<TOP>.gds` is exported from it with `File > Export Layout For Tapeout`, which resolves every PCell and library reference into a static cell.
+
+**Magic.** `layout/magic/<TOP>.mag` is the editing source, together with the generated device cells beside it. `layout/magic/<TOP>.gds` is exported from it with `make export-gds`, see [Export GDS](#export-gds).
 
 > [!IMPORTANT]
-> Re-export after every layout change and never hand-edit `layout/<TOP>.gds`. Keeping the two in step by editing both is how they drift apart, and the drift is invisible because the sign-off targets only look at the exported file.
+> Re-export after every layout change and never hand-edit the exported `<TOP>.gds`. Keeping the two in step by editing both is how they drift apart, and the drift is invisible because the sign-off targets only look at the exported file.
 
 The export re-evaluates the PCells against the **installed** PDK, so device geometry can change even though nobody touched the editing source, and the exported file is the only place that shows it. The sibling SG13CMOS5L template hit this for real: for the identical stored parameters its `SG13_dev` `pmos` draws the `NWell` (`31/0`) 0.11 µm tighter on every side than the geometry frozen into its exported GDS, which pulled the two mirrored pmos wells away from the hand-drawn `NWell` straps that bridge them and produced four `NW.b1` markers (min. PWell width between NWell regions) that no sign-off target saw. Measured on the 2026.08 container, this PDK still draws the wider well, so the two are not interchangeable: a layout carried between the templates has to be re-exported under the target PDK and re-checked, not copied. Re-run DRC, LVS and PEX after every export.
 
 
-### Layout File Extension Usage
+### Layout File Lookup
 
-The Makefile defines a `_GDS_EXT` variable that auto-selects the layout file extension: it prefers `.gds` when available, and falls back to `.klay.gds` otherwise.
+No target names a layout folder. The Makefile resolves the file for a cell in two variables, both of which search `layout/klayout/` first and `layout/magic/` second, so a cell drawn in either tool is found without an override:
 
-- Targets that use `layout/<name>.$(_GDS_EXT)` and work with either `.gds` or `.klay.gds` (the `sak` scripts derive the GDS top cell name from the `<name>.klay.gds` naming convention):
+- `_CELL_GDS` resolves `<CELL>` for the sign-off targets. It prefers the exported `<CELL>.gds` and falls back to the KLayout editing source `<CELL>.klay.gds`, so these targets work with either (the `sak` scripts derive the GDS top cell name from the `<name>.klay.gds` naming convention):
   - `klayout-lvs`
   - `klayout-drc`
   - `klayout-pex`
@@ -181,11 +192,13 @@ The Makefile defines a `_GDS_EXT` variable that auto-selects the layout file ext
   - `magic-drc`
   - `magic-pex`
 
-- Build targets always use `layout/<name>.gds`:
+- `_TOP_GDS` resolves the exported `<TOP>.gds` only, never the editing source, for the build targets:
   - `check-boundary`
   - `lef`
   - `copy-gds`
   - `render-gds`
+
+Both are resolved per cell, so cells can mix `.gds` and `.klay.gds` within one macro. When neither folder holds a match, the Makefile stops with a message naming the files it looked for, instead of passing a non-existent path to a tool.
 
 
 ### Run Xschem Testbench Simulation
@@ -290,20 +303,33 @@ make build-top
 ```
 
 
+### Export GDS
+
+Exports the tapeout GDS of a Magic layout: loads `layout/magic/<TOP>.mag` and writes `layout/magic/<TOP>.gds` next to it, which is the file the build targets read.
+
+```sh
+make export-gds
+```
+
+Magic runs from inside `layout/magic/` so the subcells of the hierarchy resolve, and it starts on the project `.magicrc` when that folder has one, otherwise on the PDK default `$PDK_ROOT/$PDK/libs.tech/magic/ihp-sg13g2.magicrc`.
+
+The target refuses to run when there is no `layout/magic/<TOP>.mag`, which is the case in this template: the inverter is drawn in KLayout, and a KLayout layout is exported from the GUI with `File > Export Layout For Tapeout` instead. `build-top` deliberately does not call this target, so that both flows are driven the same way, see [Layout Sources and the Exported Tapeout GDS](#layout-sources-and-the-exported-tapeout-gds).
+
+
 ### PR Boundary Check
 
-Checks that the top cell of `layout/<TOP>.gds` draws the PR boundary box on layer 189 (`prBoundary`). `build-top` runs it first:
+Checks that the top cell of the exported `<TOP>.gds` draws the PR boundary box on layer 189 (`prBoundary`). `build-top` runs it first:
 
 ```sh
 make check-boundary
 ```
 
-The chip flow derives the bounding box of every macro from this layer: Magic maps all datatypes of layer 189 to its boundary, and LibreLane's `Magic.StreamOut` runs `get_bbox.tcl` on every macro it places. A layout without the box fails the whole chip build with `Failed to extract PR boundary from GDSII view of macro '<TOP>'`, two flows away from the layout that caused it. Treat the box as part of the layout: never delete it as clutter, keep it in the KLayout editing source (`<TOP>.klay.gds`) so every re-export carries it, and hide it at render time with `sak-render.py -x` if it spoils a chip shot. The check runs [`scripts/check_boundary.py`](scripts/check_boundary.py), which also warns when the drawn geometry extends beyond the boundary box.
+The chip flow derives the bounding box of every macro from this layer: Magic maps all datatypes of layer 189 to its boundary, and LibreLane's `Magic.StreamOut` runs `get_bbox.tcl` on every macro it places. A layout without the box fails the whole chip build with `Failed to extract PR boundary from GDSII view of macro '<TOP>'`, two flows away from the layout that caused it. Treat the box as part of the layout: never delete it as clutter, keep it in the editing source (`<TOP>.klay.gds` or `<TOP>.mag`) so every re-export carries it, and hide it at render time with `sak-render.py -x` if it spoils a chip shot. The check runs [`scripts/check_boundary.py`](scripts/check_boundary.py), which also warns when the drawn geometry extends beyond the boundary box.
 
 
 ### Export LEF
 
-Exports a LEF file (`final/lef/<TOP>.lef`) from the top-level layout GDS in `layout/` using Magic with the `-hide` option:
+Exports a LEF file (`final/lef/<TOP>.lef`) from the exported top-level layout GDS using Magic with the `-hide` option:
 
 ```sh
 make lef
@@ -343,7 +369,7 @@ make verilog
 
 ### Copy GDS
 
-Copies the top-level GDS from `layout/` to `final/gds/`:
+Copies the exported top-level GDS from its layout folder to `final/gds/`:
 
 ```sh
 make copy-gds
@@ -361,9 +387,9 @@ make render-gds
 
 ### Design Rule Check (DRC)
 
-Runs DRC on the layout in `layout/`. Both flows use `sak-drc.sh`.
+Runs DRC on the layout of the macro. Both flows use `sak-drc.sh`.
 
-- `klayout-drc` and `magic-drc` use `layout/<CELL>.$(_GDS_EXT)` (`.gds` if present, otherwise `.klay.gds`)
+- `klayout-drc` and `magic-drc` use `$(_CELL_GDS)` (the exported `.gds` if present, otherwise `.klay.gds`), see [Layout File Lookup](#layout-file-lookup)
 
 Reports are written into per-cell run folders: `verification/drc/<CELL>.magic.drc/` (Magic) and `verification/drc/<CELL>.klayout.drc/` (KLayout, `.lyrdb`). The run folders are wiped at the start of each run, so they always reflect the latest run only.
 
@@ -426,9 +452,9 @@ make magic-lvs-netlist EV_PRECISION=5
 
 ### Layout Versus Schematic (LVS)
 
-Exports the schematic netlist from Xschem, then runs LVS. Compares the layout in `layout/` against the schematic netlist in `netlist/schematic/`.
+Exports the schematic netlist from Xschem, then runs LVS. Compares the layout of the macro against the schematic netlist in `netlist/schematic/`.
 
-- `klayout-lvs` and `magic-lvs` use `layout/<CELL>.$(_GDS_EXT)` (`.gds` if present, otherwise `.klay.gds`)
+- `klayout-lvs` and `magic-lvs` use `$(_CELL_GDS)` (the exported `.gds` if present, otherwise `.klay.gds`), see [Layout File Lookup](#layout-file-lookup)
 
 Both flows use `sak-lvs.sh` and write their reports into per-cell run folders: `verification/lvs/<CELL>.magic.lvs/` (Magic + Netgen) and `verification/lvs/<CELL>.klayout.lvs/` (KLayout, `.lvsdb`). The run folders are wiped at the start of each run, so they always reflect the latest run only. The extracted layout netlist is moved to `netlist/layout/`.
 
@@ -473,9 +499,9 @@ If `<CELL>.sym` does not exist, the target prints a note and does nothing, which
 
 ### Parasitic Extraction (PEX)
 
-Runs parasitic extraction on the layout in `layout/`. The extracted SPICE netlist is written to `netlist/pex/`.
+Runs parasitic extraction on the layout of the macro. The extracted SPICE netlist is written to `netlist/pex/`.
 
-- `klayout-pex` and `magic-pex` use `layout/<CELL>.$(_GDS_EXT)` (`.gds` if present, otherwise `.klay.gds`)
+- `klayout-pex` and `magic-pex` use `$(_CELL_GDS)` (the exported `.gds` if present, otherwise `.klay.gds`), see [Layout File Lookup](#layout-file-lookup)
 
 The extracted SPICE filenames include the selected extraction mode:
 - `klayout-pex` writes `netlist/pex/<CELL>_klayout_pex_<EXT_MODE>.spice`
@@ -612,7 +638,7 @@ The inverter is meant to be the starting point for a new analog macro. It alread
 2. Run `make clean` in the new folder so that no output of the inverter is left behind.
 3. Set `TOP` in the `Makefile`. Every target derives its paths from `TOP` (and from `CELL`, which defaults to `TOP`), so the design files must carry the same name.
 4. Rename the Xschem schematics, symbols and testbenches in `schematic/xschem/` and `testbenches/xschem/`. Note that the macro holds two cells, the unit cell `inverter` and the top cell `inverter_top`, so a rename to `amp` gives `amp` and `amp_top`.
-5. Rename the layout files in `layout/` **and the top cell inside each GDS** (open it in KLayout, rename the cell, save). The DRC, LVS and PEX targets pass the file name as the cell name, so the two must match. Note that `inverter_top.klay.gds` is a KLayout-saved layout that pulls in `inverter.gds` as a library through `inverter_top.klay.klib`, so update `lib_name` and `lib_path` in that `.klib` file too. `inverter_top.klay.gds` and `inverter.gds` are the layout sources, `inverter_top.gds` is exported from the first one, see [Layout Sources and the Exported Tapeout GDS](#layout-sources-and-the-exported-tapeout-gds).
+5. Rename the layout files in `layout/klayout/` **and the top cell inside each GDS** (open it in KLayout, rename the cell, save). The DRC, LVS and PEX targets pass the file name as the cell name, so the two must match. Note that `inverter_top.klay.gds` is a KLayout-saved layout that pulls in `inverter.gds` as a library through `inverter_top.klay.klib`, so update `lib_name` and `lib_path` in that `.klib` file too. `inverter_top.klay.gds` and `inverter.gds` are the layout sources, `inverter_top.gds` is exported from the first one, see [Layout Sources and the Exported Tapeout GDS](#layout-sources-and-the-exported-tapeout-gds).
 6. Rename the CACE files `verification/cace/inverter.yaml`, `verification/cace/templates/inverter_tb_ac.sch` and `verification/cace/scripts/inverter_tb_ac.{py,csv}`, and set `name:` in the yaml.
 7. Rename the plotting scripts in `testbenches/xschem/plot_simulations/`. The sizing notebook `scripts/sizing/sizing_inverter.ipynb` and the figures next to it are specific to the inverter, so adapt or delete them.
 8. Search and replace the remaining `inverter` references inside the renamed files. Xschem schematics, the CACE yaml and the plot scripts are all plain text. The ones that matter are the `inverter.sym` instances in the testbenches, the `.include` of the PEX netlist, the `template:` and `script:` keys in the CACE yaml, and the raw file names in the plot scripts.
@@ -625,7 +651,7 @@ cp -r macros/inverter macros/amp
 cd macros/amp
 make clean
 # set TOP = amp_top in the Makefile, then:
-for f in schematic/xschem/inverter* testbenches/xschem/inverter* layout/inverter* \
+for f in schematic/xschem/inverter* testbenches/xschem/inverter* layout/klayout/inverter* \
          verification/cace/inverter* verification/cace/templates/inverter* \
          verification/cace/scripts/inverter* \
          testbenches/xschem/plot_simulations/plot_inverter*; do

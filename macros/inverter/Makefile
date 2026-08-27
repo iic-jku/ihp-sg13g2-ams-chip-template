@@ -36,10 +36,19 @@ DRC_LEVEL ?= macro
 # Override with: make <target> EV_PRECISION=<digits>
 EV_PRECISION ?= 5
 
-# Preferred GDS extension: use .gds when available for the CELL, otherwise .klay.gds
-# Resolved per CELL (CELL defaults to TOP), so cells can mix .gds and .klay.gds within one macro.
-# All DRC, LVS and PEX targets (KLayout and Magic) work with either .gds or .klay.gds.
-_GDS_EXT = $(if $(wildcard $(LAY_DIR)/$(CELL).gds),gds,klay.gds)
+# Layout file lookup: search the KLayout folder first, then the Magic folder, so a cell drawn in
+# either tool is found without an override. Both are resolved per CELL (CELL defaults to TOP), so
+# cells can mix .gds and .klay.gds within one macro.
+# _TOP_GDS is the exported tapeout GDS and is what the build targets read.
+# _CELL_GDS prefers that same exported GDS and falls back to the KLayout editing source, so all
+# DRC, LVS and PEX targets (KLayout and Magic) work with either .gds or .klay.gds.
+_gds      = $(firstword $(wildcard $(LAY_KLAY_DIR)/$(1) $(LAY_MAGIC_DIR)/$(1)))
+_TOP_GDS  = $(or $(call _gds,$(TOP).gds),$(error No exported GDS for '$(TOP)': looked for $(LAY_KLAY_DIR)/$(TOP).gds and $(LAY_MAGIC_DIR)/$(TOP).gds. Export it first, see the README))
+_CELL_GDS = $(or $(call _gds,$(CELL).gds),$(call _gds,$(CELL).klay.gds),$(error No layout for cell '$(CELL)': looked for $(CELL).gds and $(CELL).klay.gds in $(LAY_KLAY_DIR)/ and $(LAY_MAGIC_DIR)/))
+
+# Magic startup file for export-gds: the project one when the Magic layout folder has its own,
+# otherwise the PDK default (relative, because the recipe runs inside the Magic layout folder)
+_MAGIC_RCFILE = $(if $(wildcard $(LAY_MAGIC_DIR)/.magicrc),.magicrc,$(PDK_ROOT)/$(PDK)/libs.tech/magic/ihp-sg13g2.magicrc)
 
 # Extra options for the sak-open.py file browser (e.g. --all to include build outputs)
 # Override with: make open OPEN_ARGS=<options>
@@ -49,6 +58,8 @@ OPEN_ARGS ?=
 XSCHEM_SCH_DIR  := schematic/xschem
 XSCHEM_TB_DIR   := testbenches/xschem
 LAY_DIR         := layout
+LAY_KLAY_DIR    := $(LAY_DIR)/klayout
+LAY_MAGIC_DIR   := $(LAY_DIR)/magic
 SCRIPTS_DIR     := scripts
 SIM_PLOT_DIR    := testbenches/xschem/plot_simulations
 GDS_DIR         := final/gds
@@ -159,9 +170,26 @@ build-top: ## Build TOP cell (check PR boundary, Verilog, LEF, LIB, copy GDS, an
 # ================================================================================================
 
 
+# GDS Export Target
+export-gds: ## Export the tapeout GDS of the TOP cell from its Magic layout (Magic flow only)
+	@if [ ! -f $(LAY_MAGIC_DIR)/$(TOP).mag ]; then \
+		echo "ERROR: $(LAY_MAGIC_DIR)/$(TOP).mag not found."; \
+		echo "This target exports a Magic layout. A KLayout layout is exported from the GUI"; \
+		echo "with 'File > Export Layout For Tapeout', see 'Layout Sources and the Exported"; \
+		echo "Tapeout GDS' in README.md."; \
+		exit 1; \
+	fi
+	cd $(LAY_MAGIC_DIR) && printf '%s\n' \
+		'load $(TOP)' \
+		'gds write $(TOP).gds' | \
+		magic -dnull -noconsole -rcfile $(_MAGIC_RCFILE)
+.PHONY: export-gds
+# ================================================================================================
+
+
 # PR Boundary Check Target
 check-boundary: ## Check that the TOP cell layout carries the PR boundary box on layer 189 that the chip flow needs
-	python3 $(SCRIPTS_DIR)/check_boundary.py $(LAY_DIR)/$(TOP).gds $(TOP)
+	python3 $(SCRIPTS_DIR)/check_boundary.py $(_TOP_GDS) $(TOP)
 .PHONY: check-boundary
 # ================================================================================================
 
@@ -171,7 +199,7 @@ lef: ## Export LEF from the TOP cell layout using Magic
 	rm -rf $(LEF_DIR)
 	mkdir -p $(LEF_DIR)
 	printf '%s\n' \
-		'gds read $(LAY_DIR)/$(TOP).gds' \
+		'gds read $(_TOP_GDS)' \
 		'load $(TOP)' \
 		'lef write $(LEF_DIR)/$(TOP).lef -hide -pinonly 2um' | \
 		magic -dnull -noconsole \
@@ -244,7 +272,7 @@ verilog: ## Generate a Verilog stub of the TOP cell from Magic or KLayout PEX ne
 copy-gds: ## Copy the TOP cell GDS from layout/ to final/gds/
 	rm -rf $(GDS_DIR)
 	mkdir -p $(GDS_DIR)
-	cp $(LAY_DIR)/$(TOP).gds $(GDS_DIR)/$(TOP).gds
+	cp $(_TOP_GDS) $(GDS_DIR)/$(TOP).gds
 .PHONY: copy-gds
 # ================================================================================================
 
@@ -253,7 +281,7 @@ copy-gds: ## Copy the TOP cell GDS from layout/ to final/gds/
 render-gds: ## Render images from the final GDS using sak-render.py
 	rm -rf $(RENDER_IMG_DIR)/
 	mkdir -p $(RENDER_IMG_DIR)/
-	sak-render.py -t ihp-sg13g2 -w 2048 -s 4 -o $(RENDER_IMG_DIR)/$(TOP) $(LAY_DIR)/$(TOP).gds
+	sak-render.py -t ihp-sg13g2 -w 2048 -s 4 -o $(RENDER_IMG_DIR)/$(TOP) $(_TOP_GDS)
 .PHONY: render-gds
 # ================================================================================================
 
@@ -261,12 +289,12 @@ render-gds: ## Render images from the final GDS using sak-render.py
 # DRC Targets
 klayout-drc: ## Run KLayout DRC of the CELL cell (usage: make klayout-drc [CELL=<cellname>] [DRC_LEVEL=<precheck|macro|regular>])
 	mkdir -p $(DRC_RPT_DIR)
-	sak-drc.sh -d -k -l $(DRC_LEVEL) -w $(DRC_RPT_DIR) $(LAY_DIR)/$(CELL).$(_GDS_EXT)
+	sak-drc.sh -d -k -l $(DRC_LEVEL) -w $(DRC_RPT_DIR) $(_CELL_GDS)
 .PHONY: klayout-drc
 
 magic-drc: ## Run Magic DRC of the CELL cell (usage: make magic-drc [CELL=<cellname>])
 	mkdir -p $(DRC_RPT_DIR)
-	sak-drc.sh -d -m -f "*" -w $(DRC_RPT_DIR) $(LAY_DIR)/$(CELL).$(_GDS_EXT)
+	sak-drc.sh -d -m -f "*" -w $(DRC_RPT_DIR) $(_CELL_GDS)
 .PHONY: magic-drc
 # ================================================================================================
 
@@ -290,7 +318,7 @@ klayout-lvs: ## Run KLayout LVS of the CELL cell (usage: make klayout-lvs [CELL=
 	$(MAKE) klayout-lvs-netlist CELL=$(CELL)
 	mkdir -p $(LVS_RPT_DIR)
 	mkdir -p $(NET_LAY_DIR)
-	sak-lvs.sh -d -k -w $(LVS_RPT_DIR) -s $(NET_SCH_DIR)/$(CELL)_klayout.cdl -l $(LAY_DIR)/$(CELL).$(_GDS_EXT) -c $(CELL)
+	sak-lvs.sh -d -k -w $(LVS_RPT_DIR) -s $(NET_SCH_DIR)/$(CELL)_klayout.cdl -l $(_CELL_GDS) -c $(CELL)
 	mv $(LVS_RPT_DIR)/$(CELL).klayout.lvs/$(CELL)_extracted.cir $(NET_LAY_DIR)/$(CELL)_klayout.cir
 .PHONY: klayout-lvs
 
@@ -312,7 +340,7 @@ magic-lvs: ## Run Magic + Netgen LVS of the CELL cell (usage: make magic-lvs [CE
 	mkdir -p $(LVS_RPT_DIR)
 	mkdir -p $(NET_LAY_DIR)
 	$(MAKE) magic-lvs-netlist CELL=$(CELL)
-	sak-lvs.sh -d -w $(LVS_RPT_DIR) -s $(NET_SCH_DIR)/$(CELL)_magic.spice -l $(LAY_DIR)/$(CELL).$(_GDS_EXT) -c $(CELL)
+	sak-lvs.sh -d -w $(LVS_RPT_DIR) -s $(NET_SCH_DIR)/$(CELL)_magic.spice -l $(_CELL_GDS) -c $(CELL)
 	mv $(LVS_RPT_DIR)/$(CELL).magic.lvs/$(CELL).ext.spc $(NET_LAY_DIR)/$(CELL)_magic.ext.spc
 .PHONY: magic-lvs
 # ================================================================================================
@@ -347,7 +375,7 @@ klayout-pex: ## Run Parasitic Extraction with KPEX of the CELL cell (usage: make
 	--pdk $$PDK_UNDERSCORED \
 	--cell $(CELL) \
 	--schematic $(XSCHEM_SCH_DIR)/$(CELL).sch \
-	--gds $(LAY_DIR)/$(CELL).$(_GDS_EXT) \
+	--gds $(_CELL_GDS) \
 	--magic \
 	--magic_mode $$KPEX_MODE \
 	--out_dir $(NET_PEX_DIR) \
@@ -369,7 +397,7 @@ klayout-pex: ## Run Parasitic Extraction with KPEX of the CELL cell (usage: make
 magic-pex: ## Run Parasitic Extraction with Magic of the CELL cell (usage: make magic-pex [CELL=<cellname>] [EXT_MODE=<1|2|3>] [THRESHOLD=<mOhm>] [MINRES=<mOhm>] [MINDELAY=<ps>])
 	mkdir -p $(NET_PEX_DIR)
 	$(MAKE) symbol-pex CELL=$(CELL)
-	sak-pex.sh -d -m $(EXT_MODE) -n $(CELL)_pex -t $(THRESHOLD) -r $(MINRES) -y $(MINDELAY) -w $(NET_PEX_DIR) $(LAY_DIR)/$(CELL).$(_GDS_EXT)
+	sak-pex.sh -d -m $(EXT_MODE) -n $(CELL)_pex -t $(THRESHOLD) -r $(MINRES) -y $(MINDELAY) -w $(NET_PEX_DIR) $(_CELL_GDS)
 	mv $(NET_PEX_DIR)/$(CELL).pex.spice $(NET_PEX_DIR)/$(CELL)_magic_pex_$(EXT_MODE).spice
 	rm -f $(NET_PEX_DIR)/pex_$(CELL).tcl
 	@if [ -f $(XSCHEM_SCH_DIR)/$(CELL)_pex.sym ]; then \

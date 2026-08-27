@@ -152,6 +152,8 @@ A designer-oriented description of this chip can be found in [doc/](doc/):
 │  └─ 📁 inverter/
 │     ├─ 📁 final/
 │     ├─ 📁 layout/
+│     │  ├─ 📁 klayout/
+│     │  └─ 📁 magic/
 │     ├─ 📁 netlist/
 │     ├─ 📁 render/
 │     ├─ 📁 schematic/
@@ -243,6 +245,16 @@ A designer-oriented description of this chip can be found in [doc/](doc/):
 ```
 
 </details>
+
+
+## Layout Folders
+
+`layout/` means two different things in this repo, and which one it is follows from whether the cells inside are drawn or generated:
+
+- Where cells are **drawn**, the sources sit in one folder per tool, [`macros/inverter/layout/klayout/`](macros/inverter/layout/klayout/) and [`macros/inverter/layout/magic/`](macros/inverter/layout/magic/), the same way schematics sit in `schematic/xschem/`. The analog macro is the only place with these. A cell is drawn in one of the two and the macro Makefile finds it in either, so the choice of tool stays inside the macro. The tools get a folder each because a Magic hierarchy also carries the device cells Magic generates for every placed device, which in a shared folder would bury the handful of files that are actually the design. See [Layout Sources and the Exported Tapeout GDS](macros/inverter/README.md#layout-sources-and-the-exported-tapeout-gds) in the macro README.
+- Everywhere else `layout/` holds a **derived** GDS and stays flat, because GDS is the interchange format that every tool in the flow reads: the chip top-level [`layout/`](layout/) is filled from the last LibreLane run by `make copy-gds` and `make add-logo-fill`, and `make bondplan` writes its outputs into [`packaging/layout/`](packaging/layout/) beside the EUROPRACTICE package library it reads. `make clean` deletes the generated ones.
+
+The same split decides where a new folder goes: a tool subfolder when the files are that tool's own working format, a plain folder when they are an interchange format or a result.
 
 
 ## Xschem Configuration
