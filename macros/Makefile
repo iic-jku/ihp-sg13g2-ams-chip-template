@@ -25,7 +25,7 @@ _FROM_ANY   := -e '$(FROM)' -e '$(_FROM_TITLE)' -e '$(_FROM_UPPER)'
 _RENAME     := -e 's/$(FROM)/$(NAME)/g' -e 's/$(_FROM_TITLE)/$(_NAME_TITLE)/g' -e 's/$(_FROM_UPPER)/$(_NAME_UPPER)/g'
 
 # Files that describe the copied design rather than reference it: the replace pass leaves them to the designer
-_KEEP := --exclude=README.md --exclude='*.ipynb'
+_KEEP := --exclude='*.md' --exclude='*.ipynb'
 
 
 # Help Target
@@ -74,7 +74,7 @@ macro: ## Start a new macro as a renamed copy of an existing one (usage: make ma
 	fi
 	@echo ''
 	@echo "Left untouched, they describe the $(FROM) design (adapt or delete them):"
-	@grep -rIl --include=README.md --include='*.ipynb' $(_FROM_ANY) $(NAME) | sed 's/^/  /' | grep . || echo '  none'
+	@grep -rIl --include='*.md' --include='*.ipynb' $(_FROM_ANY) $(NAME) | sed 's/^/  /' | grep . || echo '  none'
 	@echo "Still carrying '$(FROM)' after the rename:"
 	@left=$$( if echo '$(NAME)' | grep -q '$(FROM)'; then \
 			grep -rIl $(_KEEP) $(_FROM_ANY) $(NAME) | while IFS= read -r f; do \

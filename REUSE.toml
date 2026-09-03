@@ -42,7 +42,7 @@ SPDX-FileCopyrightText = "2026 Simon Dorrer and Harald Pretl"
 SPDX-License-Identifier = "Apache-2.0 WITH SHL-2.1"
 
 [[annotations]]
-path = ["macros/counter/fpga/README.md", "macros/counter/flow/librelane/pin_order.cfg"]
+path = ["macros/*/fpga/README.md", "macros/*/flow/librelane/pin_order.cfg"]
 SPDX-FileCopyrightText = "2026 Simon Dorrer and Harald Pretl"
 SPDX-License-Identifier = "Apache-2.0 WITH SHL-2.1"
 
@@ -52,12 +52,12 @@ SPDX-FileCopyrightText = "2026 Simon Dorrer and Harald Pretl"
 SPDX-License-Identifier = "Apache-2.0 WITH SHL-2.1"
 
 [[annotations]]
-path = ["testbenches/xschem/plot_simulations/data/**", "testbenches/xschem/plot_simulations/figures/**", "macros/*/testbenches/xschem/plot_simulations/data/**", "macros/*/testbenches/xschem/plot_simulations/figures/**", "macros/inverter/scripts/sizing/data/**", "macros/inverter/scripts/sizing/figures/**"]
+path = ["testbenches/xschem/plot_simulations/data/**", "testbenches/xschem/plot_simulations/figures/**", "macros/*/testbenches/xschem/plot_simulations/data/**", "macros/*/testbenches/xschem/plot_simulations/figures/**", "macros/*/scripts/sizing/data/**", "macros/*/scripts/sizing/figures/**"]
 SPDX-FileCopyrightText = "2026 Simon Dorrer and Harald Pretl"
 SPDX-License-Identifier = "Apache-2.0 WITH SHL-2.1"
 
 [[annotations]]
-path = ["verification/**", "macros/counter/verification/*", "macros/inverter/verification/drc/**", "macros/inverter/verification/lvs/**", "macros/inverter/verification/cace/results/**", "macros/inverter/verification/cace/templates/**", "macros/inverter/verification/cace/scripts/*.csv"]
+path = ["verification/**", "macros/*/verification/*", "macros/*/verification/drc/**", "macros/*/verification/lvs/**", "macros/*/verification/cace/results/**", "macros/*/verification/cace/templates/**", "macros/*/verification/cace/scripts/*.csv"]
 SPDX-FileCopyrightText = "2026 Simon Dorrer and Harald Pretl"
 SPDX-License-Identifier = "Apache-2.0 WITH SHL-2.1"
 
