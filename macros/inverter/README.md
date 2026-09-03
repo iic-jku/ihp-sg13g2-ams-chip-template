@@ -606,31 +606,4 @@ make all
 
 ## Start a New Analog Macro from This Template
 
-The inverter is meant to be the starting point for a new analog macro. It already carries the full analog flow: Xschem schematic and symbol, four testbenches, the KLayout layout, DRC, LVS and PEX, the LEF, Liberty and Verilog stub export, CACE characterization, and the plotting scripts.
-
-1. Copy the folder, for example to `macros/amp`.
-2. Run `make clean` in the new folder so that no output of the inverter is left behind.
-3. Set `TOP` in the `Makefile`. Every target derives its paths from `TOP` (and from `CELL`, which defaults to `TOP`), so the design files must carry the same name.
-4. Rename the Xschem schematics, symbols and testbenches in `schematic/xschem/` and `testbenches/xschem/`. Note that the macro holds two cells, the unit cell `inverter` and the top cell `inverter_top`, so a rename to `amp` gives `amp` and `amp_top`.
-5. Rename the layout files in `layout/` **and the top cell inside each GDS** (open it in KLayout, rename the cell, save). The DRC, LVS and PEX targets pass the file name as the cell name, so the two must match. Note that `inverter_top.klay.gds` is a KLayout-saved layout that pulls in `inverter.gds` as a library through `inverter_top.klay.klib`, so update `lib_name` and `lib_path` in that `.klib` file too. `inverter_top.klay.gds` and `inverter.gds` are the layout sources, `inverter_top.gds` is exported from the first one, see [Layout Sources and the Exported Tapeout GDS](#layout-sources-and-the-exported-tapeout-gds).
-6. Rename the CACE files `verification/cace/inverter.yaml`, `verification/cace/templates/inverter_tb_ac.sch` and `verification/cace/scripts/inverter_tb_ac.{py,csv}`, and set `name:` in the yaml.
-7. Rename the plotting scripts in `testbenches/xschem/plot_simulations/`. The sizing notebook `scripts/sizing/sizing_inverter.ipynb` and the figures next to it are specific to the inverter, so adapt or delete them.
-8. Search and replace the remaining `inverter` references inside the renamed files. Xschem schematics, the CACE yaml and the plot scripts are all plain text. The ones that matter are the `inverter.sym` instances in the testbenches, the `.include` of the PEX netlist, the `template:` and `script:` keys in the CACE yaml, and the raw file names in the plot scripts.
-9. Register the macro at the chip top-level: add a `build-<name>` target and a `clean-all` entry in the top-level `Makefile`, instantiate the macro in `rtl/chip_core.sv` and `schematic/xschem/chip_top.sch`, and add a `MACROS` entry in `flow/librelane/config.yaml`.
-
-For a new macro named `amp`, the mechanical part looks as follows:
-
-```sh
-cp -r macros/inverter macros/amp
-cd macros/amp
-make clean
-# set TOP = amp_top in the Makefile, then:
-for f in schematic/xschem/inverter* testbenches/xschem/inverter* layout/inverter* \
-         verification/cace/inverter* verification/cace/templates/inverter* \
-         verification/cace/scripts/inverter* \
-         testbenches/xschem/plot_simulations/plot_inverter*; do
-    mv "$f" "$(echo "$f" | sed 's/inverter/amp/')"
-done
-```
-
-The remaining work is step 5 (the top cell name inside each GDS and the `.klib` library reference) and step 8 (search and replace inside the files).
+The inverter is meant to be the starting point for a new analog macro. It already carries the full analog flow: Xschem schematic and symbol, four testbenches, the KLayout layout, DRC, LVS and PEX, the LEF, Liberty and Verilog stub export, CACE characterization, and the plotting scripts. `make macro FROM=inverter NAME=<name>` in [`macros/`](../) copies and renames it, including the cells inside the GDS files and the `.klib` library map. See [Start a New Macro from an Existing One](../README.md#start-a-new-macro-from-an-existing-one) for what the target does, what is left to do afterwards, and where to register the macro at the chip top-level.

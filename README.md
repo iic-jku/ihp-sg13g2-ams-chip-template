@@ -149,17 +149,20 @@ A designer-oriented description of this chip can be found in [doc/](doc/):
 │  │  ├─ 📁 verification/
 │  │  ├─ Makefile
 │  │  └─ README.md
-│  └─ 📁 inverter/
-│     ├─ 📁 final/
-│     ├─ 📁 layout/
-│     ├─ 📁 netlist/
-│     ├─ 📁 render/
-│     ├─ 📁 schematic/
-│     ├─ 📁 scripts/
-│     ├─ 📁 testbenches/
-│     ├─ 📁 verification/
-│     ├─ Makefile
-│     └─ README.md
+│  ├─ 📁 inverter/
+│  │  ├─ 📁 final/
+│  │  ├─ 📁 layout/
+│  │  ├─ 📁 netlist/
+│  │  ├─ 📁 render/
+│  │  ├─ 📁 schematic/
+│  │  ├─ 📁 scripts/
+│  │  ├─ 📁 testbenches/
+│  │  ├─ 📁 verification/
+│  │  ├─ Makefile
+│  │  └─ README.md
+│  ├─ 📁 scripts/
+│  ├─ Makefile
+│  └─ README.md
 ├─ 📁 netlist/
 │  ├─ 📁 layout/
 │  ├─ 📁 nl/
@@ -1083,7 +1086,7 @@ make clean-all
 make all
 ```
 
-The two example macros are themselves templates for the two kinds of block. See [Start a New Analog Macro from This Template](macros/inverter/README.md#start-a-new-analog-macro-from-this-template) for the inverter and [Start a New Digital Macro from This Template](macros/counter/README.md#start-a-new-digital-macro-from-this-template) for the counter.
+The two example macros are themselves templates for the two kinds of block. `make macro FROM=<macro> NAME=<name>` in [`macros/`](macros/) starts a new macro as a renamed copy of one of them, see [Start a New Macro from an Existing One](macros/README.md#start-a-new-macro-from-an-existing-one).
 
 
 ## Cite This Work

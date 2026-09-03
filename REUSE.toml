@@ -37,7 +37,7 @@ SPDX-FileCopyrightText = "2026 Simon Dorrer and Harald Pretl"
 SPDX-License-Identifier = "Apache-2.0 WITH SHL-2.1"
 
 [[annotations]]
-path = ["macros/*/README.md", "macros/*/final/**", "macros/*/layout/**", "macros/*/netlist/**", "macros/*/render/**", "macros/*/schematic/**"]
+path = ["macros/README.md", "macros/*/README.md", "macros/*/final/**", "macros/*/layout/**", "macros/*/netlist/**", "macros/*/render/**", "macros/*/schematic/**"]
 SPDX-FileCopyrightText = "2026 Simon Dorrer and Harald Pretl"
 SPDX-License-Identifier = "Apache-2.0 WITH SHL-2.1"
 

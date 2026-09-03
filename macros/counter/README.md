@@ -725,46 +725,4 @@ make all
 
 ## Start a New Digital Macro from This Template
 
-The counter is meant to be the starting point for a new digital macro. It already carries the full digital flow: SystemVerilog RTL, Verilator lint, Icarus Verilog and cocotb simulation, the LibreLane hardening flow with its SDC files and pin order, the XSPICE model generation for mixed-signal simulation in Xschem, and an FPGA emulation flow for three boards.
-
-1. Copy the folder, for example to `macros/fifo`.
-2. Run `make clean` in the new folder so that no output of the counter is left behind.
-3. Set `TOP` in the `Makefile` and in every [`fpga/<board>/Makefile`](fpga/). Every target derives its paths from `TOP` (and from `CELL`, which defaults to `TOP`), so the design files must carry the same name.
-4. Rename the RTL in `rtl/` and adjust `MODULES_SYNTH` and `MODULES_SIM` in the `Makefile` if you add or drop files.
-5. Rename the testbenches in `testbenches/verilog/`, `testbenches/cocotb/` and `testbenches/xschem/`. Delete both symbols in `schematic/xschem/` rather than renaming them: renaming carries the counter's ports into the new macro, and `make symbol-check` rejects that on the first build. `make symbol-gl` scaffolds `<TOP>.sym` from the ports of the new design once it has been hardened (step 11), and `make symbol-pex` rebuilds `<TOP>_pex.sym` from it.
-6. Update `flow/librelane/config.yaml`: `DESIGN_NAME`, `VERILOG_FILES`, `CLOCK_PORT` and `DIE_AREA`. Adapt the pin placement in `flow/librelane/pin_order.cfg` and the constraints in `impl.sdc` and `signoff.sdc`.
-7. Update `DUT_SRCS` in `fpga/dut.mk`, and the pin constraint file in each `fpga/<board>/` you care about, to the ports of the new design. Delete the board folders you do not need, the dispatcher derives its board list from the folders that are there.
-8. Rename the plotting script in `testbenches/xschem/plot_simulations/`.
-9. Search and replace the remaining `counter` references inside the files, in particular the module instantiations, the `COUNTER_MAX_DEFAULT` and `CLK_FREQ_DEFAULT` macros in `rtl/constants.sv` (which keeps its name), the cocotb `hdl_toplevel` and source list, the two `.include` lines in the Xschem testbench (the XSPICE model and the extracted PEX netlist), and the raw file name in the plot script.
-10. Register the macro at the chip top-level: add a `build-<name>` target and a `clean-all` entry in the top-level `Makefile`, instantiate the macro in `rtl/chip_core.sv` and `schematic/xschem/chip_top.sch`, and add a `MACROS` entry in `flow/librelane/config.yaml`.
-11. Harden the macro once, then scaffold its Xschem symbol from the ports the hardening produced, arrange it, and only then run the full flow:
-
-    ```sh
-    make librelane        # harden the new design
-    make copy-netlist     # brings netlist/pnl/<TOP>.pnl.v into the tree
-    make symbol-gl        # scaffold schematic/xschem/<TOP>.sym from its ports
-    xschem schematic/xschem/<TOP>.sym   # rename pins to house style, arrange, draw the body
-    make all
-    ```
-
-    The symbol has to exist before `generate-xspice` runs, so a `make all` on a macro that has none stops there and says so. Wire the Xschem testbench to the finished symbol afterwards, because its pins are what the testbench connects to by coordinate.
-
-For a new macro named `fifo`, the mechanical part looks as follows:
-
-```sh
-cp -r macros/counter macros/fifo
-cd macros/fifo
-make clean
-# set TOP = fifo_top in the Makefile and in every fpga/<board>/Makefile, then:
-rm -f schematic/xschem/counter*.sym
-for f in rtl/counter* testbenches/verilog/counter* \
-         testbenches/cocotb/counter* testbenches/xschem/counter* \
-         testbenches/xschem/plot_simulations/plot_counter*; do
-    mv "$f" "$(echo "$f" | sed 's/counter/fifo/')"
-done
-```
-
-The remaining work is steps 6, 7, 9, 10 and 11, which all need real edits rather than renames.
-
-> [!NOTE]
-> The Xschem symbol `schematic/xschem/<TOP>.sym` must carry a `sim_pinname` property on every pin, see [Generate XSPICE File](#generate-xspice-file). `sak-pin-reorder.py` maps the ports of the extracted netlist onto the symbol by that name, and gate-level Xschem simulation breaks silently without it. `make symbol-gl` writes the property on every pin it scaffolds and `make symbol-check` refuses a symbol that is missing one, so neither the first symbol nor a later port change depends on remembering it.
+The counter is meant to be the starting point for a new digital macro. It already carries the full digital flow: SystemVerilog RTL, Verilator lint, Icarus Verilog and cocotb simulation, the LibreLane hardening flow with its SDC files and pin order, the XSPICE model generation for mixed-signal simulation in Xschem, and an FPGA emulation flow for three boards. `make macro FROM=counter NAME=<name>` in [`macros/`](../) copies and renames it, including `TOP` in every `fpga/<board>/Makefile` and `DESIGN_NAME` in the LibreLane config. See [Start a New Macro from an Existing One](../README.md#start-a-new-macro-from-an-existing-one) for what the target does, what is left to do afterwards, and where to register the macro at the chip top-level.
