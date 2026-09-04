@@ -5,6 +5,23 @@ MAKEFILE_DIR := $(shell dirname $(realpath $(firstword $(MAKEFILE_LIST))))
 
 .DEFAULT_GOAL := help
 
+# PDK Guard
+# Override with: make <target> REQUIRED_PDK=<pdk>, an empty value skips the check
+REQUIRED_PDK ?= ihp-sg13g2
+
+# Goals that do not read the PDK
+PDK_FREE_GOALS = help
+
+ifneq ($(REQUIRED_PDK),)
+ifneq ($(filter-out $(PDK_FREE_GOALS),$(or $(MAKECMDGOALS),$(.DEFAULT_GOAL))),)
+ifneq ($(PDK),$(REQUIRED_PDK))
+$(error PDK is "$(PDK)", but the macros need "$(REQUIRED_PDK)". Run `sak-pdk $(REQUIRED_PDK)` in this shell and retry, or pass REQUIRED_PDK= to skip this check)
+endif
+endif
+endif
+# ================================================================================================
+
+
 # Folder structure
 SCRIPTS_DIR := scripts
 
@@ -37,6 +54,7 @@ help: ## Show this help message
 	@echo ''
 	@echo 'FROM selects the macro to copy. Available: $(MACROS).'
 	@echo 'NAME names the new macro: a lowercase letter followed by lowercase letters, digits or underscores.'
+	@echo 'REQUIRED_PDK defaults to $(REQUIRED_PDK). Every target except help aborts if $$PDK differs.'
 .PHONY: help
 # ================================================================================================
 

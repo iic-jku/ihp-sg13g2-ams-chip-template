@@ -45,6 +45,18 @@ Build everything (clean, generate logo GDS, LEF, Liberty, Verilog stub, run DRC)
 make all
 ```
 
+### PDK Guard
+
+Every target except `help` and `clean` needs the `ihp-sg13g2` PDK. A wrong `$PDK`, for example `ihp-sg13cmos5l` from the sibling CMOS5L template, splits the IP across two technologies: the GDS layer numbers are hard-coded for sg13g2 (`Metal5` is `67/0`), while `sak-drc.sh` runs the DRC against the rule deck of whatever `$PDK` says. The Makefile therefore compares `$PDK` against `REQUIRED_PDK` once when it is parsed, before any target runs:
+
+```bash
+$ make all
+Makefile:21: *** PDK is "ihp-sg13cmos5l", but this IP needs "ihp-sg13g2". Run `sak-pdk ihp-sg13g2` in this shell and retry, or pass REQUIRED_PDK= to skip this check.  Stop.
+```
+
+The check is a parse-time conditional at the top of the Makefile, not a prerequisite of each target. Switch the PDK with `sak-pdk ihp-sg13g2`, pass `REQUIRED_PDK=` to skip the check, or `REQUIRED_PDK=<pdk>` to require a different PDK.
+
+
 ### Individual Targets
 
 | Target        | Description                                              |

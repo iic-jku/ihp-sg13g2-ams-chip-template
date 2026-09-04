@@ -115,7 +115,7 @@ Additional video walk-throughs are available for Linux and Windows.
 - [IIC-OSIC-TOOLS installation on Windows (from 37:20 to 45:15)](https://www.youtube.com/watch?v=AiFTwKdS2V4)
 :::
 
-## PDK Selection
+## PDK Selection {#sec-pdk}
 
 As mentioned above, the container includes four Open-PDKs. To activate or switch the active PDK, the following two options are available. More detailed instructions can be found in the container's [`README.md`](https://github.com/iic-jku/IIC-OSIC-TOOLS/blob/main/README.md#2-installed-pdks).
 
@@ -132,6 +132,26 @@ As mentioned above, the container includes four Open-PDKs. To activate or switch
 ::: {.callout-tip}
 By default, the container is already configured for `ihp-sg13g2`, so both options above are only needed when switching between PDKs. However, since this tutorial can also be used for all other PDKs, it is worth knowing how to switch the active PDK.
 :::
+
+Every `Makefile` in this repository guards against a mismatch. All targets except `help` and `clean` (plus `clean-all` at the top level) compare `$PDK` against `REQUIRED_PDK`, which defaults to `ihp-sg13g2`, and abort before any tool starts:
+
+```sh
+sak-pdk ihp-sg13cmos5l
+make librelane
+```
+
+```text
+Makefile:27: *** PDK is "ihp-sg13cmos5l", but this chip needs "ihp-sg13g2". Run `sak-pdk ihp-sg13g2` in this shell and retry, or pass REQUIRED_PDK= to skip this check.  Stop.
+```
+
+The check is a parse-time conditional at the top of each `Makefile`, not a prerequisite of each target, so it costs nothing and cannot be forgotten when a target is added. Without it a wrong PDK mixes technologies silently: LibreLane hardens against the wrong tech LEF and standard cells, DRC and LVS run against the wrong rule deck, Magic reads the wrong `magicrc`, and the results still look valid.
+
+Since this tutorial can also be followed with another PDK, the expected PDK is a variable. Override it, or switch the check off entirely:
+
+```sh
+make <target> REQUIRED_PDK=<pdk>     # require a different PDK
+make <target> REQUIRED_PDK=          # skip the check
+```
 
 # Repository Overview {#sec-repo}
 
@@ -184,7 +204,7 @@ The repository is organised into the following top-level folders. The full listi
 
 ## Workflow
 
-The flow is driven by Makefiles. After cloning the repository and entering the IIC-OSIC-TOOLS container, every step is invoked via a `make` target. The default target of every `Makefile` is `help`, so `make` (without arguments) prints the list of available targets. After entering the container, the starting folder is `/foss/designs/`.
+The flow is driven by Makefiles. After cloning the repository and entering the IIC-OSIC-TOOLS container, every step is invoked via a `make` target. The default target of every `Makefile` is `help`, so `make` (without arguments) prints the list of available targets. Every `Makefile` checks the active PDK first and stops on a mismatch, see @sec-pdk. After entering the container, the starting folder is `/foss/designs/`.
 
 ```sh
 git clone https://github.com/iic-jku/ihp-sg13g2-ams-chip-template.git

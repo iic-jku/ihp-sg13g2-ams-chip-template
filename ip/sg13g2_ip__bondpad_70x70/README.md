@@ -41,6 +41,18 @@ Build everything (clean, generate bondpad, generate Verilog, run DRC):
 make all
 ```
 
+### PDK Guard
+
+Every target except `help` and `clean` needs the `ihp-sg13g2` PDK. A wrong `$PDK`, for example `ihp-sg13cmos5l` from the sibling CMOS5L template, breaks this IP in both directions: the `bondpad` target reads the KLayout technology from `$PDK_ROOT/$PDK` and asks for `sg13g2` by name, which another PDK does not provide, and `sak-drc.sh` runs the DRC against the rule deck of whatever `$PDK` says. The Makefile therefore compares `$PDK` against `REQUIRED_PDK` once when it is parsed, before any target runs:
+
+```bash
+$ make all
+Makefile:21: *** PDK is "ihp-sg13cmos5l", but this IP needs "ihp-sg13g2". Run `sak-pdk ihp-sg13g2` in this shell and retry, or pass REQUIRED_PDK= to skip this check.  Stop.
+```
+
+The check is a parse-time conditional at the top of the Makefile, not a prerequisite of each target. Switch the PDK with `sak-pdk ihp-sg13g2`, pass `REQUIRED_PDK=` to skip the check, or `REQUIRED_PDK=<pdk>` to require a different PDK.
+
+
 ### Individual Targets
 
 | Target        | Description                                                                                                          |

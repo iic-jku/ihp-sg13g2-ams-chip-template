@@ -14,6 +14,23 @@ TOP = chip_top
 
 .DEFAULT_GOAL := help
 
+# PDK Guard
+# Override with: make <target> REQUIRED_PDK=<pdk>, an empty value skips the check
+REQUIRED_PDK ?= ihp-sg13g2
+
+# Goals that do not read the PDK
+PDK_FREE_GOALS = help clean clean-all
+
+ifneq ($(REQUIRED_PDK),)
+ifneq ($(filter-out $(PDK_FREE_GOALS),$(or $(MAKECMDGOALS),$(.DEFAULT_GOAL))),)
+ifneq ($(PDK),$(REQUIRED_PDK))
+$(error PDK is "$(PDK)", but this chip needs "$(REQUIRED_PDK)". Run `sak-pdk $(REQUIRED_PDK)` in this shell and retry, or pass REQUIRED_PDK= to skip this check)
+endif
+endif
+endif
+# ========================================================================
+
+
 # Cell name for verification targets (default: top-level cell)
 # Override with: make <target> CELL=<cellname>
 CELL ?= $(TOP)
@@ -106,6 +123,7 @@ help: ## Show this help message
 	@echo 'SCRIPT selects the plotting script for sim-view-xschem (default: plot_<CELL>).'
 	@echo 'VERSION defaults to $(VERSION). Used by the release target.'
 	@echo 'OPEN_ARGS passes extra options to sak-open.py for the open target (e.g. --all).'
+	@echo 'REQUIRED_PDK defaults to $(REQUIRED_PDK). Every target except help, clean and clean-all aborts if $$PDK differs.'
 .PHONY: help
 # ================================================================================================
 

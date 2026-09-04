@@ -364,6 +364,26 @@ make help
 ```
 
 
+### PDK Guard
+
+Every target except `help`, `clean` and `clean-all` needs the `ihp-sg13g2` PDK. A wrong `$PDK`, for example `ihp-sg13cmos5l` from the sibling CMOS5L template, silently mixes technologies: LibreLane hardens against the wrong tech LEF and standard cells, DRC and LVS run against the wrong rule deck, Magic reads the wrong `magicrc`, and the results look valid. The Makefile therefore compares `$PDK` against `REQUIRED_PDK` once when it is parsed, before any target runs:
+
+```sh
+$ sak-pdk ihp-sg13cmos5l
+$ make librelane
+Makefile:27: *** PDK is "ihp-sg13cmos5l", but this chip needs "ihp-sg13g2". Run `sak-pdk ihp-sg13g2` in this shell and retry, or pass REQUIRED_PDK= to skip this check.  Stop.
+```
+
+The check is a parse-time conditional at the top of the Makefile, not a prerequisite of each target, so it costs nothing and cannot be forgotten when a target is added. `help`, `clean` and `clean-all` are exempt, so the usage text and the cleanup still work under any PDK. The macro and IP Makefiles carry the same guard, so the recursive `make -C` calls of `build-all` are checked as well.
+
+Switch the PDK with `sak-pdk ihp-sg13g2`, which also sets `PDKPATH`, `KLAYOUT_PATH`, `SPICE_USERINIT_DIR` and `STD_CELL_LIBRARY`. To run a single target against another PDK anyway, pass an empty `REQUIRED_PDK`:
+
+```sh
+make <target> REQUIRED_PDK=          # skip the check
+make <target> REQUIRED_PDK=<pdk>     # require a different PDK
+```
+
+
 ### Open the Design Files
 
 Opens a file browser for this folder with `sak-open.py` from the [IIC-OSIC-TOOLS](https://github.com/iic-jku/IIC-OSIC-TOOLS), one button per design file, grouped by directory:

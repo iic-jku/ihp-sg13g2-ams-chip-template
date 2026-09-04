@@ -32,6 +32,18 @@ make help
 ```
 
 
+### PDK Guard
+
+`make macro` needs the `ihp-sg13g2` PDK, only `help` is exempt. The target renames the cells inside the copied GDS with KLayout and produces a macro that the chip flow builds against `ihp-sg13g2`, so a wrong `$PDK` is caught before it starts:
+
+```sh
+$ make macro FROM=inverter NAME=amplifier
+Makefile:18: *** PDK is "ihp-sg13cmos5l", but the macros need "ihp-sg13g2". Run `sak-pdk ihp-sg13g2` in this shell and retry, or pass REQUIRED_PDK= to skip this check.  Stop.
+```
+
+The check is a parse-time conditional at the top of the Makefile, the same one every macro and IP Makefile carries. Switch the PDK with `sak-pdk ihp-sg13g2`, or pass `REQUIRED_PDK=` to skip the check.
+
+
 ### Start a New Macro from an Existing One
 
 ```sh

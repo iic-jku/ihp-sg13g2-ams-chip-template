@@ -8,6 +8,23 @@ TOP = sg13g2_ip__jku
 
 .DEFAULT_GOAL := help
 
+# PDK Guard
+# Override with: make <target> REQUIRED_PDK=<pdk>, an empty value skips the check
+REQUIRED_PDK ?= ihp-sg13g2
+
+# Goals that do not read the PDK
+PDK_FREE_GOALS = help clean
+
+ifneq ($(REQUIRED_PDK),)
+ifneq ($(filter-out $(PDK_FREE_GOALS),$(or $(MAKECMDGOALS),$(.DEFAULT_GOAL))),)
+ifneq ($(PDK),$(REQUIRED_PDK))
+$(error PDK is "$(PDK)", but this IP needs "$(REQUIRED_PDK)". Run `sak-pdk $(REQUIRED_PDK)` in this shell and retry, or pass REQUIRED_PDK= to skip this check)
+endif
+endif
+endif
+# ================================================================================================
+
+
 # Cell name for verification targets (default: top-level cell)
 # Override with: make <target> CELL=<cellname>
 CELL ?= $(TOP)
@@ -61,6 +78,8 @@ help: ## Show this help message
 	@echo ''
 	@echo 'Available targets:'
 	@grep -E '^[a-zA-Z0-9_.-]+:.*## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*## "}; {printf "  %-20s %s\n", $$1, $$2}'
+	@echo ''
+	@echo 'REQUIRED_PDK defaults to $(REQUIRED_PDK). Every target except help and clean aborts if $$PDK differs.'
 .PHONY: help
 # ================================================================================================
 
