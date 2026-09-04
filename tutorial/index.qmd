@@ -23,7 +23,7 @@ format:
 ---
 
 ::: {.callout-important}
-This tutorial and the underlying template repository require the [IIC-OSIC-TOOLS](https://github.com/iic-jku/IIC-OSIC-TOOLS) container with tag `2026.08` or later. All commands below must be executed from within the container, and the working directory must be a folder containing the corresponding `Makefile`.
+This tutorial and the underlying template repository require the [IIC-OSIC-TOOLS](https://github.com/iic-jku/IIC-OSIC-TOOLS) container with tag `2026.09` or later. All commands below must be executed from within the container, and the working directory must be a folder containing the corresponding `Makefile`.
 :::
 
 ::: {.callout-note}
