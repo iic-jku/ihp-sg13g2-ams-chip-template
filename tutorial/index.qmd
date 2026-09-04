@@ -521,6 +521,10 @@ Two instances are used in the chip core. One is used as a 4-channel digital inve
 An inverter can act as a digital circuit (when the input is driven by a digital signal and the output is switching between the supply rails). Here, we characterise the inverter as an analog circuit, meaning that we are interested in its continuous voltage transfer characteristic and its small-signal voltage gain.
 :::
 
+@fig-inverter-circuit shows the circuit of one channel. The NMOS $M_1$ and the PMOS $M_2$ form the complementary inverter. The transistors $M_\mathrm{dummy1}$ and $M_\mathrm{dummy2}$ are dummy devices. They do not contribute to the circuit function but improve matching in the layout, because the active transistors then see identical neighbouring structures on both sides.
+
+![The CMOS inverter circuit with dummy transistors.](fig/inverter_top/inverter_circuit.svg){#fig-inverter-circuit width=45%}
+
 ## Directory Structure
 
 The inverter design files are located in [`macros/inverter/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/inverter/), and the relevant folders are:
@@ -528,7 +532,7 @@ The inverter design files are located in [`macros/inverter/`](https://github.com
 | Folder                                          | Content                                                                                  |
 | ------------------------------------------- | ---------------------------------------------------------------------------------------- |
 | [`schematic/xschem/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/inverter/schematic/xschem/) | Xschem schematics and symbols (`inverter.sch`, `inverter.sym`, `inverter_top.sch`, `inverter_top.sym`, and the generated `inverter_top_pex.sym`). |
-| [`layout/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/inverter/layout/)         | KLayout GDS files (`*.klay.gds`) and the exported `inverter_top.gds`.           |
+| [`layout/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/inverter/layout/)         | The unit cell `inverter.gds`, the editing source `inverter_top.klay.gds` with its library map `inverter_top.klay.klib`, and the exported `inverter_top.gds`. |
 | [`testbenches/xschem/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/inverter/testbenches/xschem/) | Transient, ac open-loop, dc input sweep, and top-level transient testbenches.      |
 | [`netlist/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/inverter/netlist/)       | `schematic/` (CDL for KLayout LVS / SPICE for Magic + Netgen LVS), `layout/` (extracted for LVS), `pex/` (SPICE).           |
 | [`scripts/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/inverter/scripts/)       | Sizing notebooks (`sizing/`), the PR boundary check (`check_boundary.py`), and the PEX port check (`check_pex_ports.py`). |
@@ -538,6 +542,47 @@ The inverter design files are located in [`macros/inverter/`](https://github.com
 
 ::: {.callout-tip}
 Read the [inverter README](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/inverter/README.md) first to get familiar with the folder layout and the available Makefile targets. Most of the commands below are documented there as well.
+:::
+
+## Getting Started with Xschem {#sec-xschem-intro}
+
+Xschem is a schematic capture tool where circuits are built from symbols, wires, and net labels. Everything is stored in plain text files (`.sch` for schematics, `.sym` for symbols), which makes them friendly for version control and search-and-replace in a text editor.
+
+Always start Xschem from the schematic or testbench folder of the macro, so that the local `xschemrc` is picked up. It sources the PDK configuration, adds the macro's schematic and testbench folders to the symbol search path, and pins the netlist directory to `testbenches/xschem/simulations/`, where Ngspice runs and writes its results.
+
+```sh
+cd macros/inverter/schematic/xschem
+xschem                  # empty session
+xschem inverter.sch     # or load a schematic directly at startup
+```
+
+The most important shortcuts are listed in @tbl-xschem-keys. A complete list is available in Xschem under `Help > Keys` and in the [Xschem Cheatsheet](https://iic-jku.github.io/analog-circuit-design/aicd.html#sec-xschem-cheatsheet).
+
+| Shortcut | Action |
+| :--- | :--- |
+| `Ins` | Insert a symbol from the component library |
+| `w` | Draw a wire |
+| `m` | Move the selected objects |
+| `c` | Copy the selected objects |
+| `Del` | Delete the selected objects |
+| `q` | Edit the properties of the selected object |
+| `Shift + R` | Rotate the selection |
+| `Shift + F` / `Shift + V` | Mirror the selection horizontally / vertically |
+| `u` / `Shift + U` | Undo / redo |
+| `f` | Zoom full |
+| `Ctrl + s` | Save |
+| `Ctrl + o` | Open a schematic or symbol |
+| `e` | Descend into the schematic of the selected symbol |
+| `i` | Descend into the symbol view of the selected symbol |
+| `Ctrl + e` | Return to the parent schematic |
+| `a` | Make a symbol from the current schematic |
+| `Shift + T` | Toggle the `spice_ignore` flag on the selected instances (excluded from the netlist) |
+| `n` | Generate a netlist |
+
+: Essential Xschem shortcuts. {#tbl-xschem-keys}
+
+::: {.callout-tip}
+Since Xschem is a text-based schematic editor, you can also open `*.sch` and `*.sym` files in a text editor and modify them there. This is especially useful for search-and-replace operations.
 :::
 
 ## Schematic-Level Simulation
@@ -558,7 +603,7 @@ Four testbenches are available in
 - [`inverter_tb_dc_vout.sch`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/inverter/testbenches/xschem/inverter_tb_dc_vout.sch), dc input sweep (see @fig-inverter-tb-dc-vout-schematic),
 - [`inverter_top_tb_tran.sch`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/inverter/testbenches/xschem/inverter_top_tb_tran.sch), top-level transient on `inverter_top` (see @fig-inverter-top-tb-tran-schematic).
 
-Load a testbench in Xschem by pressing **`Ctrl + o`**, then hold **`Ctrl`** and click the **Simulate** button in the schematic to launch the simulator. Once the simulation has finished, hold **`Ctrl`** and click the **Load waves** arrow to load the results into the integrated waveform viewer. The following figures show the testbench schematics and selected plotted results.
+Load a testbench in Xschem by pressing **`Ctrl + o`**. Each testbench is operated with the three launcher buttons in the schematic. Hold **`Ctrl`** and click **Simulate** to netlist the schematic and start Ngspice. Once the simulation has finished, hold **`Ctrl`** and click **Load waves** to load the results into the integrated waveform viewer (the embedded graphs), or **Annotate OP** to back-annotate the operating point into the schematic. **Simulate** also regenerates the FET `.save` file described in @sec-tb-ac, so the operating-point annotation always matches the devices currently in the schematic. The following figures show the testbench schematics, the plotted results follow in @sec-batch-sim.
 
 ![Xschem testbench `inverter_tb_tran` (single-channel transient response on `inverter`).](fig/inverter_top/inverter_tb_tran_schematic.svg){#fig-inverter-tb-tran-schematic}
 
@@ -568,7 +613,118 @@ Load a testbench in Xschem by pressing **`Ctrl + o`**, then hold **`Ctrl`** and 
 
 ![Xschem top-level testbench `inverter_top_tb_tran` (transient on `inverter_top`).](fig/inverter_top/inverter_top_tb_tran_schematic.svg){#fig-inverter-top-tb-tran-schematic}
 
-Non-interactive runs and post-processing are also available through the Makefile.
+### Anatomy of the AC Testbench {#sec-tb-ac}
+
+We look at the ac testbench in detail, because it contains every ingredient a complete analog testbench needs. Open [`inverter_tb_ac_ol.sch`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/inverter/testbenches/xschem/inverter_tb_ac_ol.sch) (see @fig-inverter-tb-ac-ol-schematic) and identify the following parts:
+
+**1. The device under test.** An instance `x1` of `inverter.sym`. Two spare instances `x2` (`inverter.sym`) and `x3` (`inverter_pex.sym`) are also placed, with the attribute `spice_ignore=true` so they are excluded from the netlist. They are used later for the post-layout comparison in @sec-postlayout.
+
+**2. Supplies and bias.** A voltage source `VDD` with `value={VDD}` powers the circuit between the `VDD` rail and ground. The input source `vin` has the value
+
+```spice
+dc {Vcm} ac 1
+```
+
+The `dc {Vcm}` part biases the input at the switching threshold $V_\mathrm{cm} = V_\mathrm{DD}/2$, where the inverter has its highest gain. The `ac 1` part sets the small-signal stimulus amplitude to $1\,\mathrm{V}$. This does not overdrive the circuit, because the ac analysis linearises the circuit around the operating point. With an input of exactly 1, the output magnitude directly equals the voltage gain, so `v(vout)/v(vin)` is a normalised transfer function.
+
+**3. The load.** A capacitor `C1` with `value={Cload}` ($10\,\mathrm{pF}$) loads the output. A load resistor `R1` with `value={Rload}` is placed as well but disabled with `spice_ignore=true`. Toggle it with `Shift + T` if you want to study resistive loading.
+
+**4. The model includes.** A `code_shown.sym` block named `MODEL` pulls in the PDK device models with the typical corner:
+
+```spice
+.lib cornerMOSlv.lib mos_tt
+.lib cornerMOShv.lib mos_tt
+.lib cornerHBT.lib hbt_typ
+.lib cornerRES.lib res_typ
+.lib cornerCAP.lib cap_typ
+.lib cornerDIO.lib dio_tt
+```
+
+The bare file names work because the container points Ngspice at the `.spiceinit` of the active PDK (`$PDK_ROOT/$PDK/libs.tech/ngspice/.spiceinit`), which adds the PDK model directory to the Ngspice source path and loads the compiled PSP OSDI models. To simulate a different process corner, replace `mos_tt` with, for example, `mos_ss` or `mos_ff`.
+
+**5. The control block.** A second `code_shown.sym` block named `NGSPICE` contains the parameters, simulator options, and the `.control` section:
+
+```spice
+.include ../../../netlist/pex/inverter_magic_pex_3.spice
+.param VDD=1.5
+.param Vcm=VDD/2
+.temp 27
+.param Cload=10p
+.param Rload=1k
+.options savecurrents klu method=gear reltol=1e-4 abstol=1e-15 gmin=1e-15
+.control
+save all
+
+* User Constants
+let f_min = 0.1
+let f_max = 10G
+let fdc = 1
+
+* Operating Point Analysis
+op
+remzerovec
+write @schname.raw
+set appendwrite
+
+* AC Analysis
+ac dec 101 $&const.f_min $&const.f_max
+remzerovec
+write @schname.raw
+...
+.endc
+```
+
+Read it top to bottom:
+
+- The `.include` line loads the extracted PEX netlist from [`netlist/pex/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/inverter/netlist/pex/), which defines the subcircuit `inverter_pex`. It is not used while `x1` is active, but it must be present for the post-layout swap in @sec-postlayout. The extracted netlists are tracked in the repository, so a fresh clone simulates right away, and `make magic-pex CELL=inverter` refreshes them (see @sec-pex).
+- The `.param` lines define the supply, the input bias, and the load as parameters, so one edit changes the whole testbench. The `.temp` line sets the simulation temperature in °C. It is an Ngspice directive of its own, not a parameter.
+- The `.options` line selects the KLU sparse solver and tightens the tolerances for a clean ac result.
+- Inside `.control`, first an operating point analysis (`op`) runs and its result is written to the `.raw` file. This is what **Annotate OP** reads.
+- Then the ac analysis sweeps 101 points per decade from $0.1\,\mathrm{Hz}$ to $10\,\mathrm{GHz}$ and appends the result to the same `.raw` file.
+
+**6. The measurements.** After the analysis, the control block computes the open-loop gain and extracts the key numbers:
+
+```spice
+let Aol = v(vout)/v(vin)
+let Aol_dB = vdb(Aol)
+let Aol_arg = 180/PI*cphase(Aol)
+
+* DC open-loop gain
+meas ac Adc_ol_dB find Aol_dB when frequency = fdc
+
+* 3dB cut-off frequency
+let Aol_fc = Adc_ol_dB - 3
+meas ac fc find frequency when Aol_dB = Aol_fc
+
+* Unity Gain Bandwidth (Aol=1 or Aol_dB = 0dB)
+meas ac UGB when Aol_dB=0 fall=1
+
+* Phase Margin at Aol=1 or Aol_dB = 0dB
+meas ac arg_0dB find Aol_arg when Aol_dB=0
+let PM = 180-abs(arg_0dB)
+```
+
+The phase starts at $180°$ because the inverter is an inverting amplifier. With the sizing from @sec-sizing you should measure approximately $A_\mathrm{ol} = 31.3\,\mathrm{dB}$, $f_\mathrm{c} = 2.9\,\mathrm{MHz}$, and $\mathrm{UGB} = 107\,\mathrm{MHz}$ (see @fig-inverter-tb-ac-ol-sim).
+
+**7. The data export.** The final `wrdata` command writes the traces to [`plot_simulations/data/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/inverter/testbenches/xschem/plot_simulations/data), so the Python plotting script and the batch flow from @sec-batch-sim can use them.
+
+**8. Graphs and the save file.** The embedded graph boxes display magnitude and phase after **Load waves**. A small `SAVE` code block pulls in the FET save file:
+
+```spice
+.include [file rootname [file tail [xschem get schname]]].save
+```
+
+The Tcl expression evaluates to the bare file name of the current schematic, for example `inverter_tb_ac_ol.save`, so the include resolves inside `testbenches/xschem/simulations/`, where Ngspice runs. That file holds a `.save` line for every transistor parameter (`ids`, `gm`, `gds`, `vth`, ...), which is what the `annotate_fet_params` symbols inside the inverter and the **Annotate OP** launcher read back from the `.raw` file. Without it, Ngspice would not store these internal device quantities and the annotation would stay empty.
+
+You never have to create the file by hand: both the **Simulate** launcher and `make sim-xschem` (see @sec-batch-sim) write it before every run with `write_data [save_params]`. Since `testbenches/xschem/simulations/` is generated and git-ignored, a fresh clone works right away. Xschem's **IHP > Create FET .save file** menu entry writes the same file manually.
+
+::: {.callout-tip}
+The dc and transient testbenches follow exactly the same pattern. Only the analysis command changes: `dc Vgsp 0 $&VDD 1m` sweeps the input source in $1\,\mathrm{mV}$ steps, and `tran 1u 5m` simulates $5\,\mathrm{ms}$ with a sine input `sin({Vcm} 10m 1k)`, a $10\,\mathrm{mV}$ amplitude at $1\,\mathrm{kHz}$. Both testbenches add a `.csparam VDD=VDD` line next to the `.param` line, because a parameter is visible inside the `.control` block (as `$&VDD`) only through `.csparam`. In the dc sweep, at which input voltage does `vout` cross $V_\mathrm{cm} = 0.75\,\mathrm{V}$? The simulation reports approximately $0.745\,\mathrm{V}$, slightly below $V_\mathrm{DD}/2$.
+:::
+
+### Batch Simulation with the Makefile {#sec-batch-sim}
+
+Every testbench can also be run non-interactively through the Makefile, which is useful for reproducible results and scripting.
 
 ```sh
 cd macros/inverter
@@ -596,17 +752,36 @@ The full simulation suite, including all four testbenches plus the CACE flow (se
 
 To inspect or modify the underlying circuit of a symbol, mark the symbol and press **`e`** to descend into the underlying circuit, then **`Ctrl + e`** to go back up. To inspect or modify the graphical symbol of a device, mark the symbol and press **`i`** to descend into the symbol drawing, then **`Ctrl + e`** to go back up again.
 
-::: {.callout-tip}
-Since Xschem is a text-based schematic editor, you can also open `*.sch` and `*.sym` files in a text editor and modify them there. This is especially useful for search-and-replace operations.
-:::
-
-@fig-inverter-symbol shows the symbol of the `inverter` cell.
-
-![Xschem `inverter` symbol.](fig/inverter_top/inverter_symbol.svg){#fig-inverter-symbol width=30%}
+### Drawing the Inverter Schematic {#sec-draw-schematic}
 
 @fig-inverter-schematic displays the schematic of the `inverter` cell with additional small-signal parameters for the NMOS and PMOS transistors at the chosen operating point. To view these small-signal parameters, hold **`Ctrl`** and click **Annotate OP** after the simulation has finished. Afterwards, descend into the inverter schematic.
 
 ![Xschem `inverter` schematic with dummy transistors and OP annotations.](fig/inverter_top/inverter_schematic.svg){#fig-inverter-schematic width=65%}
+
+To draw this schematic from scratch, start Xschem in `macros/inverter/schematic/xschem/` and go through the following steps. The reference is [`inverter.sch`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/inverter/schematic/xschem/inverter.sch), and the device geometry comes from the sizing in @sec-sizing (see @tbl-inverter-sizing-geom).
+
+1. **Place the transistors.** Press `Ins`, and pick `sg13_lv_nmos.sym` and `sg13_lv_pmos.sym` from the `sg13g2_pr` PDK library. Place the NMOS $M_1$ at the bottom and the PMOS $M_2$ at the top.
+2. **Set the device parameters.** Select a transistor and press `q`. Enter the values from @tbl-inverter-sizing-geom, for example for $M_1$: `l=1.0u`, `w=20.0u`, `ng=20`, `m=1`. Note that `w` is the total width and `ng` is the number of fingers. Keep `spiceprefix=X`, because the PSP transistor models of the PDK are SPICE subcircuits and must be instantiated with an `X` prefix. Keep `mm_ok=1` as well, it is the per-instance switch of the PDK's mismatch models, which the CACE mismatch runs in @sec-cace rely on.
+3. **Place the dummy transistors.** Copy each device with `c` and change the properties to the dummy sizing (`w=2.0u`, `ng=2` for the NMOS and `w=12.0u`, `ng=2` for the PMOS). Wire all four terminals of each dummy to its supply rail (gate, source, drain, and bulk of $M_\mathrm{dummy1}$ to `VSS`, those of $M_\mathrm{dummy2}$ to `VDD`), so the dummies are off and only their geometry matters.
+4. **Wire the circuit.** Press `w` and connect the gates of $M_1$ and $M_2$ to the input net, the drains to the output net, the NMOS source and bulk to `VSS`, and the PMOS source and bulk to `VDD`.
+5. **Add the pins.** Press `Ins` and place `ipin.sym` for the input `vin`, `iopin.sym` for the output `vout`, and `iopin.sym` for `VDD` and `VSS`. The pin names define the port names of the subcircuit later used for LVS, so name them exactly `vin`, `vout`, `VDD`, and `VSS`.
+6. **Annotate (optional).** Place `annotate_fet_params.sym` next to $M_1$ and $M_2$ and set `ref=M1` and `ref=M2`. After a simulation, these display the operating-point parameters of the devices directly in the schematic, as visible in @fig-inverter-schematic.
+7. **Save** with `Ctrl + s` as `inverter.sch`.
+
+### Drawing the Inverter Symbol {#sec-draw-symbol}
+
+To use the inverter in a testbench or in the 4-channel `inverter_top.sch`, it needs a symbol. @fig-inverter-symbol shows the finished symbol, the reference is [`inverter.sym`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/inverter/schematic/xschem/inverter.sym).
+
+![Xschem `inverter` symbol.](fig/inverter_top/inverter_symbol.svg){#fig-inverter-symbol width=30%}
+
+1. **Auto-generate the symbol.** With `inverter.sch` open, press `a`. Xschem creates `inverter.sym` with one pin per schematic pin, placed on a rectangular outline.
+2. **Open the symbol.** Load it with `Ctrl + o` (or select a placed instance and press `i`).
+3. **Redraw the shape.** Delete the auto-generated rectangle and draw the triangle with the output bubble using the line (`l`) and arc tools. Keep the pin boxes, they carry the electrical information (`name` and `dir` attributes).
+4. **Arrange the pins.** Place `vin` on the left, `vout` on the right, `VDD` on top, and `VSS` at the bottom. Add the small text labels with `t`.
+5. **Check the global properties.** Press `q` with nothing selected. The symbol must have `type=subcircuit` and `format="@name @pinlist @symname"`. With `type=subcircuit`, Xschem descends into `inverter.sch` during netlisting and emits the full transistor-level subcircuit. Keep the `spectre_format` line that Xschem wrote next to it, see the note in @sec-pex.
+6. **Save** the symbol.
+
+You can now place the symbol in any schematic with `Ins`. The 4-channel [`inverter_top.sch`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/inverter/schematic/xschem/inverter_top.sch) places four instances of it, and its symbol `inverter_top.sym` is drawn the same way. The PEX symbols `inverter_pex.sym` and `inverter_top_pex.sym` are not drawn by hand, `make symbol-pex` derives them (see @sec-pex).
 
 ## Process Variation and Mismatch (CACE) {#sec-cace}
 
@@ -652,9 +827,44 @@ In the `inverter.yaml` characterisation file, more parameter sweeps can be added
 Do not `print()` from a CACE postprocess hook. The hooks in [`verification/cace/scripts/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/inverter/verification/cace/scripts/) post-process the raw Ngspice results before CACE evaluates them against the specification, and CACE 2.11.0 redirects their stdout into its own rich logger, which writes back to stdout. The first `print()` therefore recurses without end, and `make sim-cace` hangs instead of failing. That is why the debug prints in [`inverter_tb_ac.py`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/inverter/verification/cace/scripts/inverter_tb_ac.py) are commented out. Write intermediate values to a file if you need to inspect them.
 :::
 
-## Transistor Sizing
+## Transistor Sizing {#sec-sizing}
 
-During simulation, it could happen that some specifications are not fulfilled and that the inverter must be resized. In this tutorial, the inverter is sized with the $g_\mathrm{m}/I_\mathrm{D}$ method (see [Transistor Sizing Using $g_\mathrm{m}/I_\mathrm{D}$ Methodology](https://iic-jku.github.io/analog-circuit-design/aicd.html#sec-gmid-method) for theoretical background). Instead of relying on textbook square-law equations, the method looks up the actual device behaviour from pre-characterised SPICE simulations, parameterised by $g_\mathrm{m}/I_\mathrm{D}$. An overview of these techsweeps can be found in the folder [`doc/sizing/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/doc/sizing). The chosen $g_\mathrm{m}/I_\mathrm{D}$ point sets the inversion level of the transistor and therefore the trade-off between intrinsic gain (high $g_\mathrm{m}/I_\mathrm{D}$, weak inversion) and bandwidth (low $g_\mathrm{m}/I_\mathrm{D}$, strong inversion). An overview of the $g_\mathrm{m}/I_\mathrm{D}$ trade-offs can be found [here](https://iic-jku.github.io/analog-circuit-design/aicd.html#sec-tradeoffs-saturation). For each chosen operating point the lookup tables return all relevant figures of merit ($I_\mathrm{D}/W$, $g_\mathrm{m}/g_\mathrm{ds}$, $g_\mathrm{m}/C_\mathrm{gg}$, $S_\mathrm{TH}$, etc.) at the actual bias condition, which is then used to compute $W$ for a given drain current.
+During simulation, it could happen that some specifications are not fulfilled and that the inverter must be resized. In this tutorial, the inverter is sized with the $g_\mathrm{m}/I_\mathrm{D}$ method (see [Transistor Sizing Using $g_\mathrm{m}/I_\mathrm{D}$ Methodology](https://iic-jku.github.io/analog-circuit-design/aicd.html#sec-gmid-method) for theoretical background). Instead of relying on textbook square-law equations, the method looks up the actual device behaviour from pre-characterised SPICE simulations, parameterised by $g_\mathrm{m}/I_\mathrm{D}$. An overview of these techsweeps can be found in the folder [`doc/sizing/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/doc/sizing). The chosen $g_\mathrm{m}/I_\mathrm{D}$ point sets the inversion level of the transistor and therefore the trade-off between intrinsic gain (high $g_\mathrm{m}/I_\mathrm{D}$, weak inversion) and bandwidth (low $g_\mathrm{m}/I_\mathrm{D}$, strong inversion). These trade-offs are discussed in @sec-tradeoffs. For each chosen operating point the lookup tables return all relevant figures of merit ($I_\mathrm{D}/W$, $g_\mathrm{m}/g_\mathrm{ds}$, $g_\mathrm{m}/C_\mathrm{gg}$, $S_\mathrm{TH}$, etc.) at the actual bias condition, which is then used to compute $W$ for a given drain current.
+
+### Design Trade-offs: Choosing $g_\mathrm{m}/I_\mathrm{D}$ and $L$ {#sec-tradeoffs}
+
+Before sizing anything, two numbers have to be picked: the transconductance efficiency $g_\mathrm{m}/I_\mathrm{D}$ and the channel length $L$. Everything else follows from them, so it is worth understanding what each one buys and what it costs.
+
+$g_\mathrm{m}/I_\mathrm{D}$ says how much transconductance you get per ampere of bias current, in $\mathrm{S/A}$ or $\mathrm{V^{-1}}$. It is a normalised, technology-independent measure of the **inversion level** of the device.
+
+@fig-tradeoffs shows the trade-offs in one picture. The arrows point from the centre towards the corner where each design parameter reaches its **best** value, so the same parameter is at its worst in the opposite direction.
+
+![Overview of key design trade-offs depending on the channel length $L$ and the transconductance efficiency $g_\mathrm{m}/I_\mathrm{D}$. Taken from [Tradeoffs in Saturation](https://iic-jku.github.io/analog-circuit-design/aicd.html#sec-tradeoffs-saturation) in the Analog Circuit Design course at JKU.](fig/inverter_top/tradeoffs_gmid.svg){#fig-tradeoffs width=75%}
+
+Read it corner by corner:
+
+- **Strong inversion, short $L$** (bottom left): $f_\mathrm{T}$ and input impedance $Z_\mathrm{in}$ are maximal, gate capacitance $C_\mathrm{gg}$ and area are minimal. This is the high-speed corner.
+- **Strong inversion, medium $L$** (left): minimal thermal noise PSD $S_\mathrm{TH}$ and maximal current density $I_\mathrm{D}/W$.
+- **Moderate inversion, short $L$** (bottom): the speed-efficiency product $f_\mathrm{T} \cdot g_\mathrm{m}/I_\mathrm{D}$ is maximal, the best overall compromise between bandwidth and current.
+- **Moderate inversion, long $L$** (top): the output resistance $r_\mathrm{ds} = 1/g_\mathrm{ds}$ is maximal. This is where current sources belong.
+- **Weak inversion, long $L$** (top right): intrinsic gain $g_\mathrm{m}/g_\mathrm{ds}$ is maximal, while flicker corner frequency $f_\mathrm{co}$, noise factor $\gamma$, flicker noise $S_\mathrm{FL}$, offset $V_\mathrm{OS}$, and power $P$ are minimal. This is the low-power, low-noise, high-gain corner.
+- **Weak inversion, medium $L$** (right): overdrive $V_\mathrm{od}$ and $V_\mathrm{ds,sat}$ are minimal, so this corner gives the most voltage headroom.
+
+Two corners stay empty on purpose. Strong inversion with a long channel and weak inversion with a short channel optimise nothing, they combine the drawbacks of both settings, so in practice they make little sense.
+
+::: {.callout-tip}
+## Rules of thumb
+
+Fast circuits use **strong inversion with short channels**. Low-power and low-noise circuits use **weak inversion with long channels**. Current sources use **moderate inversion with longer channels**, to maximise their output resistance. Everything else starts in moderate inversion and is moved from there.
+:::
+
+::: {.callout-note}
+## Where does our inverter sit?
+
+The sizing below lands at $g_\mathrm{m}/I_\mathrm{D} = 3.76\,\mathrm{V^{-1}}$ with $L = 1\,\mathrm{\mu m}$, which is deep strong inversion with a comparatively long channel, that is the corner the map leaves empty. This is a deliberate compromise for this example, not an oversight: the stage has to drive a $10\,\mathrm{pF}$ load, which demands a lot of $g_\mathrm{m}$ and therefore a lot of current, while the long channel keeps the intrinsic gain and the matching of this very simple circuit acceptable. It also explains the modest simulated gain of about $31\,\mathrm{dB}$. Keep the map in mind when you size your own blocks, where you are free to choose the operating point rather than inheriting it.
+:::
+
+### Sizing the Inverter {#sec-sizing-inverter}
 
 The full sizing flow for the inverter is implemented in the Jupyter notebook [`scripts/sizing/sizing_inverter.ipynb`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/inverter/scripts/sizing/sizing_inverter.ipynb). The notebook uses [`pygmid`](https://github.com/dreoilin/pygmid) to query the pre-characterised ihp-sg13g2 NMOS/PMOS lookup tables ([`sg13g2_lv_nmos.mat`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/inverter/scripts/sizing/data/sg13g2_lv_nmos.mat) and [`sg13g2_lv_pmos.mat`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/inverter/scripts/sizing/data/sg13g2_lv_pmos.mat)). An overview of the $g_\mathrm{m}/I_\mathrm{D}$ MOSFET characterisation procedure can be found [here](https://iic-jku.github.io/analog-circuit-design/aicd.html#sec-techsweep-testbench).
 
@@ -672,8 +882,10 @@ The resulting device geometry is summarised in @tbl-inverter-sizing-geom.
 | :------ | :----------------------: | :-----------------: | :-------------------------------: | :----------------------------: |
 | NMOS $M_1$ | 1.0                   | 20              | 1.0                               | 20.0                           |
 | PMOS $M_2$ | 1.0                   | 20              | 6.0                               | 120.0                          |
+| NMOS $M_\mathrm{dummy1}$ | 1.0     | 2               | 1.0                               | 2.0                            |
+| PMOS $M_\mathrm{dummy2}$ | 1.0     | 2               | 6.0                               | 12.0                           |
 
-: Sized device geometry of the complementary inverter. {#tbl-inverter-sizing-geom}
+: Sized device geometry of the complementary inverter and its dummy devices. {#tbl-inverter-sizing-geom}
 
 With these final widths the notebook computes the small-signal parameters listed in @tbl-inverter-sizing-ss. As a reference, compare these values with the OP annotations in @fig-inverter-schematic.
 
@@ -725,11 +937,64 @@ $$
 The notebook is fully parametric. Changing $L$, the target $g_\mathrm{m}/I_\mathrm{D}$ or $I_\mathrm{out}$ and re-running the cells immediately produces a new sizing point, so it can be used as a starting template for sizing other simple analog blocks with the ihp-sg13g2 lookup tables. Try it out yourself by decreasing the transistor length to $L = 0.5\,\mathrm{\mu m}$ and see how the small-signal parameters and the resulting open-loop gain and cut-off frequency change. What would you expect based on the trade-offs above?
 :::
 
+## Getting Started with KLayout {#sec-klayout-intro}
+
+The layout is created and edited in KLayout. Open it in edit mode with `ke`, an alias for `klayout -e` provided by the container. With the ihp-sg13g2 PDK active, KLayout loads the `sg13g2` technology, which brings the layer properties, the `SG13_dev` PCell library, and the `SG13G2 PDK` menu with the DRC and LVS runners.
+
+```sh
+ke                              # empty session
+ke layout/inverter_top.klay.gds # or open a layout directly at startup
+```
+
+Some basics before drawing:
+
+- **Database unit.** When creating a new layout (`File > New Layout`), set the database unit (DBU) to $0.001\,\mathrm{\mu m}$. This is important for the IHP Open-PDK. The [KLayout cheatsheet](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/doc/klayout/klayout_cheatsheet.md) explains how to rescale a layout that was started with the wrong DBU.
+- **Layer roles.** Each drawing layer has three roles: `MetalX.drawing` carries the actual geometry, `MetalX.pin` marks the pin shapes, and `MetalX.text` carries the pin labels used by LVS.
+- **PCells.** The PDK provides parametric cells (PCells) in the `SG13_dev` library, for example `nmos`, `pmos`, resistors (`rppd`, `rsil`, `rhigh`), capacitors (`cmim`, `moscap_n`, `moscap_p`), taps (`ntap1`, `ptap1`), the `guard_ring`, and `via_stack`. Select a placed PCell and press `Q` to edit its parameters.
+
+The most important shortcuts are listed in @tbl-klayout-keys, taken from the [KLayout cheatsheet](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/doc/klayout/klayout_cheatsheet.md) in this repository.
+
+| Shortcut | Action |
+| :--- | :--- |
+| `Q` | Properties of the selected object / PCell |
+| `M` | Move quickly |
+| `A` | Align tool |
+| `C` | Copy object |
+| `P` | Path / drawing tool (double-click to finish) |
+| `R` | Draw rectangle |
+| `T` | Place text |
+| `Shift + P` | Set pin (input, output, ...) for LVS |
+| `O` | Place vias during routing (path mode) |
+| `E` / `Ctrl + E` | Descend into / ascend from an instance |
+| `Shift + R` | Rotate instance by 90° |
+| `Shift + H` / `Shift + V` | Flip instance horizontally / vertically |
+| `F` | Zoom full |
+| `U` / `Shift + U` | Undo / redo |
+| `K` / `Shift + K` | Ruler+ / clear all rulers |
+| `0` ... `9` | Layer focus (see @tbl-klayout-plugins) |
+
+: Essential KLayout shortcuts with the productivity plugins installed. {#tbl-klayout-keys}
+
+Most of these shortcuts come from the [KLayout Productivity Suite](https://github.com/iic-jku/klayout-productivity-suite), a collection of plugins developed at JKU that make manual layout much faster. The suite is installed in the IIC-OSIC-TOOLS container, so nothing has to be set up. The full documentation with animations is [here](https://iic-jku.github.io/klayout-productivity-suite/doc/doc.html). A short summary:
+
+| Plugin | What it does |
+| :----- | :----------- |
+| **Move Quickly Tool** (`M`) | Rapid repositioning of shapes and instances with mouse or keyboard, including diagonal moves and multi-object selection |
+| **Align Tool** (`A`) | Align objects to each other by clicking reference features (middle, corner, or edge markers) |
+| **Pin Tool** (`Shift + P`) | Place LVS-ready pins (pin shape plus text label) with automatic layer detection from the current layer selection |
+| **Layer Shortcuts** (`0` ... `9`) | Fast layer visibility switching: `1` ... `7` focus on one metal with its vias, `8` gate poly, `9` diffusion, `0` shows the default layers, `,` hides them, `Shift + 1` ... `Shift + 9` extend the current focus by one more layer group |
+| **Netlist Import** (`File > Import > Netlist`) | Import a SPICE netlist and place the cell instances with technology-specific mapping. Great for starting a layout from the schematic netlist |
+| **Library Manager** (`File > Cell Library Manager`) | Manage hierarchical layouts and cell libraries, and export a clean layout for tapeout |
+| **Auto Backup** (`File > Automatic Backups`) | Periodic layout backups with configurable interval and rotation |
+| **Vector File Export** (`File > Export Vector File`) | Export the layout view as PDF or SVG |
+
+: The KLayout productivity plugins in a nutshell. {#tbl-klayout-plugins}
+
 ## Inspect / Edit the Layout {#sec-inspect-layout}
 
 After the schematic is finalised and the design targets are met, the layout can be created. The layout of the `inverter` cell is hierarchical, and the top-level cell `inverter_top` contains four instances of the `inverter` cell. Around the 4-channel inverter layout, a power ring is drawn on `Metal5` and `TopMetal1` layers, which is connected to the `VDD` and `VSS` pins of the four inverters. This power ring is required for top-level integration, connecting the macro power to the chip's PDN.
 
-The layout is created and edited in KLayout. The container provides the `ke` alias for `klayout -e` (edit mode). With the following command, the GDS of the 4-channel inverter is opened in KLayout as shown in @fig-inverter-top-layout. With the keys `0`, `1`, `2`, ..., `9` you can view different layers as explained in the [KLayout cheatsheet](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/doc/klayout/klayout_cheatsheet.md) or in the [klayout-layer-shortcuts](https://github.com/iic-jku/klayout-layer-shortcuts) plugin.
+With the following command, the GDS of the 4-channel inverter is opened in KLayout as shown in @fig-inverter-top-layout. Use the layer shortcuts `0`, `1`, `2`, ..., `9` from @tbl-klayout-plugins to view the individual layers.
 
 ```sh
 ke layout/inverter_top.klay.gds
@@ -750,6 +1015,22 @@ Never delete the box on the `prBoundary` layer (`189/0`) that frames the macro, 
 KLayout also supports a 2.5D viewer, which can be used to inspect the layout. To open the 2.5D viewer, press `SG13G2 PDK > BEOL 2.5D Viewer`. @fig-inverter-top-layout-3D shows the `inverter_top` layout in the 2.5D viewer.
 
 ![`inverter_top` layout in KLayout 2.5D viewer.](fig/inverter_top/inverter_top_3D.png){#fig-inverter-top-layout-3D width=100%}
+
+### Drawing the `inverter` Unit Cell {#sec-draw-layout}
+
+The hierarchy starts with the unit cell. [`layout/inverter.gds`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/inverter/layout/) is its editing source, and `inverter_top.klay.gds` pulls it in as a library through `inverter_top.klay.klib`, so the four instances follow every edit of the unit cell. To draw the unit cell from scratch, open KLayout with `ke` and go through the following steps. The finished result is the `inverter` cell inside @fig-inverter-top-layout.
+
+1. **Create the cell.** `File > New Layout`, top cell name `inverter`, DBU $0.001\,\mathrm{\mu m}$.
+2. **Place the transistor PCells.** Drag `nmos` and `pmos` from the `SG13_dev` library into the layout. Place the PMOS row above the NMOS row.
+3. **Match the schematic.** Select each PCell and press `Q`. Set the same `w`, `l`, and `ng` values as in the schematic (@tbl-inverter-sizing-geom): the NMOS with $20 \times 1.0\,\mathrm{\mu m}$ fingers and the PMOS with $20 \times 6.0\,\mathrm{\mu m}$ fingers, both with $L = 1.0\,\mathrm{\mu m}$. As in the schematic, `w` is the total width that the PCell splits into `ng` fingers. Add the two dummy devices next to the active devices in the same way.
+4. **Substrate and well contacts.** Tie the substrate to `VSS` and the n-well of the PMOS to `VDD` with `ptap1` / `ntap1` contacts (or a `guard_ring`).
+5. **Route.** Connect the gates (input), the drains (output), and the source rails with `Metal1` and `Metal2`. Use the path tool `P`, place vias with `O` or with `via_stack` PCells. Keep signal routing on the lower metals within a macro. Use the layer shortcuts `1`, `2`, `8`, `9` to focus on the layer you are working on.
+6. **Add the pins.** Select the target metal layer and press `Shift + P` to place the pins `vin`, `vout`, `VDD`, and `VSS`. The pin tool places the pin shape on `MetalX.pin` and the label on `MetalX.text`, which is exactly what LVS expects.
+7. **Save** as `layout/inverter.gds`. Then open `inverter_top.klay.gds`, check the four instances and the power ring, and export `inverter_top.gds` as described above.
+
+::: {.callout-tip}
+The layout drawing order follows the matching rules of analog design: active devices in the centre with common orientation, dummies at the edges, and taps close to the devices. Also check the layout tips in the [KLayout cheatsheet](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/doc/klayout/klayout_cheatsheet.md).
+:::
 
 ## DRC, LVS, and PEX
 
@@ -776,6 +1057,14 @@ make magic-drc [CELL=<cellname>]    # default CELL=inverter_top
 
 Reports are written into per-cell run folders (`<CELL>.magic.drc/` for Magic, `<CELL>.klayout.drc/` for KLayout) inside [`verification/drc/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/inverter/verification/drc/). The run folders are wiped at the start of each run, so they always reflect the latest run only.
 
+A successful KLayout run ends with the line
+
+```text
+INFO    | KLayout DRC Check Passed: No DRC violations detected in the layout.
+```
+
+and the Magic report `<CELL>.magic.drc.rpt` lists `COUNT: 0` for the cell.
+
 ::: {.callout-tip}
 In KLayout, a non-interactive DRC run can be launched from the GUI by pressing **`F9`**. The DRC options can be modified by pressing **`F10`**.
 
@@ -794,13 +1083,36 @@ make magic-lvs [CELL=<cellname>]    # default CELL=inverter_top, uses SPICE netl
 The schematic netlist is exported automatically by the matching `*-lvs-netlist` sub-target and moved to [`netlist/schematic/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/inverter/netlist/schematic/). The extracted layout netlist is moved to
 [`netlist/layout/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/inverter/netlist/layout/) and the reports are written into per-cell run folders (`<CELL>.magic.lvs/` for Magic + Netgen, `<CELL>.klayout.lvs/` for KLayout) inside [`verification/lvs/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/inverter/verification/lvs/). The run folders are wiped at the start of each run, so they always reflect the latest run only.
 
+Substrate and well contacts are not devices for LVS in either flow (KLayout skips the `ntap1` / `ptap1` device extraction, Magic extracts them as substrate connections), so the taps in the layout need no matching device in the schematic. A successful KLayout run prints:
+
+```text
+| Status           | PASS                                    |
+| Mode             | COMPARE                                 |
+| Outcome          | Comparison mode: PASS (netlists match). |
+| Warnings         | 0                                       |
+| Errors           | 0                                       |
+```
+
+The Magic + Netgen flow reports:
+
+```text
+Cell pin lists are equivalent.
+Device classes inverter_top and inverter_top are equivalent.
+
+Final result: Circuits match uniquely.
+```
+
+::: {.callout-note}
+The Netgen report additionally states `Netlists match uniquely with property errors` and lists one warning per transistor about a `mm_ok` property that exists only on the schematic side. It is the mismatch switch of the Xschem symbol (see @sec-draw-schematic), which the layout PCell does not carry, so the two netlists cannot agree on it. This is expected with the current PDK and can be ignored as long as the final result reads `Circuits match uniquely.`
+:::
+
 ::: {.callout-tip}
 In KLayout, a non-interactive LVS run can be launched from the GUI by pressing **`F11`**. The LVS options can be modified by pressing **`F12`**, where the schematic netlist `inverter_top_klayout.cdl` has to be selected manually. Set `deep` as the run mode.
 
 ![KLayout LVS output windows.](fig/inverter_top/KLayout_LVS_Output.png){width=100%}
 :::
 
-### Parasitic Extraction
+### Parasitic Extraction {#sec-pex}
 
 The non-interactive PEX can be run with the following Makefile targets. The `CELL` variable can be set to run PEX on a specific cell, or it defaults to `inverter_top` if not set. The `EXT_MODE` variable can be set to choose between different extraction modes,
 
@@ -825,17 +1137,31 @@ PEX writes a SPICE netlist into [`netlist/pex/`](https://github.com/iic-jku/ihp-
 
 That PEX symbol is generated, not maintained by hand. Both PEX targets start by running `make symbol-pex`, which copies `schematic/xschem/<CELL>.sym` to `schematic/xschem/<CELL>_pex.sym` and changes `type=subcircuit` into `type=primitive`. Everything else is inherited, above all the pin order that `sak-pin-reorder.py` sorts the extracted netlist to. The `primitive` type keeps Xschem from descending into a schematic of the same name, so the instance is netlisted as it stands and its subcircuit comes from the included PEX netlist instead. Because the symbol is rebuilt before every extraction, it cannot go stale when a pin is added, removed or renamed, and it can be built on its own with `make symbol-pex [CELL=<cellname>]`. Edit `<CELL>.sym`, never the generated `<CELL>_pex.sym`.
 
+After the reorder, both PEX targets run [`scripts/check_pex_ports.py`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/inverter/scripts/check_pex_ports.py) on the extracted netlist and fail if a port of the subcircuit is not connected to any element inside it. A floating port usually means a missing or misspelled pin label in the layout, and it is better caught here than as a silently open input in the post-layout simulation.
+
 ::: {.callout-note}
 Every symbol in this template carries `spectre_format="@name ( @pinlist ) @symname"` next to its `format` line. Xschem writes that line itself whenever a symbol is generated from a schematic's pin list (key `a`), and only the Spectre netlister reads it, which is also the one that drives VACASK. The SPICE netlister used for Ngspice ignores it. Do not delete it: without it, instances of that symbol are silently dropped from a Spectre/VACASK netlist and its `subckt` line comes out with an empty port list, with no warning at all.
-:::
-
-::: {.callout-tip}
-To run a post-layout simulation, open one of the Xschem testbenches, swap the original symbol with the PEX symbol, and include the path to the SPICE netlist so the extracted netlist is used in the same testbench. This is the recommended way to compare schematic-only and post-layout simulation results.
 :::
 
 ::: {.callout-note}
 Note that [KLayout-PEX (KPEX)](https://github.com/iic-jku/klayout-pex) is currently under development and therefore the Magic engine is used internally for the actual extraction.
 :::
+
+### Post-Layout Simulation {#sec-postlayout}
+
+Now we close the loop and simulate the extracted layout in the same testbenches. Every testbench already carries a spare instance of the PEX symbol (`x3`, see @sec-tb-ac), and the PEX symbol has the same pin positions as the cell symbol, so the swap takes a few key presses:
+
+1. Open a testbench, for example `inverter_tb_ac_ol.sch`.
+2. Select the active instance `x1` (`inverter.sym`) and press `Shift + T` to set its `spice_ignore` flag. It is now excluded from the netlist.
+3. Select the spare instance `x3` (`inverter_pex.sym`), move it with `m` onto the position of `x1`, and press `Shift + T` to activate it. Its pins land on the same wires, so nothing else changes.
+4. The `.include ../../../netlist/pex/inverter_magic_pex_3.spice` line at the top of the control block now supplies the subcircuit definition. If you extracted with a different `EXT_MODE` or with KLayout, adapt the file name (for example `inverter_klayout_pex_3.spice`).
+5. Re-run the simulation with `Ctrl` + click on **Simulate**.
+
+The same swap works in `inverter_top_tb_tran.sch` with `inverter_top_pex.sym` and `inverter_top_magic_pex_3.spice`, which is the post-layout view that `make all` refreshes before it simulates (see @sec-full-analog-flow).
+
+Compare the post-layout results against the schematic-level results. What differences do you see, and why?
+
+Think about it before simulating. The extracted netlist adds the wiring resistance and the capacitance of every drawn wire to the circuit. The dc transfer characteristic should barely change, because almost no current flows into the parasitics at dc. In the ac response, the added output and internal capacitances and the interconnect resistance shift the poles, so expect a slightly reduced bandwidth and small changes in the measured gain. If your post-layout results deviate strongly, that is usually a sign of a layout problem, for example a too narrow or too long wire on a critical net.
 
 ### Run Full Verification Flow at Once
 
@@ -862,7 +1188,7 @@ make build-top        # the four steps above plus copy-gds and render-gds
 
 `make build-top` also copies the GDS to [`final/gds/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/inverter/final/gds/) and renders the macro to [`render/img/inverter_top_white.png` and `render/img/inverter_top_black.png`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/inverter/render/img/), as displayed in @fig-inverter-top-layout.
 
-## Full Analog Macro Flow
+## Full Analog Macro Flow {#sec-full-analog-flow}
 
 The full verification, build, and simulation chain is run with the following command.
 
@@ -1462,12 +1788,12 @@ Replace the binary counter with a 16-bit Gray counter (only one bit toggles per 
 
 Repeat @sec-analog with a self-biased single-ended inverter amplifier by adding a feedback resistor $R_\mathrm{f}$ between the output and the input of the inverter. As discussed in @sec-cace, the bare CMOS inverter has poor PVT robustness because nothing pins the gate bias to $V_\mathrm{DD}/2$. A feedback resistor closes a DC loop that forces the operating point to the high-gain crossover ($V_\mathrm{in} \approx V_\mathrm{out} \approx V_\mathrm{DD}/2$) regardless of process corner, which also linearises the small-signal transfer characteristic and turns the inverter into a usable single-ended amplifier. The disadvantage of this technique is the reduced input resistance, which equals $R_\mathrm{in} \approx 1 / (g_\mathrm{m,NMOS} + g_\mathrm{m,PMOS})$. The recommended steps are:
 
-1. Open the inverter schematic ([`inverter.sch`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/inverter/schematic/xschem/inverter.sch)) in Xschem and add a resistor between the `vin` and `vout` nets of the inverter. Start with a value of $R_\mathrm{f} = 1\,\mathrm{M\Omega}$ and adjust as needed. What can you observe?
-2. Re-run the schematic-level testbenches from @sec-analog and observe the change in behaviour. First, always carefully think about what the expected behaviour would be before running the simulations, and then check if the results match your expectations.
+1. Open the inverter schematic ([`inverter.sch`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/inverter/schematic/xschem/inverter.sch)) in Xschem and add a resistor between the `vin` and `vout` nets of the inverter. Use the `rhigh.sym` device from the `sg13g2_pr` PDK library, the high-sheet poly resistor. Keep `spiceprefix=X` and connect its `body` terminal to `VSS`. The symbol computes the value from the geometry: with a sheet resistance of $1360\,\mathrm{\Omega/sq}$ this is roughly $2.7\,\mathrm{k\Omega}$ per $\mathrm{\mu m}$ of length at $W = 0.5\,\mathrm{\mu m}$, so keep $W$ at $0.5\,\mathrm{\mu m}$ and set the value with $L$ (the `b` parameter folds a long resistor into segments). Start with a value of $R_\mathrm{f} = 1\,\mathrm{M\Omega}$ and adjust as needed. What can you observe?
+2. Re-run the schematic-level testbenches from @sec-analog and observe the change in behaviour. First, always carefully think about what the expected behaviour would be before running the simulations, and then check if the results match your expectations. Note that the ac open-loop testbench drives `vin` directly with a voltage source, which overrides the self-biasing. To observe it, also try removing the dc bias from the input (for example by coupling the source through a large capacitor) and let the feedback set the operating point.
 3. Re-run the full schematic-level simulation suite with `make sim-all` to refresh the plotted results in [`fig/inverter_top/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/tutorial/fig/inverter_top).
 4. Re-run the CACE flow with `make sim-cace` and compare the new process and mismatch plots against @fig-inverter-cace-aol and @fig-inverter-cace-fcu. The spread of $A_\mathrm{ol}$ across corners should be visibly narrower than the open-loop reference.
 5. [Optional] Sweep $R_\mathrm{f}$ in the CACE characterisation YAML ([`inverter.yaml`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/inverter/verification/cace/inverter.yaml)) to study the circuit behaviour across a range of feedback resistor values.
-6. [Optional] Once the schematic results are convincing, propagate the resistor to the layout in [`layout/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/inverter/layout/) and re-run the verification chain (`make klayout-verify`, `make magic-verify`) plus `make build-top`.
+6. [Optional] Once the schematic results are convincing, propagate the resistor to the layout in [`layout/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/inverter/layout/) with the `rhigh` PCell, using the same $W$ and $L$ as in the schematic and dummy resistors of minimum length above and below it, and re-run the verification chain (`make klayout-verify`, `make magic-verify`) plus `make build-top`. Compare the post-layout gain and bandwidth against the schematic level as in @sec-postlayout.
 
 ::: {.callout-tip}
 Choose $R_\mathrm{f}$ carefully. Too small, and the loop loads the amplifier output and degrades the closed-loop gain. Too large, and the time constant with the input parasitic capacitance dominates, so the amplifier loses gain at the low end of the signal band. A value in the $1$–$10\,\mathrm{M\Omega}$ range is a sensible starting point for this inverter sizing.
@@ -1480,10 +1806,21 @@ Repeat @sec-analog for a three-stage ring oscillator with an output buffer, deri
 1. Start the new macro as a renamed copy of the [inverter](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/inverter/) with `make macro FROM=inverter NAME=ringosc` in `macros/`. The target renames the files, the cells inside the GDS files and every reference, see the [macros README](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/README.md) for what it does and what is left.
 2. Update the schematic in Xschem. Connect three inverters in a ring, and tap the output of the last stage through a buffer. The fourth inverter of the quad inverter can naturally be used as the buffer.
 3. Update the symbol of the macro ([`schematic/xschem/inverter_top.sym`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/inverter/schematic/xschem/inverter_top.sym)) to expose a single output net, instead of `vin1..vin4` and `vout1..vout4`. The PEX symbol `inverter_top_pex.sym` is rebuilt from it by `make symbol-pex`, which the PEX targets run automatically.
-4. Update the transient testbench ([`testbenches/xschem/inverter_top_tb_tran.sch`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/inverter/testbenches/xschem/inverter_top_tb_tran.sch)) to measure the oscillation frequency. Delete testbenches that are no longer relevant.
-5. [Optional] Adapt the CACE [`inverter.yaml`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/inverter/verification/cace/inverter.yaml) to characterise the oscillation frequency across PVT.
-6. Update the layout in KLayout. The existing `inverter_top.klay.gds` can be used as a starting point, but the internal routing has to be modified to form the ring and the buffer stage. After editing, export a clean `ringosc_top.gds`. Keep the box on the `prBoundary` layer (`189/0`) and resize it with the macro, otherwise the top-level flow cannot place it. `make check-boundary` verifies this.
-7. Re-run the verification chain, `make klayout-verify`, `make magic-verify`, and `make build-top`.
+4. Update the transient testbench ([`testbenches/xschem/inverter_top_tb_tran.sch`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/inverter/testbenches/xschem/inverter_top_tb_tran.sch)) to measure the oscillation frequency. Remove the input source. Since the delay per stage is small, simulate a few hundred nanoseconds with a fine step, and measure the period between two consecutive rising crossings of $V_\mathrm{cm}$ on the output net:
+
+   ```spice
+   meas tran t_rise1 when v(vout)=Vcm rise=1
+   meas tran t_rise2 when v(vout)=Vcm rise=2
+   let T_osc = t_rise2 - t_rise1
+   let f_osc = 1/T_osc
+   print f_osc
+   ```
+
+   `Vcm` is visible inside the `.control` block only through a `.csparam Vcm=Vcm` line next to `.param Vcm=VDD/2`, as the dc testbench shows (see @sec-tb-ac). The expected relation is $f_\mathrm{osc} = 1/(2 \cdot N \cdot t_\mathrm{d})$ with $N = 3$ stages and $t_\mathrm{d}$ the effective stage delay. An ideal simulation can rest on the metastable point where all stages sit at $V_\mathrm{cm}$, so if the ring does not start, kick it with an initial condition on one ring node, for example `.ic v(osc)=0`. Delete testbenches that are no longer relevant.
+5. Resize the unit inverter and watch the frequency. Vary `w`, `l`, and the finger count `ng` of $M_1$ and $M_2$ in the unit cell schematic (`ringosc.sch`), and re-run the transient simulation for each variant. Predict the outcome before you simulate, and use @sec-tradeoffs as your guide.
+6. [Optional] Adapt the CACE [`inverter.yaml`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/inverter/verification/cace/inverter.yaml) to characterise the oscillation frequency across PVT.
+7. Update the layout in KLayout. The existing `inverter_top.klay.gds` can be used as a starting point, but the internal routing has to be modified to form the ring and the buffer stage. After editing, export a clean `ringosc_top.gds`. Keep the box on the `prBoundary` layer (`189/0`) and resize it with the macro, otherwise the top-level flow cannot place it. `make check-boundary` verifies this.
+8. Re-run the verification chain, `make klayout-verify`, `make magic-verify`, and `make build-top`. Then compare the post-layout oscillation frequency against the schematic level as in @sec-postlayout. The parasitics add delay per stage, so the frequency drops.
 
 ## Exercise 4: Update Pinout and Floorplan of the Top-Level {#sec-exercise4}
 
