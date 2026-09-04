@@ -46,7 +46,7 @@ The target refuses to run when `NAME` exists already. Otherwise it does, in this
 2. Runs `make clean` in the copy, so that the committed build outputs of the copied macro (`final/`, `netlist/`, `render/img/`, the reports) are gone as well.
 3. Renames every file and folder whose name carries `FROM`.
 4. Replaces `FROM` inside every text file, in its three spellings `inverter`, `Inverter` and `INVERTER`. That covers `TOP` in the `Makefile` and in every `fpga/<board>/Makefile`, `DESIGN_NAME` and `VERILOG_FILES` in `flow/librelane/config.yaml`, the symbol instances and the `.include` lines in the Xschem testbenches, `name:`, `template:` and `script:` in the CACE yaml, the file names in the plot scripts, the module names and include guards in the RTL, and `lib_name` and `lib_path` in the `.klib` library map.
-5. Renames the cells inside every GDS in `layout/` with [`scripts/rename_gds_cells.py`](scripts/rename_gds_cells.py). The DRC, LVS and PEX targets pass the file name as the cell name, so the two must match. `<TOP>.klay.gds` references the unit cell from a library that `<TOP>.klay.klib` maps to the unit cell GDS, and that link is stored inside the GDS by library name and cell name, where no text edit reaches it. The script relinks it to the renamed cell of the renamed library, which is what KLayout resolves through its Library Manager plugin when you open the layout afterwards. The geometry does not change, an XOR of every layer against the source is empty.
+5. Renames the cells inside every GDS in `layout/` with [`scripts/rename_gds_cells.py`](scripts/rename_gds_cells.py). The DRC, LVS and PEX targets pass the file name as the cell name, so the two must match. A `.klay.gds` references cells from the libraries that its `.klay.klib` maps to other GDS files, and each link is stored inside the GDS by library name and cell name, where no text edit reaches it. The script processes the files in dependency order, libraries before the layouts that use them, and relinks every reference to the renamed cell of the renamed library, which is what KLayout resolves through its Library Manager plugin when you open the layout afterwards. It runs without the PDK, so the PCells stay frozen exactly as the source saved them instead of being re-evaluated against the installed PDK. The geometry does not change, an XOR of every layer against the source with the library maps resolved is empty.
 6. Lists what still carries the old name. Markdown files and notebooks are left alone on purpose, they describe the copied design rather than reference it, and a blind rename would turn their prose into nonsense. Anything else in that list is something the target could not know about.
 
 The copy is a complete macro that builds as one: `make all` in the new folder passes exactly as it does in the source, because nothing but names has changed. So the copy is the moment to commit, before the real work starts.
@@ -60,7 +60,7 @@ make macro FROM=counter NAME=fifo
 ```
 
 > [!NOTE]
-> The target runs in the IIC-OSIC-TOOLS container: it needs GNU `find`, `grep`, `sed` and `xargs`, and `klayout` with the PDK technology on `KLAYOUT_PATH` for the GDS step, which the container sets up.
+> The target runs in the IIC-OSIC-TOOLS container: it needs GNU `find`, `grep`, `sed` and `xargs`, and `klayout` for the GDS step.
 
 
 ### What Is Left to Do

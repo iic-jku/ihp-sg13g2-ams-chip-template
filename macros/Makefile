@@ -68,9 +68,7 @@ macro: ## Start a new macro as a renamed copy of an existing one (usage: make ma
 	@grep -rIlZ $(_KEEP) $(_FROM_ANY) $(NAME) | xargs -0 -r sed -i $(_RENAME)
 	@if ls $(NAME)/layout/*.gds >/dev/null 2>&1; then \
 		echo "Renaming the cells inside the GDS files ..."; \
-		for gds in $$(ls $(NAME)/layout/*.gds | grep -v '\.klay\.gds$$') $$(ls $(NAME)/layout/*.klay.gds 2>/dev/null); do \
-			klayout -z -nc -r $(SCRIPTS_DIR)/rename_gds_cells.py -rd gds=$$gds -rd old=$(FROM) -rd new=$(NAME) || exit 1; \
-		done; \
+		klayout -b -r $(SCRIPTS_DIR)/rename_gds_cells.py -rd layout=$(NAME)/layout -rd old=$(FROM) -rd new=$(NAME) || exit 1; \
 	fi
 	@echo ''
 	@echo "Left untouched, they describe the $(FROM) design (adapt or delete them):"
