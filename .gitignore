@@ -17,6 +17,7 @@ sim_build/
 /tutorial/_site/
 /tutorial/index.pdf
 /tutorial/fig/*.pdf
+/tutorial/fig/**/*.pdf
 /doc/ihp-structure-proposals/gen_structure.py
 /flow/artistic
 /flow/final
