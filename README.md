@@ -49,6 +49,15 @@ The repository is the starting point for your own custom silicon and provides a 
 Furthermore, it serves as a regression test for the above-mentioned open-source tools and their dependencies using the ihp-sg13g2 Open-PDK.
 
 
+## PDKs
+
+This template is available for the following open-source PDKs:
+- **ihp-sg13g2**: this repository
+- **ihp-sg13cmos5l**: [ihp-sg13cmos5l-ams-chip-template](https://github.com/iic-jku/ihp-sg13cmos5l-ams-chip-template)
+- **sky130A**: coming soon
+- **gf180mcuD**: coming soon
+
+
 ## Tutorial
 
 A step-by-step tutorial, including additional exercises, can be found [here](https://iic-jku.github.io/ihp-sg13g2-ams-chip-template/index.html).
