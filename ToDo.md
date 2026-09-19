@@ -27,5 +27,5 @@
 - [ ] save markdown report of CACE
 - [ ] update table "Folder" column width
 - [ ] build same template for ihp-sg13cmos5l
-- [ ] build same template for gf180mcuD
+- [x] build same template for gf180mcuD
 - [ ] build same template for sky130A
