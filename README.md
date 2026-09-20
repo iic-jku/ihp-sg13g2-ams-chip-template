@@ -54,7 +54,7 @@ Furthermore, it serves as a regression test for the above-mentioned open-source 
 This template is available for the following open-source PDKs:
 - **ihp-sg13g2**: this repository
 - **ihp-sg13cmos5l**: [ihp-sg13cmos5l-ams-chip-template](https://github.com/iic-jku/ihp-sg13cmos5l-ams-chip-template)
-- **sky130A**: coming soon
+- **sky130A**: [sky130A-ams-chip-template](https://github.com/iic-jku/sky130A-ams-chip-template)
 - **gf180mcuD**: [gf180mcuD-ams-chip-template](https://github.com/iic-jku/gf180mcuD-ams-chip-template)
 
 

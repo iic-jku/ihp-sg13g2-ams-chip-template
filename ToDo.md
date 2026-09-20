@@ -28,4 +28,4 @@
 - [ ] update table "Folder" column width
 - [ ] build same template for ihp-sg13cmos5l
 - [x] build same template for gf180mcuD
-- [ ] build same template for sky130A
+- [x] build same template for sky130A
