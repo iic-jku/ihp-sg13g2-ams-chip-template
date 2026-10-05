@@ -7,7 +7,7 @@ version = 1
 # information.
 
 [[annotations]]
-path = [".designinit", ".gitattributes", ".gitignore", ".gitmodules", "CITATION.cff", "README.md", "ToDo.md"]
+path = [".designinit", ".gitattributes", ".gitignore", ".gitmodules", "AGENTS.md", "CITATION.cff", "README.md", "ToDo.md"]
 SPDX-FileCopyrightText = "2026 Simon Dorrer and Harald Pretl"
 SPDX-License-Identifier = "Apache-2.0 WITH SHL-2.1"
 
