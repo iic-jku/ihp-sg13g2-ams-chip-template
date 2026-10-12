@@ -721,17 +721,20 @@ Runs DRC on the GDS layout in `layout/`. Both flows use `sak-drc.sh` and write t
 
 The `DRC_LEVEL` parameter selects the KLayout DRC level (`sak-drc.sh -l`). It is ignored by `magic-drc`, since Magic has no selectable rule decks and always runs the full rule set compiled into the PDK's Magic tech file:
 
-- `precheck` = core FEOL + BEOL manufacturing rules only (fast iteration)
-- `macro` = block-in-isolation sign-off: `precheck` plus off-grid, zero-area, and pin/label checks (default)
-- `regular` = full-chip sign-off: all checks, including density and antenna
+- `precheck` = the foundry precheck rule set and the pin checks (fast iteration)
+- `macro` = block-in-isolation sign-off: the full FEOL and BEOL rules with off-grid, angle, recommended and pin checks, without chip-level density, the extra rules and antenna (default)
+- `regular` = full-chip sign-off: all checks, including density, the extra rules and antenna
+
+For the IHP Open-PDK, `sak-drc.sh` passes `--precheck_drc --no_density --no_offgrid --no_angle --disable_extra_rules --no_recommended` for `precheck`, `--no_density --disable_extra_rules` for `macro` and `--antenna` for `regular` to the PDK's `run_drc.py`, which adds the pin checks at every level:
 
 | Check | `precheck` | `macro` _(default)_ | `regular` |
 | --- | :---: | :---: | :---: |
-| FEOL + BEOL core rules | ✓ | ✓ | ✓ |
+| Foundry precheck rule set | ✓ | ✓ | ✓ |
+| Pin / label | ✓ | ✓ | ✓ |
+| Full FEOL + BEOL rules | – | ✓ | ✓ |
 | Off-grid / angle | – | ✓ | ✓ |
-| Zero-area / geometry | – | ✓ | ✓ |
-| Pin / label | – | ✓ | ✓ |
-| Recommended / extra rules | – | – | ✓ |
+| Recommended rules | – | ✓ | ✓ |
+| Extra rules | – | – | ✓ |
 | Density (full-chip fill) | – | – | ✓ |
 | Antenna | – | – | ✓ |
 
