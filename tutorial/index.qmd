@@ -216,6 +216,10 @@ make help              # show available targets at the top level
 Instead of `git clone`, you can start by clicking the green "Use this template" button on the GitHub page to create your own copy of the repository. This way, you can push your changes to your own GitHub repository and even make it public if you want to share your custom silicon design with the community.
 :::
 
+To find and open a design file, run `make open` in the container's VNC/noVNC desktop. It shows one button per design file of the folder, grouped by directory, and a click opens the file in its tool: Xschem for `.sch` and `.sym`, KLayout for `.gds`, GTKWave for waveforms and gvim for RTL, scripts and configs. The checkboxes select the file types, and the filter field keeps only the paths that contain the typed text. @fig-make-open shows the top level with only the schematics and symbols selected. The window is rescanned every 15 s, so files a running flow writes appear on their own. The [top-level README](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/README.md#open-the-design-files) lists every file type and option.
+
+![`make open` at the top level after `None` and ticking `.sch` and `.sym`: all 18 schematics and symbols of the chip and both macros, each one click away from Xschem.](fig/make_open/make_open.png){#fig-make-open}
+
 Each macro under [`macros/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/) has its own `Makefile` and `README.md`, including macro-specific targets. These targets are invoked by the top-level build flow, but you can also run them directly from inside each macro folder. @fig-targets-overview shows how the Makefile targets across the repository are connected.
 
 The colour scheme groups targets by the final deliverable they produce, so beginners can follow one colour from `make all` to the generated outputs:

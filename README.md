@@ -401,6 +401,16 @@ Opens a file browser for this folder with `sak-open.py` from the [IIC-OSIC-TOOLS
 make open
 ```
 
+<p align="center">
+  <a href="tutorial/fig/make_open/make_open.png">
+    <img src="tutorial/fig/make_open/make_open.png" alt="The sak-open.py window of make open at the top level, with only the .sch and .sym types ticked" width=80%>
+  </a>
+  <br>
+  <em><code>make open</code> at the top level after <code>None</code> and ticking <code>.sch</code> and <code>.sym</code>: all 18 schematics and symbols of the chip and both macros, each one click away from Xschem.</em>
+</p>
+
+All file types are ticked at startup, each checkbox showing how many files of that type the tree holds. `None` and `All` untick or tick every type at once, and `Rescan` rereads the tree immediately. The filter field keeps only the files whose path contains the typed text (case-insensitive), so `inverter` reduces the list to the inverter macro. Clicking a directory heading folds it away. Hovering a button shows the file's size and age in the status line at the bottom. A right click on a button opens a menu with `Cell view` (all views of that cell, for example its `.sch`, `.sym`, `.gds` and `.nl.v`, wherever they live in the tree), `Scope here` (rescan from that file's directory), `Fold all`, `Save view` (remember the folded directories and ticked types for this tree), `Open shell` and `Copy path`.
+
 Clicking a button launches the matching tool in the file's own directory, so Xschem finds its `simulations/` folder and KLayout its run outputs where they belong:
 
 | File type | Tool |
