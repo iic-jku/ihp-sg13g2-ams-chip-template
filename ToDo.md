@@ -1,5 +1,6 @@
 ﻿# ToDo List
 
+- [ ] add VCO RF macro in branch `add-rf-macro`
 - [ ] test and merge `hv-stdcell`: https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/test-hv-stdcell
 - [ ] check and merge `gdscheck-drc`: https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/pull/7
 - [ ] `ngspice` & `verilog` RTL Co-Simulation using `Xschem`: https://www.youtube.com/watch?v=PPd7jkcHOgA
@@ -26,6 +27,3 @@
 - [ ] add PF SimulatePARALLEL testbench
 - [ ] save markdown report of CACE
 - [ ] update table "Folder" column width
-- [ ] build same template for ihp-sg13cmos5l
-- [x] build same template for gf180mcuD
-- [x] build same template for sky130A
