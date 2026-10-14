@@ -70,8 +70,11 @@ macro: ## Start a new macro as a renamed copy of an existing one (usage: make ma
 	@test ! -e '$(NAME)' || { echo "'$(NAME)' exists already, remove it or pick another NAME."; exit 1; }
 	@echo "Copying $(FROM)/ to $(NAME)/ ..."
 	@mkdir -p $(NAME)
+# git ls-files also lists tracked files deleted from the working tree (e.g. by make clean), cp would abort on them
 	@if git -C $(FROM) rev-parse --is-inside-work-tree >/dev/null 2>&1; then \
-		cd $(FROM) && git ls-files --cached --others --exclude-standard -z | xargs -0 cp --parents -t $(MAKEFILE_DIR)/$(NAME); \
+		cd $(FROM) && git ls-files --cached --others --exclude-standard -z \
+			| xargs -0 -r sh -c 'for f do if [ -e "$$f" ]; then printf "%s\0" "$$f"; fi; done' sh \
+			| xargs -0 -r cp --parents -t $(MAKEFILE_DIR)/$(NAME); \
 	else \
 		echo "$(FROM)/ is not inside a git checkout, copying every file including the build outputs"; \
 		cp -r $(FROM)/. $(NAME)/; \
@@ -102,5 +105,6 @@ macro: ## Start a new macro as a renamed copy of an existing one (usage: make ma
 	echo "$${left:-  none}"
 	@echo ''
 	@echo "$(NAME)/ is a renamed copy of $(FROM)/ and builds as one. See README.md in this folder for what to replace next and where to register the macro at the chip top-level."
+	@echo "Run make all in $(NAME)/ before a single simulation target: the testbenches include netlists that make all writes."
 .PHONY: macro
 # ================================================================================================

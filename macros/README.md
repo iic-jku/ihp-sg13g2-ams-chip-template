@@ -54,7 +54,7 @@ make macro FROM=<macro> NAME=<name>
 
 The target refuses to run when `NAME` exists already. Otherwise it does, in this order:
 
-1. Copies every file of `FROM` that git knows about, tracked or untracked but not ignored. LibreLane runs, `sim_build/`, `__pycache__/` and the other ignored build outputs stay behind. Outside a git checkout it falls back to copying the whole folder.
+1. Copies every file of `FROM` that git knows about, tracked or untracked but not ignored. LibreLane runs, `sim_build/`, `__pycache__/` and the other ignored build outputs stay behind. A tracked file missing from the working tree, for example after `make clean` in `FROM`, is skipped. Outside a git checkout it falls back to copying the whole folder.
 2. Runs `make clean` in the copy, so that the committed build outputs of the copied macro (`final/`, `netlist/`, `render/img/`, the reports) are gone as well.
 3. Renames every file and folder whose name carries `FROM`.
 4. Replaces `FROM` inside every text file, in its three spellings `inverter`, `Inverter` and `INVERTER`. That covers `TOP` in the `Makefile` and in every `fpga/<board>/Makefile`, `DESIGN_NAME` and `VERILOG_FILES` in `flow/librelane/config.yaml`, the symbol instances and the `.include` lines in the Xschem testbenches, `name:`, `template:` and `script:` in the CACE yaml, the file names in the plot scripts, the module names and include guards in the RTL, and `lib_name` and `lib_path` in the `.klib` library map.
@@ -62,6 +62,8 @@ The target refuses to run when `NAME` exists already. Otherwise it does, in this
 6. Lists what still carries the old name. Markdown files and notebooks are left alone on purpose, they describe the copied design rather than reference it, and a blind rename would turn their prose into nonsense. Anything else in that list is something the target could not know about.
 
 The copy is a complete macro that builds as one: `make all` in the new folder passes exactly as it does in the source, because nothing but names has changed. So the copy is the moment to commit, before the real work starts.
+
+Run `make all` in the copy before any single simulation target. Step 2 removed the generated netlists, and the testbenches include them: `netlist/pex/<NAME>_magic_pex_3.spice` and `netlist/pex/<NAME>_top_magic_pex_3.spice` in the analog testbenches, `netlist/xspice/<NAME>_top.xspice` and `final/nl/` in the gate-level simulations of the digital ones.
 
 For a new analog macro named `amp` and a new digital macro named `fifo`:
 
