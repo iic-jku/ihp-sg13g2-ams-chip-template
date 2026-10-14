@@ -13,7 +13,6 @@
     - flow without filler (GDS streamout + DRC check) --> default
     - add logo with ArtistIC --> custom
     - add filler structures --> custom
-        - adjust fill density on top-level: 0.75 (M1), 0.75 (M2), 0.75 (M3), 0.75 (M4), 0.75 (M5), 2.0 (TM1), 2.0 (TM2) --> fix KLayout DRC filler errors
         - KLayout & Magic Filler: https://librelane.readthedocs.io/en/stable/reference/step_config_vars.html
         - add GDSFill to `config.yaml`: https://github.com/aesc-silicon/gdsfill 
     - GDS streamout + DRC check --> custom
