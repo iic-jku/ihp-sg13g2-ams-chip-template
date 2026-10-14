@@ -1,5 +1,6 @@
 ﻿# ToDo List
 
+- [ ] add VCO RF macro in branch `add-rf-macro`
 - [ ] test and merge `hv-stdcell`: https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/test-hv-stdcell
 - [ ] check and merge `gdscheck-drc`: https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/pull/7
 - [ ] `ngspice` & `verilog` RTL Co-Simulation using `Xschem`: https://www.youtube.com/watch?v=PPd7jkcHOgA
@@ -12,7 +13,6 @@
     - flow without filler (GDS streamout + DRC check) --> default
     - add logo with ArtistIC --> custom
     - add filler structures --> custom
-        - adjust fill density on top-level: 0.75 (M1), 0.75 (M2), 0.75 (M3), 0.75 (M4), 0.75 (M5), 2.0 (TM1), 2.0 (TM2) --> fix KLayout DRC filler errors
         - KLayout & Magic Filler: https://librelane.readthedocs.io/en/stable/reference/step_config_vars.html
         - add GDSFill to `config.yaml`: https://github.com/aesc-silicon/gdsfill 
     - GDS streamout + DRC check --> custom
@@ -26,6 +26,3 @@
 - [ ] add PF SimulatePARALLEL testbench
 - [ ] save markdown report of CACE
 - [ ] update table "Folder" column width
-- [ ] build same template for ihp-sg13cmos5l
-- [ ] build same template for gf180mcuD
-- [ ] build same template for sky130A

@@ -8,86 +8,38 @@
  </tags>
  <categories>
  <category>
-   <name>TM2Fil.c</name>
-   <description>5.26. TM2Fil.c : Min. TopMetal2:filler space to TopMetal2 is 3.0 um</description>
-   <categories>
-   </categories>
-  </category>
- <category>
-   <name>TM1Fil.c</name>
-   <description>5.23. TM1Fil.c : Min. TopMetal1:filler space to TopMetal1 is 3.0 um</description>
-   <categories>
-   </categories>
-  </category>
- <category>
-   <name>TM2.a</name>
-   <description>5.25. TM2.a: Min. TopMetal2 width: 2.0 μm.</description>
-   <categories>
-   </categories>
-  </category>
-  <category>
-   <name>TM2.b</name>
-   <description>5.25. TM2.b: Min. TopMetal2 (drawing + filler) space or notch: 2.0 μm.</description>
-   <categories>
-   </categories>
-  </category>
- <category>
-   <name>Pas.a</name>
-   <description>5.27. Pas.a:Min. Passiv width: 2.1 µm</description>
-   <categories>
-   </categories>
-  </category>
-  <category>
-   <name>Pas.b</name>
-   <description>5.27. Pas.b: Min. Passiv space or notch: 3.5 µm</description>
-   <categories>
-   </categories>
-  </category>
- <category>
    <name>TGO.f</name>
    <description>5.7. TGO.f : Min. ThickGateOx width: 0.86 µm</description>
    <categories>
    </categories>
   </category>
  <category>
-   <name>TV1.a</name>
-   <description>5.21. TV1.a : Min. and max. TopVia1 width: 0.42 µm</description>
+   <name>Act.a</name>
+   <description>5.5. Act.a : Min. Activ width : 0.15 µm</description>
    <categories>
    </categories>
   </category>
   <category>
-   <name>TV1.b</name>
-   <description>5.21. TV1.b : Min. TopVia1 space: 0.42 µm</description>
-   <categories>
-   </categories>
-  </category>
- <category>
-   <name>TM1.a</name>
-   <description>5.22. TM1.a: Min. TopMetal1 width: 1.64 μm.</description>
-   <categories>
-   </categories>
-  </category>
-  <category>
-   <name>TM1.b</name>
-   <description>5.22. TM1.b: Min. TopMetal1 (drawing + filler) space or notch: 1.64 μm.</description>
-   <categories>
-   </categories>
-  </category>
- <category>
-   <name>TV2.a</name>
-   <description>5.24. TV2.a : Min. and max. TopVia2 width: 0.9 µm</description>
-   <categories>
-   </categories>
-  </category>
-  <category>
-   <name>TV2.b</name>
-   <description>5.24. TV2.b : Min. TopVia2 space: 1.06 µm</description>
+   <name>Act.b</name>
+   <description>5.5. Act.b : Min. Activ (drawing + filler) space or notch: 0.21 µm.</description>
    <categories>
    </categories>
   </category>
  <category>
    <name>AFil.c1</name>
    <description>5.6. AFil.c1 Min. Activ:filler space to Activ is 0.42 um</description>
+   <categories>
+   </categories>
+  </category>
+ <category>
+   <name>Cnt.a</name>
+   <description>5.14. Cnt.a : Min. and max. Cont width: 0.16 µm</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>Cnt.b</name>
+   <description>5.14. Cnt.b : Min. Cont space: 0.18 µm</description>
    <categories>
    </categories>
   </category>
@@ -106,6 +58,192 @@
   <category>
    <name>Gat.d</name>
    <description>5.8. Gat.d :Min. GatPoly space to Activ: 0.07 µm.</description>
+   <categories>
+   </categories>
+  </category>
+ <category>
+   <name>LBE.a</name>
+   <description>9.1. LBE.a: Min. LBE width: 100.0 µm</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>LBE.b</name>
+   <description>9.1. LBE.b: Max. LBE width: 1500.0 µm.</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>LBE.b1</name>
+   <description>9.1. LBE.b1: Max. LBE area (µm²): 250000.0 .um</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>LBE.c</name>
+   <description>9.1. LBE.c: Min. LBE space or notch: 100.0 µm</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>LBE.d</name>
+   <description>9.1. LBE.d: Min. LBE space to inner edge of EdgeSeal: 150.0 µm</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>LBE.h</name>
+   <description>9.1. LBE.h: No LBE ring allowed.</description>
+   <categories>
+   </categories>
+  </category>
+ <category>
+   <name>TM1.a</name>
+   <description>5.22. TM1.a: Min. TopMetal1 width: 1.64 μm.</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>TM1.b</name>
+   <description>5.22. TM1.b: Min. TopMetal1 (drawing + filler) space or notch: 1.64 μm.</description>
+   <categories>
+   </categories>
+  </category>
+ <category>
+   <name>Pas.a</name>
+   <description>5.27. Pas.a:Min. Passiv width: 2.1 µm</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>Pas.b</name>
+   <description>5.27. Pas.b: Min. Passiv space or notch: 3.5 µm</description>
+   <categories>
+   </categories>
+  </category>
+ <category>
+   <name>CntB.a</name>
+   <description>5.15. CntB.a Min. and max. ContBar width is 0.16 um</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>CntB.a1</name>
+   <description>5.15. CntB.a1 Min. ContBar length is 0.34 um</description>
+   <categories>
+   </categories>
+  </category>
+ <category>
+   <name>TM2Fil.c</name>
+   <description>5.26. TM2Fil.c : Min. TopMetal2:filler space to TopMetal2 is 3.0 um</description>
+   <categories>
+   </categories>
+  </category>
+ <category>
+   <name>GFil.d</name>
+   <description>5.9. GFil.d : Min. GatPoly:filler space to Activ, GatPoly, Cont, pSD, nSD:block, SalBlock is 1.1 um</description>
+   <categories>
+   </categories>
+  </category>
+ <category>
+   <name>Padc.a</name>
+   <description>6.9. Padc.a : CuPillarPad size is 35.0 um</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>Padc.b</name>
+   <description>6.9. Padc.b : Min. CuPillarPad space is 40.0 um</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>Padc.c</name>
+   <description>6.9. Padc.c : Min. TopMetal2 (within dfpad) enclosure of CuPillarPad is 7.5 um</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>padc.f</name>
+   <description>6.9.2. Padc.f: Allowed passivation opening shape Circle</description>
+   <categories>
+   </categories>
+  </category>
+ <category>
+   <name>M1.a</name>
+   <description>5.16. M1.a: Min. Metal1 width: 0.16 μm.</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>M1.b</name>
+   <description>5.16. M1.b: Min. Metal1 (drawing + filler) space or notch: 0.18 μm.</description>
+   <categories>
+   </categories>
+  </category>
+ <category>
+   <name>Pad.m</name>
+   <description>6.9. Pad.m : SBumpPad and CuPillarPad in same layout not allowed</description>
+   <categories>
+   </categories>
+  </category>
+ <category>
+   <name>TV1.a</name>
+   <description>5.21. TV1.a : Min. and max. TopVia1 width: 0.42 µm</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>TV1.b</name>
+   <description>5.21. TV1.b : Min. TopVia1 space: 0.42 µm</description>
+   <categories>
+   </categories>
+  </category>
+ <category>
+   <name>TV2.a</name>
+   <description>5.24. TV2.a : Min. and max. TopVia2 width: 0.9 µm</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>TV2.b</name>
+   <description>5.24. TV2.b : Min. TopVia2 space: 1.06 µm</description>
+   <categories>
+   </categories>
+  </category>
+ <category>
+   <name>Padb.a</name>
+   <description>6.9. Padb.a : SBumpPad size is 60.0 um</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>Padb.b</name>
+   <description>6.9. Padb.b : Min. SBumpPad space is 70.0 um</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>Padb.c</name>
+   <description>6.9. Padb.c : Min. TopMetal2 (within dfpad) enclosure of SBumpPad is 10.0 um</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>padb.f</name>
+   <description>6.9. Padb.f: Allowed passivation opening shape Octagon , Circle</description>
+   <categories>
+   </categories>
+  </category>
+ <category>
+   <name>TM2.a</name>
+   <description>5.25. TM2.a: Min. TopMetal2 width: 2.0 μm.</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>TM2.b</name>
+   <description>5.25. TM2.b: Min. TopMetal2 (drawing + filler) space or notch: 2.0 μm.</description>
    <categories>
    </categories>
   </category>
@@ -158,80 +296,8 @@
    </categories>
   </category>
  <category>
-   <name>Act.a</name>
-   <description>5.5. Act.a : Min. Activ width : 0.15 µm</description>
-   <categories>
-   </categories>
-  </category>
-  <category>
-   <name>Act.b</name>
-   <description>5.5. Act.b : Min. Activ (drawing + filler) space or notch: 0.21 µm.</description>
-   <categories>
-   </categories>
-  </category>
- <category>
-   <name>Padc.a</name>
-   <description>6.9. Padc.a : CuPillarPad size is 35.0 um</description>
-   <categories>
-   </categories>
-  </category>
-  <category>
-   <name>Padc.b</name>
-   <description>6.9. Padc.b : Min. CuPillarPad space is 40.0 um</description>
-   <categories>
-   </categories>
-  </category>
-  <category>
-   <name>Padc.c</name>
-   <description>6.9. Padc.c : Min. TopMetal2 (within dfpad) enclosure of CuPillarPad is 7.5 um</description>
-   <categories>
-   </categories>
-  </category>
-  <category>
-   <name>padc.f</name>
-   <description>6.9.2. Padc.f: Allowed passivation opening shape Circle</description>
-   <categories>
-   </categories>
-  </category>
- <category>
-   <name>LBE.a</name>
-   <description>9.1. LBE.a: Min. LBE width: 100.0 µm</description>
-   <categories>
-   </categories>
-  </category>
-  <category>
-   <name>LBE.b</name>
-   <description>9.1. LBE.b: Max. LBE width: 1500.0 µm.</description>
-   <categories>
-   </categories>
-  </category>
-  <category>
-   <name>LBE.b1</name>
-   <description>9.1. LBE.b1: Max. LBE area (µm²): 250000.0 .um</description>
-   <categories>
-   </categories>
-  </category>
-  <category>
-   <name>LBE.c</name>
-   <description>9.1. LBE.c: Min. LBE space or notch: 100.0 µm</description>
-   <categories>
-   </categories>
-  </category>
-  <category>
-   <name>LBE.d</name>
-   <description>9.1. LBE.d: Min. LBE space to inner edge of EdgeSeal: 150.0 µm</description>
-   <categories>
-   </categories>
-  </category>
-  <category>
-   <name>LBE.h</name>
-   <description>9.1. LBE.h: No LBE ring allowed.</description>
-   <categories>
-   </categories>
-  </category>
- <category>
-   <name>Pad.m</name>
-   <description>6.9. Pad.m : SBumpPad and CuPillarPad in same layout not allowed</description>
+   <name>TM1Fil.c</name>
+   <description>5.23. TM1Fil.c : Min. TopMetal1:filler space to TopMetal1 is 3.0 um</description>
    <categories>
    </categories>
   </category>
@@ -302,30 +368,6 @@
    </categories>
   </category>
  <category>
-   <name>Padb.a</name>
-   <description>6.9. Padb.a : SBumpPad size is 60.0 um</description>
-   <categories>
-   </categories>
-  </category>
-  <category>
-   <name>Padb.b</name>
-   <description>6.9. Padb.b : Min. SBumpPad space is 70.0 um</description>
-   <categories>
-   </categories>
-  </category>
-  <category>
-   <name>Padb.c</name>
-   <description>6.9. Padb.c : Min. TopMetal2 (within dfpad) enclosure of SBumpPad is 10.0 um</description>
-   <categories>
-   </categories>
-  </category>
-  <category>
-   <name>padb.f</name>
-   <description>6.9. Padb.f: Allowed passivation opening shape Octagon , Circle</description>
-   <categories>
-   </categories>
-  </category>
- <category>
    <name>Pin.a</name>
    <description>Pin.a : 7.4. Pin.a: Min. activ enclosure of activ:pin = 0um</description>
    <categories>
@@ -380,18 +422,6 @@
    </categories>
   </category>
  <category>
-   <name>M1.a</name>
-   <description>5.16. M1.a: Min. Metal1 width: 0.16 μm.</description>
-   <categories>
-   </categories>
-  </category>
-  <category>
-   <name>M1.b</name>
-   <description>5.16. M1.b: Min. Metal1 (drawing + filler) space or notch: 0.18 μm.</description>
-   <categories>
-   </categories>
-  </category>
- <category>
    <name>M1Fil.c</name>
    <description>5.18. M1Fil.c : Min. Metal1:filler space to Metal1 is 0.42 um</description>
    <categories>
@@ -422,26 +452,14 @@
    </categories>
   </category>
  <category>
-   <name>CntB.a</name>
-   <description>5.15. CntB.a Min. and max. ContBar width is 0.16 um</description>
+   <name>Seal.l</name>
+   <description>6.10. Seal.l : No structures outside sealring boundary allowed</description>
    <categories>
    </categories>
   </category>
   <category>
-   <name>CntB.a1</name>
-   <description>5.15. CntB.a1 Min. ContBar length is 0.34 um</description>
-   <categories>
-   </categories>
-  </category>
- <category>
-   <name>Cnt.a</name>
-   <description>5.14. Cnt.a : Min. and max. Cont width: 0.16 µm</description>
-   <categories>
-   </categories>
-  </category>
-  <category>
-   <name>Cnt.b</name>
-   <description>5.14. Cnt.b : Min. Cont space: 0.18 µm</description>
+   <name>Seal.n</name>
+   <description>6.10. seal.n : Sealring must be enclosed by an unbroken Passiv ring</description>
    <categories>
    </categories>
   </category>
@@ -490,24 +508,6 @@
   <category>
    <name>M5.b</name>
    <description>5.17. M5.b: Min. Metal5 (drawing + filler) space or notch: 0.21 μm.</description>
-   <categories>
-   </categories>
-  </category>
- <category>
-   <name>Seal.l</name>
-   <description>6.10. Seal.l : No structures outside sealring boundary allowed</description>
-   <categories>
-   </categories>
-  </category>
-  <category>
-   <name>Seal.n</name>
-   <description>6.10. seal.n : Sealring must be enclosed by an unbroken Passiv ring</description>
-   <categories>
-   </categories>
-  </category>
- <category>
-   <name>GFil.d</name>
-   <description>5.9. GFil.d : Min. GatPoly:filler space to Activ, GatPoly, Cont, pSD, nSD:block, SalBlock is 1.1 um</description>
    <categories>
    </categories>
   </category>

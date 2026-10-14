@@ -12,7 +12,7 @@
 Institute for Integrated Circuits and Quantum Computing, Johannes Kepler University (JKU), Linz, Austria
 
 > [!IMPORTANT]
-> This repository requires the [IIC-OSIC-TOOLS](https://github.com/iic-jku/IIC-OSIC-TOOLS) container with tag `2026.08` or later.
+> This repository requires the [IIC-OSIC-TOOLS](https://github.com/iic-jku/IIC-OSIC-TOOLS) container with tag `2026.09` or later.
 
 <p align="center">
   <a href="render/img/chip_top_black.png">
@@ -47,6 +47,15 @@ This Makefile-driven repository simulates, builds, and fully verifies (DRC, LVS,
 The repository is the starting point for your own custom silicon and provides a universal design flow solution: Just clone the repo, enter the IIC-OSIC-TOOLS container, and run `make all` to get a tapeout-ready analog mixed-signal chip. Focus on your design and do not worry about the tools and the design flow!
 
 Furthermore, it serves as a regression test for the above-mentioned open-source tools and their dependencies using the ihp-sg13g2 Open-PDK.
+
+
+## PDKs
+
+This template is available for the following open-source PDKs:
+- **ihp-sg13g2**: this repository
+- **ihp-sg13cmos5l**: [ihp-sg13cmos5l-ams-chip-template](https://github.com/iic-jku/ihp-sg13cmos5l-ams-chip-template)
+- **sky130A**: [sky130A-ams-chip-template](https://github.com/iic-jku/sky130A-ams-chip-template)
+- **gf180mcuD**: [gf180mcuD-ams-chip-template](https://github.com/iic-jku/gf180mcuD-ams-chip-template)
 
 
 ## Tutorial
@@ -149,17 +158,20 @@ A designer-oriented description of this chip can be found in [doc/](doc/):
 │  │  ├─ 📁 verification/
 │  │  ├─ Makefile
 │  │  └─ README.md
-│  └─ 📁 inverter/
-│     ├─ 📁 final/
-│     ├─ 📁 layout/
-│     ├─ 📁 netlist/
-│     ├─ 📁 render/
-│     ├─ 📁 schematic/
-│     ├─ 📁 scripts/
-│     ├─ 📁 testbenches/
-│     ├─ 📁 verification/
-│     ├─ Makefile
-│     └─ README.md
+│  ├─ 📁 inverter/
+│  │  ├─ 📁 final/
+│  │  ├─ 📁 layout/
+│  │  ├─ 📁 netlist/
+│  │  ├─ 📁 render/
+│  │  ├─ 📁 schematic/
+│  │  ├─ 📁 scripts/
+│  │  ├─ 📁 testbenches/
+│  │  ├─ 📁 verification/
+│  │  ├─ Makefile
+│  │  └─ README.md
+│  ├─ 📁 scripts/
+│  ├─ Makefile
+│  └─ README.md
 ├─ 📁 netlist/
 │  ├─ 📁 layout/
 │  ├─ 📁 nl/
@@ -361,6 +373,26 @@ make help
 ```
 
 
+### PDK Guard
+
+Every target except `help`, `clean` and `clean-all` needs the `ihp-sg13g2` PDK. A wrong `$PDK`, for example `ihp-sg13cmos5l` from the sibling CMOS5L template, silently mixes technologies: LibreLane hardens against the wrong tech LEF and standard cells, DRC and LVS run against the wrong rule deck, Magic reads the wrong `magicrc`, and the results look valid. The Makefile therefore compares `$PDK` against `REQUIRED_PDK` once when it is parsed, before any target runs:
+
+```sh
+$ sak-pdk ihp-sg13cmos5l
+$ make librelane
+Makefile:27: *** PDK is "ihp-sg13cmos5l", but this chip needs "ihp-sg13g2". Run `sak-pdk ihp-sg13g2` in this shell and retry, or pass REQUIRED_PDK= to skip this check.  Stop.
+```
+
+The check is a parse-time conditional at the top of the Makefile, not a prerequisite of each target, so it costs nothing and cannot be forgotten when a target is added. `help`, `clean` and `clean-all` are exempt, so the usage text and the cleanup still work under any PDK. The macro and IP Makefiles carry the same guard, so the recursive `make -C` calls of `build-all` are checked as well.
+
+Switch the PDK with `sak-pdk ihp-sg13g2`, which also sets `PDKPATH`, `KLAYOUT_PATH`, `SPICE_USERINIT_DIR` and `STD_CELL_LIBRARY`. To run a single target against another PDK anyway, pass an empty `REQUIRED_PDK`:
+
+```sh
+make <target> REQUIRED_PDK=          # skip the check
+make <target> REQUIRED_PDK=<pdk>     # require a different PDK
+```
+
+
 ### Open the Design Files
 
 Opens a file browser for this folder with `sak-open.py` from the [IIC-OSIC-TOOLS](https://github.com/iic-jku/IIC-OSIC-TOOLS), one button per design file, grouped by directory:
@@ -368,6 +400,16 @@ Opens a file browser for this folder with `sak-open.py` from the [IIC-OSIC-TOOLS
 ```sh
 make open
 ```
+
+<p align="center">
+  <a href="tutorial/fig/make_open/make_open.png">
+    <img src="tutorial/fig/make_open/make_open.png" alt="The sak-open.py window of make open at the top level, with only the .sch and .sym types ticked" width=80%>
+  </a>
+  <br>
+  <em><code>make open</code> at the top level after <code>None</code> and ticking <code>.sch</code> and <code>.sym</code>: all 18 schematics and symbols of the chip and both macros, each one click away from Xschem.</em>
+</p>
+
+All file types are ticked at startup, each checkbox showing how many files of that type the tree holds. `None` and `All` untick or tick every type at once, and `Rescan` rereads the tree immediately. The filter field keeps only the files whose path contains the typed text (case-insensitive), so `inverter` reduces the list to the inverter macro. Clicking a directory heading folds it away. Hovering a button shows the file's size and age in the status line at the bottom. A right click on a button opens a menu with `Cell view` (all views of that cell, for example its `.sch`, `.sym`, `.gds` and `.nl.v`, wherever they live in the tree), `Scope here` (rescan from that file's directory), `Fold all`, `Save view` (remember the folded directories and ticked types for this tree), `Open shell` and `Copy path`.
 
 Clicking a button launches the matching tool in the file's own directory, so Xschem finds its `simulations/` folder and KLayout its run outputs where they belong:
 
@@ -689,17 +731,20 @@ Runs DRC on the GDS layout in `layout/`. Both flows use `sak-drc.sh` and write t
 
 The `DRC_LEVEL` parameter selects the KLayout DRC level (`sak-drc.sh -l`). It is ignored by `magic-drc`, since Magic has no selectable rule decks and always runs the full rule set compiled into the PDK's Magic tech file:
 
-- `precheck` = core FEOL + BEOL manufacturing rules only (fast iteration)
-- `macro` = block-in-isolation sign-off: `precheck` plus off-grid, zero-area, and pin/label checks (default)
-- `regular` = full-chip sign-off: all checks, including density and antenna
+- `precheck` = the foundry precheck rule set and the pin checks (fast iteration)
+- `macro` = block-in-isolation sign-off: the full FEOL and BEOL rules with off-grid, angle, recommended and pin checks, without chip-level density, the extra rules and antenna (default)
+- `regular` = full-chip sign-off: all checks, including density, the extra rules and antenna
+
+For the IHP Open-PDK, `sak-drc.sh` passes `--precheck_drc --no_density --no_offgrid --no_angle --disable_extra_rules --no_recommended` for `precheck`, `--no_density --disable_extra_rules` for `macro` and `--antenna` for `regular` to the PDK's `run_drc.py`, which adds the pin checks at every level:
 
 | Check | `precheck` | `macro` _(default)_ | `regular` |
 | --- | :---: | :---: | :---: |
-| FEOL + BEOL core rules | ✓ | ✓ | ✓ |
+| Foundry precheck rule set | ✓ | ✓ | ✓ |
+| Pin / label | ✓ | ✓ | ✓ |
+| Full FEOL + BEOL rules | – | ✓ | ✓ |
 | Off-grid / angle | – | ✓ | ✓ |
-| Zero-area / geometry | – | ✓ | ✓ |
-| Pin / label | – | ✓ | ✓ |
-| Recommended / extra rules | – | – | ✓ |
+| Recommended rules | – | ✓ | ✓ |
+| Extra rules | – | – | ✓ |
 | Density (full-chip fill) | – | – | ✓ |
 | Antenna | – | – | ✓ |
 
@@ -1083,7 +1128,7 @@ make clean-all
 make all
 ```
 
-The two example macros are themselves templates for the two kinds of block. See [Start a New Analog Macro from This Template](macros/inverter/README.md#start-a-new-analog-macro-from-this-template) for the inverter and [Start a New Digital Macro from This Template](macros/counter/README.md#start-a-new-digital-macro-from-this-template) for the counter.
+The two example macros are themselves templates for the two kinds of block. `make macro FROM=<macro> NAME=<name>` in [`macros/`](macros/) starts a new macro as a renamed copy of one of them, see [Start a New Macro from an Existing One](macros/README.md#start-a-new-macro-from-an-existing-one).
 
 
 ## Cite This Work
