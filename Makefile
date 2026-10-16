@@ -20,6 +20,9 @@ REQUIRED_PDK ?= ihp-sg13g2
 
 # Goals that do not read the PDK
 PDK_FREE_GOALS = help clean clean-all
+# template-only
+PDK_FREE_GOALS += project
+# /template-only
 
 ifneq ($(REQUIRED_PDK),)
 ifneq ($(filter-out $(PDK_FREE_GOALS),$(or $(MAKECMDGOALS),$(.DEFAULT_GOAL))),)
@@ -75,6 +78,14 @@ VERSION ?= 1.0.0
 # Extra options for the sak-open.py file browser (e.g. --all to include build outputs)
 # Override with: make open OPEN_ARGS=<options>
 OPEN_ARGS ?=
+# template-only
+
+# Name of the new chip for the project target, DRY_RUN=1 only lists the changes, FORCE=1 skips the git checks
+# Override with: make project NAME=<name> [DRY_RUN=1] [FORCE=1]
+NAME ?=
+DRY_RUN ?=
+FORCE ?=
+# /template-only
 
 # Folder structure
 XSCHEM_SCH_DIR  		:= schematic/xschem
@@ -124,6 +135,9 @@ help: ## Show this help message
 	@echo 'VERSION defaults to $(VERSION). Used by the release target.'
 	@echo 'OPEN_ARGS passes extra options to sak-open.py for the open target (e.g. --all).'
 	@echo 'REQUIRED_PDK defaults to $(REQUIRED_PDK). Every target except help, clean and clean-all aborts if $$PDK differs.'
+# template-only
+	@echo 'NAME names the new chip for the project target, which needs no PDK either: a lowercase letter followed by lowercase letters, digits or underscores.'
+# /template-only
 .PHONY: help
 # ================================================================================================
 
@@ -593,3 +607,12 @@ clean-all: ## Delete all generated files of the chip top-level, the IPs and the 
 	$(MAKE) -C $(MACROS_DIR)/inverter clean
 .PHONY: clean-all
 # ================================================================================================
+# template-only
+
+
+# Project Target
+project: ## Start a new chip from this template, the target deletes itself (usage: make project NAME=<name> [DRY_RUN=1] [FORCE=1])
+	@python3 $(SCRIPTS_DIR)/new_project.py --name '$(NAME)' --name-origin '$(origin NAME)' $(if $(filter 1,$(DRY_RUN)),--dry-run) $(if $(filter 1,$(FORCE)),--force)
+.PHONY: project
+# ================================================================================================
+# /template-only

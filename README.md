@@ -1,4 +1,5 @@
-﻿# An Open-Source Analog Mixed-Signal Chip Design Template & Tutorial for the ihp-sg13g2 Open-PDK
+﻿<!-- template-only -->
+# An Open-Source Analog Mixed-Signal Chip Design Template & Tutorial for the ihp-sg13g2 Open-PDK
 
 [![License: Solderpad Hardware License v2.1](https://img.shields.io/badge/License-Solderpad%20Hardware%20License%20v2.1-blue.svg)](LICENSE)
 [![Quarto Publish](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/actions/workflows/quarto-publish.yml/badge.svg?branch=main)](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/actions/workflows/quarto-publish.yml)
@@ -11,9 +12,12 @@
 
 Institute for Integrated Circuits and Quantum Computing, Johannes Kepler University (JKU), Linz, Austria
 
+<!-- /template-only -->
 > [!IMPORTANT]
 > This repository requires the [IIC-OSIC-TOOLS](https://github.com/iic-jku/IIC-OSIC-TOOLS) container with tag `2026.09` or later.
 
+
+<!-- template-only -->
 <p align="center">
   <a href="render/img/chip_top_black.png">
     <img src="render/img/chip_top_black.png" alt="Chip render of the ihp-sg13g2 analog mixed-signal template chip (1.6 mm x 1.6 mm)" width=70%>
@@ -75,6 +79,7 @@ Examples based on this template are:
 - [Multi-Project Chip](https://github.com/iic-jku/gf180mcu-jku-projects) for the wafer.space gf180mcuD MPW run
 
 
+<!-- /template-only -->
 ## Chip Documentation
 
 A designer-oriented description of this chip can be found in [doc/](doc/):
@@ -1109,24 +1114,33 @@ make all
 > The chip top-level testbench includes the counter XSPICE model `macros/counter/netlist/xspice/counter_top.xspice`, which `clean-all` removes. Run `make build-counter` (or the full `make all`) once before `make sim-gl-xschem`, otherwise the include fails.
 
 
+<!-- template-only -->
 ## Start a New Chip from This Template
 
-This repository is itself the template for a new chip. Fork it or copy it, then work outwards from the top level:
-
-1. Run `make clean-all` so that no output of the example chip is left behind.
-2. Set `TOP` in the `Makefile`. `make add-logo-fill` and `make bondplan` pass it to their scripts.
-3. Rename the RTL in [`rtl/`](rtl/), the Xschem schematic, symbols and testbenches in [`schematic/xschem/`](schematic/xschem/) and [`testbenches/`](testbenches/), and the plotting script in `testbenches/xschem/plot_simulations/`.
-4. Update [`flow/librelane/config.yaml`](flow/librelane/config.yaml): `DESIGN_NAME`, `VERILOG_FILES`, `CLOCK_PORT`, `DIE_AREA`, the `MACROS` entries with their instance placements, and the IO pad ring. Rename `flow/librelane/chip_top.sdc` and update the three `*_SDC_FILE` keys that point at it.
-5. Update the `PINOUT` map in [`packaging/config.yaml`](packaging/config.yaml). The `{design}` placeholder expands to `TOP`, so the bondplan output names follow automatically.
-6. Replace or remove the example macros under [`macros/`](macros/) and the logos under [`ip/`](ip/), and adjust `build-macros`, `build-logos` and `clean-all` in the `Makefile` to match.
-7. Update `CITATION.cff`, this `README.md` and the tutorial under [`tutorial/`](tutorial/).
-
-Then build from the clean tree:
+This repository is itself the template for a new chip. Create your own repository from it (**Use this template** on GitHub, a fork or a copy), clone it, and run in the IIC-OSIC-TOOLS container:
 
 ```sh
-make clean-all
-make all
+make project NAME=<name> DRY_RUN=1   # list what would change, nothing is touched
+make project NAME=<name>             # start the chip <name>
 ```
+
+`NAME` is a lowercase letter followed by lowercase letters, digits or underscores, and it must not be the name of a macro or an IP. The target needs no PDK. It refuses to run in a git tree with uncommitted changes and in a checkout whose `origin` is this template, `FORCE=1` skips both checks. Every change is planned first, so a refused run leaves the tree untouched. Then the target:
+
+1. Runs `make clean`, which deletes the committed outputs of the template chip. The macros and IPs keep their committed views, so the new chip builds without rebuilding them.
+2. Removes what only makes sense in the template: `tutorial/`, `.github/workflows/quarto-publish.yml`, `doc/ihp-structure-proposals/`, `CITATION.cff`, the content of `release/`, and every block between `template-only` markers in this README, `AGENTS.md`, the `Makefile` and the configuration files. Figures that a remaining file still shows move to `doc/fig/`, and `ToDo.md` starts empty.
+3. Renames `chip_top`, `chip_core` and `chip_logo` to `<name>_top`, `<name>_core` and `<name>_logo`, in file names and in file contents.
+4. Gives this README a new header that records the template version, and deletes itself (`scripts/new_project.py` and the `project` target).
+5. Checks that no old name, no link into a deleted path and no marker is left, runs `reuse lint` when it is installed, and lists what is left for you: the die area, the pad ring and the macro placements in [`flow/librelane/config.yaml`](flow/librelane/config.yaml), the `PINOUT` in [`packaging/config.yaml`](packaging/config.yaml), the chip documentation in [`doc/`](doc/), and the `regression` target once you replace the example macros.
+
+Review the result, commit it and build the new chip:
+
+```sh
+git status                           # git reset --hard && git clean -fd undoes everything
+git add -A && git commit -m "started <name> from ihp-sg13g2-ams-chip-template"
+make build-top                       # or make all
+```
+
+The example macros and the logos stay, and two of the logos put the template's identity on the die: [`ip/sg13g2_ip__jku_names/`](ip/sg13g2_ip__jku_names/) draws the names of the template authors and `flow/logo/chip_logo_mono.png` the "AMS CHIP" artwork. Replace them, and the JKU logo in [`ip/sg13g2_ip__jku/`](ip/sg13g2_ip__jku/) where it does not apply, before a tapeout.
 
 The two example macros are themselves templates for the two kinds of block. `make macro FROM=<macro> NAME=<name>` in [`macros/`](macros/) starts a new macro as a renamed copy of one of them, see [Start a New Macro from an Existing One](macros/README.md#start-a-new-macro-from-an-existing-one).
 
@@ -1169,6 +1183,7 @@ This project is funded by the JKU/SAL [IWS Lab](https://research.jku.at/de/proje
   </tr>
 </table>
 
+<!-- /template-only -->
 ## License
 
 Licensed under the **Solderpad Hardware License v2.1**, see [`LICENSE`](LICENSE).
