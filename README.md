@@ -1120,7 +1120,7 @@ make all
 This repository is itself the template for a new chip. Create your own repository from it (**Use this template** on GitHub, a fork or a copy), clone it, and run in the IIC-OSIC-TOOLS container:
 
 ```sh
-make project NAME=<name> DRY_RUN=1   # list what would change, nothing is touched
+make project NAME=<name> DRY_RUN=1   # list the changes, touch nothing
 make project NAME=<name>             # start the chip <name>
 ```
 
@@ -1135,12 +1135,14 @@ make project NAME=<name>             # start the chip <name>
 Review the result, commit it and build the new chip:
 
 ```sh
-git status                           # git reset --hard && git clean -fd undoes everything
-git add -A && git commit -m "started <name> from ihp-sg13g2-ams-chip-template"
-make build-top                       # or make all
+git status             # undo: git reset --hard && git clean -fd
+git add -A
+git commit -m "started <name> from ihp-sg13g2-ams-chip-template"
+make init-submodules   # the logo and fill step needs flow/artistic
+make build-top         # or make all, which also fetches it
 ```
 
-The example macros and the logos stay, and two of the logos put the template's identity on the die: [`ip/sg13g2_ip__jku_names/`](ip/sg13g2_ip__jku_names/) draws the names of the template authors and `flow/logo/chip_logo_mono.png` the "AMS CHIP" artwork. Replace them, and the JKU logo in [`ip/sg13g2_ip__jku/`](ip/sg13g2_ip__jku/) where it does not apply, before a tapeout.
+The example macros and the logos stay, and two of the logos put the template's identity on the die: [`ip/sg13g2_ip__jku_names/`](ip/sg13g2_ip__jku_names/) draws the names of the template authors and `flow/logo/chip_logo_mono.png` the "AMS CHIP" artwork. Replace them, and the JKU logo in [`ip/sg13g2_ip__jku/`](ip/sg13g2_ip__jku/) where it does not apply, before a tapeout. The tutorial walks through the same steps in [Start Your Own Chip](https://iic-jku.github.io/ihp-sg13g2-ams-chip-template/index.html#sec-new-chip).
 
 The two example macros are themselves templates for the two kinds of block. `make macro FROM=<macro> NAME=<name>` in [`macros/`](macros/) starts a new macro as a renamed copy of one of them, see [Start a New Macro from an Existing One](macros/README.md#start-a-new-macro-from-an-existing-one).
 

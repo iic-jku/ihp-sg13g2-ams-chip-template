@@ -603,7 +603,7 @@ def report(plan, problems=None, dry_run=False):
         print("\n".join("  - " + step for step in NEXT_STEPS))
         print("  - review the result with git status and git diff, undo everything with: git reset --hard && git clean -fd")
         print(f"  - commit it: git add -A && git commit -m \"started {plan.name} from {plan.slug}\"")
-        print("  - build the chip: make build-top (or make all)")
+        print("  - build the chip: make init-submodules, then make build-top (or make all, which also fetches the submodule)")
 
 
 def main():
