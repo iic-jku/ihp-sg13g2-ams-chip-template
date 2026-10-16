@@ -1678,7 +1678,7 @@ Note that currently the LibreLane flow streams out the top-level GDS `layout/chi
 make add-logo-fill
 ```
 
-This calls `scripts/add_logo_fill.sh` and writes `layout/chip_top_logo_fill.gds.gz`. This step is already called by `make build-top`. In the future, it is planned to replace this script and Makefile target with a custom LibreLane step.
+This calls `scripts/add_logo_fill.sh` with `TOP` and writes `layout/chip_top_logo_fill.gds.gz`. This step is already called by `make build-top`. In the future, it is planned to replace this script and Makefile target with a custom LibreLane step.
 :::
 
 ::: {.callout-tip}

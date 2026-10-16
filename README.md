@@ -719,7 +719,7 @@ To add the chip logo (PNG -> GDS) and the fill structures on top of the LibreLan
 make add-logo-fill
 ```
 
-This calls `scripts/add_logo_fill.sh` and writes `layout/chip_top_logo_fill.gds.gz`. The step is also called from `make build-top`.
+This calls `scripts/add_logo_fill.sh` with `TOP` and writes `layout/chip_top_logo_fill.gds.gz`. The step is also called from `make build-top`.
 
 > [!NOTE]
 > In the future, it is planned to replace this script and Makefile target with a custom LibreLane step.
@@ -963,7 +963,7 @@ make bondplan                        # uses the default VERSION (1.0.0)
 make bondplan VERSION=2.1.0          # stamp another version on the sheet
 ```
 
-The `VERSION` variable is passed to the flow and printed in the title block (`DIE: CHIP_TOP - V.1.0.0`), so the version number is maintained in the Makefile only.
+`TOP` (as `DESIGN_NAME`) and `VERSION` are passed to the flow and printed in the title block (`DIE: CHIP_TOP - V.1.0.0`), so the design name and the version number are maintained in the Makefile only.
 
 The flow ([packaging/scripts/run_bondplan.py](packaging/scripts/run_bondplan.py)) is driven by [packaging/config.yaml](packaging/config.yaml), which holds the full package-pin-to-die-pad `PINOUT` in a LibreLane-style config format. It detects the die bondpads (`Passiv` openings and `TopMetal2.text` labels), places the die in the package cavity, draws the bondwires, and checks wire lengths, crossings, spacing, lead skew and analog guard clearances. Outputs:
 
@@ -1114,10 +1114,10 @@ make all
 This repository is itself the template for a new chip. Fork it or copy it, then work outwards from the top level:
 
 1. Run `make clean-all` so that no output of the example chip is left behind.
-2. Set `TOP` in the `Makefile` and `DESIGN` in [`scripts/add_logo_fill.sh`](scripts/add_logo_fill.sh).
+2. Set `TOP` in the `Makefile`. `make add-logo-fill` and `make bondplan` pass it to their scripts.
 3. Rename the RTL in [`rtl/`](rtl/), the Xschem schematic, symbols and testbenches in [`schematic/xschem/`](schematic/xschem/) and [`testbenches/`](testbenches/), and the plotting script in `testbenches/xschem/plot_simulations/`.
 4. Update [`flow/librelane/config.yaml`](flow/librelane/config.yaml): `DESIGN_NAME`, `VERILOG_FILES`, `CLOCK_PORT`, `DIE_AREA`, the `MACROS` entries with their instance placements, and the IO pad ring. Rename `flow/librelane/chip_top.sdc` and update the three `*_SDC_FILE` keys that point at it.
-5. Update [`packaging/config.yaml`](packaging/config.yaml): `DESIGN_NAME` and the `PINOUT` map. The `{design}` placeholder expands to `DESIGN_NAME`, so the bondplan output names follow automatically.
+5. Update the `PINOUT` map in [`packaging/config.yaml`](packaging/config.yaml). The `{design}` placeholder expands to `TOP`, so the bondplan output names follow automatically.
 6. Replace or remove the example macros under [`macros/`](macros/) and the logos under [`ip/`](ip/), and adjust `build-macros`, `build-logos` and `clean-all` in the `Makefile` to match.
 7. Update `CITATION.cff`, this `README.md` and the tutorial under [`tutorial/`](tutorial/).
 

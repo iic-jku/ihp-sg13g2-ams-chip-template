@@ -84,7 +84,7 @@ make -C macros/inverter all                 # KLayout and Magic DRC/LVS/PEX, LEF
 
 - Run `make clean` or `make clean-all` only when asked. Most of what they delete is committed, and the LibreLane runs in `flow/librelane/runs/` are not tracked at all.
 - Never hand-edit generated files: the top-level `layout/`, `netlist/` and `verification/`, and per macro `final/`, `netlist/` and `*_pex.sym`. Rerun the target that writes them. Leave `release/` alone, it holds published versions.
-- Renaming `TOP` in `Makefile` also needs `DESIGN` in `scripts/add_logo_fill.sh` (step 2 of "Start a New Chip from This Template" in `README.md`) and the `chip_top` file names in `REUSE.toml`.
+- Renaming `TOP` in `Makefile` also needs the `chip_top` file names in `REUSE.toml`. `make add-logo-fill` and `make bondplan` pass `TOP` to `scripts/add_logo_fill.sh` and `packaging/scripts/run_bondplan.py`, so never hard-code the name in either.
 - The `Makefile` reads `PACKAGE_NAME:` from `packaging/config.yaml` with `sed`, so keep it a plain `key: value` line.
 
 ## Writing style

@@ -311,7 +311,7 @@ build-macros: ## Build all enabled macros (counter and inverter)
 # Adds the chip logo and fill structures to the final GDS.
 # TODO: This step is temporary and will be replaced by a custom LibreLane step in the future.
 add-logo-fill: ## Run scripts/add_logo_fill.sh to add the chip logo and fill structures
-	cd $(SCRIPTS_DIR) && ./add_logo_fill.sh
+	cd $(SCRIPTS_DIR) && ./add_logo_fill.sh $(TOP)
 .PHONY: add-logo-fill
 
 # TODO: Switch back to `make librelane` once IHP fixes the metal1_pin_offgrid errors.
@@ -495,7 +495,7 @@ magic-verify: ## Verify CELL cell with Magic (usage: make magic-verify [CELL=<ce
 
 # Packaging Target
 bondplan: ## Generate the bondplan (die in package + bondwires + pin table) in packaging/ (usage: make bondplan [VERSION=<version>])
-	cd $(PACKAGING_DIR) && python3 scripts/run_bondplan.py config.yaml VERSION=$(VERSION)
+	cd $(PACKAGING_DIR) && python3 scripts/run_bondplan.py config.yaml DESIGN_NAME=$(TOP) VERSION=$(VERSION)
 .PHONY: bondplan
 # ================================================================================================
 
