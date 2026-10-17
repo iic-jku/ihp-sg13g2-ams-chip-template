@@ -1,0 +1,23 @@
+* Extracted by KLayout with SG13G2 LVS runset on : 17/10/2026 22:45
+
+.SUBCKT vco_core VDD VSS rf_n rf_p vbp_core vtune
+X$1 VSS rf_p vtune rf_n vco_var
+X$2 VSS \$4 rf_n rf_p vco_ind
+M$1 VSS rf_p rf_n VSS sg13_lv_nmos L=0.13u W=20u AS=4.1p AD=4.1p PS=26.1u
++ PD=26.1u rfmode=0
+M$11 VSS rf_n rf_p VSS sg13_lv_nmos L=0.13u W=20u AS=4.1p AD=4.1p PS=26.1u
++ PD=26.1u rfmode=0
+M$21 VDD vbp_core \$4 VDD sg13_lv_pmos L=0.5u W=150u AS=29.25p AD=29.25p
++ PS=166.7u PD=166.7u rfmode=0
+C$51 \$4 VSS cap_cmim w=25u l=25u A=625p P=100u m=1
+.ENDS vco_core
+
+.SUBCKT vco_var VSS rf_p vtune rf_n
+C$1 rf_p vtune rf_n VSS sg13_hv_svaricap w=3.74u l=0.3u Nx=8
+C$2 rf_p vtune rf_n VSS sg13_hv_svaricap w=3.74u l=0.3u Nx=8
+C$3 rf_p vtune rf_n VSS sg13_hv_svaricap w=3.74u l=0.3u Nx=8
+.ENDS vco_var
+
+.SUBCKT vco_ind VSS LC LB LA
+L$1 LA LC LB VSS inductor3 w=4u s=3.999u d=58.022u nr_r=2
+.ENDS vco_ind

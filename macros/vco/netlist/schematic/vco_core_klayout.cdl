@@ -14,7 +14,7 @@ MM2 rf_n rf_p VSS VSS sg13_lv_nmos w=20u l=0.13u ng=10
 ** sch_path: /foss/designs/ihp-sg13g2-ams-chip-template/macros/vco/schematic/xschem/vco_ind.sch
 .subckt vco_ind la lb lc VSS
 *.PININFO la:B lc:B lb:B VSS:B
-LL1 la lc lb VSS inductor3 w=4e-6 s=4e-6 d=82e-6 nr_r=2
+LL1 la lc lb VSS inductor3 w=4e-6 s=4e-6 d=58e-6 nr_r=2
 .ends
 
 

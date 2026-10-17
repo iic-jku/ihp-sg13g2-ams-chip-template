@@ -5,7 +5,7 @@ XMB1 rf_out_n gp tail VSS sg13_lv_nmos w=24u l=0.13u ng=12 m=1 mm_ok=1
 XMB2 rf_out_p gn tail VSS sg13_lv_nmos w=24u l=0.13u ng=12 m=1 mm_ok=1
 XRL1 VDD rf_out_n VSS rppd w=10e-6 l=1.65e-6 m=1 b=0 mm_ok=1
 XRL2 VDD rf_out_p VSS rppd w=10e-6 l=1.65e-6 m=1 b=0 mm_ok=1
-XMBt tail vbn_buf VSS VSS sg13_lv_nmos w=2.5u l=0.5u ng=1 m=60 mm_ok=1
+XMBt tail vbn_buf VSS VSS sg13_lv_nmos w=150u l=0.5u ng=60 m=1 mm_ok=1
 XCc1 gp rf_p cap_cmim w=10e-6 l=10e-6 m=1 mm_ok=1
 XCc2 gn rf_n cap_cmim w=10e-6 l=10e-6 m=1 mm_ok=1
 XRb1 vbg_buf gp VSS rhigh w=0.5e-6 l=8e-6 m=1 b=0 mm_ok=1

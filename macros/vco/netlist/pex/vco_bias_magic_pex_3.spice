@@ -1,0 +1,134 @@
+* PEX produced on Sat Oct 17 10:46:26 PM CEST 2026 using /foss/tools/sak/sak-pex.sh with m=3 and s=1 (extresist threshold=10000 mOhm, minres=1000 mOhm, mindelay=1 ps)
+* NGSPICE file created from vco_bias_pex.ext - technology: ihp-sg13g2
+
+.subckt vco_bias_pex ibias_100u di_en VDD VSS vbg_buf vbn_buf vbp_core
+X0 vbn_buf a_94_n100# VSS.t3 VSS.t5 sg13_lv_nmos ad=0.34p pd=2.68u as=0.34p ps=2.68u w=1u l=0.13u
+X1 vbg_buf VSS.t0 cap_cmim l=20u w=20u
+X2 a_94_n100# di_en VDD VDD sg13_lv_pmos ad=0.34p pd=2.68u as=0.34p ps=2.68u w=1u l=0.13u
+X3 ibias_100u ibias_100u VSS.t3 VSS.t2 sg13_lv_nmos ad=0.85p pd=5.68u as=0.85p ps=5.68u w=2.5u l=0.5u
+X4 VDD vbp_core cap_cmim l=30u w=30u
+X5 a_94_n100# di_en VSS VSS.t10 sg13_lv_nmos ad=0.17p pd=1.68u as=0.17p ps=1.68u w=0.5u l=0.13u
+X6 a_2868_1824# vbp_core VSS.t8 rhigh l=16u w=0.5u
+X7 vbg_buf vbp_core VDD VDD sg13_lv_pmos ad=1.7p pd=10.68u as=1.7p ps=10.68u w=5u l=0.5u
+X8 ibias_100u a_94_n100# VSS VSS.t7 sg13_lv_nmos ad=0.34p pd=2.68u as=0.34p ps=2.68u w=1u l=0.13u
+X9 a_2868_1824# ibias_100u VSS.t3 VSS.t4 sg13_lv_nmos ad=0.85p pd=5.68u as=0.85p ps=5.68u w=2.5u l=0.5u
+X10 vbg_buf a_4268_n536# VSS.t11 rppd l=8.5u w=0.5u
+X11 vbn_buf VSS.t12 cap_cmim l=30u w=30u
+X12 a_794_n100# a_94_n100# VDD VDD sg13_lv_pmos ad=0.34p pd=2.68u as=0.34p ps=2.68u w=1u l=0.13u
+X13 a_4268_n536# a_4268_n536# VSS.t0 VSS.t9 sg13_lv_nmos ad=0.85p pd=5.68u as=0.85p ps=5.68u w=2.5u l=0.5u
+X14 a_2868_1824# a_2868_1824# VDD VDD sg13_lv_pmos ad=1.7p pd=10.68u as=1.7p ps=10.68u w=5u l=0.5u
+X15 a_794_n100# a_94_n100# VSS VSS.t6 sg13_lv_nmos ad=0.17p pd=1.68u as=0.17p ps=1.68u w=0.5u l=0.13u
+X16 ibias_100u vbn_buf VSS.t14 rhigh l=16u w=0.5u
+X17 vbp_core a_794_n100# VDD VDD sg13_lv_pmos ad=0.34p pd=2.68u as=0.34p ps=2.68u w=1u l=0.13u
+R0 VSS.n14 VSS.n7 6048.75
+R1 VSS.t11 VSS.n14 5058.26
+R2 VSS.n2 VSS.n1 4764.19
+R3 VSS.n22 VSS.n3 4376.81
+R4 VSS.n26 VSS.n2 4376.81
+R5 VSS.n7 VSS.n3 2743.9
+R6 VSS.n3 VSS.n2 1829.27
+R7 VSS.n7 VSS.n4 1626.57
+R8 VSS.n15 VSS.t14 995.167
+R9 VSS.n19 VSS.n18 203.136
+R10 VSS.n8 VSS.n5 193.69
+R11 VSS.n11 VSS.n10 179.464
+R12 VSS.n14 VSS.n13 112.924
+R13 VSS.t14 VSS.t8 108.582
+R14 VSS.t8 VSS.t11 108.582
+R15 VSS.n27 VSS.n26 101.088
+R16 VSS.n26 VSS.n25 101.088
+R17 VSS.n23 VSS.n22 101.088
+R18 VSS.n22 VSS.n21 101.088
+R19 VSS.n14 VSS.n6 96.845
+R20 VSS.n10 VSS.t4 21.7535
+R21 VSS.n15 VSS.t9 21.7535
+R22 VSS.n28 VSS.n27 17.0005
+R23 VSS.n28 VSS.n1 17.0005
+R24 VSS.n24 VSS.n23 17.0005
+R25 VSS.n25 VSS.n24 17.0005
+R26 VSS.n20 VSS.n19 17.0005
+R27 VSS.n21 VSS.n20 17.0005
+R28 VSS.n13 VSS.n12 17.0005
+R29 VSS.n12 VSS.n11 17.0005
+R30 VSS.n18 VSS.n17 17.0005
+R31 VSS.n10 VSS.n9 17.0005
+R32 VSS.n16 VSS.n15 17.0005
+R33 VSS.t2 VSS.n4 11.8367
+R34 VSS.t10 VSS.n1 10.877
+R35 VSS.n27 VSS.t10 10.877
+R36 VSS.n25 VSS.t6 10.877
+R37 VSS.n23 VSS.t6 10.877
+R38 VSS.n21 VSS.t7 10.877
+R39 VSS.n19 VSS.t7 10.877
+R40 VSS.n11 VSS.t5 10.877
+R41 VSS.n13 VSS.t5 10.877
+R42 VSS.n18 VSS.n4 9.91733
+R43 VSS.n0 VSS.t12 2.25994
+R44 VSS.n0 VSS 1.91727
+R45 VSS VSS.n28 8.5005
+R46 VSS.n24 VSS 8.5005
+R47 VSS.n20 VSS 8.5005
+R48 VSS.n12 VSS.t3 8.5005
+R49 VSS.n8 VSS.t4 6.63385
+R50 VSS.t9 VSS.n6 6.63385
+R51 VSS.n5 VSS.t2 6.63385
+R52 VSS.n17 VSS.t3 5.66717
+R53 VSS.n9 VSS.t3 5.66717
+R54 VSS.t0 VSS.n16 5.66717
+R55 VSS.n17 VSS.n5 5.18457
+R56 VSS.n9 VSS.n8 5.18457
+R57 VSS.n16 VSS.n6 5.18457
+R58 VSS.t3 VSS.n0 0.873051
+R59 VSS.t0 VSS.t3 1.64571
+C0 vbp_core a_2868_1824# 0.94042f
+C1 a_794_n100# VDD 0.22541f
+C2 vbp_core vbg_buf 3.79851f
+C3 a_94_n100# di_en 0.30274f
+C4 a_5600_370# vbn_buf 0.02904f
+C5 a_5800_850# a_2868_1824# 0.03026f
+C6 a_5800_850# vbg_buf 0.02655f
+C7 ibias_100u di_en 0.09509f
+C8 a_2868_1824# VDD 0.70337f
+C9 vbn_buf a_94_n100# 0.22213f
+C10 vbg_buf VDD 0.53086f
+C11 ibias_100u a_4268_n536# 0.11158f
+C12 vbn_buf ibias_100u 0.17615f
+C13 vbp_core a_5600_370# 0.02317f
+C14 a_4268_n536# a_6000_1330# 0.06042f
+C15 a_5800_850# a_5600_370# 0.04676f
+C16 vbn_buf di_en 0.13731f
+C17 a_94_n100# a_794_n100# 0.54548f
+C18 vbp_core ibias_100u 0.10664f
+C19 a_5600_370# vbg_buf 0.02009f
+C20 vbn_buf a_4268_n536# 1.07881f
+C21 ibias_100u a_794_n100# 0.28363f
+C22 a_94_n100# VDD 0.22455f
+C23 a_94_n100# a_2868_1824# 0.08356f
+C24 a_5800_850# a_6000_1330# 0.0265f
+C25 ibias_100u a_2868_1824# 1.01166f
+C26 vbp_core a_4268_n536# 0.23569f
+C27 vbp_core vbn_buf 0.38632f
+C28 vbg_buf a_6000_1330# 0.06186f
+C29 di_en VDD 0.10564f
+C30 vbn_buf a_794_n100# 0.11355f
+C31 a_5800_850# vbn_buf 0.03055f
+C32 vbn_buf VDD 0.15254f
+C33 a_4268_n536# a_2868_1824# 0.08819f
+C34 vbg_buf a_4268_n536# 0.78768f
+C35 vbn_buf a_2868_1824# 0.21969f
+C36 a_5600_370# ibias_100u 0.02902f
+C37 vbn_buf vbg_buf 1.28176f
+C38 vbp_core a_794_n100# 0.13729f
+C39 a_5800_850# vbp_core 0.07295f
+C40 ibias_100u a_94_n100# 0.65944f
+C41 vbp_core VDD 2.53164f
+C42 vbn_buf VSS 1.00147f
+C43 ibias_100u VSS 1.00147f
+C44 vbg_buf VSS 17.29004f
+C45 vbp_core VSS 0.41145f
+C46 VDD VSS 18.59448f
+C47 VSS.t3 VSS 2.85433f
+C48 VSS.t12 VSS 14.14788f
+C49 VSS.t0 VSS 7.88301f
+.ends
+
