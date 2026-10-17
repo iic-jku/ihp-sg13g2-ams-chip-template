@@ -36,9 +36,9 @@ GRT_ALLOW_CONGESTION: true
 RUN_MAGIC_DRC: true
 RUN_CTS: true
 
-# Valid values are AREA 0-3 and DELAY 0-4
-# DELAY 4 = fastest, but largest area
-# AREA 3 = slowest, but smallest area
+# Valid values are AREA 0-3 and DELAY 0-4, LibreLane defaults to AREA 0
+# DELAY favours speed, AREA favours cell area
+# AREA 3 and DELAY 4 always add buffering and gate sizing, so AREA 3 can be larger than AREA 0
 SYNTH_STRATEGY: DELAY 4
 # MAX_FANOUT_CONSTRAINT: 6
 # RT_MAX_LAYER: Metal5

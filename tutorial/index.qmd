@@ -426,15 +426,15 @@ Three parameters in [`config.yaml`](https://github.com/iic-jku/ihp-sg13g2-ams-ch
 DIE_AREA: [0, 0, 200, 100]
 PL_TARGET_DENSITY_PCT: 40
 
-# Valid values are AREA 0-3 and DELAY 0-4
-# DELAY 4 = fastest, but largest area
-# AREA 3 = slowest, but smallest area
+# Valid values are AREA 0-3 and DELAY 0-4, LibreLane defaults to AREA 0
+# DELAY favours speed, AREA favours cell area
+# AREA 3 and DELAY 4 always add buffering and gate sizing, so AREA 3 can be larger than AREA 0
 SYNTH_STRATEGY: DELAY 4
 ```
 
 - **`DIE_AREA`** is the macro outline `[x0, y0, x1, y1]` in µm (`FP_SIZING: absolute`). The standard-cell rows fill a core area inside it, which is 188 µm × 68 µm for the counter. The aspect ratio matters as much as the area: the outline has to fit the slot of the macro in the top-level floorplan and leave room for the pins listed in [`pin_order.cfg`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/counter/flow/librelane/pin_order.cfg).
 - **`PL_TARGET_DENSITY_PCT`** is the cell density that global placement aims for. At 40 %, the placer spreads the cells so that most of the core stays free for the clock tree, the buffers added during timing repair, and the routing. The target should stay above the utilisation (cell area divided by free core area), which global placement prints as `Utilization` in its log. A lower target triggers the warning `[GPL-0302] Target density 0.4000 is too low for the available free area`, and global placement then raises the target to the utilisation on its own.
-- **`SYNTH_STRATEGY`** selects the ABC script that Yosys uses for logic optimisation and technology mapping. The `AREA 0` to `AREA 3` scripts favour a small cell area, the `DELAY 0` to `DELAY 4` scripts favour short critical paths. `AREA 0` is the LibreLane default. The comment in `config.yaml` describes what the scripts aim for, not what they deliver: `AREA 3` and `DELAY 4` always add buffering and gate sizing, so in the test runs below, the counter synthesised to 675 µm² with `AREA 0`, 704 µm² with `DELAY 0`, 720 µm² with `AREA 3`, and 742 µm² with `DELAY 4`. The best strategy for a design is found by trying.
+- **`SYNTH_STRATEGY`** selects the ABC script that Yosys uses for logic optimisation and technology mapping. The `AREA 0` to `AREA 3` scripts favour a small cell area, the `DELAY 0` to `DELAY 4` scripts favour short critical paths. `AREA 0` is the LibreLane default. `AREA 3` and `DELAY 4` always add buffering and gate sizing, so in the test runs below, the counter synthesised to 675 µm² with `AREA 0`, 704 µm² with `DELAY 0`, 720 µm² with `AREA 3`, and 742 µm² with `DELAY 4`. The best strategy for a design is found by trying.
 
 No formula gives the right values up front. They are found iteratively. A run of a small macro takes only a few minutes (`make librelane-nodrc` skips the DRC steps), and the following procedure converges within a handful of runs.
 
