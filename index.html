@@ -8,7 +8,7 @@
 
 <meta name="author" content="Simon Dorrer">
 <meta name="author" content="Harald Pretl">
-<meta name="dcterms.date" content="2026-10-14">
+<meta name="dcterms.date" content="2026-10-17">
 
 <title>A Tutorial on Open-Source Analog Mixed-Signal Chip Design with the ihp-sg13g2 Open-PDK – Open-Source Analog-Mixed Signal Chip Design Tutorial</title>
 <style>
@@ -401,7 +401,10 @@ window.Quarto = {
   <li><a href="#rtl-with-systemverilog-testbench-icarus-verilog" id="toc-rtl-with-systemverilog-testbench-icarus-verilog" class="nav-link" data-scroll-target="#rtl-with-systemverilog-testbench-icarus-verilog"><span class="header-section-number">4.4.1</span> RTL with SystemVerilog testbench (Icarus Verilog)</a></li>
   <li><a href="#rtl-and-gate-level-with-cocotb" id="toc-rtl-and-gate-level-with-cocotb" class="nav-link" data-scroll-target="#rtl-and-gate-level-with-cocotb"><span class="header-section-number">4.4.2</span> RTL and gate-level with cocotb</a></li>
   </ul></li>
-  <li><a href="#librelane-hardening" id="toc-librelane-hardening" class="nav-link" data-scroll-target="#librelane-hardening"><span class="header-section-number">4.5</span> LibreLane Hardening</a></li>
+  <li><a href="#librelane-hardening" id="toc-librelane-hardening" class="nav-link" data-scroll-target="#librelane-hardening"><span class="header-section-number">4.5</span> LibreLane Hardening</a>
+  <ul class="collapse">
+  <li><a href="#sec-hardening-sizing" id="toc-sec-hardening-sizing" class="nav-link" data-scroll-target="#sec-hardening-sizing"><span class="header-section-number">4.5.1</span> Sizing the Macro</a></li>
+  </ul></li>
   <li><a href="#viewing-the-macro" id="toc-viewing-the-macro" class="nav-link" data-scroll-target="#viewing-the-macro"><span class="header-section-number">4.6</span> Viewing the Macro</a></li>
   <li><a href="#rtl-mixed-signal-simulation-with-xschem" id="toc-rtl-mixed-signal-simulation-with-xschem" class="nav-link" data-scroll-target="#rtl-mixed-signal-simulation-with-xschem"><span class="header-section-number">4.7</span> RTL Mixed-Signal Simulation with Xschem</a></li>
   <li><a href="#gate-level-mixed-signal-simulation-with-xschem" id="toc-gate-level-mixed-signal-simulation-with-xschem" class="nav-link" data-scroll-target="#gate-level-mixed-signal-simulation-with-xschem"><span class="header-section-number">4.8</span> Gate-Level Mixed-Signal Simulation with Xschem</a>
@@ -474,16 +477,21 @@ window.Quarto = {
   <li><a href="#full-flow-at-once" id="toc-full-flow-at-once" class="nav-link" data-scroll-target="#full-flow-at-once"><span class="header-section-number">7.10</span> Full Flow at Once</a></li>
   <li><a href="#releasing-for-tapeout" id="toc-releasing-for-tapeout" class="nav-link" data-scroll-target="#releasing-for-tapeout"><span class="header-section-number">7.11</span> Releasing for Tapeout</a></li>
   </ul></li>
-  <li><a href="#sec-exercises" id="toc-sec-exercises" class="nav-link" data-scroll-target="#sec-exercises"><span class="header-section-number">8</span> Additional Exercises</a>
+  <li><a href="#sec-new-chip" id="toc-sec-new-chip" class="nav-link" data-scroll-target="#sec-new-chip"><span class="header-section-number">8</span> Start Your Own Chip</a>
   <ul class="collapse">
-  <li><a href="#sec-exercise1" id="toc-sec-exercise1" class="nav-link" data-scroll-target="#sec-exercise1"><span class="header-section-number">8.1</span> Exercise 1: From 8-bit Up-Counter to 16-bit Down-Counter</a></li>
-  <li><a href="#sec-exercise2" id="toc-sec-exercise2" class="nav-link" data-scroll-target="#sec-exercise2"><span class="header-section-number">8.2</span> Exercise 2: Self-Biased Single-Ended Inverter Amplifier</a></li>
-  <li><a href="#sec-exercise3" id="toc-sec-exercise3" class="nav-link" data-scroll-target="#sec-exercise3"><span class="header-section-number">8.3</span> Exercise 3: Three-Stage Ring Oscillator with Output Buffer</a></li>
-  <li><a href="#sec-exercise4" id="toc-sec-exercise4" class="nav-link" data-scroll-target="#sec-exercise4"><span class="header-section-number">8.4</span> Exercise 4: Update Pinout and Floorplan of the Top-Level</a></li>
-  <li><a href="#sec-exercise5" id="toc-sec-exercise5" class="nav-link" data-scroll-target="#sec-exercise5"><span class="header-section-number">8.5</span> Exercise 5: Update the Bondplan Configuration</a></li>
+  <li><a href="#what-make-project-does" id="toc-what-make-project-does" class="nav-link" data-scroll-target="#what-make-project-does"><span class="header-section-number">8.1</span> What <code>make project</code> Does</a></li>
+  <li><a href="#after-make-project" id="toc-after-make-project" class="nav-link" data-scroll-target="#after-make-project"><span class="header-section-number">8.2</span> After <code>make project</code></a></li>
   </ul></li>
-  <li><a href="#rfic-flow" id="toc-rfic-flow" class="nav-link" data-scroll-target="#rfic-flow"><span class="header-section-number">9</span> RFIC Flow</a></li>
-  <li><a href="#acknowledgements" id="toc-acknowledgements" class="nav-link" data-scroll-target="#acknowledgements"><span class="header-section-number">10</span> Acknowledgements</a></li>
+  <li><a href="#sec-exercises" id="toc-sec-exercises" class="nav-link" data-scroll-target="#sec-exercises"><span class="header-section-number">9</span> Additional Exercises</a>
+  <ul class="collapse">
+  <li><a href="#sec-exercise1" id="toc-sec-exercise1" class="nav-link" data-scroll-target="#sec-exercise1"><span class="header-section-number">9.1</span> Exercise 1: From 8-bit Up-Counter to 16-bit Down-Counter</a></li>
+  <li><a href="#sec-exercise2" id="toc-sec-exercise2" class="nav-link" data-scroll-target="#sec-exercise2"><span class="header-section-number">9.2</span> Exercise 2: Self-Biased Single-Ended Inverter Amplifier</a></li>
+  <li><a href="#sec-exercise3" id="toc-sec-exercise3" class="nav-link" data-scroll-target="#sec-exercise3"><span class="header-section-number">9.3</span> Exercise 3: Three-Stage Ring Oscillator with Output Buffer</a></li>
+  <li><a href="#sec-exercise4" id="toc-sec-exercise4" class="nav-link" data-scroll-target="#sec-exercise4"><span class="header-section-number">9.4</span> Exercise 4: Update Pinout and Floorplan of the Top-Level</a></li>
+  <li><a href="#sec-exercise5" id="toc-sec-exercise5" class="nav-link" data-scroll-target="#sec-exercise5"><span class="header-section-number">9.5</span> Exercise 5: Update the Bondplan Configuration</a></li>
+  </ul></li>
+  <li><a href="#rfic-flow" id="toc-rfic-flow" class="nav-link" data-scroll-target="#rfic-flow"><span class="header-section-number">10</span> RFIC Flow</a></li>
+  <li><a href="#acknowledgements" id="toc-acknowledgements" class="nav-link" data-scroll-target="#acknowledgements"><span class="header-section-number">11</span> Acknowledgements</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/edit/main/tutorial/index.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div><div class="quarto-alternate-formats"><h2>Other Formats</h2><ul><li><a href="index.pdf"><i class="bi bi-file-pdf"></i>PDF</a></li></ul></div></nav>
     </div>
@@ -511,7 +519,7 @@ window.Quarto = {
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">October 14, 2026</p>
+      <p class="date">October 17, 2026</p>
     </div>
   </div>
   
@@ -571,6 +579,7 @@ Note
 <li>Verification with DRC, LVS, PEX using <a href="https://github.com/KLayout/klayout">KLayout</a>, <a href="https://github.com/rtimothyedwards/magic">Magic</a> + <a href="https://github.com/rtimothyedwards/netgen">Netgen</a></li>
 </ul></li>
 <li><a href="#sec-top">Top-level assembly and padframe generation</a> with logos and fill structures using SystemVerilog and the <a href="https://github.com/librelane/librelane">LibreLane</a> flow.</li>
+<li><a href="#sec-new-chip">Starting your own chip</a> from the template with a single <code>make project</code> target.</li>
 </ul>
 <p>The example design used throughout the tutorial contains:</p>
 <ul>
@@ -801,7 +810,7 @@ Tip
 </tr>
 <tr class="odd">
 <td><a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/scripts/"><code>scripts/</code></a></td>
-<td>Helper Python and shell scripts for rendering, logo placement, and plotting.</td>
+<td>Helper Python and shell scripts for the logo and fill step, the PEX symbol, the port checks, and <code>make project</code> (see <a href="#sec-new-chip" class="quarto-xref">Section&nbsp;8</a>).</td>
 </tr>
 <tr class="even">
 <td><a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/testbenches/"><code>testbenches/</code></a></td>
@@ -834,7 +843,7 @@ Tip
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>Instead of <code>git clone</code>, you can start by clicking the green “Use this template” button on the GitHub page to create your own copy of the repository. This way, you can push your changes to your own GitHub repository and even make it public if you want to share your custom silicon design with the community.</p>
+<p>Instead of <code>git clone</code>, you can start by clicking the green “Use this template” button on the GitHub page to create your own copy of the repository. This way, you can push your changes to your own GitHub repository and even make it public if you want to share your custom silicon design with the community. When the copy is to become your own chip, <code>make project NAME=&lt;name&gt;</code> renames it and removes the template-only content, see <a href="#sec-new-chip" class="quarto-xref">Section&nbsp;8</a>.</p>
 </div>
 </div>
 <p>To find and open a design file, run <code>make open</code> in the container’s VNC/noVNC desktop. It shows one button per design file of the folder, grouped by directory, and a click opens the file in its tool: Xschem for <code>.sch</code> and <code>.sym</code>, KLayout for <code>.gds</code>, GTKWave for waveforms and gvim for RTL, scripts and configs. The checkboxes select the file types, and the filter field keeps only the paths that contain the typed text. <a href="#fig-make-open" class="quarto-xref">Figure&nbsp;2</a> shows the top level with only the schematics and symbols selected. The window is rescanned every 15 s, so files a running flow writes appear on their own. The <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/README.md#open-the-design-files">top-level README</a> lists every file type and option.</p>
@@ -952,6 +961,10 @@ Figure&nbsp;3: Overview of the Makefile targets that <code>make all</code> resol
 <tr class="odd">
 <td><code>make clean</code> / <code>make clean-all</code></td>
 <td>Delete the generated files of the chip top-level, or of the chip top-level plus the IPs and the macros.</td>
+</tr>
+<tr class="even">
+<td><code>make project NAME=&lt;name&gt;</code></td>
+<td>Start a new chip from the template: remove the template-only content and rename <code>chip_top</code>, <code>chip_core</code> and <code>chip_logo</code> (see <a href="#sec-new-chip" class="quarto-xref">Section&nbsp;8</a>).</td>
 </tr>
 </tbody>
 </table>
@@ -1357,11 +1370,73 @@ Tip
 <p>The macro can also be built as an FPGA bitstream (<a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/counter/fpga/"><code>fpga/</code></a>) with <code>make build-fpga</code>. <code>counter_top</code> is synthesised straight onto board pins, without a board-top wrapper, and three boards are supported: pico-ice and iCEBreaker (Lattice iCE40) and ULX3S (Lattice ECP5). Pick one with <code>make build-fpga</code> for the default pico-ice, or <code>make -C fpga BOARD=ulx3s all</code> for another. IIC-OSIC-TOOLS carries the build chain for all three boards, so the bitstreams build inside the container, and only flashing needs the host, since the container has no USB access. Details are in <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/counter/fpga/README.md"><code>fpga/README.md</code></a>. The FPGA flow is not used in this tutorial and is only listed here for reference.</p>
 </div>
 </div>
+<section id="sec-hardening-sizing" class="level3" data-number="4.5.1">
+<h3 data-number="4.5.1" class="anchored" data-anchor-id="sec-hardening-sizing"><span class="header-section-number">4.5.1</span> Sizing the Macro</h3>
+<p>Three parameters in <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/counter/flow/librelane/config.yaml"><code>config.yaml</code></a> decide how compact and how fast the hardened macro is.</p>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>macros/counter/flow/librelane/config.yaml (code snippet)</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12" data-filename="macros/counter/flow/librelane/config.yaml (code snippet)"><pre class="sourceCode yaml code-with-copy"><code class="sourceCode yaml"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Layout / Floorplan Rules</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="fu">DIE_AREA</span><span class="kw">:</span><span class="at"> </span><span class="kw">[</span><span class="dv">0</span><span class="kw">,</span><span class="at"> </span><span class="dv">0</span><span class="kw">,</span><span class="at"> </span><span class="dv">200</span><span class="kw">,</span><span class="at"> </span><span class="dv">100</span><span class="kw">]</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="fu">PL_TARGET_DENSITY_PCT</span><span class="kw">:</span><span class="at"> </span><span class="dv">40</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Valid values are AREA 0-3 and DELAY 0-4, LibreLane defaults to AREA 0</span></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a><span class="co"># DELAY favours speed, AREA favours cell area</span></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a><span class="co"># AREA 3 and DELAY 4 always add buffering and gate sizing, so AREA 3 can be larger than AREA 0</span></span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a><span class="fu">SYNTH_STRATEGY</span><span class="kw">:</span><span class="at"> DELAY 4</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<ul>
+<li><strong><code>DIE_AREA</code></strong> is the macro outline <code>[x0, y0, x1, y1]</code> in µm (<code>FP_SIZING: absolute</code>). The standard-cell rows fill a core area inside it, which is 188 µm × 68 µm for the counter. The aspect ratio matters as much as the area: the outline has to fit the slot of the macro in the top-level floorplan and leave room for the pins listed in <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/counter/flow/librelane/pin_order.cfg"><code>pin_order.cfg</code></a>.</li>
+<li><strong><code>PL_TARGET_DENSITY_PCT</code></strong> is the cell density that global placement aims for. At 40 %, the placer spreads the cells so that most of the core stays free for the clock tree, the buffers added during timing repair, and the routing. The target should stay above the utilisation (cell area divided by free core area), which global placement prints as <code>Utilization</code> in its log. A lower target triggers the warning <code>[GPL-0302] Target density 0.4000 is too low for the available free area</code>, and global placement then raises the target to the utilisation on its own.</li>
+<li><strong><code>SYNTH_STRATEGY</code></strong> selects the ABC script that Yosys uses for logic optimisation and technology mapping. The <code>AREA 0</code> to <code>AREA 3</code> scripts favour a small cell area, the <code>DELAY 0</code> to <code>DELAY 4</code> scripts favour short critical paths. <code>AREA 0</code> is the LibreLane default. <code>AREA 3</code> and <code>DELAY 4</code> always add buffering and gate sizing, so in the test runs below, the counter synthesised to 675 µm² with <code>AREA 0</code>, 704 µm² with <code>DELAY 0</code>, 720 µm² with <code>AREA 3</code>, and 742 µm² with <code>DELAY 4</code>. The best strategy for a design is found by trying.</li>
+</ul>
+<p>No formula gives the right values up front. They are found iteratively. A run of a small macro takes only a few minutes (<code>make librelane-nodrc</code> skips the DRC steps), and the following procedure converges within a handful of runs.</p>
+<ol type="1">
+<li><strong>Start large and balanced.</strong> Set a generous <code>DIE_AREA</code>, several times the cell area that Yosys reports in <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/counter/verification/stat.rpt"><code>verification/stat.rpt</code></a>, and a balanced strategy such as <code>AREA 0</code> or <code>DELAY 0</code>. This run finishes quickly and gives the reference values for cell area, utilisation, and timing slack.</li>
+<li><strong>Shrink the die until placement complains.</strong> Reduce <code>DIE_AREA</code> step by step and leave <code>PL_TARGET_DENSITY_PCT</code> unchanged. The first complaint is the <code>[GPL-0302]</code> warning, which means the die is now too small for the target density. The run can still finish, but shrinking further ends in a hard error, typically <code>[DPL-0036] Detailed placement failed</code> once the buffers added by design repair, clock tree synthesis, or timing repair no longer fit.</li>
+<li><strong>Step back.</strong> Enlarge the die again until the warning is gone and run the full flow. The result places, routes, and meets timing at the configured density, and it is the starting point for the next step. A denser macro is possible by raising <code>PL_TARGET_DENSITY_PCT</code> on purpose, at the cost of less room for routing and timing repair.</li>
+<li><strong>Trade timing slack for area.</strong> Read the worst setup slack in the slowest corner (<code>nom_slow_1p08V_125C</code>). If there is margin left, switch to a strategy with a smaller cell area (the <code>Chip area</code> line in <code>*-yosys-synthesis/reports/stat.rpt</code> of the run) and repeat steps 2 and 3, since a smaller cell area allows a smaller die. If setup fails, move towards <code>DELAY</code>, up to <code>DELAY 4</code>, or give the placer more room.</li>
+</ol>
+<p>Each iteration changes only two values and reads back a few numbers, so the loop can also be scripted or handed to a coding agent. After every run, check the following in the run folder <code>flow/librelane/runs/&lt;run&gt;/</code>:</p>
+<ul>
+<li><code>warning.log</code>: the <code>[GPL-0302]</code> warning, among others.</li>
+<li><code>final/metrics.csv</code>: <code>design__instance__utilization</code>, <code>timing__setup__ws</code>, <code>timing__hold__ws</code>, and <code>route__drc_errors</code>.</li>
+<li><code>*-openroad-stapostpnr/summary.rpt</code>: worst setup and hold slack and the violation counts in all six STA corners. <code>make copy-reports</code> copies it to <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/counter/verification/stapostpnr_summary.rpt"><code>verification/stapostpnr_summary.rpt</code></a>.</li>
+</ul>
+<p>The counter sits far from these limits. In test runs at the configured 200 µm × 100 µm, global placement reported a utilisation of 6.3 % against the target of 40 %, and the worst setup slack was 13.4 ns of the 20 ns clock period. At the same target density, the counter placed without the warning at 100 µm × 60 µm (34 % utilisation), warned but still routed and met timing at 70 µm × 60 µm (52 %), and failed detailed placement at 60 µm × 60 µm (62 %). The runs that finished kept about 13.5 ns of setup slack. With <code>AREA 0</code> instead of <code>DELAY 4</code>, the 60 µm × 60 µm die routed and met timing as well, which is step 4 at work. Repeating these runs is a good first exercise.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The configuration sets <code>GRT_ALLOW_CONGESTION: true</code>, so global routing continues despite overflow. A die that is too small to route then shows up as detailed routing DRC errors, and the <code>Checker.TrDRC</code> step stops the flow.</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Important
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>A new die size changes the LEF of the macro. Update its placement in the <code>MACROS</code> block of the top-level <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/flow/librelane/config.yaml"><code>config.yaml</code></a> and in <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/doc/floorplan.md"><code>doc/floorplan.md</code></a> (see <a href="#sec-top" class="quarto-xref">Section&nbsp;7</a>). The copy targets take the newest run in <code>flow/librelane/runs/</code>, so finish with <code>make build-top</code> on the final values.</p>
+</div>
+</div>
+</section>
 </section>
 <section id="viewing-the-macro" class="level2" data-number="4.6">
 <h2 data-number="4.6" class="anchored" data-anchor-id="viewing-the-macro"><span class="header-section-number">4.6</span> Viewing the Macro</h2>
 <p>After the flow finishes, the macro layout can be inspected with KLayout. The container provides the <code>ke</code> alias for <code>klayout -e</code> (edit mode). With the following command, the final GDS from the latest LibreLane run is opened in KLayout. With the keys <code>0</code>, <code>1</code>, <code>2</code>, …, <code>9</code> you can view different layers as explained in the <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/doc/klayout/klayout_cheatsheet.md">KLayout cheatsheet</a> or in the <a href="https://github.com/iic-jku/klayout-layer-shortcuts">klayout-layer-shortcuts</a> plugin.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="ex">ke</span> final/gds/counter_top.gds</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="ex">ke</span> final/gds/counter_top.gds</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div id="fig-counter-top-layout" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-counter-top-layout-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
@@ -1381,7 +1456,7 @@ Figure&nbsp;6: <code>counter_top</code> layout in KLayout (200 µm × 100 µm).
 <section id="gate-level-mixed-signal-simulation-with-xschem" class="level2" data-number="4.8">
 <h2 data-number="4.8" class="anchored" data-anchor-id="gate-level-mixed-signal-simulation-with-xschem"><span class="header-section-number">4.8</span> Gate-Level Mixed-Signal Simulation with Xschem</h2>
 <p>A more accurate validation step is the gate-level mixed-signal simulation in Xschem with the Ngspice XSPICE event-driven engine. The LibreLane-extracted SPICE netlist (<code>netlist/spice/&lt;CELL&gt;.spice</code>, copied from the latest run by <code>copy-netlist</code>) is converted into an XSPICE model with the following command, which is also executed automatically as part of <code>make build-top</code>.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> generate-xspice</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb14"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> generate-xspice</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>The conversion pipeline is <code>.spice → .xspice</code> (<code>spi2xspice.py</code>), followed by a pin-reorder pass with <code>sak-pin-reorder.py</code> (a SAK tool installed in the IIC-OSIC-TOOLS container) to match the Xschem symbol (<a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/counter/schematic/xschem/"><code>schematic/xschem/counter_top.sym</code></a>).</p>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -1400,8 +1475,8 @@ Note
 <h3 data-number="4.8.1" class="anchored" data-anchor-id="the-symbol-is-a-source-file"><span class="header-section-number">4.8.1</span> The symbol is a source file</h3>
 <p>The macro is hardened, so it has no schematic, and Xschem’s “make symbol from a schematic” (key <code>a</code>) has nothing to work from. <code>schematic/xschem/counter_top.sym</code> is drawn by hand, and everything downstream bends to it: the pin order of the XSPICE model and of the extracted PEX netlists is sorted to match it. It is therefore never regenerated by a build. The testbench wires to pin <strong>coordinates</strong>, and a pin one grid step off its wire floats without any error, so a build that moved pins would quietly break the simulation instead of failing it.</p>
 <p>Two targets support that arrangement without taking ownership of the file away from you.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb14"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> symbol-gl      <span class="co"># scaffold schematic/xschem/&lt;CELL&gt;.sym, for a new macro</span></span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> symbol-check   <span class="co"># verify the committed symbol, runs inside generate-xspice</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb15"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> symbol-gl      <span class="co"># scaffold schematic/xschem/&lt;CELL&gt;.sym, for a new macro</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> symbol-check   <span class="co"># verify the committed symbol, runs inside generate-xspice</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><code>symbol-gl</code> reads the ports of the powered netlist <code>netlist/pnl/&lt;CELL&gt;.pnl.v</code> and writes a first-cut symbol in which every port is a pin with its direction, its bus range and its <code>sim_pinname</code>. The geometry follows Xschem’s own symbol generator, so loading the result and saving it again returns it unchanged. It is a scaffold: rename the pins to house style (<code>clock_i</code> becomes <code>di_clock</code>, <code>counter_value_o[0..7]</code> becomes <code>do_b[0..7]</code>), arrange them, draw the body, then commit it. Renaming is safe because <code>sim_pinname</code> holds the binding to the netlist. The target refuses to overwrite an existing symbol, because that is where the hand work lives.</p>
 <p><code>symbol-check</code> is the half that runs in the build. It compares the committed symbol against the same netlist and fails if a port was added, removed, renamed, given a different width, or drawn with the wrong direction. Its most useful check is that <strong>every pin declares <code>sim_pinname</code></strong>: a single pin missing the property drops <code>sak-pin-reorder.py</code> out of name matching and into matching by position, which is wrong for an alphabetically sorted netlist and can mis-wire the macro without any error at all.</p>
 <div class="callout callout-style-default callout-tip callout-titled">
@@ -1421,8 +1496,8 @@ Tip
 <section id="running-the-gate-level-testbench" class="level3" data-number="4.8.2">
 <h3 data-number="4.8.2" class="anchored" data-anchor-id="running-the-gate-level-testbench"><span class="header-section-number">4.8.2</span> Running the gate-level testbench</h3>
 <p>The Xschem testbench (<a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/counter/testbenches/xschem/"><code>counter_top_tb_tran.sch</code></a>) can be opened and simulated interactively.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb15"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> testbenches/xschem</span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="ex">xschem</span> counter_top_tb_tran.sch</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb16"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> testbenches/xschem</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="ex">xschem</span> counter_top_tb_tran.sch</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div id="fig-counter-top-tb-tran-schematic" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-counter-top-tb-tran-schematic-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
@@ -1461,8 +1536,8 @@ Note
 </div>
 </div>
 <p>The same simulation can also be run non-interactively from the Makefile, and the result can be plotted from Python.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb16"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> sim-gl-xschem</span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> sim-view-xschem SCRIPT=plot_counter_top</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb17"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> sim-gl-xschem</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> sim-view-xschem SCRIPT=plot_counter_top</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><code>sim-gl-xschem</code> runs in batch mode: it netlists the testbench with <code>xschem netlist</code> and then calls <code>ngspice -b</code> directly, so <code>make</code> blocks until the run finishes and sees its exit status. The testbench is selected with <code>TB=&lt;testbench_name&gt;</code> (default: <code>&lt;CELL&gt;_tb_tran</code>). Since the run is headless, the <code>plot</code> commands in the testbench’s <code>.control</code> block are a no-op. The testbench exports its results with <code>wrdata</code> to <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/counter/testbenches/xschem/plot_simulations/data"><code>testbenches/xschem/plot_simulations/data/</code></a>, from where <code>sim-view-xschem</code> plots them with Matplotlib.</p>
 <div id="fig-counter-top-tb-tran-sim" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
@@ -1479,10 +1554,10 @@ Figure&nbsp;8: Plotted Xschem simulation results of <code>counter_top_tb_tran</c
 <section id="parasitic-extraction-pex" class="level2" data-number="4.9">
 <h2 data-number="4.9" class="anchored" data-anchor-id="parasitic-extraction-pex"><span class="header-section-number">4.9</span> Parasitic Extraction (PEX)</h2>
 <p>The XSPICE model above is a <em>gate-level</em> view of the macro: every standard cell becomes an XSPICE primitive driven by its Liberty delay, and the wiring is ideal. Parasitic extraction gives the <em>transistor-level</em> view instead. It reads the hardened layout <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/counter/final/gds/"><code>final/gds/counter_top.gds</code></a> and writes a SPICE netlist into <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/counter/netlist/pex/"><code>netlist/pex/</code></a> in which every standard cell is flattened to transistors and the wiring carries the resistances and capacitances measured from the layout.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb17"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> magic-pex                            <span class="co"># full-RC, the default EXT_MODE=3</span></span>
-<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> magic-pex EXT_MODE=1                 <span class="co"># C-decoupled, fastest</span></span>
-<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> klayout-pex                          <span class="co"># the same with kpex, which runs Magic internally</span></span>
-<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> magic-pex EXT_MODE=3 THRESHOLD=5000 MINRES=500 MINDELAY=2   <span class="co"># full-RC with custom extresist settings</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb18"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> magic-pex                            <span class="co"># full-RC, the default EXT_MODE=3</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> magic-pex EXT_MODE=1                 <span class="co"># C-decoupled, fastest</span></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> klayout-pex                          <span class="co"># the same with kpex, which runs Magic internally</span></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> magic-pex EXT_MODE=3 THRESHOLD=5000 MINRES=500 MINDELAY=2   <span class="co"># full-RC with custom extresist settings</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Both targets read <code>final/gds/&lt;CELL&gt;.gds</code>, so <code>make build-top</code> (or at least <code>make copy-final</code>) has to have run first, and both abort with a clear message if it is missing. They start by running <code>make symbol-pex</code>, which derives <code>schematic/xschem/counter_top_pex.sym</code> from <code>counter_top.sym</code> so the PEX symbol can never go stale, and they finish by reordering the extracted <code>.subckt</code> ports to that symbol’s pin order with <code>sak-pin-reorder.py</code> and verifying them with <code>scripts/check_pex_ports.py</code>. For <code>counter_top</code>, the full-RC default extracts 4401 transistors and roughly 2100 capacitors and 4600 resistors. Magic’s <code>extresist</code> step is not deterministic, so the exact R and C counts move slightly from run to run while the transistor count stays the same.</p>
 <p>The transient testbench already <code>.include</code>s the extracted netlist next to the XSPICE model, and it carries two spare DUT instances above the schematic, <code>x2</code> of <code>counter_top.sym</code> and <code>x3</code> of <code>counter_top_pex.sym</code>, both parked with <code>spice_ignore=true</code>. Swapping the wired-up <code>x1</code> for <code>x3</code> turns the run into a post-layout simulation.</p>
 <div class="callout callout-style-default callout-warning callout-titled">
@@ -1515,7 +1590,7 @@ Note
 <section id="lint-build-verify-and-simulate-everything" class="level2" data-number="4.10">
 <h2 data-number="4.10" class="anchored" data-anchor-id="lint-build-verify-and-simulate-everything"><span class="header-section-number">4.10</span> Lint, Build, Verify and Simulate Everything</h2>
 <p>The full lint, build, verification, and simulation chain is run with the following command.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb18"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> all</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb19"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> all</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>This calls <code>lint-verilog-all</code>, <code>build-fpga</code>, <code>build-top</code>, <code>magic-pex</code>, and <code>sim-all</code> in sequence. The simulations run after the build, so the gate-level simulations run on the netlists, the XSPICE model and the extracted netlist produced by this build. <code>klayout-pex</code> is commented out in the recipe, since it is a second full extraction that nothing in the flow consumes. DRC and LVS are already covered by the LibreLane verification steps, so no extra verification target is needed for the digital macro.</p>
 </section>
 </section>
@@ -1616,9 +1691,9 @@ Tip
 <h2 data-number="5.2" class="anchored" data-anchor-id="sec-xschem-intro"><span class="header-section-number">5.2</span> Getting Started with Xschem</h2>
 <p>Xschem is a schematic capture tool where circuits are built from symbols, wires, and net labels. Everything is stored in plain text files (<code>.sch</code> for schematics, <code>.sym</code> for symbols), which makes them friendly for version control and search-and-replace in a text editor.</p>
 <p>Always start Xschem from the schematic or testbench folder of the macro, so that the local <code>xschemrc</code> is picked up. It sources the PDK configuration, adds the macro’s schematic and testbench folders to the symbol search path, and pins the netlist directory to <code>testbenches/xschem/simulations/</code>, where Ngspice runs and writes its results.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb19"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> macros/inverter/schematic/xschem</span>
-<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="ex">xschem</span>                  <span class="co"># empty session</span></span>
-<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a><span class="ex">xschem</span> inverter.sch     <span class="co"># or load a schematic directly at startup</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb20"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> macros/inverter/schematic/xschem</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="ex">xschem</span>                  <span class="co"># empty session</span></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a><span class="ex">xschem</span> inverter.sch     <span class="co"># or load a schematic directly at startup</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>The most important shortcuts are listed in <a href="#tbl-xschem-keys" class="quarto-xref">Table&nbsp;1</a>. A complete list is available in Xschem under <code>Help &gt; Keys</code> and in the <a href="https://iic-jku.github.io/analog-circuit-design/aicd.html#sec-xschem-cheatsheet">Xschem Cheatsheet</a>.</p>
 <div id="tbl-xschem-keys" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-tbl figure">
@@ -1732,9 +1807,9 @@ Tip
 <section id="schematic-level-simulation" class="level2" data-number="5.3">
 <h2 data-number="5.3" class="anchored" data-anchor-id="schematic-level-simulation"><span class="header-section-number">5.3</span> Schematic-Level Simulation</h2>
 <p>Go to the Xschem testbench folder and start Xschem.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb20"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> macros/inverter/testbenches/xschem</span>
-<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="ex">xschem</span></span>
-<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a><span class="ex">xschem</span> <span class="op">&lt;</span>testbench_name<span class="op">&gt;</span>.sch <span class="co"># load a testbench schematic directly at startup</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb21"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> macros/inverter/testbenches/xschem</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="ex">xschem</span></span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a><span class="ex">xschem</span> <span class="op">&lt;</span>testbench_name<span class="op">&gt;</span>.sch <span class="co"># load a testbench schematic directly at startup</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Four testbenches are available in <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/inverter/testbenches/xschem/"><code>testbenches/xschem/</code></a>.</p>
 <ul>
 <li><a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/inverter/testbenches/xschem/inverter_tb_tran.sch"><code>inverter_tb_tran.sch</code></a>, single-channel transient response (see <a href="#fig-inverter-tb-tran-schematic" class="quarto-xref">Figure&nbsp;10</a>),</li>
@@ -1876,11 +1951,11 @@ Tip
 <section id="sec-batch-sim" class="level3" data-number="5.3.2">
 <h3 data-number="5.3.2" class="anchored" data-anchor-id="sec-batch-sim"><span class="header-section-number">5.3.2</span> Batch Simulation with the Makefile</h3>
 <p>Every testbench can also be run non-interactively through the Makefile, which is useful for reproducible results and scripting.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb26"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> macros/inverter</span>
-<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> sim-xschem                         <span class="co"># run the default testbench (inverter_top_tb_tran)</span></span>
-<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> sim-xschem TB=<span class="op">&lt;</span>testbench_name<span class="op">&gt;</span>     <span class="co"># run another testbench non-interactively</span></span>
-<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> sim-view-xschem SCRIPT=plot_inverter      <span class="co"># plot results of inverter with Python</span></span>
-<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> sim-view-xschem SCRIPT=plot_inverter_top  <span class="co"># plot results of inverter_top with Python</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb27"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> macros/inverter</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> sim-xschem                         <span class="co"># run the default testbench (inverter_top_tb_tran)</span></span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> sim-xschem TB=<span class="op">&lt;</span>testbench_name<span class="op">&gt;</span>     <span class="co"># run another testbench non-interactively</span></span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> sim-view-xschem SCRIPT=plot_inverter      <span class="co"># plot results of inverter with Python</span></span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> sim-view-xschem SCRIPT=plot_inverter_top  <span class="co"># plot results of inverter_top with Python</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><code>sim-xschem</code> runs in batch mode: it netlists the testbench with <code>xschem netlist</code> and then calls <code>ngspice -b</code> directly, so <code>make</code> blocks until the run finishes and sees its exit status. The testbench is selected with <code>TB=&lt;testbench_name&gt;</code> and defaults to <code>&lt;CELL&gt;_tb_tran</code>. Since the run is headless, the <code>plot</code> commands in the testbench’s <code>.control</code> block are a no-op. Every testbench exports its results with <code>wrdata</code> to <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/inverter/testbenches/xschem/plot_simulations/data"><code>testbenches/xschem/plot_simulations/data/</code></a> instead.</p>
 <p>The Makefile target <code>sim-view-xschem</code> calls the Python plotters in <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/inverter/testbenches/xschem/plot_simulations"><code>testbenches/xschem/plot_simulations/</code></a>, selected with the <code>SCRIPT</code> variable (default: <code>plot_&lt;CELL&gt;</code>), to parse the raw simulation output and plot the results with Matplotlib. The following figures show some of these plotted results.</p>
 <div id="fig-inverter-tb-ac-ol-sim" class="quarto-float quarto-figure quarto-figure-center anchored">
@@ -1982,7 +2057,7 @@ Figure&nbsp;18: Xschem <code>inverter</code> symbol.
 <section id="sec-cace" class="level2" data-number="5.5">
 <h2 data-number="5.5" class="anchored" data-anchor-id="sec-cace"><span class="header-section-number">5.5</span> Process Variation and Mismatch (CACE)</h2>
 <p><a href="https://github.com/fossi-foundation/cace">CACE</a> drives Ngspice via a characterisation YAML file (<a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/inverter/verification/cace/inverter.yaml"><code>verification/cace/inverter.yaml</code></a>) to run Monte Carlo simulations and produce process and mismatch variation plots.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb27"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> sim-cace</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb28"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> sim-cace</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Plots are written to <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/inverter/verification/cace/results/inverter"><code>verification/cace/results/inverter/</code></a>. This step is mainly relevant for advanced designers who want to characterise the analog macro across PVT corners. The following figures show the results of the CACE simulations for 200 iterations.</p>
 <p><a href="#fig-inverter-cace-aol" class="quarto-xref">Figure&nbsp;19</a> shows the process (left) and mismatch (right) variations of the dc open-loop gain <span class="math inline">\(A_\mathrm{ol}\)</span>, while <a href="#fig-inverter-cace-aol-vdd" class="quarto-xref">Figure&nbsp;20</a> plots its variation across several process corners at one fixed supply voltage.</p>
 <div id="fig-inverter-cace-aol" class="quarto-layout-panel">
@@ -2390,8 +2465,8 @@ Tip
 <section id="sec-klayout-intro" class="level2" data-number="5.7">
 <h2 data-number="5.7" class="anchored" data-anchor-id="sec-klayout-intro"><span class="header-section-number">5.7</span> Getting Started with KLayout</h2>
 <p>The layout is created and edited in KLayout. Open it in edit mode with <code>ke</code>, an alias for <code>klayout -e</code> provided by the container. With the ihp-sg13g2 PDK active, KLayout loads the <code>sg13g2</code> technology, which brings the layer properties, the <code>SG13_dev</code> PCell library, and the <code>SG13G2 PDK</code> menu with the DRC and LVS runners.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb28"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="ex">ke</span>                              <span class="co"># empty session</span></span>
-<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a><span class="ex">ke</span> layout/inverter_top.klay.gds <span class="co"># or open a layout directly at startup</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb29"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="ex">ke</span>                              <span class="co"># empty session</span></span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a><span class="ex">ke</span> layout/inverter_top.klay.gds <span class="co"># or open a layout directly at startup</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Some basics before drawing:</p>
 <ul>
 <li><strong>Database unit.</strong> When creating a new layout (<code>File &gt; New Layout</code>), set the database unit (DBU) to <span class="math inline">\(0.001\,\mathrm{\mu m}\)</span>. This is important for the IHP Open-PDK. The <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/doc/klayout/klayout_cheatsheet.md">KLayout cheatsheet</a> explains how to rescale a layout that was started with the wrong DBU.</li>
@@ -2543,7 +2618,7 @@ Table&nbsp;6: The KLayout productivity plugins in a nutshell.
 <h2 data-number="5.8" class="anchored" data-anchor-id="sec-inspect-layout"><span class="header-section-number">5.8</span> Inspect / Edit the Layout</h2>
 <p>After the schematic is finalised and the design targets are met, the layout can be created. The layout of the <code>inverter</code> cell is hierarchical, and the top-level cell <code>inverter_top</code> contains four instances of the <code>inverter</code> cell. Around the 4-channel inverter layout, a power ring is drawn on <code>Metal5</code> and <code>TopMetal1</code> layers, which is connected to the <code>VDD</code> and <code>VSS</code> pins of the four inverters. This power ring is required for top-level integration, connecting the macro power to the chip’s PDN.</p>
 <p>With the following command, the GDS of the 4-channel inverter is opened in KLayout as shown in <a href="#fig-inverter-top-layout" class="quarto-xref">Figure&nbsp;24</a>. Use the layer shortcuts <code>0</code>, <code>1</code>, <code>2</code>, …, <code>9</code> from <a href="#tbl-klayout-plugins" class="quarto-xref">Table&nbsp;6</a> to view the individual layers.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb29"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="ex">ke</span> layout/inverter_top.klay.gds</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb30"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="ex">ke</span> layout/inverter_top.klay.gds</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><code>inverter_top.klay.gds</code> is the source of truth. After modifying the layout, export a clean <code>.gds</code> file (for example <code>inverter_top.gds</code>) by pressing <code>File &gt; Export Layout For Tapeout</code>, which resolves every PCell and library reference into a static cell so the result opens without the PDK loaded. Never hand-edit the exported file: keeping the two in step by editing both is how they drift apart, and the drift is invisible because the sign-off targets only look at the exported one. All verification flows (DRC, LVS, and PEX with both KLayout and Magic) accept either <code>.gds</code> or <code>.klay.gds</code>, while the build targets (LEF export, GDS copy, and rendering) use the exported <code>.gds</code>.</p>
 <div class="callout callout-style-default callout-warning callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -2685,8 +2760,8 @@ Tip
 </tr>
 </tbody>
 </table>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb30"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> klayout-drc [CELL=<span class="op">&lt;</span>cellname<span class="op">&gt;</span>] [DRC_LEVEL=<span class="op">&lt;</span>precheck<span class="kw">|</span><span class="ex">macro</span><span class="kw">|</span><span class="ex">regular</span><span class="op">&gt;</span>]   <span class="co"># default CELL=inverter_top, default DRC_LEVEL=macro</span></span>
-<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> magic-drc [CELL=<span class="op">&lt;</span>cellname<span class="op">&gt;</span>]    <span class="co"># default CELL=inverter_top</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb31"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> klayout-drc [CELL=<span class="op">&lt;</span>cellname<span class="op">&gt;</span>] [DRC_LEVEL=<span class="op">&lt;</span>precheck<span class="kw">|</span><span class="ex">macro</span><span class="kw">|</span><span class="ex">regular</span><span class="op">&gt;</span>]   <span class="co"># default CELL=inverter_top, default DRC_LEVEL=macro</span></span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> magic-drc [CELL=<span class="op">&lt;</span>cellname<span class="op">&gt;</span>]    <span class="co"># default CELL=inverter_top</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Reports are written into per-cell run folders (<code>&lt;CELL&gt;.magic.drc/</code> for Magic, <code>&lt;CELL&gt;.klayout.drc/</code> for KLayout) inside <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/inverter/verification/drc/"><code>verification/drc/</code></a>. The run folders are wiped at the start of each run, so they always reflect the latest run only.</p>
 <p>A successful KLayout run ends with the line</p>
 <pre class="text"><code>INFO    | KLayout DRC Check Passed: No DRC violations detected in the layout.</code></pre>
@@ -2714,8 +2789,8 @@ Tip
 <section id="layout-versus-schematic" class="level3" data-number="5.9.2">
 <h3 data-number="5.9.2" class="anchored" data-anchor-id="layout-versus-schematic"><span class="header-section-number">5.9.2</span> Layout-Versus-Schematic</h3>
 <p>The non-interactive LVS can be run with the following Makefile targets. The <code>CELL</code> variable can be set to run LVS on a specific cell, or it defaults to <code>inverter_top</code> if not set.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb32"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> klayout-lvs [CELL=<span class="op">&lt;</span>cellname<span class="op">&gt;</span>]  <span class="co"># default CELL=inverter_top, uses CDL netlist exported from Xschem</span></span>
-<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> magic-lvs [CELL=<span class="op">&lt;</span>cellname<span class="op">&gt;</span>]    <span class="co"># default CELL=inverter_top, uses SPICE netlist exported from Xschem</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb33"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> klayout-lvs [CELL=<span class="op">&lt;</span>cellname<span class="op">&gt;</span>]  <span class="co"># default CELL=inverter_top, uses CDL netlist exported from Xschem</span></span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> magic-lvs [CELL=<span class="op">&lt;</span>cellname<span class="op">&gt;</span>]    <span class="co"># default CELL=inverter_top, uses SPICE netlist exported from Xschem</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>The schematic netlist is exported automatically by the matching <code>*-lvs-netlist</code> sub-target and moved to <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/inverter/netlist/schematic/"><code>netlist/schematic/</code></a>. The extracted layout netlist is moved to <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/inverter/netlist/layout/"><code>netlist/layout/</code></a> and the reports are written into per-cell run folders (<code>&lt;CELL&gt;.magic.lvs/</code> for Magic + Netgen, <code>&lt;CELL&gt;.klayout.lvs/</code> for KLayout) inside <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/inverter/verification/lvs/"><code>verification/lvs/</code></a>. The run folders are wiped at the start of each run, so they always reflect the latest run only.</p>
 <p>Substrate and well contacts are not devices for LVS in either flow (KLayout skips the <code>ntap1</code> / <code>ptap1</code> device extraction, Magic extracts them as substrate connections), so the taps in the layout need no matching device in the schematic. A successful KLayout run prints:</p>
 <pre class="text"><code>| Status           | PASS                                    |
@@ -2776,8 +2851,8 @@ Tip
 <li><code>MINRES</code> - extresist minimum resistance in mOhm (<code>-r</code>, default <code>1000</code> = 1 Ohm),</li>
 <li><code>MINDELAY</code> - extresist minimum delay in ps (<code>-y</code>, default <code>1</code>; <code>0</code> = gate by resistance).</li>
 </ul>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb35"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> klayout-pex [CELL=<span class="op">&lt;</span>cellname<span class="op">&gt;</span>] [EXT_MODE=<span class="op">&lt;</span>1<span class="kw">|</span><span class="ex">2</span><span class="kw">|</span><span class="dv">3</span><span class="op">&gt;</span>]   <span class="co"># default CELL=inverter_top, default EXT_MODE=3 (full-RC)</span></span>
-<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> magic-pex [CELL=<span class="op">&lt;</span>cellname<span class="op">&gt;</span>] [EXT_MODE=<span class="op">&lt;</span>1<span class="kw">|</span><span class="ex">2</span><span class="kw">|</span><span class="dv">3</span><span class="op">&gt;</span>] <span class="ex">[THRESHOLD=</span><span class="op">&lt;</span>mOhm<span class="op">&gt;</span>] [MINRES=<span class="op">&lt;</span>mOhm<span class="op">&gt;</span>] [MINDELAY=<span class="op">&lt;</span>ps<span class="op">&gt;</span>]   <span class="co"># default CELL=inverter_top, default EXT_MODE=3 (full-RC)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb36"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> klayout-pex [CELL=<span class="op">&lt;</span>cellname<span class="op">&gt;</span>] [EXT_MODE=<span class="op">&lt;</span>1<span class="kw">|</span><span class="ex">2</span><span class="kw">|</span><span class="dv">3</span><span class="op">&gt;</span>]   <span class="co"># default CELL=inverter_top, default EXT_MODE=3 (full-RC)</span></span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> magic-pex [CELL=<span class="op">&lt;</span>cellname<span class="op">&gt;</span>] [EXT_MODE=<span class="op">&lt;</span>1<span class="kw">|</span><span class="ex">2</span><span class="kw">|</span><span class="dv">3</span><span class="op">&gt;</span>] <span class="ex">[THRESHOLD=</span><span class="op">&lt;</span>mOhm<span class="op">&gt;</span>] [MINRES=<span class="op">&lt;</span>mOhm<span class="op">&gt;</span>] [MINDELAY=<span class="op">&lt;</span>ps<span class="op">&gt;</span>]   <span class="co"># default CELL=inverter_top, default EXT_MODE=3 (full-RC)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>PEX writes a SPICE netlist into <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/inverter/netlist/pex/"><code>netlist/pex/</code></a>. The subcircuit is named <code>&lt;CELL&gt;_pex</code>, and the pin order is rearranged to match the Xschem PEX symbol (<a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/inverter/schematic/xschem/inverter_top_pex.sym"><code>inverter_top_pex.sym</code></a>).</p>
 <p>That PEX symbol is generated, not maintained by hand. Both PEX targets start by running <code>make symbol-pex</code>, which copies <code>schematic/xschem/&lt;CELL&gt;.sym</code> to <code>schematic/xschem/&lt;CELL&gt;_pex.sym</code> and changes <code>type=subcircuit</code> into <code>type=primitive</code>. Everything else is inherited, above all the pin order that <code>sak-pin-reorder.py</code> sorts the extracted netlist to. The <code>primitive</code> type keeps Xschem from descending into a schematic of the same name, so the instance is netlisted as it stands and its subcircuit comes from the included PEX netlist instead. Because the symbol is rebuilt before every extraction, it cannot go stale when a pin is added, removed or renamed, and it can be built on its own with <code>make symbol-pex [CELL=&lt;cellname&gt;]</code>. Edit <code>&lt;CELL&gt;.sym</code>, never the generated <code>&lt;CELL&gt;_pex.sym</code>.</p>
 <p>After the reorder, both PEX targets run <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/inverter/scripts/check_pex_ports.py"><code>scripts/check_pex_ports.py</code></a> on the extracted netlist and fail if a port of the subcircuit is not connected to any element inside it. A floating port usually means a missing or misspelled pin label in the layout, and it is better caught here than as a silently open input in the post-layout simulation.</p>
@@ -2825,25 +2900,25 @@ Note
 <section id="run-full-verification-flow-at-once" class="level3" data-number="5.9.5">
 <h3 data-number="5.9.5" class="anchored" data-anchor-id="run-full-verification-flow-at-once"><span class="header-section-number">5.9.5</span> Run Full Verification Flow at Once</h3>
 <p>If you want to run the full verification flow at once, the verify targets bundle DRC, LVS, and PEX in one command.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb36"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> klayout-verify [CELL=<span class="op">&lt;</span>cellname<span class="op">&gt;</span>]   <span class="co"># default CELL=inverter_top</span></span>
-<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> magic-verify [CELL=<span class="op">&lt;</span>cellname<span class="op">&gt;</span>]     <span class="co"># default CELL=inverter_top</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb37"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> klayout-verify [CELL=<span class="op">&lt;</span>cellname<span class="op">&gt;</span>]   <span class="co"># default CELL=inverter_top</span></span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> magic-verify [CELL=<span class="op">&lt;</span>cellname<span class="op">&gt;</span>]     <span class="co"># default CELL=inverter_top</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 </section>
 <section id="sec-build-deliverables" class="level2" data-number="5.10">
 <h2 data-number="5.10" class="anchored" data-anchor-id="sec-build-deliverables"><span class="header-section-number">5.10</span> Build Deliverables for Top-Level Integration</h2>
 <p>For the inverter to be picked up by the top-level LibreLane flow, it must expose a <strong><a href="https://en.wikipedia.org/wiki/LEF/DEF">LEF</a></strong> (abstract pin / blockage view), a <strong><a href="https://chipverify.com/rtl-synthesis/introduction-to-liberty-format">Liberty timing library</a></strong> stub, and a <strong>Verilog stub</strong>. The Verilog stub is referenced by <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/rtl/chip_top.sv"><code>rtl/chip_top.sv</code></a> for top-level integration. These files can be built with individual Makefile targets or via <code>build-top</code>.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb37"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> check-boundary   <span class="co"># check the PR boundary box on layer 189 in layout/inverter_top.gds</span></span>
-<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> lef              <span class="co"># final/lef/inverter_top.lef</span></span>
-<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> lib              <span class="co"># final/lib/inverter_top.lib</span></span>
-<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> verilog          <span class="co"># final/vh/inverter_top.vh</span></span>
-<span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> build-top        <span class="co"># the four steps above plus copy-gds and render-gds</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb38"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> check-boundary   <span class="co"># check the PR boundary box on layer 189 in layout/inverter_top.gds</span></span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> lef              <span class="co"># final/lef/inverter_top.lef</span></span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> lib              <span class="co"># final/lib/inverter_top.lib</span></span>
+<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> verilog          <span class="co"># final/vh/inverter_top.vh</span></span>
+<span id="cb38-5"><a href="#cb38-5" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> build-top        <span class="co"># the four steps above plus copy-gds and render-gds</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><code>make build-top</code> runs <code>check-boundary</code> first, so a top cell without the PR boundary box fails the macro build in a second with a message that names the layer, instead of failing the chip flow much later (see the callout in <a href="#sec-inspect-layout" class="quarto-xref">Section&nbsp;5.8</a>). The check runs <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/inverter/scripts/check_boundary.py"><code>scripts/check_boundary.py</code></a>, which also reports the size of the box and warns when the drawn geometry extends beyond it, because the top-level flow places the macro by the boundary and anything outside it may overlap a neighbour.</p>
 <p><code>make build-top</code> also copies the GDS to <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/inverter/final/gds/"><code>final/gds/</code></a> and renders the macro to <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/inverter/render/img/"><code>render/img/inverter_top_white.png</code> and <code>render/img/inverter_top_black.png</code></a>, as displayed in <a href="#fig-inverter-top-layout" class="quarto-xref">Figure&nbsp;24</a>.</p>
 </section>
 <section id="sec-full-analog-flow" class="level2" data-number="5.11">
 <h2 data-number="5.11" class="anchored" data-anchor-id="sec-full-analog-flow"><span class="header-section-number">5.11</span> Full Analog Macro Flow</h2>
 <p>The full verification, build, and simulation chain is run with the following command.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb38"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> all</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb39"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> all</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>This calls <code>klayout-verify-all</code>, <code>magic-verify-all</code>, <code>build-top</code>, and <code>sim-all</code> (Xschem + CACE) in sequence. The simulations run last, so the <code>inverter_top</code> testbench includes the PEX netlist produced by this run. Depending on the hardware used, a full pass can take a few minutes, especially the CACE simulation step.</p>
 </section>
 </section>
@@ -2976,10 +3051,10 @@ Tip
 </tbody>
 </table>
 <p>To execute the <code>clean</code>, <code>bondpad</code>, <code>verilog</code>, <code>klayout-drc</code>, and <code>magic-drc</code> targets in sequence, run:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb39"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> ip/sg13g2_ip__bondpad_70x70</span>
-<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> all</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb40"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> ip/sg13g2_ip__bondpad_70x70</span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> all</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>View the bondpad layout in KLayout with:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb40"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="ex">ke</span> final/gds/sg13g2_ip__bondpad_70x70.gds</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb41"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="ex">ke</span> final/gds/sg13g2_ip__bondpad_70x70.gds</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div id="fig-bondpad-layout" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-bondpad-layout-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
@@ -2992,7 +3067,7 @@ Figure&nbsp;26: <code>sg13g2_ip__bondpad_70x70</code> layout in KLayout.
 </div>
 <p>The bondpad goes from <code>Metal3</code> up to <code>TopMetal2</code> by default, but the <code>BOTTOM_METAL</code> Makefile variable can be set to change the lowest metal in the stack. The pad is surrounded by the pad recognition layer <code>dfpad</code> (<code>41/0</code>).</p>
 <p>The <code>bondpad</code> target accepts the geometry and metal-stack variables as command-line overrides. For example, to build an octagonal 80 µm bondpad from <code>Metal2</code> up to <code>TopMetal2</code>, run:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb41"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> bondpad DIAMETER=80 SHAPE=octagon BOTTOM_METAL=2</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb42"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> bondpad DIAMETER=80 SHAPE=octagon BOTTOM_METAL=2</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 <section id="logo-generation" class="level2" data-number="6.3">
 <h2 data-number="6.3" class="anchored" data-anchor-id="logo-generation"><span class="header-section-number">6.3</span> Logo Generation</h2>
@@ -3087,10 +3162,10 @@ Figure&nbsp;26: <code>sg13g2_ip__bondpad_70x70</code> layout in KLayout.
 </tbody>
 </table>
 <p>To execute the <code>clean</code>, <code>logo</code>, <code>lef</code>, <code>lib</code>, <code>verilog</code>, <code>klayout-drc</code>, and <code>magic-drc</code> targets in sequence, run:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb42"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> ip/sg13g2_ip__jku                <span class="co"># or ip/sg13g2_ip__jku_names</span></span>
-<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> all</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb43"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> ip/sg13g2_ip__jku                <span class="co"># or ip/sg13g2_ip__jku_names</span></span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> all</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>View the JKU logo or JKU names layout in KLayout with:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb43"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="ex">ke</span> final/gds/sg13g2_ip__jku.gds     <span class="co"># or sg13g2_ip__jku_names.gds</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb44"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="ex">ke</span> final/gds/sg13g2_ip__jku.gds     <span class="co"># or sg13g2_ip__jku_names.gds</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div id="fig-jku-logo-layout" class="quarto-layout-panel">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-jku-logo-layout-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
@@ -3135,8 +3210,8 @@ Tip
 <section id="top-level-assembly" class="level2" data-number="6.4">
 <h2 data-number="6.4" class="anchored" data-anchor-id="top-level-assembly"><span class="header-section-number">6.4</span> Top-Level Assembly</h2>
 <p>For top-level assembly, the <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/Makefile">top-level Makefile</a> exposes two wrapper targets that descend into the IP folders and call <code>make all</code>:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb44"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> build-bondpad      <span class="co"># build ip/sg13g2_ip__bondpad_70x70</span></span>
-<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> build-logos        <span class="co"># build ip/sg13g2_ip__jku and ip/sg13g2_ip__jku_names</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb45"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> build-bondpad      <span class="co"># build ip/sg13g2_ip__bondpad_70x70</span></span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> build-logos        <span class="co"># build ip/sg13g2_ip__jku and ip/sg13g2_ip__jku_names</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Both targets are part of <code>make build-all</code> (see <a href="#sec-top" class="quarto-xref">Section&nbsp;7</a>), so the IP cells are refreshed automatically before the chip is hardened with LibreLane. The generated GDS, LEF, Verilog stub and Liberty files are referenced by <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/flow/librelane/config.yaml"><code>flow/librelane/config.yaml</code></a> when assembling the chip top-level. Furthermore, the Verilog stubs are instantiated in <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/rtl/chip_top.sv"><code>rtl/chip_top.sv</code></a>.</p>
 </section>
 </section>
@@ -3151,6 +3226,7 @@ Tip
 <li><a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/flow/librelane/chip_top.sdc"><code>flow/librelane/chip_top.sdc</code></a>, timing constraints (clock period, input/output delays).</li>
 <li>Reference documentation for the chip, <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/doc/specifications.md">specifications.md</a>, <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/doc/pinout.md">pinout.md</a>, and <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/doc/floorplan.md">floorplan.md</a>.</li>
 </ul>
+<p>For your own chip, <code>make project</code> renames these files and every reference to them in one step (<a href="#sec-new-chip" class="quarto-xref">Section&nbsp;8</a>), and their content is what you then adapt.</p>
 <section id="understanding-chip_top.sv" class="level2" data-number="7.1">
 <h2 data-number="7.1" class="anchored" data-anchor-id="understanding-chip_top.sv"><span class="header-section-number">7.1</span> Understanding <code>chip_top.sv</code></h2>
 <p>The padframe wrapper <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/rtl/chip_top.sv"><code>chip_top.sv</code></a> declares the chip’s parameters and ports. The parameter block at the top of the module controls the number of pads of each type and is the place to update when the pinout changes.</p>
@@ -3158,21 +3234,21 @@ Tip
 <div class="code-with-filename-file">
 <pre><strong>rtl/chip_top.sv (code snippet)</strong></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb45" data-filename="rtl/chip_top.sv (code snippet)"><pre class="sourceCode systemverilog code-with-copy"><code class="sourceCode systemverilog"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="kw">module</span> chip_top #(</span>
-<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Power / ground pads for digital core / analog front-end</span></span>
-<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a>    <span class="kw">parameter</span> <span class="kw">int</span> <span class="kw">unsigned</span> NUM_VDD_PADS    = <span class="dv">1</span>,</span>
-<span id="cb45-4"><a href="#cb45-4" aria-hidden="true" tabindex="-1"></a>    <span class="kw">parameter</span> <span class="kw">int</span> <span class="kw">unsigned</span> NUM_VSS_PADS    = <span class="dv">1</span>,</span>
-<span id="cb45-5"><a href="#cb45-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb45-6"><a href="#cb45-6" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Power / ground pads for I/O</span></span>
-<span id="cb45-7"><a href="#cb45-7" aria-hidden="true" tabindex="-1"></a>    <span class="kw">parameter</span> <span class="kw">int</span> <span class="kw">unsigned</span> NUM_IOVDD_PADS  = <span class="dv">1</span>,</span>
-<span id="cb45-8"><a href="#cb45-8" aria-hidden="true" tabindex="-1"></a>    <span class="kw">parameter</span> <span class="kw">int</span> <span class="kw">unsigned</span> NUM_IOVSS_PADS  = <span class="dv">1</span>,</span>
-<span id="cb45-9"><a href="#cb45-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb45-10"><a href="#cb45-10" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Signal pads</span></span>
-<span id="cb45-11"><a href="#cb45-11" aria-hidden="true" tabindex="-1"></a>    <span class="kw">parameter</span> <span class="kw">int</span> <span class="kw">unsigned</span> NUM_INPUT_PADS  = <span class="dv">1</span>,  <span class="co">// excluding clock and reset pads</span></span>
-<span id="cb45-12"><a href="#cb45-12" aria-hidden="true" tabindex="-1"></a>    <span class="kw">parameter</span> <span class="kw">int</span> <span class="kw">unsigned</span> NUM_OUTPUT_PADS = <span class="dv">17</span>,</span>
-<span id="cb45-13"><a href="#cb45-13" aria-hidden="true" tabindex="-1"></a>    <span class="kw">parameter</span> <span class="kw">int</span> <span class="kw">unsigned</span> NUM_BIDIR_PADS  = <span class="dv">4</span>,</span>
-<span id="cb45-14"><a href="#cb45-14" aria-hidden="true" tabindex="-1"></a>    <span class="kw">parameter</span> <span class="kw">int</span> <span class="kw">unsigned</span> NUM_ANALOG_PADS = <span class="dv">4</span></span>
-<span id="cb45-15"><a href="#cb45-15" aria-hidden="true" tabindex="-1"></a>) ( ... );</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb46" data-filename="rtl/chip_top.sv (code snippet)"><pre class="sourceCode systemverilog code-with-copy"><code class="sourceCode systemverilog"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="kw">module</span> chip_top #(</span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Power / ground pads for digital core / analog front-end</span></span>
+<span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a>    <span class="kw">parameter</span> <span class="kw">int</span> <span class="kw">unsigned</span> NUM_VDD_PADS    = <span class="dv">1</span>,</span>
+<span id="cb46-4"><a href="#cb46-4" aria-hidden="true" tabindex="-1"></a>    <span class="kw">parameter</span> <span class="kw">int</span> <span class="kw">unsigned</span> NUM_VSS_PADS    = <span class="dv">1</span>,</span>
+<span id="cb46-5"><a href="#cb46-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-6"><a href="#cb46-6" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Power / ground pads for I/O</span></span>
+<span id="cb46-7"><a href="#cb46-7" aria-hidden="true" tabindex="-1"></a>    <span class="kw">parameter</span> <span class="kw">int</span> <span class="kw">unsigned</span> NUM_IOVDD_PADS  = <span class="dv">1</span>,</span>
+<span id="cb46-8"><a href="#cb46-8" aria-hidden="true" tabindex="-1"></a>    <span class="kw">parameter</span> <span class="kw">int</span> <span class="kw">unsigned</span> NUM_IOVSS_PADS  = <span class="dv">1</span>,</span>
+<span id="cb46-9"><a href="#cb46-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-10"><a href="#cb46-10" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Signal pads</span></span>
+<span id="cb46-11"><a href="#cb46-11" aria-hidden="true" tabindex="-1"></a>    <span class="kw">parameter</span> <span class="kw">int</span> <span class="kw">unsigned</span> NUM_INPUT_PADS  = <span class="dv">1</span>,  <span class="co">// excluding clock and reset pads</span></span>
+<span id="cb46-12"><a href="#cb46-12" aria-hidden="true" tabindex="-1"></a>    <span class="kw">parameter</span> <span class="kw">int</span> <span class="kw">unsigned</span> NUM_OUTPUT_PADS = <span class="dv">17</span>,</span>
+<span id="cb46-13"><a href="#cb46-13" aria-hidden="true" tabindex="-1"></a>    <span class="kw">parameter</span> <span class="kw">int</span> <span class="kw">unsigned</span> NUM_BIDIR_PADS  = <span class="dv">4</span>,</span>
+<span id="cb46-14"><a href="#cb46-14" aria-hidden="true" tabindex="-1"></a>    <span class="kw">parameter</span> <span class="kw">int</span> <span class="kw">unsigned</span> NUM_ANALOG_PADS = <span class="dv">4</span></span>
+<span id="cb46-15"><a href="#cb46-15" aria-hidden="true" tabindex="-1"></a>) ( ... );</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>The remaining code does not need to be modified for a pinout change, since the <code>generate</code> blocks automatically instantiate the correct number of I/O cells based on the parameter values. One <code>generate</code> block per pad type (<code>g_vdd_pads</code>, <code>g_vss_pads</code>, <code>g_iovdd_pads</code>, <code>g_iovss_pads</code>, <code>g_inputs</code>, <code>g_outputs</code>, <code>g_bidirs</code>, <code>g_analogs</code>) instantiates the matching IHP I/O cell, plus single instances for the clock and reset pads. An example code snippet of the input pad generation with a <code>generate</code> block is shown below. The <code>input_PAD</code> signals are exposed as ports of the <code>chip_top</code> module and are connected to the pads of the I/O cell, while the <code>input_PAD2CORE</code> signals are connected to the internal core logic in <code>chip_core.sv</code>. The same structure, or a very similar one, applies to the other pad types.</p>
 <div class="callout callout-style-default callout-note callout-titled">
@@ -3192,20 +3268,20 @@ Note
 <div class="code-with-filename-file">
 <pre><strong>rtl/chip_top.sv (code snippet)</strong></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb46" data-filename="rtl/chip_top.sv (code snippet)"><pre class="sourceCode systemverilog code-with-copy"><code class="sourceCode systemverilog"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="kw">generate</span></span>
-<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">for</span> (<span class="kw">genvar</span> i = <span class="dv">0</span>; i &lt; NUM_INPUT_PADS; i++) <span class="kw">begin :</span><span class="dt"> </span><span class="kw">g_inputs</span></span>
-<span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a>        sg13g2_IOPadIn input_pad (</span>
-<span id="cb46-4"><a href="#cb46-4" aria-hidden="true" tabindex="-1"></a>            <span class="ot">`ifdef</span> USE_POWER_PINS</span>
-<span id="cb46-5"><a href="#cb46-5" aria-hidden="true" tabindex="-1"></a>            .iovdd (IOVDD),</span>
-<span id="cb46-6"><a href="#cb46-6" aria-hidden="true" tabindex="-1"></a>            .iovss (IOVSS),</span>
-<span id="cb46-7"><a href="#cb46-7" aria-hidden="true" tabindex="-1"></a>            .vdd   (VDD),</span>
-<span id="cb46-8"><a href="#cb46-8" aria-hidden="true" tabindex="-1"></a>            .vss   (VSS),</span>
-<span id="cb46-9"><a href="#cb46-9" aria-hidden="true" tabindex="-1"></a>            <span class="ot">`endif</span></span>
-<span id="cb46-10"><a href="#cb46-10" aria-hidden="true" tabindex="-1"></a>            .p2c   (input_PAD2CORE[i]),</span>
-<span id="cb46-11"><a href="#cb46-11" aria-hidden="true" tabindex="-1"></a>            .pad   (input_PAD[i])</span>
-<span id="cb46-12"><a href="#cb46-12" aria-hidden="true" tabindex="-1"></a>        );</span>
-<span id="cb46-13"><a href="#cb46-13" aria-hidden="true" tabindex="-1"></a>    <span class="kw">end</span></span>
-<span id="cb46-14"><a href="#cb46-14" aria-hidden="true" tabindex="-1"></a><span class="kw">endgenerate</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb47" data-filename="rtl/chip_top.sv (code snippet)"><pre class="sourceCode systemverilog code-with-copy"><code class="sourceCode systemverilog"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="kw">generate</span></span>
+<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">for</span> (<span class="kw">genvar</span> i = <span class="dv">0</span>; i &lt; NUM_INPUT_PADS; i++) <span class="kw">begin :</span><span class="dt"> </span><span class="kw">g_inputs</span></span>
+<span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a>        sg13g2_IOPadIn input_pad (</span>
+<span id="cb47-4"><a href="#cb47-4" aria-hidden="true" tabindex="-1"></a>            <span class="ot">`ifdef</span> USE_POWER_PINS</span>
+<span id="cb47-5"><a href="#cb47-5" aria-hidden="true" tabindex="-1"></a>            .iovdd (IOVDD),</span>
+<span id="cb47-6"><a href="#cb47-6" aria-hidden="true" tabindex="-1"></a>            .iovss (IOVSS),</span>
+<span id="cb47-7"><a href="#cb47-7" aria-hidden="true" tabindex="-1"></a>            .vdd   (VDD),</span>
+<span id="cb47-8"><a href="#cb47-8" aria-hidden="true" tabindex="-1"></a>            .vss   (VSS),</span>
+<span id="cb47-9"><a href="#cb47-9" aria-hidden="true" tabindex="-1"></a>            <span class="ot">`endif</span></span>
+<span id="cb47-10"><a href="#cb47-10" aria-hidden="true" tabindex="-1"></a>            .p2c   (input_PAD2CORE[i]),</span>
+<span id="cb47-11"><a href="#cb47-11" aria-hidden="true" tabindex="-1"></a>            .pad   (input_PAD[i])</span>
+<span id="cb47-12"><a href="#cb47-12" aria-hidden="true" tabindex="-1"></a>        );</span>
+<span id="cb47-13"><a href="#cb47-13" aria-hidden="true" tabindex="-1"></a>    <span class="kw">end</span></span>
+<span id="cb47-14"><a href="#cb47-14" aria-hidden="true" tabindex="-1"></a><span class="kw">endgenerate</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -3232,22 +3308,22 @@ Note
 <div class="code-with-filename-file">
 <pre><strong>rtl/chip_top.sv (code snippet)</strong></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb47" data-filename="rtl/chip_top.sv (code snippet)"><pre class="sourceCode systemverilog code-with-copy"><code class="sourceCode systemverilog"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="kw">generate</span></span>
-<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">for</span> (<span class="kw">genvar</span> i = <span class="dv">0</span>; i &lt; NUM_ANALOG_PADS; i++) <span class="kw">begin :</span><span class="dt"> </span><span class="kw">g_analogs</span></span>
-<span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a>        (* keep *)</span>
-<span id="cb47-4"><a href="#cb47-4" aria-hidden="true" tabindex="-1"></a>        sg13g2_IOPadAnalog analog_pad (</span>
-<span id="cb47-5"><a href="#cb47-5" aria-hidden="true" tabindex="-1"></a>            <span class="ot">`ifdef</span> USE_POWER_PINS</span>
-<span id="cb47-6"><a href="#cb47-6" aria-hidden="true" tabindex="-1"></a>            .iovdd   (IOVDD),</span>
-<span id="cb47-7"><a href="#cb47-7" aria-hidden="true" tabindex="-1"></a>            .iovss   (IOVSS),</span>
-<span id="cb47-8"><a href="#cb47-8" aria-hidden="true" tabindex="-1"></a>            .vdd     (VDD),</span>
-<span id="cb47-9"><a href="#cb47-9" aria-hidden="true" tabindex="-1"></a>            .vss     (VSS),</span>
-<span id="cb47-10"><a href="#cb47-10" aria-hidden="true" tabindex="-1"></a>            <span class="ot">`endif</span></span>
-<span id="cb47-11"><a href="#cb47-11" aria-hidden="true" tabindex="-1"></a>            .pad     (analog_PAD[i]),</span>
-<span id="cb47-12"><a href="#cb47-12" aria-hidden="true" tabindex="-1"></a>            .padres  (analog_PADRES[i]),</span>
-<span id="cb47-13"><a href="#cb47-13" aria-hidden="true" tabindex="-1"></a>            .padbare (analog_PADBARE[i])</span>
-<span id="cb47-14"><a href="#cb47-14" aria-hidden="true" tabindex="-1"></a>        );</span>
-<span id="cb47-15"><a href="#cb47-15" aria-hidden="true" tabindex="-1"></a>    <span class="kw">end</span></span>
-<span id="cb47-16"><a href="#cb47-16" aria-hidden="true" tabindex="-1"></a><span class="kw">endgenerate</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb48" data-filename="rtl/chip_top.sv (code snippet)"><pre class="sourceCode systemverilog code-with-copy"><code class="sourceCode systemverilog"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="kw">generate</span></span>
+<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">for</span> (<span class="kw">genvar</span> i = <span class="dv">0</span>; i &lt; NUM_ANALOG_PADS; i++) <span class="kw">begin :</span><span class="dt"> </span><span class="kw">g_analogs</span></span>
+<span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a>        (* keep *)</span>
+<span id="cb48-4"><a href="#cb48-4" aria-hidden="true" tabindex="-1"></a>        sg13g2_IOPadAnalog analog_pad (</span>
+<span id="cb48-5"><a href="#cb48-5" aria-hidden="true" tabindex="-1"></a>            <span class="ot">`ifdef</span> USE_POWER_PINS</span>
+<span id="cb48-6"><a href="#cb48-6" aria-hidden="true" tabindex="-1"></a>            .iovdd   (IOVDD),</span>
+<span id="cb48-7"><a href="#cb48-7" aria-hidden="true" tabindex="-1"></a>            .iovss   (IOVSS),</span>
+<span id="cb48-8"><a href="#cb48-8" aria-hidden="true" tabindex="-1"></a>            .vdd     (VDD),</span>
+<span id="cb48-9"><a href="#cb48-9" aria-hidden="true" tabindex="-1"></a>            .vss     (VSS),</span>
+<span id="cb48-10"><a href="#cb48-10" aria-hidden="true" tabindex="-1"></a>            <span class="ot">`endif</span></span>
+<span id="cb48-11"><a href="#cb48-11" aria-hidden="true" tabindex="-1"></a>            .pad     (analog_PAD[i]),</span>
+<span id="cb48-12"><a href="#cb48-12" aria-hidden="true" tabindex="-1"></a>            .padres  (analog_PADRES[i]),</span>
+<span id="cb48-13"><a href="#cb48-13" aria-hidden="true" tabindex="-1"></a>            .padbare (analog_PADBARE[i])</span>
+<span id="cb48-14"><a href="#cb48-14" aria-hidden="true" tabindex="-1"></a>        );</span>
+<span id="cb48-15"><a href="#cb48-15" aria-hidden="true" tabindex="-1"></a>    <span class="kw">end</span></span>
+<span id="cb48-16"><a href="#cb48-16" aria-hidden="true" tabindex="-1"></a><span class="kw">endgenerate</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </div>
@@ -3259,78 +3335,78 @@ Note
 <div class="code-with-filename-file">
 <pre><strong>rtl/chip_core.sv (code snippet)</strong></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb48" data-filename="rtl/chip_core.sv (code snippet)"><pre class="sourceCode systemverilog code-with-copy"><code class="sourceCode systemverilog"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="co">// ======================================================</span></span>
-<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a><span class="co">// Input Assignments</span></span>
-<span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a><span class="co">// ======================================================</span></span>
-<span id="cb48-4"><a href="#cb48-4" aria-hidden="true" tabindex="-1"></a><span class="kw">logic</span> enable;</span>
-<span id="cb48-5"><a href="#cb48-5" aria-hidden="true" tabindex="-1"></a><span class="kw">assign</span> enable = input_in[<span class="dv">0</span>];</span>
-<span id="cb48-6"><a href="#cb48-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb48-7"><a href="#cb48-7" aria-hidden="true" tabindex="-1"></a><span class="co">// Inverter 1</span></span>
-<span id="cb48-8"><a href="#cb48-8" aria-hidden="true" tabindex="-1"></a><span class="kw">wire</span> inv1_din1 = bidir_in[<span class="dv">0</span>];</span>
-<span id="cb48-9"><a href="#cb48-9" aria-hidden="true" tabindex="-1"></a><span class="kw">wire</span> inv1_din2 = bidir_in[<span class="dv">1</span>];</span>
-<span id="cb48-10"><a href="#cb48-10" aria-hidden="true" tabindex="-1"></a><span class="kw">wire</span> inv1_din3 = bidir_in[<span class="dv">2</span>];</span>
-<span id="cb48-11"><a href="#cb48-11" aria-hidden="true" tabindex="-1"></a><span class="kw">wire</span> inv1_din4 = bidir_in[<span class="dv">3</span>];</span>
-<span id="cb48-12"><a href="#cb48-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb48-13"><a href="#cb48-13" aria-hidden="true" tabindex="-1"></a><span class="co">// Inverter 2</span></span>
-<span id="cb48-14"><a href="#cb48-14" aria-hidden="true" tabindex="-1"></a><span class="kw">wire</span> inv2_vin1 = analog_padres[<span class="dv">0</span>];</span>
-<span id="cb48-15"><a href="#cb48-15" aria-hidden="true" tabindex="-1"></a><span class="kw">wire</span> inv2_vin2 = analog_padres[<span class="dv">1</span>];</span>
-<span id="cb48-16"><a href="#cb48-16" aria-hidden="true" tabindex="-1"></a><span class="co">// ======================================================</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb49" data-filename="rtl/chip_core.sv (code snippet)"><pre class="sourceCode systemverilog code-with-copy"><code class="sourceCode systemverilog"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="co">// ======================================================</span></span>
+<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a><span class="co">// Input Assignments</span></span>
+<span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a><span class="co">// ======================================================</span></span>
+<span id="cb49-4"><a href="#cb49-4" aria-hidden="true" tabindex="-1"></a><span class="kw">logic</span> enable;</span>
+<span id="cb49-5"><a href="#cb49-5" aria-hidden="true" tabindex="-1"></a><span class="kw">assign</span> enable = input_in[<span class="dv">0</span>];</span>
+<span id="cb49-6"><a href="#cb49-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb49-7"><a href="#cb49-7" aria-hidden="true" tabindex="-1"></a><span class="co">// Inverter 1</span></span>
+<span id="cb49-8"><a href="#cb49-8" aria-hidden="true" tabindex="-1"></a><span class="kw">wire</span> inv1_din1 = bidir_in[<span class="dv">0</span>];</span>
+<span id="cb49-9"><a href="#cb49-9" aria-hidden="true" tabindex="-1"></a><span class="kw">wire</span> inv1_din2 = bidir_in[<span class="dv">1</span>];</span>
+<span id="cb49-10"><a href="#cb49-10" aria-hidden="true" tabindex="-1"></a><span class="kw">wire</span> inv1_din3 = bidir_in[<span class="dv">2</span>];</span>
+<span id="cb49-11"><a href="#cb49-11" aria-hidden="true" tabindex="-1"></a><span class="kw">wire</span> inv1_din4 = bidir_in[<span class="dv">3</span>];</span>
+<span id="cb49-12"><a href="#cb49-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb49-13"><a href="#cb49-13" aria-hidden="true" tabindex="-1"></a><span class="co">// Inverter 2</span></span>
+<span id="cb49-14"><a href="#cb49-14" aria-hidden="true" tabindex="-1"></a><span class="kw">wire</span> inv2_vin1 = analog_padres[<span class="dv">0</span>];</span>
+<span id="cb49-15"><a href="#cb49-15" aria-hidden="true" tabindex="-1"></a><span class="kw">wire</span> inv2_vin2 = analog_padres[<span class="dv">1</span>];</span>
+<span id="cb49-16"><a href="#cb49-16" aria-hidden="true" tabindex="-1"></a><span class="co">// ======================================================</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="code-with-filename">
 <div class="code-with-filename-file">
 <pre><strong>rtl/chip_core.sv (code snippet)</strong></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb49" data-filename="rtl/chip_core.sv (code snippet)"><pre class="sourceCode systemverilog code-with-copy"><code class="sourceCode systemverilog"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="co">// ======================================================</span></span>
-<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a><span class="co">// Output Assignments</span></span>
-<span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a><span class="co">// ======================================================</span></span>
-<span id="cb49-4"><a href="#cb49-4" aria-hidden="true" tabindex="-1"></a><span class="co">// Digital outputs</span></span>
-<span id="cb49-5"><a href="#cb49-5" aria-hidden="true" tabindex="-1"></a><span class="co">// Counter 1</span></span>
-<span id="cb49-6"><a href="#cb49-6" aria-hidden="true" tabindex="-1"></a><span class="kw">assign</span> output_out[<span class="dv">0</span>]  = counter1_value[<span class="dv">0</span>];</span>
-<span id="cb49-7"><a href="#cb49-7" aria-hidden="true" tabindex="-1"></a><span class="kw">assign</span> output_out[<span class="dv">1</span>]  = counter1_value[<span class="dv">1</span>];</span>
-<span id="cb49-8"><a href="#cb49-8" aria-hidden="true" tabindex="-1"></a><span class="kw">assign</span> output_out[<span class="dv">2</span>]  = counter1_value[<span class="dv">2</span>];</span>
-<span id="cb49-9"><a href="#cb49-9" aria-hidden="true" tabindex="-1"></a><span class="kw">assign</span> output_out[<span class="dv">3</span>]  = counter1_value[<span class="dv">3</span>];</span>
-<span id="cb49-10"><a href="#cb49-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb49-11"><a href="#cb49-11" aria-hidden="true" tabindex="-1"></a><span class="co">// Counter 2</span></span>
-<span id="cb49-12"><a href="#cb49-12" aria-hidden="true" tabindex="-1"></a><span class="kw">assign</span> output_out[<span class="dv">4</span>]  = counter2_value[<span class="dv">0</span>];</span>
-<span id="cb49-13"><a href="#cb49-13" aria-hidden="true" tabindex="-1"></a><span class="kw">assign</span> output_out[<span class="dv">5</span>]  = counter2_value[<span class="dv">1</span>];</span>
-<span id="cb49-14"><a href="#cb49-14" aria-hidden="true" tabindex="-1"></a><span class="kw">assign</span> output_out[<span class="dv">6</span>]  = counter2_value[<span class="dv">2</span>];</span>
-<span id="cb49-15"><a href="#cb49-15" aria-hidden="true" tabindex="-1"></a><span class="kw">assign</span> output_out[<span class="dv">7</span>]  = counter2_value[<span class="dv">3</span>];</span>
-<span id="cb49-16"><a href="#cb49-16" aria-hidden="true" tabindex="-1"></a><span class="kw">assign</span> output_out[<span class="dv">8</span>]  = counter2_value[<span class="dv">4</span>];</span>
-<span id="cb49-17"><a href="#cb49-17" aria-hidden="true" tabindex="-1"></a><span class="kw">assign</span> output_out[<span class="dv">9</span>]  = counter2_value[<span class="dv">5</span>];</span>
-<span id="cb49-18"><a href="#cb49-18" aria-hidden="true" tabindex="-1"></a><span class="kw">assign</span> output_out[<span class="dv">10</span>] = counter2_value[<span class="dv">6</span>];</span>
-<span id="cb49-19"><a href="#cb49-19" aria-hidden="true" tabindex="-1"></a><span class="kw">assign</span> output_out[<span class="dv">11</span>] = counter2_value[<span class="dv">7</span>];</span>
-<span id="cb49-20"><a href="#cb49-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb49-21"><a href="#cb49-21" aria-hidden="true" tabindex="-1"></a><span class="co">// Inverter 1</span></span>
-<span id="cb49-22"><a href="#cb49-22" aria-hidden="true" tabindex="-1"></a><span class="kw">assign</span> output_out[<span class="dv">12</span>] = inv1_dout1;</span>
-<span id="cb49-23"><a href="#cb49-23" aria-hidden="true" tabindex="-1"></a><span class="kw">assign</span> output_out[<span class="dv">13</span>] = inv1_dout2;</span>
-<span id="cb49-24"><a href="#cb49-24" aria-hidden="true" tabindex="-1"></a><span class="kw">assign</span> output_out[<span class="dv">14</span>] = inv1_dout3;</span>
-<span id="cb49-25"><a href="#cb49-25" aria-hidden="true" tabindex="-1"></a><span class="kw">assign</span> output_out[<span class="dv">15</span>] = inv1_dout4;</span>
-<span id="cb49-26"><a href="#cb49-26" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb49-27"><a href="#cb49-27" aria-hidden="true" tabindex="-1"></a><span class="co">// SRAM</span></span>
-<span id="cb49-28"><a href="#cb49-28" aria-hidden="true" tabindex="-1"></a><span class="co">// Reduce the 32-bit SRAM output to a single bit by computing the parity.</span></span>
-<span id="cb49-29"><a href="#cb49-29" aria-hidden="true" tabindex="-1"></a><span class="co">// output_out[16] = 1 when an odd number of bits in sram_0_out are 1.</span></span>
-<span id="cb49-30"><a href="#cb49-30" aria-hidden="true" tabindex="-1"></a><span class="co">// output_out[16] = 0 when an even number of bits in sram_0_out are 1.</span></span>
-<span id="cb49-31"><a href="#cb49-31" aria-hidden="true" tabindex="-1"></a><span class="kw">assign</span> output_out[<span class="dv">16</span>] = ^sram_0_out;</span>
-<span id="cb49-32"><a href="#cb49-32" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb49-33"><a href="#cb49-33" aria-hidden="true" tabindex="-1"></a><span class="co">// Digital bidirectionals (output side)</span></span>
-<span id="cb49-34"><a href="#cb49-34" aria-hidden="true" tabindex="-1"></a><span class="co">// Bidir output enable: drive when `enable` is high (counter visible),</span></span>
-<span id="cb49-35"><a href="#cb49-35" aria-hidden="true" tabindex="-1"></a><span class="co">// float as input when low (so external stimuli can drive inverter1).</span></span>
-<span id="cb49-36"><a href="#cb49-36" aria-hidden="true" tabindex="-1"></a><span class="kw">assign</span> bidir_out[<span class="dv">0</span>] = counter1_value[<span class="dv">4</span>];</span>
-<span id="cb49-37"><a href="#cb49-37" aria-hidden="true" tabindex="-1"></a><span class="kw">assign</span> bidir_oe[<span class="dv">0</span>]  = enable;</span>
-<span id="cb49-38"><a href="#cb49-38" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb49-39"><a href="#cb49-39" aria-hidden="true" tabindex="-1"></a><span class="kw">assign</span> bidir_out[<span class="dv">1</span>] = counter1_value[<span class="dv">5</span>];</span>
-<span id="cb49-40"><a href="#cb49-40" aria-hidden="true" tabindex="-1"></a><span class="kw">assign</span> bidir_oe[<span class="dv">1</span>]  = enable;</span>
-<span id="cb49-41"><a href="#cb49-41" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb49-42"><a href="#cb49-42" aria-hidden="true" tabindex="-1"></a><span class="kw">assign</span> bidir_out[<span class="dv">2</span>] = counter1_value[<span class="dv">6</span>];</span>
-<span id="cb49-43"><a href="#cb49-43" aria-hidden="true" tabindex="-1"></a><span class="kw">assign</span> bidir_oe[<span class="dv">2</span>]  = enable;</span>
-<span id="cb49-44"><a href="#cb49-44" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb49-45"><a href="#cb49-45" aria-hidden="true" tabindex="-1"></a><span class="kw">assign</span> bidir_out[<span class="dv">3</span>] = counter1_value[<span class="dv">7</span>];</span>
-<span id="cb49-46"><a href="#cb49-46" aria-hidden="true" tabindex="-1"></a><span class="kw">assign</span> bidir_oe[<span class="dv">3</span>]  = enable;</span>
-<span id="cb49-47"><a href="#cb49-47" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb49-48"><a href="#cb49-48" aria-hidden="true" tabindex="-1"></a><span class="co">// Analog outputs</span></span>
-<span id="cb49-49"><a href="#cb49-49" aria-hidden="true" tabindex="-1"></a><span class="kw">assign</span> analog_padbare[<span class="dv">2</span>] = inv2_vout1;</span>
-<span id="cb49-50"><a href="#cb49-50" aria-hidden="true" tabindex="-1"></a><span class="kw">assign</span> analog_padbare[<span class="dv">3</span>] = inv2_vout2;</span>
-<span id="cb49-51"><a href="#cb49-51" aria-hidden="true" tabindex="-1"></a><span class="co">// ======================================================</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb50" data-filename="rtl/chip_core.sv (code snippet)"><pre class="sourceCode systemverilog code-with-copy"><code class="sourceCode systemverilog"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="co">// ======================================================</span></span>
+<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a><span class="co">// Output Assignments</span></span>
+<span id="cb50-3"><a href="#cb50-3" aria-hidden="true" tabindex="-1"></a><span class="co">// ======================================================</span></span>
+<span id="cb50-4"><a href="#cb50-4" aria-hidden="true" tabindex="-1"></a><span class="co">// Digital outputs</span></span>
+<span id="cb50-5"><a href="#cb50-5" aria-hidden="true" tabindex="-1"></a><span class="co">// Counter 1</span></span>
+<span id="cb50-6"><a href="#cb50-6" aria-hidden="true" tabindex="-1"></a><span class="kw">assign</span> output_out[<span class="dv">0</span>]  = counter1_value[<span class="dv">0</span>];</span>
+<span id="cb50-7"><a href="#cb50-7" aria-hidden="true" tabindex="-1"></a><span class="kw">assign</span> output_out[<span class="dv">1</span>]  = counter1_value[<span class="dv">1</span>];</span>
+<span id="cb50-8"><a href="#cb50-8" aria-hidden="true" tabindex="-1"></a><span class="kw">assign</span> output_out[<span class="dv">2</span>]  = counter1_value[<span class="dv">2</span>];</span>
+<span id="cb50-9"><a href="#cb50-9" aria-hidden="true" tabindex="-1"></a><span class="kw">assign</span> output_out[<span class="dv">3</span>]  = counter1_value[<span class="dv">3</span>];</span>
+<span id="cb50-10"><a href="#cb50-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb50-11"><a href="#cb50-11" aria-hidden="true" tabindex="-1"></a><span class="co">// Counter 2</span></span>
+<span id="cb50-12"><a href="#cb50-12" aria-hidden="true" tabindex="-1"></a><span class="kw">assign</span> output_out[<span class="dv">4</span>]  = counter2_value[<span class="dv">0</span>];</span>
+<span id="cb50-13"><a href="#cb50-13" aria-hidden="true" tabindex="-1"></a><span class="kw">assign</span> output_out[<span class="dv">5</span>]  = counter2_value[<span class="dv">1</span>];</span>
+<span id="cb50-14"><a href="#cb50-14" aria-hidden="true" tabindex="-1"></a><span class="kw">assign</span> output_out[<span class="dv">6</span>]  = counter2_value[<span class="dv">2</span>];</span>
+<span id="cb50-15"><a href="#cb50-15" aria-hidden="true" tabindex="-1"></a><span class="kw">assign</span> output_out[<span class="dv">7</span>]  = counter2_value[<span class="dv">3</span>];</span>
+<span id="cb50-16"><a href="#cb50-16" aria-hidden="true" tabindex="-1"></a><span class="kw">assign</span> output_out[<span class="dv">8</span>]  = counter2_value[<span class="dv">4</span>];</span>
+<span id="cb50-17"><a href="#cb50-17" aria-hidden="true" tabindex="-1"></a><span class="kw">assign</span> output_out[<span class="dv">9</span>]  = counter2_value[<span class="dv">5</span>];</span>
+<span id="cb50-18"><a href="#cb50-18" aria-hidden="true" tabindex="-1"></a><span class="kw">assign</span> output_out[<span class="dv">10</span>] = counter2_value[<span class="dv">6</span>];</span>
+<span id="cb50-19"><a href="#cb50-19" aria-hidden="true" tabindex="-1"></a><span class="kw">assign</span> output_out[<span class="dv">11</span>] = counter2_value[<span class="dv">7</span>];</span>
+<span id="cb50-20"><a href="#cb50-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb50-21"><a href="#cb50-21" aria-hidden="true" tabindex="-1"></a><span class="co">// Inverter 1</span></span>
+<span id="cb50-22"><a href="#cb50-22" aria-hidden="true" tabindex="-1"></a><span class="kw">assign</span> output_out[<span class="dv">12</span>] = inv1_dout1;</span>
+<span id="cb50-23"><a href="#cb50-23" aria-hidden="true" tabindex="-1"></a><span class="kw">assign</span> output_out[<span class="dv">13</span>] = inv1_dout2;</span>
+<span id="cb50-24"><a href="#cb50-24" aria-hidden="true" tabindex="-1"></a><span class="kw">assign</span> output_out[<span class="dv">14</span>] = inv1_dout3;</span>
+<span id="cb50-25"><a href="#cb50-25" aria-hidden="true" tabindex="-1"></a><span class="kw">assign</span> output_out[<span class="dv">15</span>] = inv1_dout4;</span>
+<span id="cb50-26"><a href="#cb50-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb50-27"><a href="#cb50-27" aria-hidden="true" tabindex="-1"></a><span class="co">// SRAM</span></span>
+<span id="cb50-28"><a href="#cb50-28" aria-hidden="true" tabindex="-1"></a><span class="co">// Reduce the 32-bit SRAM output to a single bit by computing the parity.</span></span>
+<span id="cb50-29"><a href="#cb50-29" aria-hidden="true" tabindex="-1"></a><span class="co">// output_out[16] = 1 when an odd number of bits in sram_0_out are 1.</span></span>
+<span id="cb50-30"><a href="#cb50-30" aria-hidden="true" tabindex="-1"></a><span class="co">// output_out[16] = 0 when an even number of bits in sram_0_out are 1.</span></span>
+<span id="cb50-31"><a href="#cb50-31" aria-hidden="true" tabindex="-1"></a><span class="kw">assign</span> output_out[<span class="dv">16</span>] = ^sram_0_out;</span>
+<span id="cb50-32"><a href="#cb50-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb50-33"><a href="#cb50-33" aria-hidden="true" tabindex="-1"></a><span class="co">// Digital bidirectionals (output side)</span></span>
+<span id="cb50-34"><a href="#cb50-34" aria-hidden="true" tabindex="-1"></a><span class="co">// Bidir output enable: drive when `enable` is high (counter visible),</span></span>
+<span id="cb50-35"><a href="#cb50-35" aria-hidden="true" tabindex="-1"></a><span class="co">// float as input when low (so external stimuli can drive inverter1).</span></span>
+<span id="cb50-36"><a href="#cb50-36" aria-hidden="true" tabindex="-1"></a><span class="kw">assign</span> bidir_out[<span class="dv">0</span>] = counter1_value[<span class="dv">4</span>];</span>
+<span id="cb50-37"><a href="#cb50-37" aria-hidden="true" tabindex="-1"></a><span class="kw">assign</span> bidir_oe[<span class="dv">0</span>]  = enable;</span>
+<span id="cb50-38"><a href="#cb50-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb50-39"><a href="#cb50-39" aria-hidden="true" tabindex="-1"></a><span class="kw">assign</span> bidir_out[<span class="dv">1</span>] = counter1_value[<span class="dv">5</span>];</span>
+<span id="cb50-40"><a href="#cb50-40" aria-hidden="true" tabindex="-1"></a><span class="kw">assign</span> bidir_oe[<span class="dv">1</span>]  = enable;</span>
+<span id="cb50-41"><a href="#cb50-41" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb50-42"><a href="#cb50-42" aria-hidden="true" tabindex="-1"></a><span class="kw">assign</span> bidir_out[<span class="dv">2</span>] = counter1_value[<span class="dv">6</span>];</span>
+<span id="cb50-43"><a href="#cb50-43" aria-hidden="true" tabindex="-1"></a><span class="kw">assign</span> bidir_oe[<span class="dv">2</span>]  = enable;</span>
+<span id="cb50-44"><a href="#cb50-44" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb50-45"><a href="#cb50-45" aria-hidden="true" tabindex="-1"></a><span class="kw">assign</span> bidir_out[<span class="dv">3</span>] = counter1_value[<span class="dv">7</span>];</span>
+<span id="cb50-46"><a href="#cb50-46" aria-hidden="true" tabindex="-1"></a><span class="kw">assign</span> bidir_oe[<span class="dv">3</span>]  = enable;</span>
+<span id="cb50-47"><a href="#cb50-47" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb50-48"><a href="#cb50-48" aria-hidden="true" tabindex="-1"></a><span class="co">// Analog outputs</span></span>
+<span id="cb50-49"><a href="#cb50-49" aria-hidden="true" tabindex="-1"></a><span class="kw">assign</span> analog_padbare[<span class="dv">2</span>] = inv2_vout1;</span>
+<span id="cb50-50"><a href="#cb50-50" aria-hidden="true" tabindex="-1"></a><span class="kw">assign</span> analog_padbare[<span class="dv">3</span>] = inv2_vout2;</span>
+<span id="cb50-51"><a href="#cb50-51" aria-hidden="true" tabindex="-1"></a><span class="co">// ======================================================</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
 <section id="understanding-config.yaml" class="level2" data-number="7.3">
@@ -3381,34 +3457,34 @@ Note
 <div class="code-with-filename-file">
 <pre><strong>flow/librelane/pdn_cfg.tcl (code snippet)</strong></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb50" data-filename="flow/librelane/pdn_cfg.tcl (code snippet)"><pre class="sourceCode tcl code-with-copy"><code class="sourceCode tcl"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Custom connect for the inverter macros (inverter1, inverter2).</span></span>
-<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a><span class="co"># The top-level power ring is on TM1 (horizontal) and TM2 (vertical).</span></span>
-<span id="cb50-3"><a href="#cb50-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Each inverter has its own power ring on M5 (horizontal) and TM1 (vertical),</span></span>
-<span id="cb50-4"><a href="#cb50-4" aria-hidden="true" tabindex="-1"></a><span class="co"># so the connection between the top-level power ring and the inverter power rings crosses cleanly.</span></span>
-<span id="cb50-5"><a href="#cb50-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Note: within an inverter's power ring no top-level TM1 or TM2 power rails are routed.</span></span>
-<span id="cb50-6"><a href="#cb50-6" aria-hidden="true" tabindex="-1"></a>define_pdn_grid <span class="ch">\</span></span>
-<span id="cb50-7"><a href="#cb50-7" aria-hidden="true" tabindex="-1"></a>    -macro <span class="ch">\</span></span>
-<span id="cb50-8"><a href="#cb50-8" aria-hidden="true" tabindex="-1"></a>    -instances <span class="st">"i_chip_core.inverter1 i_chip_core.inverter2"</span> <span class="ch">\</span></span>
-<span id="cb50-9"><a href="#cb50-9" aria-hidden="true" tabindex="-1"></a>    -<span class="ot">name</span> inverter_top <span class="ch">\</span></span>
-<span id="cb50-10"><a href="#cb50-10" aria-hidden="true" tabindex="-1"></a>    -starts_with POWER <span class="ch">\</span></span>
-<span id="cb50-11"><a href="#cb50-11" aria-hidden="true" tabindex="-1"></a>    -halo <span class="st">"</span><span class="dt">$::env</span><span class="va">(</span><span class="vs">PDN_HORIZONTAL_HALO</span><span class="va">)</span><span class="st"> </span><span class="dt">$::env</span><span class="va">(</span><span class="vs">PDN_VERTICAL_HALO</span><span class="va">)</span><span class="st">"</span></span>
-<span id="cb50-12"><a href="#cb50-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb50-13"><a href="#cb50-13" aria-hidden="true" tabindex="-1"></a>add_pdn_connect <span class="ch">\</span></span>
-<span id="cb50-14"><a href="#cb50-14" aria-hidden="true" tabindex="-1"></a>    -<span class="kw">grid</span> inverter_top <span class="ch">\</span></span>
-<span id="cb50-15"><a href="#cb50-15" aria-hidden="true" tabindex="-1"></a>    -layers <span class="st">"</span><span class="dt">$::env</span><span class="va">(</span><span class="vs">PDN_VERTICAL_LAYER</span><span class="va">)</span><span class="st"> </span><span class="dt">$::env</span><span class="va">(</span><span class="vs">PDN_HORIZONTAL_LAYER</span><span class="va">)</span><span class="st">"</span></span>
-<span id="cb50-16"><a href="#cb50-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb50-17"><a href="#cb50-17" aria-hidden="true" tabindex="-1"></a>add_pdn_connect <span class="ch">\</span></span>
-<span id="cb50-18"><a href="#cb50-18" aria-hidden="true" tabindex="-1"></a>    -<span class="kw">grid</span> inverter_top <span class="ch">\</span></span>
-<span id="cb50-19"><a href="#cb50-19" aria-hidden="true" tabindex="-1"></a>    -layers <span class="st">"</span><span class="dt">$::env</span><span class="va">(</span><span class="vs">PDN_VERTICAL_LAYER</span><span class="va">)</span><span class="st"> Metal5"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb51" data-filename="flow/librelane/pdn_cfg.tcl (code snippet)"><pre class="sourceCode tcl code-with-copy"><code class="sourceCode tcl"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Custom connect for the inverter macros (inverter1, inverter2).</span></span>
+<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a><span class="co"># The top-level power ring is on TM1 (horizontal) and TM2 (vertical).</span></span>
+<span id="cb51-3"><a href="#cb51-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Each inverter has its own power ring on M5 (horizontal) and TM1 (vertical),</span></span>
+<span id="cb51-4"><a href="#cb51-4" aria-hidden="true" tabindex="-1"></a><span class="co"># so the connection between the top-level power ring and the inverter power rings crosses cleanly.</span></span>
+<span id="cb51-5"><a href="#cb51-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Note: within an inverter's power ring no top-level TM1 or TM2 power rails are routed.</span></span>
+<span id="cb51-6"><a href="#cb51-6" aria-hidden="true" tabindex="-1"></a>define_pdn_grid <span class="ch">\</span></span>
+<span id="cb51-7"><a href="#cb51-7" aria-hidden="true" tabindex="-1"></a>    -macro <span class="ch">\</span></span>
+<span id="cb51-8"><a href="#cb51-8" aria-hidden="true" tabindex="-1"></a>    -instances <span class="st">"i_chip_core.inverter1 i_chip_core.inverter2"</span> <span class="ch">\</span></span>
+<span id="cb51-9"><a href="#cb51-9" aria-hidden="true" tabindex="-1"></a>    -<span class="ot">name</span> inverter_top <span class="ch">\</span></span>
+<span id="cb51-10"><a href="#cb51-10" aria-hidden="true" tabindex="-1"></a>    -starts_with POWER <span class="ch">\</span></span>
+<span id="cb51-11"><a href="#cb51-11" aria-hidden="true" tabindex="-1"></a>    -halo <span class="st">"</span><span class="dt">$::env</span><span class="va">(</span><span class="vs">PDN_HORIZONTAL_HALO</span><span class="va">)</span><span class="st"> </span><span class="dt">$::env</span><span class="va">(</span><span class="vs">PDN_VERTICAL_HALO</span><span class="va">)</span><span class="st">"</span></span>
+<span id="cb51-12"><a href="#cb51-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb51-13"><a href="#cb51-13" aria-hidden="true" tabindex="-1"></a>add_pdn_connect <span class="ch">\</span></span>
+<span id="cb51-14"><a href="#cb51-14" aria-hidden="true" tabindex="-1"></a>    -<span class="kw">grid</span> inverter_top <span class="ch">\</span></span>
+<span id="cb51-15"><a href="#cb51-15" aria-hidden="true" tabindex="-1"></a>    -layers <span class="st">"</span><span class="dt">$::env</span><span class="va">(</span><span class="vs">PDN_VERTICAL_LAYER</span><span class="va">)</span><span class="st"> </span><span class="dt">$::env</span><span class="va">(</span><span class="vs">PDN_HORIZONTAL_LAYER</span><span class="va">)</span><span class="st">"</span></span>
+<span id="cb51-16"><a href="#cb51-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb51-17"><a href="#cb51-17" aria-hidden="true" tabindex="-1"></a>add_pdn_connect <span class="ch">\</span></span>
+<span id="cb51-18"><a href="#cb51-18" aria-hidden="true" tabindex="-1"></a>    -<span class="kw">grid</span> inverter_top <span class="ch">\</span></span>
+<span id="cb51-19"><a href="#cb51-19" aria-hidden="true" tabindex="-1"></a>    -layers <span class="st">"</span><span class="dt">$::env</span><span class="va">(</span><span class="vs">PDN_VERTICAL_LAYER</span><span class="va">)</span><span class="st"> Metal5"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
 <section id="top-level-simulation" class="level2" data-number="7.5">
 <h2 data-number="7.5" class="anchored" data-anchor-id="top-level-simulation"><span class="header-section-number">7.5</span> Top-Level Simulation</h2>
 <p>The same RTL and gate-level cocotb flow as in <a href="#sec-digital" class="quarto-xref">Section&nbsp;4</a> is available at top level.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb51"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> sim-rtl-cocotb</span>
-<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> sim-gl-cocotb</span>
-<span id="cb51-3"><a href="#cb51-3" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> sim-view-cocotb                                <span class="co"># use GTKWave as waveform viewer</span></span>
-<span id="cb51-4"><a href="#cb51-4" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> sim-view-cocotb WAVEFORM_VIEWER=surfer         <span class="co"># use Surfer as waveform viewer</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb52"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> sim-rtl-cocotb</span>
+<span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> sim-gl-cocotb</span>
+<span id="cb52-3"><a href="#cb52-3" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> sim-view-cocotb                                <span class="co"># use GTKWave as waveform viewer</span></span>
+<span id="cb52-4"><a href="#cb52-4" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> sim-view-cocotb WAVEFORM_VIEWER=surfer         <span class="co"># use Surfer as waveform viewer</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>The cocotb testbench at top level is <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/testbenches/cocotb/chip_top_tb.py"><code>testbenches/cocotb/chip_top_tb.py</code></a>, and it covers the global enable, reset, counters, and bidir behaviour documented in <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/doc/specifications.md"><code>doc/specifications.md</code></a>. The result is shown in <a href="#fig-chip-top-cocotb-gtkwave" class="quarto-xref">Figure&nbsp;28</a>.</p>
 <div id="fig-chip-top-cocotb-gtkwave" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
@@ -3421,8 +3497,8 @@ Figure&nbsp;28: <code>chip_top</code> cocotb waveform in GTKWave.
 </figure>
 </div>
 <p>For mixed-signal simulation, the <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/testbenches/xschem/chip_top_tb_tran.sch"><code>testbenches/xschem/chip_top_tb_tran.sch</code></a> testbench can be opened in Xschem for interactive simulation, the same way as for the counter or the inverter, and is shown in <a href="#fig-chip-top-tb-tran-schematic" class="quarto-xref">Figure&nbsp;29</a>.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb52"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> testbenches/xschem</span>
-<span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a><span class="ex">xschem</span> chip_top_tb_tran.sch</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb53"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> testbenches/xschem</span>
+<span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a><span class="ex">xschem</span> chip_top_tb_tran.sch</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div id="fig-chip-top-tb-tran-schematic" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-chip-top-tb-tran-schematic-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
@@ -3434,8 +3510,8 @@ Figure&nbsp;29: Xschem top-level mixed-signal testbench <code>chip_top_tb_tran</
 </figure>
 </div>
 <p>Again, the simulation and plotting can be run non-interactively from the command line with the following targets.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb53"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> sim-gl-xschem</span>
-<span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> sim-view-xschem SCRIPT=plot_chip_top</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb54"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> sim-gl-xschem</span>
+<span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> sim-view-xschem SCRIPT=plot_chip_top</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><code>sim-gl-xschem</code> runs in batch mode: it netlists the testbench with <code>xschem netlist</code> and then calls <code>ngspice -b</code> directly, so <code>make</code> blocks until the run finishes and sees its exit status. The testbench is selected with <code>TB=&lt;testbench_name&gt;</code> (default: <code>&lt;CELL&gt;_tb_tran</code>). Since the run is headless, the <code>plot</code> commands in the testbench’s <code>.control</code> block are a no-op. The testbench exports its results with <code>wrdata</code> to <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/testbenches/xschem/plot_simulations/data"><code>testbenches/xschem/plot_simulations/data/</code></a>, from where <code>sim-view-xschem</code> plots them with Matplotlib.</p>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -3516,10 +3592,10 @@ Figure&nbsp;35: Xschem schematic of <code>chip_top</code>, showing the connectio
 <section id="building-the-chip" class="level2" data-number="7.6">
 <h2 data-number="7.6" class="anchored" data-anchor-id="building-the-chip"><span class="header-section-number">7.6</span> Building the Chip</h2>
 <p>When the floorplan and pinout are planned and configured, the chip can be built from scratch with the following command.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb54"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> build-all</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb55"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> build-all</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>This runs the steps in order, <code>init-submodules</code>, <code>build-bondpad</code>, <code>build-logos</code>, <code>build-macros</code>, and <code>build-top</code>. It is the right starting point on a fresh machine after cloning the repository and entering the IIC-OSIC-TOOLS container.</p>
 <p>To re-run only the top-level flow (for example after a change in <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/flow/librelane/config.yaml"><code>config.yaml</code></a> or <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/rtl/chip_core.sv"><code>chip_core.sv</code></a>), without rebuilding the bondpad, logos, or macros, run the following command.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb55"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> build-top</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb56"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> build-top</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Internally, <code>build-top</code> runs <code>librelane-nodrc</code>, <code>copy-reports</code>, <code>copy-gds</code>, <code>copy-netlist</code>, <code>copy-render</code>, <code>add-logo-fill</code>, and <code>render-gds</code>. The final GDS is written to <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/layout/chip_top_logo_fill.gds.gz"><code>layout/chip_top_logo_fill.gds.gz</code></a>.</p>
 <p>The renders generated by <code>sak-render.py</code>, which runs during the <code>render-gds</code> step, are located in <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/render/img/"><code>render/img/</code></a>. The verification reports (Yosys, antenna, STA, IR-drop, LVS, manufacturability) from the top-level LibreLane flow can be found in <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/verification/reports/"><code>verification/reports/</code></a>. The netlists are located in <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/netlist/"><code>netlist/</code></a>.</p>
 <div class="callout callout-style-default callout-note callout-titled">
@@ -3533,8 +3609,8 @@ Note
 </div>
 <div class="callout-body-container callout-body">
 <p>Note that currently the LibreLane flow streams out the top-level GDS <code>layout/chip_top.gds.gz</code> without the logos and the fill structures. To add the chip logo (PNG → GDS) and the fill structures on top of the LibreLane output, run:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb56"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> add-logo-fill</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>This calls <code>scripts/add_logo_fill.sh</code> and writes <code>layout/chip_top_logo_fill.gds.gz</code>. This step is already called by <code>make build-top</code>. In the future, it is planned to replace this script and Makefile target with a custom LibreLane step.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb57"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> add-logo-fill</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>This calls <code>scripts/add_logo_fill.sh</code> with <code>TOP</code> and writes <code>layout/chip_top_logo_fill.gds.gz</code>. This step is already called by <code>make build-top</code>. In the future, it is planned to replace this script and Makefile target with a custom LibreLane step.</p>
 </div>
 </div>
 <div class="callout callout-style-default callout-tip callout-titled">
@@ -3554,8 +3630,8 @@ Tip
 <section id="viewing-the-chip" class="level2" data-number="7.7">
 <h2 data-number="7.7" class="anchored" data-anchor-id="viewing-the-chip"><span class="header-section-number">7.7</span> Viewing the Chip</h2>
 <p>After a successful build, the chip can be opened with KLayout.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb57"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a><span class="ex">ke</span> layout/chip_top.gds.gz             <span class="co"># Chip layout without logos and filler</span></span>
-<span id="cb57-2"><a href="#cb57-2" aria-hidden="true" tabindex="-1"></a><span class="ex">ke</span> layout/chip_top_logo_fill.gds.gz   <span class="co"># Chip layout with logos and filler</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb58"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a><span class="ex">ke</span> layout/chip_top.gds.gz             <span class="co"># Chip layout without logos and filler</span></span>
+<span id="cb58-2"><a href="#cb58-2" aria-hidden="true" tabindex="-1"></a><span class="ex">ke</span> layout/chip_top_logo_fill.gds.gz   <span class="co"># Chip layout with logos and filler</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div id="fig-chip-top-layout" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-chip-top-layout-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
@@ -3583,17 +3659,17 @@ Figure&nbsp;37: <code>chip_top_logo_fill</code> layout in KLayout with only <cod
 <section id="drc" class="level3" data-number="7.8.1">
 <h3 data-number="7.8.1" class="anchored" data-anchor-id="drc"><span class="header-section-number">7.8.1</span> DRC</h3>
 <p>The following DRC targets are available for the top-level.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb58"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> magic-drc CELL=chip_top              <span class="co"># Magic DRC on the bare chip</span></span>
-<span id="cb58-2"><a href="#cb58-2" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> magic-drc CELL=chip_top_logo_fill    <span class="co"># Magic DRC including logo + filler</span></span>
-<span id="cb58-3"><a href="#cb58-3" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> klayout-drc-minimum                  <span class="co"># fast pre-check KLayout DRC on chip_top_logo_fill.gds.gz</span></span>
-<span id="cb58-4"><a href="#cb58-4" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> klayout-drc-regular                  <span class="co"># full KLayout DRC on chip_top_logo_fill.gds.gz (slower)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb59"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> magic-drc CELL=chip_top              <span class="co"># Magic DRC on the bare chip</span></span>
+<span id="cb59-2"><a href="#cb59-2" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> magic-drc CELL=chip_top_logo_fill    <span class="co"># Magic DRC including logo + filler</span></span>
+<span id="cb59-3"><a href="#cb59-3" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> klayout-drc-minimum                  <span class="co"># fast pre-check KLayout DRC on chip_top_logo_fill.gds.gz</span></span>
+<span id="cb59-4"><a href="#cb59-4" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> klayout-drc-regular                  <span class="co"># full KLayout DRC on chip_top_logo_fill.gds.gz (slower)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><code>klayout-drc-minimum</code> is a quick pre-check on the final top-level layout including the logo and the fill structures. <code>klayout-drc-regular</code> does the full check, but takes longer. <code>magic-drc</code> is faster than <code>klayout-drc</code>, but it does not support the full set of DRC rules and is less accurate on the complex top-level layout, so it is recommended to use both.</p>
 </section>
 <section id="lvs" class="level3" data-number="7.8.2">
 <h3 data-number="7.8.2" class="anchored" data-anchor-id="lvs"><span class="header-section-number">7.8.2</span> LVS</h3>
 <p>The following LVS targets are available for the top-level.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb59"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> klayout-lvs                          <span class="co"># top-level KLayout LVS</span></span>
-<span id="cb59-2"><a href="#cb59-2" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> magic-lvs                            <span class="co"># top-level Magic + Netgen LVS</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb60"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> klayout-lvs                          <span class="co"># top-level KLayout LVS</span></span>
+<span id="cb60-2"><a href="#cb60-2" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> magic-lvs                            <span class="co"># top-level Magic + Netgen LVS</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="callout callout-style-default callout-warning callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -3611,8 +3687,8 @@ Warning
 <section id="pex" class="level3" data-number="7.8.3">
 <h3 data-number="7.8.3" class="anchored" data-anchor-id="pex"><span class="header-section-number">7.8.3</span> PEX</h3>
 <p>The following PEX target is available for the top-level.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb60"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> magic-pex                            <span class="co"># only chip_top (without logo and filler), default EXT_MODE=1</span></span>
-<span id="cb60-2"><a href="#cb60-2" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> magic-pex EXT_MODE=3 THRESHOLD=5000 MINRES=500 MINDELAY=2   <span class="co"># full-RC with custom extresist settings</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb61"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> magic-pex                            <span class="co"># only chip_top (without logo and filler), default EXT_MODE=1</span></span>
+<span id="cb61-2"><a href="#cb61-2" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> magic-pex EXT_MODE=3 THRESHOLD=5000 MINRES=500 MINDELAY=2   <span class="co"># full-RC with custom extresist settings</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>For full-RC extraction (<code>EXT_MODE=3</code>), <code>magic-pex</code> also exposes the <code>sak-pex.sh</code> <code>extresist</code> tuning parameters <code>THRESHOLD</code> (<code>-t</code>, default <code>10000</code> mOhm), <code>MINRES</code> (<code>-r</code>, default <code>1000</code> mOhm) and <code>MINDELAY</code> (<code>-y</code>, default <code>1</code> ps; <code>0</code> = gate by resistance). They are ignored in <code>EXT_MODE=1</code>/<code>2</code>.</p>
 <p>As in the macros, <code>magic-pex</code> starts by running <code>make symbol-pex</code>, which rebuilds <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/schematic/xschem/chip_top_pex.sym"><code>schematic/xschem/chip_top_pex.sym</code></a> from <code>chip_top.sym</code> with <code>type=subcircuit</code> changed into <code>type=primitive</code>, so the PEX symbol always matches the current chip symbol.</p>
 <div class="callout callout-style-default callout-warning callout-titled">
@@ -3634,8 +3710,8 @@ Warning
 <h2 data-number="7.9" class="anchored" data-anchor-id="sec-packaging"><span class="header-section-number">7.9</span> Packaging</h2>
 <p>The die is packaged in a QFN-32 (5 × 5 mm) open-molded plastic package (<a href="https://www.qptechnologies.com/products/ompp/">OmPP</a>) from the <a href="https://europractice-ic.com/services/packaging/asic-packaging/">EUROPRACTICE ASIC packaging</a> offering. The package matches the padframe exactly: all 32 bondpads (8 per side, see <a href="#sec-top" class="quarto-xref">Section&nbsp;7</a>) are wired one-to-one to the 32 package leads (8 per side). Bonding is done with 25 µm gold wire, the longest wire measures 1.70 mm, and the cover is glued on after bonding.</p>
 <p>The bonding diagram below is generated fully automatically with <code>make bondplan</code> from the final chip GDS (<a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/layout/chip_top_logo_fill.gds.gz"><code>layout/chip_top_logo_fill.gds.gz</code></a>) and the EUROPRACTICE package library <a href="https://europractice-ic.com/wp-content/uploads/2019/07/EP_PACKAGES_08022018.gds_.gz"><code>EP_PACKAGES_08022018.gds</code></a>. The flow extracts the die bondpads together with their names, places the die in the package cavity, draws the bondwires, fills in the title block, and checks wire lengths, crossings, spacing, lead skew, and the clearance around the sensitive analog wires. The <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/packaging/config.yaml">pinout</a> and all flow settings are kept in a single configuration file, so the diagram never goes out of sync with the chip. Details are documented in the <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/packaging">packaging README</a>.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb61"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> bondplan                        <span class="co"># uses the default VERSION (1.0.0)</span></span>
-<span id="cb61-2"><a href="#cb61-2" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> bondplan VERSION=2.1.0          <span class="co"># stamp another version on the sheet</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb62"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> bondplan                        <span class="co"># uses the default VERSION (1.0.0)</span></span>
+<span id="cb62-2"><a href="#cb62-2" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> bondplan VERSION=2.1.0          <span class="co"># stamp another version on the sheet</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>The <code>VERSION</code> variable is passed to the flow and printed in the title block (<code>DIE: CHIP_TOP - V.1.0.0</code>), so the version number is maintained in the Makefile only. The outputs are the bondplan GDS (<code>packaging/layout/chip_top_bondplan.gds</code>), the bond report with summary and bond table (<a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/packaging/result.md"><code>packaging/result.md</code></a>), and the bonding diagram images (<code>packaging/render/chip_top_bondplan_{white,black}.{png,svg}</code>).</p>
 <div id="fig-chip-top-bondplan" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
@@ -3664,13 +3740,13 @@ Tip
 <section id="full-flow-at-once" class="level2" data-number="7.10">
 <h2 data-number="7.10" class="anchored" data-anchor-id="full-flow-at-once"><span class="header-section-number">7.10</span> Full Flow at Once</h2>
 <p>The comprehensive simulation, build, and DRC pass for the complete chip is run with the following command.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb62"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> all</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb63"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb63-1"><a href="#cb63-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> all</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>This calls <code>build-all</code> first, then Magic DRC on both <code>chip_top</code> and <code>chip_top_logo_fill</code>, then <code>sim-all</code> (RTL and gate-level cocotb plus the gate-level Xschem run), and finally <code>bondplan</code>. The simulations therefore run on the netlists that this build has just produced. To shorten the runtime, the KLayout DRC is currently not included in <code>make all</code>. However, depending on the hardware used, <code>make all</code> can still take a while.</p>
 </section>
 <section id="releasing-for-tapeout" class="level2" data-number="7.11">
 <h2 data-number="7.11" class="anchored" data-anchor-id="releasing-for-tapeout"><span class="header-section-number">7.11</span> Releasing for Tapeout</h2>
 <p>When the chip is clean, the <code>release</code> target copies the GDS, the netlists, and the renders into a versioned folder for tapeout submission.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb63"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb63-1"><a href="#cb63-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> release VERSION=2.1.0</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb64"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb64-1"><a href="#cb64-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> release VERSION=2.1.0</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>The artifacts are written to <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/release/"><code>release/v.2.1.0/</code></a> (<code>gds/</code>, <code>netlist/{schematic,layout,pnl,spice}/</code>, <code>img/</code>).</p>
 <div class="callout callout-style-default callout-important callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -3687,11 +3763,154 @@ Important
 </div>
 </section>
 </section>
-<section id="sec-exercises" class="level1" data-number="8">
-<h1 data-number="8"><span class="header-section-number">8</span> Additional Exercises</h1>
+<section id="sec-new-chip" class="level1" data-number="8">
+<h1 data-number="8"><span class="header-section-number">8</span> Start Your Own Chip</h1>
+<p>The template is meant to become your own chip. Work through this tutorial on the template as it is, then start your chip from a copy of it: create your own repository with the green “Use this template” button on GitHub (or fork or copy the repository) and name it <code>ihp-sg13g2-&lt;name&gt;</code> after the chip, clone it, and enter the IIC-OSIC-TOOLS container. In the top-level folder of the clone, one target turns the copy into a new chip with its own name:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb65"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb65-1"><a href="#cb65-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> project NAME=<span class="op">&lt;</span>name<span class="op">&gt;</span> DRY_RUN=1   <span class="co"># list the changes, touch nothing</span></span>
+<span id="cb65-2"><a href="#cb65-2" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> project NAME=<span class="op">&lt;</span>name<span class="op">&gt;</span>             <span class="co"># start the chip &lt;name&gt;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><code>NAME</code> is a lowercase letter followed by lowercase letters, digits or underscores, for example <code>mychip</code>. It must not be the name of a macro or an IP: with <code>NAME=counter</code>, the chip top <code>counter_top</code> would be the same cell as the top cell of the counter macro. The target needs no PDK.</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Tip
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>With the repository named <code>ihp-sg13g2-&lt;name&gt;</code>, for example <code>ihp-sg13g2-mychip</code>, <code>git clone</code> gives its folder the same name, and <code>make project</code> writes that name into the directory tree of the README. If your clone has another name, rename it before <code>make project</code>: rename the repository on GitHub (Settings &gt; General, the old URLs redirect), point <code>origin</code> at the new URL with <code>git remote set-url origin &lt;URL&gt;</code>, close VS Code and every terminal in the folder, and rename the folder from its parent folder. <code>make project</code> lists the same steps when the folder name differs.</p>
+</div>
+</div>
+<section id="what-make-project-does" class="level2" data-number="8.1">
+<h2 data-number="8.1" class="anchored" data-anchor-id="what-make-project-does"><span class="header-section-number">8.1</span> What <code>make project</code> Does</h2>
+<ol type="1">
+<li><strong>It checks before it changes anything.</strong> It refuses to run in a git tree with uncommitted changes, so that <code>git reset --hard &amp;&amp; git clean -fd</code> can undo the run completely, and in a checkout whose <code>origin</code> is still the template repository. <code>FORCE=1</code> skips both checks. Every change is planned first, so a refused run, for example because of a name that is already in use, leaves the tree untouched.</li>
+<li><strong>It deletes the outputs of the template chip</strong> with <code>make clean</code>: the GDS in <code>layout/</code>, the netlists, the renders, the reports, the simulation results and the bondplan. They carry the old name and come from a build of the template chip. The macros and IPs keep their committed views, so the new chip builds without rebuilding them.</li>
+<li><strong>It removes what only makes sense in the template</strong>: this tutorial (<code>tutorial/</code>) and the workflow that publishes it, <code>doc/ihp-structure-proposals/</code>, <code>CITATION.cff</code>, the content of <code>release/</code>, and every block between <code>template-only</code> markers in the README, <code>AGENTS.md</code>, the <code>Makefile</code> and the configuration files. Figures that a remaining file still shows move to <code>doc/fig/</code>, and <code>ToDo.md</code> starts empty.</li>
+<li><strong>It renames the chip.</strong> <code>chip_top</code>, <code>chip_core</code> and <code>chip_logo</code> become <code>&lt;name&gt;_top</code>, <code>&lt;name&gt;_core</code> and <code>&lt;name&gt;_logo</code>, in file names and in file contents (see <a href="#tbl-new-chip-names" class="quarto-xref">Table&nbsp;7</a>). <code>TOP</code> in the <code>Makefile</code> follows, and with it every target that takes the name from <code>TOP</code>, including the logo and fill step and the bondplan.</li>
+<li><strong>It gives the README a new header</strong> that records the template version it started from, and deletes itself: <code>scripts/new_project.py</code> and the <code>project</code> target are gone afterwards.</li>
+<li><strong>It checks the result.</strong> No old name, no link into a deleted path and no <code>template-only</code> marker may be left, and <code>reuse lint</code> has to pass when it is installed. The report at the end lists what is left for you.</li>
+</ol>
+<div id="tbl-new-chip-names" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-new-chip-names-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;7: Names in the template and after <code>make project NAME=mychip</code>.
+</figcaption>
+<div aria-describedby="tbl-new-chip-names-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 47%">
+<col style="width: 52%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Template</th>
+<th>After <code>make project NAME=mychip</code></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>TOP = chip_top</code> in the <code>Makefile</code></td>
+<td><code>TOP = mychip_top</code></td>
+</tr>
+<tr class="even">
+<td><code>DESIGN_NAME: chip_top</code> in <code>config.yaml</code></td>
+<td><code>DESIGN_NAME: mychip_top</code></td>
+</tr>
+<tr class="odd">
+<td><code>rtl/chip_top.sv</code>, <code>rtl/chip_core.sv</code></td>
+<td><code>rtl/mychip_top.sv</code>, <code>rtl/mychip_core.sv</code></td>
+</tr>
+<tr class="even">
+<td><code>flow/librelane/chip_top.sdc</code></td>
+<td><code>flow/librelane/mychip_top.sdc</code></td>
+</tr>
+<tr class="odd">
+<td><code>schematic/xschem/chip_top.sch</code>, <code>.sym</code></td>
+<td><code>schematic/xschem/mychip_top.sch</code>, <code>.sym</code></td>
+</tr>
+<tr class="even">
+<td>cocotb <code>chip_top_tb.py</code></td>
+<td><code>mychip_top_tb.py</code></td>
+</tr>
+<tr class="odd">
+<td>Xschem <code>chip_top_tb_tran.sch</code></td>
+<td><code>mychip_top_tb_tran.sch</code></td>
+</tr>
+<tr class="even">
+<td>the instance <code>i_chip_core</code></td>
+<td><code>i_mychip_core</code></td>
+</tr>
+<tr class="odd">
+<td><code>flow/logo/chip_logo_mono.png</code></td>
+<td><code>flow/logo/mychip_logo_mono.png</code></td>
+</tr>
+<tr class="even">
+<td><code>layout/chip_top_logo_fill.gds.gz</code></td>
+<td><code>layout/mychip_top_logo_fill.gds.gz</code>, written by the first build</td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure>
+</div>
+</section>
+<section id="after-make-project" class="level2" data-number="8.2">
+<h2 data-number="8.2" class="anchored" data-anchor-id="after-make-project"><span class="header-section-number">8.2</span> After <code>make project</code></h2>
+<p>Review the result, commit it, and build the new chip:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb66"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb66-1"><a href="#cb66-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> status             <span class="co"># undo: git reset --hard &amp;&amp; git clean -fd</span></span>
+<span id="cb66-2"><a href="#cb66-2" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> add <span class="at">-A</span></span>
+<span id="cb66-3"><a href="#cb66-3" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> commit <span class="at">-m</span> <span class="st">"started &lt;name&gt; from ihp-sg13g2-ams-chip-template"</span></span>
+<span id="cb66-4"><a href="#cb66-4" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> init-submodules   <span class="co"># the logo and fill step needs flow/artistic</span></span>
+<span id="cb66-5"><a href="#cb66-5" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> build-top         <span class="co"># or make all, which also fetches it</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>The first build writes the layout, the netlists, the renders and the reports under the new name (see <a href="#sec-top" class="quarto-xref">Section&nbsp;7</a>). Then make the chip your own:</p>
+<ul>
+<li><p><strong>Your own blocks.</strong> In <code>macros/</code>, start a digital or an analog macro as a renamed copy of an example (see <a href="#sec-digital" class="quarto-xref">Section&nbsp;4</a>, <a href="#sec-analog" class="quarto-xref">Section&nbsp;5</a> and <a href="#sec-exercise3" class="quarto-xref">Section&nbsp;9.3</a>):</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb67"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb67-1"><a href="#cb67-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> macro FROM=counter NAME=<span class="op">&lt;</span>macro<span class="op">&gt;</span>    <span class="co"># digital macro</span></span>
+<span id="cb67-2"><a href="#cb67-2" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> macro FROM=inverter NAME=<span class="op">&lt;</span>macro<span class="op">&gt;</span>   <span class="co"># analog macro</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>The <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/README.md#register-the-macro-at-the-chip-top-level">macros README</a> lists every place where a new macro is registered at the chip top-level. Remove the example macros once your own ones replace them.</p></li>
+<li><p><strong>Floorplan, pinout and package.</strong> Adapt the die area, the pad ring and the macro placements in <code>flow/librelane/config.yaml</code> (see <a href="#sec-top" class="quarto-xref">Section&nbsp;7</a>), the <code>PINOUT</code> map in <code>packaging/config.yaml</code> (see <a href="#sec-packaging" class="quarto-xref">Section&nbsp;7.9</a>), and the chip documentation in <code>doc/</code>. <a href="#sec-exercise4" class="quarto-xref">Section&nbsp;9.4</a> and <a href="#sec-exercise5" class="quarto-xref">Section&nbsp;9.5</a> walk through exactly these changes.</p></li>
+<li><p><strong>Regression.</strong> The <code>regression</code> target, which the nightly workflow runs, tests the counter and inverter macros. Point it at your own macros once the examples are gone.</p></li>
+</ul>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Important
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The logos stay, and they put the template’s identity on the die. Replace them before a tapeout, <a href="#sec-ip" class="quarto-xref">Section&nbsp;6</a> shows how the logo IPs are generated from PNG images:</p>
+<ul>
+<li><a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/ip/sg13g2_ip__jku_names/"><code>ip/sg13g2_ip__jku_names/</code></a> draws the names of the template authors.</li>
+<li><code>flow/logo/&lt;name&gt;_logo_mono.png</code> draws the “AMS CHIP” artwork on TopMetal2 (see <a href="#fig-chip-top-layout-tm2" class="quarto-xref">Figure&nbsp;37</a>).</li>
+<li><a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/ip/sg13g2_ip__jku/"><code>ip/sg13g2_ip__jku/</code></a> draws the JKU logo, replace it where it does not apply.</li>
+</ul>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><code>make project</code> deletes this tutorial from the new chip, but it stays available online. The template’s <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/README.md#start-a-new-chip-from-this-template">top-level README</a> describes the target as well.</p>
+</div>
+</div>
+</section>
+</section>
+<section id="sec-exercises" class="level1" data-number="9">
+<h1 data-number="9"><span class="header-section-number">9</span> Additional Exercises</h1>
 <p>The following exercises repeat the corresponding sections of this tutorial with modifications to the design.</p>
-<section id="sec-exercise1" class="level2" data-number="8.1">
-<h2 data-number="8.1" class="anchored" data-anchor-id="sec-exercise1"><span class="header-section-number">8.1</span> Exercise 1: From 8-bit Up-Counter to 16-bit Down-Counter</h2>
+<section id="sec-exercise1" class="level2" data-number="9.1">
+<h2 data-number="9.1" class="anchored" data-anchor-id="sec-exercise1"><span class="header-section-number">9.1</span> Exercise 1: From 8-bit Up-Counter to 16-bit Down-Counter</h2>
 <p>Repeat <a href="#sec-digital" class="quarto-xref">Section&nbsp;4</a> for a 16-bit synchronous down-counter that wraps from 0 back to <span class="math inline">\(2^{16} - 1 = 65535\)</span>. The recommended steps are:</p>
 <ol type="1">
 <li>Update the RTL (<a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/counter/rtl/counter.sv"><code>counter.sv</code></a>, <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/counter/rtl/counter_top.sv"><code>counter_top.sv</code></a>, <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/counter/rtl/constants.sv"><code>constants.sv</code></a>). Change the bitwidth and turn the increment block into a decrement, with wrap-around from 0 to <code>CTR_MAX</code>.</li>
@@ -3714,8 +3933,8 @@ Important
 </div>
 </div>
 </section>
-<section id="sec-exercise2" class="level2" data-number="8.2">
-<h2 data-number="8.2" class="anchored" data-anchor-id="sec-exercise2"><span class="header-section-number">8.2</span> Exercise 2: Self-Biased Single-Ended Inverter Amplifier</h2>
+<section id="sec-exercise2" class="level2" data-number="9.2">
+<h2 data-number="9.2" class="anchored" data-anchor-id="sec-exercise2"><span class="header-section-number">9.2</span> Exercise 2: Self-Biased Single-Ended Inverter Amplifier</h2>
 <p>Repeat <a href="#sec-analog" class="quarto-xref">Section&nbsp;5</a> with a self-biased single-ended inverter amplifier by adding a feedback resistor <span class="math inline">\(R_\mathrm{f}\)</span> between the output and the input of the inverter. As discussed in <a href="#sec-cace" class="quarto-xref">Section&nbsp;5.5</a>, the bare CMOS inverter has poor PVT robustness because nothing pins the gate bias to <span class="math inline">\(V_\mathrm{DD}/2\)</span>. A feedback resistor closes a DC loop that forces the operating point to the high-gain crossover (<span class="math inline">\(V_\mathrm{in} \approx V_\mathrm{out} \approx V_\mathrm{DD}/2\)</span>) regardless of process corner, which also linearises the small-signal transfer characteristic and turns the inverter into a usable single-ended amplifier. The disadvantage of this technique is the reduced input resistance, which equals <span class="math inline">\(R_\mathrm{in} \approx 1 / (g_\mathrm{m,NMOS} + g_\mathrm{m,PMOS})\)</span>. The recommended steps are:</p>
 <ol type="1">
 <li>Open the inverter schematic (<a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/inverter/schematic/xschem/inverter.sch"><code>inverter.sch</code></a>) in Xschem and add a resistor between the <code>vin</code> and <code>vout</code> nets of the inverter. Use the <code>rhigh.sym</code> device from the <code>sg13g2_pr</code> PDK library, the high-sheet poly resistor. Keep <code>spiceprefix=X</code> and connect its <code>body</code> terminal to <code>VSS</code>. The symbol computes the value from the geometry: with a sheet resistance of <span class="math inline">\(1360\,\mathrm{\Omega/sq}\)</span> this is roughly <span class="math inline">\(2.7\,\mathrm{k\Omega}\)</span> per <span class="math inline">\(\mathrm{\mu m}\)</span> of length at <span class="math inline">\(W = 0.5\,\mathrm{\mu m}\)</span>, so keep <span class="math inline">\(W\)</span> at <span class="math inline">\(0.5\,\mathrm{\mu m}\)</span> and set the value with <span class="math inline">\(L\)</span> (the <code>b</code> parameter folds a long resistor into segments). Start with a value of <span class="math inline">\(R_\mathrm{f} = 1\,\mathrm{M\Omega}\)</span> and adjust as needed. What can you observe?</li>
@@ -3739,8 +3958,8 @@ Tip
 </div>
 </div>
 </section>
-<section id="sec-exercise3" class="level2" data-number="8.3">
-<h2 data-number="8.3" class="anchored" data-anchor-id="sec-exercise3"><span class="header-section-number">8.3</span> Exercise 3: Three-Stage Ring Oscillator with Output Buffer</h2>
+<section id="sec-exercise3" class="level2" data-number="9.3">
+<h2 data-number="9.3" class="anchored" data-anchor-id="sec-exercise3"><span class="header-section-number">9.3</span> Exercise 3: Three-Stage Ring Oscillator with Output Buffer</h2>
 <p>Repeat <a href="#sec-analog" class="quarto-xref">Section&nbsp;5</a> for a three-stage ring oscillator with an output buffer, derived from the existing quad inverter. The recommended steps are:</p>
 <ol type="1">
 <li><p>Start the new macro as a renamed copy of the <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/inverter/">inverter</a> with <code>make macro FROM=inverter NAME=ringosc</code> in <code>macros/</code>. The target renames the files, the cells inside the GDS files and every reference, see the <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/README.md">macros README</a> for what it does and what is left.</p></li>
@@ -3759,9 +3978,9 @@ print f_osc</code></pre>
 <li><p>Re-run the verification chain, <code>make klayout-verify</code>, <code>make magic-verify</code>, and <code>make build-top</code>. Then compare the post-layout oscillation frequency against the schematic level as in <a href="#sec-postlayout" class="quarto-xref">Section&nbsp;5.9.4</a>. The parasitics add delay per stage, so the frequency drops.</p></li>
 </ol>
 </section>
-<section id="sec-exercise4" class="level2" data-number="8.4">
-<h2 data-number="8.4" class="anchored" data-anchor-id="sec-exercise4"><span class="header-section-number">8.4</span> Exercise 4: Update Pinout and Floorplan of the Top-Level</h2>
-<p>Building on <a href="#sec-exercise1" class="quarto-xref">Section&nbsp;8.1</a> and <a href="#sec-exercise3" class="quarto-xref">Section&nbsp;8.3</a>, swap <code>inverter2</code> for the ring oscillator, delete <code>counter2</code>, and connect the now 16-bit <code>counter1</code> to the freed-up south-side pads. The recommended steps are:</p>
+<section id="sec-exercise4" class="level2" data-number="9.4">
+<h2 data-number="9.4" class="anchored" data-anchor-id="sec-exercise4"><span class="header-section-number">9.4</span> Exercise 4: Update Pinout and Floorplan of the Top-Level</h2>
+<p>Building on <a href="#sec-exercise1" class="quarto-xref">Section&nbsp;9.1</a> and <a href="#sec-exercise3" class="quarto-xref">Section&nbsp;9.3</a>, swap <code>inverter2</code> for the ring oscillator, delete <code>counter2</code>, and connect the now 16-bit <code>counter1</code> to the freed-up south-side pads. The recommended steps are:</p>
 <ol type="1">
 <li>Replace <code>inverter2</code> with the ring oscillator macro in <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/rtl/chip_core.sv"><code>chip_core.sv</code></a>.</li>
 <li>Replace three of the four analog pads with VSS pads, and connect the ring oscillator’s output to the fourth analog pad.</li>
@@ -3774,11 +3993,11 @@ print f_osc</code></pre>
 <li>Rebuild the chip from scratch with <code>make build-all</code>, then verify with <code>make magic-drc CELL=chip_top</code> and <code>make klayout-drc-minimum</code>.</li>
 </ol>
 </section>
-<section id="sec-exercise5" class="level2" data-number="8.5">
-<h2 data-number="8.5" class="anchored" data-anchor-id="sec-exercise5"><span class="header-section-number">8.5</span> Exercise 5: Update the Bondplan Configuration</h2>
-<p>Building on <a href="#sec-exercise4" class="quarto-xref">Section&nbsp;8.4</a>, update the bondplan configuration in <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/packaging/config.yaml"><code>packaging/config.yaml</code></a> so that the packaged chip matches the new pinout (ring oscillator instead of <code>inverter2</code>, 16-bit <code>counter1</code>, no <code>counter2</code>, three additional VSS pads). The recommended steps are:</p>
+<section id="sec-exercise5" class="level2" data-number="9.5">
+<h2 data-number="9.5" class="anchored" data-anchor-id="sec-exercise5"><span class="header-section-number">9.5</span> Exercise 5: Update the Bondplan Configuration</h2>
+<p>Building on <a href="#sec-exercise4" class="quarto-xref">Section&nbsp;9.4</a>, update the bondplan configuration in <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/packaging/config.yaml"><code>packaging/config.yaml</code></a> so that the packaged chip matches the new pinout (ring oscillator instead of <code>inverter2</code>, 16-bit <code>counter1</code>, no <code>counter2</code>, three additional VSS pads). The recommended steps are:</p>
 <ol type="1">
-<li>Rebuild the final GDS of the modified chip (<code>make build-all</code> from <a href="#sec-exercise4" class="quarto-xref">Section&nbsp;8.4</a>), since the bondplan flow reads the die pads and their names directly from <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/layout/chip_top_logo_fill.gds.gz"><code>layout/chip_top_logo_fill.gds.gz</code></a>.</li>
+<li>Rebuild the final GDS of the modified chip (<code>make build-all</code> from <a href="#sec-exercise4" class="quarto-xref">Section&nbsp;9.4</a>), since the bondplan flow reads the die pads and their names directly from <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/layout/chip_top_logo_fill.gds.gz"><code>layout/chip_top_logo_fill.gds.gz</code></a>.</li>
 <li>Update the <code>PINOUT</code> table in <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/packaging/config.yaml"><code>packaging/config.yaml</code></a>: the south-side pads now carry <code>counter1_value[15:8]</code>, three of the four east-side analog pads became VSS pads, and the fourth carries the ring-oscillator output. Keep the geometric order in mind (pins 1-8 left top→bottom, 9-16 bottom left→right, 17-24 right bottom→top, 25-32 top right→left) so that the bondwires do not cross.</li>
 <li>Connect the freed-up VSS pads as downbonds to the exposed pad by adding an <code>EPAD</code> list (e.g.&nbsp;<code>EPAD: ["VSS", "VSS", "VSS"]</code>) and marking their former leads as NC (<code>~</code>). The exposed pad of the QFN-32 is the package ground, and the die is attached with conductive epoxy, so ground downbonds are shorter and lower-inductance than wires to leads.</li>
 <li>Re-run <code>make bondplan</code> and read the flow log and <a href="https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/packaging/result.md"><code>packaging/result.md</code></a> carefully: only the deliberately unbonded pads may appear as <em>unbonded named pads</em> (plus the seal-ring artifact), and there must be no wire-length, crossing, spacing, lead-skew, or guard-clearance warnings.</li>
@@ -3787,12 +4006,12 @@ print f_osc</code></pre>
 </ol>
 </section>
 </section>
-<section id="rfic-flow" class="level1" data-number="9">
-<h1 data-number="9"><span class="header-section-number">9</span> RFIC Flow</h1>
+<section id="rfic-flow" class="level1" data-number="10">
+<h1 data-number="10"><span class="header-section-number">10</span> RFIC Flow</h1>
 <p>Are you interested in an open-source RFIC flow? Check it out <a href="https://github.com/iic-jku/SG13CMOS_SPARX">here</a>.</p>
 </section>
-<section id="acknowledgements" class="level1" data-number="10">
-<h1 data-number="10"><span class="header-section-number">10</span> Acknowledgements</h1>
+<section id="acknowledgements" class="level1" data-number="11">
+<h1 data-number="11"><span class="header-section-number">11</span> Acknowledgements</h1>
 <p>This project is funded by the JKU/SAL <a href="https://research.jku.at/de/projects/jku-lit-sal-intelligent-wireless-systems-lab-iws-lab/">IWS Lab</a>, a collaboration of <a href="https://jku.at">Johannes Kepler University</a> and <a href="https://silicon-austria-labs.com">Silicon Austria Labs</a>.</p>
 <table width="100%">
 <tbody><tr>
