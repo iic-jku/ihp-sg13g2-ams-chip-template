@@ -42,6 +42,9 @@ NEXT_STEPS = [
     "the regression target in the Makefile tests the counter and inverter macros, point it at your own macros once you replace them",
 ]
 
+# How the new chip is built, the last of the next steps
+BUILD_STEPS = "make init-submodules, then make build-top (or make all, which also fetches the submodule)"
+
 # Recommended name of the repository and its folder: REPO_PREFIX + NAME
 REPO_PREFIX = "ihp-sg13g2-"
 
@@ -630,7 +633,7 @@ def report(plan, problems=None, dry_run=False):
         print("\n".join("  - " + step for step in NEXT_STEPS))
         print("  - review the result with git status and git diff, undo everything with: git reset --hard && git clean -fd")
         print(f"  - commit it: git add -A && git commit -m \"started {plan.name} from {plan.slug}\"")
-        print("  - build the chip: make init-submodules, then make build-top (or make all, which also fetches the submodule)")
+        print(f"  - build the chip: {BUILD_STEPS}")
 
 
 def main():
