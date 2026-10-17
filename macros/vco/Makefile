@@ -69,6 +69,10 @@ LE_MODEL ?= inductor-ct
 # Override with: make snp2le ORDER=<N>
 ORDER ?= 6
 
+# Number of MPI processes of the Palace EM simulation (default: 4)
+# Override with: make sim-em NP=<processes>
+NP ?= 4
+
 # Preferred GDS extension: use .gds when available for the CELL, otherwise .klay.gds
 # Resolved per CELL (CELL defaults to TOP), so cells can mix .gds and .klay.gds within one macro.
 # All DRC, LVS and PEX targets (KLayout and Magic) work with either .gds or .klay.gds.
@@ -83,6 +87,7 @@ XSCHEM_SCH_DIR  := schematic/xschem
 XSCHEM_TB_DIR   := testbenches/xschem
 LAY_DIR         := layout
 SCRIPTS_DIR     := scripts
+LAY_SCRIPTS_DIR := scripts/layout
 SIM_PLOT_DIR    := testbenches/xschem/plot_simulations
 GDS_DIR         := final/gds
 LEF_DIR         := final/lef
@@ -96,12 +101,15 @@ NET_SPICE_DIR   := netlist/spice
 NET_SPECTRE_DIR := netlist/spectre
 LVS_RPT_DIR     := verification/lvs
 DRC_RPT_DIR     := verification/drc
+EM_DIR          := verification/em
 EM_SPARAM_DIR   := verification/em/s-parameter
+EM_MODEL_DIR    := verification/em/palace_model
+PALACE_SCRIPTS  := $(PDK_ROOT)/$(PDK)/libs.tech/palace/scripts
 
 
 # Help Target
 help: ## Show this help message
-	@echo 'Usage: make <target> [CELL=<cellname>] [EXT_MODE=<1|2|3>] [THRESHOLD=<mOhm>] [MINRES=<mOhm>] [MINDELAY=<ps>] [DRC_LEVEL=<precheck|macro|regular>] [EV_PRECISION=<digits>] [TB=<testbenchname>] [SCRIPT=<scriptname>] [EM=<structure>] [SNP=<file.sNp>] [LE_MODEL=<structure|universal>] [ORDER=<N>] [OPEN_ARGS=<options>]'
+	@echo 'Usage: make <target> [CELL=<cellname>] [EXT_MODE=<1|2|3>] [THRESHOLD=<mOhm>] [MINRES=<mOhm>] [MINDELAY=<ps>] [DRC_LEVEL=<precheck|macro|regular>] [EV_PRECISION=<digits>] [TB=<testbenchname>] [SCRIPT=<scriptname>] [EM=<structure>] [NP=<processes>] [SNP=<file.sNp>] [LE_MODEL=<structure|universal>] [ORDER=<N>] [OPEN_ARGS=<options>]'
 	@echo ''
 	@echo 'Available targets:'
 	@grep -E '^[a-zA-Z0-9_.-]+:.*## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*## "}; {printf "  %-20s %s\n", $$1, $$2}'
@@ -113,7 +121,8 @@ help: ## Show this help message
 	@echo 'EV_PRECISION defaults to 5 significant digits for xschem ev function.'
 	@echo 'TB selects the Xschem testbench for sim-xschem (default: <CELL>_tb_tran). A name containing _vacask runs VACASK, any other ngspice.'
 	@echo 'SCRIPT selects the plotting script for sim-view-xschem (default: plot_<CELL>).'
-	@echo 'EM selects the passive structure for snp2le (default: vco_ind). The model is written to netlist/spice/<EM>_le.spice and netlist/spectre/<EM>_le.inc.'
+	@echo 'EM selects the passive structure for the EM targets and snp2le (default: vco_ind). sim-em runs verification/em/scripts/palace_<EM>.py.'
+	@echo 'NP sets the number of MPI processes of Palace (default: 4).'
 	@echo 'SNP selects the Touchstone file for snp2le (default: verification/em/s-parameter/<EM>.s3p).'
 	@echo 'LE_MODEL selects the snp2le model (default: inductor-ct). ORDER sets the order of a universal fit (default: 6).'
 	@echo 'OPEN_ARGS passes extra options to sak-open.py for the open target (e.g. --all).'
@@ -161,6 +170,49 @@ sim-all: ## Simulate the macro
 	$(MAKE) sim-xschem TB=vco_top_tb_pss_vacask
 	$(MAKE) sim-xschem TB=vco_top_tb_tune_vacask
 .PHONY: sim-all
+# ================================================================================================
+
+
+# Layout Script Target
+klayout-script: ## Generate layout/<CELL>.gds with the KLayout Python script scripts/layout/<CELL>.py (usage: make klayout-script CELL=<cellname>)
+	@if [ ! -f "$(LAY_SCRIPTS_DIR)/$(CELL).py" ]; then \
+		echo "ERROR: no layout script $(LAY_SCRIPTS_DIR)/$(CELL).py. Pass CELL=<cellname>."; \
+		exit 1; \
+	fi
+	mkdir -p $(LAY_DIR)
+	klayout -b -r $(LAY_SCRIPTS_DIR)/$(CELL).py -rd out=$(abspath $(LAY_DIR)/$(CELL).gds)
+.PHONY: klayout-script
+# ================================================================================================
+
+
+# EM Simulation Targets
+# palace_<EM>.py builds the EM layout verification/em/layout/<EM>.gds from layout/<EM>.gds and the Palace model in
+# verification/em/palace_model/<EM>_data/. combine_extend_snp.py of the PDK collects the port results into Touchstone files.
+sim-em: ## Run the EM simulation of the EM structure with AWS Palace (usage: make sim-em [EM=<structure>] [NP=<processes>])
+	@if [ ! -f "$(LAY_DIR)/$(EM).gds" ]; then \
+		echo "ERROR: $(LAY_DIR)/$(EM).gds not found. Run make klayout-script CELL=$(EM) first."; \
+		exit 1; \
+	fi
+	rm -rf $(EM_MODEL_DIR)/$(EM)_data
+	python3 $(EM_DIR)/scripts/palace_$(EM).py
+	cd $(EM_MODEL_DIR)/$(EM)_data && palace -np $(NP) config.json && python3 $(PALACE_SCRIPTS)/combine_extend_snp.py
+.PHONY: sim-em
+
+copy-sparam: ## Copy the Touchstone file of the EM simulation to verification/em/s-parameter/ (usage: make copy-sparam [EM=<structure>])
+	mkdir -p $(EM_SPARAM_DIR)
+	cp -f $(EM_MODEL_DIR)/$(EM)_data/output/$(EM)/$(EM).s*p $(EM_SPARAM_DIR)/
+.PHONY: copy-sparam
+
+view-em-sim: ## Plot the EM result of the EM structure, against its model when the ACSP testbench has run (usage: make view-em-sim [EM=<structure>])
+	SHOW_PLOTS=1 python3 $(SIM_PLOT_DIR)/plot_$(EM).py
+.PHONY: view-em-sim
+
+em-model: ## Run sim-em, copy-sparam, snp2le and the ACSP testbench of the EM structure (usage: make em-model [EM=<structure>] [NP=<processes>])
+	$(MAKE) sim-em EM=$(EM)
+	$(MAKE) copy-sparam EM=$(EM)
+	$(MAKE) snp2le EM=$(EM)
+	$(MAKE) sim-xschem TB=$(EM)_tb_acsp_vacask
+.PHONY: em-model
 # ================================================================================================
 
 
@@ -425,11 +477,13 @@ klayout-verify: ## Verify CELL cell with KLayout (usage: make klayout-verify [CE
 	$(MAKE) klayout-pex CELL=$(CELL)
 .PHONY: klayout-verify
 
-klayout-verify-all: ## Verify all main subcells with KLayout (DRC, LVS, PEX)
+klayout-verify-all: ## Verify all main subcells with KLayout (DRC, LVS, PEX), the coil without PEX
 	$(MAKE) klayout-verify CELL=vco_bias
 	$(MAKE) klayout-verify CELL=vco_buf
 	$(MAKE) klayout-verify CELL=vco_var
-	$(MAKE) klayout-verify CELL=vco_ind
+# An RC extraction of the coil holds no inductance, its model is the EM simulation (sim-em)
+	$(MAKE) klayout-drc CELL=vco_ind
+	$(MAKE) klayout-lvs CELL=vco_ind
 	$(MAKE) klayout-verify CELL=vco_core
 	$(MAKE) klayout-verify CELL=vco_top
 .PHONY: klayout-verify-all
