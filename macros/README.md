@@ -6,7 +6,7 @@ Every folder here is one macro with its own `Makefile` and `README.md`, followin
 | --- | --- | --- | --- |
 | [`counter/`](counter/) | digital | SystemVerilog in `rtl/` | Verilator lint, Icarus Verilog and cocotb simulation, LibreLane hardening with DRC and LVS inside the run, XSPICE model for the mixed-signal Xschem simulation, FPGA emulation on three boards |
 | [`inverter/`](inverter/) | analog | Xschem schematic and hand-drawn GDS in `layout/` | Four Xschem testbenches, KLayout and Magic DRC, LVS and PEX, LEF, Liberty and Verilog stub export by Magic, CACE characterization |
-| [`vco/`](vco/) | RF | Xschem schematic, coil layout from a KLayout Python script, its Palace EM result and snp2le model | The analog flow plus lumped-element models from snp2le and the oscillator analyses of VACASK (PSS, PNOISE, PAC). Under construction on the branch `add-rf-macro`, the chip does not build it yet |
+| [`vco/`](vco/) | RF | Xschem schematic, layouts from KLayout Python scripts, the coil's Palace EM result and snp2le model | The analog flow plus lumped-element models from snp2le and the oscillator analyses of VACASK (PSS, PNOISE, PAC). Under construction on the branch `add-rf-macro`, the chip does not build it yet |
 
 The `Makefile` in this folder has one job: it starts a new macro as a renamed copy of an existing one.
 
