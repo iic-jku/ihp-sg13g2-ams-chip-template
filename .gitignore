@@ -27,6 +27,7 @@ sim_build/
 /macros/*/verification/cace/_docs
 /macros/*/verification/cace/netlist
 /macros/*/verification/cace/templates/simulations
+/macros/*/verification/em/palace_model/**/*.msh
 /macros/*/schematic/xschem/simulations
 /macros/*/testbenches/xschem/simulations
 /macros/*/flow/final
