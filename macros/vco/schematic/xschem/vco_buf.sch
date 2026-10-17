@@ -86,9 +86,9 @@ C {devices/iopin.sym} 840 -960 0 1 {name=p3 lab=rf_out_n}
 C {devices/iopin.sym} 1240 -960 0 0 {name=p4 lab=rf_out_p}
 C {sg13g2_pr/sg13_lv_nmos.sym} 1020 -460 0 0 {name=MBt
 l=0.5u
-w=2.5u
-ng=1
-m=60
+w=150u
+ng=60
+m=1
 model=sg13_lv_nmos
 spiceprefix=X}
 C {devices/ipin.sym} 520 -460 0 0 {name=p5 lab=vbn_buf}
