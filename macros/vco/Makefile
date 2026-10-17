@@ -182,6 +182,15 @@ klayout-script: ## Generate layout/<CELL>.gds with the KLayout Python script scr
 	mkdir -p $(LAY_DIR)
 	klayout -b -r $(LAY_SCRIPTS_DIR)/$(CELL).py -rd out=$(abspath $(LAY_DIR)/$(CELL).gds)
 .PHONY: klayout-script
+
+klayout-script-all: ## Generate every layout with its KLayout Python script, subcells before the cells that place them
+	$(MAKE) klayout-script CELL=vco_ind
+	$(MAKE) klayout-script CELL=vco_var
+	$(MAKE) klayout-script CELL=vco_bias
+	$(MAKE) klayout-script CELL=vco_buf
+	$(MAKE) klayout-script CELL=vco_core
+	$(MAKE) klayout-script CELL=vco_top
+.PHONY: klayout-script-all
 # ================================================================================================
 
 
@@ -477,15 +486,19 @@ klayout-verify: ## Verify CELL cell with KLayout (usage: make klayout-verify [CE
 	$(MAKE) klayout-pex CELL=$(CELL)
 .PHONY: klayout-verify
 
-klayout-verify-all: ## Verify all main subcells with KLayout (DRC, LVS, PEX), the coil without PEX
+klayout-verify-all: ## Verify every cell with KLayout: DRC, LVS and PEX of the bias and the buffer, DRC and LVS of the others
 	$(MAKE) klayout-verify CELL=vco_bias
 	$(MAKE) klayout-verify CELL=vco_buf
-	$(MAKE) klayout-verify CELL=vco_var
-# An RC extraction of the coil holds no inductance, its model is the EM simulation (sim-em)
+# KPEX cannot read Magic's extraction of sg13_hv_svaricap, and an RC extraction of the coil holds no inductance (its model
+# is the EM simulation), so the cells with the varactors or the coil get DRC and LVS only
+	$(MAKE) klayout-drc CELL=vco_var
+	$(MAKE) klayout-lvs CELL=vco_var
 	$(MAKE) klayout-drc CELL=vco_ind
 	$(MAKE) klayout-lvs CELL=vco_ind
-	$(MAKE) klayout-verify CELL=vco_core
-	$(MAKE) klayout-verify CELL=vco_top
+	$(MAKE) klayout-drc CELL=vco_core
+	$(MAKE) klayout-lvs CELL=vco_core
+	$(MAKE) klayout-drc CELL=vco_top
+	$(MAKE) klayout-lvs CELL=vco_top
 .PHONY: klayout-verify-all
 
 magic-verify: ## Verify CELL cell with Magic (usage: make magic-verify [CELL=<cellname>])
@@ -494,16 +507,23 @@ magic-verify: ## Verify CELL cell with Magic (usage: make magic-verify [CELL=<ce
 	$(MAKE) magic-pex CELL=$(CELL)
 .PHONY: magic-verify
 
-magic-verify-all: ## Verify the subcells without the inductor with Magic (DRC, LVS, PEX), Magic does not extract the PDK inductor
+magic-verify-all: ## Verify with Magic: DRC, LVS and PEX of the bias and the buffer, DRC of the others, PEX of TOP for its pins
 	$(MAKE) magic-verify CELL=vco_bias
 	$(MAKE) magic-verify CELL=vco_buf
-	$(MAKE) magic-verify CELL=vco_var
+# Magic extracts sg13_hv_svaricap as two two-terminal halves and does not extract the PDK inductor, so Netgen cannot
+# compare the cells that hold them. The PEX netlist of TOP is for its pin list (make verilog), not for simulation.
+	$(MAKE) magic-drc CELL=vco_var
+	$(MAKE) magic-drc CELL=vco_ind
+	$(MAKE) magic-drc CELL=vco_core
+	$(MAKE) magic-drc CELL=vco_top
+	$(MAKE) magic-pex CELL=$(TOP)
 .PHONY: magic-verify-all
 # ================================================================================================
 
 
 # Verify, Build and Simulate All Target
-all: ## Verify, build and simulate the TOP cell
+all: ## Generate the layouts, verify, build and simulate the TOP cell
+	$(MAKE) klayout-script-all
 	$(MAKE) klayout-verify-all
 	$(MAKE) magic-verify-all
 	$(MAKE) build-top

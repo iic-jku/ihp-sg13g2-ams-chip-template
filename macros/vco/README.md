@@ -3,7 +3,7 @@
 A 20 GHz LC voltage-controlled oscillator built from CMOS devices only, the RF macro of this template. It is the starting point for RF blocks: next to the analog flow of the [inverter](../inverter/README.md) it carries the RF layer, the EM simulation of the passives with AWS Palace, their lumped-element models from snp2le, and the periodic steady-state, small-signal and noise analyses of VACASK.
 
 > [!NOTE]
-> This macro is under construction on the branch `add-rf-macro`. The schematic, its simulations, the coil layout and the EM model of the coil are in place. The layout of the active cells, the post-layout simulation and the chip integration follow, see [Status](#status). The chip top-level does not build it yet.
+> This macro is under construction on the branch `add-rf-macro`. The schematic, its simulations, the layout of every cell (KLayout Python scripts, DRC and LVS clean) and the EM model of the coil are in place. The post-layout simulation and the chip integration follow, see [Status](#status). The chip top-level does not build it yet.
 
 > [!IMPORTANT]
 > The VACASK testbenches need the IIC-OSIC-TOOLS container with tag `2026.10` or later: the oscillator PSS (`oscillator=1`), `pac` and `pnoise` arrived in VACASK after the `2026.09` image.
@@ -14,10 +14,10 @@ A 20 GHz LC voltage-controlled oscillator built from CMOS devices only, the RF m
 | Parameter | Target | Simulated (TT, 27 C, 1.5 V) |
 | --- | --- | --- |
 | Oscillation frequency | 20 GHz | 20.60 GHz at `vtune` = 0.75 V |
-| Tuning range | 18.5 GHz to 21.5 GHz or wider | 19.60 GHz to 22.15 GHz for `vtune` from 0 V to 1.5 V |
-| Tuning gain | | 0.79 GHz/V to 2.19 GHz/V, 2.11 GHz/V at 0.75 V |
-| Phase noise | not optimized, reported | -85.3 dBc/Hz at 1 MHz, see [Limitations](#limitations) |
-| Output power | -10 dBm or more per output into 50 Ohm | -9.4 dBm |
+| Tuning range | 18.5 GHz to 21.5 GHz or wider | 19.60 GHz to 22.16 GHz for `vtune` from 0 V to 1.5 V |
+| Tuning gain | | 0.79 GHz/V to 2.20 GHz/V, 2.11 GHz/V at 0.75 V |
+| Phase noise | not optimized, reported | -85.4 dBc/Hz at 1 MHz, see [Limitations](#limitations) |
+| Output power | -10 dBm or more per output into 50 Ohm | -9.2 dBm |
 | Supply | `VDD` = 1.5 V, the chip core supply | 8.7 mA |
 | Bias | 100 uA reference current into `ibias_100u` | |
 | Power down | `di_en` low turns every current off | |
@@ -60,6 +60,8 @@ This is a simple VCO to learn the RF flow on, not an optimized design. It goes t
 | `vtune` | input | tuning voltage, 0 V to `VDD` |
 | `rf_out_p`, `rf_out_n` | inout | differential RF output, 50 Ohm back-terminated to `VDD`, the load has to be AC-coupled |
 
+In the layout (161 um by 284 um), `di_en` and `ibias_100u` leave on Metal3 at the left edge, `vtune` on Metal4 at the right edge, and `rf_out_p` and `rf_out_n` on Metal3 at the bottom edge. `VSS` is a Metal5 strap and `VDD` a Metal4 strap along the bottom edge.
+
 
 ## Simulation Results
 
@@ -67,12 +69,12 @@ All results are from the testbenches in [`testbenches/xschem/`](testbenches/xsch
 
 | Testbench | Simulator | Analyses | Result |
 | --- | --- | --- | --- |
-| `vco_top_tb_tran` | ngspice | start-up transient, 2 ns | 20.60 GHz, tank 0.13 V to 1.21 V, 212 mVpp per output (-9.5 dBm), 8.7 mA |
-| `vco_top_tb_pss_vacask` | VACASK | oscillator PSS, PNOISE, PAC | 20.60 GHz, -9.4 dBm per output at the fundamental, -85.3 dBc/Hz at 1 MHz, K_VCO 2.18 GHz/V at 10 MHz (PAC) |
-| `vco_top_tb_tune_vacask` | VACASK | one 1.5 ns transient per tuning voltage | 19.60 GHz to 22.15 GHz for `vtune` from 0 V to 1.5 V |
+| `vco_top_tb_tran` | ngspice | start-up transient, 2 ns | 20.61 GHz, tank 0.13 V to 1.21 V, 206 mVpp per output (-9.7 dBm), 8.7 mA |
+| `vco_top_tb_pss_vacask` | VACASK | oscillator PSS, PNOISE, PAC | 20.60 GHz, -9.2 dBm per output at the fundamental, -85.4 dBc/Hz at 1 MHz, K_VCO 2.18 GHz/V at 10 MHz (PAC) |
+| `vco_top_tb_tune_vacask` | VACASK | one 1.5 ns transient per tuning voltage | 19.60 GHz to 22.16 GHz for `vtune` from 0 V to 1.5 V |
 | `vco_ind_tb_acsp_vacask` | VACASK | ACSP, S-parameters of the coil model from 0 Hz to 60 GHz | 483 pH and Q 11.0 at 20.25 GHz, against 472 pH and Q 11.3 from EM |
 
-The ngspice transient and the VACASK PSS agree on the oscillation frequency within 0.01 %, and the tuning gain from PAC agrees with the slope of the tuning curve within 4 %. A `make sim-all` takes about 2 minutes.
+The ngspice transient and the VACASK PSS agree on the oscillation frequency within 0.05 %, and the tuning gain from PAC agrees with the slope of the tuning curve within 4 %. A `make sim-all` takes about 2 minutes.
 
 
 ## Directory Structure
@@ -82,10 +84,21 @@ The ngspice transient and the VACASK PSS agree on the oscillation frequency with
 
 ```text
 📁 vco/
+├─ 📁 final/
+│  ├─ 📁 gds/
+│  ├─ 📁 lef/
+│  ├─ 📁 lib/
+│  └─ 📁 vh/
 ├─ 📁 layout/
-│  └─ vco_ind.gds
+│  ├─ vco_bias.gds
+│  ├─ vco_buf.gds
+│  ├─ vco_core.gds
+│  ├─ vco_ind.gds
+│  ├─ vco_top.gds
+│  └─ vco_var.gds
 ├─ 📁 netlist/
 │  ├─ 📁 layout/
+│  ├─ 📁 pex/
 │  ├─ 📁 schematic/
 │  ├─ 📁 spectre/
 │  │  └─ vco_ind_le.inc
@@ -95,8 +108,10 @@ The ngspice transient and the VACASK PSS agree on the oscillation frequency with
 │  └─ 📁 xschem/
 │     ├─ vco_bias.sch
 │     ├─ vco_bias.sym
+│     ├─ vco_bias_pex.sym
 │     ├─ vco_buf.sch
 │     ├─ vco_buf.sym
+│     ├─ vco_buf_pex.sym
 │     ├─ vco_core.sch
 │     ├─ vco_core.sym
 │     ├─ vco_ind.sch
@@ -104,12 +119,21 @@ The ngspice transient and the VACASK PSS agree on the oscillation frequency with
 │     ├─ vco_ind_le.sym
 │     ├─ vco_top.sch
 │     ├─ vco_top.sym
+│     ├─ vco_top_pex.sym
 │     ├─ vco_var.sch
 │     ├─ vco_var.sym
 │     └─ xschemrc
+├─ 📁 render/
+│  └─ 📁 img/
 ├─ 📁 scripts/
 │  ├─ 📁 layout/
-│  │  └─ vco_ind.py
+│  │  ├─ vco_bias.py
+│  │  ├─ vco_buf.py
+│  │  ├─ vco_core.py
+│  │  ├─ vco_ind.py
+│  │  ├─ vco_layout.py
+│  │  ├─ vco_top.py
+│  │  └─ vco_var.py
 │  ├─ check_boundary.py
 │  └─ check_pex_ports.py
 ├─ 📁 testbenches/
@@ -148,7 +172,7 @@ The ngspice transient and the VACASK PSS agree on the oscillation frequency with
 
 </details>
 
-The layouts of the active cells, the exported views (`final/`) and the layout renders (`render/`) follow, in the same places as in the [inverter](../inverter/README.md#directory-structure).
+The exported views (`final/`) and the layout renders (`render/`) are those of the [inverter](../inverter/README.md#directory-structure). The difference is where a layout comes from: `layout/<cell>.gds` is written by `scripts/layout/<cell>.py`, not exported from a `.klay.gds` drawn by hand.
 
 
 ## Makefile Targets
@@ -226,17 +250,43 @@ make sim-all
 Runs `vco_top_tb_tran`, `vco_top_tb_pss_vacask` and `vco_top_tb_tune_vacask` in sequence. `sim-view-xschem` is not part of it, because it blocks until the plot windows are closed.
 
 
-### Generate a Layout with a KLayout Python Script
+### Generate the Layouts with KLayout Python Scripts
 
 ```sh
-make klayout-script CELL=vco_ind
+make klayout-script CELL=vco_bias     # one cell
+make klayout-script-all               # every cell, subcells before the cells that place them
 ```
 
-Runs `scripts/layout/<CELL>.py` in KLayout batch mode and writes `layout/<CELL>.gds`. So far the coil is the only cell with a script. [`vco_ind.py`](scripts/layout/vco_ind.py) places the PDK's `inductor3` PCell, flattens it into the cell `vco_ind` so the GDS carries no PCell context, adds a `ptap1` substrate tap with the `VSS` label left of the feeds, and labels the feed pins on their metals. The cell passes `make klayout-drc CELL=vco_ind` and `make klayout-lvs CELL=vco_ind`. Three details of the PCell:
+Every layout of this macro is written by a KLayout Python script in [`scripts/layout/`](scripts/layout/), run in batch mode, which writes `layout/<CELL>.gds`. Nothing is drawn by hand: to change a layout, change its script, rerun it, and rerun DRC and LVS.
+
+| Script | Cell | Floorplan |
+| --- | --- | --- |
+| [`vco_ind.py`](scripts/layout/vco_ind.py) | the coil | the PDK `inductor3` PCell and a `ptap1` for its substrate terminal |
+| [`vco_var.py`](scripts/layout/vco_var.py) | the varactor array | three `SVaricap` side by side, a Metal2 bus over the bottom gate strips (`rf_p`) and one over the top strips (`rf_n`), `vtune` on Metal3 over the well contacts, a substrate tap below |
+| [`vco_bias.py`](scripts/layout/vco_bias.py) | bias and enable | an NMOS row (gates up, VSS taps down) and a PMOS row (gates down, VDD taps up) facing a channel of Metal3 tracks, one net each, which the gates and drains reach on Metal2 stubs. The resistors lie in the channel right of the rows, the three MIM caps in a row below |
+| [`vco_buf.py`](scripts/layout/vco_buf.py) | the output buffer | mirror-symmetric: the tail (60 fingers) at the bottom, its taps also biasing the pair's substrate, the pair above it, the 50 Ohm loads at the sides, the coupling caps on top with their Metal5 bottom plates as the inputs, the gate bias resistors outside them |
+| [`vco_core.py`](scripts/layout/vco_core.py) | the core | the coil and the varactor array as subcells, the pair right below the coil's feeds with its cross-coupling on Metal2 (`rf_n`) and Metal4 (`rf_p`), the array turned by 270 degrees so `rf_p` is on its left, `Cct` under a TopMetal1 spine from the center tap, `Mtop` at the bottom, `rf_p` and `rf_n` out on Metal5 |
+| [`vco_top.py`](scripts/layout/vco_top.py) | the macro | the core in the middle, the buffer centered below it, the bias turned by 270 degrees left of the core's column, power trunks to a VSS strap (Metal5) and a VDD strap (Metal4) along the bottom, nothing that closes a loop around the coil, the PR boundary with the origin at its lower-left corner |
+
+The macro measures 161 um by 284 um, most of it the coil's keep-out. The scripts share [`vco_layout.py`](scripts/layout/vco_layout.py):
+
+- `mos()` builds a transistor with its wiring: a poly strap with contacts joining the gate fingers below the active area and a Metal1 pad reaching 1 um past the device's left edge, the sources up to a Metal1 rail, the drains joined by a Metal2 strap through the middle, and a substrate or well tap under the source rail or apart from it. The cell scripts place it mirrored or rotated.
+- `stub()` and `track()` join a port to a horizontal track, the routing scheme of the bias cell. The bias script checks its stubs for two nets that would touch before it writes anything.
+- Every coordinate snaps to the 5 nm grid. A cell is written flat except for the subcells it places (the core keeps the coil and the varactor array, the macro keeps bias, core and buffer), so LVS compares the hierarchy of the schematic and cells read from several files cannot clash by name.
+- Pins are a pin shape (datatype 2) with its label (datatype 25), as in the inverter.
+
+What the scripts had to learn:
+
+- **A KLayout batch script that ends in `SystemExit` exits with code 0 and prints nothing**, so a failed check would leave the old GDS in place. The scripts raise `RuntimeError`, which KLayout reports and `make` stops on.
+- **PDK PCells write their terminal names as texts**: `inductor3` writes `LA`, `LB` and `LC` on `IND.text`, `SVaricap` writes `G1`, `G2` and `W` on TEXT, and `ntap1` writes `well` on the NWell layer. KLayout LVS names a net after each of them, and a net with a second name fails its strict port check, while Magic, and so KPEX, turns the NWell text into a dangling port. The coil's metal labels repeat the PCell's names, the other cells drop the texts once they are flat (`write(drop_texts=...)`).
+- **The resistor and MIM PCells compute a dimension from R or C by default** (`Calculate`), so the scripts pass `Calculate="R"` and `Calculate="C"` to keep the drawn width and length.
+- **The buffer's tail is drawn as one device with 60 fingers.** The schematic had 60 parallel devices (`m=60`), which KLayout LVS does not combine with a 60-finger device, so the schematic now says `w=150u ng=60`, the same 60 fingers of 2.5 um.
+
+Three details of the coil's PCell:
 
 - `d` is the inner diameter: 58 um gives the 82 um outer diameter. The PCell centers the octagon in a 142 um by 142 um keep-out (layer `IND` with the no-fill layers and `PWell.block`) and runs the feeds 31 um down to its lower edge, where the pins sit: `LA` and `LB` on TopMetal1 at x = -8 um and 8 um, `LC` on TopMetal2 at x = 0.
 - `subE=0`: passed as the boolean `False` from a script, the PCell still draws the backside etch layer `LBE` under the coil.
-- The pin labels repeat the PCell's own names in upper case. KLayout LVS names a net after every label on it and fails the strict port check when a net carries both `LA` and `la`. It compares names case-insensitively, so `LA` matches the schematic pin `la`.
+- The pin labels repeat the PCell's own names in upper case. LVS compares names case-insensitively, so `LA` matches the schematic pin `la`.
 
 
 ### EM Simulation of the Coil
@@ -293,12 +343,22 @@ The committed model is fitted with the defaults to the EM result of the drawn co
 
 ### Layout, Verification and Build
 
-The layout targets are those of the [inverter](../inverter/README.md) and work the same way once `layout/` holds the cells: `klayout-drc`, `magic-drc`, `klayout-lvs`, `magic-lvs`, their `*-lvs-netlist` exporters, `symbol-pex`, `klayout-pex`, `magic-pex`, `klayout-verify`, `magic-verify`, `check-boundary`, `lef`, `lib`, `verilog`, `copy-gds`, `render-gds` and `build-top`. Two things differ:
+The verification and build targets are those of the [inverter](../inverter/README.md): `klayout-drc`, `magic-drc`, `klayout-lvs`, `magic-lvs`, their `*-lvs-netlist` exporters, `symbol-pex`, `klayout-pex`, `magic-pex`, `klayout-verify`, `magic-verify`, `check-boundary`, `lef`, `lib`, `verilog`, `copy-gds`, `render-gds` and `build-top`. What runs on which cell:
 
-- **Magic does not extract the PDK inductor**, so `magic-verify-all` covers `vco_bias`, `vco_buf` and `vco_var`, while `klayout-verify-all` covers every cell.
-- **A parasitic extraction of a cell that contains the coil is not its RF model.** RC extraction misses the coil's inductance and its coupling: KPEX turns `vco_ind` into a single 42 fF capacitor. `klayout-verify-all` therefore runs only DRC and LVS on `vco_ind`, and the post-layout model of the core will combine the extraction of the active devices with the EM model of the coil and its leads.
+| Cell | KLayout | Magic |
+| --- | --- | --- |
+| `vco_bias`, `vco_buf` | DRC, LVS, PEX | DRC, LVS, PEX |
+| `vco_var` | DRC, LVS | DRC |
+| `vco_ind`, `vco_core` | DRC, LVS | DRC |
+| `vco_top` | DRC, LVS | DRC, PEX for the pin list of the Verilog stub |
 
-Today `layout/` holds the coil: `make klayout-drc CELL=vco_ind` and `make klayout-lvs CELL=vco_ind` pass. The LVS netlist exporters `make klayout-lvs-netlist CELL=<cell>` and `make magic-lvs-netlist CELL=<cell>` work for every cell.
+`klayout-verify-all` and `magic-verify-all` run exactly that. The gaps have three reasons:
+
+- **Magic extracts `sg13_hv_svaricap` as two two-terminal halves** and does not extract the PDK inductor, so Netgen cannot compare a cell that holds either.
+- **KPEX cannot read Magic's extraction of the varactor.** Magic writes it as a `veriloga` device, and KPEX's parser of the `.ext` file stops on `'veriloga' is not a valid DeviceType`. Every cell above the array inherits it.
+- **A parasitic extraction of a cell that contains the coil is not its RF model.** RC extraction misses the coil's inductance and its coupling: KPEX turns `vco_ind` into a single 42 fF capacitor. The post-layout model of the core will combine the extraction of the active devices with the EM model of the coil and its leads.
+
+`make build-top` checks the PR boundary and writes the LEF, the Liberty stub, the Verilog stub (from the Magic PEX netlist of `vco_top`), the GDS in `final/` and the renders.
 
 
 ### Verify, Build and Simulate All
@@ -307,7 +367,7 @@ Today `layout/` holds the coil: `make klayout-drc CELL=vco_ind` and `make klayou
 make all
 ```
 
-Runs `klayout-verify-all`, `magic-verify-all`, `build-top` and `sim-all`, as in the inverter. It needs the layout, so on this branch only `sim-all` runs through.
+Runs `klayout-script-all`, `klayout-verify-all`, `magic-verify-all`, `build-top` and `sim-all`: the inverter's chain, which first writes the layouts from their scripts. It takes about 12 minutes. The EM simulation of the coil is not part of it, see [EM Simulation of the Coil](#em-simulation-of-the-coil).
 
 
 ### Clean
@@ -322,7 +382,7 @@ Runs `klayout-verify-all`, `magic-verify-all`, `build-top` and `sim-all`, as in 
 
 This VCO is kept simple on purpose. These are the places where it falls short, and what a better design would change:
 
-- **Phase noise** is -85.3 dBc/Hz at 1 MHz, where 20 GHz CMOS LC oscillators in the literature reach about -105 dBc/Hz to -115 dBc/Hz. PNOISE puts 92 % of it on the bias chain of the core current source (`Rp`, `MN0`, `MP1`, `MN1`) and 0.2 % on the coil. The cause is the top biasing: the core current sets the tank common mode, which is the varactor's gate voltage, so the frequency pushes by about -300 MHz/mA and any current noise becomes frequency noise. In the first simulations, ten times the resistance and four times the capacitance in both bias filters (476 kOhm, 5.4 pF) lowered the phase noise by about 14 dB, but the 2.6 us time constant keeps the frequency settling for about 10 us after every disturbance, and the oscillator PSS then no longer converges reliably. A center tap held at a regulated voltage removes the coupling at its source. After that the tank Q sets the limit, and the coil's Q of 11 at 20 GHz is low: wider traces and fewer turns raise it.
+- **Phase noise** is -85.4 dBc/Hz at 1 MHz, where 20 GHz CMOS LC oscillators in the literature reach about -105 dBc/Hz to -115 dBc/Hz. PNOISE puts 92 % of it on the bias chain of the core current source (`Rp`, `MN0`, `MP1`, `MN1`) and 0.2 % on the coil. The cause is the top biasing: the core current sets the tank common mode, which is the varactor's gate voltage, so the frequency pushes by about -300 MHz/mA and any current noise becomes frequency noise. In the first simulations, ten times the resistance and four times the capacitance in both bias filters (476 kOhm, 5.4 pF) lowered the phase noise by about 14 dB, but the 2.6 us time constant keeps the frequency settling for about 10 us after every disturbance, and the oscillator PSS then no longer converges reliably. A center tap held at a regulated voltage removes the coupling at its source. After that the tank Q sets the limit, and the coil's Q of 11 at 20 GHz is low: wider traces and fewer turns raise it.
 - **The oscillator PSS is fragile.** With these filters it converges at the nominal tuning voltage, but not at every tuning voltage with the same settings, which is why the tuning curve uses transients. Slow states (the bias filters, the AC coupling of the buffer, the DC blocks of the load) make the shooting Newton overshoot.
 - **PNOISE and PAC are pinned below about 0.6 MHz.** The tuning gain from PAC is flat at 2.18 GHz/V above 3 MHz and falls below 1 MHz, and the phase noise flattens there too. More harmonics (`truncharm` 20, 40, 60) change nothing. So read the phase noise from about 1 MHz up (at 1 MHz it is about 1.3 dB optimistic), and check it against a transient-noise simulation.
 
@@ -336,10 +396,11 @@ The macro is built in steps, each one reviewed before the next:
 - [x] Testbenches: start-up transient (ngspice), oscillator PSS with PNOISE and PAC, and the tuning curve (VACASK)
 - [x] Layout of the coil, generated as a KLayout Python script from the PDK `inductor3`, DRC and LVS clean
 - [x] EM simulation of the drawn coil with Palace (gds2palace, volume metals) and its snp2le model, checked with ACSP
+- [x] Layout of every cell as a KLayout Python script, DRC and LVS clean with KLayout, the cells Magic can compare clean with Magic, PEX of the bias and the buffer
+- [ ] Post-layout simulation: PEX of the bias and the buffer, the EM model of the coil, and an EM or extracted model of the core's leads and the varactor array
 - [ ] Corners (TT, SS, FF, supply and temperature), enable and power-up transient
 - [ ] More RF analyses: transient noise as the cross-check of PNOISE, HB, HBAC and HBNOISE on the buffer, ACSP of the buffer
-- [ ] Layout of the active cells, one per method: hand-drawn in KLayout, generated with GDSFactory, and a KLayout Python script
-- [ ] DRC, LVS and PEX of every cell, post-layout simulation with the EM model of the coil
+- [ ] Layouts by other methods for the tutorial: hand-drawn in KLayout, generated with GDSFactory
 - [ ] Chip integration: the 20 GHz output needs RF pads or a divider to an existing pad, and the coil occupies both TopMetal layers of the chip power grid
 - [ ] Tutorial chapter after the analog macro
 
