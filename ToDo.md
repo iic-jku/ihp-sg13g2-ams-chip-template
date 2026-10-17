@@ -1,5 +1,10 @@
 ﻿# ToDo List
 
+- [ ] update tutorial
+    - no sizing guidance for `DIE_AREA`/`CORE_AREA` or the core ring
+    - no explanation of `chip_top.sdc`
+    - no description of the MACROS entry structure
+    - no post-run checklist
 - [ ] add VCO RF macro in branch `add-rf-macro`
 - [ ] test and merge `hv-stdcell`: https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/test-hv-stdcell
 - [ ] check and merge `gdscheck-drc`: https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/pull/7

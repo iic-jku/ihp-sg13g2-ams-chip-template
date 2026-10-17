@@ -48,6 +48,7 @@ This tutorial is a step-by-step walk-through of the open-source analog mixed-sig
   - Layout in [KLayout](https://github.com/KLayout/klayout)
   - Verification with DRC, LVS, PEX using [KLayout](https://github.com/KLayout/klayout), [Magic](https://github.com/rtimothyedwards/magic) + [Netgen](https://github.com/rtimothyedwards/netgen)
 - [Top-level assembly and padframe generation](#sec-top) with logos and fill structures using SystemVerilog and the [LibreLane](https://github.com/librelane/librelane) flow.
+- [Starting your own chip](#sec-new-chip) from the template with a single `make project` target.
 
 The example design used throughout the tutorial contains:
 
@@ -197,7 +198,7 @@ The repository is organised into the following top-level folders. The full listi
 | [`render/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/render/) | Chip and macro renders used in the documentation. |
 | [`rtl/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/rtl/) | Top-level RTL sources, including [chip_top.sv](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/rtl/chip_top.sv) and [chip_core.sv](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/rtl/chip_core.sv). |
 | [`schematic/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/schematic/) | Xschem schematics and symbols for the top-level chip. |
-| [`scripts/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/scripts/) | Helper Python and shell scripts for rendering, logo placement, and plotting. |
+| [`scripts/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/scripts/) | Helper Python and shell scripts for the logo and fill step, the PEX symbol, the port checks, and `make project` (see @sec-new-chip). |
 | [`testbenches/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/testbenches/) | Xschem and cocotb testbenches for the top-level chip. |
 | [`tutorial/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/tutorial/) | This Quarto tutorial and its supporting materials. |
 | [`verification/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/verification/) | DRC, LVS, and signoff reports. |
@@ -213,7 +214,7 @@ make help              # show available targets at the top level
 ```
 
 ::: {.callout-tip}
-Instead of `git clone`, you can start by clicking the green "Use this template" button on the GitHub page to create your own copy of the repository. This way, you can push your changes to your own GitHub repository and even make it public if you want to share your custom silicon design with the community.
+Instead of `git clone`, you can start by clicking the green "Use this template" button on the GitHub page to create your own copy of the repository. This way, you can push your changes to your own GitHub repository and even make it public if you want to share your custom silicon design with the community. When the copy is to become your own chip, `make project NAME=<name>` renames it and removes the template-only content, see @sec-new-chip.
 :::
 
 To find and open a design file, run `make open` in the container's VNC/noVNC desktop. It shows one button per design file of the folder, grouped by directory, and a click opens the file in its tool: Xschem for `.sch` and `.sym`, KLayout for `.gds`, GTKWave for waveforms and gvim for RTL, scripts and configs. The checkboxes select the file types, and the filter field keeps only the paths that contain the typed text. @fig-make-open shows the top level with only the schematics and symbols selected. The window is rescanned every 15 s, so files a running flow writes appear on their own. The [top-level README](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/README.md#open-the-design-files) lists every file type and option.
@@ -259,6 +260,7 @@ The [top-level Makefile](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template
 | `make all`          | Full build, DRC verification, simulation, and bondplan generation.                        |
 | `make release VERSION=2.1.0` | Copy GDS, netlists, and renders into `release/v.<VERSION>/` for tapeout submission.          |
 | `make clean` / `make clean-all` | Delete the generated files of the chip top-level, or of the chip top-level plus the IPs and the macros. |
+| `make project NAME=<name>` | Start a new chip from the template: remove the template-only content and rename `chip_top`, `chip_core` and `chip_logo` (see @sec-new-chip). |
 
 See the [top-level README](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/README.md) for more details and how to use the Makefile targets.
 
@@ -413,6 +415,48 @@ make build-top
 
 ::: {.callout-tip}
 The macro can also be built as an FPGA bitstream ([`fpga/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/counter/fpga/)) with `make build-fpga`. `counter_top` is synthesised straight onto board pins, without a board-top wrapper, and three boards are supported: pico-ice and iCEBreaker (Lattice iCE40) and ULX3S (Lattice ECP5). Pick one with `make build-fpga` for the default pico-ice, or `make -C fpga BOARD=ulx3s all` for another. IIC-OSIC-TOOLS carries the build chain for all three boards, so the bitstreams build inside the container, and only flashing needs the host, since the container has no USB access. Details are in [`fpga/README.md`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/counter/fpga/README.md). The FPGA flow is not used in this tutorial and is only listed here for reference.
+:::
+
+### Sizing the Macro {#sec-hardening-sizing}
+
+Three parameters in [`config.yaml`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/counter/flow/librelane/config.yaml) decide how compact and how fast the hardened macro is.
+
+```{.yaml filename="macros/counter/flow/librelane/config.yaml (code snippet)"}
+# Layout / Floorplan Rules
+DIE_AREA: [0, 0, 200, 100]
+PL_TARGET_DENSITY_PCT: 40
+
+# Valid values are AREA 0-3 and DELAY 0-4, LibreLane defaults to AREA 0
+# DELAY favours speed, AREA favours cell area
+# AREA 3 and DELAY 4 always add buffering and gate sizing, so AREA 3 can be larger than AREA 0
+SYNTH_STRATEGY: DELAY 4
+```
+
+- **`DIE_AREA`** is the macro outline `[x0, y0, x1, y1]` in µm (`FP_SIZING: absolute`). The standard-cell rows fill a core area inside it, which is 188 µm × 68 µm for the counter. The aspect ratio matters as much as the area: the outline has to fit the slot of the macro in the top-level floorplan and leave room for the pins listed in [`pin_order.cfg`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/counter/flow/librelane/pin_order.cfg).
+- **`PL_TARGET_DENSITY_PCT`** is the cell density that global placement aims for. At 40 %, the placer spreads the cells so that most of the core stays free for the clock tree, the buffers added during timing repair, and the routing. The target should stay above the utilisation (cell area divided by free core area), which global placement prints as `Utilization` in its log. A lower target triggers the warning `[GPL-0302] Target density 0.4000 is too low for the available free area`, and global placement then raises the target to the utilisation on its own.
+- **`SYNTH_STRATEGY`** selects the ABC script that Yosys uses for logic optimisation and technology mapping. The `AREA 0` to `AREA 3` scripts favour a small cell area, the `DELAY 0` to `DELAY 4` scripts favour short critical paths. `AREA 0` is the LibreLane default. `AREA 3` and `DELAY 4` always add buffering and gate sizing, so in the test runs below, the counter synthesised to 675 µm² with `AREA 0`, 704 µm² with `DELAY 0`, 720 µm² with `AREA 3`, and 742 µm² with `DELAY 4`. The best strategy for a design is found by trying.
+
+No formula gives the right values up front. They are found iteratively. A run of a small macro takes only a few minutes (`make librelane-nodrc` skips the DRC steps), and the following procedure converges within a handful of runs.
+
+1. **Start large and balanced.** Set a generous `DIE_AREA`, several times the cell area that Yosys reports in [`verification/stat.rpt`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/counter/verification/stat.rpt), and a balanced strategy such as `AREA 0` or `DELAY 0`. This run finishes quickly and gives the reference values for cell area, utilisation, and timing slack.
+2. **Shrink the die until placement complains.** Reduce `DIE_AREA` step by step and leave `PL_TARGET_DENSITY_PCT` unchanged. The first complaint is the `[GPL-0302]` warning, which means the die is now too small for the target density. The run can still finish, but shrinking further ends in a hard error, typically `[DPL-0036] Detailed placement failed` once the buffers added by design repair, clock tree synthesis, or timing repair no longer fit.
+3. **Step back.** Enlarge the die again until the warning is gone and run the full flow. The result places, routes, and meets timing at the configured density, and it is the starting point for the next step. A denser macro is possible by raising `PL_TARGET_DENSITY_PCT` on purpose, at the cost of less room for routing and timing repair.
+4. **Trade timing slack for area.** Read the worst setup slack in the slowest corner (`nom_slow_1p08V_125C`). If there is margin left, switch to a strategy with a smaller cell area (the `Chip area` line in `*-yosys-synthesis/reports/stat.rpt` of the run) and repeat steps 2 and 3, since a smaller cell area allows a smaller die. If setup fails, move towards `DELAY`, up to `DELAY 4`, or give the placer more room.
+
+Each iteration changes only two values and reads back a few numbers, so the loop can also be scripted or handed to a coding agent. After every run, check the following in the run folder `flow/librelane/runs/<run>/`:
+
+- `warning.log`: the `[GPL-0302]` warning, among others.
+- `final/metrics.csv`: `design__instance__utilization`, `timing__setup__ws`, `timing__hold__ws`, and `route__drc_errors`.
+- `*-openroad-stapostpnr/summary.rpt`: worst setup and hold slack and the violation counts in all six STA corners. `make copy-reports` copies it to [`verification/stapostpnr_summary.rpt`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/counter/verification/stapostpnr_summary.rpt).
+
+The counter sits far from these limits. In test runs at the configured 200 µm × 100 µm, global placement reported a utilisation of 6.3 % against the target of 40 %, and the worst setup slack was 13.4 ns of the 20 ns clock period. At the same target density, the counter placed without the warning at 100 µm × 60 µm (34 % utilisation), warned but still routed and met timing at 70 µm × 60 µm (52 %), and failed detailed placement at 60 µm × 60 µm (62 %). The runs that finished kept about 13.5 ns of setup slack. With `AREA 0` instead of `DELAY 4`, the 60 µm × 60 µm die routed and met timing as well, which is step 4 at work. Repeating these runs is a good first exercise.
+
+::: {.callout-note}
+The configuration sets `GRT_ALLOW_CONGESTION: true`, so global routing continues despite overflow. A die that is too small to route then shows up as detailed routing DRC errors, and the `Checker.TrDRC` step stops the flow.
+:::
+
+::: {.callout-important}
+A new die size changes the LEF of the macro. Update its placement in the `MACROS` block of the top-level [`config.yaml`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/flow/librelane/config.yaml) and in [`doc/floorplan.md`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/doc/floorplan.md) (see @sec-top). The copy targets take the newest run in `flow/librelane/runs/`, so finish with `make build-top` on the final values.
 :::
 
 ## Viewing the Macro
@@ -1385,6 +1429,8 @@ This section covers the top-level assembly and padframe generation. The top-leve
 - [`flow/librelane/chip_top.sdc`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/flow/librelane/chip_top.sdc), timing constraints (clock period, input/output delays).
 - Reference documentation for the chip, [specifications.md](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/doc/specifications.md), [pinout.md](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/doc/pinout.md), and [floorplan.md](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/doc/floorplan.md).
 
+For your own chip, `make project` renames these files and every reference to them in one step (@sec-new-chip), and their content is what you then adapt.
+
 ## Understanding `chip_top.sv`
 
 The padframe wrapper [`chip_top.sv`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/rtl/chip_top.sv) declares the chip's parameters and ports. The parameter block at the top of the module controls the number of pads of each type and is the place to update when the pinout changes.
@@ -1678,7 +1724,7 @@ Note that currently the LibreLane flow streams out the top-level GDS `layout/chi
 make add-logo-fill
 ```
 
-This calls `scripts/add_logo_fill.sh` and writes `layout/chip_top_logo_fill.gds.gz`. This step is already called by `make build-top`. In the future, it is planned to replace this script and Makefile target with a custom LibreLane step.
+This calls `scripts/add_logo_fill.sh` with `TOP` and writes `layout/chip_top_logo_fill.gds.gz`. This step is already called by `make build-top`. In the future, it is planned to replace this script and Makefile target with a custom LibreLane step.
 :::
 
 ::: {.callout-tip}
@@ -1786,6 +1832,83 @@ The artifacts are written to [`release/v.2.1.0/`](https://github.com/iic-jku/ihp
 
 ::: {.callout-important}
 Run `make all` before `make release`. The release target only copies files, it does not rebuild or re-verify the chip.
+:::
+
+
+# Start Your Own Chip {#sec-new-chip}
+
+The template is meant to become your own chip. Work through this tutorial on the template as it is, then start your chip from a copy of it: create your own repository with the green "Use this template" button on GitHub (or fork or copy the repository) and name it `ihp-sg13g2-<name>` after the chip, clone it, and enter the IIC-OSIC-TOOLS container. In the top-level folder of the clone, one target turns the copy into a new chip with its own name:
+
+```sh
+make project NAME=<name> DRY_RUN=1   # list the changes, touch nothing
+make project NAME=<name>             # start the chip <name>
+```
+
+`NAME` is a lowercase letter followed by lowercase letters, digits or underscores, for example `mychip`. It must not be the name of a macro or an IP: with `NAME=counter`, the chip top `counter_top` would be the same cell as the top cell of the counter macro. The target needs no PDK.
+
+::: {.callout-tip}
+With the repository named `ihp-sg13g2-<name>`, for example `ihp-sg13g2-mychip`, `git clone` gives its folder the same name, and `make project` writes that name into the directory tree of the README. If your clone has another name, rename it before `make project`: rename the repository on GitHub (Settings > General, the old URLs redirect), point `origin` at the new URL with `git remote set-url origin <URL>`, close VS Code and every terminal in the folder, and rename the folder from its parent folder. `make project` lists the same steps when the folder name differs.
+:::
+
+## What `make project` Does
+
+1. **It checks before it changes anything.** It refuses to run in a git tree with uncommitted changes, so that `git reset --hard && git clean -fd` can undo the run completely, and in a checkout whose `origin` is still the template repository. `FORCE=1` skips both checks. Every change is planned first, so a refused run, for example because of a name that is already in use, leaves the tree untouched.
+2. **It deletes the outputs of the template chip** with `make clean`: the GDS in `layout/`, the netlists, the renders, the reports, the simulation results and the bondplan. They carry the old name and come from a build of the template chip. The macros and IPs keep their committed views, so the new chip builds without rebuilding them.
+3. **It removes what only makes sense in the template**: this tutorial (`tutorial/`) and the workflow that publishes it, `doc/ihp-structure-proposals/`, `CITATION.cff`, the content of `release/`, and every block between `template-only` markers in the README, `AGENTS.md`, the `Makefile` and the configuration files. Figures that a remaining file still shows move to `doc/fig/`, and `ToDo.md` starts empty.
+4. **It renames the chip.** `chip_top`, `chip_core` and `chip_logo` become `<name>_top`, `<name>_core` and `<name>_logo`, in file names and in file contents (see @tbl-new-chip-names). `TOP` in the `Makefile` follows, and with it every target that takes the name from `TOP`, including the logo and fill step and the bondplan.
+5. **It gives the README a new header** that records the template version it started from, and deletes itself: `scripts/new_project.py` and the `project` target are gone afterwards.
+6. **It checks the result.** No old name, no link into a deleted path and no `template-only` marker may be left, and `reuse lint` has to pass when it is installed. The report at the end lists what is left for you.
+
+| Template                                    | After `make project NAME=mychip`                |
+| ------------------------------------------- | ----------------------------------------------- |
+| `TOP = chip_top` in the `Makefile`          | `TOP = mychip_top`                              |
+| `DESIGN_NAME: chip_top` in `config.yaml`    | `DESIGN_NAME: mychip_top`                       |
+| `rtl/chip_top.sv`, `rtl/chip_core.sv`       | `rtl/mychip_top.sv`, `rtl/mychip_core.sv`       |
+| `flow/librelane/chip_top.sdc`               | `flow/librelane/mychip_top.sdc`                 |
+| `schematic/xschem/chip_top.sch`, `.sym`     | `schematic/xschem/mychip_top.sch`, `.sym`       |
+| cocotb `chip_top_tb.py`                     | `mychip_top_tb.py`                              |
+| Xschem `chip_top_tb_tran.sch`               | `mychip_top_tb_tran.sch`                        |
+| the instance `i_chip_core`                  | `i_mychip_core`                                 |
+| `flow/logo/chip_logo_mono.png`              | `flow/logo/mychip_logo_mono.png`                |
+| `layout/chip_top_logo_fill.gds.gz`          | `layout/mychip_top_logo_fill.gds.gz`, written by the first build |
+
+: Names in the template and after `make project NAME=mychip`. {#tbl-new-chip-names}
+
+## After `make project`
+
+Review the result, commit it, and build the new chip:
+
+```sh
+git status             # undo: git reset --hard && git clean -fd
+git add -A
+git commit -m "started <name> from ihp-sg13g2-ams-chip-template"
+make init-submodules   # the logo and fill step needs flow/artistic
+make build-top         # or make all, which also fetches it
+```
+
+The first build writes the layout, the netlists, the renders and the reports under the new name (see @sec-top). Then make the chip your own:
+
+- **Your own blocks.** In `macros/`, start a digital or an analog macro as a renamed copy of an example (see @sec-digital, @sec-analog and @sec-exercise3):
+
+  ```sh
+  make macro FROM=counter NAME=<macro>    # digital macro
+  make macro FROM=inverter NAME=<macro>   # analog macro
+  ```
+
+  The [macros README](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/README.md#register-the-macro-at-the-chip-top-level) lists every place where a new macro is registered at the chip top-level. Remove the example macros once your own ones replace them.
+- **Floorplan, pinout and package.** Adapt the die area, the pad ring and the macro placements in `flow/librelane/config.yaml` (see @sec-top), the `PINOUT` map in `packaging/config.yaml` (see @sec-packaging), and the chip documentation in `doc/`. @sec-exercise4 and @sec-exercise5 walk through exactly these changes.
+- **Regression.** The `regression` target, which the nightly workflow runs, tests the counter and inverter macros. Point it at your own macros once the examples are gone.
+
+::: {.callout-important}
+The logos stay, and they put the template's identity on the die. Replace them before a tapeout, @sec-ip shows how the logo IPs are generated from PNG images:
+
+- [`ip/sg13g2_ip__jku_names/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/ip/sg13g2_ip__jku_names/) draws the names of the template authors.
+- `flow/logo/<name>_logo_mono.png` draws the "AMS CHIP" artwork on TopMetal2 (see @fig-chip-top-layout-tm2).
+- [`ip/sg13g2_ip__jku/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/ip/sg13g2_ip__jku/) draws the JKU logo, replace it where it does not apply.
+:::
+
+::: {.callout-note}
+`make project` deletes this tutorial from the new chip, but it stays available online. The template's [top-level README](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/README.md#start-a-new-chip-from-this-template) describes the target as well.
 :::
 
 

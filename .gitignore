@@ -13,12 +13,14 @@ __pycache__/
 runs/
 backups/
 sim_build/
+# template-only
 /tutorial/.quarto/
 /tutorial/_site/
 /tutorial/index.pdf
 /tutorial/fig/*.pdf
 /tutorial/fig/**/*.pdf
 /doc/ihp-structure-proposals/gen_structure.py
+# /template-only
 /flow/artistic
 /flow/final
 /schematic/xschem/simulations

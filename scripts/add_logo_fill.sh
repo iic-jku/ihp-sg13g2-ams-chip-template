@@ -5,11 +5,16 @@
 # Chip top finishing script: Logo addition and fill pattern generation
 # Input is a top GDS without filling
 # Output is a top GDS with the logo added and filling on all layers
+# Usage: ./add_logo_fill.sh <top cell>, make add-logo-fill passes TOP from the Makefile
 
 # Abort on the first failing step instead of reporting success at the end.
 set -eo pipefail
 
-DESIGN="chip_top"
+DESIGN="$1"
+if [ -z "$DESIGN" ]; then
+    echo "[ERROR] Usage: ./add_logo_fill.sh <top cell>"
+    exit 1
+fi
 SCRIPTS_DIR="../flow/artistic/scripts"
 GDS_DIR="../layout"
 IMG_DIR="../flow/logo"

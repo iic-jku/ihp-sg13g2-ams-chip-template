@@ -1,6 +1,6 @@
 # Chip Floorplan
 
-This document describes the physical floorplan of the AMS template chip and is the human-readable companion to the macro `instances` blocks in [config.yaml](../flow/librelane/config.yaml).
+This document describes the physical floorplan of this chip and is the human-readable companion to the macro `instances` blocks in [config.yaml](../flow/librelane/config.yaml).
 
 Related documents:
 - Pinout: [pinout.md](pinout.md)
