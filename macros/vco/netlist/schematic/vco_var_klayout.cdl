@@ -1,0 +1,7 @@
+** sch_path: /foss/designs/ihp-sg13g2-ams-chip-template/macros/vco/schematic/xschem/vco_var.sch
+.subckt vco_var rf_p rf_n vtune VSS
+*.PININFO vtune:I rf_p:B rf_n:B VSS:B
+CCvar1 rf_p vtune rf_n VSS sg13_hv_svaricap w=3.74u l=0.3u Nx=8
+CCvar2 rf_p vtune rf_n VSS sg13_hv_svaricap w=3.74u l=0.3u Nx=8
+CCvar3 rf_p vtune rf_n VSS sg13_hv_svaricap w=3.74u l=0.3u Nx=8
+.ends

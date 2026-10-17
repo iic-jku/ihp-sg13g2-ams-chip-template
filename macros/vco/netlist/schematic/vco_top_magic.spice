@@ -1,0 +1,84 @@
+** sch_path: /foss/designs/ihp-sg13g2-ams-chip-template/macros/vco/schematic/xschem/vco_top.sch
+.subckt vco_top ibias_100u di_en VDD VSS vtune rf_out_p rf_out_n
+*.PININFO VDD:B VSS:B ibias_100u:I di_en:I vtune:I rf_out_p:B rf_out_n:B
+xbias ibias_100u di_en VDD VSS vbg_buf vbn_buf vbp_core vco_bias
+xcore vbp_core VDD VSS vtune rf_p rf_n vco_core
+xbuf vbn_buf vbg_buf VDD VSS rf_p rf_n rf_out_p rf_out_n vco_buf
+.ends
+
+* expanding   symbol:  vco_bias.sym # of pins=7
+** sym_path: /foss/designs/ihp-sg13g2-ams-chip-template/macros/vco/schematic/xschem/vco_bias.sym
+** sch_path: /foss/designs/ihp-sg13g2-ams-chip-template/macros/vco/schematic/xschem/vco_bias.sch
+.subckt vco_bias ibias_100u di_en VDD VSS vbg_buf vbn_buf vbp_core
+*.PININFO VDD:B VSS:B di_en:I ibias_100u:I vbn_buf:B vbp_core:B vbg_buf:B
+XMPi1 en_b di_en VDD VDD sg13_lv_pmos w=1u l=0.13u ng=1 m=1 mm_ok=1
+XMNi1 en_b di_en VSS VSS sg13_lv_nmos w=0.5u l=0.13u ng=1 m=1 mm_ok=1
+XMPi2 en en_b VDD VDD sg13_lv_pmos w=1u l=0.13u ng=1 m=1 mm_ok=1
+XMNi2 en en_b VSS VSS sg13_lv_nmos w=0.5u l=0.13u ng=1 m=1 mm_ok=1
+XMN0 ibias_100u ibias_100u VSS VSS sg13_lv_nmos w=2.5u l=0.5u ng=1 m=1 mm_ok=1
+XMNd0 ibias_100u en_b VSS VSS sg13_lv_nmos w=1u l=0.13u ng=1 m=1 mm_ok=1
+XRn ibias_100u vbn_buf VSS rhigh w=0.5e-6 l=16e-6 m=1 b=0 mm_ok=1
+XCn vbn_buf VSS cap_cmim w=30e-6 l=30e-6 m=1 mm_ok=1
+XMNd1 vbn_buf en_b VSS VSS sg13_lv_nmos w=1u l=0.13u ng=1 m=1 mm_ok=1
+XMN1 vbp_ref ibias_100u VSS VSS sg13_lv_nmos w=2.5u l=0.5u ng=1 m=1 mm_ok=1
+XMP1 vbp_ref vbp_ref VDD VDD sg13_lv_pmos w=5u l=0.5u ng=1 m=1 mm_ok=1
+XRp vbp_ref vbp_core VSS rhigh w=0.5e-6 l=16e-6 m=1 b=0 mm_ok=1
+XCp VDD vbp_core cap_cmim w=30e-6 l=30e-6 m=1 mm_ok=1
+XMPd vbp_core en VDD VDD sg13_lv_pmos w=1u l=0.13u ng=1 m=1 mm_ok=1
+XMP2 vbg_buf vbp_core VDD VDD sg13_lv_pmos w=5u l=0.5u ng=1 m=1 mm_ok=1
+XRg vbg_buf nbg VSS rppd w=0.5e-6 l=8.5e-6 m=1 b=0 mm_ok=1
+XMN3 nbg nbg VSS VSS sg13_lv_nmos w=2.5u l=0.5u ng=1 m=1 mm_ok=1
+XCg vbg_buf VSS cap_cmim w=20e-6 l=20e-6 m=1 mm_ok=1
+.ends
+
+
+* expanding   symbol:  vco_core.sym # of pins=6
+** sym_path: /foss/designs/ihp-sg13g2-ams-chip-template/macros/vco/schematic/xschem/vco_core.sym
+** sch_path: /foss/designs/ihp-sg13g2-ams-chip-template/macros/vco/schematic/xschem/vco_core.sch
+.subckt vco_core vbp_core VDD VSS vtune rf_p rf_n
+*.PININFO VDD:B VSS:B vbp_core:I vtune:I rf_p:B rf_n:B
+XMtop vct vbp_core VDD VDD sg13_lv_pmos w=150u l=0.5u ng=30 m=1 mm_ok=1
+xind rf_p rf_n vct VSS vco_ind
+XCct vct VSS cap_cmim w=25e-6 l=25e-6 m=1 mm_ok=1
+xvar rf_p rf_n vtune VSS vco_var
+XM1 rf_p rf_n VSS VSS sg13_lv_nmos w=20u l=0.13u ng=10 m=1 mm_ok=1
+XM2 rf_n rf_p VSS VSS sg13_lv_nmos w=20u l=0.13u ng=10 m=1 mm_ok=1
+.ends
+
+
+* expanding   symbol:  vco_buf.sym # of pins=8
+** sym_path: /foss/designs/ihp-sg13g2-ams-chip-template/macros/vco/schematic/xschem/vco_buf.sym
+** sch_path: /foss/designs/ihp-sg13g2-ams-chip-template/macros/vco/schematic/xschem/vco_buf.sch
+.subckt vco_buf vbn_buf vbg_buf VDD VSS rf_p rf_n rf_out_p rf_out_n
+*.PININFO VDD:B VSS:B rf_out_n:B rf_out_p:B vbn_buf:I rf_p:B rf_n:B vbg_buf:I
+XMB1 rf_out_n gp tail VSS sg13_lv_nmos w=24u l=0.13u ng=12 m=1 mm_ok=1
+XMB2 rf_out_p gn tail VSS sg13_lv_nmos w=24u l=0.13u ng=12 m=1 mm_ok=1
+XRL1 VDD rf_out_n VSS rppd w=10e-6 l=1.65e-6 m=1 b=0 mm_ok=1
+XRL2 VDD rf_out_p VSS rppd w=10e-6 l=1.65e-6 m=1 b=0 mm_ok=1
+XMBt tail vbn_buf VSS VSS sg13_lv_nmos w=2.5u l=0.5u ng=1 m=60 mm_ok=1
+XCc1 gp rf_p cap_cmim w=10e-6 l=10e-6 m=1 mm_ok=1
+XCc2 gn rf_n cap_cmim w=10e-6 l=10e-6 m=1 mm_ok=1
+XRb1 vbg_buf gp VSS rhigh w=0.5e-6 l=8e-6 m=1 b=0 mm_ok=1
+XRb2 vbg_buf gn VSS rhigh w=0.5e-6 l=8e-6 m=1 b=0 mm_ok=1
+.ends
+
+
+* expanding   symbol:  vco_ind.sym # of pins=4
+** sym_path: /foss/designs/ihp-sg13g2-ams-chip-template/macros/vco/schematic/xschem/vco_ind.sym
+** sch_path: /foss/designs/ihp-sg13g2-ams-chip-template/macros/vco/schematic/xschem/vco_ind.sch
+.subckt vco_ind la lb lc VSS
+*.PININFO la:B lc:B lb:B VSS:B
+XL1 la lc lb VSS inductor3 w=4e-6 s=4e-6 d=82e-6 nr_r=2
+.ends
+
+
+* expanding   symbol:  vco_var.sym # of pins=4
+** sym_path: /foss/designs/ihp-sg13g2-ams-chip-template/macros/vco/schematic/xschem/vco_var.sym
+** sch_path: /foss/designs/ihp-sg13g2-ams-chip-template/macros/vco/schematic/xschem/vco_var.sch
+.subckt vco_var rf_p rf_n vtune VSS
+*.PININFO vtune:I rf_p:B rf_n:B VSS:B
+XCvar1 rf_p vtune rf_n VSS sg13_hv_svaricap w=3.74u l=0.3u Nx=8 mm_ok=1
+XCvar2 rf_p vtune rf_n VSS sg13_hv_svaricap w=3.74u l=0.3u Nx=8 mm_ok=1
+XCvar3 rf_p vtune rf_n VSS sg13_hv_svaricap w=3.74u l=0.3u Nx=8 mm_ok=1
+.ends
+

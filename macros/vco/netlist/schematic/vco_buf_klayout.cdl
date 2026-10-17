@@ -1,0 +1,13 @@
+** sch_path: /foss/designs/ihp-sg13g2-ams-chip-template/macros/vco/schematic/xschem/vco_buf.sch
+.subckt vco_buf vbn_buf vbg_buf VDD VSS rf_p rf_n rf_out_p rf_out_n
+*.PININFO VDD:B VSS:B rf_out_n:B rf_out_p:B vbn_buf:I rf_p:B rf_n:B vbg_buf:I
+MMB1 rf_out_n gp tail VSS sg13_lv_nmos w=24u l=0.13u ng=12
+MMB2 rf_out_p gn tail VSS sg13_lv_nmos w=24u l=0.13u ng=12
+RRL1 VDD rf_out_n 49.874 $SUB=VSS $[rppd] w=10e-6 l=1.65e-6 b=0
+RRL2 VDD rf_out_p 49.874 $SUB=VSS $[rppd] w=10e-6 l=1.65e-6 b=0
+MMBt tail vbn_buf VSS VSS sg13_lv_nmos w=2.5u l=0.5u ng=1 m=60
+CCc1 gp rf_p cap_cmim w=10e-6 l=10e-6
+CCc2 gn rf_n cap_cmim w=10e-6 l=10e-6
+RRb1 vbg_buf gp 23.972k $SUB=VSS $[rhigh] w=0.5e-6 l=8e-6 b=0
+RRb2 vbg_buf gn 23.972k $SUB=VSS $[rhigh] w=0.5e-6 l=8e-6 b=0
+.ends

@@ -1,0 +1,22 @@
+** sch_path: /foss/designs/ihp-sg13g2-ams-chip-template/macros/vco/schematic/xschem/vco_bias.sch
+.subckt vco_bias ibias_100u di_en VDD VSS vbg_buf vbn_buf vbp_core
+*.PININFO VDD:B VSS:B di_en:I ibias_100u:I vbn_buf:B vbp_core:B vbg_buf:B
+MMPi1 en_b di_en VDD VDD sg13_lv_pmos w=1u l=0.13u ng=1
+MMNi1 en_b di_en VSS VSS sg13_lv_nmos w=0.5u l=0.13u ng=1
+MMPi2 en en_b VDD VDD sg13_lv_pmos w=1u l=0.13u ng=1
+MMNi2 en en_b VSS VSS sg13_lv_nmos w=0.5u l=0.13u ng=1
+MMN0 ibias_100u ibias_100u VSS VSS sg13_lv_nmos w=2.5u l=0.5u ng=1
+MMNd0 ibias_100u en_b VSS VSS sg13_lv_nmos w=1u l=0.13u ng=1
+RRn ibias_100u vbn_buf 47.624k $SUB=VSS $[rhigh] w=0.5e-6 l=16e-6 b=0
+CCn vbn_buf VSS cap_cmim w=30e-6 l=30e-6
+MMNd1 vbn_buf en_b VSS VSS sg13_lv_nmos w=1u l=0.13u ng=1
+MMN1 vbp_ref ibias_100u VSS VSS sg13_lv_nmos w=2.5u l=0.5u ng=1
+MMP1 vbp_ref vbp_ref VDD VDD sg13_lv_pmos w=5u l=0.5u ng=1
+RRp vbp_ref vbp_core 47.624k $SUB=VSS $[rhigh] w=0.5e-6 l=16e-6 b=0
+CCp VDD vbp_core cap_cmim w=30e-6 l=30e-6
+MMPd vbp_core en VDD VDD sg13_lv_pmos w=1u l=0.13u ng=1
+MMP2 vbg_buf vbp_core VDD VDD sg13_lv_pmos w=5u l=0.5u ng=1
+RRg vbg_buf nbg 4.5076k $SUB=VSS $[rppd] w=0.5e-6 l=8.5e-6 b=0
+MMN3 nbg nbg VSS VSS sg13_lv_nmos w=2.5u l=0.5u ng=1
+CCg vbg_buf VSS cap_cmim w=20e-6 l=20e-6
+.ends
