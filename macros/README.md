@@ -1,11 +1,12 @@
 # Macros
 
-Every folder here is one macro with its own `Makefile` and `README.md`, following the same conventions as the chip top-level (`make help`, `make all`, `make clean`). The chip builds them through `make build-<macro>` and cleans them through `make clean-all` in the top-level [`Makefile`](../Makefile). The two shipped macros are the two archetypes a new block starts from:
+Every folder here is one macro with its own `Makefile` and `README.md`, following the same conventions as the chip top-level (`make help`, `make all`, `make clean`). The chip builds them through `make build-<macro>` and cleans them through `make clean-all` in the top-level [`Makefile`](../Makefile). The shipped macros are the archetypes a new block starts from:
 
 | Macro | Kind | Source of truth | Flow |
 | --- | --- | --- | --- |
 | [`counter/`](counter/) | digital | SystemVerilog in `rtl/` | Verilator lint, Icarus Verilog and cocotb simulation, LibreLane hardening with DRC and LVS inside the run, XSPICE model for the mixed-signal Xschem simulation, FPGA emulation on three boards |
 | [`inverter/`](inverter/) | analog | Xschem schematic and hand-drawn GDS in `layout/` | Four Xschem testbenches, KLayout and Magic DRC, LVS and PEX, LEF, Liberty and Verilog stub export by Magic, CACE characterization |
+| [`vco/`](vco/) | RF | Xschem schematic, EM models of the passives in `netlist/` | The analog flow plus lumped-element models from snp2le and the oscillator analyses of VACASK (PSS, PNOISE, PAC). Under construction on the branch `add-rf-macro`, the chip does not build it yet |
 
 The `Makefile` in this folder has one job: it starts a new macro as a renamed copy of an existing one.
 
@@ -18,6 +19,7 @@ The `Makefile` in this folder has one job: it starts a new macro as a renamed co
 ├─ 📁 inverter/               analog macro, see inverter/README.md
 ├─ 📁 scripts/
 │  └─ rename_gds_cells.py     renames the cells inside a GDS, used by make macro
+├─ 📁 vco/                    RF macro, see vco/README.md
 ├─ Makefile
 └─ README.md
 ```

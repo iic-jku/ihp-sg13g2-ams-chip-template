@@ -2,7 +2,7 @@
 
 Guidance for coding agents and contributors working in this repo (a Makefile-driven analog mixed-signal chip on the ihp-sg13g2 Open-PDK).
 
-This repo is the ihp-sg13g2 AMS chip template or a chip copied from it. Items marked (template) describe the shipped example content (the `counter` and `inverter` macros, the logos, the tutorial), which a derived chip renames, replaces or removes. `README.md` documents every top-level target, and `macros/README.md` and each `macros/<name>/README.md` document the macro targets.
+This repo is the ihp-sg13g2 AMS chip template or a chip copied from it. Items marked (template) describe the shipped example content (the `counter`, `inverter` and `vco` macros, the logos, the tutorial), which a derived chip renames, replaces or removes. `README.md` documents every top-level target, and `macros/README.md` and each `macros/<name>/README.md` document the macro targets.
 
 ## Repository layout
 
@@ -12,6 +12,7 @@ This repo is the ihp-sg13g2 AMS chip template or a chip copied from it. Items ma
 - `macros/<name>/`: one hard macro per folder with its own `Makefile` (`help`, `all`, `clean`, PDK guard) and `README.md`. The chip reads the committed views in `macros/<name>/final/`.
 - `macros/counter/` (template, digital): `rtl/`, `flow/librelane/`, `fpga/`, `testbenches/{verilog,cocotb,xschem}/`, hardened with LibreLane.
 - `macros/inverter/` (template, analog): `schematic/xschem/`, `layout/`, `testbenches/xschem/`, `verification/cace/`, verified with KLayout and Magic.
+- `macros/vco/` (template, RF, under construction): `schematic/xschem/`, `testbenches/xschem/` with ngspice and VACASK benches (a `_vacask` in the testbench name selects VACASK), and the snp2le coil model in `netlist/spice/` and `netlist/spectre/`. Not built by the chip yet.
 - `macros/Makefile`: one job, `make macro FROM=<macro> NAME=<name>` starts a new macro as a renamed copy of an existing one.
 - `ip/`: bondpad `sg13g2_ip__bondpad_70x70` and the logos `sg13g2_ip__jku` and `sg13g2_ip__jku_names` (template), each with a `Makefile`. `ip/sg13g2_io_custom/` is third-party IHP IO cell data.
 - `schematic/xschem/`, `testbenches/xschem/`, `testbenches/cocotb/`: chip schematic, symbols and testbenches. Every folder holding schematics has its own `xschemrc`, see "Xschem Configuration" in `README.md`.

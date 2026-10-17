@@ -1,6 +1,7 @@
 ﻿# ToDo List
 
 - [ ] add VCO RF macro in branch `add-rf-macro`
+    - status and next steps: section Status in `macros/vco/README.md`
 - [ ] test and merge `hv-stdcell`: https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/test-hv-stdcell
 - [ ] check and merge `gdscheck-drc`: https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/pull/7
 - [ ] `ngspice` & `verilog` RTL Co-Simulation using `Xschem`: https://www.youtube.com/watch?v=PPd7jkcHOgA
