@@ -264,7 +264,7 @@ A designer-oriented description of this chip can be found in [doc/](doc/):
 
 ## Xschem Configuration
 
-Xschem reads exactly one `xschemrc` at start-up, and that file decides which symbol libraries are visible and where netlists and simulation output are written. This template ships one per folder that holds schematics:
+Xschem reads exactly one `xschemrc` at start-up, and that file decides which symbol libraries are visible and where netlists and simulation output are written. This repository ships one per folder that holds schematics:
 
 | `xschemrc` | Belongs to |
 | --- | --- |
@@ -980,10 +980,10 @@ See [packaging/README.md](packaging/README.md) for the full flow documentation a
 
 <p align="center">
   <a href="packaging/render/chip_top_bondplan_white.png">
-    <img src="packaging/render/chip_top_bondplan_white.png" alt="Bonding diagram of the ihp-sg13g2 AMS template chip in a QFN32 package" width=70%>
+    <img src="packaging/render/chip_top_bondplan_white.png" alt="Bonding diagram of the chip in a QFN32 package" width=70%>
   </a>
   <br>
-  <em>Bonding diagram of the ihp-sg13g2 AMS template chip in a QFN32 package.</em>
+  <em>Bonding diagram of the chip in a QFN32 package.</em>
 </p>
 
 
@@ -1040,7 +1040,7 @@ make release VERSION=2.1.0
 
 ### Regression
 
-The `regression` target is the project's end-to-end smoke test for the [IIC-OSIC-TOOLS](https://github.com/iic-jku/IIC-OSIC-TOOLS) environment. Its goal is to exercise **every tool and flow** in the template at least once with the **shortest possible runtime**. It is a tool/flow regression, not a design sign-off.
+The `regression` target is the project's end-to-end smoke test for the [IIC-OSIC-TOOLS](https://github.com/iic-jku/IIC-OSIC-TOOLS) environment. Its goal is to exercise **every tool and flow** in the repository at least once with the **shortest possible runtime**. It is a tool/flow regression, not a design sign-off.
 
 ```sh
 make regression
@@ -1117,7 +1117,7 @@ make all
 <!-- template-only -->
 ## Start a New Chip from This Template
 
-This repository is itself the template for a new chip. Create your own repository from it (**Use this template** on GitHub, a fork or a copy), clone it, and run in the IIC-OSIC-TOOLS container:
+This repository is itself the template for a new chip. Create your own repository from it (**Use this template** on GitHub, a fork or a copy) and name it `ihp-sg13g2-<name>` after the chip, so that `git clone` gives its folder the same name. Clone it and run in the IIC-OSIC-TOOLS container:
 
 ```sh
 make project NAME=<name> DRY_RUN=1   # list the changes, touch nothing
@@ -1130,7 +1130,7 @@ make project NAME=<name>             # start the chip <name>
 2. Removes what only makes sense in the template: `tutorial/`, `.github/workflows/quarto-publish.yml`, `doc/ihp-structure-proposals/`, `CITATION.cff`, the content of `release/`, and every block between `template-only` markers in this README, `AGENTS.md`, the `Makefile` and the configuration files. Figures that a remaining file still shows move to `doc/fig/`, and `ToDo.md` starts empty.
 3. Renames `chip_top`, `chip_core` and `chip_logo` to `<name>_top`, `<name>_core` and `<name>_logo`, in file names and in file contents.
 4. Gives this README a new header that records the template version, and deletes itself (`scripts/new_project.py` and the `project` target).
-5. Checks that no old name, no link into a deleted path and no marker is left, runs `reuse lint` when it is installed, and lists what is left for you: the die area, the pad ring and the macro placements in [`flow/librelane/config.yaml`](flow/librelane/config.yaml), the `PINOUT` in [`packaging/config.yaml`](packaging/config.yaml), the chip documentation in [`doc/`](doc/), and the `regression` target once you replace the example macros.
+5. Checks that no old name, no link into a deleted path and no marker is left, runs `reuse lint` when it is installed, and lists what is left for you: the die area, the pad ring and the macro placements in [`flow/librelane/config.yaml`](flow/librelane/config.yaml), the `PINOUT` in [`packaging/config.yaml`](packaging/config.yaml), the chip documentation in [`doc/`](doc/), and the `regression` target once you replace the example macros. When the folder is not named `ihp-sg13g2-<name>`, the list also gives the steps to rename it together with the GitHub repository and `origin`.
 
 Review the result, commit it and build the new chip:
 

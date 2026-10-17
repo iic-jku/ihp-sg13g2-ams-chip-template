@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: Apache-2.0 WITH SHL-2.1
 #
 # =============================================================================
-# Bondplan configuration for the ihp-sg13g2 AMS chip template
+# Bondplan configuration of the chip (ihp-sg13g2 Open-PDK)
 #
 # Consumed by scripts/run_bondplan.py (run from this folder):
 #   python3 scripts/run_bondplan.py config.yaml DESIGN_NAME=<top> VERSION=<version>

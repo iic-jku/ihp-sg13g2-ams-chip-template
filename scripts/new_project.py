@@ -42,6 +42,9 @@ NEXT_STEPS = [
     "the regression target in the Makefile tests the counter and inverter macros, point it at your own macros once you replace them",
 ]
 
+# Recommended name of the repository and its folder: REPO_PREFIX + NAME
+REPO_PREFIX = "ihp-sg13g2-"
+
 # ------------------------------------------------------------------------------------------------
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -567,6 +570,27 @@ def prose_lines(plan):
     return hits
 
 
+def folder_hint(plan, dry_run):
+    """The steps to rename the repository and its folder to REPO_PREFIX + NAME, empty when the folder has that name."""
+    want = REPO_PREFIX + plan.name
+    if ROOT.name == want:
+        return []
+    origin = git("remote", "get-url", "origin")
+    steps = []
+    if origin and plan.url and repo_id(origin) == repo_id(plan.url):
+        steps.append(f"create your own repository {want} from the template and point origin at it: git remote set-url origin <its URL>")
+    elif origin:
+        steps.append(f"rename the remote repository to {want} as well (on GitHub: Settings > General, the old URLs redirect)")
+        steps.append("git remote set-url origin " + re.sub(r"[^/:]+?(\.git)?/*$", lambda m: want + (m.group(1) or ""), origin))
+    # Windows refuses to rename a folder that a program has open
+    steps.append(f"close VS Code and every terminal in the folder, then in its parent folder: mv {ROOT.name} {want}")
+    if not dry_run:
+        steps.append(f"change the root line of the directory tree in README.md to {DIR_ICON}{want}/")
+    intro = f"The folder is {ROOT.name}, the recommended name is {want}. " + (
+        "Rename it before the real run, then the directory tree in README.md gets the new name as well:" if dry_run else "To rename it:")
+    return [intro] + [f"  {i}. {step}" for i, step in enumerate(steps, 1)]
+
+
 def report(plan, problems=None, dry_run=False):
     print(f"\nmake project: {plan.name} from {plan.slug} {plan.version}" + (" (dry run, nothing was changed)" if dry_run else ""))
     for warning in plan.warnings:
@@ -598,6 +622,9 @@ def report(plan, problems=None, dry_run=False):
         print("\nLines that still call the chip a template, rewrite them where they no longer fit"
               + (" (line numbers of the result):" if dry_run else ":"))
         print("\n".join("  " + hit for hit in prose))
+    hint = folder_hint(plan, dry_run)
+    if hint:
+        print("\n" + "\n".join(hint))
     if not dry_run:
         print("\nNext steps:")
         print("\n".join("  - " + step for step in NEXT_STEPS))

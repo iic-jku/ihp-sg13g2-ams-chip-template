@@ -2,7 +2,7 @@
 
 Guidance for coding agents and contributors working in this repo (a Makefile-driven analog mixed-signal chip on the ihp-sg13g2 Open-PDK).
 
-This repo is the ihp-sg13g2 AMS chip template or a chip copied from it. Items marked (template) describe the shipped example content (the `counter` and `inverter` macros, the logos), which a derived chip renames, replaces or removes. `README.md` documents every top-level target, and `macros/README.md` and each `macros/<name>/README.md` document the macro targets.
+This repo is the ihp-sg13g2 AMS template or a chip started from it. Items marked (template) describe the shipped example content (the `counter` and `inverter` macros, the logos), which a derived chip renames, replaces or removes. `README.md` documents every top-level target, and `macros/README.md` and each `macros/<name>/README.md` document the macro targets.
 
 ## Repository layout
 

@@ -1,6 +1,6 @@
 # Chip Specifications
 
-This document describes the AMS template chip from a designer's point of view: what it contains, how it behaves, and where each subsystem is configured. The numbers below are read from the actual design files. If you change them in the source, please mirror them here.
+This document describes this chip from a designer's point of view: what it contains, how it behaves, and where each subsystem is configured. The numbers below are read from the actual design files. If you change them in the source, please mirror them here.
 
 Related documents:
 - Pinout: [pinout.md](pinout.md)

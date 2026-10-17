@@ -1837,7 +1837,7 @@ Run `make all` before `make release`. The release target only copies files, it d
 
 # Start Your Own Chip {#sec-new-chip}
 
-The template is meant to become your own chip. Work through this tutorial on the template as it is, then start your chip from a copy of it: create your own repository with the green "Use this template" button on GitHub (or fork or copy the repository), clone it, and enter the IIC-OSIC-TOOLS container. In the top-level folder of the clone, one target turns the copy into a new chip with its own name:
+The template is meant to become your own chip. Work through this tutorial on the template as it is, then start your chip from a copy of it: create your own repository with the green "Use this template" button on GitHub (or fork or copy the repository) and name it `ihp-sg13g2-<name>` after the chip, clone it, and enter the IIC-OSIC-TOOLS container. In the top-level folder of the clone, one target turns the copy into a new chip with its own name:
 
 ```sh
 make project NAME=<name> DRY_RUN=1   # list the changes, touch nothing
@@ -1845,6 +1845,10 @@ make project NAME=<name>             # start the chip <name>
 ```
 
 `NAME` is a lowercase letter followed by lowercase letters, digits or underscores, for example `mychip`. It must not be the name of a macro or an IP: with `NAME=counter`, the chip top `counter_top` would be the same cell as the top cell of the counter macro. The target needs no PDK.
+
+::: {.callout-tip}
+With the repository named `ihp-sg13g2-<name>`, for example `ihp-sg13g2-mychip`, `git clone` gives its folder the same name, and `make project` writes that name into the directory tree of the README. If your clone has another name, rename it before `make project`: rename the repository on GitHub (Settings > General, the old URLs redirect), point `origin` at the new URL with `git remote set-url origin <URL>`, close VS Code and every terminal in the folder, and rename the folder from its parent folder. `make project` lists the same steps when the folder name differs.
+:::
 
 ## What `make project` Does
 

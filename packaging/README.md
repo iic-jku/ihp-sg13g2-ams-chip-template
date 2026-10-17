@@ -171,7 +171,7 @@ Every key has a sensible default. A minimal config only needs `DIE_GDS`, `DIE_EX
 
 ### Porting to another Package / Chip
 
-The flow is not specific to this template chip. For a different chip or package you need: a die GDS with labeled `Passiv` pad openings, a package GDS whose footprint cell contains one lead polygon per pin plus numeric pin texts, and an updated `PINOUT`. Everything else (pad/lead detection, inner border, placement, checks, rendering) is derived from the geometry.
+The flow is not specific to this chip. For a different chip or package you need: a die GDS with labeled `Passiv` pad openings, a package GDS whose footprint cell contains one lead polygon per pin plus numeric pin texts, and an updated `PINOUT`. Everything else (pad/lead detection, inner border, placement, checks, rendering) is derived from the geometry.
 
 ## Useful Links
 
