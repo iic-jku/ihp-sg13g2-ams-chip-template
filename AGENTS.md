@@ -22,7 +22,7 @@ This repo is the ihp-sg13g2 AMS chip template or a chip copied from it. Items ma
 
 ## Environment and PDK
 
-- Run every target inside the IIC-OSIC-TOOLS container, tag `2026.09` or later. CI uses `hpretl/iic-osic-tools:latest`.
+- Run every target inside the IIC-OSIC-TOOLS container, tag `2026.10` or later. CI uses `hpretl/iic-osic-tools:latest`.
 - The PDK is `ihp-sg13g2`, which is also the PDK a fresh container starts on.
 - `sak-pdk ihp-sg13g2` selects it for the current shell only. `.designinit` exports the same variables (`PDK`, `PDKPATH`, `STD_CELL_LIBRARY`, `SPICE_USERINIT_DIR`, `KLAYOUT_PATH`), and copied into the container's `designs/` folder it selects the PDK at every start. In a shell that does not keep state between commands, select the PDK in the same command line as `make`.
 - PDK guard: the top-level, `macros/`, macro and IP Makefiles compare `$PDK` with `REQUIRED_PDK` (default `ihp-sg13g2`) when parsed and stop with an error that names the `sak-pdk` call to run. Exempt goals are `help` and `clean` (`macros/Makefile`: `help` only), plus `clean-all` at the top level. Fix the PDK instead of passing `REQUIRED_PDK=`: a wrong PDK runs the wrong rule decks, LEFs and cells, and the results still look valid.
