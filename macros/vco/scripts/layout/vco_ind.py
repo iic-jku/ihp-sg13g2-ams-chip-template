@@ -45,7 +45,7 @@ top = ly.create_cell(CELL)
 ind = ly.create_cell("inductor3", "SG13_dev", {"w": f"{W}u", "s": f"{S}u", "d": f"{D_INNER}u", "nr_r": TURNS, "subE": 0})
 tap = ly.create_cell("ptap1", "SG13_dev", {"w": f"{TAP_W}u", "l": f"{TAP_L}u"})
 if ind is None or tap is None:
-    sys.exit("vco_ind.py: PCell inductor3 or ptap1 not found in library SG13_dev")
+    raise RuntimeError("vco_ind.py: PCell inductor3 or ptap1 not found in library SG13_dev")
 top.insert(pya.CellInstArray(ind.cell_index(), pya.Trans()))
 tap_box = tap.dbbox()
 top.insert(pya.DCellInstArray(tap.cell_index(), pya.DTrans(TAP_X - tap_box.center().x, TAP_Y - tap_box.center().y)))
@@ -56,6 +56,7 @@ for text, (layer, datatype), x, y in LABELS:
 
 opt = pya.SaveLayoutOptions()
 opt.write_context_info = False
+opt.gds2_write_timestamps = False  # a rerun with the same geometry writes the same bytes
 ly.write(out_file, opt)
 print(f"vco_ind.py: wrote {os.path.normpath(out_file)}, cell {CELL}, bbox {top.dbbox()}")
 # ==============================================================================
