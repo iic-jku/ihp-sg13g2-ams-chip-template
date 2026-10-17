@@ -6,7 +6,7 @@ S {}
 F {}
 E {}
 T {Tank Coil, PDK Device for LVS, Lumped-Element Model for Simulation} 300 -1740 0 0 1 1 {}
-T {PDK inductor3 for LVS: 2 turns, w 4 um, s 4 um, d 82 um.
+T {PDK inductor3 for LVS: 2 turns, w 4 um, s 4 um, d 58 um (inner, 82 um outer).
 The PDK has no SPICE model for it, so it is skipped
 in every simulation netlist (spice_ignore, spectre_ignore).} 480 -1400 0 0 0.3 0.3 {}
 T {snp2le model vco_ind_le for simulation, skipped in the LVS netlist
@@ -33,7 +33,7 @@ C {title-3.sym} 0 0 0 0 {name=l1 author="Simon Dorrer" rev=1.0 lock=true}
 C {sg13g2_pr/inductor3.sym} 700 -900 0 0 {name=L1
 w=4e-6
 s=4e-6
-d=82e-6
+d=58e-6
 nr_r=2
 m=1
 device=inductor3
