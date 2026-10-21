@@ -388,7 +388,7 @@ klayout-drc: ## Run KLayout DRC of the CELL cell (usage: make klayout-drc [CELL=
 
 magic-drc: ## Run Magic DRC of the CELL cell (usage: make magic-drc [CELL=<cellname>])
 	mkdir -p $(DRC_RPT_DIR)
-	sak-drc.sh -d -m -f "*" -w $(DRC_RPT_DIR) $(LAY_DIR)/$(CELL).gds.gz
+	sak-drc.sh -d -m -w $(DRC_RPT_DIR) $(LAY_DIR)/$(CELL).gds.gz
 .PHONY: magic-drc
 
 gdscheck-drc-minimum: ## Run minimum pre-check gdscheck DRC of the TOP cell with logo and filler (usage: make gdscheck-drc-minimum [DRC_JOBS=<n>])
