@@ -1,5 +1,6 @@
 ﻿# ToDo List
 
+- [ ] integrate https://github.com/mgolser/Pad-Ring-Planer
 - [ ] update tutorial
     - no sizing guidance for `DIE_AREA`/`CORE_AREA` or the core ring
     - no explanation of `chip_top.sdc`
