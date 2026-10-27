@@ -45,9 +45,21 @@ MINRES ?= 1000
 # Override with: make <target> MINDELAY=<ps>
 MINDELAY ?= 1
 
-# KLayout DRC level: precheck, macro, or regular (sak-drc.sh -l, only used by klayout-drc; default: macro)
+# KLayout/gdscheck DRC level: precheck, macro, or regular (sak-drc.sh -l, only used by klayout-drc and gdscheck-drc; default: macro)
 # Override with: make <target> DRC_LEVEL=<precheck|macro|regular>
 DRC_LEVEL ?= macro
+
+# gdscheck suite, replaces the one DRC_LEVEL selects (sak-drc.sh -s, only used by gdscheck-drc; default: empty = precheck runs precheck, macro core, regular main)
+# Override with: make <target> GDSCHECK_SUITE=<precheck|core|main|density|antenna|recommended>
+GDSCHECK_SUITE ?=
+
+# Parallel DRC jobs, the KLayout processes and gdscheck threads (sak-drc.sh -j, only used by klayout-drc and gdscheck-drc; default: empty = 4 KLayout processes or fewer, gdscheck on every CPU)
+# Override with: make <target> DRC_JOBS=<n>
+DRC_JOBS ?=
+
+# sak-drc.sh options for the two variables above, left out when empty so that the script defaults apply
+_GDSCHECK_SUITE_OPT = $(if $(GDSCHECK_SUITE),-s $(GDSCHECK_SUITE))
+_DRC_JOBS_OPT = $(if $(DRC_JOBS),-j $(DRC_JOBS))
 
 # Floating-point precision (significant digits) for Xschem's ev function
 # Override with: make <target> EV_PRECISION=<digits>
@@ -83,7 +95,7 @@ DRC_RPT_DIR     := verification/drc
 
 # Help Target
 help: ## Show this help message
-	@echo 'Usage: make <target> [CELL=<cellname>] [EXT_MODE=<1|2|3>] [THRESHOLD=<mOhm>] [MINRES=<mOhm>] [MINDELAY=<ps>] [DRC_LEVEL=<precheck|macro|regular>] [EV_PRECISION=<digits>] [TB=<testbenchname>] [SCRIPT=<scriptname>] [OPEN_ARGS=<options>]'
+	@echo 'Usage: make <target> [CELL=<cellname>] [EXT_MODE=<1|2|3>] [THRESHOLD=<mOhm>] [MINRES=<mOhm>] [MINDELAY=<ps>] [DRC_LEVEL=<precheck|macro|regular>] [GDSCHECK_SUITE=<suite>] [DRC_JOBS=<n>] [EV_PRECISION=<digits>] [TB=<testbenchname>] [SCRIPT=<scriptname>] [OPEN_ARGS=<options>]'
 	@echo ''
 	@echo 'Available targets:'
 	@grep -E '^[a-zA-Z0-9_.-]+:.*## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*## "}; {printf "  %-20s %s\n", $$1, $$2}'
@@ -91,7 +103,9 @@ help: ## Show this help message
 	@echo 'CELL defaults to $(TOP). Override to verify subcells.'
 	@echo 'EXT_MODE defaults to 3 (full-RC). 1=C-decoupled, 2=C-coupled.'
 	@echo 'THRESHOLD/MINRES/MINDELAY are full-RC (EXT_MODE=3) extresist settings for magic-pex (defaults 10000 mOhm / 1000 mOhm / 1 ps).'
-	@echo 'DRC_LEVEL defaults to macro. Sets the KLayout DRC level for klayout-drc (precheck|macro|regular).'
+	@echo 'DRC_LEVEL defaults to macro. Sets the DRC level for klayout-drc and gdscheck-drc (precheck|macro|regular).'
+	@echo 'GDSCHECK_SUITE replaces the gdscheck suite of DRC_LEVEL for gdscheck-drc (precheck|core|main|density|antenna|recommended).'
+	@echo 'DRC_JOBS caps the KLayout DRC processes and sets the gdscheck threads (default: 4 KLayout processes or fewer, gdscheck on every CPU).'
 	@echo 'EV_PRECISION defaults to 5 significant digits for xschem ev function.'
 	@echo 'TB selects the Xschem testbench for sim-xschem (default: <CELL>_tb_tran).'
 	@echo 'SCRIPT selects the plotting script for sim-view-xschem (default: plot_<CELL>).'
@@ -277,15 +291,25 @@ render-gds: ## Render images from the final GDS using sak-render.py
 
 
 # DRC Targets
-klayout-drc: ## Run KLayout DRC of the CELL cell (usage: make klayout-drc [CELL=<cellname>] [DRC_LEVEL=<precheck|macro|regular>])
+klayout-drc: ## Run KLayout DRC of the CELL cell (usage: make klayout-drc [CELL=<cellname>] [DRC_LEVEL=<precheck|macro|regular>] [DRC_JOBS=<n>])
 	mkdir -p $(DRC_RPT_DIR)
-	sak-drc.sh -d -k -l $(DRC_LEVEL) -w $(DRC_RPT_DIR) $(LAY_DIR)/$(CELL).$(_GDS_EXT)
+	sak-drc.sh -d -k -l $(DRC_LEVEL) $(_DRC_JOBS_OPT) -w $(DRC_RPT_DIR) $(LAY_DIR)/$(CELL).$(_GDS_EXT)
 .PHONY: klayout-drc
 
 magic-drc: ## Run Magic DRC of the CELL cell (usage: make magic-drc [CELL=<cellname>])
 	mkdir -p $(DRC_RPT_DIR)
 	sak-drc.sh -d -m -f "*" -w $(DRC_RPT_DIR) $(LAY_DIR)/$(CELL).$(_GDS_EXT)
 .PHONY: magic-drc
+
+gdscheck-drc: ## Run gdscheck DRC of the CELL cell (usage: make gdscheck-drc [CELL=<cellname>] [DRC_LEVEL=<precheck|macro|regular>] [GDSCHECK_SUITE=<suite>] [DRC_JOBS=<n>])
+	mkdir -p $(DRC_RPT_DIR)
+	sak-drc.sh -d -g -l $(DRC_LEVEL) $(_GDSCHECK_SUITE_OPT) $(_DRC_JOBS_OPT) -w $(DRC_RPT_DIR) $(LAY_DIR)/$(CELL).$(_GDS_EXT)
+.PHONY: gdscheck-drc
+
+gdscheck-drc-all: ## Run gdscheck DRC of all main subcells
+	$(MAKE) gdscheck-drc CELL=inverter
+	$(MAKE) gdscheck-drc CELL=inverter_top
+.PHONY: gdscheck-drc-all
 # ================================================================================================
 
 

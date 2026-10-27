@@ -65,8 +65,9 @@ The check is a parse-time conditional at the top of the Makefile, not a prerequi
 | `lef`         | Generate LEF macro (CLASS BLOCK, OBS on `$(LAYER_NAME)`) |
 | `lib`         | Generate Liberty timing stub (empty cell)                |
 | `verilog`     | Generate Verilog blackbox stub (no ports)                |
-| `klayout-drc` | Run KLayout DRC using `sak-drc.sh` (usage: `make klayout-drc [CELL=<cellname>] [DRC_LEVEL=<precheck\|macro\|regular>]`) |
+| `klayout-drc` | Run KLayout DRC using `sak-drc.sh` (usage: `make klayout-drc [CELL=<cellname>] [DRC_LEVEL=<precheck\|macro\|regular>] [DRC_JOBS=<n>]`) |
 | `magic-drc`   | Run Magic DRC using `sak-drc.sh` (usage: `make magic-drc [CELL=<cellname>]`)                                         |
+| `gdscheck-drc` | Run gdscheck DRC using `sak-drc.sh` (usage: `make gdscheck-drc [CELL=<cellname>] [DRC_LEVEL=<precheck\|macro\|regular>] [GDSCHECK_SUITE=<suite>] [DRC_JOBS=<n>]`) |
 | `open`        | Browse this folder with `sak-open.py` and open each file in its tool      |
 | `clean`       | Remove all generated output directories                  |
 
@@ -104,9 +105,9 @@ The `script/img2lay.py` script converts a PNG image into a GDSII layout:
 
 ## Design Rule Check (DRC)
 
-Runs DRC on the GDS layout in `final/gds/`. Both flows use `sak-drc.sh` and write their reports into per-cell run folders: `verification/drc/<CELL>.magic.drc/` (Magic) and `verification/drc/<CELL>.klayout.drc/` (KLayout, `.lyrdb`).
+Runs DRC on the GDS layout in `final/gds/`. All three flows use `sak-drc.sh` and write their reports into per-cell run folders: `verification/drc/<CELL>.magic.drc/` (Magic), `verification/drc/<CELL>.klayout.drc/` (KLayout, `.lyrdb`) and `verification/drc/<CELL>.gdscheck.drc/` (gdscheck, `.lyrdb`).
 
-**KLayout DRC** uses `sak-drc.sh` at the selected `DRC_LEVEL` (`precheck`, `macro` [default], or `regular`):
+**KLayout DRC** uses `sak-drc.sh` at the selected `DRC_LEVEL` (`precheck`, `macro` [default], or `regular`), with at most `DRC_JOBS` processes (default: 4, or the CPU count if lower):
 
 ```sh
 make klayout-drc
@@ -119,4 +120,11 @@ make klayout-drc DRC_LEVEL=regular
 ```sh
 make magic-drc
 make magic-drc CELL=sg13g2_ip__jku_names
+```
+
+**gdscheck DRC** runs the standalone [gdscheck](https://github.com/aesc-silicon/gdscheck) engine (`sak-drc.sh -g`). `DRC_LEVEL` selects its suite (`precheck`, `core` for the default `macro`, or `main` for `regular`) and `GDSCHECK_SUITE` replaces it, see the [top-level README](../../README.md#design-rule-check-drc). It is not part of `make all`:
+
+```sh
+make gdscheck-drc
+make gdscheck-drc CELL=sg13g2_ip__jku_names
 ```

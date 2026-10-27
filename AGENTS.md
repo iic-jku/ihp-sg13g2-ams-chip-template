@@ -41,6 +41,7 @@ make sim-all                       # RTL and gate-level cocotb, gate-level Xsche
 make klayout-drc-regular           # full KLayout DRC of layout/chip_top_logo_fill.gds.gz
 make klayout-verify CELL=<cell>    # KLayout DRC, LVS and PEX of layout/<cell>.gds.gz
 make magic-verify CELL=<cell>      # Magic DRC, Magic/Netgen LVS and Magic PEX
+make gdscheck-drc CELL=<cell>      # gdscheck DRC of layout/<cell>.gds.gz, in no all flow
 make regression                    # the CI smoke test
 make -C macros/counter lint-verilog-all     # Verilator lint (template macro)
 make -C macros/counter sim-rtl-verilog      # Icarus Verilog testbench
@@ -54,7 +55,7 @@ make -C macros/inverter all                 # KLayout and Magic DRC/LVS/PEX, LEF
 - `make all` and the `build-*` and `copy-*` targets overwrite committed outputs. Check `git status` afterwards and commit outputs only when they belong to the change.
 - The Xschem targets netlist in batch mode and run `ngspice -b`, so `plot` commands in a testbench `.control` block do nothing. Testbenches write results with `wrdata` to `testbenches/xschem/plot_simulations/data/`, and `sim-view-xschem` plots them.
 - The top-level `sim-gl-xschem` includes `macros/counter/netlist/xspice/counter_top.xspice` (template), which `clean-all` deletes. Run `make build-counter` before it.
-- `build-top` runs `librelane-nodrc` on purpose until IHP fixes the `metal1_pin_offgrid` errors (see the comment in `Makefile`). Run DRC separately with `magic-drc`, `klayout-drc-minimum` or `klayout-drc-regular`.
+- `build-top` runs `librelane-nodrc` on purpose until IHP fixes the `metal1_pin_offgrid` errors (see the comment in `Makefile`). Run DRC separately with `magic-drc`, `klayout-drc-minimum`, `klayout-drc-regular` or the matching `gdscheck-drc-*` targets. `DRC_JOBS=<n>` caps the KLayout processes and sets the gdscheck threads (default 4 and every CPU). More than 4 only pays off for the full chip on a server.
 
 ## Conventions
 
