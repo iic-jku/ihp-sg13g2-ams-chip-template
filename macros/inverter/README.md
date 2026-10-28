@@ -118,7 +118,7 @@ The `sim-xschem` target accepts an optional `TB=<testbenchname>` parameter (defa
 All targets that operate on a specific cell accept an optional `CELL=<cellname>` parameter. The default is the top-level cell (`inverter_top`).
 
 ```sh
-make <target> [CELL=<cellname>] [EXT_MODE=<1|2|3>] [THRESHOLD=<mOhm>] [MINRES=<mOhm>] [MINDELAY=<ps>] [DRC_LEVEL=<precheck|macro|regular>] [GDSCHECK_SUITE=<suite>] [DRC_JOBS=<n>] [EV_PRECISION=<digits>]
+make <target> [CELL=<cellname>] [EXT_MODE=<1|2|3>] [THRESHOLD=<mOhm>] [MINRES=<mOhm>] [MINDELAY=<ps>] [DRC_LEVEL=<precheck|macro|regular>] [GDSCHECK_SUITE=<suite>|GDSCHECK_DECKS=<decks>] [DRC_JOBS=<n>] [EV_PRECISION=<digits>]
 ```
 
 
@@ -424,12 +424,13 @@ make magic-drc
 make magic-drc CELL=inverter_top
 ```
 
-**gdscheck DRC** runs the standalone [gdscheck](https://github.com/aesc-silicon/gdscheck) engine (`sak-drc.sh -g`) at the selected `DRC_LEVEL` or `GDSCHECK_SUITE`. The levels map onto its built-in suites: `precheck` runs `precheck` (which includes the density rules, so a single macro fails it), `macro` runs `core` (all geometric rules without density and antenna) and `regular` runs `main` (all rules). The `GDSCHECK_SUITE` parameter (`sak-drc.sh -s`) replaces this mapping and also reaches `density`, `antenna` and `recommended`:
+**gdscheck DRC** runs the standalone [gdscheck](https://github.com/aesc-silicon/gdscheck) engine (`sak-drc.sh -g`) at the selected `DRC_LEVEL`, `GDSCHECK_SUITE` or `GDSCHECK_DECKS`. The levels map onto its built-in suites: `precheck` runs `precheck` (which includes the density rules, so a single macro fails it), `macro` runs `core` (all geometric rules without density and antenna) and `regular` runs `main` (all rules). The `GDSCHECK_SUITE` parameter (`sak-drc.sh -s`) replaces this mapping and also reaches `density`, `antenna` and `recommended`. The `GDSCHECK_DECKS` parameter (`sak-drc.sh -D`) runs single rule decks instead, comma-separated, and `gdscheck list-decks --process ihp-sg13g2` lists them. The layer decks include their fill and density rules, so a deck run can fail on a rule that `macro` does not check: the inverter fails `GDSCHECK_DECKS=activ,gatpoly` on `AFil.g1`.
 
 ```sh
 make gdscheck-drc
 make gdscheck-drc CELL=inverter_top
 make gdscheck-drc CELL=inverter_top GDSCHECK_SUITE=recommended
+make gdscheck-drc CELL=inverter GDSCHECK_DECKS=cont,via1
 ```
 
 **gdscheck DRC of all main subcells** runs it for `inverter` and `inverter_top`:

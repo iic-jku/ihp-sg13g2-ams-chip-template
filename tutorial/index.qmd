@@ -257,7 +257,7 @@ The [top-level Makefile](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template
 | `make build-top`    | Run LibreLane on the top-level, copy back all artifacts, add logos and fill structures, and render the final GDS. |
 | `make build-all`    | Init submodules, build bondpad, build logos, build macros, and build top-level.                           |
 | `make klayout-verify` / `magic-verify` | Run DRC, LVS, and PEX for a given cell with KLayout or Magic.                      |
-| `make gdscheck-drc` (`DRC_LEVEL=<precheck\|macro\|regular>` or `GDSCHECK_SUITE=<suite>`) | Run the standalone gdscheck DRC for a given cell (not part of `make all`). |
+| `make gdscheck-drc` (`DRC_LEVEL=<precheck\|macro\|regular>`, `GDSCHECK_SUITE=<suite>` or `GDSCHECK_DECKS=<decks>`) | Run the standalone gdscheck DRC for a given cell (not part of `make all`). |
 | `make bondplan`     | Generate the bondplan (die in package, bondwires, pin table) in `packaging/` (see @sec-packaging).        |
 | `make all`          | Full build, DRC verification, simulation, and bondplan generation.                        |
 | `make release VERSION=2.1.0` | Copy GDS, netlists, and renders into `release/v.<VERSION>/` for tapeout submission.          |
@@ -301,7 +301,7 @@ The [inverter Makefile](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/
 | `make sim-xschem` / `make sim-view-xschem`        | Run an Xschem testbench (batch mode) and plot its results with Python. `TB` defaults to `<CELL>_tb_tran` and `SCRIPT` to `plot_<CELL>`, override with `TB=<tb>` / `SCRIPT=<script>`. |
 | `make sim-cace`                                   | Run [CACE](https://github.com/fossi-foundation/cace) Monte Carlo / mismatch characterisations. |
 | `make klayout-drc` / `magic-drc` (`DRC_LEVEL=<precheck\|macro\|regular>`) | Run DRC using KLayout or Magic.                       |
-| `make gdscheck-drc` / `gdscheck-drc-all` (`GDSCHECK_SUITE=<suite>`) | Run the standalone gdscheck DRC for a given cell, or for `inverter` and `inverter_top`. |
+| `make gdscheck-drc` / `gdscheck-drc-all` (`GDSCHECK_SUITE=<suite>` or `GDSCHECK_DECKS=<decks>`) | Run the standalone gdscheck DRC for a given cell, or for `inverter` and `inverter_top`. |
 | `make klayout-lvs` / `magic-lvs`                  | Run LVS using KLayout or Magic + Netgen.                                    |
 | `make symbol-pex`                                 | Build the Xschem PEX symbol `<CELL>_pex.sym` from `<CELL>.sym`. Runs automatically before every extraction. |
 | `make klayout-pex` / `magic-pex` (`EXT_MODE=<1\|2\|3>`) | Run parasitic extraction in C, CC, or full-RC mode.                     |
@@ -1125,12 +1125,12 @@ The non-interactive DRC can be run with the following Makefile targets (all thre
 ```sh
 make klayout-drc [CELL=<cellname>] [DRC_LEVEL=<precheck|macro|regular>] [DRC_JOBS=<n>]   # default CELL=inverter_top, default DRC_LEVEL=macro
 make magic-drc [CELL=<cellname>]    # default CELL=inverter_top
-make gdscheck-drc [CELL=<cellname>] [DRC_LEVEL=<precheck|macro|regular>] [GDSCHECK_SUITE=<suite>]   # default CELL=inverter_top
+make gdscheck-drc [CELL=<cellname>] [DRC_LEVEL=<precheck|macro|regular>] [GDSCHECK_SUITE=<suite>|GDSCHECK_DECKS=<decks>]   # default CELL=inverter_top
 ```
 
 `DRC_JOBS` caps the number of KLayout processes of one run and sets the gdscheck threads. The default of 4 KLayout processes (fewer on a machine with fewer CPUs) and gdscheck on every CPU suits the macros, and larger values only pay off for the full chip on a server.
 
-[gdscheck](https://github.com/aesc-silicon/gdscheck) is a standalone DRC engine with its own rule decks built into the binary. `DRC_LEVEL` maps onto its suites (`precheck` runs `precheck`, which includes the density rules, `macro` runs `core` and `regular` runs `main`), and `GDSCHECK_SUITE` replaces this mapping (`precheck`, `core`, `main`, `density`, `antenna` or `recommended`). Upstream calls gdscheck experimental, so it is a third opinion next to KLayout and Magic, not a sign-off, and `make all` does not run it.
+[gdscheck](https://github.com/aesc-silicon/gdscheck) is a standalone DRC engine with its own rule decks built into the binary. `DRC_LEVEL` maps onto its suites (`precheck` runs `precheck`, which includes the density rules, `macro` runs `core` and `regular` runs `main`), and `GDSCHECK_SUITE` replaces this mapping (`precheck`, `core`, `main`, `density`, `antenna` or `recommended`). `GDSCHECK_DECKS` runs single rule decks instead of a suite, comma-separated (for example `cont,via1`, `gdscheck list-decks --process ihp-sg13g2` lists them). The layer decks include their fill and density rules, so a single cell can fail a layer deck on a fill or density rule that `macro` does not check. Upstream calls gdscheck experimental, so it is a third opinion next to KLayout and Magic, not a sign-off, and `make all` does not run it.
 
 ::: {.callout-note}
 gdscheck 0.2.0 reports `NBL.f` between the nBuLay ring of the inverter's `pmos` cell and the PMOS diffusion inside the ring, which the IHP KLayout deck passes ([aesc-silicon/gdscheck#50](https://github.com/aesc-silicon/gdscheck/issues/50)). Until a gdscheck with the fix is installed, `gdscheck-drc` fails on `inverter` and `inverter_top`.
@@ -1335,7 +1335,7 @@ The available Makefile targets for the bondpad are summarised below.
 | `verilog`     | Generate a Verilog blackbox stub.                                                                                                                                                                       |
 | `klayout-drc` | Run KLayout DRC (`make klayout-drc [CELL=<cellname>] [DRC_LEVEL=<precheck\|macro\|regular>] [DRC_JOBS=<n>]`).                                                                                                                                                 |
 | `magic-drc`   | Run Magic DRC (`make magic-drc [CELL=<cellname>]`).                                                                                                                                                     |
-| `gdscheck-drc` | Run gdscheck DRC (`make gdscheck-drc [CELL=<cellname>] [DRC_LEVEL=<precheck\|macro\|regular>] [GDSCHECK_SUITE=<suite>]`), not part of `make all`. |
+| `gdscheck-drc` | Run gdscheck DRC (`make gdscheck-drc [CELL=<cellname>] [DRC_LEVEL=<precheck\|macro\|regular>] [GDSCHECK_SUITE=<suite>\|GDSCHECK_DECKS=<decks>]`), not part of `make all`. |
 | `open`        | Browse this folder with `sak-open.py` and open each file in its tool (needs the VNC/X11 desktop).                                                                                                        |
 | `clean`       | Remove the `final/` and `verification/drc/` output directories.                                                                                                                                         |
 
@@ -1395,7 +1395,7 @@ The available Makefile targets for the logos are summarised below.
 | `verilog`     | Emit a Verilog blackbox stub (`module sg13g2_ip__jku;`) with no ports.                             |
 | `klayout-drc` | Run KLayout DRC (same `DRC_LEVEL` selection as the bondpad).                                            |
 | `magic-drc`   | Run Magic DRC.                                                                                     |
-| `gdscheck-drc` | Run gdscheck DRC (same `DRC_LEVEL` and `GDSCHECK_SUITE` selection as the bondpad), not part of `make all`. |
+| `gdscheck-drc` | Run gdscheck DRC (same `DRC_LEVEL`, `GDSCHECK_SUITE` and `GDSCHECK_DECKS` selection as the bondpad), not part of `make all`. |
 | `open`        | Browse this folder with `sak-open.py` and open each file in its tool (needs the VNC/X11 desktop).  |
 | `clean`       | Remove `final/` and `verification/drc/`.                                                           |
 

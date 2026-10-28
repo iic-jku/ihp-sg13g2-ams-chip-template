@@ -784,7 +784,7 @@ make magic-drc
 make magic-drc CELL=chip_top
 ```
 
-**gdscheck DRC** runs [gdscheck](https://github.com/aesc-silicon/gdscheck) (`sak-drc.sh -g`), a standalone DRC engine with its own IHP rule decks built into the binary. The DRC levels map onto its suites: `precheck` runs `precheck` (IHP's open-source precheck subset, which includes the density rules, so a single macro fails it), `macro` runs `core` (all geometric rules without density and antenna) and `regular` runs `main` (all rules, density and antenna included). The `GDSCHECK_SUITE` parameter (`sak-drc.sh -s`) replaces this mapping and also reaches the suites `density`, `antenna` and `recommended` (the advisory rules whose names end in `R`, not part of `main`). `gdscheck list-suites --process ihp-sg13g2` lists them.
+**gdscheck DRC** runs [gdscheck](https://github.com/aesc-silicon/gdscheck) (`sak-drc.sh -g`), a standalone DRC engine with its own IHP rule decks built into the binary. The DRC levels map onto its suites: `precheck` runs `precheck` (IHP's open-source precheck subset, which includes the density rules, so a single macro fails it), `macro` runs `core` (all geometric rules without density and antenna) and `regular` runs `main` (all rules, density and antenna included). The `GDSCHECK_SUITE` parameter (`sak-drc.sh -s`) replaces this mapping and also reaches the suites `density`, `antenna` and `recommended` (the advisory rules whose names end in `R`, not part of `main`). `gdscheck list-suites --process ihp-sg13g2` lists them. The `GDSCHECK_DECKS` parameter (`sak-drc.sh -D`) runs single rule decks instead of a suite, comma-separated, for example `activ,gatpoly` while working on those layers, and `gdscheck list-decks --process ihp-sg13g2` lists them. It cannot be combined with `GDSCHECK_SUITE`. The IHP layer decks include their fill and density rules, so a single cell can fail a deck run on a rule that `macro` does not check, for example the JKU logo on `M5.j` and `M5Fil.h` with `GDSCHECK_DECKS=metal5`.
 
 **gdscheck DRC (minimum)** runs the `precheck` suite on the final top-level layout with logo and fill structures:
 
@@ -798,12 +798,13 @@ make gdscheck-drc-minimum
 make gdscheck-drc-regular
 ```
 
-**gdscheck DRC** runs gdscheck at the selected `DRC_LEVEL` or `GDSCHECK_SUITE`:
+**gdscheck DRC** runs gdscheck at the selected `DRC_LEVEL`, `GDSCHECK_SUITE` or `GDSCHECK_DECKS`:
 
 ```sh
 make gdscheck-drc
 make gdscheck-drc CELL=chip_top
 make gdscheck-drc CELL=chip_top_logo_fill GDSCHECK_SUITE=density
+make gdscheck-drc CELL=chip_top_logo_fill GDSCHECK_DECKS=metal1,via1
 ```
 
 > [!NOTE]
