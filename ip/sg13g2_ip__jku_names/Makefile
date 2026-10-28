@@ -180,6 +180,7 @@ all: ## Build and verify the logo
 	$(MAKE) lib
 	$(MAKE) verilog
 	$(MAKE) klayout-drc
-	$(MAKE) magic-drc
+#	Magic DRC results do not stop the flow, as in the other Makefiles (see the top-level README)
+	-$(MAKE) magic-drc
 .PHONY: all
 # ================================================================================================

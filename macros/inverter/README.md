@@ -440,7 +440,7 @@ make gdscheck-drc-all
 ```
 
 > [!NOTE]
-> gdscheck gives a third opinion next to Magic and KLayout. Upstream calls it experimental, so a clean run is no sign-off on its own, and `make all` does not run it. gdscheck 0.2.0 reports `NBL.f` between the nBuLay ring of the `pmos` cell and the PMOS diffusion inside the ring (1 in `inverter`, 4 in `inverter_top`), which the IHP KLayout deck passes ([aesc-silicon/gdscheck#50](https://github.com/aesc-silicon/gdscheck/issues/50)). Until a gdscheck with the fix is installed, `gdscheck-drc` fails on both cells.
+> KLayout is the sign-off DRC, Magic and gdscheck give a second and a third opinion. The `pmos` cell is the `SG13_dev` `pmos` PCell with `guardRingType` `nwell`, which draws an nBuLay ring under the n+ tap ring. Magic reports `NBL.f` between that ring and the PMOS diffusion inside it and `NBL.d` against the NWell next to it, and gdscheck 0.2.0 reports `NBL.f` (1 in `inverter`, 4 in `inverter_top`), while the KLayout deck passes both cells ([IHP-Open-PDK#954](https://github.com/IHP-GmbH/IHP-Open-PDK/issues/954), [aesc-silicon/gdscheck#50](https://github.com/aesc-silicon/gdscheck/issues/50)). So `magic-drc` and `gdscheck-drc` fail on both cells, `magic-verify` reports the Magic DRC result without stopping on it, and `make all` does not run gdscheck. See the [top-level README](../../README.md#design-rule-check-drc) for the background.
 
 
 ### Export Schematic Netlist for LVS
@@ -598,7 +598,7 @@ make klayout-verify-all
 
 ### Verify with Magic
 
-**Verify a single cell** by running DRC, LVS, and PEX in sequence:
+**Verify a single cell** by running DRC, LVS, and PEX in sequence. The Magic DRC result does not stop the sequence, since Magic flags the guard ring of the `pmos` PCell (see [Design Rule Check (DRC)](#design-rule-check-drc)):
 
 ```sh
 make magic-verify

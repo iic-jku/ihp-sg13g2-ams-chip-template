@@ -108,7 +108,7 @@ make klayout-drc CELL=sg13g2_ip__bondpad_70x70
 make klayout-drc DRC_LEVEL=regular
 ```
 
-**Magic DRC** uses `sak-drc.sh`:
+**Magic DRC** uses `sak-drc.sh`. `make all` reports its result without stopping on it, as all flows do, since Magic flags some of IHP's own cells (see the [top-level README](../../README.md#design-rule-check-drc)):
 
 ```sh
 make magic-drc

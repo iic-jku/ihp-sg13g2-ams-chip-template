@@ -33,7 +33,7 @@ This repo is the ihp-sg13g2 AMS template or a chip started from it. Items marked
 
 ```sh
 make help                          # targets and variables
-make all                           # build-all, magic-drc of chip_top and chip_top_logo_fill, sim-all, bondplan
+make all                           # build-all, Magic and gdscheck DRC of chip_top and chip_top_logo_fill (not gating), sim-all, bondplan
 make build-all                     # submodules, bondpad, logos, macros, build-top
 make build-top                     # librelane-nodrc, copy reports/GDS/netlists/render, add-logo-fill, render-gds
 make sim-rtl-cocotb                # chip RTL simulation (cocotb on Icarus Verilog)
@@ -41,7 +41,7 @@ make sim-all                       # RTL and gate-level cocotb, gate-level Xsche
 make klayout-drc-regular           # full KLayout DRC of layout/chip_top_logo_fill.gds.gz
 make klayout-verify CELL=<cell>    # KLayout DRC, LVS and PEX of layout/<cell>.gds.gz
 make magic-verify CELL=<cell>      # Magic DRC, Magic/Netgen LVS and Magic PEX
-make gdscheck-drc CELL=<cell>      # gdscheck DRC of layout/<cell>.gds.gz, in no all flow
+make gdscheck-drc CELL=<cell>      # gdscheck DRC of layout/<cell>.gds.gz
 make regression                    # the CI smoke test
 make -C macros/counter lint-verilog-all     # Verilator lint (template macro)
 make -C macros/counter sim-rtl-verilog      # Icarus Verilog testbench
@@ -56,6 +56,7 @@ make -C macros/inverter all                 # KLayout and Magic DRC/LVS/PEX, LEF
 - The Xschem targets netlist in batch mode and run `ngspice -b`, so `plot` commands in a testbench `.control` block do nothing. Testbenches write results with `wrdata` to `testbenches/xschem/plot_simulations/data/`, and `sim-view-xschem` plots them.
 - The top-level `sim-gl-xschem` includes `macros/counter/netlist/xspice/counter_top.xspice` (template), which `clean-all` deletes. Run `make build-counter` before it.
 - `build-top` runs `librelane-nodrc` on purpose until IHP fixes the `metal1_pin_offgrid` errors (see the comment in `Makefile`). Run DRC separately with `magic-drc`, `klayout-drc-minimum`, `klayout-drc-regular` or the matching `gdscheck-drc-*` targets. `DRC_JOBS=<n>` caps the KLayout processes and sets the gdscheck threads (default 4 and every CPU). More than 4 only pays off for the full chip on a server.
+- KLayout is the sign-off DRC. Magic and gdscheck flag IHP's own cells (the nBuLay ring of the `pmos` guard ring PCell, IHP-Open-PDK#954 and gdscheck#50, and, for Magic, the IO pads and the SRAM read hierarchically), so every flow calls `magic-drc` and the chip `gdscheck-drc` with make's `-` prefix and reports their result without stopping. Keep that prefix until the upstream fixes are in the image, and keep `-f` patterns for Magic away from the top cell: `sak-drc.sh` refuses one that matches it, because Magic would check an empty cell.
 
 ## Conventions
 
