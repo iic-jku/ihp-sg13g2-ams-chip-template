@@ -10,7 +10,7 @@
 - [ ] add VCO RF macro in branch `add-rf-macro`
 - [ ] test and merge `hv-stdcell`: https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/test-hv-stdcell
 - [ ] let the flows stop on Magic DRC again (drop the `-` of the `magic-drc` calls and the guard ring notes in the READMEs and the tutorial) once the Magic `NBL.f`/`NBL.d` rules accept the nBuLay ring of the `pmos` guard ring PCell (https://github.com/IHP-GmbH/IHP-Open-PDK/issues/954) and Magic reads the IHP IO pads and the SRAM without subcell overlap errors (flatglobs of https://github.com/IHP-GmbH/IHP-Open-PDK/issues/794)
-- [ ] let `make all` stop on the chip `gdscheck-drc` and add `gdscheck-drc-all` to the inverter `all` once a gdscheck with https://github.com/aesc-silicon/gdscheck/pull/51 is in the IIC-OSIC-TOOLS image
+- [ ] let `make all` stop on the chip `gdscheck-drc` and add `gdscheck-drc-all` to the inverter `all` once a gdscheck release with https://github.com/aesc-silicon/gdscheck/pull/51 (merged after 0.2.0, its `main` passes both inverter cells) replaces the `gdscheck@0.2.0` pin of the IIC-OSIC-TOOLS image
 - [ ] `ngspice` & `verilog` RTL Co-Simulation using `Xschem`: https://www.youtube.com/watch?v=PPd7jkcHOgA
 - [ ] add VACASK testbenches to inverter macro (update Makefile + README, see `add-vacask` branch)
 - [ ] add VACASK mixed-signal GL testbenches to counter macro (update Makefile + README, see `add-vacask` branch)
