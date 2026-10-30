@@ -54,9 +54,26 @@ MINRES ?= 1000
 # Override with: make <target> MINDELAY=<ps>
 MINDELAY ?= 1
 
-# KLayout DRC level: precheck, macro, or regular (sak-drc.sh -l, only used by klayout-drc; default: macro)
+# KLayout/gdscheck DRC level: precheck, macro, or regular (sak-drc.sh -l, only used by klayout-drc and gdscheck-drc; default: macro)
 # Override with: make <target> DRC_LEVEL=<precheck|macro|regular>
 DRC_LEVEL ?= macro
+
+# gdscheck suite, replaces the one DRC_LEVEL selects (sak-drc.sh -s, only used by gdscheck-drc; default: empty = precheck runs precheck, macro core, regular main)
+# Override with: make <target> GDSCHECK_SUITE=<precheck|core|main|density|antenna|recommended>
+GDSCHECK_SUITE ?=
+
+# gdscheck rule decks instead of a suite, comma-separated (sak-drc.sh -D, only used by gdscheck-drc, not together with GDSCHECK_SUITE; default: empty = run the suite)
+# Override with: make <target> GDSCHECK_DECKS=<deck>[,<deck>...]
+GDSCHECK_DECKS ?=
+
+# Parallel DRC jobs, the KLayout processes and gdscheck threads (sak-drc.sh -j, used by the klayout-drc* and gdscheck-drc* targets; default: empty = 4 KLayout processes or fewer, gdscheck on every CPU)
+# Override with: make <target> DRC_JOBS=<n>
+DRC_JOBS ?=
+
+# sak-drc.sh options for the three variables above, left out when empty so that the script defaults apply
+_GDSCHECK_SUITE_OPT = $(if $(GDSCHECK_SUITE),-s "$(GDSCHECK_SUITE)")
+_GDSCHECK_DECKS_OPT = $(if $(GDSCHECK_DECKS),-D "$(GDSCHECK_DECKS)")
+_DRC_JOBS_OPT = $(if $(DRC_JOBS),-j $(DRC_JOBS))
 
 # Supply pins that the flat PEX extraction merges into one node, they are dropped from the generated <CELL>_pex.sym so it matches the extracted netlist.
 # IOVSS and VSS share the p-substrate, so a flat extraction reports one ground node named VSS and the PEX netlist carries no IOVSS port. Pads that repeat a pin name are dropped down to one pin the same way, only the pin boxes go and the labels stay.
@@ -118,7 +135,7 @@ FLOW_FINAL_DIR  		:= flow/final
 
 # Help Target
 help: ## Show this help message
-	@echo 'Usage: make <target> [CELL=<cellname>] [EXT_MODE=<1|2|3>] [THRESHOLD=<mOhm>] [MINRES=<mOhm>] [MINDELAY=<ps>] [DRC_LEVEL=<precheck|macro|regular>] [PEX_MERGED_PINS="<pin> ..."] [EV_PRECISION=<digits>] [WAVEFORM_VIEWER=<gtkwave|surfer>] [TB=<testbenchname>] [SCRIPT=<scriptname>] [VERSION=<version>] [OPEN_ARGS=<options>]'
+	@echo 'Usage: make <target> [CELL=<cellname>] [EXT_MODE=<1|2|3>] [THRESHOLD=<mOhm>] [MINRES=<mOhm>] [MINDELAY=<ps>] [DRC_LEVEL=<precheck|macro|regular>] [GDSCHECK_SUITE=<suite>|GDSCHECK_DECKS=<decks>] [DRC_JOBS=<n>] [PEX_MERGED_PINS="<pin> ..."] [EV_PRECISION=<digits>] [WAVEFORM_VIEWER=<gtkwave|surfer>] [TB=<testbenchname>] [SCRIPT=<scriptname>] [VERSION=<version>] [OPEN_ARGS=<options>]'
 	@echo ''
 	@echo 'Available targets:'
 	@grep -E '^[a-zA-Z0-9_.-]+:.*## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*## "}; {printf "  %-20s %s\n", $$1, $$2}'
@@ -126,7 +143,10 @@ help: ## Show this help message
 	@echo 'CELL defaults to $(TOP). Override to verify subcells.'
 	@echo 'EXT_MODE defaults to 1 (C-decoupled). 2=C-coupled, 3=full-RC.'
 	@echo 'THRESHOLD/MINRES/MINDELAY are full-RC (EXT_MODE=3) extresist settings for magic-pex (defaults 10000 mOhm / 1000 mOhm / 1 ps).'
-	@echo 'DRC_LEVEL defaults to macro. Sets the KLayout DRC level for klayout-drc (precheck|macro|regular).'
+	@echo 'DRC_LEVEL defaults to macro. Sets the DRC level for klayout-drc and gdscheck-drc (precheck|macro|regular).'
+	@echo 'GDSCHECK_SUITE replaces the gdscheck suite of DRC_LEVEL for gdscheck-drc (precheck|core|main|density|antenna|recommended).'
+	@echo 'GDSCHECK_DECKS runs gdscheck rule decks instead of a suite, comma-separated (e.g. activ,gatpoly).'
+	@echo 'DRC_JOBS caps the KLayout DRC processes and sets the gdscheck threads (default: 4 KLayout processes or fewer, gdscheck on every CPU).'
 	@echo 'PEX_MERGED_PINS defaults to IOVSS. Lists the supply pins that the flat extraction merges, they are dropped from the generated PEX symbol.'
 	@echo 'EV_PRECISION defaults to 5 significant digits for Xschem ev function.'
 	@echo 'WAVEFORM_VIEWER defaults to gtkwave. Use surfer to launch Surfer instead.'
@@ -351,25 +371,40 @@ build-all: ## Build the bondpad, logos, macros and the chip top-level
 
 
 # DRC Targets
-klayout-drc-minimum: ## Run minimum pre-check KLayout DRC of the TOP cell with logo and filler
+klayout-drc-minimum: ## Run minimum pre-check KLayout DRC of the TOP cell with logo and filler (usage: make klayout-drc-minimum [DRC_JOBS=<n>])
 	mkdir -p $(DRC_RPT_DIR)
-	sak-drc.sh -d -k -l precheck -w $(DRC_RPT_DIR) $(LAY_DIR)/$(TOP)_logo_fill.gds.gz
+	sak-drc.sh -d -k -l precheck $(_DRC_JOBS_OPT) -w $(DRC_RPT_DIR) $(LAY_DIR)/$(TOP)_logo_fill.gds.gz
 .PHONY: klayout-drc-minimum
 
-klayout-drc-regular: ## Run regular KLayout DRC of the TOP cell with logo and filler
+klayout-drc-regular: ## Run regular KLayout DRC of the TOP cell with logo and filler (usage: make klayout-drc-regular [DRC_JOBS=<n>])
 	mkdir -p $(DRC_RPT_DIR)
-	sak-drc.sh -d -k -l regular -w $(DRC_RPT_DIR) $(LAY_DIR)/$(TOP)_logo_fill.gds.gz
+	sak-drc.sh -d -k -l regular $(_DRC_JOBS_OPT) -w $(DRC_RPT_DIR) $(LAY_DIR)/$(TOP)_logo_fill.gds.gz
 .PHONY: klayout-drc-regular
 
-klayout-drc: ## Run KLayout DRC of the CELL cell (usage: make klayout-drc [CELL=<cellname>] [DRC_LEVEL=<precheck|macro|regular>])
+klayout-drc: ## Run KLayout DRC of the CELL cell (usage: make klayout-drc [CELL=<cellname>] [DRC_LEVEL=<precheck|macro|regular>] [DRC_JOBS=<n>])
 	mkdir -p $(DRC_RPT_DIR)
-	sak-drc.sh -d -k -l $(DRC_LEVEL) -w $(DRC_RPT_DIR) $(LAY_DIR)/$(CELL).gds.gz
+	sak-drc.sh -d -k -l $(DRC_LEVEL) $(_DRC_JOBS_OPT) -w $(DRC_RPT_DIR) $(LAY_DIR)/$(CELL).gds.gz
 .PHONY: klayout-drc
 
 magic-drc: ## Run Magic DRC of the CELL cell (usage: make magic-drc [CELL=<cellname>])
 	mkdir -p $(DRC_RPT_DIR)
-	sak-drc.sh -d -m -f "*" -w $(DRC_RPT_DIR) $(LAY_DIR)/$(CELL).gds.gz
+	sak-drc.sh -d -m -w $(DRC_RPT_DIR) $(LAY_DIR)/$(CELL).gds.gz
 .PHONY: magic-drc
+
+gdscheck-drc-minimum: ## Run minimum pre-check gdscheck DRC of the TOP cell with logo and filler (usage: make gdscheck-drc-minimum [DRC_JOBS=<n>])
+	mkdir -p $(DRC_RPT_DIR)
+	sak-drc.sh -d -g -l precheck $(_DRC_JOBS_OPT) -w $(DRC_RPT_DIR) $(LAY_DIR)/$(TOP)_logo_fill.gds.gz
+.PHONY: gdscheck-drc-minimum
+
+gdscheck-drc-regular: ## Run regular gdscheck DRC of the TOP cell with logo and filler (usage: make gdscheck-drc-regular [DRC_JOBS=<n>])
+	mkdir -p $(DRC_RPT_DIR)
+	sak-drc.sh -d -g -l regular $(_DRC_JOBS_OPT) -w $(DRC_RPT_DIR) $(LAY_DIR)/$(TOP)_logo_fill.gds.gz
+.PHONY: gdscheck-drc-regular
+
+gdscheck-drc: ## Run gdscheck DRC of the CELL cell (usage: make gdscheck-drc [CELL=<cellname>] [DRC_LEVEL=<precheck|macro|regular>] [GDSCHECK_SUITE=<suite>|GDSCHECK_DECKS=<decks>] [DRC_JOBS=<n>])
+	mkdir -p $(DRC_RPT_DIR)
+	sak-drc.sh -d -g -l $(DRC_LEVEL) $(_GDSCHECK_SUITE_OPT) $(_GDSCHECK_DECKS_OPT) $(_DRC_JOBS_OPT) -w $(DRC_RPT_DIR) $(LAY_DIR)/$(CELL).gds.gz
+.PHONY: gdscheck-drc
 # ================================================================================================
 
 
@@ -500,7 +535,8 @@ klayout-verify: ## Verify CELL cell with KLayout (usage: make klayout-verify [CE
 .PHONY: klayout-verify
 
 magic-verify: ## Verify CELL cell with Magic (usage: make magic-verify [CELL=<cellname>])
-	$(MAKE) magic-drc CELL=$(CELL)
+#	Magic flags IHP's own guard ring PCell, IO pads and SRAM, so its DRC result does not stop the flow (see README)
+	-$(MAKE) magic-drc CELL=$(CELL)
 	$(MAKE) magic-lvs CELL=$(CELL)
 	$(MAKE) magic-pex CELL=$(CELL)
 .PHONY: magic-verify
@@ -517,8 +553,11 @@ bondplan: ## Generate the bondplan (die in package + bondwires + pin table) in p
 # Build, Verify, Simulate and Package All Target
 all: ## Build, verify, simulate and package the whole chip
 	$(MAKE) build-all
-	$(MAKE) magic-drc CELL=$(TOP)
-	$(MAKE) magic-drc CELL=$(TOP)_logo_fill
+#	Magic and gdscheck flag IHP's own cells, so their chip DRC is a comparison that does not stop the flow (see README)
+	-$(MAKE) magic-drc CELL=$(TOP)
+	-$(MAKE) magic-drc CELL=$(TOP)_logo_fill
+	-$(MAKE) gdscheck-drc CELL=$(TOP)
+	-$(MAKE) gdscheck-drc CELL=$(TOP)_logo_fill
 #	$(MAKE) klayout-verify
 #	$(MAKE) magic-verify
 	$(MAKE) sim-all
@@ -574,6 +613,8 @@ regression: ## Regression test target for IIC-OSIC-TOOLS
 # 	Top-level assembly
 	$(MAKE) init-submodules
 	$(MAKE) build-bondpad
+# 	gdscheck DRC of a cell it passes, so that a broken gdscheck fails the regression (make all only reports it).
+	$(MAKE) -C $(IP_DIR)/sg13g2_ip__bondpad_70x70 gdscheck-drc
 	$(MAKE) -C $(IP_DIR)/sg13g2_ip__jku all
 # 	librelane-nodrc: full RTL-to-GDS. DRC is skipped for runtime.
 	$(MAKE) librelane-nodrc

@@ -118,7 +118,7 @@ The `sim-xschem` target accepts an optional `TB=<testbenchname>` parameter (defa
 All targets that operate on a specific cell accept an optional `CELL=<cellname>` parameter. The default is the top-level cell (`inverter_top`).
 
 ```sh
-make <target> [CELL=<cellname>] [EXT_MODE=<1|2|3>] [THRESHOLD=<mOhm>] [MINRES=<mOhm>] [MINDELAY=<ps>] [DRC_LEVEL=<precheck|macro|regular>] [EV_PRECISION=<digits>]
+make <target> [CELL=<cellname>] [EXT_MODE=<1|2|3>] [THRESHOLD=<mOhm>] [MINRES=<mOhm>] [MINDELAY=<ps>] [DRC_LEVEL=<precheck|macro|regular>] [GDSCHECK_SUITE=<suite>|GDSCHECK_DECKS=<decks>] [DRC_JOBS=<n>] [EV_PRECISION=<digits>]
 ```
 
 
@@ -200,6 +200,7 @@ The Makefile defines a `_GDS_EXT` variable that auto-selects the layout file ext
   - `magic-lvs`
   - `magic-drc`
   - `magic-pex`
+  - `gdscheck-drc`
 
 - Build targets always use `layout/<name>.gds`:
   - `check-boundary`
@@ -381,27 +382,32 @@ make render-gds
 
 ### Design Rule Check (DRC)
 
-Runs DRC on the layout in `layout/`. Both flows use `sak-drc.sh`.
+Runs DRC on the layout in `layout/`. All three flows use `sak-drc.sh`.
 
-- `klayout-drc` and `magic-drc` use `layout/<CELL>.$(_GDS_EXT)` (`.gds` if present, otherwise `.klay.gds`)
+- `klayout-drc`, `magic-drc` and `gdscheck-drc` use `layout/<CELL>.$(_GDS_EXT)` (`.gds` if present, otherwise `.klay.gds`)
 
-Reports are written into per-cell run folders: `verification/drc/<CELL>.magic.drc/` (Magic) and `verification/drc/<CELL>.klayout.drc/` (KLayout, `.lyrdb`). The run folders are wiped at the start of each run, so they always reflect the latest run only.
+Reports are written into per-cell run folders: `verification/drc/<CELL>.magic.drc/` (Magic), `verification/drc/<CELL>.klayout.drc/` (KLayout, `.lyrdb`) and `verification/drc/<CELL>.gdscheck.drc/` (gdscheck, `.lyrdb`). The run folders are wiped at the start of each run, so they always reflect the latest run only.
 
-The `DRC_LEVEL` parameter selects the KLayout DRC level (`sak-drc.sh -l`). It is ignored by `magic-drc`, since Magic has no selectable rule decks and always runs the full rule set compiled into the PDK's Magic tech file:
+The `DRC_LEVEL` parameter selects the KLayout DRC level and the gdscheck suite (`sak-drc.sh -l`). It is ignored by `magic-drc`, since Magic has no selectable rule decks and always runs the full rule set compiled into the PDK's Magic tech file:
 
-- `precheck` = core FEOL + BEOL manufacturing rules only (fast iteration)
-- `macro` = block-in-isolation sign-off: `precheck` plus off-grid, zero-area, and pin/label checks (default)
-- `regular` = full-chip sign-off: all checks, including density and antenna
+- `precheck` = the foundry precheck rule set and the pin checks (fast iteration)
+- `macro` = block-in-isolation sign-off: the full FEOL and BEOL rules with off-grid, angle, recommended and pin checks, without chip-level density, the extra rules and antenna (default)
+- `regular` = full-chip sign-off: all checks, including density, the extra rules and antenna
+
+For the IHP Open-PDK, `sak-drc.sh` passes `--precheck_drc --no_density --no_offgrid --no_angle --disable_extra_rules --no_recommended` for `precheck`, `--no_density --disable_extra_rules` for `macro` and `--antenna` for `regular` to the PDK's `run_drc.py`, which adds the pin checks at every level:
 
 | Check | `precheck` | `macro` _(default)_ | `regular` |
 | --- | :---: | :---: | :---: |
-| FEOL + BEOL core rules | ✓ | ✓ | ✓ |
+| Foundry precheck rule set | ✓ | ✓ | ✓ |
+| Pin / label | ✓ | ✓ | ✓ |
+| Full FEOL + BEOL rules | – | ✓ | ✓ |
 | Off-grid / angle | – | ✓ | ✓ |
-| Zero-area / geometry | – | ✓ | ✓ |
-| Pin / label | – | ✓ | ✓ |
-| Recommended / extra rules | – | – | ✓ |
+| Recommended rules | – | ✓ | ✓ |
+| Extra rules | – | – | ✓ |
 | Density (full-chip fill) | – | – | ✓ |
 | Antenna | – | – | ✓ |
+
+The `DRC_JOBS` parameter (`sak-drc.sh -j`) sets how many jobs one run uses at most, by default 4 (or the CPU count if lower) for KLayout and every CPU the container may use for gdscheck. At `regular`, KLayout runs the four rule sets as parallel processes and writes the reports of the extra rules, the density and the antenna checks into the subfolders `maximal/`, `density/` and `antenna/` of the run folder. The [top-level README](../../README.md#design-rule-check-drc) describes what more jobs change.
 
 **KLayout DRC** runs a KLayout DRC at the selected `DRC_LEVEL`:
 
@@ -411,12 +417,30 @@ make klayout-drc CELL=inverter_top
 make klayout-drc CELL=inverter_top DRC_LEVEL=regular
 ```
 
-**Magic DRC** runs a Magic DRC with all subcells flattened (`sak-drc.sh -f "*"`):
+**Magic DRC** runs Magic's full DRC on the layout (`sak-drc.sh -m`), hierarchically and without flattening any cell:
 
 ```sh
 make magic-drc
 make magic-drc CELL=inverter_top
 ```
+
+**gdscheck DRC** runs the standalone [gdscheck](https://github.com/aesc-silicon/gdscheck) engine (`sak-drc.sh -g`) at the selected `DRC_LEVEL`, `GDSCHECK_SUITE` or `GDSCHECK_DECKS`. The levels map onto its built-in suites: `precheck` runs `precheck` (which includes the density rules, so a single macro fails it), `macro` runs `core` (all geometric rules without density and antenna) and `regular` runs `main` (all rules). The `GDSCHECK_SUITE` parameter (`sak-drc.sh -s`) replaces this mapping and also reaches `density`, `antenna` and `recommended`. The `GDSCHECK_DECKS` parameter (`sak-drc.sh -D`) runs single rule decks instead, comma-separated, and `gdscheck list-decks --process ihp-sg13g2` lists them. The layer decks include their fill and density rules, so a deck run can fail on a rule that `macro` does not check: the inverter fails `GDSCHECK_DECKS=activ,gatpoly` on `AFil.g1`.
+
+```sh
+make gdscheck-drc
+make gdscheck-drc CELL=inverter_top
+make gdscheck-drc CELL=inverter_top GDSCHECK_SUITE=recommended
+make gdscheck-drc CELL=inverter GDSCHECK_DECKS=cont,via1
+```
+
+**gdscheck DRC of all main subcells** runs it for `inverter` and `inverter_top`:
+
+```sh
+make gdscheck-drc-all
+```
+
+> [!NOTE]
+> KLayout is the sign-off DRC, Magic and gdscheck give a second and a third opinion. The `pmos` cell is the `SG13_dev` `pmos` PCell with `guardRingType` `nwell`, which draws an nBuLay ring under the n+ tap ring. Magic reports `NBL.f` between that ring and the PMOS diffusion inside it and `NBL.d` against the NWell next to it, and gdscheck 0.2.0 reports `NBL.f` (1 in `inverter`, 4 in `inverter_top`), while the KLayout deck passes both cells ([IHP-Open-PDK#954](https://github.com/IHP-GmbH/IHP-Open-PDK/issues/954), fixed in gdscheck after 0.2.0 by [aesc-silicon/gdscheck#51](https://github.com/aesc-silicon/gdscheck/pull/51)). So `magic-drc` and `gdscheck-drc` fail on both cells, `magic-verify` reports the Magic DRC result without stopping on it, and `make all` does not run gdscheck. See the [top-level README](../../README.md#design-rule-check-drc) for the background.
 
 
 ### Export Schematic Netlist for LVS
@@ -574,7 +598,7 @@ make klayout-verify-all
 
 ### Verify with Magic
 
-**Verify a single cell** by running DRC, LVS, and PEX in sequence:
+**Verify a single cell** by running DRC, LVS, and PEX in sequence. The Magic DRC result does not stop the sequence, since Magic flags the guard ring of the `pmos` PCell (see [Design Rule Check (DRC)](#design-rule-check-drc)):
 
 ```sh
 make magic-verify

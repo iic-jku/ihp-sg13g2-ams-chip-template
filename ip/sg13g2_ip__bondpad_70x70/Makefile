@@ -29,9 +29,26 @@ endif
 # Override with: make <target> CELL=<cellname>
 CELL ?= $(TOP)
 
-# KLayout DRC level: precheck, macro, or regular (sak-drc.sh -l, only used by klayout-drc; default: macro)
+# KLayout/gdscheck DRC level: precheck, macro, or regular (sak-drc.sh -l, only used by klayout-drc and gdscheck-drc; default: macro)
 # Override with: make <target> DRC_LEVEL=<precheck|macro|regular>
 DRC_LEVEL ?= macro
+
+# gdscheck suite, replaces the one DRC_LEVEL selects (sak-drc.sh -s, only used by gdscheck-drc; default: empty = precheck runs precheck, macro core, regular main)
+# Override with: make <target> GDSCHECK_SUITE=<precheck|core|main|density|antenna|recommended>
+GDSCHECK_SUITE ?=
+
+# gdscheck rule decks instead of a suite, comma-separated (sak-drc.sh -D, only used by gdscheck-drc, not together with GDSCHECK_SUITE; default: empty = run the suite)
+# Override with: make <target> GDSCHECK_DECKS=<deck>[,<deck>...]
+GDSCHECK_DECKS ?=
+
+# Parallel DRC jobs, the KLayout processes and gdscheck threads (sak-drc.sh -j, only used by klayout-drc and gdscheck-drc; default: empty = 4 KLayout processes or fewer, gdscheck on every CPU)
+# Override with: make <target> DRC_JOBS=<n>
+DRC_JOBS ?=
+
+# sak-drc.sh options for the three variables above, left out when empty so that the script defaults apply
+_GDSCHECK_SUITE_OPT = $(if $(GDSCHECK_SUITE),-s "$(GDSCHECK_SUITE)")
+_GDSCHECK_DECKS_OPT = $(if $(GDSCHECK_DECKS),-D "$(GDSCHECK_DECKS)")
+_DRC_JOBS_OPT = $(if $(DRC_JOBS),-j $(DRC_JOBS))
 
 # Extra options for the sak-open.py file browser (e.g. --all to include build outputs)
 # Override with: make open OPEN_ARGS=<options>
@@ -91,15 +108,20 @@ bondpad: ## Generate bondpad GDS and LEF (usage: make bondpad [DIAMETER=<um>] [S
 
 
 # DRC Targets
-klayout-drc: ## Run KLayout DRC of the CELL cell (usage: make klayout-drc [CELL=<cellname>] [DRC_LEVEL=<precheck|macro|regular>])
+klayout-drc: ## Run KLayout DRC of the CELL cell (usage: make klayout-drc [CELL=<cellname>] [DRC_LEVEL=<precheck|macro|regular>] [DRC_JOBS=<n>])
 	mkdir -p $(DRC_RPT_DIR)
-	sak-drc.sh -d -k -l $(DRC_LEVEL) -w $(DRC_RPT_DIR) $(GDS_DIR)/$(CELL).gds
+	sak-drc.sh -d -k -l $(DRC_LEVEL) $(_DRC_JOBS_OPT) -w $(DRC_RPT_DIR) $(GDS_DIR)/$(CELL).gds
 .PHONY: klayout-drc
 
 magic-drc: ## Run Magic DRC of the CELL cell (usage: make magic-drc [CELL=<cellname>])
 	mkdir -p $(DRC_RPT_DIR)
-	sak-drc.sh -d -m -f "*" -w $(DRC_RPT_DIR) $(GDS_DIR)/$(CELL).gds
+	sak-drc.sh -d -m -w $(DRC_RPT_DIR) $(GDS_DIR)/$(CELL).gds
 .PHONY: magic-drc
+
+gdscheck-drc: ## Run gdscheck DRC of the CELL cell (usage: make gdscheck-drc [CELL=<cellname>] [DRC_LEVEL=<precheck|macro|regular>] [GDSCHECK_SUITE=<suite>|GDSCHECK_DECKS=<decks>] [DRC_JOBS=<n>])
+	mkdir -p $(DRC_RPT_DIR)
+	sak-drc.sh -d -g -l $(DRC_LEVEL) $(_GDSCHECK_SUITE_OPT) $(_GDSCHECK_DECKS_OPT) $(_DRC_JOBS_OPT) -w $(DRC_RPT_DIR) $(GDS_DIR)/$(CELL).gds
+.PHONY: gdscheck-drc
 # ================================================================================================
 
 
@@ -117,6 +139,7 @@ all: ## Build and verify the bondpad
 	$(MAKE) bondpad
 	$(MAKE) verilog
 	$(MAKE) klayout-drc
-	$(MAKE) magic-drc
+#	Magic DRC results do not stop the flow, as in the other Makefiles (see the top-level README)
+	-$(MAKE) magic-drc
 .PHONY: all
 # ================================================================================================
