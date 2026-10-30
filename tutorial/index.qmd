@@ -282,9 +282,10 @@ The [counter Makefile](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/b
 | `make sim-gl-xschem` / `sim-view-xschem`          | Run the mixed-signal XSPICE simulation in Xschem (batch mode) and plot the results. `TB` defaults to `<CELL>_tb_tran` and `SCRIPT` to `plot_<CELL>`. |
 | `make build-fpga`                                 | Run the full FPGA flow: lint, synthesis, P&R, and bitstream generation. The board is selected with `BOARD=` and defaults to the pico-ice. |
 | `make build-top`                                  | Run LibreLane, copy reports, netlists, and final views, generate the XSPICE model, and render the final GDS. |
+| `make lec` / `lec-mutant`                         | Prove the final netlist equivalent to the RTL with EQY (`LEC_NETLIST` selects another netlist), and check that the proof can fail. |
 | `make symbol-pex`                                 | Build the Xschem PEX symbol `<CELL>_pex.sym` from `<CELL>.sym`. Runs automatically before every extraction. |
 | `make klayout-pex` / `magic-pex` (`EXT_MODE=<1\|2\|3>`) | Extract the parasitics of the hardened macro from `final/gds/` into `netlist/pex/`. |
-| `make all`                                        | Run lint, the FPGA build, the full macro build flow, the parasitic extraction, and all simulations. |
+| `make all`                                        | Run lint, the FPGA build, the full macro build flow, the equivalence check, the parasitic extraction, and all simulations. |
 | `make clean`                                      | Delete all generated files and folders of the macro, including the FPGA outputs. |
 
 See the [counter README](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/counter/README.md) for more details and how to use the Makefile targets.

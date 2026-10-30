@@ -37,6 +37,7 @@
 │  └─ 📁 vh/
 │     └─ counter_top.vh
 ├─ 📁 flow/
+│  ├─ 📁 eqy/                 # .gitignore'd: EQY script and work folder of make lec
 │  ├─ 📁 final/               # .gitignore'd: important files are copied to counter/final/ (listed here to document LibreLane output folders)
 │  │  ├─ 📁 def/              # Design Exchange Format: cell placement & routing (text-based)
 │  │  ├─ 📁 gds/              # GDSII layout: final tape-out file
@@ -652,6 +653,27 @@ The testbench runs with `.options savecurrents klu method=gear reltol=1e-3 absto
 > A post-layout run simulates every transistor of the macro in ngspice. In the IIC-OSIC-TOOLS container, 60 ns of transient take about 80 s, while the full 10 µs gate-level XSPICE run of the same testbench finishes in under 2 s. Use the XSPICE model for functional runs, and the PEX netlist on short, targeted stimuli to check timing and signal integrity.
 
 
+### Logic Equivalence Check
+
+A gate-level simulation checks the netlist only for the stimuli of its testbench. A logic equivalence check (LEC) proves with a formal solver that the netlist does exactly what the RTL does, for every input sequence. It catches a netlist that no longer matches the RTL, e.g. because the RTL was edited after the last `make build-top`, and any change of function by the flow.
+
+```sh
+make lec                         # final/nl/counter_top.nl.v against the RTL
+make lec LEC_NETLIST=<netlist>   # another netlist, e.g. the synthesis netlist of a run
+make lec-mutant                  # check that lec catches a difference
+```
+
+`lec` writes an [EQY](https://github.com/YosysHQ/eqy) script to `flow/eqy/counter_top.eqy` and runs it in `flow/eqy/work/`. EQY splits the design into partitions, proves each of them, and exits with 0 only when all of them are equivalent. On the counter, it proves 8 partitions, one per output bit, in a few seconds. Three details of the script matter:
+
+- The RTL is read with the other front end than synthesis: yosys-slang while `USE_SLANG` is off in `flow/librelane/config.yaml`, and Yosys' own `read_verilog -sv` when it is on. With the same front end on both sides, a front end that misreads the RTL would produce the same mistake in the netlist and prove it equivalent.
+- The functions of the standard cells come from the Liberty file of the PDK, not from its Verilog models. `-ignore_miss_func` skips the cells without a function (e.g. the clock gate `sg13g2_lgcp_1`), and `hierarchy -check` together with `select -assert-none t:sg13g2_*` makes the run fail if the netlist uses a cell without a model, instead of treating it as an empty box that proves trivially.
+- Each partition is proved with SBY and the ABC engine `pdr`, which needs no depth bound.
+
+`lec-mutant` swaps the first `sg13g2_nand2_1` of the netlist for a `sg13g2_nor2_1` in a copy (`flow/eqy/mutant.nl.v`) and passes only if `lec` then fails. Run it after changing the script, to make sure the check can still fail.
+
+LibreLane has an equivalence step of its own (`Yosys.EQY`, enabled with `RUN_EQY`), but it skips every PDK other than sky130A, which is why the macro runs EQY from its Makefile. `lec` was tested with IIC-OSIC-TOOLS `2026.10`.
+
+
 ### Lint, Build, Verify and Simulate All
 
 Lints, builds, verifies and simulates the whole macro:
@@ -659,10 +681,11 @@ Lints, builds, verifies and simulates the whole macro:
 - `lint-verilog-all`
 - `build-fpga`
 - `build-top`
+- `lec`
 - `magic-pex`
 - `sim-all`
 
-Linting runs first to fail fast on structural RTL issues. The simulations run **after** the build, so the gate-level simulations (`sim-gl-cocotb`, `sim-gl-xschem`) run on the netlists and the XSPICE model produced by this build, not on those of a previous one. `magic-pex` sits between the two, so the post-layout netlist the Xschem testbench includes is extracted from the GDS of this build as well. `klayout-pex` is commented out in the recipe: it works (see [Parasitic Extraction (PEX)](#parasitic-extraction-pex)), but it is a second full extraction that nothing in the flow consumes. The DRC and LVS verification is done within the LibreLane flow.
+Linting runs first to fail fast on structural RTL issues. `lec` proves the netlist of this build equivalent to the RTL. The simulations run **after** the build, so the gate-level simulations (`sim-gl-cocotb`, `sim-gl-xschem`) run on the netlists and the XSPICE model produced by this build, not on those of a previous one. `magic-pex` sits between the two, so the post-layout netlist the Xschem testbench includes is extracted from the GDS of this build as well. `klayout-pex` is commented out in the recipe: it works (see [Parasitic Extraction (PEX)](#parasitic-extraction-pex)), but it is a second full extraction that nothing in the flow consumes. The DRC and LVS verification is done within the LibreLane flow.
 
 ```sh
 make all

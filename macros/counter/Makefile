@@ -59,6 +59,10 @@ WAVEFORM_VIEWER ?= gtkwave
 # Override with: make open OPEN_ARGS=<options>
 OPEN_ARGS ?=
 
+# Gate-level netlist that lec proves equivalent to the RTL (default: the committed final netlist)
+# Override with: make lec LEC_NETLIST=<netlist>
+LEC_NETLIST ?= final/nl/$(TOP).nl.v
+
 # Folder structure
 COCOTB_DIR      := testbenches/cocotb
 VERILOG_TB_DIR 	:= testbenches/verilog
@@ -117,6 +121,7 @@ help: ## Show this help message
 	@echo 'SCRIPT selects the plotting script for sim-view-xschem (default: plot_<CELL>).'
 	@echo 'OPEN_ARGS passes extra options to sak-open.py for the open target (e.g. --all).'
 	@echo 'FORCE=1 lets symbol-gl overwrite an existing symbol instead of refusing.'
+	@echo 'LEC_NETLIST selects the netlist for lec (default: final/nl/$(TOP).nl.v).'
 	@echo 'REQUIRED_PDK defaults to $(REQUIRED_PDK). Every target except help and clean aborts if $$PDK differs.'
 .PHONY: help
 # ================================================================================================
@@ -419,11 +424,68 @@ magic-pex: ## Run Parasitic Extraction with Magic on the final GDS (usage: make 
 # ================================================================================================
 
 
+# Logic Equivalence Check Targets
+LEC_DIR := flow/eqy
+LEC_LIB := $(PDK_ROOT)/$(PDK)/libs.ref/sg13g2_stdcell/lib/sg13g2_stdcell_typ_1p20V_25C.lib
+
+# Read the RTL with the other front end than synthesis (USE_SLANG in config.yaml),
+# so that a front end that misreads the RTL cannot do so on both sides
+ifneq ($(shell grep -Eis '^[[:space:]]*USE_SLANG:[[:space:]]*true' $(LIBRELANE_DIR)/config.yaml),)
+LEC_GOLD_READ := 'read_verilog -sv $(abspath $(MODULES_SIM))'
+else
+LEC_GOLD_READ := 'plugin -i slang' 'read_slang --single-unit --top $(TOP) $(abspath $(MODULES_SIM))'
+endif
+
+lec: ## Prove the gate-level netlist equivalent to the RTL with EQY (usage: make lec [LEC_NETLIST=<netlist>])
+	@if [ ! -f $(LEC_NETLIST) ]; then \
+		echo "No netlist $(LEC_NETLIST) found. Run 'make build-top' (or 'make copy-final') first."; \
+		exit 1; \
+	fi
+	rm -rf $(LEC_DIR)/work
+	mkdir -p $(LEC_DIR)
+	@printf '%s\n' \
+		'[gold]' \
+		$(LEC_GOLD_READ) \
+		'hierarchy -check -top $(TOP)' \
+		'proc' \
+		'flatten -noscopeinfo' \
+		'' \
+		'[gate]' \
+		'read_liberty -ignore_miss_func $(LEC_LIB)' \
+		'read_verilog $(abspath $(LEC_NETLIST))' \
+		'hierarchy -check -top $(TOP)' \
+		'flatten -noscopeinfo' \
+		'select -assert-none t:sg13g2_*' \
+		'' \
+		'[strategy sby]' \
+		'use sby' \
+		'engine abc pdr' > $(LEC_DIR)/$(TOP).eqy
+	cd $(LEC_DIR) && eqy -f $(TOP).eqy -d work
+.PHONY: lec
+
+lec-mutant: ## Check that lec catches a difference: swap one cell in a copy of the netlist and expect lec to fail
+	mkdir -p $(LEC_DIR)
+	sed '0,/sg13g2_nand2_1 /s//sg13g2_nor2_1 /' $(LEC_NETLIST) > $(LEC_DIR)/mutant.nl.v
+	@if cmp -s $(LEC_NETLIST) $(LEC_DIR)/mutant.nl.v; then \
+		echo "lec-mutant: no sg13g2_nand2_1 cell to swap in $(LEC_NETLIST)"; \
+		exit 1; \
+	fi
+	@if $(MAKE) --no-print-directory lec LEC_NETLIST=$(LEC_DIR)/mutant.nl.v; then \
+		echo "lec-mutant: FAIL, lec proved the changed netlist equivalent"; \
+		exit 1; \
+	else \
+		echo "lec-mutant: PASS, lec found the swapped cell"; \
+	fi
+.PHONY: lec-mutant
+# ================================================================================================
+
+
 # Lint, Build, Verify and Simulate All Target
 all: ## Lint, build, verify and simulate the macro
 	$(MAKE) lint-verilog-all
 	$(MAKE) build-fpga
 	$(MAKE) build-top
+	$(MAKE) lec
 	$(MAKE) magic-pex
 #	$(MAKE) klayout-pex
 	$(MAKE) sim-all
@@ -433,7 +495,7 @@ all: ## Lint, build, verify and simulate the macro
 
 # Clean Target
 clean: ## Delete all generated files and folders (LibreLane runs, final, netlists, render, reports, simulation and FPGA outputs)
-	rm -rf $(LIBRELANE_DIR)/runs $(FLOW_FINAL_DIR)
+	rm -rf $(LIBRELANE_DIR)/runs $(FLOW_FINAL_DIR) $(LEC_DIR)
 	rm -rf $(FINAL_DIR)
 	rm -rf $(NET_NL_DIR) $(NET_PNL_DIR) $(NET_SPICE_DIR) $(XSPICE_DIR) $(NET_PEX_DIR)
 	rm -rf $(RENDER_IMG_DIR)
