@@ -6,10 +6,12 @@ S {}
 F {}
 E {}
 T {VCO Bias and Enable} 300 -1740 0 0 1 1 {}
-T {ibias_100u: 100 uA into the macro. MN1, MP1 and the 30:1 Mtop of the core
-set the 3 mA core current, MBt of the buffer mirrors MN0 60:1 for 6 mA.
-Rp/Cp and Rn/Cn (48 kOhm, 1.35 pF, 2.5 MHz) filter the reference noise.
-di_en low: MNd0 and MNd1 pull the NMOS gates to VSS, MPd the PMOS gate to VDD.} 2500 -1440 0 0 0.3 0.3 {}
+T {ibias_100u: 100 uA into the macro. MBt of the buffer mirrors MN0 60:1 for 6 mA.
+MN1 and MP1 copy the reference into MP2, which sets vbg_int to Vgs(MN3) + 100 uA x Rg.
+Rn and MCn1/2 (95 kOhm, 9.4 pF), Rf and MCg1/2 (95 kOhm, 10 pF) filter both buffer biases
+at about 170 kHz: their noise moves the buffer's input capacitance, which the tank sees.
+MCn1/2 and MCg1/2 are NMOS gate capacitors, eight times denser than MIM.
+di_en low: MNd0 and MNd1 pull the NMOS gates to VSS, MPd the PMOS gates to VDD.} 2500 -1440 0 0 0.3 0.3 {}
 N 2280 -1320 2400 -1320 {lab=VDD}
 N 2280 -280 2400 -280 {lab=VSS}
 N 580 -680 620 -680 {lab=VDD}
@@ -60,8 +62,8 @@ N 1020 -990 1060 -990 {lab=VSS}
 N 1060 -990 1060 -960 {lab=VSS}
 N 1100 -1020 1140 -1020 {lab=en_b}
 N 1000 -760 1090 -760 {lab=ibias_100u}
-N 1150 -760 1240 -760 {lab=vbn_buf}
-N 1240 -760 1240 -690 {lab=vbn_buf}
+N 1150 -760 1200 -760 {lab=vbn_buf}
+N 1200 -760 1240 -760 {lab=vbn_buf}
 N 1240 -760 1360 -760 {lab=vbn_buf}
 N 1360 -760 1360 -670 {lab=vbn_buf}
 N 1360 -640 1400 -640 {lab=VSS}
@@ -69,7 +71,6 @@ N 1400 -640 1400 -610 {lab=VSS}
 N 1360 -610 1400 -610 {lab=VSS}
 N 1360 -610 1360 -580 {lab=VSS}
 N 1300 -640 1320 -640 {lab=en_b}
-N 1360 -760 1440 -760 {lab=vbn_buf}
 N 1000 -880 1560 -880 {lab=ibias_100u}
 N 1000 -1180 1000 -1100 {lab=ibias_100u}
 N 1000 -1100 1000 -880 {lab=ibias_100u}
@@ -88,25 +89,21 @@ N 1540 -1120 1600 -1120 {lab=vbp_ref}
 N 1600 -1170 1600 -1120 {lab=vbp_ref}
 N 1600 -1120 1600 -1060 {lab=vbp_ref}
 N 1600 -1060 1600 -910 {lab=vbp_ref}
-N 1600 -1060 1690 -1060 {lab=vbp_ref}
-N 1840 -1320 1840 -1180 {lab=VDD}
-N 1750 -1060 1840 -1060 {lab=vbp_core}
-N 1840 -1120 1840 -1060 {lab=vbp_core}
 N 1960 -1320 1960 -1210 {lab=VDD}
 N 1960 -1180 2000 -1180 {lab=VDD}
 N 2000 -1320 2000 -1180 {lab=VDD}
 N 1900 -1180 1920 -1180 {lab=en}
-N 1840 -1060 1960 -1060 {lab=vbp_core}
-N 1960 -1150 1960 -1060 {lab=vbp_core}
-N 1960 -1060 2040 -1060 {lab=vbp_core}
-N 2040 -1060 2120 -1060 {lab=vbp_core}
-N 2040 -1200 2040 -1060 {lab=vbp_core}
-N 2040 -1200 2220 -1200 {lab=vbp_core}
+N 1960 -1150 1960 -1060 {lab=vbp_ref}
+N 1600 -1060 1960 -1060 {lab=vbp_ref}
+N 1960 -1060 2040 -1060 {lab=vbp_ref}
+N 2040 -1200 2040 -1060 {lab=vbp_ref}
+N 2040 -1200 2220 -1200 {lab=vbp_ref}
+N 1640 -1320 1960 -1320 {lab=VDD}
 N 2240 -1320 2240 -1230 {lab=VDD}
 N 2240 -1200 2280 -1200 {lab=VDD}
 N 2280 -1320 2280 -1200 {lab=VDD}
-N 2240 -1170 2240 -1080 {lab=vbg_buf}
-N 2240 -1080 2240 -1030 {lab=vbg_buf}
+N 2240 -1170 2240 -1080 {lab=vbg_int}
+N 2240 -1080 2240 -1030 {lab=vbg_int}
 N 2240 -970 2240 -840 {lab=nbg}
 N 2240 -840 2240 -790 {lab=nbg}
 N 2180 -760 2200 -760 {lab=nbg}
@@ -115,22 +112,39 @@ N 2180 -840 2240 -840 {lab=nbg}
 N 2240 -730 2240 -280 {lab=VSS}
 N 2240 -760 2280 -760 {lab=VSS}
 N 2280 -760 2280 -280 {lab=VSS}
-N 2240 -1080 2360 -1080 {lab=vbg_buf}
-N 2360 -1080 2360 -1040 {lab=vbg_buf}
-N 2360 -1080 2440 -1080 {lab=vbg_buf}
 N 420 -280 1000 -280 {lab=VSS}
 N 1000 -280 1040 -280 {lab=VSS}
 N 1040 -280 1600 -280 {lab=VSS}
 N 1600 -280 1640 -280 {lab=VSS}
 N 420 -1320 1600 -1320 {lab=VDD}
 N 1600 -1320 1640 -1320 {lab=VDD}
-N 1640 -1320 1840 -1320 {lab=VDD}
-N 1840 -1320 1960 -1320 {lab=VDD}
 N 1960 -1320 2000 -1320 {lab=VDD}
 N 2000 -1320 2240 -1320 {lab=VDD}
 N 2240 -1320 2280 -1320 {lab=VDD}
 N 1640 -280 2240 -280 {lab=VSS}
 N 2240 -280 2280 -280 {lab=VSS}
+N 1200 -760 1200 -640 {lab=vbn_buf}
+N 1240 -670 1240 -640 {lab=VSS}
+N 1240 -640 1240 -610 {lab=VSS}
+N 1240 -610 1240 -580 {lab=VSS}
+N 1360 -760 1420 -760 {lab=vbn_buf}
+N 1420 -760 1520 -760 {lab=vbn_buf}
+N 1420 -760 1420 -640 {lab=vbn_buf}
+N 1460 -670 1460 -640 {lab=VSS}
+N 1460 -640 1460 -610 {lab=VSS}
+N 1460 -610 1460 -580 {lab=VSS}
+N 2240 -1080 2300 -1080 {lab=vbg_int}
+N 2360 -1080 2400 -1080 {lab=vbg_buf}
+N 2400 -1080 2500 -1080 {lab=vbg_buf}
+N 2500 -1080 2600 -1080 {lab=vbg_buf}
+N 2400 -1080 2400 -1000 {lab=vbg_buf}
+N 2500 -1080 2500 -1000 {lab=vbg_buf}
+N 2440 -1030 2440 -1000 {lab=VSS}
+N 2440 -1000 2440 -970 {lab=VSS}
+N 2440 -970 2440 -940 {lab=VSS}
+N 2540 -1030 2540 -1000 {lab=VSS}
+N 2540 -1000 2540 -970 {lab=VSS}
+N 2540 -970 2540 -940 {lab=VSS}
 C {title-3.sym} 0 0 0 0 {name=l1 author="Simon Dorrer" rev=1.0 lock=true}
 C {devices/iopin.sym} 420 -1320 0 1 {name=p1 lab=VDD}
 C {devices/iopin.sym} 420 -280 0 1 {name=p2 lab=VSS}
@@ -188,19 +202,12 @@ C {devices/lab_pin.sym} 1060 -960 1 0 {name=l7 sig_type=std_logic lab=VSS}
 C {devices/lab_pin.sym} 1140 -1020 0 1 {name=l8 sig_type=std_logic lab=en_b}
 C {sg13g2_pr/rhigh.sym} 1120 -760 3 0 {name=Rn
 w=0.5e-6
-l=16e-6
+l=32e-6
 m=1
 b=0
 model=rhigh
 body=VSS
 spiceprefix=X}
-C {sg13g2_pr/cap_cmim.sym} 1240 -660 0 0 {name=Cn
-w=30e-6
-l=30e-6
-m=1
-model=cap_cmim
-spiceprefix=X}
-C {devices/lab_pin.sym} 1240 -630 1 0 {name=l9 sig_type=std_logic lab=VSS}
 C {sg13g2_pr/sg13_lv_nmos.sym} 1340 -640 0 0 {name=MNd1
 l=0.13u
 w=1u
@@ -210,7 +217,6 @@ model=sg13_lv_nmos
 spiceprefix=X}
 C {devices/lab_pin.sym} 1360 -580 1 0 {name=l10 sig_type=std_logic lab=VSS}
 C {devices/lab_pin.sym} 1300 -640 0 0 {name=l11 sig_type=std_logic lab=en_b}
-C {devices/iopin.sym} 1440 -760 0 0 {name=p5 lab=vbn_buf}
 C {sg13g2_pr/sg13_lv_nmos.sym} 1580 -880 0 0 {name=MN1
 l=0.5u
 w=2.5u
@@ -226,20 +232,6 @@ m=1
 model=sg13_lv_pmos
 spiceprefix=X}
 C {devices/lab_wire.sym} 1600 -1060 0 0 {name=l12 sig_type=std_logic lab=vbp_ref}
-C {sg13g2_pr/rhigh.sym} 1720 -1060 3 0 {name=Rp
-w=0.5e-6
-l=16e-6
-m=1
-b=0
-model=rhigh
-body=VSS
-spiceprefix=X}
-C {sg13g2_pr/cap_cmim.sym} 1840 -1150 0 0 {name=Cp
-w=30e-6
-l=30e-6
-m=1
-model=cap_cmim
-spiceprefix=X}
 C {sg13g2_pr/sg13_lv_pmos.sym} 1940 -1180 0 0 {name=MPd
 l=0.13u
 w=1u
@@ -248,7 +240,6 @@ m=1
 model=sg13_lv_pmos
 spiceprefix=X}
 C {devices/lab_pin.sym} 1900 -1180 0 0 {name=l13 sig_type=std_logic lab=en}
-C {devices/iopin.sym} 2120 -1060 0 0 {name=p6 lab=vbp_core}
 C {sg13g2_pr/sg13_lv_pmos.sym} 2220 -1200 0 0 {name=MP2
 l=0.5u
 w=5u
@@ -272,11 +263,46 @@ m=1
 model=sg13_lv_nmos
 spiceprefix=X}
 C {devices/lab_wire.sym} 2240 -840 0 0 {name=l14 sig_type=std_logic lab=nbg}
-C {sg13g2_pr/cap_cmim.sym} 2360 -1010 0 0 {name=Cg
-w=20e-6
-l=20e-6
+C {sg13g2_pr/sg13_lv_nmos.sym} 1220 -640 0 0 {name=MCn1
+l=10u
+w=40u
+ng=5
 m=1
-model=cap_cmim
+model=sg13_lv_nmos
 spiceprefix=X}
-C {devices/lab_pin.sym} 2360 -980 1 0 {name=l15 sig_type=std_logic lab=VSS}
-C {devices/iopin.sym} 2440 -1080 0 0 {name=p7 lab=vbg_buf}
+C {devices/lab_pin.sym} 1240 -580 1 0 {name=l9 sig_type=std_logic lab=VSS}
+C {sg13g2_pr/sg13_lv_nmos.sym} 1440 -640 0 0 {name=MCn2
+l=10u
+w=40u
+ng=5
+m=1
+model=sg13_lv_nmos
+spiceprefix=X}
+C {devices/lab_pin.sym} 1460 -580 1 0 {name=l16 sig_type=std_logic lab=VSS}
+C {devices/iopin.sym} 1520 -760 0 0 {name=p5 lab=vbn_buf}
+C {devices/lab_wire.sym} 2270 -1080 0 0 {name=l17 sig_type=std_logic lab=vbg_int}
+C {sg13g2_pr/rhigh.sym} 2330 -1080 3 0 {name=Rf
+w=0.5e-6
+l=32e-6
+m=1
+b=0
+model=rhigh
+body=VSS
+spiceprefix=X}
+C {sg13g2_pr/sg13_lv_nmos.sym} 2420 -1000 0 0 {name=MCg1
+l=10u
+w=40u
+ng=5
+m=1
+model=sg13_lv_nmos
+spiceprefix=X}
+C {devices/lab_pin.sym} 2440 -940 1 0 {name=l15 sig_type=std_logic lab=VSS}
+C {sg13g2_pr/sg13_lv_nmos.sym} 2520 -1000 0 0 {name=MCg2
+l=10u
+w=40u
+ng=5
+m=1
+model=sg13_lv_nmos
+spiceprefix=X}
+C {devices/lab_pin.sym} 2540 -940 1 0 {name=l18 sig_type=std_logic lab=VSS}
+C {devices/iopin.sym} 2600 -1080 0 0 {name=p7 lab=vbg_buf}

@@ -11,6 +11,9 @@ N 1240 -1120 1240 -1080 {lab=di_en}
 N 1300 -1120 1300 -1080 {lab=VDD}
 N 1300 -880 1300 -840 {lab=GND}
 N 1020 -980 1080 -980 {lab=vtune}
+N 1020 -1020 1080 -1020 {lab=vdd_core}
+N 1060 -910 1060 -870 {lab=vdd_core}
+N 1060 -810 1060 -770 {lab=GND}
 N 1360 -1000 1480 -1000 {lab=rf_out_p}
 N 1540 -1000 1600 -1000 {lab=vout_p}
 N 1600 -1000 1600 -970 {lab=vout_p}
@@ -38,6 +41,10 @@ C {devices/lab_pin.sym} 1240 -1120 3 0 {name=l2 sig_type=std_logic lab=di_en}
 C {devices/vdd.sym} 1300 -1120 0 0 {name=l3 lab=VDD}
 C {devices/gnd.sym} 1300 -840 0 0 {name=l4 lab=GND}
 C {devices/lab_pin.sym} 1020 -980 0 0 {name=l5 sig_type=std_logic lab=vtune}
+C {devices/lab_pin.sym} 1020 -1020 0 0 {name=l20 sig_type=std_logic lab=vdd_core}
+C {devices/vsource.sym} 1060 -840 0 0 {name=Vcore value="dc=vcore"}
+C {devices/lab_pin.sym} 1060 -910 3 0 {name=l21 sig_type=std_logic lab=vdd_core}
+C {devices/gnd.sym} 1060 -770 0 0 {name=l22 lab=GND}
 C {devices/lab_wire.sym} 1440 -1000 0 0 {name=l6 sig_type=std_logic lab=rf_out_p}
 C {devices/capa.sym} 1510 -1000 1 0 {name=Cp
 m=1
@@ -83,8 +90,9 @@ value="
 control
   abort always
 
-  // Supply and reference current, read by the sources.
+  // Supplies and reference current, read by the sources.
   var vdd=1.5
+  var vcore=0.72
   var ibias=100u
 
   options strictsave=1
