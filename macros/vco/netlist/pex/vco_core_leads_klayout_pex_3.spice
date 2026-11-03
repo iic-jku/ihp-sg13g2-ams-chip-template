@@ -1,0 +1,94 @@
+* NGSPICE file created from vco_core_leads.ext - technology: ihp-sg13g2
+
+.subckt vco_core_leads vdd_core VSS vtune rf_p rf_n
+X0 VSS.t12 rf_n rf_p VSS.t15 sg13_lv_nmos ad=0.38p pd=2.38u as=0.38p ps=2.38u w=2u l=0.13u
+X1 rf_p rf_n VSS.t1 VSS.t18 sg13_lv_nmos ad=0.38p pd=2.38u as=0.38p ps=2.38u w=2u l=0.13u
+X2 VSS.t1 rf_n rf_p VSS.t21 sg13_lv_nmos ad=0.68p pd=4.68u as=0.38p ps=2.38u w=2u l=0.13u
+X3 rf_n rf_p VSS.t1 VSS.t0 sg13_lv_nmos ad=0.38p pd=2.38u as=0.68p ps=4.68u w=2u l=0.13u
+X4 rf_n rf_p VSS.t1 VSS.t5 sg13_lv_nmos ad=0.38p pd=2.38u as=0.38p ps=2.38u w=2u l=0.13u
+X5 rf_n rf_p VSS.t1 VSS.t9 sg13_lv_nmos ad=0.38p pd=2.38u as=0.38p ps=2.38u w=2u l=0.13u
+X6 VSS.t1 rf_p rf_n VSS.t2 sg13_lv_nmos ad=0.38p pd=2.38u as=0.38p ps=2.38u w=2u l=0.13u
+X7 vdd_core VSS cap_cmim l=39u w=56u
+X8 rf_p rf_n VSS.t12 VSS.t14 sg13_lv_nmos ad=0.38p pd=2.38u as=0.38p ps=2.38u w=2u l=0.13u
+X9 VSS.t1 rf_n rf_p VSS.t17 sg13_lv_nmos ad=0.38p pd=2.38u as=0.38p ps=2.38u w=2u l=0.13u
+X10 rf_p rf_n VSS.t1 VSS.t20 sg13_lv_nmos ad=0.38p pd=2.38u as=0.38p ps=2.38u w=2u l=0.13u
+X11 VSS.t1 rf_p rf_n VSS.t6 sg13_lv_nmos ad=0.38p pd=2.38u as=0.38p ps=2.38u w=2u l=0.13u
+X12 VSS.t1 rf_p rf_n VSS.t10 sg13_lv_nmos ad=0.68p pd=4.68u as=0.38p ps=2.38u w=2u l=0.13u
+X13 rf_n rf_p VSS.t1 VSS.t3 sg13_lv_nmos ad=0.38p pd=2.38u as=0.38p ps=2.38u w=2u l=0.13u
+X14 rf_n rf_p VSS.t1 VSS.t7 sg13_lv_nmos ad=0.38p pd=2.38u as=0.38p ps=2.38u w=2u l=0.13u
+X15 rf_p rf_n VSS.t12 VSS.t11 sg13_lv_nmos ad=0.38p pd=2.38u as=0.68p ps=4.68u w=2u l=0.13u
+X16 VSS.t12 rf_n rf_p VSS.t13 sg13_lv_nmos ad=0.38p pd=2.38u as=0.38p ps=2.38u w=2u l=0.13u
+X17 rf_p rf_n VSS.t12 VSS.t16 sg13_lv_nmos ad=0.38p pd=2.38u as=0.38p ps=2.38u w=2u l=0.13u
+X18 VSS.t1 rf_n rf_p VSS.t19 sg13_lv_nmos ad=0.38p pd=2.38u as=0.38p ps=2.38u w=2u l=0.13u
+X19 VSS.t1 rf_p rf_n VSS.t4 sg13_lv_nmos ad=0.38p pd=2.38u as=0.38p ps=2.38u w=2u l=0.13u
+X20 VSS.t1 rf_p rf_n VSS.t8 sg13_lv_nmos ad=0.38p pd=2.38u as=0.38p ps=2.38u w=2u l=0.13u
+X21 vdd_core VSS cap_cmim l=25.5u w=42u
+C0 vdd_core rf_p 0.57963f
+C1 rf_p rf_n 1.27378f
+C2 vtune rf_p 0.04892f
+C3 vdd_core rf_n 0.83091f
+R0 VSS.n18 VSS.n17 414.765
+R1 VSS.t12 VSS.n18 17.0005
+R2 VSS.t12 VSS.n1 17.0005
+R3 VSS.t12 VSS.n7 17.0005
+R4 VSS.t12 VSS.n3 17.0005
+R5 VSS.t12 VSS.n5 17.0005
+R6 VSS.n0 VSS.n9 17.0005
+R7 VSS.n0 VSS.n16 17.0005
+R8 VSS.n0 VSS.n11 17.0005
+R9 VSS.n0 VSS.n14 17.0005
+R10 VSS.n17 VSS.n0 17.0005
+R11 VSS.n5 VSS.t13 10.269
+R12 VSS.n5 VSS.t14 10.269
+R13 VSS.t15 VSS.n3 10.269
+R14 VSS.t16 VSS.n3 10.269
+R15 VSS.n7 VSS.t17 10.269
+R16 VSS.n7 VSS.t18 10.269
+R17 VSS.t19 VSS.n1 10.269
+R18 VSS.t20 VSS.n1 10.269
+R19 VSS.n18 VSS.t21 10.269
+R20 VSS.n17 VSS.t0 10.269
+R21 VSS.n14 VSS.t2 10.269
+R22 VSS.n14 VSS.t3 10.269
+R23 VSS.t4 VSS.n11 10.269
+R24 VSS.t5 VSS.n11 10.269
+R25 VSS.n16 VSS.t6 10.269
+R26 VSS.n16 VSS.t7 10.269
+R27 VSS.t8 VSS.n9 10.269
+R28 VSS.t9 VSS.n9 10.269
+R29 VSS.t10 VSS.t9 9.51345
+R30 VSS.t13 VSS.t11 9.51286
+R31 VSS.t14 VSS.n4 8.3042
+R32 VSS.n4 VSS.t15 8.3042
+R33 VSS.n6 VSS.t16 8.3042
+R34 VSS.t17 VSS.n6 8.3042
+R35 VSS.t18 VSS.n2 8.3042
+R36 VSS.n2 VSS.t19 8.3042
+R37 VSS.n8 VSS.t20 8.3042
+R38 VSS.t21 VSS.n8 8.3042
+R39 VSS.n13 VSS.t0 8.3042
+R40 VSS.t2 VSS.n13 8.3042
+R41 VSS.t3 VSS.n12 8.3042
+R42 VSS.n12 VSS.t4 8.3042
+R43 VSS.n15 VSS.t5 8.3042
+R44 VSS.t6 VSS.n15 8.3042
+R45 VSS.t7 VSS.n10 8.3042
+R46 VSS.n10 VSS.t8 8.3042
+R47 VSS.t12 VSS.n8 6.06081
+R48 VSS.t12 VSS.n2 6.06081
+R49 VSS.t12 VSS.n6 6.06081
+R50 VSS.t12 VSS.n4 6.06081
+R51 VSS.n0 VSS.n10 6.06081
+R52 VSS.n0 VSS.n15 6.06081
+R53 VSS.n0 VSS.n12 6.06081
+R54 VSS.n0 VSS.n13 6.06081
+R55 VSS.n0 VSS.t10 3.97038
+R56 VSS.t12 VSS.t11 3.97026
+R57 VSS.t1 VSS.t12 2.04248
+R58 VSS.n0 VSS.t1 1.91816
+R59 VSS VSS.t1 1.32753
+C4 vdd_core VSS 19.782f
+C5 vtune VSS 1.147f
+C6 rf_p VSS 9.112f
+C7 rf_n VSS 9.21829f
+.ends

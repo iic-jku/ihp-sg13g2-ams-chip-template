@@ -73,6 +73,22 @@ ORDER ?= 6
 # Override with: make sim-em NP=<processes>
 NP ?= 4
 
+# MOS corners of sim-corners, applied to the LV and the HV models (default: mos_tt mos_ss mos_ff)
+# Override with: make sim-corners CORNERS="<corner> ..."
+CORNERS ?= mos_tt mos_ss mos_ff
+
+# Temperatures of sim-corners in C (default: -40 27 85)
+# Override with: make sim-corners TEMPS="<C> ..."
+TEMPS ?= -40 27 85
+
+# vdd_core values of sim-corners in V (default: 0.72, the nominal core supply)
+# Override with: make sim-corners VCORE="<V> ..."
+VCORE ?= 0.72
+
+# vtune values of sim-corners in V (default: 0 1.5, the ends of the tuning range)
+# Override with: make sim-corners VTUNE="<V> ..."
+VTUNE ?= 0 1.5
+
 # Preferred GDS extension: use .gds when available for the CELL, otherwise .klay.gds
 # Resolved per CELL (CELL defaults to TOP), so cells can mix .gds and .klay.gds within one macro.
 # All DRC, LVS and PEX targets (KLayout and Magic) work with either .gds or .klay.gds.
@@ -109,7 +125,7 @@ PALACE_SCRIPTS  := $(PDK_ROOT)/$(PDK)/libs.tech/palace/scripts
 
 # Help Target
 help: ## Show this help message
-	@echo 'Usage: make <target> [CELL=<cellname>] [EXT_MODE=<1|2|3>] [THRESHOLD=<mOhm>] [MINRES=<mOhm>] [MINDELAY=<ps>] [DRC_LEVEL=<precheck|macro|regular>] [EV_PRECISION=<digits>] [TB=<testbenchname>] [SCRIPT=<scriptname>] [EM=<structure>] [NP=<processes>] [SNP=<file.sNp>] [LE_MODEL=<structure|universal>] [ORDER=<N>] [OPEN_ARGS=<options>]'
+	@echo 'Usage: make <target> [CELL=<cellname>] [EXT_MODE=<1|2|3>] [THRESHOLD=<mOhm>] [MINRES=<mOhm>] [MINDELAY=<ps>] [DRC_LEVEL=<precheck|macro|regular>] [EV_PRECISION=<digits>] [TB=<testbenchname>] [SCRIPT=<scriptname>] [EM=<structure>] [NP=<processes>] [SNP=<file.sNp>] [LE_MODEL=<structure|universal>] [ORDER=<N>] [CORNERS=<corners>] [TEMPS=<C>] [VCORE=<V>] [VTUNE=<V>] [OPEN_ARGS=<options>]'
 	@echo ''
 	@echo 'Available targets:'
 	@grep -E '^[a-zA-Z0-9_.-]+:.*## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*## "}; {printf "  %-20s %s\n", $$1, $$2}'
@@ -125,6 +141,7 @@ help: ## Show this help message
 	@echo 'NP sets the number of MPI processes of Palace (default: 4).'
 	@echo 'SNP selects the Touchstone file for snp2le (default: verification/em/s-parameter/<EM>.s3p).'
 	@echo 'LE_MODEL selects the snp2le model (default: inductor-ct). ORDER sets the order of a universal fit (default: 6).'
+	@echo 'CORNERS, TEMPS, VCORE and VTUNE set the runs of sim-corners (defaults: mos_tt mos_ss mos_ff, -40 27 85 C, 0.72 V, 0 V and 1.5 V).'
 	@echo 'OPEN_ARGS passes extra options to sak-open.py for the open target (e.g. --all).'
 	@echo 'REQUIRED_PDK defaults to $(REQUIRED_PDK). Every target except help and clean aborts if $$PDK differs.'
 .PHONY: help
@@ -169,7 +186,18 @@ sim-all: ## Simulate the macro
 	$(MAKE) sim-xschem TB=vco_top_tb_tran
 	$(MAKE) sim-xschem TB=vco_top_tb_pss_vacask
 	$(MAKE) sim-xschem TB=vco_top_tb_tune_vacask
+	$(MAKE) sim-xschem TB=vco_top_tb_tran_lpe
 .PHONY: sim-all
+
+# sim_corners.py rewrites the netlist of a start-up transient testbench (vco_top_tb_tran or vco_top_tb_tran_lpe) once
+# per corner, temperature, vdd_core and vtune value, runs ngspice on them in parallel and fails when a run does not
+# oscillate or a tank node peaks above the 1.5 V supply.
+sim-corners: ## Run a start-up transient over MOS corners, temperatures, vdd_core and vtune (usage: make sim-corners [TB=<vco_top_tb_tran|vco_top_tb_tran_lpe>] [CORNERS=<corners>] [TEMPS=<C>] [VCORE=<V>] [VTUNE=<V>])
+	$(MAKE) sim-xschem TB=$(TB)
+	python3 $(SCRIPTS_DIR)/sim_corners.py $(XSCHEM_TB_DIR)/simulations/$(TB).spice \
+		--corners $(CORNERS) --temps $(TEMPS) --vcore $(VCORE) --vtune $(VTUNE) \
+		--csv $(SIM_PLOT_DIR)/figures/$(TB)_corners.csv
+.PHONY: sim-corners
 # ================================================================================================
 
 
@@ -462,6 +490,33 @@ klayout-pex: ## Run Parasitic Extraction with KPEX of the CELL cell (usage: make
 	python3 $(SCRIPTS_DIR)/check_pex_ports.py $(NET_PEX_DIR)/$(CELL)_klayout_pex_$(EXT_MODE).spice
 .PHONY: klayout-pex
 
+# The core holds the varactor array, which KPEX cannot read, and the coil, whose model is its EM simulation and not an RC
+# extraction. klayout-pex-leads extracts the cell without its subcells, so the pair, Cct1, Cct2 and every lead, for the
+# post-layout testbench, which adds the array's schematic and the coil's EM model at the same nets.
+klayout-pex-leads: ## Run KPEX on a cell without its subcells, the leads of the post-layout core (usage: make klayout-pex-leads [CELL=vco_core] [EXT_MODE=<2|3>])
+	mkdir -p $(NET_PEX_DIR)
+	python3 $(SCRIPTS_DIR)/drop_subcells.py $(LAY_DIR)/$(CELL).gds $(CELL) $(NET_PEX_DIR)/$(CELL)_leads.gds
+	PDK_UNDERSCORED=$$(echo $$PDK | sed -e 's/-/_/g'); \
+	case $(EXT_MODE) in \
+		2) KPEX_MODE=CC ;; \
+		3) KPEX_MODE=RC ;; \
+		*) echo "Invalid EXT_MODE: $(EXT_MODE). Use 2 or 3."; exit 1;; \
+	esac; \
+	kpex \
+	--pdk $$PDK_UNDERSCORED \
+	--cell $(CELL) \
+	--gds $(NET_PEX_DIR)/$(CELL)_leads.gds \
+	--magic \
+	--magic_mode $$KPEX_MODE \
+	--out_dir $(NET_PEX_DIR) \
+	--out_spice $(NET_PEX_DIR)/$(CELL)_leads_klayout_pex_$(EXT_MODE).spice
+	sed -i 's/\b$(CELL)\b/$(CELL)_leads/g' $(NET_PEX_DIR)/$(CELL)_leads_klayout_pex_$(EXT_MODE).spice
+	rm -rf $(NET_PEX_DIR)/$(CELL)_leads__$(CELL) $(NET_PEX_DIR)/$(CELL)_leads.gds
+	rm -f $(CELL).nodes $(CELL).sim
+	sak-pin-reorder.py $(XSCHEM_TB_DIR)/$(CELL)_leads.sym $(NET_PEX_DIR)/$(CELL)_leads_klayout_pex_$(EXT_MODE).spice --format spice
+	python3 $(SCRIPTS_DIR)/check_pex_ports.py $(NET_PEX_DIR)/$(CELL)_leads_klayout_pex_$(EXT_MODE).spice
+.PHONY: klayout-pex-leads
+
 magic-pex: ## Run Parasitic Extraction with Magic of the CELL cell (usage: make magic-pex [CELL=<cellname>] [EXT_MODE=<1|2|3>] [THRESHOLD=<mOhm>] [MINRES=<mOhm>] [MINDELAY=<ps>])
 	mkdir -p $(NET_PEX_DIR)
 	$(MAKE) symbol-pex CELL=$(CELL)
@@ -486,7 +541,7 @@ klayout-verify: ## Verify CELL cell with KLayout (usage: make klayout-verify [CE
 	$(MAKE) klayout-pex CELL=$(CELL)
 .PHONY: klayout-verify
 
-klayout-verify-all: ## Verify every cell with KLayout: DRC, LVS and PEX of the bias and the buffer, DRC and LVS of the others
+klayout-verify-all: ## Verify every cell with KLayout: DRC, LVS and PEX of the bias and the buffer, DRC and LVS of the others, PEX of the core's leads
 	$(MAKE) klayout-verify CELL=vco_bias
 	$(MAKE) klayout-verify CELL=vco_buf
 # KPEX cannot read Magic's extraction of sg13_hv_svaricap, and an RC extraction of the coil holds no inductance (its model
@@ -497,6 +552,7 @@ klayout-verify-all: ## Verify every cell with KLayout: DRC, LVS and PEX of the b
 	$(MAKE) klayout-lvs CELL=vco_ind
 	$(MAKE) klayout-drc CELL=vco_core
 	$(MAKE) klayout-lvs CELL=vco_core
+	$(MAKE) klayout-pex-leads CELL=vco_core
 	$(MAKE) klayout-drc CELL=vco_top
 	$(MAKE) klayout-lvs CELL=vco_top
 .PHONY: klayout-verify-all

@@ -4,7 +4,7 @@
 # Author: Simon Dorrer
 # Description: Plots of the VCO top macro from the ngspice transient, the VACASK PSS, PNOISE and PAC bench and the VACASK tuning bench.
 # Created: 17.10.2026
-# Last Modified: 17.10.2026
+# Last Modified: 31.10.2026
 # ============================================
 
 # Imports
@@ -144,6 +144,7 @@ def plot_pss(data_dir, figures_dir):
     ax2.grid(visible=True, which='both', linestyle='--', alpha=0.45)
     plt.tight_layout()
     save(fig, figures_dir, f"{tb}_pnoise_pac", (fm, L, kvco), "f_offset_hz,L_dbc_hz,kvco_hz_per_v")
+    return f0
 
 
 def frequency(t, v, t_start):
@@ -181,6 +182,7 @@ def plot_tune(data_dir, figures_dir):
     ax2.set_ylabel(r'$K_\mathrm{VCO}$ (GHz/V)', color='#ff6b35')
     plt.tight_layout()
     save(fig, figures_dir, tb, (vt, f0, kvco), "vtune_v,f0_hz,kvco_hz_per_v")
+    return vt, f0
 
 
 def main():
@@ -193,10 +195,20 @@ def main():
     # Plot what the benches have written so far
     if (data_dir / "vco_top_tb_tran.txt").exists():
         plot_tran(data_dir, figures_dir)
+    f_pss = tune = None
     if (data_dir / "vco_top_tb_pss_vacask_pss.txt").exists():
-        plot_pss(data_dir, figures_dir)
+        f_pss = plot_pss(data_dir, figures_dir)
     if list(data_dir.glob("vco_top_tb_tune_vacask_tune_*.txt")):
-        plot_tune(data_dir, figures_dir)
+        tune = plot_tune(data_dir, figures_dir)
+
+    # The shooting PSS can settle a slow state (a bias filter) away from its DC value without failing, which shows as
+    # a frequency off the transient's at the same tuning voltage (0.75 V in the PSS bench)
+    if f_pss is not None and tune is not None:
+        f_tran = np.interp(0.75, *tune)
+        dev = (f_pss - f_tran) / f_tran
+        print(f"check: PSS f0 deviates {dev * 100:+.2f} % from the transient at vtune = 0.75 V")
+        if abs(dev) > 3e-3:
+            print("WARNING: PSS and transient disagree by more than 0.3 %, do not trust PNOISE and PAC")
 
     # Open the plot windows (blocks until they are closed)
     plt.show()
