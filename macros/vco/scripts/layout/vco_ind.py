@@ -12,8 +12,8 @@ import sys
 
 import pya
 
-# Coil geometry in um. The PCell parameter d is the inner diameter: 58 um inner gives 82 um outer.
-W, S, D_INNER, TURNS = 4, 4, 58, 2
+# Coil geometry in um. The PCell parameter d is the inner diameter: 52 um inner gives 76 um outer.
+W, S, D_INNER, TURNS = 4, 4, 52, 2
 
 # Substrate tap left of the feeds, below the inductor keep-out (y < 0)
 TAP_W, TAP_L = 4, 1
