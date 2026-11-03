@@ -9,8 +9,8 @@
 # Built around the core's origin (the coil above, its column below), then moved so the PR boundary starts at (0, 0).
 # The macro is as wide as the coil's keep-out. Below it, the core's column sits on the axis with Cct1 and Cct2 to its
 # right, the buffer is centered under the column, and the bias fills the left side. Power runs on two straps along the
-# bottom edge, VSS on Metal5 and VDD on Metal4 below it. di_en and ibias_100u leave at the left edge, everything else at
-# the bottom edge. Nothing closes a loop around the coil.
+# bottom edge, VSS on Metal5 under a TopMetal2 strap and VDD on Metal4 below it. di_en and ibias_100u leave at the left
+# edge, everything else at the bottom edge. Nothing closes a loop around the coil.
 
 import os
 import sys
@@ -24,6 +24,7 @@ XB, YB = -65.7, -4.5  # origin of the bias cell, its left edge ends up at -71
 YBUF = -68.6  # origin of the buffer cell, its top edge ends up at -45
 X_BB = -25.5  # x of the Metal4 risers from the bias outputs to the buffer's bias pins
 Y_VSS = (-77.0, -75.0)  # VSS strap on Metal5
+Y_VSS2 = (-79.0, -75.0)  # VSS strap on TopMetal2 over it
 Y_VDD = (-79.5, -77.5)  # VDD strap on Metal4, its bottom is the macro's bottom edge
 Y_BOTTOM = Y_VDD[0]
 X_BVSS, X_BVDD = -67.5, -70.4  # x of the bias's VSS (Metal5) and VDD (Metal4) risers down to the straps
@@ -86,11 +87,19 @@ line = top.rect("TopMetal1", c.left, Y_BOTTOM, c.right, c.bottom + 0.1)
 top.pin("TopMetal1", "vdd_core", pya.DBox(line.left, line.bottom, line.right, line.bottom + 1.0))
 
 # VSS strap: the core's pin on Cct2's bottom plate reaches it, the buffer's rail drops onto it through via stacks
-# between the outputs and vtune, the bias's rail on a Metal5 riser at the left edge
+# between the outputs and vtune, the bias's rail on a Metal5 riser at the left edge. Metal5 is a thin metal here: alone,
+# the 2 um strap put 4.4 Ohm between the core and the pin at the left edge. The TopMetal2 strap over it carries the
+# current, joined to it through via stacks clear of vdd_core's TopMetal1.
 vss = top.rect("Metal5", X_LEFT, Y_VSS[0], X_RIGHT, Y_VSS[1])
-top.pin("Metal5", "VSS", pya.DBox(X_LEFT, vss.bottom, X_LEFT + 2.0, vss.top))
+vss2 = top.rect("TopMetal2", X_LEFT, Y_VSS2[0], X_RIGHT, Y_VSS2[1])
+top.pin("TopMetal2", "VSS", pya.DBox(X_LEFT, vss2.bottom, X_LEFT + 2.0, vss2.top))
 c = box(cp, "VSS")
 top.rect("Metal5", c.left, Y_VSS[1] - 0.1, c.right, c.bottom + 0.1)
+xvc = box(cp, "vdd_core")
+for x in range(int(X_LEFT) + 3, int(X_RIGHT) - 2, 6):
+    if xvc.left - 3.5 < x < xvc.right + 3.5:
+        continue
+    top.via(x, (Y_VSS[0] + Y_VSS[1]) / 2, "Metal5", "TopMetal2", tcols=2, trows=1)
 b = box(bp, "VSS")
 for x in (-6.0, 6.0):
     top.via(x, b.center().y, "Metal1", "Metal5", cols=2, rows=2)

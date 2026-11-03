@@ -17,9 +17,8 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import pya  # noqa: E402
 import vco_layout as vl  # noqa: E402
 
-N, W, L, NX = 3, 3.74, 0.3, 8
+N, W, L, NX = 3, 3.74, 0.3, 7
 PITCH = 8.35  # device pitch in y: 6.35 um of thick-oxide region and 2 um between two
-XAXIS = 4.925  # x of the column's axis, the middle of a device's NWell
 XBUS = 8.0  # distance of the rf_p and rf_n buses from the axis
 BUS_W = 1.0  # width of the buses and of the Metal2 stubs
 TAP_GAP, TAP_W = 1.0, 0.6  # distance of the tap from the thick-oxide region, tap width
@@ -40,6 +39,8 @@ for i in range(N):
             g1s.append(box)
         else:
             g2s.append(box)
+# The column's axis is the middle of a device's NWell, which moves with Nx
+XAXIS = pya.Region(cell.begin_shapes_rec(ly.layer(31, 0))).bbox().to_dtype(ly.dbu).center().x
 if not (len(g1s) == len(g2s) == len(ws) == N):
     raise RuntimeError(f"vco_var.py: expected {N} G1, G2 and W strips, found {len(g1s)}, {len(g2s)}, {len(ws)}")
 

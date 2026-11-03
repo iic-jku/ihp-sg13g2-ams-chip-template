@@ -92,7 +92,7 @@ control
 
   // Supplies and reference current, read by the sources.
   var vdd=1.5
-  var vcore=0.72
+  var vcore=0.79
   var ibias=100u
 
   options strictsave=1

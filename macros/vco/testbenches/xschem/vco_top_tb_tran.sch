@@ -88,7 +88,7 @@ only_toplevel=true
 value="
 .include ../../../netlist/spice/vco_ind_le.spice
 .param VDD=1.5
-.param Vcore=0.72
+.param Vcore=0.79
 .param Vtune=0.75
 .param Ibias=100u
 .temp 27

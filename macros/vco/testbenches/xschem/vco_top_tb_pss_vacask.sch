@@ -92,11 +92,11 @@ control
 
   // Supplies and reference current, read by the sources.
   var vdd=1.5
-  var vcore=0.72
+  var vcore=0.79
   var ibias=100u
 
   // 4000 steps per period: at the default 1000 the shooting Newton cycles and does not converge.
-  // reltol 3e-5: the buffer bias filters are slow states (1 us against a 49 ps period). At the default 1e-3
+  // reltol 3e-5: the buffer bias filters are slow states (1 us against a 44 ps period). At the default 1e-3
   // the shooting Newton lets them drift by about 70 mV from their DC values, at 1e-5 the operating point fails.
   options strictsave=1 pss_minpts=4000 reltol=3e-5
   save v(vout_p) v(vout_n) v(\\"x1:rf_p\\") v(\\"x1:rf_n\\")
@@ -104,7 +104,7 @@ control
 
   // Oscillator PSS: the period is solved for, tper is the guess. ic kicks the tank away
   // from the symmetric operating point, tstab lets the oscillation build up (at 3 ns the shooting fails).
-  analysis pss pss oscillator=1 tper=50p tstab=6n maxharm=20 ic=\{\\"x1:rf_p\\", 0.8, \\"x1:rf_n\\", 0.7\} store=\\"osc\\"
+  analysis pss pss oscillator=1 tper=44.3p tstab=6n maxharm=20 ic=\{\\"x1:rf_p\\", 0.8, \\"x1:rf_n\\", 0.7\} store=\\"osc\\"
 
   // Phase noise at the output: noise around the first harmonic, linearised at the stored PSS.
   // in names the source the gain output refers to, pnoise needs one.
