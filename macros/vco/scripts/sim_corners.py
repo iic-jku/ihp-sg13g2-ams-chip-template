@@ -59,10 +59,12 @@ def main():
     parser.add_argument("--corners", nargs="+", default=["mos_tt", "mos_ss", "mos_ff"],
                         help="MOS corners, applied to the LV and the HV models (default: mos_tt mos_ss mos_ff)")
     parser.add_argument("--temps", nargs="+", type=float, default=[-40.0, 27.0, 85.0], help="temperatures in C")
-    parser.add_argument("--vcore", nargs="+", type=float, default=[0.72], help="vdd_core values in V (default: 0.72)")
+    parser.add_argument("--vcore", nargs="+", type=float, default=[0.79], help="vdd_core values in V (default: 0.79)")
     parser.add_argument("--vtune", nargs="+", type=float, default=[0.0, 1.5], help="vtune values in V")
     parser.add_argument("--jobs", type=int, default=4, help="ngspice runs in parallel (default: 4)")
     parser.add_argument("--threads", type=int, default=3, help="threads of each ngspice run (default: 3)")
+    parser.add_argument("--vpeak-max", type=float, default=V_PEAK_MAX,
+                        help=f"a tank node above this fails the run, 0 only reports it (default: {V_PEAK_MAX} V)")
     parser.add_argument("--csv", required=True, help="output table")
     args = parser.parse_args()
 
@@ -84,8 +86,8 @@ def main():
             swing = v.get("vtank_max", math.nan) - v.get("vtank_min", math.nan)
             if "f0" not in v or not swing >= V_SWING_MIN:
                 status = "no oscillation"
-            elif v["vtank_max"] > V_PEAK_MAX:
-                status = f"peak above {V_PEAK_MAX} V"
+            elif args.vpeak_max > 0 and v["vtank_max"] > args.vpeak_max:
+                status = f"peak above {args.vpeak_max} V"
             else:
                 status = "ok"
             failed += status != "ok"

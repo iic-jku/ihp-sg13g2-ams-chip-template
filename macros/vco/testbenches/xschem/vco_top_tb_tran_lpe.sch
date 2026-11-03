@@ -87,12 +87,10 @@ C {devices/code_shown.sym} 60 -1410 0 0 {name=NGSPICE
 only_toplevel=true
 value="
 .include ../../../netlist/spice/vco_ind_le.spice
-* KPEX netlists (full RC) of the bias, the buffer and the core's leads, written by make klayout-verify-all
-.include ../../../netlist/pex/vco_bias_klayout_pex_3.spice
-.include ../../../netlist/pex/vco_buf_klayout_pex_3.spice
-.include ../../../netlist/pex/vco_core_leads_klayout_pex_3.spice
+* KPEX netlist (full RC) of the macro without the coil and the varactor array, written by make klayout-pex-leads
+.include ../../../netlist/pex/vco_top_leads_klayout_pex_3.spice
 .param VDD=1.5
-.param Vcore=0.72
+.param Vcore=0.79
 .param Vtune=0.75
 .param Ibias=100u
 .temp 27
