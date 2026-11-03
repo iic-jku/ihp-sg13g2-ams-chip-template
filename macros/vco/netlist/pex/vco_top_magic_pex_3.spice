@@ -1,780 +1,1130 @@
-* PEX produced on Sat Oct 17 10:46:34 PM CEST 2026 using /foss/tools/sak/sak-pex.sh with m=3 and s=1 (extresist threshold=10000 mOhm, minres=1000 mOhm, mindelay=1 ps)
+* PEX produced on Sun Nov  1 12:41:53 AM CET 2026 using /foss/tools/sak/sak-pex.sh with m=3 and s=1 (extresist threshold=10000 mOhm, minres=1000 mOhm, mindelay=1 ps)
 * NGSPICE file created from vco_top_pex.ext - technology: ihp-sg13g2
 
-.subckt vco_top_pex ibias_100u di_en VDD VSS vtune rf_out_p rf_out_n
-X0 a_12058_2500# vco_bias_0.vbn_buf VSS.t11 VSS.t28 sg13_lv_nmos ad=0.475p pd=2.88u as=0.475p ps=2.88u w=2.5u l=0.5u
-X1 VSS.t96 a_8454_22432# a_8454_22432# VSS.t95 sg13_lv_nmos ad=0.85p pd=5.68u as=0.85p ps=5.68u w=2.5u l=0.5u
-X2 VSS.t92 a_8754_23206# a_8890_25938# VSS.t91 sg13_lv_nmos ad=0.17p pd=1.68u as=0.17p ps=1.68u w=0.5u l=0.13u
-X3 a_12058_2500# vco_bias_0.vbn_buf VSS.t11 VSS.t54 sg13_lv_nmos ad=0.475p pd=2.88u as=0.475p ps=2.88u w=2.5u l=0.5u
-X4 a_12058_2500# vco_bias_0.vbn_buf VSS.t11 VSS.t40 sg13_lv_nmos ad=0.475p pd=2.88u as=0.475p ps=2.88u w=2.5u l=0.5u
-X5 VSS.t11 vco_bias_0.vbn_buf a_12058_2500# VSS.t35 sg13_lv_nmos ad=0.475p pd=2.88u as=0.475p ps=2.88u w=2.5u l=0.5u
-X6 a_12058_2500# vco_bias_0.vbn_buf VSS.t11 VSS.t42 sg13_lv_nmos ad=0.475p pd=2.88u as=0.475p ps=2.88u w=2.5u l=0.5u
-X7 VSS.t11 vco_bias_0.vbn_buf a_12058_2500# VSS.t61 sg13_lv_nmos ad=0.475p pd=2.88u as=0.475p ps=2.88u w=2.5u l=0.5u
-X8 a_12058_2500# vco_bias_0.vbn_buf VSS.t11 VSS.t56 sg13_lv_nmos ad=0.475p pd=2.88u as=0.475p ps=2.88u w=2.5u l=0.5u
-X9 vco_buf_0.rf_p vco_bias_0.vbp_core VDD VDD sg13_lv_pmos ad=0.95p pd=5.38u as=0.95p ps=5.38u w=5u l=0.5u
-X10 VDD a_8754_23206# a_8890_25938# VDD sg13_lv_pmos ad=0.34p pd=2.68u as=0.34p ps=2.68u w=1u l=0.13u
-X11 VSS.t11 vco_bias_0.vbn_buf a_12058_2500# VSS.t63 sg13_lv_nmos ad=0.475p pd=2.88u as=0.475p ps=2.88u w=2.5u l=0.5u
-X12 vco_buf_0.rf_p vco_buf_0.rf_p VSS.t115 VSS.t119 sg13_lv_nmos ad=0.38p pd=2.38u as=0.38p ps=2.38u w=2u l=0.13u
-X13 vco_buf_0.rf_p vco_bias_0.vbp_core VDD VDD sg13_lv_pmos ad=0.95p pd=5.38u as=0.95p ps=5.38u w=5u l=0.5u
-X14 vco_buf_0.rf_p vco_buf_0.rf_p VSS.t115 VSS.t114 sg13_lv_nmos ad=0.38p pd=2.38u as=0.68p ps=4.68u w=2u l=0.13u
-X15 VSS.t131 vco_buf_0.rf_p vco_buf_0.rf_p VSS.t135 sg13_lv_nmos ad=0.38p pd=2.38u as=0.38p ps=2.38u w=2u l=0.13u
-X16 vco_bias_0.vbn_buf VSS.t68 cap_cmim l=30u w=30u
-X17 VSS.t131 vco_buf_0.rf_p vco_buf_0.rf_p VSS.t130 sg13_lv_nmos ad=0.38p pd=2.38u as=0.38p ps=2.38u w=2u l=0.13u
-X18 VSS.t123 vco_buf_0.rf_p vco_buf_0.rf_p VSS.t122 sg13_lv_nmos ad=0.38p pd=2.38u as=0.38p ps=2.38u w=2u l=0.13u
-X19 a_12058_2500# a_12350_5514# rf_out_n VSS.t82 sg13_lv_nmos ad=0.38p pd=2.38u as=0.38p ps=2.38u w=2u l=0.13u
-X20 vco_buf_0.rf_p vco_bias_0.vbp_core VDD VDD sg13_lv_pmos ad=0.95p pd=5.38u as=0.95p ps=5.38u w=5u l=0.5u
-X21 vco_buf_0.rf_p vco_bias_0.vbp_core VDD VDD sg13_lv_pmos ad=0.95p pd=5.38u as=0.95p ps=5.38u w=5u l=0.5u
-X22 a_12058_2500# a_12350_5514# rf_out_n VSS.t78 sg13_lv_nmos ad=0.38p pd=2.38u as=0.38p ps=2.38u w=2u l=0.13u
-X23 a_12058_2500# vco_bias_0.vbn_buf VSS.t11 VSS.t20 sg13_lv_nmos ad=0.475p pd=2.88u as=0.475p ps=2.88u w=2.5u l=0.5u
-X24 vco_buf_0.rf_p vco_bias_0.vbp_core VDD VDD sg13_lv_pmos ad=0.95p pd=5.38u as=0.95p ps=5.38u w=5u l=0.5u
-X25 a_12058_2500# vco_bias_0.vbn_buf VSS.t11 VSS.t22 sg13_lv_nmos ad=0.475p pd=2.88u as=0.475p ps=2.88u w=2.5u l=0.5u
-X26 vco_buf_0.rf_p vco_bias_0.vbp_core VDD VDD sg13_lv_pmos ad=0.95p pd=5.38u as=0.95p ps=5.38u w=5u l=0.5u
-X27 VSS.t11 vco_bias_0.vbn_buf a_12058_2500# VSS.t29 sg13_lv_nmos ad=0.475p pd=2.88u as=0.475p ps=2.88u w=2.5u l=0.5u
-X28 VSS.t115 vco_buf_0.rf_p vco_buf_0.rf_p VSS.t116 sg13_lv_nmos ad=0.38p pd=2.38u as=0.38p ps=2.38u w=2u l=0.13u
-X29 a_12058_2500# vco_bias_0.vbn_buf VSS.t11 VSS.t36 sg13_lv_nmos ad=0.475p pd=2.88u as=0.475p ps=2.88u w=2.5u l=0.5u
-X30 vco_buf_0.rf_p vco_bias_0.vbp_core VDD VDD sg13_lv_pmos ad=0.95p pd=5.38u as=0.95p ps=5.38u w=5u l=0.5u
-X31 rf_out_p a_17568_3764# a_12058_2500# VSS.t101 sg13_lv_nmos ad=0.38p pd=2.38u as=0.38p ps=2.38u w=2u l=0.13u
-X32 VDD a_8890_25938# vco_bias_0.vbp_core VDD sg13_lv_pmos ad=0.34p pd=2.68u as=0.34p ps=2.68u w=1u l=0.13u
-X33 VSS.t11 vco_bias_0.vbn_buf a_12058_2500# VSS.t55 sg13_lv_nmos ad=0.475p pd=2.88u as=0.475p ps=2.88u w=2.5u l=0.5u
-X34 vco_bias_0.vbg_buf a_17568_3764# VSS.t111 rhigh l=8u w=0.5u
-X35 a_12058_2500# vco_bias_0.vbn_buf VSS.t11 VSS.t62 sg13_lv_nmos ad=0.475p pd=2.88u as=0.475p ps=2.88u w=2.5u l=0.5u
-X36 VDD rf_out_p VSS.t85 rppd l=1.65u w=10u
-X37 vco_buf_0.rf_p vco_bias_0.vbp_core VDD VDD sg13_lv_pmos ad=0.95p pd=5.38u as=0.95p ps=5.38u w=5u l=0.5u
-X38 vco_buf_0.rf_p vco_bias_0.vbp_core VDD VDD sg13_lv_pmos ad=0.95p pd=5.38u as=0.95p ps=5.38u w=5u l=0.5u
-X39 a_12058_2500# vco_bias_0.vbn_buf VSS.t11 VSS.t64 sg13_lv_nmos ad=0.475p pd=2.88u as=0.475p ps=2.88u w=2.5u l=0.5u
-X40 vco_buf_0.rf_p vco_bias_0.vbp_core VDD VDD sg13_lv_pmos ad=0.95p pd=5.38u as=0.95p ps=5.38u w=5u l=0.5u
-X41 VSS.t8 vco_bias_0.vbn_buf a_12058_2500# VSS.t7 sg13_lv_nmos ad=0.475p pd=2.88u as=0.475p ps=2.88u w=2.5u l=0.5u
-X42 VSS.t90 a_8754_23206# ibias_100u VSS.t89 sg13_lv_nmos ad=0.34p pd=2.68u as=0.34p ps=2.68u w=1u l=0.13u
-X43 rf_out_p a_17568_3764# a_12058_2500# VSS.t107 sg13_lv_nmos ad=0.38p pd=2.38u as=0.38p ps=2.38u w=2u l=0.13u
-X44 a_12058_2500# vco_bias_0.vbn_buf VSS.t11 VSS.t16 sg13_lv_nmos ad=0.475p pd=2.88u as=0.475p ps=2.88u w=2.5u l=0.5u
-X45 a_12350_5514# vco_buf_0.rf_p cap_cmim l=10u w=10u
-X46 rf_out_p a_17568_3764# a_12058_2500# VSS.t103 sg13_lv_nmos ad=0.38p pd=2.38u as=0.38p ps=2.38u w=2u l=0.13u
-X47 VSS.t11 vco_bias_0.vbn_buf a_12058_2500# VSS.t43 sg13_lv_nmos ad=0.475p pd=2.88u as=0.475p ps=2.88u w=2.5u l=0.5u
-X48 VSS.t11 vco_bias_0.vbn_buf a_12058_2500# VSS.t23 sg13_lv_nmos ad=0.475p pd=2.88u as=0.475p ps=2.88u w=2.5u l=0.5u
-X49 a_12058_2500# vco_bias_0.vbn_buf VSS.t11 VSS.t18 sg13_lv_nmos ad=0.475p pd=2.88u as=0.475p ps=2.88u w=2.5u l=0.5u
-X50 vco_buf_0.rf_p VSS.t112 cap_cmim l=25u w=25u
-X51 a_12058_2500# vco_bias_0.vbn_buf VSS.t11 VSS.t30 sg13_lv_nmos ad=0.475p pd=2.88u as=0.475p ps=2.88u w=2.5u l=0.5u
-X52 a_12058_2500# a_12350_5514# rf_out_n VSS.t76 sg13_lv_nmos ad=0.38p pd=2.38u as=0.38p ps=2.38u w=2u l=0.13u
-X53 rf_out_n a_12350_5514# a_12058_2500# VSS.t73 sg13_lv_nmos ad=0.38p pd=2.38u as=0.68p ps=4.68u w=2u l=0.13u
-X54 vco_buf_0.rf_p vco_buf_0.rf_p VSS.t131 VSS.t136 sg13_lv_nmos ad=0.38p pd=2.38u as=0.38p ps=2.38u w=2u l=0.13u
-N55 vco_buf_0.rf_p vtune sg13_hv_svaricap l=0.3u w=30.08u
-X56 vco_buf_0.rf_p vco_buf_0.rf_p VSS.t123 VSS.t124 sg13_lv_nmos ad=0.38p pd=2.38u as=0.38p ps=2.38u w=2u l=0.13u
-X57 a_8490_23764# vco_bias_0.vbp_core VSS.t110 rhigh l=16u w=0.5u
-X58 a_12058_2500# vco_bias_0.vbn_buf VSS.t11 VSS.t58 sg13_lv_nmos ad=0.475p pd=2.88u as=0.475p ps=2.88u w=2.5u l=0.5u
-X59 VDD vco_bias_0.vbp_core vco_buf_0.rf_p VDD sg13_lv_pmos ad=0.95p pd=5.38u as=0.95p ps=5.38u w=5u l=0.5u
-X60 a_17568_3764# vco_buf_0.rf_p cap_cmim l=10u w=10u
-X61 rf_out_n a_12350_5514# a_12058_2500# VSS.t83 sg13_lv_nmos ad=0.38p pd=2.38u as=0.38p ps=2.38u w=2u l=0.13u
-X62 rf_out_n a_12350_5514# a_12058_2500# VSS.t79 sg13_lv_nmos ad=0.38p pd=2.38u as=0.38p ps=2.38u w=2u l=0.13u
-N63 vco_buf_0.rf_p vtune sg13_hv_svaricap l=0.3u w=30.08u
-X64 VDD vco_bias_0.vbp_core vco_buf_0.rf_p VDD sg13_lv_pmos ad=0.95p pd=5.38u as=0.95p ps=5.38u w=5u l=0.5u
-X65 VSS.t11 vco_bias_0.vbn_buf a_12058_2500# VSS.t15 sg13_lv_nmos ad=0.475p pd=2.88u as=0.475p ps=2.88u w=2.5u l=0.5u
-X66 a_12058_2500# vco_bias_0.vbn_buf VSS.t8 VSS.t9 sg13_lv_nmos ad=0.475p pd=2.88u as=0.475p ps=2.88u w=2.5u l=0.5u
-X67 VDD vco_bias_0.vbp_core vco_buf_0.rf_p VDD sg13_lv_pmos ad=0.95p pd=5.38u as=0.95p ps=5.38u w=5u l=0.5u
-X68 VSS.t11 vco_bias_0.vbn_buf a_12058_2500# VSS.t17 sg13_lv_nmos ad=0.475p pd=2.88u as=0.475p ps=2.88u w=2.5u l=0.5u
-X69 VSS.t115 vco_buf_0.rf_p vco_buf_0.rf_p VSS.t120 sg13_lv_nmos ad=0.38p pd=2.38u as=0.38p ps=2.38u w=2u l=0.13u
-X70 a_12058_2500# vco_bias_0.vbn_buf VSS.t11 VSS.t24 sg13_lv_nmos ad=0.475p pd=2.88u as=0.475p ps=2.88u w=2.5u l=0.5u
-X71 VSS.t11 vco_bias_0.vbn_buf a_12058_2500# VSS.t49 sg13_lv_nmos ad=0.475p pd=2.88u as=0.475p ps=2.88u w=2.5u l=0.5u
-X72 vco_buf_0.rf_p vco_buf_0.rf_p VSS.t131 VSS.t132 sg13_lv_nmos ad=0.38p pd=2.38u as=0.38p ps=2.38u w=2u l=0.13u
-X73 VSS.t11 vco_bias_0.vbn_buf a_12058_2500# VSS.t51 sg13_lv_nmos ad=0.475p pd=2.88u as=0.475p ps=2.88u w=2.5u l=0.5u
-X74 vco_buf_0.rf_p vco_buf_0.rf_p VSS.t127 VSS.t126 sg13_lv_nmos ad=0.38p pd=2.38u as=0.68p ps=4.68u w=2u l=0.13u
-X75 VDD a_8490_23764# a_8490_23764# VDD sg13_lv_pmos ad=1.7p pd=10.68u as=1.7p ps=10.68u w=5u l=0.5u
-X76 a_12058_2500# a_17568_3764# rf_out_p VSS.t98 sg13_lv_nmos ad=0.38p pd=2.38u as=0.38p ps=2.38u w=2u l=0.13u
-X77 VSS.t11 vco_bias_0.vbn_buf a_12058_2500# VSS.t57 sg13_lv_nmos ad=0.475p pd=2.88u as=0.475p ps=2.88u w=2.5u l=0.5u
-X78 VDD vco_bias_0.vbp_core vco_buf_0.rf_p VDD sg13_lv_pmos ad=0.95p pd=5.38u as=0.95p ps=5.38u w=5u l=0.5u
-X79 VDD vco_bias_0.vbp_core cap_cmim l=30u w=30u
-X80 VSS.t11 vco_bias_0.vbn_buf a_12058_2500# VSS.t59 sg13_lv_nmos ad=0.475p pd=2.88u as=0.475p ps=2.88u w=2.5u l=0.5u
-X81 vco_buf_0.rf_p vco_buf_0.rf_p VSS.t115 VSS.t117 sg13_lv_nmos ad=0.38p pd=2.38u as=0.38p ps=2.38u w=2u l=0.13u
-X82 VSS.t127 vco_buf_0.rf_p vco_buf_0.rf_p VSS.t128 sg13_lv_nmos ad=0.38p pd=2.38u as=0.38p ps=2.38u w=2u l=0.13u
-X83 vco_bias_0.vbg_buf a_8454_22432# VSS.t70 rppd l=8.5u w=0.5u
-X84 VSS.t11 vco_bias_0.vbn_buf a_12058_2500# VSS.t31 sg13_lv_nmos ad=0.475p pd=2.88u as=0.475p ps=2.88u w=2.5u l=0.5u
-X85 VSS.t11 vco_bias_0.vbn_buf a_12058_2500# VSS.t10 sg13_lv_nmos ad=0.475p pd=2.88u as=0.475p ps=2.88u w=2.5u l=0.5u
-X86 a_12058_2500# a_17568_3764# rf_out_p VSS.t104 sg13_lv_nmos ad=0.38p pd=2.38u as=0.38p ps=2.38u w=2u l=0.13u
-N87 vco_buf_0.rf_p vtune sg13_hv_svaricap l=0.3u w=30.08u
-X88 VDD vco_bias_0.vbp_core vco_buf_0.rf_p VDD sg13_lv_pmos ad=0.95p pd=5.38u as=0.95p ps=5.38u w=5u l=0.5u
-X89 a_12058_2500# vco_bias_0.vbn_buf VSS.t11 VSS.t38 sg13_lv_nmos ad=0.475p pd=2.88u as=0.475p ps=2.88u w=2.5u l=0.5u
-X90 VSS.t11 vco_bias_0.vbn_buf a_12058_2500# VSS.t13 sg13_lv_nmos ad=0.475p pd=2.88u as=0.475p ps=2.88u w=2.5u l=0.5u
-N91 vco_buf_0.rf_p vtune sg13_hv_svaricap l=0.3u w=30.08u
-X92 VDD vco_bias_0.vbp_core vco_buf_0.rf_p VDD sg13_lv_pmos ad=0.95p pd=5.38u as=0.95p ps=5.38u w=5u l=0.5u
-X93 a_12058_2500# vco_bias_0.vbn_buf VSS.t11 VSS.t50 sg13_lv_nmos ad=0.475p pd=2.88u as=0.475p ps=2.88u w=2.5u l=0.5u
-X94 VSS.t11 vco_bias_0.vbn_buf a_12058_2500# VSS.t25 sg13_lv_nmos ad=0.475p pd=2.88u as=0.475p ps=2.88u w=2.5u l=0.5u
-X95 a_12058_2500# a_12350_5514# rf_out_n VSS.t74 sg13_lv_nmos ad=0.38p pd=2.38u as=0.38p ps=2.38u w=2u l=0.13u
-X96 VDD vco_bias_0.vbp_core vco_buf_0.rf_p VDD sg13_lv_pmos ad=0.95p pd=5.38u as=0.95p ps=5.38u w=5u l=0.5u
-X97 a_12058_2500# vco_bias_0.vbn_buf VSS.t11 VSS.t52 sg13_lv_nmos ad=0.475p pd=2.88u as=0.475p ps=2.88u w=2.5u l=0.5u
-X98 VDD vco_bias_0.vbp_core vco_buf_0.rf_p VDD sg13_lv_pmos ad=0.95p pd=5.38u as=0.95p ps=5.38u w=5u l=0.5u
-X99 VDD vco_bias_0.vbp_core vco_buf_0.rf_p VDD sg13_lv_pmos ad=0.95p pd=5.38u as=0.95p ps=5.38u w=5u l=0.5u
-X100 vco_bias_0.vbg_buf a_12350_5514# VSS.t4 rhigh l=8u w=0.5u
-X101 VDD vco_bias_0.vbp_core vco_buf_0.rf_p VDD sg13_lv_pmos ad=0.95p pd=5.38u as=0.95p ps=5.38u w=5u l=0.5u
-X102 VSS.t11 vco_bias_0.vbn_buf a_12058_2500# VSS.t65 sg13_lv_nmos ad=0.475p pd=2.88u as=0.475p ps=2.88u w=2.5u l=0.5u
-X103 a_12058_2500# a_12350_5514# rf_out_n VSS.t84 sg13_lv_nmos ad=0.68p pd=4.68u as=0.38p ps=2.38u w=2u l=0.13u
-X104 VSS.t131 vco_buf_0.rf_p vco_buf_0.rf_p VSS.t137 sg13_lv_nmos ad=0.68p pd=4.68u as=0.38p ps=2.38u w=2u l=0.13u
-N105 vco_buf_0.rf_p vtune sg13_hv_svaricap l=0.3u w=30.08u
-X106 a_12058_2500# a_12350_5514# rf_out_n VSS.t80 sg13_lv_nmos ad=0.38p pd=2.38u as=0.38p ps=2.38u w=2u l=0.13u
-X107 VSS.t123 vco_buf_0.rf_p vco_buf_0.rf_p VSS.t125 sg13_lv_nmos ad=0.68p pd=4.68u as=0.38p ps=2.38u w=2u l=0.13u
-X108 VSS.t94 a_8754_23206# vco_bias_0.vbn_buf VSS.t93 sg13_lv_nmos ad=0.34p pd=2.68u as=0.34p ps=2.68u w=1u l=0.13u
-X109 VDD vco_bias_0.vbp_core vco_buf_0.rf_p VDD sg13_lv_pmos ad=0.95p pd=5.38u as=0.95p ps=5.38u w=5u l=0.5u
-X110 a_12058_2500# vco_bias_0.vbn_buf VSS.t11 VSS.t12 sg13_lv_nmos ad=0.475p pd=2.88u as=0.475p ps=2.88u w=2.5u l=0.5u
-X111 VDD vco_bias_0.vbp_core vco_buf_0.rf_p VDD sg13_lv_pmos ad=0.95p pd=5.38u as=0.95p ps=5.38u w=5u l=0.5u
-X112 VSS.t11 vco_bias_0.vbn_buf a_12058_2500# VSS.t37 sg13_lv_nmos ad=0.475p pd=2.88u as=0.475p ps=2.88u w=2.5u l=0.5u
-X113 VDD vco_bias_0.vbp_core vco_buf_0.rf_p VDD sg13_lv_pmos ad=0.95p pd=5.38u as=0.95p ps=5.38u w=5u l=0.5u
-X114 vco_bias_0.vbg_buf VSS.t71 cap_cmim l=20u w=20u
-X115 VSS.t11 vco_bias_0.vbn_buf a_12058_2500# VSS.t39 sg13_lv_nmos ad=0.475p pd=2.88u as=0.475p ps=2.88u w=2.5u l=0.5u
-X116 VSS.t11 vco_bias_0.vbn_buf a_12058_2500# VSS.t19 sg13_lv_nmos ad=0.475p pd=2.88u as=0.475p ps=2.88u w=2.5u l=0.5u
-X117 VSS.t1 ibias_100u ibias_100u VSS.t0 sg13_lv_nmos ad=0.85p pd=5.68u as=0.85p ps=5.68u w=2.5u l=0.5u
-X118 a_12058_2500# vco_bias_0.vbn_buf VSS.t11 VSS.t44 sg13_lv_nmos ad=0.475p pd=2.88u as=0.475p ps=2.88u w=2.5u l=0.5u
-X119 a_12058_2500# vco_bias_0.vbn_buf VSS.t11 VSS.t46 sg13_lv_nmos ad=0.475p pd=2.88u as=0.475p ps=2.88u w=2.5u l=0.5u
-X120 VDD vco_bias_0.vbp_core vco_buf_0.rf_p VDD sg13_lv_pmos ad=0.95p pd=5.38u as=0.95p ps=5.38u w=5u l=0.5u
-X121 VSS.t11 vco_bias_0.vbn_buf a_12058_2500# VSS.t53 sg13_lv_nmos ad=0.475p pd=2.88u as=0.475p ps=2.88u w=2.5u l=0.5u
-X122 rf_out_p a_17568_3764# a_12058_2500# VSS.t99 sg13_lv_nmos ad=0.38p pd=2.38u as=0.38p ps=2.38u w=2u l=0.13u
-X123 VDD vco_bias_0.vbp_core vco_buf_0.rf_p VDD sg13_lv_pmos ad=1.7p pd=10.68u as=0.95p ps=5.38u w=5u l=0.5u
-X124 VDD rf_out_n VSS.t86 rppd l=1.65u w=10u
-X125 ibias_100u vco_bias_0.vbn_buf VSS.t109 rhigh l=16u w=0.5u
-X126 VSS.t131 vco_buf_0.rf_p vco_buf_0.rf_p VSS.t133 sg13_lv_nmos ad=0.38p pd=2.38u as=0.38p ps=2.38u w=2u l=0.13u
-X127 a_12058_2500# a_17568_3764# rf_out_p VSS.t108 sg13_lv_nmos ad=0.68p pd=4.68u as=0.38p ps=2.38u w=2u l=0.13u
-X128 a_12058_2500# vco_bias_0.vbn_buf VSS.t11 VSS.t26 sg13_lv_nmos ad=0.475p pd=2.88u as=0.475p ps=2.88u w=2.5u l=0.5u
-X129 rf_out_p a_17568_3764# a_12058_2500# VSS.t105 sg13_lv_nmos ad=0.38p pd=2.38u as=0.38p ps=2.38u w=2u l=0.13u
-X130 a_12058_2500# a_17568_3764# rf_out_p VSS.t102 sg13_lv_nmos ad=0.38p pd=2.38u as=0.38p ps=2.38u w=2u l=0.13u
-N131 vco_buf_0.rf_p vtune sg13_hv_svaricap l=0.3u w=30.08u
-X132 VSS.t3 ibias_100u a_8490_23764# VSS.t2 sg13_lv_nmos ad=0.85p pd=5.68u as=0.85p ps=5.68u w=2.5u l=0.5u
-X133 VSS.t11 vco_bias_0.vbn_buf a_12058_2500# VSS.t33 sg13_lv_nmos ad=0.475p pd=2.88u as=0.475p ps=2.88u w=2.5u l=0.5u
-X134 a_12058_2500# vco_bias_0.vbn_buf VSS.t6 VSS.t5 sg13_lv_nmos ad=0.475p pd=2.88u as=0.85p ps=5.68u w=2.5u l=0.5u
-X135 VSS.t115 vco_buf_0.rf_p vco_buf_0.rf_p VSS.t118 sg13_lv_nmos ad=0.38p pd=2.38u as=0.38p ps=2.38u w=2u l=0.13u
-X136 vco_buf_0.rf_p vco_buf_0.rf_p VSS.t131 VSS.t134 sg13_lv_nmos ad=0.38p pd=2.38u as=0.38p ps=2.38u w=2u l=0.13u
-X137 rf_out_n a_12350_5514# a_12058_2500# VSS.t75 sg13_lv_nmos ad=0.38p pd=2.38u as=0.38p ps=2.38u w=2u l=0.13u
-X138 VSS.t11 vco_bias_0.vbn_buf a_12058_2500# VSS.t45 sg13_lv_nmos ad=0.475p pd=2.88u as=0.475p ps=2.88u w=2.5u l=0.5u
-X139 vco_buf_0.rf_p vco_buf_0.rf_p VSS.t115 VSS.t121 sg13_lv_nmos ad=0.38p pd=2.38u as=0.38p ps=2.38u w=2u l=0.13u
-X140 vco_buf_0.rf_p vco_buf_0.rf_p VSS.t127 VSS.t129 sg13_lv_nmos ad=0.38p pd=2.38u as=0.38p ps=2.38u w=2u l=0.13u
-X141 a_12058_2500# vco_bias_0.vbn_buf VSS.t11 VSS.t66 sg13_lv_nmos ad=0.475p pd=2.88u as=0.475p ps=2.88u w=2.5u l=0.5u
-X142 VSS.t11 vco_bias_0.vbn_buf a_12058_2500# VSS.t47 sg13_lv_nmos ad=0.475p pd=2.88u as=0.475p ps=2.88u w=2.5u l=0.5u
-X143 VDD vco_bias_0.vbp_core vco_bias_0.vbg_buf VDD sg13_lv_pmos ad=1.7p pd=10.68u as=1.7p ps=10.68u w=5u l=0.5u
-X144 rf_out_n a_12350_5514# a_12058_2500# VSS.t81 sg13_lv_nmos ad=0.38p pd=2.38u as=0.38p ps=2.38u w=2u l=0.13u
-X145 rf_out_n a_12350_5514# a_12058_2500# VSS.t77 sg13_lv_nmos ad=0.38p pd=2.38u as=0.38p ps=2.38u w=2u l=0.13u
-X146 VSS.t88 di_en a_8754_23206# VSS.t87 sg13_lv_nmos ad=0.17p pd=1.68u as=0.17p ps=1.68u w=0.5u l=0.13u
-X147 vco_buf_0.rf_p vco_bias_0.vbp_core VDD VDD sg13_lv_pmos ad=0.95p pd=5.38u as=0.95p ps=5.38u w=5u l=0.5u
-X148 a_12058_2500# vco_bias_0.vbn_buf VSS.t11 VSS.t32 sg13_lv_nmos ad=0.475p pd=2.88u as=0.475p ps=2.88u w=2.5u l=0.5u
-X149 VSS.t11 vco_bias_0.vbn_buf a_12058_2500# VSS.t27 sg13_lv_nmos ad=0.475p pd=2.88u as=0.475p ps=2.88u w=2.5u l=0.5u
-X150 a_12058_2500# vco_bias_0.vbn_buf VSS.t11 VSS.t34 sg13_lv_nmos ad=0.475p pd=2.88u as=0.475p ps=2.88u w=2.5u l=0.5u
-X151 VDD di_en a_8754_23206# VDD sg13_lv_pmos ad=0.34p pd=2.68u as=0.34p ps=2.68u w=1u l=0.13u
-X152 VSS.t11 vco_bias_0.vbn_buf a_12058_2500# VSS.t41 sg13_lv_nmos ad=0.475p pd=2.88u as=0.475p ps=2.88u w=2.5u l=0.5u
-X153 vco_buf_0.rf_p vco_bias_0.vbp_core VDD VDD sg13_lv_pmos ad=0.95p pd=5.38u as=0.95p ps=5.38u w=5u l=0.5u
-X154 a_12058_2500# a_17568_3764# rf_out_p VSS.t100 sg13_lv_nmos ad=0.38p pd=2.38u as=0.38p ps=2.38u w=2u l=0.13u
-X155 a_12058_2500# vco_bias_0.vbn_buf VSS.t11 VSS.t60 sg13_lv_nmos ad=0.475p pd=2.88u as=0.475p ps=2.88u w=2.5u l=0.5u
-X156 a_12058_2500# vco_bias_0.vbn_buf VSS.t11 VSS.t48 sg13_lv_nmos ad=0.475p pd=2.88u as=0.475p ps=2.88u w=2.5u l=0.5u
-X157 rf_out_p a_17568_3764# a_12058_2500# VSS.t97 sg13_lv_nmos ad=0.38p pd=2.38u as=0.68p ps=4.68u w=2u l=0.13u
-X158 vco_buf_0.rf_p vco_bias_0.vbp_core VDD VDD sg13_lv_pmos ad=0.95p pd=5.38u as=0.95p ps=5.38u w=5u l=0.5u
-X159 VSS.t11 vco_bias_0.vbn_buf a_12058_2500# VSS.t67 sg13_lv_nmos ad=0.85p pd=5.68u as=0.475p ps=2.88u w=2.5u l=0.5u
-X160 a_12058_2500# vco_bias_0.vbn_buf VSS.t11 VSS.t14 sg13_lv_nmos ad=0.475p pd=2.88u as=0.475p ps=2.88u w=2.5u l=0.5u
-X161 a_12058_2500# a_17568_3764# rf_out_p VSS.t106 sg13_lv_nmos ad=0.38p pd=2.38u as=0.38p ps=2.38u w=2u l=0.13u
-X162 VSS.t11 vco_bias_0.vbn_buf a_12058_2500# VSS.t21 sg13_lv_nmos ad=0.475p pd=2.88u as=0.475p ps=2.88u w=2.5u l=0.5u
-X163 vco_buf_0.rf_p vco_bias_0.vbp_core VDD VDD sg13_lv_pmos ad=0.95p pd=5.38u as=1.7p ps=10.68u w=5u l=0.5u
-X164 vco_buf_0.rf_p vco_bias_0.vbp_core VDD VDD sg13_lv_pmos ad=0.95p pd=5.38u as=0.95p ps=5.38u w=5u l=0.5u
-R0 VSS.n6 VSS.n57 6666.35
-R1 VSS.n51 VSS.n49 5564.07
-R2 VSS.n48 VSS.n47 4750.95
-R3 VSS.n195 VSS.n48 4376.81
-R4 VSS.n191 VSS.n49 4376.81
-R5 VSS.n176 VSS.n56 3279.08
-R6 VSS.n180 VSS.n55 2420.69
-R7 VSS.n99 VSS.n98 2155.77
-R8 VSS.n55 VSS.n49 2107.5
-R9 VSS.n175 VSS.n174 1643.25
-R10 VSS.n77 VSS.n55 1053.4
-R11 VSS.n90 VSS.n57 984.928
-R12 VSS.n176 VSS.n175 847.847
-R13 VSS.t110 VSS.n176 809.735
-R14 VSS.n177 VSS.t70 681.417
-R15 VSS.n55 VSS.n48 517.5
-R16 VSS.n175 VSS.n57 422.873
-R17 VSS.n47 VSS.n46 251.095
-R18 VSS.n77 VSS.n71 225.508
-R19 VSS.n188 VSS.n187 175.608
-R20 VSS.n54 VSS.n52 168.083
-R21 VSS.n184 VSS.n183 155.144
-R22 VSS.n181 VSS.n180 97.6222
-R23 VSS.t70 VSS.t109 96.7925
-R24 VSS.n191 VSS.n190 87.3899
-R25 VSS.n192 VSS.n191 87.3899
-R26 VSS.n195 VSS.n194 87.3899
-R27 VSS.n196 VSS.n195 87.3899
-R28 VSS.n180 VSS.n179 84.0419
-R29 VSS.n92 VSS.n91 57.3703
-R30 VSS.t109 VSS.t110 55.3102
-R31 VSS.n64 VSS.n57 43.9681
-R32 VSS.n5 VSS.n77 31.6903
-R33 VSS.n129 VSS.t23 26.3243
-R34 VSS.t52 VSS.n107 26.3243
-R35 VSS.t28 VSS.n142 25.1168
-R36 VSS.n160 VSS.t47 25.1168
-R37 VSS.t25 VSS.n127 23.9094
-R38 VSS.n109 VSS.t50 23.9094
-R39 VSS.t18 VSS.n131 23.3399
-R40 VSS.n105 VSS.t57 23.3399
-R41 VSS.n151 VSS.t37 22.7019
-R42 VSS.t38 VSS.n151 22.7019
-R43 VSS.t114 VSS.n71 22.5071
-R44 VSS.n73 VSS.t116 22.5071
-R45 VSS.n73 VSS.t117 22.5071
-R46 VSS.t118 VSS.n69 22.5071
-R47 VSS.t119 VSS.n69 22.5071
-R48 VSS.n75 VSS.t120 22.5071
-R49 VSS.n75 VSS.t121 22.5071
-R50 VSS.t122 VSS.n67 22.5071
-R51 VSS.t124 VSS.n67 22.5071
-R52 VSS.n92 VSS.t125 22.5071
-R53 VSS.t10 VSS.n172 22.2819
-R54 VSS.n135 VSS.t13 22.2819
-R55 VSS.t62 VSS.n166 22.2819
-R56 VSS.n168 VSS.t64 22.2819
-R57 VSS.n127 VSS.t26 21.4944
-R58 VSS.t49 VSS.n109 21.4944
-R59 VSS.n170 VSS.t5 21.2239
-R60 VSS.n133 VSS.t16 21.2239
-R61 VSS.t59 VSS.n103 21.2239
-R62 VSS.n100 VSS.t67 21.2239
-R63 VSS.n162 VSS.t51 20.7718
-R64 VSS.t24 VSS.n128 20.771
-R65 VSS.t22 VSS.n129 20.2869
-R66 VSS.n142 VSS.t27 20.2869
-R67 VSS.t48 VSS.n160 20.2869
-R68 VSS.n139 VSS.t20 20.1659
-R69 VSS.t21 VSS.n139 20.1659
-R70 VSS.n163 VSS.t54 20.1659
-R71 VSS.t55 VSS.n163 20.1659
-R72 VSS.t7 VSS.n170 19.1079
-R73 VSS.t15 VSS.n133 19.1079
-R74 VSS.n103 VSS.t60 19.1079
-R75 VSS.t66 VSS.n100 19.1079
-R76 VSS.n119 VSS.t36 19.0794
-R77 VSS.t39 VSS.n117 19.0794
-R78 VSS.n107 VSS.t53 19.0794
-R79 VSS.n177 VSS.t95 18.8058
-R80 VSS.n184 VSS.t2 18.8058
-R81 VSS.n137 VSS.t17 18.7925
-R82 VSS.t58 VSS.n104 18.7917
-R83 VSS.n174 VSS.n173 18.5788
-R84 VSS.n5 VSS.n6 0.00205546
-R85 VSS.t74 VSS.n125 18.4147
-R86 VSS.n145 VSS.t76 18.4147
-R87 VSS.t78 VSS.n123 18.4147
-R88 VSS.n156 VSS.t103 18.4147
-R89 VSS.t105 VSS.n111 18.4147
-R90 VSS.n159 VSS.t107 18.4147
-R91 VSS.n141 VSS.t24 18.3568
-R92 VSS.t51 VSS.n108 18.3561
-R93 VSS.t14 VSS.n135 18.0498
-R94 VSS.n166 VSS.t61 18.0498
-R95 VSS.t35 VSS.t84 17.8109
-R96 VSS.t97 VSS.t40 17.8109
-R97 VSS.t63 VSS.n101 17.7345
-R98 VSS.n134 VSS.t12 17.7345
-R99 VSS.n167 VSS.t63 17.7337
-R100 VSS.n148 VSS.t33 17.5091
-R101 VSS.t42 VSS.n114 17.5091
-R102 VSS.t108 VSS.n110 17.4512
-R103 VSS.n143 VSS.t73 17.4504
-R104 VSS.t36 VSS.n118 17.1494
-R105 VSS.n152 VSS.t39 17.1486
-R106 VSS.t11 VSS.n159 17.0005
-R107 VSS.t11 VSS.n111 17.0005
-R108 VSS.t11 VSS.n157 17.0005
-R109 VSS.t11 VSS.n112 17.0005
-R110 VSS.t11 VSS.n156 17.0005
-R111 VSS.t11 VSS.n113 17.0005
-R112 VSS.t11 VSS.n155 17.0005
-R113 VSS.t11 VSS.n114 17.0005
-R114 VSS.t11 VSS.n154 17.0005
-R115 VSS.t11 VSS.n116 17.0005
-R116 VSS.t11 VSS.n150 17.0005
-R117 VSS.t11 VSS.n120 17.0005
-R118 VSS.t11 VSS.n148 17.0005
-R119 VSS.t11 VSS.n122 17.0005
-R120 VSS.t11 VSS.n147 17.0005
-R121 VSS.t11 VSS.n123 17.0005
-R122 VSS.t11 VSS.n146 17.0005
-R123 VSS.t11 VSS.n124 17.0005
-R124 VSS.t11 VSS.n145 17.0005
-R125 VSS.t11 VSS.n125 17.0005
-R126 VSS.t11 VSS.n130 17.0005
-R127 VSS.t11 VSS.n58 17.0005
-R128 VSS.n93 VSS.n92 17.0005
-R129 VSS.n93 VSS.n67 17.0005
-R130 VSS.n93 VSS.n75 17.0005
-R131 VSS.n93 VSS.n69 17.0005
-R132 VSS.n93 VSS.n73 17.0005
-R133 VSS.n93 VSS.n71 17.0005
-R134 VSS.n87 VSS.n5 17.0005
-R135 VSS.n90 VSS.n16 2.12491
-R136 VSS.n15 VSS.n14 0.00306579
-R137 VSS.n91 VSS.n14 5.66756
-R138 VSS.n16 VSS.n33 0.00422716
-R139 VSS.n90 VSS.n23 5.66767
-R140 VSS.n31 VSS.n23 0.00292766
-R141 VSS.n0 VSS.n3 0.00992722
-R142 VSS.n20 VSS.n0 0.418288
-R143 VSS.n90 VSS.n13 4.25069
-R144 VSS.n90 VSS.n22 4.25069
-R145 VSS.n90 VSS.n24 3.4006
-R146 VSS.n24 VSS.n38 0.00206648
-R147 VSS.n17 VSS.n87 3.4007
-R148 VSS.n32 VSS.n17 0.00259955
-R149 VSS.n9 VSS.n17 0.00389877
-R150 VSS.n90 VSS.n9 3.4
-R151 VSS.n98 VSS.n60 17.0005
-R152 VSS.n60 VSS.n59 17.0005
-R153 VSS.n60 VSS.n96 17.0005
-R154 VSS.n60 VSS.n62 17.0005
-R155 VSS.n60 VSS.n94 17.0005
-R156 VSS.n60 VSS.n64 17.0005
-R157 VSS.n197 VSS.n196 17.0005
-R158 VSS.n197 VSS.n46 17.0005
-R159 VSS.n193 VSS.n192 17.0005
-R160 VSS.n194 VSS.n193 17.0005
-R161 VSS.n189 VSS.n188 17.0005
-R162 VSS.n190 VSS.n189 17.0005
-R163 VSS.n187 VSS.n186 17.0005
-R164 VSS.n185 VSS.n184 17.0005
-R165 VSS.n182 VSS.n181 17.0005
-R166 VSS.n183 VSS.n182 17.0005
-R167 VSS.n178 VSS.n177 17.0005
-R168 VSS.n131 VSS.t19 16.9918
-R169 VSS.t56 VSS.n105 16.9918
-R170 VSS.n165 VSS.t58 16.6765
-R171 VSS.t17 VSS.n132 16.6757
-R172 VSS.n161 VSS.t48 15.9419
-R173 VSS.t27 VSS.n126 15.9411
-R174 VSS.n138 VSS.t86 15.9338
-R175 VSS.n164 VSS.t56 15.6177
-R176 VSS.n72 VSS.t114 15.4732
-R177 VSS.t116 VSS.n72 15.4732
-R178 VSS.t117 VSS.n70 15.4732
-R179 VSS.n70 VSS.t118 15.4732
-R180 VSS.n74 VSS.t119 15.4732
-R181 VSS.t120 VSS.n74 15.4732
-R182 VSS.t121 VSS.n68 15.4732
-R183 VSS.n68 VSS.t122 15.4732
-R184 VSS.n76 VSS.t124 15.4732
-R185 VSS.t125 VSS.n76 15.4732
-R186 VSS.t32 VSS.n122 15.0941
-R187 VSS.n155 VSS.t43 15.0941
-R188 VSS.t26 VSS.n126 14.7344
-R189 VSS.n161 VSS.t49 14.7336
-R190 VSS.n169 VSS.t65 14.5604
-R191 VSS.t85 VSS.n106 14.5604
-R192 VSS.n136 VSS.t14 14.5604
-R193 VSS.t9 VSS.n171 14.5597
-R194 VSS.n140 VSS.t22 14.5597
-R195 VSS.t61 VSS.n102 14.5597
-R196 VSS.n121 VSS.t81 14.5513
-R197 VSS.t83 VSS.n149 14.5513
-R198 VSS.n153 VSS.t98 14.5513
-R199 VSS.t100 VSS.n115 14.5513
-R200 VSS.n200 VSS.t8 14.0121
-R201 VSS.t31 VSS.n124 13.8866
-R202 VSS.n157 VSS.t44 13.8866
-R203 VSS.n152 VSS.t38 13.5269
-R204 VSS.t37 VSS.n118 13.5261
-R205 VSS.t60 VSS.n102 13.5024
-R206 VSS.n171 VSS.t7 13.5024
-R207 VSS.n136 VSS.t15 13.5017
-R208 VSS.n169 VSS.t66 13.5017
-R209 VSS.n164 VSS.t55 12.4444
-R210 VSS.n140 VSS.t21 12.4444
-R211 VSS.t54 VSS.n106 12.4437
-R212 VSS.n145 VSS.t75 12.3772
-R213 VSS.t77 VSS.n123 12.3772
-R214 VSS.n148 VSS.t79 12.3772
-R215 VSS.t81 VSS.n120 12.3772
-R216 VSS.n150 VSS.t83 12.3772
-R217 VSS.t98 VSS.n116 12.3772
-R218 VSS.n154 VSS.t100 12.3772
-R219 VSS.t102 VSS.n114 12.3772
-R220 VSS.n156 VSS.t104 12.3772
-R221 VSS.t106 VSS.n111 12.3772
-R222 VSS.t50 VSS.n108 12.3194
-R223 VSS.n141 VSS.t25 12.3186
-R224 VSS.t16 VSS.n132 11.3864
-R225 VSS.n165 VSS.t59 11.3856
-R226 VSS.n143 VSS.t28 11.1119
-R227 VSS.t47 VSS.n110 11.1111
-R228 VSS.n199 VSS.n44 10.8254
-R229 VSS.t4 VSS.t9 10.5806
-R230 VSS.t65 VSS.t111 10.5806
-R231 VSS.n167 VSS.t62 10.3284
-R232 VSS.t13 VSS.n134 10.3276
-R233 VSS.t64 VSS.n101 10.3276
-R234 VSS.t29 VSS.n125 10.2641
-R235 VSS.n159 VSS.t46 10.2641
-R236 VSS.t0 VSS.n51 10.2328
-R237 VSS.t23 VSS.n128 9.90444
-R238 VSS.n162 VSS.t52 9.90366
-R239 VSS.n199 VSS.n198 9.688
-R240 VSS.t20 VSS.n138 9.58572
-R241 VSS.n181 VSS.t93 9.40316
-R242 VSS.n183 VSS.t93 9.40316
-R243 VSS.n188 VSS.t89 9.40316
-R244 VSS.n190 VSS.t89 9.40316
-R245 VSS.n192 VSS.t91 9.40316
-R246 VSS.n194 VSS.t91 9.40316
-R247 VSS.n196 VSS.t87 9.40316
-R248 VSS.t87 VSS.n46 9.40316
-R249 VSS.t82 VSS.t34 9.35852
-R250 VSS.t41 VSS.t99 9.35852
-R251 VSS.t57 VSS.n104 9.27037
-R252 VSS.n137 VSS.t18 9.26961
-R253 VSS.t71 VSS.t68 9.20243
-R254 VSS.t68 VSS.n53 9.14267
-R255 VSS.t68 VSS.n45 9.13957
-R256 VSS.t34 VSS.n120 9.05665
-R257 VSS.n154 VSS.t41 9.05665
-R258 VSS.t12 VSS.n58 8.99362
-R259 VSS.t126 VSS.n64 8.9699
-R260 VSS.n94 VSS.t128 8.9699
-R261 VSS.n94 VSS.t129 8.9699
-R262 VSS.t130 VSS.n62 8.9699
-R263 VSS.t132 VSS.n62 8.9699
-R264 VSS.n96 VSS.t133 8.9699
-R265 VSS.n96 VSS.t134 8.9699
-R266 VSS.t135 VSS.n59 8.9699
-R267 VSS.t136 VSS.n59 8.9699
-R268 VSS.n98 VSS.t137 8.9699
-R269 VSS.n189 VSS.t90 8.74516
-R270 VSS.n182 VSS.t94 8.74516
-R271 VSS.n187 VSS.n51 8.57351
-R272 VSS.t5 VSS.n56 8.52771
-R273 VSS.t67 VSS.n99 8.52771
-R274 VSS.n144 VSS.t74 8.5139
-R275 VSS.t80 VSS.n121 8.5139
-R276 VSS.n149 VSS.t82 8.5139
-R277 VSS.t84 VSS.n119 8.5139
-R278 VSS.n117 VSS.t97 8.5139
-R279 VSS.t99 VSS.n153 8.5139
-R280 VSS.n115 VSS.t101 8.5139
-R281 VSS.t107 VSS.n158 8.5139
-R282 VSS.n91 VSS.n37 4.25062
-R283 VSS.n87 VSS.n15 3.40002
-R284 VSS.n37 VSS.n36 0.0022498
-R285 VSS.n33 VSS.n40 0.00166663
-R286 VSS.n87 VSS.n31 2.4287
-R287 VSS.n91 VSS.n23 2.83384
-R288 VSS.n90 VSS.n3 1.69863
-R289 VSS.n87 VSS.n3 2.42836
-R290 VSS.n1 VSS.n0 0.00798598
-R291 VSS.n19 VSS.n0 1.14776
-R292 VSS.n91 VSS.n1 1.41246
-R293 VSS.n87 VSS.n39 8.501
-R294 VSS.n28 VSS.n13 0.00224981
-R295 VSS.n91 VSS.n28 4.25062
-R296 VSS.n87 VSS.n26 4.25087
-R297 VSS.n91 VSS.n25 4.25087
-R298 VSS.n87 VSS.n21 4.25025
-R299 VSS.n21 VSS.n25 0.00299946
-R300 VSS.n91 VSS.n32 3.4003
-R301 VSS.n91 VSS.n10 8.501
-R302 VSS.n8 VSS.n7 0.003947
-R303 VSS.n90 VSS.n43 8.5005
-R304 VSS.n87 VSS.n8 4.25019
-R305 VSS.t88 VSS.n197 8.5005
-R306 VSS.n193 VSS.t92 8.5005
-R307 VSS.t30 VSS.n144 8.21203
-R308 VSS.n158 VSS.t45 8.21203
-R309 VSS.n146 VSS.t77 8.15103
-R310 VSS.t79 VSS.n122 8.15103
-R311 VSS.n155 VSS.t102 8.15103
-R312 VSS.t104 VSS.n112 8.15103
-R313 VSS.n91 VSS.n20 4.41865
-R314 VSS.n90 VSS.n19 2.0252
-R315 VSS.t86 VSS.n130 7.93561
-R316 VSS.n200 VSS.n199 7.68092
-R317 VSS.n172 VSS.t4 7.4697
-R318 VSS.n173 VSS.t10 7.4697
-R319 VSS.t111 VSS.n168 7.4697
-R320 VSS.n65 VSS.t126 7.41443
-R321 VSS.t128 VSS.n65 7.41443
-R322 VSS.t129 VSS.n63 7.41443
-R323 VSS.n63 VSS.t130 7.41443
-R324 VSS.n95 VSS.t132 7.41443
-R325 VSS.t133 VSS.n95 7.41443
-R326 VSS.t134 VSS.n61 7.41443
-R327 VSS.n61 VSS.t135 7.41443
-R328 VSS.n97 VSS.t136 7.41443
-R329 VSS.n97 VSS.t137 7.41443
-R330 VSS.t19 VSS.n130 6.87759
-R331 VSS.n146 VSS.t31 6.64168
-R332 VSS.t44 VSS.n112 6.64168
-R333 VSS.t75 VSS.t30 6.3398
-R334 VSS.t45 VSS.t106 6.3398
-R335 VSS.n60 VSS.n97 6.28919
-R336 VSS.n60 VSS.n61 6.28919
-R337 VSS.n60 VSS.n95 6.28919
-R338 VSS.n60 VSS.n63 6.28919
-R339 VSS.n60 VSS.n65 6.28919
-R340 VSS.t2 VSS.n54 6.05513
-R341 VSS.n179 VSS.t95 6.05513
-R342 VSS.n52 VSS.t0 6.05513
-R343 VSS.t3 VSS.n185 5.74235
-R344 VSS.n178 VSS.t96 5.72969
-R345 VSS.n186 VSS.t1 5.72969
-R346 VSS.n91 VSS.n43 5.66767
-R347 VSS.n41 VSS.n36 2.82442
-R348 VSS.n29 VSS.n14 2.82442
-R349 VSS.n42 VSS.n33 2.82442
-R350 VSS.n86 VSS.n40 5.66717
-R351 VSS.n30 VSS.n23 2.82442
-R352 VSS.n12 VSS.n11 1.87245
-R353 VSS.n4 VSS.n3 1.87245
-R354 VSS.n2 VSS.n0 0.449746
-R355 VSS.n81 VSS.n39 5.66717
-R356 VSS.n80 VSS.n13 5.66717
-R357 VSS.n27 VSS.n26 1.87245
-R358 VSS.n35 VSS.n22 2.82442
-R359 VSS.n34 VSS.n25 2.82442
-R360 VSS.n79 VSS.n38 5.66717
-R361 VSS.n18 VSS.n17 1.87245
-R362 VSS.n89 VSS.n17 5.66717
-R363 VSS.n10 VSS.n7 0.00317616
-R364 VSS.t11 VSS.n99 5.56016
-R365 VSS.t11 VSS.n100 5.56016
-R366 VSS.t11 VSS.n168 5.56016
-R367 VSS.t11 VSS.n166 5.56016
-R368 VSS.t11 VSS.n103 5.56016
-R369 VSS.t11 VSS.n105 5.56016
-R370 VSS.t11 VSS.n163 5.56016
-R371 VSS.t11 VSS.n139 5.56016
-R372 VSS.t11 VSS.n138 5.56016
-R373 VSS.t11 VSS.n131 5.56016
-R374 VSS.t11 VSS.n133 5.56016
-R375 VSS.t11 VSS.n135 5.56016
-R376 VSS.n173 VSS.t11 5.56016
-R377 VSS.n172 VSS.t11 5.56016
-R378 VSS.n170 VSS.t11 5.56016
-R379 VSS.t11 VSS.n56 5.56016
-R380 VSS.n186 VSS.n52 5.47393
-R381 VSS.n185 VSS.n54 5.47393
-R382 VSS.n179 VSS.n178 5.47393
-R383 VSS.n147 VSS.t32 5.43419
-R384 VSS.t43 VSS.n113 5.43419
-R385 VSS.t11 VSS.n107 5.3011
-R386 VSS.t11 VSS.n109 5.3011
-R387 VSS.t11 VSS.n160 5.3011
-R388 VSS.t11 VSS.n158 5.3011
-R389 VSS.t11 VSS.n115 5.3011
-R390 VSS.t11 VSS.n153 5.3011
-R391 VSS.t11 VSS.n117 5.3011
-R392 VSS.t11 VSS.n151 5.3011
-R393 VSS.t11 VSS.n119 5.3011
-R394 VSS.t11 VSS.n149 5.3011
-R395 VSS.t11 VSS.n121 5.3011
-R396 VSS.t11 VSS.n144 5.3011
-R397 VSS.t11 VSS.n142 5.3011
-R398 VSS.t11 VSS.n127 5.3011
-R399 VSS.t11 VSS.n129 5.3011
-R400 VSS.n174 VSS.n58 5.29057
-R401 VSS.n93 VSS.n76 4.516
-R402 VSS.n93 VSS.n68 4.516
-R403 VSS.n93 VSS.n74 4.516
-R404 VSS.n93 VSS.n70 4.516
-R405 VSS.n93 VSS.n72 4.516
-R406 VSS.n20 VSS.n87 2.20912
-R407 VSS.n19 VSS.n87 10.1219
-R408 VSS.t94 VSS.n53 3.41865
-R409 VSS.t90 VSS.n50 3.10466
-R410 VSS.n47 VSS.n44 2.57828
-R411 VSS.t1 VSS.t90 2.25609
-R412 VSS.t96 VSS.t94 2.25609
-R413 VSS.t73 VSS.t29 2.1136
-R414 VSS.t76 VSS.n124 2.1136
-R415 VSS.n147 VSS.t78 2.1136
-R416 VSS.t103 VSS.n113 2.1136
-R417 VSS.n157 VSS.t105 2.1136
-R418 VSS.t46 VSS.t108 2.1136
-R419 VSS.t11 VSS.n169 2.03671
-R420 VSS.t11 VSS.n101 2.03671
-R421 VSS.t11 VSS.n167 2.03671
-R422 VSS.t11 VSS.n102 2.03671
-R423 VSS.t11 VSS.n165 2.03671
-R424 VSS.t11 VSS.n104 2.03671
-R425 VSS.t11 VSS.n164 2.03671
-R426 VSS.t11 VSS.n106 2.03671
-R427 VSS.t11 VSS.n140 2.03671
-R428 VSS.t11 VSS.n137 2.03671
-R429 VSS.t11 VSS.n132 2.03671
-R430 VSS.t11 VSS.n136 2.03671
-R431 VSS.t11 VSS.n134 2.03671
-R432 VSS.n171 VSS.t11 2.03671
-R433 VSS.t1 VSS.t3 1.98985
-R434 VSS.n85 VSS.n5 1.87245
-R435 VSS.t11 VSS.n162 1.83146
-R436 VSS.t11 VSS.n108 1.83146
-R437 VSS.t11 VSS.n161 1.83146
-R438 VSS.t11 VSS.n110 1.83146
-R439 VSS.t11 VSS.n152 1.83146
-R440 VSS.t11 VSS.n118 1.83146
-R441 VSS.t11 VSS.n143 1.83146
-R442 VSS.t11 VSS.n126 1.83146
-R443 VSS.t11 VSS.n141 1.83146
-R444 VSS.t11 VSS.n128 1.83146
-R445 VSS.t112 VSS.n82 1.5471
-R446 VSS.n82 VSS.n78 1.5471
-R447 VSS.n83 VSS.t112 1.38499
-R448 VSS.t53 VSS.t85 1.20799
-R449 VSS.n66 VSS.n44 1.1819
-R450 VSS.t127 VSS.t123 1.15662
-R451 VSS.n88 VSS.n78 1.08262
-R452 VSS.n84 VSS.n82 1.08262
-R453 VSS.n60 VSS.t131 1.07402
-R454 VSS.n93 VSS.t115 0.967348
-R455 VSS.t96 VSS.t71 0.949757
-R456 VSS.t33 VSS.t80 0.906115
-R457 VSS.t101 VSS.t42 0.906115
-R458 VSS.n78 VSS.n66 0.74905
-R459 VSS.n150 VSS.t35 0.604243
-R460 VSS.t40 VSS.n116 0.604243
-R461 VSS.t11 VSS.t8 0.541782
-R462 VSS.n66 VSS.t115 0.532744
-R463 VSS.n84 VSS.n83 0.506709
-R464 VSS.n198 VSS.t88 0.479883
-R465 VSS.n50 VSS.t92 0.479883
-R466 VSS.t3 VSS.n53 0.3305
-R467 VSS.n50 VSS.n45 0.28925
-R468 VSS.t123 VSS.t115 0.279563
-R469 VSS VSS.n200 0.24118
-R470 VSS.t127 VSS.t131 0.173302
-R471 VSS.n198 VSS.n45 0.081625
-R472 VSS.n85 VSS.n84 0.0408366
-R473 VSS.n41 VSS.n85 0.101287
-R474 VSS.n29 VSS.n41 0.0809353
-R475 VSS.n42 VSS.n29 0.0809353
-R476 VSS.n86 VSS.n42 0.0606113
-R477 VSS.n30 VSS.n86 0.0606113
-R478 VSS.n12 VSS.n30 0.100948
-R479 VSS.n4 VSS.n12 0.12164
-R480 VSS.n2 VSS.n4 0.269728
-R481 VSS.n2 VSS.n81 0.229748
-R482 VSS.n81 VSS.n80 0.0402872
-R483 VSS.n80 VSS.n27 0.0809634
-R484 VSS.n27 VSS.n35 0.100948
-R485 VSS.n35 VSS.n34 0.0809353
-R486 VSS.n34 VSS.n79 0.0606113
-R487 VSS.n18 VSS.n79 0.0809634
-R488 VSS.n89 VSS.n7 1.22087
-R489 VSS.n89 VSS.n88 0.0262447
-R490 VSS.n83 VSS.n5 0.0253244
-R491 VSS.t6 VSS.t8 0.0166246
-R492 VSS.n88 VSS.n18 0.0548791
-R493 VSS.n3 VSS.n11 0.00616649
-R494 VSS.n22 VSS.n21 0.00599934
-R495 VSS.n14 VSS.n16 0.00293632
-R496 VSS.n15 VSS.n36 0.00409859
-R497 VSS.n10 VSS.n9 0.00293252
-R498 VSS.n22 VSS.n26 0.00449974
-R499 VSS.n23 VSS.n11 0.00433248
-R500 VSS.n8 VSS.n43 0.00287423
-R501 VSS.n31 VSS.n40 0.00357017
-R502 VSS.n38 VSS.n32 0.00339925
-R503 VSS.n25 VSS.n24 0.00259965
-R504 VSS.n28 VSS.n26 0.00224981
-R505 VSS.n37 VSS.n5 0.0022498
-R506 VSS.n39 VSS.n1 0.0139924
-R507 VSS.n13 VSS.n39 0.00349976
-R508 VSS.n6 VSS.n176 884.345
-C0 a_8490_23764# a_8754_23206# 0.08356f
-C1 VDD vco_bias_0.vbn_buf 0.22504f
-C2 rf_out_p vco_buf_0.rf_p 0.0158f
-C3 a_12058_2500# rf_out_n 2.54668f
-C4 a_21950_5600# vco_bias_0.vbg_buf 0.03836f
-C5 a_12350_5514# a_17568_3764# 0.145f
-C6 rf_out_p a_19400_4600# 0.47902f
-C7 a_8454_22432# vco_bias_0.vbp_core 0.23569f
-C8 a_8890_25938# vco_bias_0.vbp_core 0.13729f
-C9 a_12058_2500# vco_bias_0.vbn_buf 7.75561f
-C10 vco_bias_0.vbn_buf ibias_100u 0.2371f
-C11 a_9840_17800# vco_bias_0.vbg_buf 0.02655f
-C12 rf_out_n vco_bias_0.vbn_buf 0.13372f
-C13 a_8890_25938# VDD 0.22706f
-C14 a_17568_3764# VDD 0.48463f
-C15 a_8454_22432# a_10320_19100# 0.06042f
-C16 a_9360_18000# a_9840_17800# 0.04676f
-C17 a_12350_5600# vco_bias_0.vbg_buf 0.03836f
-C18 a_8454_22432# ibias_100u 0.11158f
-C19 a_8890_25938# ibias_100u 0.28364f
-C20 a_12058_2500# a_17568_3764# 0.39649f
-C21 di_en VDD 0.10659f
-C22 vco_bias_0.vbp_core a_9840_17800# 0.07295f
-C23 a_13000_4600# vco_buf_0.rf_p 0.01479f
-C24 a_8454_22432# vco_bias_0.vbn_buf 1.07881f
-C25 a_8890_25938# vco_bias_0.vbn_buf 0.11355f
-C26 rf_out_p VDD 0.43313f
-C27 di_en ibias_100u 2.27793f
-C28 a_19400_4600# vco_buf_0.rf_p 0.01479f
-C29 a_12350_5514# a_12350_5600# 0.03458f
-C30 vco_buf_0.rf_p vco_bias_0.vbg_buf 1.20393f
-C31 a_9840_17800# a_10320_19100# 0.0265f
-C32 vco_bias_0.vbp_core a_8490_23764# 0.94042f
-C33 a_12058_2500# rf_out_p 2.54668f
-C34 di_en vco_bias_0.vbn_buf 0.23907f
-C35 rf_out_p rf_out_n 0.01053f
-C36 VDD a_8754_23206# 0.2262f
-C37 a_12350_5600# VDD 0.04827f
-C38 VDD a_8490_23764# 0.71392f
-C39 rf_out_p vco_bias_0.vbn_buf 0.13372f
-C40 vco_bias_0.vbn_buf a_9840_17800# 0.03055f
-C41 a_12350_5514# vco_buf_0.rf_p 1.58319f
-C42 a_12350_5514# a_13000_4600# 0.0615f
-C43 a_8754_23206# ibias_100u 0.66092f
-C44 vco_bias_0.vbp_core vco_buf_0.rf_p 5.62793f
-C45 a_9360_18000# vco_bias_0.vbg_buf 0.02009f
-C46 a_8490_23764# ibias_100u 1.01166f
-C47 a_21950_5600# a_17568_3764# 0.03458f
-C48 VDD vco_buf_0.rf_p 8.73743f
-C49 a_12350_5514# vco_bias_0.vbg_buf 0.05308f
-C50 a_13000_4600# VDD 0.34018f
-C51 vco_bias_0.vbn_buf a_8754_23206# 0.22213f
-C52 vco_bias_0.vbp_core vco_bias_0.vbg_buf 3.88548f
-C53 vtune vco_buf_0.rf_p 15.9769f
-C54 rf_out_p a_17568_3764# 0.6427f
-C55 vco_bias_0.vbn_buf a_8490_23764# 0.21969f
-C56 a_19400_4600# VDD 0.32168f
-C57 VDD vco_bias_0.vbg_buf 0.7786f
-C58 rf_out_n vco_buf_0.rf_p 0.0158f
-C59 vco_bias_0.vbp_core a_9360_18000# 0.02317f
-C60 a_13000_4600# rf_out_n 0.47902f
-C61 vco_bias_0.vbg_buf a_10320_19100# 0.06186f
-C62 a_8890_25938# a_8754_23206# 0.54548f
-C63 a_8454_22432# a_8490_23764# 0.08819f
-C64 a_12350_5514# VDD 0.58805f
-C65 VDD vco_bias_0.vbp_core 16.2841f
-C66 di_en a_8754_23206# 0.30341f
-C67 a_9360_18000# ibias_100u 0.02902f
-C68 vco_bias_0.vbn_buf vco_bias_0.vbg_buf 1.45056f
-C69 vtune vco_bias_0.vbp_core 0.22559f
-C70 a_17568_3764# vco_buf_0.rf_p 1.58319f
-C71 a_12058_2500# a_12350_5514# 0.39649f
-C72 a_12350_5514# rf_out_n 0.6427f
-C73 vtune VDD 0.1994f
-C74 vco_bias_0.vbn_buf a_9360_18000# 0.02904f
-C75 vco_bias_0.vbp_core ibias_100u 0.10664f
-C76 a_8490_23764# a_9840_17800# 0.03026f
-C77 a_19400_4600# a_17568_3764# 0.0615f
-C78 a_8454_22432# vco_bias_0.vbg_buf 0.78768f
-C79 a_12058_2500# VDD 0.17998f
-C80 a_17568_3764# vco_bias_0.vbg_buf 0.05308f
-C81 rf_out_n VDD 0.43874f
-C82 vco_bias_0.vbp_core vco_bias_0.vbn_buf 0.45526f
-C83 rf_out_p VSS 7.36095f
-C84 rf_out_n VSS 7.34269f
-C85 vtune VSS 40.82631f
-C86 VDD VSS 30.81864f
-C87 a_12058_2500# VSS 39.92633f
-C88 a_8454_22432# VSS 0.52913f
-C89 a_8490_23764# VSS 0.50073f
-C90 a_8754_23206# VSS 2.01464f
-C91 VSS.t92 VSS 1.21742f
-C92 VSS.t71 VSS 13.17665f
-C93 VSS.t96 VSS 0.85118f
-C94 VSS.t115 VSS 50.14038f
-C95 VSS.t112 VSS 0.51008f
-C96 VSS.t11 VSS 19.75753f
-C97 VSS.t3 VSS 0.50073f
-C98 VSS.t1 VSS 2.78562f
-C99 VSS.t88 VSS 2.01464f
+.subckt vco_top_pex ibias_100u di_en VDD VSS vdd_core vtune rf_out_p rf_out_n
+X0 VSS.t42 vdd_core vdd_core VSS.t46 sg13_lv_nmos ad=0.68p pd=4.68u as=0.38p ps=2.38u w=2u l=0.13u
+X1 VSS.t31 vdd_core vdd_core VSS.t35 sg13_lv_nmos ad=0.68p pd=4.68u as=0.38p ps=2.38u w=2u l=0.13u
+X2 a_1474_1090# a_2654_4840# VDD VDD sg13_lv_pmos ad=1.7p pd=10.68u as=1.7p ps=10.68u w=5u l=0.5u
+X3 rf_out_n a_9450_4394# a_11798_1180# VSS.t11 sg13_lv_nmos ad=0.38p pd=2.38u as=0.38p ps=2.38u w=2u l=0.13u
+X4 rf_out_n a_9450_4394# a_11798_1180# VSS.t7 sg13_lv_nmos ad=0.38p pd=2.38u as=0.38p ps=2.38u w=2u l=0.13u
+N5 vdd_core vtune sg13_hv_svaricap l=0.3u w=30.08u
+X6 VSS.t49 vco_bias_0.vbn_buf a_11798_1180# VSS.t85 sg13_lv_nmos ad=0.95p pd=5.38u as=0.95p ps=5.38u w=5u l=0.5u
+X7 a_11798_1180# vco_bias_0.vbn_buf VSS.t49 VSS.t80 sg13_lv_nmos ad=0.95p pd=5.38u as=0.95p ps=5.38u w=5u l=0.5u
+X8 a_11798_1180# vco_bias_0.vbn_buf VSS.t49 VSS.t48 sg13_lv_nmos ad=0.95p pd=5.38u as=1.7p ps=10.68u w=5u l=0.5u
+X9 VSS.t51 vco_bias_0.vbn_buf VSS.t51 VSS.t52 sg13_lv_nmos ad=1.52p pd=8.38u as=0 ps=0 w=8u l=10u
+X10 VSS.t49 vco_bias_0.vbn_buf a_11798_1180# VSS.t67 sg13_lv_nmos ad=0.95p pd=5.38u as=0.95p ps=5.38u w=5u l=0.5u
+X11 VSS.t51 vco_bias_0.vbn_buf VSS.t51 VSS.t54 sg13_lv_nmos ad=1.52p pd=8.38u as=0 ps=0 w=8u l=10u
+X12 VSS.t42 vdd_core vdd_core VSS.t41 sg13_lv_nmos ad=0.38p pd=2.38u as=0.38p ps=2.38u w=2u l=0.13u
+X13 a_11798_1180# a_14668_2644# rf_out_p VSS.t97 sg13_lv_nmos ad=0.38p pd=2.38u as=0.38p ps=2.38u w=2u l=0.13u
+X14 VSS.t51 vco_bias_0.vbn_buf VSS.t51 VSS.t53 sg13_lv_nmos ad=1.52p pd=8.38u as=0 ps=0 w=8u l=10u
+X15 rf_out_p a_14668_2644# a_11798_1180# VSS.t94 sg13_lv_nmos ad=0.38p pd=2.38u as=0.68p ps=4.68u w=2u l=0.13u
+X16 ibias_100u a_1254_2820# VSS.t18 VSS.t19 sg13_lv_nmos ad=0.34p pd=2.68u as=0.34p ps=2.68u w=1u l=0.13u
+X17 VSS.t106 vco_bias_0.vbg_buf VSS.t106 VSS.t50 sg13_lv_nmos ad=2.72p pd=16.68u as=0 ps=0 w=8u l=10u
+X18 VSS.t106 vco_bias_0.vbg_buf VSS.t106 VSS.t54 sg13_lv_nmos ad=1.52p pd=8.38u as=0 ps=0 w=8u l=10u
+X19 VSS.t25 vdd_core vdd_core VSS.t28 sg13_lv_nmos ad=0.38p pd=2.38u as=0.38p ps=2.38u w=2u l=0.13u
+X20 vdd_core vdd_core VSS.t42 VSS.t43 sg13_lv_nmos ad=0.38p pd=2.38u as=0.38p ps=2.38u w=2u l=0.13u
+X21 vdd_core vdd_core VSS.t31 VSS.t38 sg13_lv_nmos ad=0.38p pd=2.38u as=0.38p ps=2.38u w=2u l=0.13u
+X22 a_1474_1090# vco_bias_0.vbg_buf VSS.t16 rhigh l=32u w=0.5u
+X23 a_2654_4840# a_1954_2820# VDD VDD sg13_lv_pmos ad=0.34p pd=2.68u as=0.34p ps=2.68u w=1u l=0.13u
+X24 vdd_core vdd_core VSS.t31 VSS.t32 sg13_lv_nmos ad=0.38p pd=2.38u as=0.38p ps=2.38u w=2u l=0.13u
+X25 a_11798_1180# a_14668_2644# rf_out_p VSS.t103 sg13_lv_nmos ad=0.38p pd=2.38u as=0.38p ps=2.38u w=2u l=0.13u
+X26 a_1954_2820# a_1254_2820# VSS.t18 VSS.t17 sg13_lv_nmos ad=0.17p pd=1.68u as=0.17p ps=1.68u w=0.5u l=0.13u
+X27 VSS.t49 vco_bias_0.vbn_buf a_11798_1180# VSS.t79 sg13_lv_nmos ad=0.95p pd=5.38u as=0.95p ps=5.38u w=5u l=0.5u
+X28 VSS.t106 vco_bias_0.vbg_buf VSS.t106 VSS.t53 sg13_lv_nmos ad=1.52p pd=8.38u as=0 ps=0 w=8u l=10u
+X29 VSS.t49 vco_bias_0.vbn_buf a_11798_1180# VSS.t61 sg13_lv_nmos ad=0.95p pd=5.38u as=0.95p ps=5.38u w=5u l=0.5u
+X30 a_11798_1180# vco_bias_0.vbn_buf VSS.t49 VSS.t86 sg13_lv_nmos ad=0.95p pd=5.38u as=0.95p ps=5.38u w=5u l=0.5u
+X31 ibias_100u vco_bias_0.vbn_buf VSS.t16 rhigh l=32u w=0.5u
+X32 a_11798_1180# vco_bias_0.vbn_buf VSS.t49 VSS.t88 sg13_lv_nmos ad=0.95p pd=5.38u as=0.95p ps=5.38u w=5u l=0.5u
+X33 a_1254_2820# di_en VDD VDD sg13_lv_pmos ad=0.34p pd=2.68u as=0.34p ps=2.68u w=1u l=0.13u
+N34 vdd_core vtune sg13_hv_svaricap l=0.3u w=30.08u
+X35 a_5428_2384# a_5428_2384# VSS.t1 VSS.t0 sg13_lv_nmos ad=0.85p pd=5.68u as=0.85p ps=5.68u w=2.5u l=0.5u
+X36 a_11798_1180# a_9450_4394# rf_out_n VSS.t12 sg13_lv_nmos ad=0.38p pd=2.38u as=0.38p ps=2.38u w=2u l=0.13u
+X37 VSS.t51 vco_bias_0.vbn_buf VSS.t51 VSS.t53 sg13_lv_nmos ad=1.52p pd=8.38u as=0 ps=0 w=8u l=10u
+X38 a_11798_1180# vco_bias_0.vbn_buf VSS.t49 VSS.t68 sg13_lv_nmos ad=0.95p pd=5.38u as=0.95p ps=5.38u w=5u l=0.5u
+X39 a_11798_1180# a_9450_4394# rf_out_n VSS.t8 sg13_lv_nmos ad=0.38p pd=2.38u as=0.38p ps=2.38u w=2u l=0.13u
+X40 VSS.t49 vco_bias_0.vbn_buf a_11798_1180# VSS.t75 sg13_lv_nmos ad=0.95p pd=5.38u as=0.95p ps=5.38u w=5u l=0.5u
+X41 VSS.t106 vco_bias_0.vbg_buf VSS.t106 VSS.t52 sg13_lv_nmos ad=1.52p pd=8.38u as=0 ps=0 w=8u l=10u
+X42 a_2654_4840# ibias_100u VSS.t91 VSS.t0 sg13_lv_nmos ad=0.85p pd=5.68u as=0.85p ps=5.68u w=2.5u l=0.5u
+X43 VSS.t106 vco_bias_0.vbg_buf VSS.t106 VSS.t55 sg13_lv_nmos ad=1.52p pd=8.38u as=0 ps=0 w=8u l=10u
+X44 VSS.t49 vco_bias_0.vbn_buf a_11798_1180# VSS.t87 sg13_lv_nmos ad=0.95p pd=5.38u as=0.95p ps=5.38u w=5u l=0.5u
+X45 VSS.t42 vdd_core vdd_core VSS.t44 sg13_lv_nmos ad=0.38p pd=2.38u as=0.38p ps=2.38u w=2u l=0.13u
+X46 VSS.t49 vco_bias_0.vbn_buf a_11798_1180# VSS.t89 sg13_lv_nmos ad=1.7p pd=10.68u as=0.95p ps=5.38u w=5u l=0.5u
+X47 VSS.t51 vco_bias_0.vbn_buf VSS.t51 VSS.t50 sg13_lv_nmos ad=2.72p pd=16.68u as=0 ps=0 w=8u l=10u
+X48 VSS.t31 vdd_core vdd_core VSS.t33 sg13_lv_nmos ad=0.38p pd=2.38u as=0.38p ps=2.38u w=2u l=0.13u
+N49 vdd_core vtune sg13_hv_svaricap l=0.3u w=30.08u
+X50 VDD rf_out_p VSS.t93 rppd l=1.65u w=10u
+X51 rf_out_p a_14668_2644# a_11798_1180# VSS.t104 sg13_lv_nmos ad=0.38p pd=2.38u as=0.38p ps=2.38u w=2u l=0.13u
+X52 a_2654_4840# a_2654_4840# VDD VDD sg13_lv_pmos ad=1.7p pd=10.68u as=1.7p ps=10.68u w=5u l=0.5u
+X53 a_11798_1180# vco_bias_0.vbn_buf VSS.t49 VSS.t74 sg13_lv_nmos ad=0.95p pd=5.38u as=0.95p ps=5.38u w=5u l=0.5u
+X54 rf_out_p a_14668_2644# a_11798_1180# VSS.t100 sg13_lv_nmos ad=0.38p pd=2.38u as=0.38p ps=2.38u w=2u l=0.13u
+X55 VSS.t51 vco_bias_0.vbn_buf VSS.t51 VSS.t55 sg13_lv_nmos ad=1.52p pd=8.38u as=0 ps=0 w=8u l=10u
+X56 vdd_core vdd_core VSS.t25 VSS.t29 sg13_lv_nmos ad=0.38p pd=2.38u as=0.38p ps=2.38u w=2u l=0.13u
+X57 VSS.t49 vco_bias_0.vbn_buf a_11798_1180# VSS.t81 sg13_lv_nmos ad=0.95p pd=5.38u as=0.95p ps=5.38u w=5u l=0.5u
+X58 a_11798_1180# vco_bias_0.vbn_buf VSS.t49 VSS.t76 sg13_lv_nmos ad=0.95p pd=5.38u as=0.95p ps=5.38u w=5u l=0.5u
+X59 vdd_core vdd_core VSS.t25 VSS.t24 sg13_lv_nmos ad=0.38p pd=2.38u as=0.68p ps=4.68u w=2u l=0.13u
+X60 VSS.t49 vco_bias_0.vbn_buf a_11798_1180# VSS.t83 sg13_lv_nmos ad=0.95p pd=5.38u as=0.95p ps=5.38u w=5u l=0.5u
+X61 VSS.t31 vdd_core vdd_core VSS.t39 sg13_lv_nmos ad=0.38p pd=2.38u as=0.38p ps=2.38u w=2u l=0.13u
+X62 rf_out_n a_9450_4394# a_11798_1180# VSS.t3 sg13_lv_nmos ad=0.38p pd=2.38u as=0.68p ps=4.68u w=2u l=0.13u
+N63 vdd_core vtune sg13_hv_svaricap l=0.3u w=30.08u
+X64 a_1954_2820# a_1254_2820# VDD VDD sg13_lv_pmos ad=0.34p pd=2.68u as=0.34p ps=2.68u w=1u l=0.13u
+X65 VSS.t25 vdd_core vdd_core VSS.t26 sg13_lv_nmos ad=0.38p pd=2.38u as=0.38p ps=2.38u w=2u l=0.13u
+X66 VSS.t51 vco_bias_0.vbn_buf VSS.t51 VSS.t50 sg13_lv_nmos ad=2.72p pd=16.68u as=0 ps=0 w=8u l=10u
+X67 rf_out_n a_9450_4394# a_11798_1180# VSS.t13 sg13_lv_nmos ad=0.38p pd=2.38u as=0.38p ps=2.38u w=2u l=0.13u
+X68 rf_out_n a_9450_4394# a_11798_1180# VSS.t9 sg13_lv_nmos ad=0.38p pd=2.38u as=0.38p ps=2.38u w=2u l=0.13u
+X69 VSS.t106 vco_bias_0.vbg_buf VSS.t106 VSS.t50 sg13_lv_nmos ad=2.72p pd=16.68u as=0 ps=0 w=8u l=10u
+X70 VSS.t49 vco_bias_0.vbn_buf a_11798_1180# VSS.t63 sg13_lv_nmos ad=0.95p pd=5.38u as=0.95p ps=5.38u w=5u l=0.5u
+X71 a_11798_1180# vco_bias_0.vbn_buf VSS.t49 VSS.t70 sg13_lv_nmos ad=0.95p pd=5.38u as=0.95p ps=5.38u w=5u l=0.5u
+X72 a_11798_1180# vco_bias_0.vbn_buf VSS.t49 VSS.t82 sg13_lv_nmos ad=0.95p pd=5.38u as=0.95p ps=5.38u w=5u l=0.5u
+X73 a_11798_1180# vco_bias_0.vbn_buf VSS.t49 VSS.t84 sg13_lv_nmos ad=0.95p pd=5.38u as=0.95p ps=5.38u w=5u l=0.5u
+X74 a_9450_4394# vdd_core cap_cmim l=10u w=10u
+X75 a_11798_1180# a_14668_2644# rf_out_p VSS.t95 sg13_lv_nmos ad=0.38p pd=2.38u as=0.38p ps=2.38u w=2u l=0.13u
+X76 VSS.t51 vco_bias_0.vbn_buf VSS.t51 VSS.t55 sg13_lv_nmos ad=1.52p pd=8.38u as=0 ps=0 w=8u l=10u
+X77 vdd_core vdd_core VSS.t42 VSS.t45 sg13_lv_nmos ad=0.38p pd=2.38u as=0.38p ps=2.38u w=2u l=0.13u
+X78 vdd_core vdd_core VSS.t31 VSS.t34 sg13_lv_nmos ad=0.38p pd=2.38u as=0.38p ps=2.38u w=2u l=0.13u
+X79 a_11798_1180# vco_bias_0.vbn_buf VSS.t49 VSS.t62 sg13_lv_nmos ad=0.95p pd=5.38u as=0.95p ps=5.38u w=5u l=0.5u
+X80 ibias_100u ibias_100u VSS.t91 VSS.t0 sg13_lv_nmos ad=0.85p pd=5.68u as=0.85p ps=5.68u w=2.5u l=0.5u
+X81 VSS.t49 vco_bias_0.vbn_buf a_11798_1180# VSS.t69 sg13_lv_nmos ad=0.95p pd=5.38u as=0.95p ps=5.38u w=5u l=0.5u
+X82 a_11798_1180# vco_bias_0.vbn_buf VSS.t49 VSS.t64 sg13_lv_nmos ad=0.95p pd=5.38u as=0.95p ps=5.38u w=5u l=0.5u
+X83 a_11798_1180# a_14668_2644# rf_out_p VSS.t101 sg13_lv_nmos ad=0.38p pd=2.38u as=0.38p ps=2.38u w=2u l=0.13u
+X84 rf_out_p a_14668_2644# a_11798_1180# VSS.t98 sg13_lv_nmos ad=0.38p pd=2.38u as=0.38p ps=2.38u w=2u l=0.13u
+X85 a_1474_1090# a_5428_2384# VSS.t2 rppd l=8.5u w=0.5u
+X86 vco_bias_0.vbn_buf a_1254_2820# VSS.t1 VSS.t19 sg13_lv_nmos ad=0.34p pd=2.68u as=0.34p ps=2.68u w=1u l=0.13u
+X87 VSS.t106 vco_bias_0.vbg_buf VSS.t106 VSS.t54 sg13_lv_nmos ad=1.52p pd=8.38u as=0 ps=0 w=8u l=10u
+X88 a_14668_2644# vdd_core cap_cmim l=10u w=10u
+X89 VSS.t49 vco_bias_0.vbn_buf a_11798_1180# VSS.t71 sg13_lv_nmos ad=0.95p pd=5.38u as=0.95p ps=5.38u w=5u l=0.5u
+X90 a_11798_1180# vco_bias_0.vbn_buf VSS.t49 VSS.t78 sg13_lv_nmos ad=0.95p pd=5.38u as=0.95p ps=5.38u w=5u l=0.5u
+X91 a_11798_1180# a_9450_4394# rf_out_n VSS.t4 sg13_lv_nmos ad=0.38p pd=2.38u as=0.38p ps=2.38u w=2u l=0.13u
+X92 VSS.t106 vco_bias_0.vbg_buf VSS.t106 VSS.t52 sg13_lv_nmos ad=1.52p pd=8.38u as=0 ps=0 w=8u l=10u
+X93 VSS.t106 vco_bias_0.vbg_buf VSS.t106 VSS.t53 sg13_lv_nmos ad=1.52p pd=8.38u as=0 ps=0 w=8u l=10u
+X94 VSS.t31 vdd_core vdd_core VSS.t30 sg13_lv_nmos ad=0.38p pd=2.38u as=0.38p ps=2.38u w=2u l=0.13u
+N95 vdd_core vtune sg13_hv_svaricap l=0.3u w=30.08u
+X96 vdd_core vdd_core VSS.t31 VSS.t40 sg13_lv_nmos ad=0.38p pd=2.38u as=0.38p ps=2.38u w=2u l=0.13u
+X97 a_11798_1180# a_9450_4394# rf_out_n VSS.t14 sg13_lv_nmos ad=0.68p pd=4.68u as=0.38p ps=2.38u w=2u l=0.13u
+X98 vdd_core vdd_core VSS.t31 VSS.t36 sg13_lv_nmos ad=0.38p pd=2.38u as=0.68p ps=4.68u w=2u l=0.13u
+X99 vdd_core VSS.t21 cap_cmim l=39u w=56u
+X100 a_11798_1180# a_9450_4394# rf_out_n VSS.t10 sg13_lv_nmos ad=0.38p pd=2.38u as=0.38p ps=2.38u w=2u l=0.13u
+X101 a_11798_1180# a_9450_4394# rf_out_n VSS.t6 sg13_lv_nmos ad=0.38p pd=2.38u as=0.38p ps=2.38u w=2u l=0.13u
+X102 VSS.t49 vco_bias_0.vbn_buf a_11798_1180# VSS.t65 sg13_lv_nmos ad=0.95p pd=5.38u as=0.95p ps=5.38u w=5u l=0.5u
+X103 vco_bias_0.vbg_buf a_14668_2644# VSS.t93 rhigh l=8u w=0.5u
+X104 vdd_core vdd_core VSS.t25 VSS.t27 sg13_lv_nmos ad=0.38p pd=2.38u as=0.38p ps=2.38u w=2u l=0.13u
+X105 VSS.t49 vco_bias_0.vbn_buf a_11798_1180# VSS.t77 sg13_lv_nmos ad=0.95p pd=5.38u as=0.95p ps=5.38u w=5u l=0.5u
+X106 a_11798_1180# vco_bias_0.vbn_buf VSS.t49 VSS.t72 sg13_lv_nmos ad=0.95p pd=5.38u as=0.95p ps=5.38u w=5u l=0.5u
+X107 VSS.t31 vdd_core vdd_core VSS.t37 sg13_lv_nmos ad=0.38p pd=2.38u as=0.38p ps=2.38u w=2u l=0.13u
+X108 rf_out_p a_14668_2644# a_11798_1180# VSS.t96 sg13_lv_nmos ad=0.38p pd=2.38u as=0.38p ps=2.38u w=2u l=0.13u
+X109 a_1254_2820# di_en VSS.t47 VSS.t17 sg13_lv_nmos ad=0.17p pd=1.68u as=0.17p ps=1.68u w=0.5u l=0.13u
+X110 VDD rf_out_n VSS.t15 rppd l=1.65u w=10u
+X111 VSS.t106 vco_bias_0.vbg_buf VSS.t106 VSS.t55 sg13_lv_nmos ad=1.52p pd=8.38u as=0 ps=0 w=8u l=10u
+X112 VSS.t51 vco_bias_0.vbn_buf VSS.t51 VSS.t52 sg13_lv_nmos ad=1.52p pd=8.38u as=0 ps=0 w=8u l=10u
+X113 VSS.t51 vco_bias_0.vbn_buf VSS.t51 VSS.t54 sg13_lv_nmos ad=1.52p pd=8.38u as=0 ps=0 w=8u l=10u
+X114 vdd_core VSS.t21 cap_cmim l=25.5u w=42u
+X115 a_11798_1180# a_14668_2644# rf_out_p VSS.t105 sg13_lv_nmos ad=0.68p pd=4.68u as=0.38p ps=2.38u w=2u l=0.13u
+N116 vdd_core vtune sg13_hv_svaricap l=0.3u w=30.08u
+X117 rf_out_p a_14668_2644# a_11798_1180# VSS.t102 sg13_lv_nmos ad=0.38p pd=2.38u as=0.38p ps=2.38u w=2u l=0.13u
+X118 a_11798_1180# a_14668_2644# rf_out_p VSS.t99 sg13_lv_nmos ad=0.38p pd=2.38u as=0.38p ps=2.38u w=2u l=0.13u
+X119 vco_bias_0.vbg_buf a_9450_4394# VSS.t90 rhigh l=8u w=0.5u
+X120 a_11798_1180# vco_bias_0.vbn_buf VSS.t49 VSS.t66 sg13_lv_nmos ad=0.95p pd=5.38u as=0.95p ps=5.38u w=5u l=0.5u
+X121 VSS.t49 vco_bias_0.vbn_buf a_11798_1180# VSS.t73 sg13_lv_nmos ad=0.95p pd=5.38u as=0.95p ps=5.38u w=5u l=0.5u
+X122 rf_out_n a_9450_4394# a_11798_1180# VSS.t5 sg13_lv_nmos ad=0.38p pd=2.38u as=0.38p ps=2.38u w=2u l=0.13u
+R0 VSS.n164 VSS.n163 19554.9
+R1 VSS.n336 VSS.n333 2420.69
+R2 VSS.n336 VSS.n335 1880.72
+R3 VSS.t49 VSS.t69 16.5445
+R4 VSS.t17 VSS.n336 900.284
+R5 VSS.t53 VSS.t16 89.1795
+R6 VSS.t0 VSS.t19 70.7775
+R7 VSS.t53 VSS.n337 52.3755
+R8 VSS.n337 VSS.n2 47.1851
+R9 VSS.n2 VSS.t0 33.0298
+R10 VSS.n195 VSS.n21 25.2835
+R11 VSS.t19 VSS.t17 23.5928
+R12 VSS.n135 VSS.n134 20.9925
+R13 VSS.n143 VSS.n141 20.9925
+R14 VSS.n147 VSS.n146 20.9925
+R15 VSS.n125 VSS.n124 20.9925
+R16 VSS.n161 VSS.n159 20.9925
+R17 VSS.n119 VSS.n118 20.9925
+R18 VSS.n117 VSS.n116 20.9925
+R19 VSS.n183 VSS.n181 20.9925
+R20 VSS.n113 VSS.n112 20.9925
+R21 VSS.n165 VSS.n164 20.0664
+R22 VSS.n128 VSS.t50 19.7577
+R23 VSS.n335 VSS.n132 17.5967
+R24 VSS.t47 VSS.n1 0.532242
+R25 VSS.n1 VSS.n2 8.23538
+R26 VSS.n337 VSS.t18 17.0005
+R27 VSS.n337 VSS.t1 17.0005
+R28 VSS.n358 VSS.n73 17.0005
+R29 VSS.n358 VSS.n344 17.0005
+R30 VSS.n358 VSS.n357 17.0005
+R31 VSS.n358 VSS.n345 17.0005
+R32 VSS.n358 VSS.n356 17.0005
+R33 VSS.n358 VSS.n346 17.0005
+R34 VSS.n358 VSS.n355 17.0005
+R35 VSS.n358 VSS.n347 17.0005
+R36 VSS.n358 VSS.n354 17.0005
+R37 VSS.n358 VSS.n348 17.0005
+R38 VSS.n358 VSS.n353 17.0005
+R39 VSS.n358 VSS.n349 17.0005
+R40 VSS.n358 VSS.t64 17.0005
+R41 VSS.n358 VSS.n350 17.0005
+R42 VSS.n358 VSS.n352 17.0005
+R43 VSS.n358 VSS.n351 17.0005
+R44 VSS.n391 VSS.n9 17.0005
+R45 VSS.n9 VSS.n74 17.0005
+R46 VSS.n9 VSS.n77 17.0005
+R47 VSS.n9 VSS.n75 17.0005
+R48 VSS.n9 VSS.n76 17.0005
+R49 VSS.t49 VSS.n12 17.0005
+R50 VSS.t49 VSS.n28 17.0005
+R51 VSS.t49 VSS.n13 17.0005
+R52 VSS.t49 VSS.n27 17.0005
+R53 VSS.t49 VSS.n14 17.0005
+R54 VSS.t49 VSS.n26 17.0005
+R55 VSS.t49 VSS.n15 17.0005
+R56 VSS.t49 VSS.n25 17.0005
+R57 VSS.t49 VSS.n16 17.0005
+R58 VSS.t49 VSS.n24 17.0005
+R59 VSS.t49 VSS.n17 17.0005
+R60 VSS.t49 VSS.n3 17.0005
+R61 VSS.t49 VSS.n4 17.0005
+R62 VSS.t49 VSS.n23 17.0005
+R63 VSS.t49 VSS.n18 17.0005
+R64 VSS.t49 VSS.n21 17.0005
+R65 VSS.n9 VSS.n78 17.0005
+R66 VSS.n9 VSS.n363 17.0005
+R67 VSS.n9 VSS.n364 17.0005
+R68 VSS.n9 VSS.n365 17.0005
+R69 VSS.n9 VSS.n366 17.0005
+R70 VSS.n9 VSS.n367 17.0005
+R71 VSS.n9 VSS.n368 17.0005
+R72 VSS.n9 VSS.n369 17.0005
+R73 VSS.n9 VSS.n370 17.0005
+R74 VSS.n9 VSS.n371 17.0005
+R75 VSS.n9 VSS.n372 17.0005
+R76 VSS.n9 VSS.n373 17.0005
+R77 VSS.n9 VSS.n374 17.0005
+R78 VSS.n9 VSS.n375 17.0005
+R79 VSS.n9 VSS.n376 17.0005
+R80 VSS.n9 VSS.n377 17.0005
+R81 VSS.n9 VSS.n378 17.0005
+R82 VSS.n9 VSS.n379 17.0005
+R83 VSS.n9 VSS.n380 17.0005
+R84 VSS.n9 VSS.n381 17.0005
+R85 VSS.n9 VSS.n382 17.0005
+R86 VSS.n9 VSS.n383 17.0005
+R87 VSS.n9 VSS.n384 17.0005
+R88 VSS.n9 VSS.n385 17.0005
+R89 VSS.n9 VSS.n386 17.0005
+R90 VSS.n9 VSS.n387 17.0005
+R91 VSS.n9 VSS.n388 17.0005
+R92 VSS.n9 VSS.n389 17.0005
+R93 VSS.n9 VSS.n390 17.0005
+R94 VSS.t49 VSS.n29 17.0005
+R95 VSS.t49 VSS.n46 17.0005
+R96 VSS.t49 VSS.n47 17.0005
+R97 VSS.t49 VSS.n48 17.0005
+R98 VSS.t49 VSS.n49 17.0005
+R99 VSS.t49 VSS.n50 17.0005
+R100 VSS.t49 VSS.n51 17.0005
+R101 VSS.t49 VSS.n52 17.0005
+R102 VSS.t49 VSS.n53 17.0005
+R103 VSS.t49 VSS.n54 17.0005
+R104 VSS.t49 VSS.n55 17.0005
+R105 VSS.t49 VSS.n56 17.0005
+R106 VSS.t49 VSS.n57 17.0005
+R107 VSS.t49 VSS.n58 17.0005
+R108 VSS.t49 VSS.n59 17.0005
+R109 VSS.t49 VSS.n60 17.0005
+R110 VSS.t49 VSS.n61 17.0005
+R111 VSS.t49 VSS.n62 17.0005
+R112 VSS.t49 VSS.n63 17.0005
+R113 VSS.t49 VSS.n64 17.0005
+R114 VSS.t49 VSS.n65 17.0005
+R115 VSS.t49 VSS.n66 17.0005
+R116 VSS.t49 VSS.n67 17.0005
+R117 VSS.t49 VSS.n68 17.0005
+R118 VSS.t49 VSS.n69 17.0005
+R119 VSS.t49 VSS.n70 17.0005
+R120 VSS.t49 VSS.n71 17.0005
+R121 VSS.t49 VSS.n72 17.0005
+R122 VSS.n7 VSS.n359 17.0005
+R123 VSS.n7 VSS.n84 17.0005
+R124 VSS.n7 VSS.n96 17.0005
+R125 VSS.n7 VSS.t85 17.0005
+R126 VSS.n7 VSS.n95 17.0005
+R127 VSS.n7 VSS.n85 17.0005
+R128 VSS.n7 VSS.n94 17.0005
+R129 VSS.n7 VSS.n86 17.0005
+R130 VSS.n7 VSS.n93 17.0005
+R131 VSS.n7 VSS.n87 17.0005
+R132 VSS.n7 VSS.n92 17.0005
+R133 VSS.n360 VSS.n7 17.0005
+R134 VSS.n7 VSS.n91 17.0005
+R135 VSS.n7 VSS.n88 17.0005
+R136 VSS.n7 VSS.n90 17.0005
+R137 VSS.n7 VSS.n89 17.0005
+R138 VSS.n9 VSS.n362 17.0005
+R139 VSS.n9 VSS.n83 17.0005
+R140 VSS.n9 VSS.n81 17.0005
+R141 VSS.n9 VSS.n80 17.0005
+R142 VSS.n9 VSS.n79 17.0005
+R143 VSS.t49 VSS.t93 17.0005
+R144 VSS.t49 VSS.n42 17.0005
+R145 VSS.t49 VSS.n41 17.0005
+R146 VSS.t49 VSS.n6 17.0005
+R147 VSS.t49 VSS.n5 17.0005
+R148 VSS.t49 VSS.n40 17.0005
+R149 VSS.t49 VSS.n39 17.0005
+R150 VSS.t49 VSS.n38 17.0005
+R151 VSS.t49 VSS.n37 17.0005
+R152 VSS.t49 VSS.n36 17.0005
+R153 VSS.t49 VSS.n35 17.0005
+R154 VSS.t49 VSS.n34 17.0005
+R155 VSS.t49 VSS.n33 17.0005
+R156 VSS.t49 VSS.n32 17.0005
+R157 VSS.t49 VSS.n31 17.0005
+R158 VSS.t49 VSS.n30 17.0005
+R159 VSS.t49 VSS.t100 16.5445
+R160 VSS.t62 VSS.n19 15.6019
+R161 VSS.t87 VSS.n43 15.6019
+R162 VSS.n45 VSS.t88 14.4827
+R163 VSS.t61 VSS.n20 14.4827
+R164 VSS.n339 VSS.t53 14.201
+R165 VSS.n22 VSS.t61 12.9739
+R166 VSS.t88 VSS.n44 12.9732
+R167 VSS.n21 VSS.t48 12.4533
+R168 VSS.t93 VSS.t89 12.4533
+R169 VSS.n390 VSS.n72 12.3761
+R170 VSS.n389 VSS.n71 12.3761
+R171 VSS.n388 VSS.n71 12.3761
+R172 VSS.n387 VSS.n70 12.3761
+R173 VSS.n387 VSS.n69 12.3761
+R174 VSS.n386 VSS.n68 12.3761
+R175 VSS.n384 VSS.n67 12.3761
+R176 VSS.n384 VSS.n66 12.3761
+R177 VSS.n383 VSS.n65 12.3761
+R178 VSS.n381 VSS.n64 12.3761
+R179 VSS.n381 VSS.n63 12.3761
+R180 VSS.n380 VSS.n63 12.3761
+R181 VSS.n379 VSS.n62 12.3761
+R182 VSS.n379 VSS.n61 12.3761
+R183 VSS.n378 VSS.n61 12.3761
+R184 VSS.n378 VSS.n60 12.3761
+R185 VSS.n377 VSS.n59 12.3761
+R186 VSS.n376 VSS.n59 12.3761
+R187 VSS.n376 VSS.n58 12.3761
+R188 VSS.n375 VSS.n58 12.3761
+R189 VSS.n374 VSS.n57 12.3761
+R190 VSS.n374 VSS.n56 12.3761
+R191 VSS.n373 VSS.n56 12.3761
+R192 VSS.n373 VSS.n55 12.3761
+R193 VSS.n372 VSS.n54 12.3761
+R194 VSS.n371 VSS.n54 12.3761
+R195 VSS.n371 VSS.n53 12.3761
+R196 VSS.n369 VSS.n52 12.3761
+R197 VSS.n368 VSS.n51 12.3761
+R198 VSS.n368 VSS.n50 12.3761
+R199 VSS.n366 VSS.n49 12.3761
+R200 VSS.n365 VSS.n48 12.3761
+R201 VSS.n365 VSS.n47 12.3761
+R202 VSS.n364 VSS.n46 12.3761
+R203 VSS.n363 VSS.n46 12.3761
+R204 VSS.n78 VSS.n29 12.3761
+R205 VSS.n333 VSS.n332 12.3487
+R206 VSS.t55 VSS.n222 12.076
+R207 VSS.n390 VSS.t69 12.0121
+R208 VSS.t2 VSS.n293 11.6986
+R209 VSS.n382 VSS.t72 11.6482
+R210 VSS.n370 VSS.t77 11.6482
+R211 VSS.n343 VSS.t21 11.5239
+R212 VSS.n0 VSS.t16 3.40354
+R213 VSS.t1 VSS.n0 0.988741
+R214 VSS.n254 VSS.t90 11.3213
+R215 VSS.n176 VSS.t52 11.1139
+R216 VSS.t71 VSS.n68 10.9202
+R217 VSS.t78 VSS.n49 10.9202
+R218 VSS.t52 VSS.n174 9.87908
+R219 VSS.t9 VSS.n72 9.82821
+R220 VSS.t11 VSS.n69 9.82821
+R221 VSS.n385 VSS.t12 9.82821
+R222 VSS.t13 VSS.n66 9.82821
+R223 VSS.n382 VSS.t14 9.82821
+R224 VSS.n370 VSS.t94 9.82821
+R225 VSS.t95 VSS.n51 9.82821
+R226 VSS.n367 VSS.t96 9.82821
+R227 VSS.t97 VSS.n48 9.82821
+R228 VSS.t99 VSS.n29 9.82821
+R229 VSS.n340 VSS.n106 9.81182
+R230 VSS.n341 VSS.n11 9.81182
+R231 VSS.n284 VSS.n97 9.81182
+R232 VSS.n283 VSS.n105 9.81182
+R233 VSS.n282 VSS.n98 9.81182
+R234 VSS.n281 VSS.n104 9.81182
+R235 VSS.n280 VSS.n99 9.81182
+R236 VSS.n278 VSS.n100 9.81182
+R237 VSS.n277 VSS.n102 9.81182
+R238 VSS.n276 VSS.n101 9.81182
+R239 VSS.n122 VSS.t47 9.75612
+R240 VSS.t73 VSS.n62 9.46422
+R241 VSS.t76 VSS.n55 9.46422
+R242 VSS VSS.t47 9.43786
+R243 VSS.n108 VSS.n107 9.39463
+R244 VSS.n110 VSS.n109 9.39463
+R245 VSS.n153 VSS.n152 9.39463
+R246 VSS.n151 VSS.n150 9.39463
+R247 VSS.n149 VSS.n148 9.39463
+R248 VSS.n130 VSS.n129 9.39463
+R249 VSS.n192 VSS.n191 9.39463
+R250 VSS.n189 VSS.n188 9.39463
+R251 VSS.n187 VSS.n186 9.39463
+R252 VSS.n172 VSS.n171 9.39463
+R253 VSS.n169 VSS.n168 9.39463
+R254 VSS.n167 VSS.n166 9.39463
+R255 VSS.n157 VSS.n156 9.39463
+R256 VSS.n139 VSS.n138 9.39463
+R257 VSS.n138 VSS.n136 9.39463
+R258 VSS.n139 VSS.n137 9.39463
+R259 VSS.n140 VSS.n133 9.39463
+R260 VSS.n144 VSS.n142 9.39463
+R261 VSS.n131 VSS.n130 9.39463
+R262 VSS.n145 VSS.n126 9.39463
+R263 VSS.n150 VSS.n149 9.39463
+R264 VSS.n152 VSS.n151 9.39463
+R265 VSS.n154 VSS.n153 9.39463
+R266 VSS.n156 VSS.n154 9.39463
+R267 VSS.n157 VSS.n155 9.39463
+R268 VSS.n158 VSS.n123 9.39463
+R269 VSS.n162 VSS.n160 9.39463
+R270 VSS.n168 VSS.n167 9.39463
+R271 VSS.n171 VSS.n169 9.39463
+R272 VSS.n172 VSS.n170 9.39463
+R273 VSS.n170 VSS.n120 9.39463
+R274 VSS.n177 VSS.n175 9.39463
+R275 VSS.n178 VSS.n115 9.39463
+R276 VSS.n179 VSS.n178 9.39463
+R277 VSS.n180 VSS.n179 9.39463
+R278 VSS.n184 VSS.n182 9.39463
+R279 VSS.n182 VSS.n114 9.39463
+R280 VSS.n186 VSS.n185 9.39463
+R281 VSS.n188 VSS.n187 9.39463
+R282 VSS.n191 VSS.n189 9.39463
+R283 VSS.n192 VSS.n190 9.39463
+R284 VSS.n111 VSS.n110 9.39463
+R285 VSS.n109 VSS.n108 9.39463
+R286 VSS.n193 VSS.n107 9.39463
+R287 VSS.n194 VSS.n193 9.39463
+R288 VSS.n338 VSS.n194 9.39463
+R289 VSS.n44 VSS.t87 9.20035
+R290 VSS.n22 VSS.t62 9.19965
+R291 VSS.n351 VSS.n19 9.18684
+R292 VSS.n359 VSS.n43 9.18684
+R293 VSS.t49 VSS.n8 4.37276
+R294 VSS.n388 VSS.t70 8.73624
+R295 VSS.n364 VSS.t79 8.73624
+R296 VSS.n333 VSS.n331 8.64425
+R297 VSS.t51 VSS.n339 8.5005
+R298 VSS.t51 VSS.n113 8.5005
+R299 VSS.t51 VSS.n181 8.5005
+R300 VSS.t51 VSS.n117 8.5005
+R301 VSS.t51 VSS.n174 8.5005
+R302 VSS.t51 VSS.n118 8.5005
+R303 VSS.t51 VSS.n165 8.5005
+R304 VSS.t51 VSS.n121 8.5005
+R305 VSS.t51 VSS.n159 8.5005
+R306 VSS.t51 VSS.n125 8.5005
+R307 VSS.t51 VSS.n146 8.5005
+R308 VSS.t51 VSS.n132 8.5005
+R309 VSS.t51 VSS.n141 8.5005
+R310 VSS.t51 VSS.n135 8.5005
+R311 VSS.n112 VSS.t106 8.5005
+R312 VSS.n332 VSS.t106 8.5005
+R313 VSS.n116 VSS.t106 8.5005
+R314 VSS.n119 VSS.t106 8.5005
+R315 VSS.n124 VSS.t106 8.5005
+R316 VSS.n127 VSS.t106 8.5005
+R317 VSS.n334 VSS.t106 8.5005
+R318 VSS.n134 VSS.t106 8.5005
+R319 VSS.n331 VSS.t106 8.5005
+R320 VSS.n183 VSS.t106 8.5005
+R321 VSS.n176 VSS.t106 8.5005
+R322 VSS.n161 VSS.t106 8.5005
+R323 VSS.n147 VSS.t106 8.5005
+R324 VSS.n128 VSS.t106 8.5005
+R325 VSS.n143 VSS.t106 8.5005
+R326 VSS.n163 VSS.t106 8.5005
+R327 VSS.t51 VSS.n195 8.5005
+R328 VSS.t51 VSS.n197 8.5005
+R329 VSS.t51 VSS.n199 8.5005
+R330 VSS.t51 VSS.n201 8.5005
+R331 VSS.t51 VSS.n203 8.5005
+R332 VSS.t51 VSS.n205 8.5005
+R333 VSS.t51 VSS.n207 8.5005
+R334 VSS.t51 VSS.n208 8.5005
+R335 VSS.t51 VSS.n210 8.5005
+R336 VSS.t51 VSS.n212 8.5005
+R337 VSS.t51 VSS.n214 8.5005
+R338 VSS.t51 VSS.n216 8.5005
+R339 VSS.t51 VSS.n218 8.5005
+R340 VSS.t51 VSS.n220 8.5005
+R341 VSS.t51 VSS.n222 8.5005
+R342 VSS.t51 VSS.n223 8.5005
+R343 VSS.t51 VSS.n225 8.5005
+R344 VSS.t51 VSS.n227 8.5005
+R345 VSS.t51 VSS.n229 8.5005
+R346 VSS.t51 VSS.n231 8.5005
+R347 VSS.t51 VSS.n233 8.5005
+R348 VSS.t51 VSS.n235 8.5005
+R349 VSS.t51 VSS.n237 8.5005
+R350 VSS.t51 VSS.n239 8.5005
+R351 VSS.t51 VSS.n241 8.5005
+R352 VSS.t51 VSS.n243 8.5005
+R353 VSS.t51 VSS.n245 8.5005
+R354 VSS.t51 VSS.n247 8.5005
+R355 VSS.t51 VSS.n249 8.5005
+R356 VSS.t51 VSS.n251 8.5005
+R357 VSS.t51 VSS.n253 8.5005
+R358 VSS.t51 VSS.n254 8.5005
+R359 VSS.t51 VSS.n256 8.5005
+R360 VSS.t51 VSS.n258 8.5005
+R361 VSS.t51 VSS.n260 8.5005
+R362 VSS.t51 VSS.n262 8.5005
+R363 VSS.t51 VSS.n264 8.5005
+R364 VSS.t51 VSS.n266 8.5005
+R365 VSS.t51 VSS.n268 8.5005
+R366 VSS.t51 VSS.n270 8.5005
+R367 VSS.t51 VSS.n272 8.5005
+R368 VSS.t51 VSS.n274 8.5005
+R369 VSS.t51 VSS.n276 8.5005
+R370 VSS.t51 VSS.n277 8.5005
+R371 VSS.t51 VSS.n278 8.5005
+R372 VSS.t51 VSS.n279 8.5005
+R373 VSS.t51 VSS.n280 8.5005
+R374 VSS.t51 VSS.n281 8.5005
+R375 VSS.t51 VSS.n282 8.5005
+R376 VSS.t51 VSS.n283 8.5005
+R377 VSS.t51 VSS.n284 8.5005
+R378 VSS.t51 VSS.n11 8.5005
+R379 VSS.n340 VSS.t51 8.5005
+R380 VSS.t51 VSS.n285 8.5005
+R381 VSS.t51 VSS.n287 8.5005
+R382 VSS.t51 VSS.n289 8.5005
+R383 VSS.t51 VSS.n291 8.5005
+R384 VSS.t51 VSS.n293 8.5005
+R385 VSS.t51 VSS.n294 8.5005
+R386 VSS.t51 VSS.n296 8.5005
+R387 VSS.t51 VSS.n298 8.5005
+R388 VSS.t51 VSS.n300 8.5005
+R389 VSS.t51 VSS.n302 8.5005
+R390 VSS.t51 VSS.n304 8.5005
+R391 VSS.t51 VSS.n306 8.5005
+R392 VSS.t51 VSS.n308 8.5005
+R393 VSS.t51 VSS.n310 8.5005
+R394 VSS.t51 VSS.n312 8.5005
+R395 VSS.t51 VSS.n314 8.5005
+R396 VSS.t51 VSS.n316 8.5005
+R397 VSS.t51 VSS.n318 8.5005
+R398 VSS.t51 VSS.n320 8.5005
+R399 VSS.t51 VSS.n322 8.5005
+R400 VSS.t51 VSS.n324 8.5005
+R401 VSS.t51 VSS.n326 8.5005
+R402 VSS.t51 VSS.n328 8.5005
+R403 VSS.t51 VSS.n330 8.5005
+R404 VSS.n277 VSS.t106 8.5005
+R405 VSS.n278 VSS.t106 8.5005
+R406 VSS.n279 VSS.t106 8.5005
+R407 VSS.n280 VSS.t106 8.5005
+R408 VSS.n281 VSS.t106 8.5005
+R409 VSS.n282 VSS.t106 8.5005
+R410 VSS.n283 VSS.t106 8.5005
+R411 VSS.n284 VSS.t106 8.5005
+R412 VSS.t106 VSS.n11 8.5005
+R413 VSS.n340 VSS.t106 8.5005
+R414 VSS.n352 VSS.n23 8.30239
+R415 VSS.t64 VSS.n3 8.30239
+R416 VSS.n349 VSS.n17 8.30239
+R417 VSS.n348 VSS.n16 8.30239
+R418 VSS.n354 VSS.n25 8.30239
+R419 VSS.n346 VSS.n14 8.30239
+R420 VSS.n92 VSS.n34 8.30239
+R421 VSS.n86 VSS.n37 8.30239
+R422 VSS.n94 VSS.n38 8.30239
+R423 VSS.n95 VSS.n40 8.30239
+R424 VSS.t85 VSS.n5 8.30239
+R425 VSS.n84 VSS.n41 8.30239
+R426 VSS.t51 VSS.n122 7.76695
+R427 VSS.t48 VSS.n20 7.69091
+R428 VSS.t89 VSS.n45 7.69091
+R429 VSS.t15 VSS.n207 7.54767
+R430 VSS.n377 VSS.t74 7.28029
+R431 VSS.n375 VSS.t75 7.28029
+R432 VSS.n355 VSS.t4 6.98163
+R433 VSS.n87 VSS.t104 6.98163
+R434 VSS.n79 VSS.t100 6.41559
+R435 VSS.t80 VSS.t100 6.377
+R436 VSS.n198 VSS.t106 6.17223
+R437 VSS.n200 VSS.t106 6.17223
+R438 VSS.n202 VSS.t106 6.17223
+R439 VSS.n204 VSS.t106 6.17223
+R440 VSS.n211 VSS.t106 6.17223
+R441 VSS.n213 VSS.t106 6.17223
+R442 VSS.n215 VSS.t106 6.17223
+R443 VSS.n217 VSS.t106 6.17223
+R444 VSS.n219 VSS.t106 6.17223
+R445 VSS.n226 VSS.t106 6.17223
+R446 VSS.n228 VSS.t106 6.17223
+R447 VSS.n230 VSS.t106 6.17223
+R448 VSS.n232 VSS.t106 6.17223
+R449 VSS.n234 VSS.t106 6.17223
+R450 VSS.n236 VSS.t106 6.17223
+R451 VSS.n238 VSS.t106 6.17223
+R452 VSS.n240 VSS.t106 6.17223
+R453 VSS.n242 VSS.t106 6.17223
+R454 VSS.n244 VSS.t106 6.17223
+R455 VSS.n246 VSS.t106 6.17223
+R456 VSS.n248 VSS.t106 6.17223
+R457 VSS.n250 VSS.t106 6.17223
+R458 VSS.n257 VSS.t106 6.17223
+R459 VSS.n259 VSS.t106 6.17223
+R460 VSS.n261 VSS.t106 6.17223
+R461 VSS.n263 VSS.t106 6.17223
+R462 VSS.n265 VSS.t106 6.17223
+R463 VSS.n267 VSS.t106 6.17223
+R464 VSS.n269 VSS.t106 6.17223
+R465 VSS.n271 VSS.t106 6.17223
+R466 VSS.n273 VSS.t106 6.17223
+R467 VSS.n288 VSS.t106 6.17223
+R468 VSS.n290 VSS.t106 6.17223
+R469 VSS.n297 VSS.t106 6.17223
+R470 VSS.n299 VSS.t106 6.17223
+R471 VSS.n301 VSS.t106 6.17223
+R472 VSS.n303 VSS.t106 6.17223
+R473 VSS.n305 VSS.t106 6.17223
+R474 VSS.n307 VSS.t106 6.17223
+R475 VSS.n309 VSS.t106 6.17223
+R476 VSS.n311 VSS.t106 6.17223
+R477 VSS.n313 VSS.t106 6.17223
+R478 VSS.n315 VSS.t106 6.17223
+R479 VSS.n317 VSS.t106 6.17223
+R480 VSS.n319 VSS.t106 6.17223
+R481 VSS.n321 VSS.t106 6.17223
+R482 VSS.n323 VSS.t106 6.17223
+R483 VSS.n325 VSS.t106 6.17223
+R484 VSS.n327 VSS.t106 6.17223
+R485 VSS.t49 VSS.n19 6.17223
+R486 VSS.t49 VSS.n43 6.17223
+R487 VSS.n279 VSS.t54 6.03824
+R488 VSS.n78 VSS.t80 5.82433
+R489 VSS.n197 VSS.n196 5.69203
+R490 VSS.n210 VSS.n209 5.69203
+R491 VSS.n225 VSS.n224 5.69203
+R492 VSS.n256 VSS.n255 5.69203
+R493 VSS.n287 VSS.n286 5.69203
+R494 VSS.n296 VSS.n295 5.69203
+R495 VSS.n206 VSS.n205 5.69138
+R496 VSS.n221 VSS.n220 5.69138
+R497 VSS.n252 VSS.n251 5.69138
+R498 VSS.n275 VSS.n274 5.69138
+R499 VSS.n292 VSS.n291 5.69138
+R500 VSS.n329 VSS.n328 5.69138
+R501 VSS.n342 VSS.n106 5.66717
+R502 VSS.n342 VSS.n341 5.66717
+R503 VSS.n342 VSS.n97 5.66717
+R504 VSS.n342 VSS.n105 5.66717
+R505 VSS.n342 VSS.n98 5.66717
+R506 VSS.n342 VSS.n104 5.66717
+R507 VSS.n342 VSS.n99 5.66717
+R508 VSS.n342 VSS.n103 5.66717
+R509 VSS.n342 VSS.n100 5.66717
+R510 VSS.n342 VSS.n102 5.66717
+R511 VSS.n342 VSS.n101 5.66717
+R512 VSS.n208 VSS.t15 5.28352
+R513 VSS.t74 VSS.n60 5.09635
+R514 VSS.t75 VSS.n57 5.09635
+R515 VSS.t26 VSS.n4 5.09484
+R516 VSS.t30 VSS.n15 5.09484
+R517 VSS.n75 VSS.t6 5.09484
+R518 VSS.t35 VSS.n12 5.09484
+R519 VSS.t8 VSS.n391 5.09484
+R520 VSS.t36 VSS.n30 5.09484
+R521 VSS.n83 VSS.t102 5.09484
+R522 VSS.t40 VSS.n36 5.09484
+R523 VSS.t45 VSS.n6 5.09484
+R524 VSS.n351 VSS.t63 4.90616
+R525 VSS.n359 VSS.t86 4.90616
+R526 VSS.n112 VSS.n111 4.69757
+R527 VSS.n331 VSS.n185 4.69757
+R528 VSS.n332 VSS.n114 4.69757
+R529 VSS.n184 VSS.n183 4.69757
+R530 VSS.n116 VSS.n115 4.69757
+R531 VSS.n177 VSS.n176 4.69757
+R532 VSS.n120 VSS.n119 4.69757
+R533 VSS.n162 VSS.n161 4.69757
+R534 VSS.n124 VSS.n123 4.69757
+R535 VSS.n148 VSS.n147 4.69757
+R536 VSS.n127 VSS.n126 4.69757
+R537 VSS.n334 VSS.n131 4.69757
+R538 VSS.n144 VSS.n143 4.69757
+R539 VSS.n134 VSS.n133 4.69757
+R540 VSS.n163 VSS.n136 4.69757
+R541 VSS.n339 VSS.n338 4.69757
+R542 VSS.n181 VSS.n180 4.69757
+R543 VSS.n159 VSS.n158 4.69757
+R544 VSS.n146 VSS.n145 4.69757
+R545 VSS.n141 VSS.n140 4.69757
+R546 VSS.n190 VSS.n113 4.69757
+R547 VSS.n175 VSS.n117 4.69757
+R548 VSS.n173 VSS.n118 4.69757
+R549 VSS.n160 VSS.n121 4.69757
+R550 VSS.n155 VSS.n125 4.69757
+R551 VSS.n142 VSS.n132 4.69757
+R552 VSS.n137 VSS.n135 4.69757
+R553 VSS.n129 VSS.n128 4.69757
+R554 VSS.n166 VSS.n165 4.69757
+R555 VSS.n174 VSS.n173 4.69757
+R556 VSS.n122 VSS.t106 4.67815
+R557 VSS.n198 VSS.n197 4.65853
+R558 VSS.n200 VSS.n199 4.65853
+R559 VSS.n202 VSS.n201 4.65853
+R560 VSS.n204 VSS.n203 4.65853
+R561 VSS.n211 VSS.n210 4.65853
+R562 VSS.n213 VSS.n212 4.65853
+R563 VSS.n215 VSS.n214 4.65853
+R564 VSS.n217 VSS.n216 4.65853
+R565 VSS.n219 VSS.n218 4.65853
+R566 VSS.n226 VSS.n225 4.65853
+R567 VSS.n228 VSS.n227 4.65853
+R568 VSS.n230 VSS.n229 4.65853
+R569 VSS.n232 VSS.n231 4.65853
+R570 VSS.n234 VSS.n233 4.65853
+R571 VSS.n236 VSS.n235 4.65853
+R572 VSS.n238 VSS.n237 4.65853
+R573 VSS.n240 VSS.n239 4.65853
+R574 VSS.n242 VSS.n241 4.65853
+R575 VSS.n244 VSS.n243 4.65853
+R576 VSS.n246 VSS.n245 4.65853
+R577 VSS.n248 VSS.n247 4.65853
+R578 VSS.n250 VSS.n249 4.65853
+R579 VSS.n257 VSS.n256 4.65853
+R580 VSS.n259 VSS.n258 4.65853
+R581 VSS.n261 VSS.n260 4.65853
+R582 VSS.n263 VSS.n262 4.65853
+R583 VSS.n265 VSS.n264 4.65853
+R584 VSS.n267 VSS.n266 4.65853
+R585 VSS.n269 VSS.n268 4.65853
+R586 VSS.n271 VSS.n270 4.65853
+R587 VSS.n273 VSS.n272 4.65853
+R588 VSS.n288 VSS.n287 4.65853
+R589 VSS.n290 VSS.n289 4.65853
+R590 VSS.n297 VSS.n296 4.65853
+R591 VSS.n299 VSS.n298 4.65853
+R592 VSS.n301 VSS.n300 4.65853
+R593 VSS.n303 VSS.n302 4.65853
+R594 VSS.n305 VSS.n304 4.65853
+R595 VSS.n307 VSS.n306 4.65853
+R596 VSS.n309 VSS.n308 4.65853
+R597 VSS.n311 VSS.n310 4.65853
+R598 VSS.n313 VSS.n312 4.65853
+R599 VSS.n315 VSS.n314 4.65853
+R600 VSS.n317 VSS.n316 4.65853
+R601 VSS.n319 VSS.n318 4.65853
+R602 VSS.n321 VSS.n320 4.65853
+R603 VSS.n323 VSS.n322 4.65853
+R604 VSS.n325 VSS.n324 4.65853
+R605 VSS.n327 VSS.n326 4.65853
+R606 VSS.n328 VSS.n327 4.65853
+R607 VSS.n326 VSS.n325 4.65853
+R608 VSS.n324 VSS.n323 4.65853
+R609 VSS.n322 VSS.n321 4.65853
+R610 VSS.n320 VSS.n319 4.65853
+R611 VSS.n318 VSS.n317 4.65853
+R612 VSS.n316 VSS.n315 4.65853
+R613 VSS.n314 VSS.n313 4.65853
+R614 VSS.n312 VSS.n311 4.65853
+R615 VSS.n310 VSS.n309 4.65853
+R616 VSS.n308 VSS.n307 4.65853
+R617 VSS.n306 VSS.n305 4.65853
+R618 VSS.n304 VSS.n303 4.65853
+R619 VSS.n302 VSS.n301 4.65853
+R620 VSS.n300 VSS.n299 4.65853
+R621 VSS.n298 VSS.n297 4.65853
+R622 VSS.n291 VSS.n290 4.65853
+R623 VSS.n289 VSS.n288 4.65853
+R624 VSS.n274 VSS.n273 4.65853
+R625 VSS.n272 VSS.n271 4.65853
+R626 VSS.n270 VSS.n269 4.65853
+R627 VSS.n268 VSS.n267 4.65853
+R628 VSS.n266 VSS.n265 4.65853
+R629 VSS.n264 VSS.n263 4.65853
+R630 VSS.n262 VSS.n261 4.65853
+R631 VSS.n260 VSS.n259 4.65853
+R632 VSS.n258 VSS.n257 4.65853
+R633 VSS.n251 VSS.n250 4.65853
+R634 VSS.n249 VSS.n248 4.65853
+R635 VSS.n247 VSS.n246 4.65853
+R636 VSS.n245 VSS.n244 4.65853
+R637 VSS.n243 VSS.n242 4.65853
+R638 VSS.n241 VSS.n240 4.65853
+R639 VSS.n239 VSS.n238 4.65853
+R640 VSS.n237 VSS.n236 4.65853
+R641 VSS.n235 VSS.n234 4.65853
+R642 VSS.n233 VSS.n232 4.65853
+R643 VSS.n231 VSS.n230 4.65853
+R644 VSS.n229 VSS.n228 4.65853
+R645 VSS.n227 VSS.n226 4.65853
+R646 VSS.n220 VSS.n219 4.65853
+R647 VSS.n218 VSS.n217 4.65853
+R648 VSS.n216 VSS.n215 4.65853
+R649 VSS.n214 VSS.n213 4.65853
+R650 VSS.n212 VSS.n211 4.65853
+R651 VSS.n205 VSS.n204 4.65853
+R652 VSS.n203 VSS.n202 4.65853
+R653 VSS.n201 VSS.n200 4.65853
+R654 VSS.n199 VSS.n198 4.65853
+R655 VSS.n350 VSS.n23 4.5288
+R656 VSS.n353 VSS.n17 4.5288
+R657 VSS.n348 VSS.n24 4.5288
+R658 VSS.n347 VSS.n25 4.5288
+R659 VSS.n355 VSS.n15 4.5288
+R660 VSS.n345 VSS.n27 4.5288
+R661 VSS.n344 VSS.n28 4.5288
+R662 VSS.n73 VSS.n12 4.5288
+R663 VSS.n89 VSS.n30 4.5288
+R664 VSS.n90 VSS.n31 4.5288
+R665 VSS.n91 VSS.n33 4.5288
+R666 VSS.n87 VSS.n36 4.5288
+R667 VSS.n93 VSS.n37 4.5288
+R668 VSS.n94 VSS.n39 4.5288
+R669 VSS.n85 VSS.n40 4.5288
+R670 VSS.n96 VSS.n41 4.5288
+R671 VSS.t85 VSS.n6 4.5288
+R672 VSS.t64 VSS.n4 4.5288
+R673 VSS.t53 VSS.n330 4.15144
+R674 VSS.t68 VSS.n28 4.15144
+R675 VSS.t81 VSS.n31 4.15144
+R676 VSS.t28 VSS.t65 3.96276
+R677 VSS.t43 VSS.t84 3.96276
+R678 VSS.t25 VSS.n342 3.89324
+R679 VSS.t54 VSS.n103 3.77408
+R680 VSS.n82 VSS.t33 3.77408
+R681 VSS.t38 VSS.n361 3.77408
+R682 VSS.n196 VSS.t106 3.77104
+R683 VSS.n209 VSS.t106 3.77104
+R684 VSS.n224 VSS.t106 3.77104
+R685 VSS.n255 VSS.t106 3.77104
+R686 VSS.n286 VSS.t106 3.77104
+R687 VSS.n295 VSS.t106 3.77104
+R688 VSS.n206 VSS.t106 3.77087
+R689 VSS.n221 VSS.t106 3.77087
+R690 VSS.n252 VSS.t106 3.77087
+R691 VSS.n275 VSS.t106 3.77087
+R692 VSS.n292 VSS.t106 3.77087
+R693 VSS.n329 VSS.t106 3.77087
+R694 VSS.t63 VSS.n18 3.39673
+R695 VSS.n356 VSS.t67 3.39673
+R696 VSS.n360 VSS.t82 3.39673
+R697 VSS.t86 VSS.n42 3.39673
+R698 VSS.n335 VSS.n334 3.39626
+R699 VSS.t49 VSS.n22 3.39082
+R700 VSS.n352 VSS.t24 3.20805
+R701 VSS.n350 VSS.t26 3.20805
+R702 VSS.n349 VSS.t27 3.20805
+R703 VSS.n353 VSS.t28 3.20805
+R704 VSS.n354 VSS.t29 3.20805
+R705 VSS.n346 VSS.t32 3.20805
+R706 VSS.n357 VSS.t34 3.20805
+R707 VSS.n88 VSS.t37 3.20805
+R708 VSS.n92 VSS.t39 3.20805
+R709 VSS.n86 VSS.t41 3.20805
+R710 VSS.n85 VSS.t43 3.20805
+R711 VSS.n95 VSS.t44 3.20805
+R712 VSS.n96 VSS.t45 3.20805
+R713 VSS.n84 VSS.t46 3.20805
+R714 VSS.n285 VSS.n106 3.01937
+R715 VSS.n341 VSS.n340 3.01937
+R716 VSS.n11 VSS.n97 3.01937
+R717 VSS.n284 VSS.n105 3.01937
+R718 VSS.n283 VSS.n98 3.01937
+R719 VSS.n282 VSS.n104 3.01937
+R720 VSS.n281 VSS.n99 3.01937
+R721 VSS.n280 VSS.n103 3.01937
+R722 VSS.n279 VSS.n100 3.01937
+R723 VSS.n278 VSS.n102 3.01937
+R724 VSS.n277 VSS.n101 3.01937
+R725 VSS.t25 VSS.n343 2.9309
+R726 VSS.n380 VSS.t73 2.91241
+R727 VSS.n372 VSS.t76 2.91241
+R728 VSS.n196 VSS.n195 2.84639
+R729 VSS.n209 VSS.n208 2.84639
+R730 VSS.n224 VSS.n223 2.84639
+R731 VSS.n255 VSS.n254 2.84639
+R732 VSS.n286 VSS.n285 2.84639
+R733 VSS.n295 VSS.n294 2.84639
+R734 VSS.n330 VSS.n329 2.84619
+R735 VSS.n293 VSS.n292 2.84619
+R736 VSS.n276 VSS.n275 2.84619
+R737 VSS.n253 VSS.n252 2.84619
+R738 VSS.n222 VSS.n221 2.84619
+R739 VSS.n207 VSS.n206 2.84619
+R740 VSS VSS.n8 2.96348
+R741 VSS.t49 VSS.n45 2.58141
+R742 VSS.t49 VSS.n44 2.58141
+R743 VSS.t49 VSS.n20 2.58141
+R744 VSS.n389 VSS.t9 2.54843
+R745 VSS.t10 VSS.n70 2.54843
+R746 VSS.n386 VSS.t11 2.54843
+R747 VSS.t12 VSS.n67 2.54843
+R748 VSS.n383 VSS.t13 2.54843
+R749 VSS.t14 VSS.n64 2.54843
+R750 VSS.t94 VSS.n53 2.54843
+R751 VSS.n369 VSS.t95 2.54843
+R752 VSS.t96 VSS.n50 2.54843
+R753 VSS.n366 VSS.t97 2.54843
+R754 VSS.t98 VSS.n47 2.54843
+R755 VSS.n363 VSS.t99 2.54843
+R756 VSS.n190 VSS.t106 2.30259
+R757 VSS.t51 VSS.n194 2.29985
+R758 VSS.n77 VSS.t68 2.26465
+R759 VSS.n81 VSS.t81 2.26465
+R760 VSS.n361 VSS.n9 2.19837
+R761 VSS.t51 VSS.n107 1.90272
+R762 VSS.t51 VSS.n109 1.90272
+R763 VSS.t51 VSS.n111 1.90272
+R764 VSS.t51 VSS.n192 1.90272
+R765 VSS.t51 VSS.n189 1.90272
+R766 VSS.t51 VSS.n187 1.90272
+R767 VSS.t51 VSS.n185 1.90272
+R768 VSS.t51 VSS.n114 1.90272
+R769 VSS.t51 VSS.n184 1.90272
+R770 VSS.t51 VSS.n179 1.90272
+R771 VSS.t51 VSS.n115 1.90272
+R772 VSS.t51 VSS.n177 1.90272
+R773 VSS.t51 VSS.n120 1.90272
+R774 VSS.t51 VSS.n172 1.90272
+R775 VSS.t51 VSS.n169 1.90272
+R776 VSS.t51 VSS.n167 1.90272
+R777 VSS.t51 VSS.n162 1.90272
+R778 VSS.t51 VSS.n123 1.90272
+R779 VSS.t51 VSS.n157 1.90272
+R780 VSS.t51 VSS.n154 1.90272
+R781 VSS.t51 VSS.n152 1.90272
+R782 VSS.t51 VSS.n150 1.90272
+R783 VSS.t51 VSS.n148 1.90272
+R784 VSS.t51 VSS.n126 1.90272
+R785 VSS.t51 VSS.n129 1.90272
+R786 VSS.t51 VSS.n131 1.90272
+R787 VSS.t51 VSS.n144 1.90272
+R788 VSS.t51 VSS.n133 1.90272
+R789 VSS.t51 VSS.n139 1.90272
+R790 VSS.t51 VSS.n136 1.90272
+R791 VSS.n191 VSS.t106 1.90272
+R792 VSS.n188 VSS.t106 1.90272
+R793 VSS.n186 VSS.t106 1.90272
+R794 VSS.n182 VSS.t106 1.90272
+R795 VSS.n175 VSS.t106 1.90272
+R796 VSS.n173 VSS.t106 1.90272
+R797 VSS.n170 VSS.t106 1.90272
+R798 VSS.n171 VSS.t106 1.90272
+R799 VSS.n168 VSS.t106 1.90272
+R800 VSS.n166 VSS.t106 1.90272
+R801 VSS.n160 VSS.t106 1.90272
+R802 VSS.n155 VSS.t106 1.90272
+R803 VSS.n156 VSS.t106 1.90272
+R804 VSS.n142 VSS.t106 1.90272
+R805 VSS.n137 VSS.t106 1.90272
+R806 VSS.n138 VSS.t106 1.90272
+R807 VSS.n338 VSS.t106 1.90272
+R808 VSS.n193 VSS.t106 1.90272
+R809 VSS.n108 VSS.t106 1.90272
+R810 VSS.n110 VSS.t106 1.90272
+R811 VSS.n180 VSS.t106 1.90272
+R812 VSS.n178 VSS.t106 1.90272
+R813 VSS.n158 VSS.t106 1.90272
+R814 VSS.n153 VSS.t106 1.90272
+R815 VSS.n151 VSS.t106 1.90272
+R816 VSS.n149 VSS.t106 1.90272
+R817 VSS.n145 VSS.t106 1.90272
+R818 VSS.n130 VSS.t106 1.90272
+R819 VSS.n140 VSS.t106 1.90272
+R820 VSS.n345 VSS.n75 1.88729
+R821 VSS.n357 VSS.n77 1.88729
+R822 VSS.n391 VSS.n73 1.88729
+R823 VSS.n89 VSS.n79 1.88729
+R824 VSS.n88 VSS.n81 1.88729
+R825 VSS.n91 VSS.n83 1.88729
+R826 VSS.n7 VSS.t42 1.77901
+R827 VSS.t90 VSS.n253 1.50993
+R828 VSS.t69 VSS.t8 1.50993
+R829 VSS.n385 VSS.t71 1.45646
+R830 VSS.n367 VSS.t78 1.45646
+R831 VSS.n10 VSS.n82 1.39032
+R832 VSS.t24 VSS.n18 1.32125
+R833 VSS.t27 VSS.n3 1.32125
+R834 VSS.t29 VSS.n16 1.32125
+R835 VSS.t3 VSS.t66 1.32125
+R836 VSS.t66 VSS.t30 1.32125
+R837 VSS.t4 VSS.n26 1.32125
+R838 VSS.t32 VSS.n26 1.32125
+R839 VSS.t5 VSS.n76 1.32125
+R840 VSS.t33 VSS.n76 1.32125
+R841 VSS.n82 VSS.n27 1.32125
+R842 VSS.t6 VSS.n13 1.32125
+R843 VSS.t34 VSS.n13 1.32125
+R844 VSS.t7 VSS.n74 1.32125
+R845 VSS.n74 VSS.t35 1.32125
+R846 VSS.n80 VSS.t36 1.32125
+R847 VSS.t101 VSS.n80 1.32125
+R848 VSS.t37 VSS.n32 1.32125
+R849 VSS.t102 VSS.n32 1.32125
+R850 VSS.n361 VSS.n33 1.32125
+R851 VSS.n362 VSS.t38 1.32125
+R852 VSS.n362 VSS.t103 1.32125
+R853 VSS.t39 VSS.n35 1.32125
+R854 VSS.t104 VSS.n35 1.32125
+R855 VSS.t83 VSS.t40 1.32125
+R856 VSS.t105 VSS.t83 1.32125
+R857 VSS.t41 VSS.n38 1.32125
+R858 VSS.t44 VSS.n5 1.32125
+R859 VSS.t46 VSS.n42 1.32125
+R860 VSS.t50 VSS.n127 1.23532
+R861 VSS.n358 VSS.t25 0.967425
+R862 VSS.n294 VSS.t2 1.13258
+R863 VSS.t65 VSS.n24 1.13258
+R864 VSS.t67 VSS.n14 1.13258
+R865 VSS.t82 VSS.n34 1.13258
+R866 VSS.t84 VSS.n39 1.13258
+R867 VSS.t70 VSS.t10 1.09247
+R868 VSS.t79 VSS.t98 1.09247
+R869 VSS.t21 VSS.n8 1.3088
+R870 VSS.n9 VSS.n10 1.03087
+R871 VSS.n164 VSS.n121 0.926616
+R872 VSS.n343 VSS.n10 0.9245
+R873 VSS.n223 VSS.t55 0.755217
+R874 VSS.t72 VSS.n65 0.728479
+R875 VSS.t77 VSS.n52 0.728479
+R876 VSS.n347 VSS.t3 0.566538
+R877 VSS.n356 VSS.t5 0.566538
+R878 VSS.n344 VSS.t7 0.566538
+R879 VSS.n90 VSS.t101 0.566538
+R880 VSS.t103 VSS.n360 0.566538
+R881 VSS.n93 VSS.t105 0.566538
+R882 VSS.t21 VSS.t42 1.77567
+R883 VSS.n0 VSS.t91 0.485057
+R884 VSS.t18 VSS.n1 1.3136
+R885 VSS.t42 VSS.t31 0.225382
+R886 VSS.t25 VSS.t31 1.08722
+R887 VSS.t91 VSS.t18 1.07646
+C0 a_1254_2820# VDD 0.22664f
+C1 a_1254_2820# di_en 0.30274f
+C2 VDD a_2654_4840# 1.26593f
+C3 VDD a_11798_1180# 0.12738f
+C4 a_16500_3480# rf_out_p 0.47902f
+C5 vdd_core VDD 0.69229f
+C6 a_9450_4480# vco_bias_0.vbg_buf 0.05793f
+C7 a_9450_4394# VDD 0.50447f
+C8 a_1160_1390# ibias_100u 0.03363f
+C9 vco_bias_0.vbn_buf VDD 0.4152f
+C10 vco_bias_0.vbn_buf di_en 0.04963f
+C11 a_1254_2820# a_1474_1090# 0.1616f
+C12 VDD a_14668_2644# 0.48463f
+C13 a_1474_1090# a_2654_4840# 1.27583f
+C14 vdd_core a_10100_3480# 0.01479f
+C15 vtune vco_bias_0.vbg_buf 0.1307f
+C16 a_9450_4394# a_10100_3480# 0.0615f
+C17 vtune rf_out_n 0.03195f
+C18 vco_bias_0.vbn_buf a_6760_4250# 0.0432f
+C19 vco_bias_0.vbn_buf a_10100_3480# 0.01657f
+C20 VDD a_16500_3480# 0.32168f
+C21 a_2654_4840# a_5428_2384# 0.16582f
+C22 vco_bias_0.vbn_buf a_1474_1090# 0.40649f
+C23 a_1254_2820# vco_bias_0.vbg_buf 0.10523f
+C24 vco_bias_0.vbg_buf a_2654_4840# 0.2237f
+C25 VDD a_1560_1090# 0.0645f
+C26 a_11798_1180# rf_out_n 2.53404f
+C27 VDD a_1954_2820# 0.22541f
+C28 vdd_core vco_bias_0.vbg_buf 1.31634f
+C29 vdd_core rf_out_n 0.0158f
+C30 VDD rf_out_p 0.4155f
+C31 a_9450_4394# vco_bias_0.vbg_buf 0.06134f
+C32 a_9450_4394# rf_out_n 0.6427f
+C33 a_1254_2820# ibias_100u 0.62359f
+C34 vco_bias_0.vbn_buf a_5428_2384# 1.02459f
+C35 ibias_100u a_2654_4840# 0.55444f
+C36 vco_bias_0.vbn_buf vco_bias_0.vbg_buf 5.04344f
+C37 vco_bias_0.vbn_buf rf_out_n 0.19616f
+C38 vco_bias_0.vbg_buf a_14668_2644# 0.05188f
+C39 a_9450_4480# a_9450_4394# 0.03458f
+C40 a_1474_1090# a_1560_1090# 0.03586f
+C41 a_1474_1090# a_1954_2820# 0.1065f
+C42 a_1160_1390# vco_bias_0.vbn_buf 0.03612f
+C43 vco_bias_0.vbn_buf ibias_100u 0.02722f
+C44 vtune a_11798_1180# 0.35675f
+C45 vtune vdd_core 13.2445f
+C46 a_19050_4480# vco_bias_0.vbg_buf 0.03836f
+C47 vtune a_9450_4394# 0.13845f
+C48 vco_bias_0.vbg_buf a_1560_1090# 0.03586f
+C49 VDD di_en 0.23329f
+C50 vco_bias_0.vbg_buf a_1954_2820# 0.09651f
+C51 a_1254_2820# a_2654_4840# 0.11994f
+C52 vco_bias_0.vbn_buf vtune 0.09328f
+C53 rf_out_n rf_out_p 0.01053f
+C54 vtune a_14668_2644# 0.13593f
+C55 a_1160_1390# a_1560_1090# 0.17942f
+C56 VDD a_10100_3480# 0.35541f
+C57 ibias_100u a_1954_2820# 0.27709f
+C58 a_9450_4394# a_11798_1180# 0.39463f
+C59 VDD a_1474_1090# 0.27003f
+C60 vdd_core a_9450_4394# 1.60595f
+C61 vco_bias_0.vbn_buf a_1254_2820# 0.18509f
+C62 vco_bias_0.vbn_buf a_2654_4840# 0.27632f
+C63 vco_bias_0.vbn_buf a_11798_1180# 6.04923f
+C64 a_11798_1180# a_14668_2644# 0.39463f
+C65 vco_bias_0.vbn_buf vdd_core 0.11772f
+C66 a_1474_1090# a_6760_4250# 0.03091f
+C67 vdd_core a_14668_2644# 1.61643f
+C68 vco_bias_0.vbn_buf a_9450_4394# 0.03271f
+C69 a_9450_4394# a_14668_2644# 0.1402f
+C70 vtune rf_out_p 0.03195f
+C71 VDD vco_bias_0.vbg_buf 0.57293f
+C72 vco_bias_0.vbg_buf di_en 0.06388f
+C73 VDD rf_out_n 0.4295f
+C74 vco_bias_0.vbn_buf a_14668_2644# 0.01624f
+C75 vdd_core a_16500_3480# 0.01688f
+C76 a_6760_4250# a_5428_2384# 0.06042f
+C77 a_1254_2820# a_1954_2820# 0.54548f
+C78 a_1160_1390# VDD 0.03044f
+C79 a_19050_4480# vdd_core 0.01117f
+C80 vco_bias_0.vbg_buf a_6760_4250# 0.01222f
+C81 a_2654_4840# a_1954_2820# 0.15878f
+C82 VDD ibias_100u 0.19944f
+C83 ibias_100u di_en 0.17714f
+C84 a_1474_1090# a_5428_2384# 0.5624f
+C85 a_11798_1180# rf_out_p 2.53404f
+C86 a_10100_3480# rf_out_n 0.47902f
+C87 vco_bias_0.vbg_buf a_1474_1090# 0.05415f
+C88 a_16500_3480# a_14668_2644# 0.0615f
+C89 vdd_core rf_out_p 0.01636f
+C90 a_19050_4480# a_14668_2644# 0.03458f
+C91 vco_bias_0.vbn_buf a_1954_2820# 0.08551f
+C92 a_1160_1390# a_1474_1090# 0.02153f
+C93 vtune VDD 0.31839f
+C94 vco_bias_0.vbn_buf rf_out_p 0.17253f
+C95 a_1474_1090# ibias_100u 0.33046f
+C96 rf_out_p a_14668_2644# 0.6427f
+C97 vco_bias_0.vbg_buf a_5428_2384# 0.05904f
+C98 rf_out_p VSS 7.01089f
+C99 rf_out_n VSS 6.96948f
+C100 vtune VSS 3.81204f
+C101 VDD VSS 36.74837f
+C102 a_11798_1180# VSS 79.28182f
+C103 a_5428_2384# VSS 0.56436f
+C104 a_1474_1090# VSS 5.66344f
+C105 a_1954_2820# VSS 0.28043f
+C106 vco_bias_0.vbg_buf VSS 0.53116f
+C107 VSS.t91 VSS 3.02236f
+C108 VSS.t1 VSS 0.95211f
+C109 VSS.t49 VSS 63.52104f
+C110 VSS.t18 VSS 1.20388f
+C111 VSS.t106 VSS 0.11283p
+C112 VSS.t42 VSS 44.70925f
 .ends
 

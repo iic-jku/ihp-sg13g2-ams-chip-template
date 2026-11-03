@@ -5,7 +5,7 @@
 #
 # Usage: klayout -b -r scripts/layout/vco_buf.py [-rd out=<file.gds>], or make klayout-script CELL=vco_buf
 #
-# Mirror-symmetric about x = 0, bottom to top: the VSS rail, the tail MBt (60 fingers, gate on top, its taps also bias
+# Mirror-symmetric about x = 0, bottom to top: the VSS rail, the tail MBt (30 fingers, gate on top, its taps also bias
 # the pair's substrate), the pair MB1/MB2 (gates on top), the 50 Ohm loads at the outer sides, the VDD rail, the
 # coupling caps with the gate bias resistors outside them. The caps' Metal5 bottom plates are the inputs rf_p/rf_n.
 
@@ -16,29 +16,29 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import pya  # noqa: E402
 import vco_layout as vl  # noqa: E402
 
-Y1 = 6.0  # top of the pair's active areas
+Y1 = 4.5  # top of the pair's active areas
 GAP = 1.5  # half the gap between the pair's active areas
 XO = 12.0  # x of the output nodes, outside the pair
-RL_Y = 8.0  # bottom of the load resistor bodies
-VDD_Y = 10.6  # bottom of the VDD rail
-CC_X, CC_Y, CC = 4.5, 13.0, 10.0  # inner edge, bottom and side of the coupling caps
+RL_Y = 6.5  # bottom of the load resistor bodies
+VDD_Y = 9.1  # bottom of the VDD rail
+CC_X, CC_Y, CC = 4.5, 11.5, 10.0  # inner edge, bottom and side of the coupling caps
 XG = 2.5  # x of the gate lines from the caps' top plates down to the pair
 RB_X = 24.0  # x of the gate bias resistors
-TOP_Y = 22.6  # y of the vbg_buf track over the caps
-X_EDGE = 29.0  # pins on the left edge sit at -X_EDGE
-Y_BOT = -6.5  # bottom edge, the outputs end there
+TOP_Y = 21.1  # y of the vbg_buf track over the caps
+X_EDGE = 26.0  # pins on the left edge sit at -X_EDGE
 
 ly = vl.new_layout()
 top = vl.Block(ly, "vco_buf")
 
 # Tail, mirrored so its gate pad faces the pair
-mbt = vl.mos(ly, "MBt", "nmos", 150.0, 0.5, 60, tap="merge")
+mbt = vl.mos(ly, "MBt", "nmos", 150.0, 0.5, 30, tap="merge")
 aw = mbt.ports["ACT"][1].width()
 pt = top.place(mbt, -aw / 2, 0.0, mirror=True)
 vss_s = pt["S"][1]
 vss = top.rect("Metal1", vss_s.left, vss_s.bottom - 1.2, vss_s.right, vss_s.bottom - 0.4)
 top.rect("Metal1", vss_s.left, vss.top - 0.1, vss_s.right, vss_s.bottom + 0.1)
 top.pin("Metal1", "VSS", pya.DBox(vss.left, vss.bottom, vss.left + 2.0, vss.top))
+y_bot = vss.bottom  # the outputs end on the bottom edge, level with the VSS rail
 
 # vbn_buf: the tail's gate pad to the left edge on Metal3
 g = pt["G"][1]
@@ -72,7 +72,7 @@ for side, sgn in (("left", -1), ("right", 1)):
     top.via(bot_head.center().x, bot_head.center().y, "Metal1", "Metal2", cols=20, rows=1)
     top.rect("Metal2", xo - 0.3, d.center().y, xo + 0.3, bot_head.top)
     top.via(xo, d.center().y, "Metal2", "Metal3", cols=1, rows=2)
-    oline = top.rect("Metal3", xo - 0.3, Y_BOT, xo + 0.3, d.center().y + 0.3)
+    oline = top.rect("Metal3", xo - 0.3, y_bot, xo + 0.3, d.center().y + 0.3)
     top.pin("Metal3", "rf_out_n" if sgn < 0 else "rf_out_p", pya.DBox(oline.left, oline.bottom, oline.right, oline.bottom + 1.0))
     top.rect("Metal1", top_head.left, top_head.bottom, top_head.right, VDD_Y + 0.1)
     # Coupling cap: top plate (TopMetal1) is the gate node, bottom plate (Metal5) the input

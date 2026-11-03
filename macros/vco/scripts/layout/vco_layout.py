@@ -151,6 +151,14 @@ def write(block, path, drop_texts=(), keep=()):
     nwell = block.cell.shapes(block.ly.layer(*LAYERS["NWell"]))
     for s in [s for s in nwell.each() if s.is_text()]:
         nwell.erase(s)
+    # One polygon per connected piece of each metal, so no internal outline reads as broken metal in a review
+    for metal in METALS:
+        shapes = block.cell.shapes(block.li(metal))
+        region = pya.Region()
+        for s in [s for s in shapes.each() if s.is_box() or s.is_polygon() or s.is_path()]:
+            region.insert(s.polygon)
+            shapes.erase(s)
+        shapes.insert(region.merged())
     opt = pya.SaveLayoutOptions()
     opt.write_context_info = False
     opt.gds2_write_timestamps = False  # a rerun with the same geometry writes the same bytes
@@ -165,13 +173,14 @@ def out_path(name, script):
     return out if isinstance(out, str) else os.path.join(os.path.dirname(os.path.abspath(script)), "..", "..", "layout", f"{name}.gds")
 
 
-def mos(ly, name, kind, w, l, ng, tap=None, d_metal="Metal2", gext=1.0):
+def mos(ly, name, kind, w, l, ng, tap=None, d_metal="Metal2", gext=1.0, cap=False):
     """A MOSFET with its wiring: gate contacts on a poly strap below the fingers (port G, Metal1), sources up to a
     Metal1 rail above (port S), drains joined by a strap across the middle (port D, d_metal).
 
     tap: None, "merge" (substrate or well tap under the source rail, so S is also the body) or "separate"
     (a tap of its own above the source rail, port B). Even stripes are sources, odd ones drains.
     gext: how far the gate pad reaches left of the device, so a via on it clears the drain's via column.
+    cap: a MOS capacitor, every stripe goes up to the source rail and there is no drain strap (no port D).
     """
     b = Block(ly, name)
     model = "sg13_lv_nmos" if kind == "nmos" else "sg13_lv_pmos"
@@ -195,17 +204,18 @@ def mos(ly, name, kind, w, l, ng, tap=None, d_metal="Metal2", gext=1.0):
 
     # Sources: every even stripe up to a Metal1 rail 0.25 um above the active area
     rail_y0, rail_y1 = act.top + 0.25, act.top + 0.85
-    for s in stripes[0::2]:
+    for s in stripes if cap else stripes[0::2]:
         b.rect("Metal1", s.left, s.top, s.right, rail_y0)
     b.ports["S"] = ("Metal1", b.rect("Metal1", act.left, rail_y0, act.right, rail_y1))
 
     # Drains: a via column on every odd stripe and a strap across them, inside the active area's height
-    rows = max(1, min(8, int((wf - 0.1 + 0.22) / 0.41)))
-    dboxes = [b.via(s.center().x, act.center().y, "Metal1", d_metal, cols=1, rows=rows)[1] for s in stripes[1::2]]
-    d = dboxes[0]
-    for x in dboxes[1:]:
-        d = d + x
-    b.ports["D"] = (d_metal, b.rect(d_metal, d.left, d.bottom, d.right, d.top))
+    if not cap:
+        rows = max(1, min(8, int((wf - 0.1 + 0.22) / 0.41)))
+        dboxes = [b.via(s.center().x, act.center().y, "Metal1", d_metal, cols=1, rows=rows)[1] for s in stripes[1::2]]
+        d = dboxes[0]
+        for x in dboxes[1:]:
+            d = d + x
+        b.ports["D"] = (d_metal, b.rect(d_metal, d.left, d.bottom, d.right, d.top))
 
     # Tap: a ptap1 (nmos) or ntap1 (pmos) strip over the full device length
     if tap:

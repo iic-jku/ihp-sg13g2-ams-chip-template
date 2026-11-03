@@ -14,18 +14,19 @@ Circuit 1: sg13_lv_nmos                    |Circuit 2: sg13_lv_nmos
 Cell pin lists are equivalent.
 Device classes sg13_lv_nmos and sg13_lv_nmos are equivalent.
 
-Circuit 1 cell cap_cmim and Circuit 2 cell cap_cmim are black boxes.
-Warning: Equate pins:  cell cap_cmim is a placeholder, treated as a black box.
-Warning: Equate pins:  cell cap_cmim is a placeholder, treated as a black box.
+Circuit 1 cell rhigh and Circuit 2 cell rhigh are black boxes.
+Warning: Equate pins:  cell rhigh is a placeholder, treated as a black box.
+Warning: Equate pins:  cell rhigh is a placeholder, treated as a black box.
 
 Subcircuit pins:
-Circuit 1: cap_cmim                        |Circuit 2: cap_cmim                        
+Circuit 1: rhigh                           |Circuit 2: rhigh                           
 -------------------------------------------|-------------------------------------------
 1                                          |1                                          
 2                                          |2                                          
+3                                          |3                                          
 ---------------------------------------------------------------------------------------
 Cell pin lists are equivalent.
-Device classes cap_cmim and cap_cmim are equivalent.
+Device classes rhigh and rhigh are equivalent.
 
 Circuit 1 cell sg13_lv_pmos and Circuit 2 cell sg13_lv_pmos are black boxes.
 Warning: Equate pins:  cell sg13_lv_pmos is a placeholder, treated as a black box.
@@ -42,20 +43,6 @@ Circuit 1: sg13_lv_pmos                    |Circuit 2: sg13_lv_pmos
 Cell pin lists are equivalent.
 Device classes sg13_lv_pmos and sg13_lv_pmos are equivalent.
 
-Circuit 1 cell rhigh and Circuit 2 cell rhigh are black boxes.
-Warning: Equate pins:  cell rhigh is a placeholder, treated as a black box.
-Warning: Equate pins:  cell rhigh is a placeholder, treated as a black box.
-
-Subcircuit pins:
-Circuit 1: rhigh                           |Circuit 2: rhigh                           
--------------------------------------------|-------------------------------------------
-1                                          |1                                          
-2                                          |2                                          
-3                                          |3                                          
----------------------------------------------------------------------------------------
-Cell pin lists are equivalent.
-Device classes rhigh and rhigh are equivalent.
-
 Circuit 1 cell rppd and Circuit 2 cell rppd are black boxes.
 Warning: Equate pins:  cell rppd is a placeholder, treated as a black box.
 Warning: Equate pins:  cell rppd is a placeholder, treated as a black box.
@@ -70,101 +57,93 @@ Circuit 1: rppd                            |Circuit 2: rppd
 Cell pin lists are equivalent.
 Device classes rppd and rppd are equivalent.
 
+Class vco_bias (0):  Merged 18 parallel devices.
+Class vco_bias (1):  Merged 2 parallel devices.
 Subcircuit summary:
 Circuit 1: vco_bias                        |Circuit 2: vco_bias                        
 -------------------------------------------|-------------------------------------------
-sg13_lv_nmos (7)                           |sg13_lv_nmos (7)                           
-cap_cmim (3)                               |cap_cmim (3)                               
-sg13_lv_pmos (5)                           |sg13_lv_pmos (5)                           
+sg13_lv_nmos (27->9)                       |sg13_lv_nmos (11->9)                       
 rhigh (2)                                  |rhigh (2)                                  
+sg13_lv_pmos (5)                           |sg13_lv_pmos (5)                           
 rppd (1)                                   |rppd (1)                                   
-Number of devices: 18                      |Number of devices: 18                      
+Number of devices: 17                      |Number of devices: 17                      
 Number of nets: 11                         |Number of nets: 11                         
 ---------------------------------------------------------------------------------------
 Netlists match uniquely with property errors.
-rppd:10 vs. rppd:Rg:
+rppd:29 vs. rppd:Rg:
 Property mm_ok in circuit2 has no matching property in circuit1
-rppd:10 vs. rppd:Rg:
+rppd:29 vs. rppd:Rg:
 Property mm_ok in circuit2 has no matching property in circuit1
-rhigh:16 vs. rhigh:Rn:
+sg13_lv_pmos:18 vs. sg13_lv_pmos:MPi1:
 Property mm_ok in circuit2 has no matching property in circuit1
-rhigh:16 vs. rhigh:Rn:
+sg13_lv_pmos:18 vs. sg13_lv_pmos:MPi1:
 Property mm_ok in circuit2 has no matching property in circuit1
-rhigh:6 vs. rhigh:Rp:
+sg13_lv_pmos:9 vs. sg13_lv_pmos:MPi2:
 Property mm_ok in circuit2 has no matching property in circuit1
-rhigh:6 vs. rhigh:Rp:
+sg13_lv_pmos:9 vs. sg13_lv_pmos:MPi2:
 Property mm_ok in circuit2 has no matching property in circuit1
-sg13_lv_pmos:2 vs. sg13_lv_pmos:MPi1:
+sg13_lv_pmos:15 vs. sg13_lv_pmos:MP1:
 Property mm_ok in circuit2 has no matching property in circuit1
-sg13_lv_pmos:2 vs. sg13_lv_pmos:MPi1:
+sg13_lv_pmos:15 vs. sg13_lv_pmos:MP1:
 Property mm_ok in circuit2 has no matching property in circuit1
-sg13_lv_pmos:12 vs. sg13_lv_pmos:MPi2:
+sg13_lv_pmos:10 vs. sg13_lv_pmos:MPd:
 Property mm_ok in circuit2 has no matching property in circuit1
-sg13_lv_pmos:12 vs. sg13_lv_pmos:MPi2:
+sg13_lv_pmos:10 vs. sg13_lv_pmos:MPd:
 Property mm_ok in circuit2 has no matching property in circuit1
-sg13_lv_pmos:14 vs. sg13_lv_pmos:MP1:
+sg13_lv_pmos:30 vs. sg13_lv_pmos:MP2:
 Property mm_ok in circuit2 has no matching property in circuit1
-sg13_lv_pmos:14 vs. sg13_lv_pmos:MP1:
+sg13_lv_pmos:30 vs. sg13_lv_pmos:MP2:
 Property mm_ok in circuit2 has no matching property in circuit1
-sg13_lv_pmos:17 vs. sg13_lv_pmos:MPd:
+rhigh:5 vs. rhigh:Rn:
 Property mm_ok in circuit2 has no matching property in circuit1
-sg13_lv_pmos:17 vs. sg13_lv_pmos:MPd:
+rhigh:5 vs. rhigh:Rn:
 Property mm_ok in circuit2 has no matching property in circuit1
-sg13_lv_pmos:7 vs. sg13_lv_pmos:MP2:
+rhigh:23 vs. rhigh:Rf:
 Property mm_ok in circuit2 has no matching property in circuit1
-sg13_lv_pmos:7 vs. sg13_lv_pmos:MP2:
+rhigh:23 vs. rhigh:Rf:
 Property mm_ok in circuit2 has no matching property in circuit1
-cap_cmim:4 vs. cap_cmim:Cp:
+sg13_lv_nmos:31 vs. sg13_lv_nmos:MNi1:
 Property mm_ok in circuit2 has no matching property in circuit1
-cap_cmim:4 vs. cap_cmim:Cp:
+sg13_lv_nmos:31 vs. sg13_lv_nmos:MNi1:
 Property mm_ok in circuit2 has no matching property in circuit1
-cap_cmim:11 vs. cap_cmim:Cn:
+sg13_lv_nmos:11 vs. sg13_lv_nmos:MNd0:
 Property mm_ok in circuit2 has no matching property in circuit1
-cap_cmim:11 vs. cap_cmim:Cn:
+sg13_lv_nmos:11 vs. sg13_lv_nmos:MNd0:
 Property mm_ok in circuit2 has no matching property in circuit1
-cap_cmim:1 vs. cap_cmim:Cg:
+sg13_lv_nmos:27 vs. sg13_lv_nmos:MNd1:
 Property mm_ok in circuit2 has no matching property in circuit1
-cap_cmim:1 vs. cap_cmim:Cg:
+sg13_lv_nmos:27 vs. sg13_lv_nmos:MNd1:
 Property mm_ok in circuit2 has no matching property in circuit1
-sg13_lv_nmos:5 vs. sg13_lv_nmos:MNi1:
+sg13_lv_nmos:22 vs. sg13_lv_nmos:MNi2:
 Property mm_ok in circuit2 has no matching property in circuit1
-sg13_lv_nmos:5 vs. sg13_lv_nmos:MNi1:
+sg13_lv_nmos:22 vs. sg13_lv_nmos:MNi2:
 Property mm_ok in circuit2 has no matching property in circuit1
-sg13_lv_nmos:3 vs. sg13_lv_nmos:MN0:
+sg13_lv_nmos:26 vs. sg13_lv_nmos:MN0:
 Property mm_ok in circuit2 has no matching property in circuit1
-sg13_lv_nmos:3 vs. sg13_lv_nmos:MN0:
+sg13_lv_nmos:26 vs. sg13_lv_nmos:MN0:
 Property mm_ok in circuit2 has no matching property in circuit1
-sg13_lv_nmos:8 vs. sg13_lv_nmos:MNd0:
+sg13_lv_nmos:19 vs. sg13_lv_nmos:MN1:
 Property mm_ok in circuit2 has no matching property in circuit1
-sg13_lv_nmos:8 vs. sg13_lv_nmos:MNd0:
+sg13_lv_nmos:19 vs. sg13_lv_nmos:MN1:
 Property mm_ok in circuit2 has no matching property in circuit1
-sg13_lv_nmos:15 vs. sg13_lv_nmos:MNi2:
+sg13_lv_nmos:4 vs. sg13_lv_nmos:MN3:
 Property mm_ok in circuit2 has no matching property in circuit1
-sg13_lv_nmos:15 vs. sg13_lv_nmos:MNi2:
+sg13_lv_nmos:4 vs. sg13_lv_nmos:MN3:
 Property mm_ok in circuit2 has no matching property in circuit1
-sg13_lv_nmos:0 vs. sg13_lv_nmos:MNd1:
+sg13_lv_nmos:0 vs. sg13_lv_nmos:MCn1:
 Property mm_ok in circuit2 has no matching property in circuit1
-sg13_lv_nmos:0 vs. sg13_lv_nmos:MNd1:
-Property mm_ok in circuit2 has no matching property in circuit1
-sg13_lv_nmos:9 vs. sg13_lv_nmos:MN1:
-Property mm_ok in circuit2 has no matching property in circuit1
-sg13_lv_nmos:9 vs. sg13_lv_nmos:MN1:
-Property mm_ok in circuit2 has no matching property in circuit1
-sg13_lv_nmos:13 vs. sg13_lv_nmos:MN3:
-Property mm_ok in circuit2 has no matching property in circuit1
-sg13_lv_nmos:13 vs. sg13_lv_nmos:MN3:
+sg13_lv_nmos:1 vs. sg13_lv_nmos:MCg1:
 Property mm_ok in circuit2 has no matching property in circuit1
 
 Subcircuit pins:
 Circuit 1: vco_bias                        |Circuit 2: vco_bias                        
 -------------------------------------------|-------------------------------------------
-vbp_core                                   |vbp_core                                   
-ibias_100u                                 |ibias_100u                                 
 VDD                                        |VDD                                        
+ibias_100u                                 |ibias_100u                                 
 di_en                                      |di_en                                      
-VSS                                        |VSS                                        
-vbn_buf                                    |vbn_buf                                    
 vbg_buf                                    |vbg_buf                                    
+vbn_buf                                    |vbn_buf                                    
+VSS                                        |VSS                                        
 ---------------------------------------------------------------------------------------
 Cell pin lists are equivalent.
 Device classes vco_bias and vco_bias are equivalent.
