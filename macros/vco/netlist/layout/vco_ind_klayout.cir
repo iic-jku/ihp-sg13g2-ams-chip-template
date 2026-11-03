@@ -1,4 +1,4 @@
-* Extracted by KLayout with SG13G2 LVS runset on : 01/11/2026 00:40
+* Extracted by KLayout with SG13G2 LVS runset on : 03/11/2026 23:36
 
 .SUBCKT vco_ind LA LB LC VSS
 L$1 LA LC LB VSS inductor3 w=4u s=3.999u d=52.022u nr_r=2
