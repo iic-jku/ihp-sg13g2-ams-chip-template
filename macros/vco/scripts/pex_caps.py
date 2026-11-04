@@ -88,16 +88,19 @@ def main():
     _, _, cc_caps, _ = read(args.cc)
 
     # A port that no resistor or device reaches was left behind on a net without a resistor network: joined to another
-    # port of its net, which carries the net, with a resistor far below the extraction threshold.
+    # port of its net, which carries the net, with a resistor far below the extraction threshold. On a net with no
+    # device at all Magic builds no network at any threshold, and the port its capacitors use carries the net.
     used = {n for a, b in res for n in (a, b)}
     used |= {t for line in lines if line[:1] in ("X", "x") for t in line.split()[1:]}
+    body = {t for line in lines if line[:1].isalpha() for t in line.split()[1:] if "=" not in t}
     tie_lines, loose = [], []
     if args.ties:
         for p, others in json.load(open(args.ties, encoding="utf-8")).items():
             group = [n for n in [p] + others if n in ports]
-            carrier = next((n for n in group if n in used), None)
+            carrier = next((n for n in group if n in used), None) or next((n for n in group if n in body), None)
+            used |= {carrier} - {None}
             for n in group:
-                if n in used:
+                if n in used or n == carrier:
                     continue
                 if carrier is None:
                     loose.append(n)

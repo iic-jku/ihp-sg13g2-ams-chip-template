@@ -15,6 +15,11 @@ resistor network on some nets, one that carries no current or one whose only dev
 only one of its ports, the others left unconnected. --ties writes, for every added pin, the other pins on its net, from
 the metal connectivity of the written layout, and pex_caps.py joins such a port to them. --skip names pins that get no
 port at all, a pin the model has no terminal for, or one that carries no current.
+
+--cut does the same for devices drawn flat, a MoM capacitor whose comb Magic extracts as plain metal: it removes the
+metals of the comb and the vias between them inside each marker of the given layer, and puts a port <prefix><k>_A and
+<prefix><k>_B on the two pieces of metal that feed it, k counting the markers from the bottom left. --cut-json records
+each marker's size, metal stack and ports, which momf_lpe.py turns back into the PDK device.
 """
 
 import argparse
@@ -30,6 +35,8 @@ METALS = {"Metal1": 8, "Metal2": 10, "Metal3": 30, "Metal4": 50, "Metal5": 67, "
 VIAS = {"Via1": 19, "Via2": 29, "Via3": 49, "Via4": 66, "TopVia1": 125, "TopVia2": 133}
 PIN_DT, TEXT_DT = 2, 25
 REACH = 0.5  # um around a pin box searched for the metal it lands on
+COMB = ["Metal1", "Metal2", "Metal3", "Metal4", "Metal5"]  # metals a MoM comb can use, Via<n> joins Metal<n> and Metal<n+1>
+COMB_FILL = 0.25  # share of a marker a metal has to cover to count as a plate of the comb, not as a line crossing it
 
 
 def net_ids(ly, top, points):
@@ -89,6 +96,68 @@ def find_instances(ly, cell, names, trans, found):
             find_instances(ly, sub, names, t, found)
 
 
+def find_markers(ly, cell, li, trans, found):
+    """Polygons on layer li at every depth below cell: (cell holding it, polygon in that cell, transformation to top)."""
+    for s in cell.shapes(li).each():
+        if not s.is_text():
+            found.append((cell, s.polygon, trans))
+    for inst in cell.each_inst():
+        if inst.is_regular_array():
+            sys.exit(f"drop_subcells.py: instance array of {ly.cell(inst.cell_index).name} in {cell.name} is not supported")
+        find_markers(ly, ly.cell(inst.cell_index), li, trans * inst.cplx_trans, found)
+
+
+def cut_combs(ly, top, layer, prefix):
+    """Removes the comb inside each marker on layer (layer, datatype) and returns the markers, each with its two feed
+    pieces in top coordinates. The comb is every metal covering more than COMB_FILL of the marker, its pin shapes and
+    texts, and the vias between those metals: a line crossing a marker on another level stays."""
+    li = ly.find_layer(*layer)
+    found = []
+    if li is not None:
+        find_markers(ly, top, li, kdb.ICplxTrans(), found)
+    if not found:
+        sys.exit(f"drop_subcells.py: no marker on {layer[0]}/{layer[1]} below {top.name}")
+    if len({(c.cell_index(), str(p)) for c, p, _ in found}) != len(found):
+        sys.exit("drop_subcells.py: a marker cell is placed more than once, which --cut does not support")
+    found.sort(key=lambda m: (m[1].transformed(m[2]).bbox().bottom, m[1].transformed(m[2]).bbox().left))
+    markers = []
+    for k, (cell, poly, t) in enumerate(found, 1):
+        name = f"{prefix}{k}"
+        local = kdb.Region(poly)
+        stack = [m for m in COMB if ly.find_layer(METALS[m], 0) is not None
+                 and (kdb.Region(cell.shapes(ly.find_layer(METALS[m], 0))) & local).area() > COMB_FILL * local.area()]
+        idx = [COMB.index(m) for m in stack]
+        if len(idx) < 2 or idx != list(range(idx[0], idx[-1] + 1)):
+            sys.exit(f"drop_subcells.py: {name} in {cell.name}: metals {stack} are no comb stack")
+        for lay in [(METALS[m], dt) for m in stack for dt in (0, PIN_DT)] + [(VIAS[f"Via{i + 1}"], 0) for i in idx[:-1]]:
+            l = ly.find_layer(*lay)
+            if l is not None:
+                kept = kdb.Region(cell.shapes(l)) - local
+                cell.shapes(l).clear()
+                cell.shapes(l).insert(kept)
+        for lay in [(METALS[m], TEXT_DT) for m in stack] + [(63, 0)]:
+            l = ly.find_layer(*lay)
+            if l is not None:
+                for s in [s for s in cell.shapes(l).each() if s.is_text() and poly.inside(s.text.trans.disp.to_p())]:
+                    cell.shapes(l).erase(s)
+        markers.append({"name": name, "cell": cell.name, "poly": poly.transformed(t), "stack": stack})
+
+    for mk in markers:
+        reg = kdb.Region(mk["poly"])
+        touch, near = reg.sized(round(0.005 / ly.dbu)), reg.sized(round(REACH / ly.dbu))
+        pieces = []
+        for m in mk["stack"]:
+            metal = kdb.Region(top.begin_shapes_rec(ly.find_layer(METALS[m], 0))).merged()
+            for p in metal.interacting(touch).each():
+                patch = max((kdb.Region(p) & near).merged().each(), key=lambda q: q.area())
+                pieces.append((m, patch))
+        if len(pieces) != 2:
+            sys.exit(f"drop_subcells.py: {mk['name']} in {mk['cell']} is fed by {len(pieces)} pieces of metal, not one per plate")
+        pieces.sort(key=lambda mp: (mp[1].bbox().center().x, mp[1].bbox().center().y))
+        mk["pieces"] = pieces
+    return markers
+
+
 def main():
     parser = argparse.ArgumentParser(description="Write a cell without some of its subcells, with port labels where their pins land.")
     parser.add_argument("layout", help="input layout (GDS)")
@@ -98,6 +167,8 @@ def main():
     parser.add_argument("--skip", nargs="+", default=[], help="pins of dropped cells that get no port, as <subcell>_<pin>")
     parser.add_argument("--name", help="name of the written cell (default: the cell's own)")
     parser.add_argument("--ties", help="JSON file: for every added pin, the other pins of the cell on its net")
+    parser.add_argument("--cut", nargs=2, metavar=("LAYER/DATATYPE", "PREFIX"), help="cut the comb out of each marker on this layer, ports <prefix><k>_A/B")
+    parser.add_argument("--cut-json", help="JSON file: size, metal stack and ports of each cut marker")
     args = parser.parse_args()
 
     ly = kdb.Layout()
@@ -140,6 +211,33 @@ def main():
         top.shapes(ly.layer(METALS[metal], PIN_DT)).insert(p)
         top.shapes(ly.layer(METALS[metal], TEXT_DT)).insert(kdb.Text(name, kdb.Trans(pt)))
         points.append((name, metal, pt.to_dtype(ly.dbu)))
+
+    if args.cut:
+        layer = tuple(int(v) for v in args.cut[0].split("/"))
+        records = []
+        for mk in cut_combs(ly, top, layer, args.cut[1]):
+            box = mk["poly"].bbox().to_dtype(ly.dbu)
+            rec = {"name": mk["name"], "cell": mk["cell"], "w": round(box.height(), 3), "l": round(box.width(), 3),
+                   "mmin": COMB.index(mk["stack"][0]) + 1, "mmax": COMB.index(mk["stack"][-1]) + 1,
+                   "box": [round(v, 3) for v in (box.left, box.bottom, box.right, box.top)], "ports": {}}
+            for side, (metal, p) in zip("AB", mk["pieces"]):
+                name = f"{mk['name']}_{side}"
+                # the middle of the feed, where its bridges spread the current along the face. Magic makes a label a
+                # port only on a pin rectangle, so the pin shape is the rectangle of the feed that holds the label.
+                mid = p.bbox().center()
+                box = min(p.decompose_trapezoids(), key=lambda q: q.bbox().center().distance(mid)).bbox()
+                pt = box.center()
+                if not p.inside(pt) or (kdb.Region(box) - kdb.Region(p)).area() > 0:
+                    sys.exit(f"drop_subcells.py: no pin rectangle inside the feed of {name}")
+                top.shapes(ly.layer(METALS[metal], PIN_DT)).insert(box)
+                top.shapes(ly.layer(METALS[metal], TEXT_DT)).insert(kdb.Text(name, kdb.Trans(pt)))
+                points.append((name, metal, pt.to_dtype(ly.dbu)))
+                ports.append((name, []))
+                rec["ports"][side] = {"name": name, "metal": metal, "at": [round(v, 3) for v in (pt.x * ly.dbu, pt.y * ly.dbu)]}
+            records.append(rec)
+        if args.cut_json:
+            with open(args.cut_json, "w", encoding="utf-8") as f:
+                json.dump(records, f, indent=1)
 
     if args.ties:
         ids = net_ids(ly, top, points)

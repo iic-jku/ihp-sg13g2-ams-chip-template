@@ -35,15 +35,15 @@ EXT_MODE ?= 3
 
 # The full-RC extresist settings are below Magic's defaults (10 Ohm, 1 Ohm, 1 ps), which leave every net of the VCO
 # but VSS without resistance, the tank leads and the gate lines of the pair among them.
-# full-RC extresist threshold in mOhm (sak-pex.sh -t, kpex --magic-thresh, only used in EXT_MODE=3; default: 1000 = 1 Ohm)
+# full-RC extresist threshold in mOhm (sak-pex.sh -t, kpex --magic_thresh, only used in EXT_MODE=3; default: 1000 = 1 Ohm)
 # Override with: make <target> THRESHOLD=<mOhm>
 THRESHOLD ?= 1000
 
-# full-RC extresist minres in mOhm (sak-pex.sh -r, kpex --magic-minres, only used in EXT_MODE=3; default: 100 = 0.1 Ohm)
+# full-RC extresist minres in mOhm (sak-pex.sh -r, kpex --magic_minres, only used in EXT_MODE=3; default: 100 = 0.1 Ohm)
 # Override with: make <target> MINRES=<mOhm>
 MINRES ?= 100
 
-# full-RC extresist mindelay in ps (sak-pex.sh -y, kpex --magic-mindel, only used in EXT_MODE=3; default: 0 = gate by resistance)
+# full-RC extresist mindelay in ps (sak-pex.sh -y, kpex --magic_mindel, only used in EXT_MODE=3; default: 0 = gate by resistance)
 # Override with: make <target> MINDELAY=<ps>
 MINDELAY ?= 0
 
@@ -483,9 +483,9 @@ klayout-pex: ## Run Parasitic Extraction with KPEX of the CELL cell (usage: make
 	--gds $(LAY_DIR)/$(CELL).$(_GDS_EXT) \
 	--magic \
 	--magic_mode $$KPEX_MODE \
-	--magic-thresh $(THRESHOLD) \
-	--magic-minres $(MINRES) \
-	--magic-mindel $(MINDELAY) \
+	--magic_thresh $(THRESHOLD) \
+	--magic_minres $(MINRES) \
+	--magic_mindel $(MINDELAY) \
 	--out_dir $(NET_PEX_DIR) \
 	--out_spice $(NET_PEX_DIR)/$(CELL)_klayout_pex_$(EXT_MODE).spice
 #	--2.5D
@@ -511,22 +511,30 @@ klayout-pex: ## Run Parasitic Extraction with KPEX of the CELL cell (usage: make
 # full RC for the resistors and the devices and C-coupled for the capacitances, which pex_caps.py puts into the full-RC
 # netlist: Magic's extresist counts the coupling capacitance of a net with a resistor network again to the substrate
 # (magic#557).
+# A MoM capacitor, whose comb Magic reads as plain metal, would go into LEADS_CUT: drop_subcells.py cuts the comb out
+# of every marker on that layer, and momf_lpe.py puts the PDK device back between the two feeds, with the series
+# resistance, series inductance and substrate capacitance from LEADS_PARASITICS. This VCO has none: Magic extracts its
+# MIM capacitors as devices.
 LEADS_DROP := vco_ind vco_var
 LEADS_SKIP := vco_var_vtune vco_ind_VSS
+LEADS_CUT :=
+LEADS_PARASITICS :=
 klayout-pex-leads: ## Run KPEX on TOP without the coil and the varactor array, for the post-layout testbench (usage: make klayout-pex-leads [THRESHOLD=<mOhm>] [MINRES=<mOhm>] [MINDELAY=<ps>])
 	mkdir -p $(NET_PEX_DIR)
 	python3 $(SCRIPTS_DIR)/drop_subcells.py $(LAY_DIR)/$(TOP).gds $(TOP) $(NET_PEX_DIR)/$(TOP)_leads.gds \
-		--drop $(LEADS_DROP) --skip $(LEADS_SKIP) --name $(TOP)_leads --ties $(NET_PEX_DIR)/$(TOP)_leads_ties.json
-	PDK_UNDERSCORED=$$(echo $$PDK | sed -e 's/-/_/g'); \
+		--drop $(LEADS_DROP) --skip $(LEADS_SKIP) --name $(TOP)_leads --ties $(NET_PEX_DIR)/$(TOP)_leads_ties.json \
+		$(if $(LEADS_CUT),--cut $(LEADS_CUT) --cut-json $(NET_PEX_DIR)/$(TOP)_leads_cut.json)
 	for mode in CC RC; do \
-		kpex --pdk $$PDK_UNDERSCORED --cell $(TOP)_leads --gds $(NET_PEX_DIR)/$(TOP)_leads.gds --magic --magic_mode $$mode \
-		--magic-thresh $(THRESHOLD) --magic-minres $(MINRES) --magic-mindel $(MINDELAY) \
+		kpex --pdk $$PDK --cell $(TOP)_leads --gds $(NET_PEX_DIR)/$(TOP)_leads.gds --magic --magic_mode $$mode \
+		--magic_thresh $(THRESHOLD) --magic_minres $(MINRES) --magic_mindel $(MINDELAY) \
 		--out_dir $(NET_PEX_DIR) --out_spice $(NET_PEX_DIR)/$(TOP)_leads_$$mode.spice || exit 1; \
 	done
 	python3 $(SCRIPTS_DIR)/pex_caps.py $(NET_PEX_DIR)/$(TOP)_leads_RC.spice $(NET_PEX_DIR)/$(TOP)_leads_CC.spice \
 		--ties $(NET_PEX_DIR)/$(TOP)_leads_ties.json -o $(NET_PEX_DIR)/$(TOP)_leads_klayout_pex_3.spice
+	$(if $(LEADS_CUT),python3 $(SCRIPTS_DIR)/momf_lpe.py $(NET_PEX_DIR)/$(TOP)_leads_klayout_pex_3.spice $(NET_PEX_DIR)/$(TOP)_leads_cut.json \
+		--parasitics $(LEADS_PARASITICS) -o $(NET_PEX_DIR)/$(TOP)_leads_klayout_pex_3.spice)
 	rm -rf $(NET_PEX_DIR)/$(TOP)_leads__$(TOP)_leads $(NET_PEX_DIR)/$(TOP)_leads.gds $(NET_PEX_DIR)/$(TOP)_leads_CC.spice $(NET_PEX_DIR)/$(TOP)_leads_RC.spice \
-		$(NET_PEX_DIR)/$(TOP)_leads_ties.json
+		$(NET_PEX_DIR)/$(TOP)_leads_ties.json $(NET_PEX_DIR)/$(TOP)_leads_cut.json
 	rm -f $(TOP)_leads.nodes $(TOP)_leads.sim
 	sak-pin-reorder.py $(XSCHEM_TB_DIR)/$(TOP)_leads.sym $(NET_PEX_DIR)/$(TOP)_leads_klayout_pex_3.spice --format spice
 	python3 $(SCRIPTS_DIR)/check_pex_ports.py $(NET_PEX_DIR)/$(TOP)_leads_klayout_pex_3.spice
