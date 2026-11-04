@@ -106,7 +106,13 @@ control
   // from the symmetric operating point, tstab lets the oscillation build up (at 3 ns the shooting fails).
   analysis pss pss oscillator=1 tper=44.3p tstab=6n maxharm=20 ic=\{\\"x1:rf_p\\", 0.8, \\"x1:rf_n\\", 0.7\} store=\\"osc\\"
 
-  // Phase noise at the output: noise around the first harmonic, linearised at the stored PSS.
+  // VACASK before 7c38094 restarts the period that pnoise and pac integrate with a backward-Euler step at
+  // every Jacobian sample, which reads the phase noise and the tuning gain low below a few MHz (3.3 dB at
+  // 1 MHz on this VCO). tran_fbr shortens those steps. The option is global, so the line restates the others.
+  options strictsave=1 pss_minpts=4000 reltol=3e-5 tran_fbr=0.02
+
+  // Output noise around the first harmonic, linearised at the stored PSS. With oscillator=1 it is computed as
+  // for a driven circuit, so it is the total noise, which close to the carrier is the phase noise.
   // in names the source the gain output refers to, pnoise needs one.
   analysis pnoise pnoise psssolve=0 ic=\\"osc\\" truncharm=20 in=\\"Vtune\\" out=[\\"vout_p\\", \\"vout_n\\"] outharm=1 from=10k to=100M mode=\\"dec\\" points=10
 

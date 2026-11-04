@@ -2,9 +2,9 @@
 # SPDX-FileCopyrightText: 2026 Simon Dorrer and Harald Pretl
 # SPDX-License-Identifier: Apache-2.0 WITH SHL-2.1
 # Author: Simon Dorrer
-# Description: Plots of the VCO top macro from the ngspice transient, the VACASK PSS, PNOISE and PAC bench and the VACASK tuning bench.
+# Description: Plots of the VCO top macro from the ngspice transients (schematic and post-layout), the VACASK PSS, PNOISE and PAC bench and the VACASK tuning bench.
 # Created: 17.10.2026
-# Last Modified: 31.10.2026
+# Last Modified: 04.11.2026
 # ============================================
 
 # Imports
@@ -53,9 +53,9 @@ def complex_col(file, name):
     return ng.loadngspicecol(file, f"re({name})") + 1j * ng.loadngspicecol(file, f"im({name})")
 
 
-def plot_tran(data_dir, figures_dir):
+def plot_tran(data_dir, figures_dir, tb, title):
     """ngspice transient: start-up and steady state."""
-    file = str(data_dir / "vco_top_tb_tran.txt")
+    file = str(data_dir / f"{tb}.txt")
     time = ng.loadngspicecol(file, "time")
     vp = ng.loadngspicecol(file, "v(x1.rf_p)")
     vn = ng.loadngspicecol(file, "v(x1.rf_n)")
@@ -64,7 +64,7 @@ def plot_tran(data_dir, figures_dir):
     t_ns = time * 1e9
 
     fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(10, 8))
-    fig.suptitle('VCO Top - Transient Response (ngspice)')
+    fig.suptitle(title)
     ax1.plot(t_ns, vp - vn, color='#0c5da5', linewidth=1.2, label=r'$V_\mathrm{rf,p} - V_\mathrm{rf,n}$ (tank)')
     ax1.set_xlabel(r'$t$ (ns)')
     ax1.set_ylabel(r'$V$ (V)')
@@ -79,7 +79,7 @@ def plot_tran(data_dir, figures_dir):
     ax2.grid(visible=True, which='major', linestyle='--', alpha=0.45)
     ax2.legend(loc='upper right')
     plt.tight_layout()
-    save(fig, figures_dir, "vco_top_tb_tran", (t_ns, vp, vn, op, on), "time_ns,v_rf_p,v_rf_n,v_out_p,v_out_n")
+    save(fig, figures_dir, tb, (t_ns, vp, vn, op, on), "time_ns,v_rf_p,v_rf_n,v_out_p,v_out_n")
 
 
 def plot_pss(data_dir, figures_dir):
@@ -127,7 +127,7 @@ def plot_pss(data_dir, figures_dir):
     fa = ng.loadngspicecol(pac, "frequency")
     vusb = complex_col(pac, "vout_p;1") - complex_col(pac, "vout_n;1")
     kvco = 2 * fa * np.abs(vusb) / v1
-    # below about 1 MHz the linearised phase is pinned and the sideband no longer grows as 1/f, see README
+    # below about 100 kHz the sideband no longer grows as 1/f, see the Limitations in the README
     print(f"PAC: K_VCO = {np.interp(7, np.log10(fa), kvco) / 1e9:.3f} GHz/V at 10 MHz")
 
     fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(10, 8))
@@ -194,7 +194,9 @@ def main():
 
     # Plot what the benches have written so far
     if (data_dir / "vco_top_tb_tran.txt").exists():
-        plot_tran(data_dir, figures_dir)
+        plot_tran(data_dir, figures_dir, "vco_top_tb_tran", "VCO Top - Transient Response (ngspice)")
+    if (data_dir / "vco_top_tb_tran_lpe.txt").exists():
+        plot_tran(data_dir, figures_dir, "vco_top_tb_tran_lpe", "VCO Top - Post-Layout Transient Response (ngspice)")
     f_pss = tune = None
     if (data_dir / "vco_top_tb_pss_vacask_pss.txt").exists():
         f_pss = plot_pss(data_dir, figures_dir)
