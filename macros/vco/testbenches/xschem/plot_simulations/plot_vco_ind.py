@@ -40,12 +40,18 @@ def save(fig, figures_dir, name, columns=None, header=None):
 
 
 def diff_lq(f, s):
-    """Differential inductance and Q between ports 1 and 2, with the center tap (port 3) open."""
+    """Differential inductance and Q between ports 1 and 2, with the center tap (port 3) open.
+
+    NaN at DC: the coil floats there, so I - S is singular and its Z matrix does not exist.
+    """
+    ac = f > 0
     eye = np.eye(s.shape[1])
-    z = Z0 * np.linalg.solve((eye - s).transpose(0, 2, 1), (eye + s).transpose(0, 2, 1)).transpose(0, 2, 1)
+    z = Z0 * np.linalg.solve((eye - s[ac]).transpose(0, 2, 1), (eye + s[ac]).transpose(0, 2, 1)).transpose(0, 2, 1)
     zd = z[:, 0, 0] + z[:, 1, 1] - z[:, 0, 1] - z[:, 1, 0]
-    w = 2 * np.pi * np.where(f > 0, f, np.nan)
-    return zd.imag / w, zd.imag / zd.real
+    l_diff, q_diff = np.full(len(f), np.nan), np.full(len(f), np.nan)
+    l_diff[ac] = zd.imag / (2 * np.pi * f[ac])
+    q_diff[ac] = zd.imag / zd.real
+    return l_diff, q_diff
 
 
 def load_acsp(file, ports=3):
