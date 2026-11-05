@@ -82,6 +82,7 @@ def main():
     parser.add_argument("cc", help="C-coupled netlist of the same layout")
     parser.add_argument("-o", "--out", required=True, help="output netlist")
     parser.add_argument("--ties", help="JSON file of drop_subcells.py: the pins that share a net with an added pin")
+    parser.add_argument("--internal", nargs="+", default=[], help="ports to take off the subcircuit, the probes of drop_subcells.py")
     args = parser.parse_args()
 
     lines, ports, caps, res = read(args.rc)
@@ -165,8 +166,19 @@ def main():
     header = [f"* Capacitances rebuilt per net pair from the C-coupled extraction {args.cc.split('/')[-1]} (magic#557):",
               f"* {sum(target.values()) * 1e12:.4f} pF in {len(target)} net pairs, the full-RC run had "
               f"{sum(v for _, _, _, v in caps) * 1e12:.4f} pF, {dropped * 1e15:.1f} fF of it between pairs without coupling."]
+    missing = set(args.internal) - set(ports)
+    if missing:
+        sys.exit(f"pex_caps.py: --internal names no port of {args.rc}: {', '.join(sorted(missing))}")
+    out = [line for line in out if line is not None]
+    if args.internal:
+        i = next(k for k, line in enumerate(out) if line.lower().startswith(".subckt"))
+        end = i + 1
+        while out[end].startswith("+"):
+            end += 1
+        name = out[i].split()[1]
+        out[i:end] = [" ".join([".subckt", name] + [p for p in ports if p not in args.internal])]
     with open(args.out, "w", encoding="utf-8") as f:
-        f.write("\n".join(header + [line for line in out if line is not None]) + "\n")
+        f.write("\n".join(header + out) + "\n")
     print(f"pex_caps.py: {sum(target.values()) * 1e12:.4f} pF in {len(target)} net pairs "
           f"(full RC {sum(v for _, _, _, v in caps) * 1e12:.4f} pF), {len(added)} capacitors added, wrote {args.out}")
 

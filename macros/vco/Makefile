@@ -520,10 +520,14 @@ LEADS_SKIP := vco_var_vtune vco_ind_VSS
 LEADS_CUT :=
 LEADS_CUT_GEOS :=
 LEADS_PARASITICS :=
+# Magic gives a net that only drives gates no resistor network, and the tank drives the buffer's gates through the
+# coupling caps, so a port on each input (cell:metal:x:y:name) makes the extraction keep their resistance.
+LEADS_PROBES := vco_buf:TopMetal1:-2.5:16.5:vco_buf_in_p vco_buf:TopMetal1:2.5:16.5:vco_buf_in_n
 klayout-pex-leads: ## Run KPEX on TOP without the coil and the varactor array, for the post-layout testbench (usage: make klayout-pex-leads [THRESHOLD=<mOhm>] [MINRES=<mOhm>] [MINDELAY=<ps>])
 	mkdir -p $(NET_PEX_DIR)
 	python3 $(SCRIPTS_DIR)/drop_subcells.py $(LAY_DIR)/$(TOP).gds $(TOP) $(NET_PEX_DIR)/$(TOP)_leads.gds \
 		--drop $(LEADS_DROP) --skip $(LEADS_SKIP) --name $(TOP)_leads --ties $(NET_PEX_DIR)/$(TOP)_leads_ties.json \
+		$(foreach p,$(LEADS_PROBES),--probe $(subst :, ,$(p))) \
 		$(if $(LEADS_CUT),--cut $(LEADS_CUT) $(if $(LEADS_CUT_GEOS),--cut-only $(LEADS_CUT_GEOS)) --cut-json $(NET_PEX_DIR)/$(TOP)_leads_cut.json)
 	for mode in CC RC; do \
 		kpex --pdk $$PDK --cell $(TOP)_leads --gds $(NET_PEX_DIR)/$(TOP)_leads.gds --magic --magic_mode $$mode \
@@ -531,7 +535,8 @@ klayout-pex-leads: ## Run KPEX on TOP without the coil and the varactor array, f
 		--out_dir $(NET_PEX_DIR) --out_spice $(NET_PEX_DIR)/$(TOP)_leads_$$mode.spice || exit 1; \
 	done
 	python3 $(SCRIPTS_DIR)/pex_caps.py $(NET_PEX_DIR)/$(TOP)_leads_RC.spice $(NET_PEX_DIR)/$(TOP)_leads_CC.spice \
-		--ties $(NET_PEX_DIR)/$(TOP)_leads_ties.json -o $(NET_PEX_DIR)/$(TOP)_leads_klayout_pex_3.spice
+		--ties $(NET_PEX_DIR)/$(TOP)_leads_ties.json $(if $(LEADS_PROBES),--internal $(foreach p,$(LEADS_PROBES),$(lastword $(subst :, ,$(p))))) \
+		-o $(NET_PEX_DIR)/$(TOP)_leads_klayout_pex_3.spice
 	$(if $(LEADS_CUT),python3 $(SCRIPTS_DIR)/momf_lpe.py $(NET_PEX_DIR)/$(TOP)_leads_klayout_pex_3.spice $(NET_PEX_DIR)/$(TOP)_leads_cut.json \
 		--parasitics $(LEADS_PARASITICS) -o $(NET_PEX_DIR)/$(TOP)_leads_klayout_pex_3.spice)
 	rm -rf $(NET_PEX_DIR)/$(TOP)_leads__$(TOP)_leads $(NET_PEX_DIR)/$(TOP)_leads.gds $(NET_PEX_DIR)/$(TOP)_leads_CC.spice $(NET_PEX_DIR)/$(TOP)_leads_RC.spice \

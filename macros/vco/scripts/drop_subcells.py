@@ -20,6 +20,10 @@ port at all, a pin the model has no terminal for, or one that carries no current
 metals of the comb and the vias between them inside each marker of the given layer, and puts a port <prefix><k>_A and
 <prefix><k>_B on the two pieces of metal that feed it, k counting the markers from the bottom left. --cut-json records
 each marker's size, metal stack and ports, which momf_lpe.py turns back into the PDK device.
+
+--probe puts a port on a net of a subcell that is not dropped, at a point in that cell's coordinates. Magic gives a
+net that only drives gates no resistor network, so its resistance is missing from the extraction, and a port makes
+it build one. pex_caps.py --internal then takes the port off the subcircuit.
 """
 
 import argparse
@@ -180,6 +184,7 @@ def main():
     parser.add_argument("--skip", nargs="+", default=[], help="pins of dropped cells that get no port, as <subcell>_<pin>")
     parser.add_argument("--name", help="name of the written cell (default: the cell's own)")
     parser.add_argument("--ties", help="JSON file: for every added pin, the other pins of the cell on its net")
+    parser.add_argument("--probe", nargs=5, action="append", default=[], metavar=("CELL", "METAL", "X", "Y", "NAME"), help="a port NAME on METAL at (X, Y) um in an instance of CELL")
     parser.add_argument("--cut", nargs=2, metavar=("LAYER/DATATYPE", "PREFIX"), help="cut the comb out of each marker on this layer, ports <prefix><k>_A/B")
     parser.add_argument("--cut-only", nargs="+", metavar="GEOMETRY", help="cut only these geometries, named w<w>_l<l>_m<mmin><mmax> (default: every marker)")
     parser.add_argument("--cut-json", help="JSON file: size, metal stack and ports of each cut marker")
@@ -197,6 +202,13 @@ def main():
     if missing:
         sys.exit(f"drop_subcells.py: no instance of {', '.join(sorted(missing))} below {args.cell}")
     ports, names = [], set()
+    for cell, metal, x, y, name in args.probe:
+        hits = []
+        find_instances(ly, top, {cell}, kdb.ICplxTrans(), hits)
+        if len(hits) != 1:
+            sys.exit(f"drop_subcells.py: --probe {name}: {len(hits)} instances of {cell} below {args.cell}")
+        box = kdb.DBox(float(x) - 0.1, float(y) - 0.1, float(x) + 0.1, float(y) + 0.1).to_itype(ly.dbu)
+        ports.append((name, [(metal, box.transformed(hits[0][3]))]))
     for parent, inst, sub, t in found:
         for name, boxes in cell_pins(ly, sub).items():
             names.add(f"{sub.name}_{name}")
