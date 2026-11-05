@@ -104,7 +104,8 @@ control
 
   // Oscillator PSS: the period is solved for, tper is the guess. ic kicks the tank away
   // from the symmetric operating point, tstab lets the oscillation build up (at 3 ns the shooting fails).
-  analysis pss pss oscillator=1 tper=44.3p tstab=6n maxharm=20 ic=\{\\"x1:rf_p\\", 0.8, \\"x1:rf_n\\", 0.7\} store=\\"osc\\"
+  // stabstep: at tper/4000 the stabilisation transient stops at t = 0 with the coil model (Timestep too small).
+  analysis pss pss oscillator=1 tper=44.3p tstab=6n stabstep=0.5p maxharm=20 ic=\{\\"x1:rf_p\\", 0.8, \\"x1:rf_n\\", 0.7\} store=\\"osc\\"
 
   // VACASK before 7c38094 restarts the period that pnoise and pac integrate with a backward-Euler step at
   // every Jacobian sample, which reads the phase noise and the tuning gain low below a few MHz (3.3 dB at

@@ -1558,7 +1558,7 @@ control
   var ibias=100u
   options strictsave=1 pss_minpts=4000 reltol=3e-5
   save v(vout_p) v(vout_n) v("x1:rf_p") v("x1:rf_n")
-  analysis pss pss oscillator=1 tper=44.3p tstab=6n maxharm=20 ic={"x1:rf_p", 0.8, "x1:rf_n", 0.7} store="osc"
+  analysis pss pss oscillator=1 tper=44.3p tstab=6n stabstep=0.5p maxharm=20 ic={"x1:rf_p", 0.8, "x1:rf_n", 0.7} store="osc"
   options strictsave=1 pss_minpts=4000 reltol=3e-5 tran_fbr=0.02
   analysis pnoise pnoise psssolve=0 ic="osc" truncharm=20 in="Vtune" out=["vout_p", "vout_n"] outharm=1 from=10k to=100M mode="dec" points=10
   analysis pac pac psssolve=0 ic="osc" truncharm=20 outharm=1 from=10k to=100M mode="dec" points=10
@@ -1569,7 +1569,7 @@ endc
 ![Xschem testbench `vco_top_tb_pss_vacask` with its VACASK control block.](fig/vco_top/vco_top_tb_pss_vacask_schematic.svg){#fig-vco-tb-pss}
 
 - **`abort always`** stops VACASK with a nonzero exit code when an analysis fails. Without it, VACASK exits 0 and the plot scripts read the rawfiles of the previous run.
-- **`pss oscillator=1`** solves for the period as well, with `tper` as the guess. The initial condition `ic` kicks the tank away from its symmetric operating point, and the stabilization transient `tstab` lets the oscillation build up before the shooting Newton starts. `store="osc"` keeps the solution for the analyses that follow.
+- **`pss oscillator=1`** solves for the period as well, with `tper` as the guess. The initial condition `ic` kicks the tank away from its symmetric operating point, and the stabilization transient `tstab` lets the oscillation build up before the shooting Newton starts. `stabstep` limits its first time step. `store="osc"` keeps the solution for the analyses that follow.
 - **`pss_minpts=4000`** gives the shooting at least 4000 time steps per period. At the default 1000 its Newton iteration cycles without converging.
 - **`reltol=3e-5`** is for the bias filters of the buffer. Their time constant is 1 $\mu$s against a 44 ps period, so they barely move over one period, and at the default tolerance the shooting settled them 70 mV away from their DC values without an error.
 - **`pnoise` and `pac`** start from the stored solution (`psssolve=0 ic="osc"`) and observe the first harmonic at the outputs (`outharm=1`). `pac` drives the small-signal tone of the source `Vtune` (`smag=1`, 1 V) and observes the sideband it modulates onto the carrier, from which the plot script computes the tuning gain.
