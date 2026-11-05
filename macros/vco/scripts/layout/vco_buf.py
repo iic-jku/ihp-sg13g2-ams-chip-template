@@ -87,10 +87,14 @@ for side, sgn in (("left", -1), ("right", 1)):
     top.rect("TopMetal1", min(xg - 1.05 * sgn, tm1.left if sgn < 0 else tm1.right),
              yg - 1.05, max(xg - 1.05 * sgn, tm1.left if sgn < 0 else tm1.right), yg + 1.05)
     top.rect("TopMetal1", xg - 1.05, yg - 1.05, xg + 1.05, yg + 1.05)
-    top.via(xg, yg, "Metal2", "TopMetal1", cols=2, rows=2, tcols=2, trows=2)
+    top.via(xg, yg, "Metal2", "TopMetal1", cols=2, rows=5, tcols=2, trows=2)
+    # The tank drives the gates through the cap and this line, so its resistance is tank loss: two via rows along the pad.
     gpad = p["G"][1]
-    top.rect("Metal2", xg - 0.3, gpad.center().y, xg + 0.3, yg)
-    top.via(xg, gpad.center().y, "Metal1", "Metal2", cols=1, rows=1)
+    gy0, gy1 = gpad.bottom, gpad.top + 0.5
+    top.rect("Metal1", gpad.left, gy0, gpad.right, gy1)
+    top.rect("Metal2", gpad.left, gy0, gpad.right, gy1)
+    top.via(gpad.center().x, (gy0 + gy1) / 2, "Metal1", "Metal2", cols=12, rows=2)
+    top.rect("Metal2", xg - 0.5, gy0, xg + 0.5, yg)
     # Gate bias resistor outside the cap: bottom head to the gate line on Metal2, top head to the vbg_buf track
     rb = top.pcell("rhigh", Calculate="R", w=vl.um(0.5), l=vl.um(8.0), b=0)
     trb = top.add(rb, sgn * RB_X - 0.25, CC_Y)
