@@ -1125,7 +1125,7 @@ The non-interactive DRC can be run with the following Makefile targets (all thre
 ```sh
 make klayout-drc [CELL=<cellname>] [DRC_LEVEL=<precheck|macro|regular>] [DRC_JOBS=<n>]   # default CELL=inverter_top, default DRC_LEVEL=macro
 make magic-drc [CELL=<cellname>]    # default CELL=inverter_top
-make gdscheck-drc [CELL=<cellname>] [DRC_LEVEL=<precheck|macro|regular>] [GDSCHECK_SUITE=<suite>|GDSCHECK_DECKS=<decks>]   # default CELL=inverter_top
+make gdscheck-drc [CELL=<cellname>] [DRC_LEVEL=<precheck|macro|regular>] [GDSCHECK_SUITE=<suite>|GDSCHECK_DECKS=<decks>] [DRC_JOBS=<n>]   # default CELL=inverter_top
 ```
 
 `DRC_JOBS` caps the number of KLayout processes of one run and sets the gdscheck threads. The default of 4 KLayout processes (fewer on a machine with fewer CPUs) and gdscheck on every CPU suits the macros, and larger values only pay off for the full chip on a server.
@@ -1335,7 +1335,7 @@ The available Makefile targets for the bondpad are summarised below.
 | `verilog`     | Generate a Verilog blackbox stub.                                                                                                                                                                       |
 | `klayout-drc` | Run KLayout DRC (`make klayout-drc [CELL=<cellname>] [DRC_LEVEL=<precheck\|macro\|regular>] [DRC_JOBS=<n>]`).                                                                                                                                                 |
 | `magic-drc`   | Run Magic DRC (`make magic-drc [CELL=<cellname>]`).                                                                                                                                                     |
-| `gdscheck-drc` | Run gdscheck DRC (`make gdscheck-drc [CELL=<cellname>] [DRC_LEVEL=<precheck\|macro\|regular>] [GDSCHECK_SUITE=<suite>\|GDSCHECK_DECKS=<decks>]`), not part of `make all`. |
+| `gdscheck-drc` | Run gdscheck DRC (`make gdscheck-drc [CELL=<cellname>] [DRC_LEVEL=<precheck\|macro\|regular>] [GDSCHECK_SUITE=<suite>\|GDSCHECK_DECKS=<decks>] [DRC_JOBS=<n>]`), not part of `make all`. |
 | `open`        | Browse this folder with `sak-open.py` and open each file in its tool (needs the VNC/X11 desktop).                                                                                                        |
 | `clean`       | Remove the `final/` and `verification/drc/` output directories.                                                                                                                                         |
 
