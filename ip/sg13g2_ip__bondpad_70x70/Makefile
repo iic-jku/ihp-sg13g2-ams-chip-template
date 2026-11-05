@@ -139,7 +139,6 @@ all: ## Build and verify the bondpad
 	$(MAKE) bondpad
 	$(MAKE) verilog
 	$(MAKE) klayout-drc
-#	Magic DRC results do not stop the flow, as in the other Makefiles (see the top-level README)
-	-$(MAKE) magic-drc
+	$(MAKE) magic-drc
 .PHONY: all
 # ================================================================================================

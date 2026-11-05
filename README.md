@@ -351,7 +351,7 @@ Solid arrows are direct `$(MAKE) <target>` calls within a single Makefile. Dashe
 At the top level, `make all` runs four steps in this order:
 
 1. `build-all` initialises the submodules and builds every component by calling its own `all` target: bondpad, logos, digital macro, analog macro, and finally the chip assembly with `build-top` (LibreLane, copy-back of all artifacts, logo and fill insertion, final GDS render).
-2. `magic-drc` and `gdscheck-drc` run the DRC of the final `chip_top` and `chip_top_logo_fill` GDS as a comparison. Both flag IHP's own cells (see [Design Rule Check (DRC)](#design-rule-check-drc)), so their results do not stop `make all`. The KLayout DRC, the sign-off deck, is not part of `make all` to shorten the runtime. Run it separately with `klayout-drc-minimum` or `klayout-drc-regular`.
+2. `magic-drc` and `gdscheck-drc` run the DRC of the final `chip_top` and `chip_top_logo_fill` GDS. A violation stops `make all`, and both flag IHP's own cells until the fixes are in the container (see [Design Rule Check (DRC)](#design-rule-check-drc)). The KLayout DRC, the sign-off deck, is not part of `make all` to shorten the runtime. Run it separately with `klayout-drc-minimum` or `klayout-drc-regular`.
 3. `sim-all` runs the top-level RTL and gate-level simulations on the netlists produced by this build.
 4. `bondplan` generates the bonding diagram, the bondwires, and the pin table.
 
@@ -813,7 +813,7 @@ make gdscheck-drc CELL=chip_top_logo_fill GDSCHECK_DECKS=metal1,via1
 > - The `SG13_dev` `pmos` PCell draws an nBuLay ring under its n+ tap ring when `guardRingType` is `nwell`, as in the inverter. Magic reports `NBL.f` between that ring and the PMOS diffusion inside it and `NBL.d` against the NWell next to it, and gdscheck 0.2.0 reports `NBL.f` (1 in `inverter`, 4 in `inverter_top`). The KLayout deck checks `NBL.f` only against P+ Activ in PWell, as IHP aligned it with the commercial deck in [IHP-Open-PDK#700](https://github.com/IHP-GmbH/IHP-Open-PDK/pull/700). Which reading is right is open in [IHP-Open-PDK#954](https://github.com/IHP-GmbH/IHP-Open-PDK/issues/954). gdscheck reads `NBL.f` like the KLayout deck since [aesc-silicon/gdscheck#51](https://github.com/aesc-silicon/gdscheck/pull/51), which came after 0.2.0.
 > - Read hierarchically, Magic reports "This layer can't abut or partially overlap between subcells" in IHP's IO pads, and overlap and `M2.d` errors in the SRAM macro, which flattening the SRAM's subcells removes ([IHP-Open-PDK#794](https://github.com/IHP-GmbH/IHP-Open-PDK/issues/794)).
 >
-> So the flows that call Magic or gdscheck (`make all`, `magic-verify` and the `all` flows of the IPs) report their results without stopping on them, while the `magic-drc` and `gdscheck-drc` targets themselves still exit with the DRC result. Upstream calls gdscheck experimental, so a clean gdscheck run is no sign-off on its own.
+> A flow stops on a violation of any engine it calls, so until the fixes are in the container the Magic DRC of the inverter stops `magic-verify`, `make regression`, `make build-all` and `make all`. To continue meanwhile, run the later steps directly (`magic-lvs`, `magic-pex`, `build-top`). Upstream calls gdscheck experimental, so a clean gdscheck run is no sign-off on its own.
 
 
 ### Export Schematic Netlist for LVS
@@ -1024,7 +1024,7 @@ See [packaging/README.md](packaging/README.md) for the full flow documentation a
 
 ### Build, Verify and Simulate All
 
-Runs `build-all` first, followed by the Magic and gdscheck DRC of both `chip_top` and `chip_top_logo_fill`, then the chip simulations (`sim-all`) and finally generates the bondplan (`bondplan`). The two DRC engines are a comparison whose results do not stop the flow, see [Design Rule Check (DRC)](#design-rule-check-drc):
+Runs `build-all` first, followed by the Magic and gdscheck DRC of both `chip_top` and `chip_top_logo_fill`, then the chip simulations (`sim-all`) and finally generates the bondplan (`bondplan`). A violation in either DRC stops the flow, see [Design Rule Check (DRC)](#design-rule-check-drc):
 
 ```sh
 make all
@@ -1088,7 +1088,7 @@ To keep the runtime low while still covering the full toolchain, the regression 
 - The counter macro is hardened with `librelane-magicdrc` (only **Magic DRC** enabled, the slower KLayout DRC is skipped). Netgen LVS still runs as part of the flow.
 - The chip top-level runs `librelane-nodrc`. All DRC checks are skipped to save runtime on the large top-level assembly. The macros and IP blocks are DRC-checked individually beforehand, so this only leaves the top-level routing/fill unchecked.
 - KLayout DRC (`sak-drc.sh`) is skipped inside the LibreLane runs, but is still exercised in the bondpad and logo IP builds, and in the inverter `klayout-verify`.
-- Magic DRC (`sak-drc.sh -m`) runs in the bondpad and logo IP builds and in the inverter `magic-verify`, which report its result without stopping on it. gdscheck DRC (`sak-drc.sh -g`) runs once, as `gdscheck-drc` of the bondpad, which passes it, so a broken gdscheck fails the regression.
+- Magic DRC (`sak-drc.sh -m`) runs in the bondpad and logo IP builds and in the inverter `magic-verify`, where the regression stops until the fixes for IHP's own cells are in the container (see [Design Rule Check (DRC)](#design-rule-check-drc)). gdscheck DRC (`sak-drc.sh -g`) runs once, as `gdscheck-drc` of the bondpad, which passes it, so a broken gdscheck fails the regression.
 - Only **one** logo (`sg13g2_ip__jku`) is regenerated. It is the only step that exercises the PNG to GDS flow. The second logo (`sg13g2_ip__jku_names`) uses an identical toolchain and reuses its committed views.
 - Exactly **one** CACE parameter set is run (the AC VDD sweep `ac_params`, no Monte Carlo). Swap `ac_params` for `ac_mc_params` / `ac_mm_params` in the target to also exercise the Monte Carlo flow.
 

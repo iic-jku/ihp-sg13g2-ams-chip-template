@@ -440,7 +440,7 @@ make gdscheck-drc-all
 ```
 
 > [!NOTE]
-> KLayout is the sign-off DRC, Magic and gdscheck give a second and a third opinion. The `pmos` cell is the `SG13_dev` `pmos` PCell with `guardRingType` `nwell`, which draws an nBuLay ring under the n+ tap ring. Magic reports `NBL.f` between that ring and the PMOS diffusion inside it and `NBL.d` against the NWell next to it, and gdscheck 0.2.0 reports `NBL.f` (1 in `inverter`, 4 in `inverter_top`), while the KLayout deck passes both cells ([IHP-Open-PDK#954](https://github.com/IHP-GmbH/IHP-Open-PDK/issues/954), fixed in gdscheck after 0.2.0 by [aesc-silicon/gdscheck#51](https://github.com/aesc-silicon/gdscheck/pull/51)). So `magic-drc` and `gdscheck-drc` fail on both cells, `magic-verify` reports the Magic DRC result without stopping on it, and `make all` does not run gdscheck. See the [top-level README](../../README.md#design-rule-check-drc) for the background.
+> KLayout is the sign-off DRC, Magic and gdscheck give a second and a third opinion. The `pmos` cell is the `SG13_dev` `pmos` PCell with `guardRingType` `nwell`, which draws an nBuLay ring under the n+ tap ring. Magic reports `NBL.f` between that ring and the PMOS diffusion inside it and `NBL.d` against the NWell next to it, and gdscheck 0.2.0 reports `NBL.f` (1 in `inverter`, 4 in `inverter_top`), while the KLayout deck passes both cells ([IHP-Open-PDK#954](https://github.com/IHP-GmbH/IHP-Open-PDK/issues/954), fixed in gdscheck after 0.2.0 by [aesc-silicon/gdscheck#51](https://github.com/aesc-silicon/gdscheck/pull/51)). Until the fixes are in the container, `magic-drc` and `gdscheck-drc` fail on both cells, and the Magic DRC stops `magic-verify` and `make all`, which does not run gdscheck. See the [top-level README](../../README.md#design-rule-check-drc) for the background.
 
 
 ### Export Schematic Netlist for LVS
@@ -598,7 +598,7 @@ make klayout-verify-all
 
 ### Verify with Magic
 
-**Verify a single cell** by running DRC, LVS, and PEX in sequence. The Magic DRC result does not stop the sequence, since Magic flags the guard ring of the `pmos` PCell (see [Design Rule Check (DRC)](#design-rule-check-drc)):
+**Verify a single cell** by running DRC, LVS, and PEX in sequence. A failing step stops the sequence, and until the fixes for the `pmos` guard ring are in the container that is the Magic DRC (see [Design Rule Check (DRC)](#design-rule-check-drc)):
 
 ```sh
 make magic-verify

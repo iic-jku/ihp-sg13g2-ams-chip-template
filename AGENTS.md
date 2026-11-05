@@ -33,7 +33,7 @@ This repo is the ihp-sg13g2 AMS template or a chip started from it. Items marked
 
 ```sh
 make help                          # targets and variables
-make all                           # build-all, Magic and gdscheck DRC of chip_top and chip_top_logo_fill (not gating), sim-all, bondplan
+make all                           # build-all, Magic and gdscheck DRC of chip_top and chip_top_logo_fill, sim-all, bondplan
 make build-all                     # submodules, bondpad, logos, macros, build-top
 make build-top                     # librelane-nodrc, copy reports/GDS/netlists/render, add-logo-fill, render-gds
 make sim-rtl-cocotb                # chip RTL simulation (cocotb on Icarus Verilog)
@@ -56,7 +56,7 @@ make -C macros/inverter all                 # KLayout and Magic DRC/LVS/PEX, LEF
 - The Xschem targets netlist in batch mode and run `ngspice -b`, so `plot` commands in a testbench `.control` block do nothing. Testbenches write results with `wrdata` to `testbenches/xschem/plot_simulations/data/`, and `sim-view-xschem` plots them.
 - The top-level `sim-gl-xschem` includes `macros/counter/netlist/xspice/counter_top.xspice` (template), which `clean-all` deletes. Run `make build-counter` before it.
 - `build-top` runs `librelane-nodrc` on purpose until IHP fixes the `metal1_pin_offgrid` errors (see the comment in `Makefile`). Run DRC separately with `magic-drc`, `klayout-drc-minimum`, `klayout-drc-regular` or the matching `gdscheck-drc-*` targets. `DRC_JOBS=<n>` caps the KLayout processes and sets the gdscheck threads (default 4 and every CPU). More than 4 only pays off for the full chip on a server.
-- KLayout is the sign-off DRC. Magic and gdscheck flag IHP's own cells (the nBuLay ring of the `pmos` guard ring PCell, IHP-Open-PDK#954, fixed in gdscheck after 0.2.0, and, for Magic, the IO pads and the SRAM read hierarchically), so every flow calls `magic-drc` and the chip `gdscheck-drc` with make's `-` prefix and reports their result without stopping. Keep that prefix until the upstream fixes are in the image, and keep `-f` patterns for Magic away from the top cell: `sak-drc.sh` refuses one that matches it, because Magic would check an empty cell.
+- KLayout is the sign-off DRC. Magic and gdscheck flag IHP's own cells (the nBuLay ring of the `pmos` guard ring PCell, IHP-Open-PDK#954, fixed in gdscheck after 0.2.0, and, for Magic, the IO pads and the SRAM read hierarchically), so until the upstream fixes are in the image `magic-verify`, `make regression`, `make build-all` and `make all` stop at Magic. Fix such a report upstream, not with make's `-` prefix in a flow. Keep `-f` patterns for Magic away from the top cell: `sak-drc.sh` refuses one that matches it, because Magic would check an empty cell.
 
 ## Conventions
 
