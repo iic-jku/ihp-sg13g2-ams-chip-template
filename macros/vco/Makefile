@@ -513,17 +513,18 @@ klayout-pex: ## Run Parasitic Extraction with KPEX of the CELL cell (usage: make
 # (magic#557).
 # A MoM capacitor, whose comb Magic reads as plain metal, would go into LEADS_CUT: drop_subcells.py cuts the comb out
 # of every marker on that layer, and momf_lpe.py puts the PDK device back between the two feeds, with the series
-# resistance, series inductance and substrate capacitance from LEADS_PARASITICS. This VCO has none: Magic extracts its
-# MIM capacitors as devices.
+# resistance, series inductance and substrate capacitance from LEADS_PARASITICS. LEADS_CUT_GEOS limits the cut to some
+# geometries. This VCO has none: Magic extracts its MIM capacitors as devices.
 LEADS_DROP := vco_ind vco_var
 LEADS_SKIP := vco_var_vtune vco_ind_VSS
 LEADS_CUT :=
+LEADS_CUT_GEOS :=
 LEADS_PARASITICS :=
 klayout-pex-leads: ## Run KPEX on TOP without the coil and the varactor array, for the post-layout testbench (usage: make klayout-pex-leads [THRESHOLD=<mOhm>] [MINRES=<mOhm>] [MINDELAY=<ps>])
 	mkdir -p $(NET_PEX_DIR)
 	python3 $(SCRIPTS_DIR)/drop_subcells.py $(LAY_DIR)/$(TOP).gds $(TOP) $(NET_PEX_DIR)/$(TOP)_leads.gds \
 		--drop $(LEADS_DROP) --skip $(LEADS_SKIP) --name $(TOP)_leads --ties $(NET_PEX_DIR)/$(TOP)_leads_ties.json \
-		$(if $(LEADS_CUT),--cut $(LEADS_CUT) --cut-json $(NET_PEX_DIR)/$(TOP)_leads_cut.json)
+		$(if $(LEADS_CUT),--cut $(LEADS_CUT) $(if $(LEADS_CUT_GEOS),--cut-only $(LEADS_CUT_GEOS)) --cut-json $(NET_PEX_DIR)/$(TOP)_leads_cut.json)
 	for mode in CC RC; do \
 		kpex --pdk $$PDK --cell $(TOP)_leads --gds $(NET_PEX_DIR)/$(TOP)_leads.gds --magic --magic_mode $$mode \
 		--magic_thresh $(THRESHOLD) --magic_minres $(MINRES) --magic_mindel $(MINDELAY) \

@@ -107,10 +107,16 @@ def find_markers(ly, cell, li, trans, found):
         find_markers(ly, ly.cell(inst.cell_index), li, trans * inst.cplx_trans, found)
 
 
-def cut_combs(ly, top, layer, prefix):
+def geometry_name(box, mmin, mmax):
+    """Name of a cap geometry from its marker's box in um and its metal levels, for example w10_l18p6_m24."""
+    return f"w{box.height():g}_l{box.width():g}_m{mmin}{mmax}".replace(".", "p")
+
+
+def cut_combs(ly, top, layer, prefix, only=None):
     """Removes the comb inside each marker on layer (layer, datatype) and returns the markers, each with its two feed
     pieces in top coordinates. The comb is every metal covering more than COMB_FILL of the marker, its pin shapes and
-    texts, and the vias between those metals: a line crossing a marker on another level stays."""
+    texts, and the vias between those metals: a line crossing a marker on another level stays. With only, a list of
+    geometry names, every other marker keeps its comb."""
     li = ly.find_layer(*layer)
     found = []
     if li is not None:
@@ -121,6 +127,7 @@ def cut_combs(ly, top, layer, prefix):
         sys.exit("drop_subcells.py: a marker cell is placed more than once, which --cut does not support")
     found.sort(key=lambda m: (m[1].transformed(m[2]).bbox().bottom, m[1].transformed(m[2]).bbox().left))
     markers = []
+    seen = set()
     for k, (cell, poly, t) in enumerate(found, 1):
         name = f"{prefix}{k}"
         local = kdb.Region(poly)
@@ -129,6 +136,10 @@ def cut_combs(ly, top, layer, prefix):
         idx = [COMB.index(m) for m in stack]
         if len(idx) < 2 or idx != list(range(idx[0], idx[-1] + 1)):
             sys.exit(f"drop_subcells.py: {name} in {cell.name}: metals {stack} are no comb stack")
+        geo = geometry_name(poly.transformed(t).bbox().to_dtype(ly.dbu), idx[0] + 1, idx[-1] + 1)
+        seen.add(geo)
+        if only and geo not in only:
+            continue
         for lay in [(METALS[m], dt) for m in stack for dt in (0, PIN_DT)] + [(VIAS[f"Via{i + 1}"], 0) for i in idx[:-1]]:
             l = ly.find_layer(*lay)
             if l is not None:
@@ -141,6 +152,8 @@ def cut_combs(ly, top, layer, prefix):
                 for s in [s for s in cell.shapes(l).each() if s.is_text() and poly.inside(s.text.trans.disp.to_p())]:
                     cell.shapes(l).erase(s)
         markers.append({"name": name, "cell": cell.name, "poly": poly.transformed(t), "stack": stack})
+    if only and not set(only) <= seen:
+        sys.exit(f"drop_subcells.py: no marker of {sorted(set(only) - seen)}, the layout has {sorted(seen)}")
 
     for mk in markers:
         reg = kdb.Region(mk["poly"])
@@ -168,6 +181,7 @@ def main():
     parser.add_argument("--name", help="name of the written cell (default: the cell's own)")
     parser.add_argument("--ties", help="JSON file: for every added pin, the other pins of the cell on its net")
     parser.add_argument("--cut", nargs=2, metavar=("LAYER/DATATYPE", "PREFIX"), help="cut the comb out of each marker on this layer, ports <prefix><k>_A/B")
+    parser.add_argument("--cut-only", nargs="+", metavar="GEOMETRY", help="cut only these geometries, named w<w>_l<l>_m<mmin><mmax> (default: every marker)")
     parser.add_argument("--cut-json", help="JSON file: size, metal stack and ports of each cut marker")
     args = parser.parse_args()
 
@@ -215,7 +229,7 @@ def main():
     if args.cut:
         layer = tuple(int(v) for v in args.cut[0].split("/"))
         records = []
-        for mk in cut_combs(ly, top, layer, args.cut[1]):
+        for mk in cut_combs(ly, top, layer, args.cut[1], args.cut_only):
             box = mk["poly"].bbox().to_dtype(ly.dbu)
             rec = {"name": mk["name"], "cell": mk["cell"], "w": round(box.height(), 3), "l": round(box.width(), 3),
                    "mmin": COMB.index(mk["stack"][0]) + 1, "mmax": COMB.index(mk["stack"][-1]) + 1,
