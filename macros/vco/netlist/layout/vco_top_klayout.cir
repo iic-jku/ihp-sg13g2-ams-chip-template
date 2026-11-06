@@ -1,12 +1,12 @@
-* Extracted by KLayout with SG13G2 LVS runset on : 05/11/2026 20:20
+* Extracted by KLayout with SG13G2 LVS runset on : 06/11/2026 09:39
 
 .SUBCKT vco_top VDD VSS di_en ibias_100u rf_out_n rf_out_p vdd_core vtune
 X$1 vdd_core \$13 vtune \$14 VSS vco_core
 X$2 VSS rf_out_n \$10 rf_out_p VDD \$13 \$14 \$11 vco_buf
-X$3 \$11 ibias_100u \$10 di_en VDD VSS vco_bias
+X$3 ibias_100u \$11 \$10 di_en VDD VSS vco_bias
 .ENDS vco_top
 
-.SUBCKT vco_bias vbg_buf ibias_100u vbn_buf di_en VDD VSS
+.SUBCKT vco_bias ibias_100u vbg_buf vbn_buf di_en VDD VSS
 M$1 VSS vbn_buf VSS VSS sg13_lv_nmos L=10u W=80u AS=17.6p AD=17.6p PS=100.4u
 + PD=100.4u rfmode=0
 M$11 VSS \$26 vbn_buf VSS sg13_lv_nmos L=0.13u W=1u AS=0.34p AD=0.34p PS=2.68u
@@ -25,7 +25,7 @@ M$26 VSS \$7 \$7 VSS sg13_lv_nmos L=0.5u W=2.5u AS=0.85p AD=0.85p PS=5.68u
 + PD=5.68u rfmode=0
 M$27 VSS di_en \$26 VSS sg13_lv_nmos L=0.13u W=0.5u AS=0.17p AD=0.17p PS=1.68u
 + PD=1.68u rfmode=0
-M$28 VDD \$6 \$1 VDD sg13_lv_pmos L=0.5u W=5u AS=1.7p AD=1.7p PS=10.68u
+M$28 VDD \$6 \$2 VDD sg13_lv_pmos L=0.5u W=5u AS=1.7p AD=1.7p PS=10.68u
 + PD=10.68u rfmode=0
 M$29 VDD \$27 \$6 VDD sg13_lv_pmos L=0.13u W=1u AS=0.34p AD=0.34p PS=2.68u
 + PD=2.68u rfmode=0
@@ -35,9 +35,9 @@ M$31 VDD \$26 \$27 VDD sg13_lv_pmos L=0.13u W=1u AS=0.34p AD=0.34p PS=2.68u
 + PD=2.68u rfmode=0
 M$32 VDD di_en \$26 VDD sg13_lv_pmos L=0.13u W=1u AS=0.34p AD=0.34p PS=2.68u
 + PD=2.68u rfmode=0
-R$33 \$1 \$7 VSS rppd w=0.5u l=8.5u ps=0u b=0 m=1
+R$33 \$2 \$7 VSS rppd w=0.5u l=8.5u ps=0u b=0 m=1
 R$34 ibias_100u vbn_buf VSS rhigh w=0.5u l=32u ps=0u b=0 m=1
-R$35 \$1 vbg_buf VSS rhigh w=0.5u l=32u ps=0u b=0 m=1
+R$35 \$2 vbg_buf VSS rhigh w=0.5u l=32u ps=0u b=0 m=1
 .ENDS vco_bias
 
 .SUBCKT vco_buf VSS rf_out_n vbn_buf rf_out_p VDD rf_p rf_n vbg_buf

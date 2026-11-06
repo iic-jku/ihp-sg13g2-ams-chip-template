@@ -1,4 +1,4 @@
-* Extracted by KLayout with SG13G2 LVS runset on : 03/11/2026 23:35
+* Extracted by KLayout with SG13G2 LVS runset on : 06/11/2026 09:38
 
 .SUBCKT vco_bias VDD VSS di_en ibias_100u vbg_buf vbn_buf
 M$1 VSS vbn_buf VSS VSS sg13_lv_nmos L=10u W=80u AS=17.6p AD=17.6p PS=100.4u
@@ -19,7 +19,7 @@ M$26 VSS \$7 \$7 VSS sg13_lv_nmos L=0.5u W=2.5u AS=0.85p AD=0.85p PS=5.68u
 + PD=5.68u rfmode=0
 M$27 VSS di_en \$26 VSS sg13_lv_nmos L=0.13u W=0.5u AS=0.17p AD=0.17p PS=1.68u
 + PD=1.68u rfmode=0
-M$28 VDD \$6 \$1 VDD sg13_lv_pmos L=0.5u W=5u AS=1.7p AD=1.7p PS=10.68u
+M$28 VDD \$6 \$2 VDD sg13_lv_pmos L=0.5u W=5u AS=1.7p AD=1.7p PS=10.68u
 + PD=10.68u rfmode=0
 M$29 VDD \$27 \$6 VDD sg13_lv_pmos L=0.13u W=1u AS=0.34p AD=0.34p PS=2.68u
 + PD=2.68u rfmode=0
@@ -29,7 +29,7 @@ M$31 VDD \$26 \$27 VDD sg13_lv_pmos L=0.13u W=1u AS=0.34p AD=0.34p PS=2.68u
 + PD=2.68u rfmode=0
 M$32 VDD di_en \$26 VDD sg13_lv_pmos L=0.13u W=1u AS=0.34p AD=0.34p PS=2.68u
 + PD=2.68u rfmode=0
-R$33 \$1 \$7 VSS rppd w=0.5u l=8.5u ps=0u b=0 m=1
+R$33 \$2 \$7 VSS rppd w=0.5u l=8.5u ps=0u b=0 m=1
 R$34 ibias_100u vbn_buf VSS rhigh w=0.5u l=32u ps=0u b=0 m=1
-R$35 \$1 vbg_buf VSS rhigh w=0.5u l=32u ps=0u b=0 m=1
+R$35 \$2 vbg_buf VSS rhigh w=0.5u l=32u ps=0u b=0 m=1
 .ENDS vco_bias

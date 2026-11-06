@@ -1,4 +1,4 @@
-* Extracted by KLayout with SG13G2 LVS runset on : 03/11/2026 23:36
+* Extracted by KLayout with SG13G2 LVS runset on : 06/11/2026 09:38
 
 .SUBCKT vco_var VSS rf_n rf_p vtune
 C$1 rf_p vtune rf_n VSS sg13_hv_svaricap w=3.74u l=0.3u Nx=7
