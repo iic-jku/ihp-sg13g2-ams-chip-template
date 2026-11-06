@@ -14,7 +14,7 @@ Institute for Integrated Circuits and Quantum Computing, Johannes Kepler Univers
 
 <!-- /template-only -->
 > [!IMPORTANT]
-> This repository requires the [IIC-OSIC-TOOLS](https://github.com/iic-jku/IIC-OSIC-TOOLS) container with tag `2026.09` or later.
+> This repository requires the [IIC-OSIC-TOOLS](https://github.com/iic-jku/IIC-OSIC-TOOLS) container with tag `2026.11` or later.
 
 
 <!-- template-only -->
