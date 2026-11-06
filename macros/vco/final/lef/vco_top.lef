@@ -11,7 +11,7 @@ MACRO vco_top
     ANTENNAGATEAREA 0.195000 ;
     PORT
       LAYER Metal3 ;
-        RECT 0.000 16.100 5.185 16.500 ;
+        RECT 0.000 32.590 30.350 32.890 ;
     END
   END di_en
   PIN ibias_100u
@@ -19,7 +19,7 @@ MACRO vco_top
     ANTENNADIFFAREA 1.190000 ;
     PORT
       LAYER Metal3 ;
-        RECT 0.000 18.500 5.420 18.900 ;
+        RECT 0.000 33.100 42.645 33.400 ;
     END
   END ibias_100u
   PIN vtune
@@ -73,11 +73,10 @@ MACRO vco_top
       LAYER Metal2 ;
         RECT 0.735 3.565 95.865 74.800 ;
       LAYER Metal3 ;
-        RECT 0.735 19.110 95.800 74.825 ;
-        RECT 5.630 18.290 95.800 19.110 ;
-        RECT 0.735 16.710 95.800 18.290 ;
-        RECT 5.395 15.890 95.800 16.710 ;
-        RECT 0.735 14.305 95.800 15.890 ;
+        RECT 0.735 33.610 95.800 74.825 ;
+        RECT 42.855 32.890 95.800 33.610 ;
+        RECT 30.560 32.380 95.800 32.890 ;
+        RECT 0.735 14.305 95.800 32.380 ;
         RECT 0.735 2.695 58.990 14.305 ;
         RECT 60.010 2.905 82.990 14.305 ;
         RECT 60.010 2.695 70.990 2.905 ;

@@ -1,4 +1,4 @@
-** sch_path: /foss/designs/ihp-sg13g2-ams-chip-template/macros/vco/schematic/xschem/vco_bias.sch
+** sch_path: /foss/designs/_wt/ihp-sg13g2-ams-chip-template-rf/macros/vco/schematic/xschem/vco_bias.sch
 .subckt vco_bias ibias_100u di_en VDD VSS vbg_buf vbn_buf
 *.PININFO VDD:B VSS:B di_en:I ibias_100u:I vbn_buf:B vbg_buf:B
 MMPi1 en_b di_en VDD VDD sg13_lv_pmos w=1u l=0.13u ng=1
@@ -20,4 +20,12 @@ MMCn2 VSS vbn_buf VSS VSS sg13_lv_nmos w=40u l=10u ng=5
 RRf vbg_int vbg_buf 94.929k $SUB=VSS $[rhigh] w=0.5e-6 l=32e-6 b=0
 MMCg1 VSS vbg_buf VSS VSS sg13_lv_nmos w=40u l=10u ng=5
 MMCg2 VSS vbg_buf VSS VSS sg13_lv_nmos w=40u l=10u ng=5
+MMDn1 VSS VSS VSS VSS sg13_lv_nmos w=2.5u l=0.5u ng=1
+MMDn2 VSS VSS VSS VSS sg13_lv_nmos w=2.5u l=0.5u ng=1
+MMDp1 VDD VDD VDD VDD sg13_lv_pmos w=5u l=0.5u ng=1
+MMDp2 VDD VDD VDD VDD sg13_lv_pmos w=5u l=0.5u ng=1
+MMDp3 VDD VDD VDD VDD sg13_lv_pmos w=5u l=0.5u ng=1
+MMDp4 VDD VDD VDD VDD sg13_lv_pmos w=1u l=0.13u ng=1
+CCg1 vbg_buf VSS cap_cmim w=19.5e-6 l=19.1e-6
+CCg2 vbg_buf VSS cap_cmim w=13.6e-6 l=7.28e-6
 .ends

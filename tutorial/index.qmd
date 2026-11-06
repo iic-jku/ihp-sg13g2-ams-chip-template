@@ -1332,7 +1332,7 @@ The core follows a published design, the 27 GHz cross-coupled VCO of Jung and Pa
 | `vco_ind` | the center-tapped tank coil: the PDK `inductor3` for LVS, the lumped-element model `vco_ind_le` for simulation |
 | `vco_var` | the varactor array: three `sg13_hv_svaricap`, gates on the tank, wells on `vtune` |
 | `vco_buf` | AC-coupled differential output buffer with 50 $\Omega$ back-termination |
-| `vco_bias` | the enable logic and the two bias voltages of the buffer, each behind an RC low-pass filter |
+| `vco_bias` | the enable logic, the two bias voltages of the buffer, each behind an RC low-pass filter, and the RF decoupling of `vbg_buf` |
 
 : Cells of the `vco` macro. {#tbl-vco-cells tbl-colwidths="[15,85]"}
 
@@ -1482,7 +1482,7 @@ The gaps have three reasons:
 
 The KLayout `macro` level of `klayout-drc` leaves out the density rules, and with them rules a macro has to meet on its own, such as the minimum metal areas `Mn.d` and `pSD.b`. So `klayout-verify-all` also runs `klayout-drc-regular` on `TOP`, which fails on any rule but the global densities that only the chip's fill can meet.
 
-`magic-drc` does not pass: `vco_buf`, `vco_var`, `vco_core` and `vco_top` report `LU.d` and `Cnt.a` on `sg13_hv_svaricap` and `MIM.e` and `Slt.c` on `cap_cmim`. A bare PCell of each, with none of this macro's wiring, reports the same rules and KLayout passes them, so they belong to the PDK's cells or Magic's rule deck, as the inverter's `NBL.f` does, and get fixed upstream. Until then `magic-verify-all` and `make all` stop at the first of them, so run the targets after it by hand.
+`magic-drc` does not pass: `vco_bias`, `vco_buf`, `vco_var`, `vco_core` and `vco_top` report `LU.d` and `Cnt.a` on `sg13_hv_svaricap` and `MIM.e` and `Slt.c` on `cap_cmim`. A bare PCell of each, with none of this macro's wiring, reports the same rules and KLayout passes them, so they belong to the PDK's cells or Magic's rule deck, as the inverter's `NBL.f` does, and get fixed upstream. Until then `magic-verify-all` and `make all` stop at the first of them, so run the targets after it by hand.
 
 ### Parasitic Extraction at 20 GHz
 

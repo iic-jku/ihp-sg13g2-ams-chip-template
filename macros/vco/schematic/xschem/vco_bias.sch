@@ -11,7 +11,8 @@ MN1 and MP1 copy the reference into MP2, which sets vbg_int to Vgs(MN3) + 100 uA
 Rn and MCn1/2 (95 kOhm, 9.4 pF), Rf and MCg1/2 (95 kOhm, 10 pF) filter both buffer biases
 at about 170 kHz: their noise moves the buffer's input capacitance, which the tank sees.
 MCn1/2 and MCg1/2 are NMOS gate capacitors, eight times denser than MIM.
-di_en low: MNd0 and MNd1 pull the NMOS gates to VSS, MPd the PMOS gates to VDD.} 2500 -1440 0 0 0.3 0.3 {}
+The channel resistance of MCg1/2 limits them at RF, so Cg1 and Cg2 (cap_cmim, about 0.7 pF) hold vbg_buf there.\nMDn and MDp: end dummies of the mirrors, and fill of the PMOS row, with every terminal on the rail.
+di_en low: MNd0 and MNd1 pull the NMOS gates to VSS, MPd the PMOS gates to VDD.} 2500 -1500 0 0 0.3 0.3 {}
 N 2280 -1320 2400 -1320 {lab=VDD}
 N 2280 -280 2400 -280 {lab=VSS}
 N 580 -680 620 -680 {lab=VDD}
@@ -306,3 +307,85 @@ model=sg13_lv_nmos
 spiceprefix=X}
 C {devices/lab_pin.sym} 2540 -940 1 0 {name=l18 sig_type=std_logic lab=VSS}
 C {devices/iopin.sym} 2600 -1080 0 0 {name=p7 lab=vbg_buf}
+C {sg13g2_pr/sg13_lv_nmos.sym} 2440 -760 0 0 {name=MDn1
+l=0.5u
+w=2.5u
+ng=1
+m=1
+model=sg13_lv_nmos
+spiceprefix=X}
+C {devices/lab_pin.sym} 2420 -760 0 0 {name=l20 sig_type=std_logic lab=VSS}
+C {devices/lab_pin.sym} 2460 -790 3 0 {name=l21 sig_type=std_logic lab=VSS}
+C {devices/lab_pin.sym} 2460 -730 1 0 {name=l22 sig_type=std_logic lab=VSS}
+C {devices/lab_pin.sym} 2460 -760 0 1 {name=l23 sig_type=std_logic lab=VSS}
+C {sg13g2_pr/sg13_lv_nmos.sym} 2560 -760 0 0 {name=MDn2
+l=0.5u
+w=2.5u
+ng=1
+m=1
+model=sg13_lv_nmos
+spiceprefix=X}
+C {devices/lab_pin.sym} 2540 -760 0 0 {name=l24 sig_type=std_logic lab=VSS}
+C {devices/lab_pin.sym} 2580 -790 3 0 {name=l25 sig_type=std_logic lab=VSS}
+C {devices/lab_pin.sym} 2580 -730 1 0 {name=l26 sig_type=std_logic lab=VSS}
+C {devices/lab_pin.sym} 2580 -760 0 1 {name=l27 sig_type=std_logic lab=VSS}
+C {sg13g2_pr/sg13_lv_pmos.sym} 2440 -600 0 0 {name=MDp1
+l=0.5u
+w=5u
+ng=1
+m=1
+model=sg13_lv_pmos
+spiceprefix=X}
+C {devices/lab_pin.sym} 2420 -600 0 0 {name=l28 sig_type=std_logic lab=VDD}
+C {devices/lab_pin.sym} 2460 -630 3 0 {name=l29 sig_type=std_logic lab=VDD}
+C {devices/lab_pin.sym} 2460 -570 1 0 {name=l30 sig_type=std_logic lab=VDD}
+C {devices/lab_pin.sym} 2460 -600 0 1 {name=l31 sig_type=std_logic lab=VDD}
+C {sg13g2_pr/sg13_lv_pmos.sym} 2560 -600 0 0 {name=MDp2
+l=0.5u
+w=5u
+ng=1
+m=1
+model=sg13_lv_pmos
+spiceprefix=X}
+C {devices/lab_pin.sym} 2540 -600 0 0 {name=l32 sig_type=std_logic lab=VDD}
+C {devices/lab_pin.sym} 2580 -630 3 0 {name=l33 sig_type=std_logic lab=VDD}
+C {devices/lab_pin.sym} 2580 -570 1 0 {name=l34 sig_type=std_logic lab=VDD}
+C {devices/lab_pin.sym} 2580 -600 0 1 {name=l35 sig_type=std_logic lab=VDD}
+C {sg13g2_pr/sg13_lv_pmos.sym} 2680 -600 0 0 {name=MDp3
+l=0.5u
+w=5u
+ng=1
+m=1
+model=sg13_lv_pmos
+spiceprefix=X}
+C {devices/lab_pin.sym} 2660 -600 0 0 {name=l36 sig_type=std_logic lab=VDD}
+C {devices/lab_pin.sym} 2700 -630 3 0 {name=l37 sig_type=std_logic lab=VDD}
+C {devices/lab_pin.sym} 2700 -570 1 0 {name=l38 sig_type=std_logic lab=VDD}
+C {devices/lab_pin.sym} 2700 -600 0 1 {name=l39 sig_type=std_logic lab=VDD}
+C {sg13g2_pr/sg13_lv_pmos.sym} 2800 -600 0 0 {name=MDp4
+l=0.13u
+w=1u
+ng=1
+m=1
+model=sg13_lv_pmos
+spiceprefix=X}
+C {devices/lab_pin.sym} 2780 -600 0 0 {name=l40 sig_type=std_logic lab=VDD}
+C {devices/lab_pin.sym} 2820 -630 3 0 {name=l41 sig_type=std_logic lab=VDD}
+C {devices/lab_pin.sym} 2820 -570 1 0 {name=l42 sig_type=std_logic lab=VDD}
+C {devices/lab_pin.sym} 2820 -600 0 1 {name=l43 sig_type=std_logic lab=VDD}
+C {sg13g2_pr/cap_cmim.sym} 2700 -1000 0 0 {name=Cg1
+model=cap_cmim
+w=19.5e-6
+l=19.1e-6
+m=1
+spiceprefix=X}
+C {devices/lab_pin.sym} 2700 -1030 3 0 {name=l44 sig_type=std_logic lab=vbg_buf}
+C {devices/lab_pin.sym} 2700 -970 1 0 {name=l45 sig_type=std_logic lab=VSS}
+C {sg13g2_pr/cap_cmim.sym} 2820 -1000 0 0 {name=Cg2
+model=cap_cmim
+w=13.6e-6
+l=7.28e-6
+m=1
+spiceprefix=X}
+C {devices/lab_pin.sym} 2820 -1030 3 0 {name=l46 sig_type=std_logic lab=vbg_buf}
+C {devices/lab_pin.sym} 2820 -970 1 0 {name=l47 sig_type=std_logic lab=VSS}
