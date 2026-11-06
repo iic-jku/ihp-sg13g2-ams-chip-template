@@ -41,6 +41,7 @@ This tutorial is a step-by-step walk-through of the open-source analog mixed-sig
   - Simulation with [Icarus Verilog](https://github.com/steveicarus/iverilog) and [cocotb](https://github.com/cocotb/cocotb)
   - Viewing waveforms with [GTKWave](https://github.com/gtkwave/gtkwave) and [Surfer](https://gitlab.com/surfer-project/surfer)
   - Synthesis, placement, routing, and verification with [Yosys](https://github.com/YosysHQ/yosys), [OpenROAD](https://github.com/The-OpenROAD-Project/OpenROAD), and [LibreLane](https://github.com/librelane/librelane)
+  - Logic equivalence check of the netlist against the RTL with [EQY](https://github.com/YosysHQ/eqy)
 - [Analog macro design](#sec-analog)
   - Schematic entry in [Xschem](https://github.com/StefanSchippers/xschem)
   - Simulation with [Ngspice](https://github.com/danchitnis/ngspice-sf-mirror) and [VACASK](https://codeberg.org/arpadbuermen/VACASK)
@@ -91,7 +92,7 @@ Numerous open-source chip design tools cover the entire development workflow for
 ## IIC-OSIC-TOOLS Overview
 
 @fig-tools-overview shows a rough overview of the most important tools in the IIC-OSIC-TOOLS container. Additional tools are also included, which are documented on the associated [GitHub page](https://github.com/iic-jku/IIC-OSIC-TOOLS).
-The open-source AMS flow used in this tutorial relies on several tools, namely [Xschem](https://github.com/StefanSchippers/xschem), [Magic](https://github.com/rtimothyedwards/magic), [Netgen](https://github.com/rtimothyedwards/netgen), [KLayout](https://github.com/KLayout/klayout), [Ngspice](https://github.com/danchitnis/ngspice-sf-mirror), [VACASK](https://codeberg.org/arpadbuermen/VACASK), [CACE](https://github.com/fossi-foundation/cace), [LibreLane](https://github.com/librelane/librelane), [Yosys](https://github.com/YosysHQ/yosys), [OpenROAD](https://github.com/The-OpenROAD-Project/OpenROAD), [Verilator](https://github.com/verilator/verilator), [cocotb](https://github.com/cocotb/cocotb), [GTKWave](https://github.com/gtkwave/gtkwave), and [Surfer](https://gitlab.com/surfer-project/surfer).
+The open-source AMS flow used in this tutorial relies on several tools, namely [Xschem](https://github.com/StefanSchippers/xschem), [Magic](https://github.com/rtimothyedwards/magic), [Netgen](https://github.com/rtimothyedwards/netgen), [KLayout](https://github.com/KLayout/klayout), [Ngspice](https://github.com/danchitnis/ngspice-sf-mirror), [VACASK](https://codeberg.org/arpadbuermen/VACASK), [CACE](https://github.com/fossi-foundation/cace), [LibreLane](https://github.com/librelane/librelane), [Yosys](https://github.com/YosysHQ/yosys), [EQY](https://github.com/YosysHQ/eqy), [OpenROAD](https://github.com/The-OpenROAD-Project/OpenROAD), [Verilator](https://github.com/verilator/verilator), [cocotb](https://github.com/cocotb/cocotb), [GTKWave](https://github.com/gtkwave/gtkwave), and [Surfer](https://gitlab.com/surfer-project/surfer).
 The container also ships with four PDKs: [SkyWater sky130A](https://github.com/rtimothyedwards/open_pdks), [GlobalFoundries gf180mcuD](https://github.com/rtimothyedwards/open_pdks), [IHP ihp-sg13cmos5l](https://github.com/IHP-GmbH/ihp-sg13cmos5l) and [IHP ihp-sg13g2](https://github.com/IHP-GmbH/IHP-Open-PDK) used by this template.
 
 ![Overview of the most important open-source tools and PDKs shipped with the IIC-OSIC-TOOLS container.](fig/tools_overview/tools_overview.svg){#fig-tools-overview}
@@ -568,6 +569,30 @@ A post-layout run simulates every transistor of the macro. In the IIC-OSIC-TOOLS
 The testbench uses looser Ngspice tolerances than the analog macro (`reltol=1e-3 abstol=1e-12 gmin=1e-12 rshunt=1e14`). Full-RC extraction splits the nets into fragments, and some of the resulting nodes have no DC path to ground, so with the analog macro's settings the post-layout run aborts at the initial timepoint with `Timestep too small`. The gate-level XSPICE run gives the same result either way.
 :::
 
+## Logic Equivalence Check {#sec-lec}
+
+A gate-level simulation checks the netlist only for the stimuli of its testbench. A logic equivalence check (LEC) needs no testbench: a formal solver proves that the netlist does what the RTL does, for every input sequence. It catches a netlist that no longer matches the RTL, for example because the RTL was edited after the last `make build-top`, and any change of function by the flow.
+
+```sh
+make lec                         # final/nl/counter_top.nl.v against the RTL
+make lec LEC_NETLIST=<netlist>   # another netlist, e.g. the synthesis netlist of a run
+make lec-mutant                  # check that lec catches a difference
+```
+
+`make lec` writes an [EQY](https://github.com/YosysHQ/eqy) script to `flow/eqy/counter_top.eqy` and runs it in `flow/eqy/work/`. EQY pairs the signals of both designs by name, splits the design into partitions, and proves each of them. On the counter, these are 8 partitions, one per bit of `counter_value_o`, and the target exits with 0 only when all of them are equivalent. The RTL is read with a different front end than synthesis used, so that a front end that misreads the RTL cannot make the same mistake on both sides. The standard cells get their function from the Liberty file of the PDK, and a cell without a function fails the run.
+
+`make lec-mutant` swaps one `sg13g2_nand2_1` for a `sg13g2_nor2_1` in a copy of the netlist and passes only if `lec` then fails: a check that cannot fail proves nothing.
+
+::: {.callout-tip}
+## See it fail
+
+Change `COUNTER_MAX_DEFAULT` in `rtl/constants.sv` from 255 to 199 and run `make lec` without rebuilding. The netlist is now stale, and EQY reports bits 3, 6 and 7 of `counter_value_o` as not equivalent. The counterexample is the waveform `trace.vcd` in `flow/eqy/work/strategies/<partition>/sby/<partition>/engine_0/`. It holds the counter at 199 with `enable_i` high: the RTL wraps to 0 and the netlist steps to 200, and these are the three bits that differ. Change the constant back afterwards.
+:::
+
+::: {.callout-note}
+`make lec` has limits. It checks function, not timing, so static timing analysis and gate-level simulation stay. It treats every flop as clocked by one clock, so a flop on the wrong clock net still passes. A register the RTL leaves unknown (`X`), for example after deleting its reset, matches any netlist. And it can fail on a correct netlist: `sg13g2_dfrbpq_1` only resets to 0, so synthesis stores a register that resets to 1 inverted, and the match by name then compares the complement. Such a macro needs extra match rules.
+:::
+
 ## Lint, Build, Verify and Simulate Everything
 
 The full lint, build, verification, and simulation chain is run with the following command.
@@ -576,7 +601,7 @@ The full lint, build, verification, and simulation chain is run with the followi
 make all
 ```
 
-This calls `lint-verilog-all`, `build-fpga`, `build-top`, `magic-pex`, and `sim-all` in sequence. The simulations run after the build, so the gate-level simulations run on the netlists, the XSPICE model and the extracted netlist produced by this build. `klayout-pex` is commented out in the recipe, since it is a second full extraction that nothing in the flow consumes. DRC and LVS are already covered by the LibreLane verification steps, so no extra verification target is needed for the digital macro.
+This calls `lint-verilog-all`, `build-fpga`, `build-top`, `lec`, `lec-mutant`, `magic-pex`, and `sim-all` in sequence. The simulations run after the build, so the gate-level simulations run on the netlists, the XSPICE model and the extracted netlist produced by this build. `klayout-pex` is commented out in the recipe, since it is a second full extraction that nothing in the flow consumes. DRC and LVS are already covered by the LibreLane verification steps, so `lec` and `lec-mutant` are the only extra verification targets of the digital macro.
 
 # Analog Macro Implementation {#sec-analog}
 
@@ -1943,7 +1968,7 @@ Repeat @sec-digital for a 16-bit synchronous down-counter that wraps from 0 back
 1. Update the RTL ([`counter.sv`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/counter/rtl/counter.sv), [`counter_top.sv`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/counter/rtl/counter_top.sv), [`constants.sv`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/counter/rtl/constants.sv)). Change the bitwidth and turn the increment block into a decrement, with wrap-around from 0 to `CTR_MAX`.
 2. Update the testbenches in [`testbenches/verilog/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/counter/testbenches/verilog/), [`testbenches/cocotb/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/counter/testbenches/cocotb/), and [`testbenches/xschem/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/counter/testbenches/xschem/) to cover the new behaviour. Adjust the bus width in the waveform view files (`*.gtkw`, `*.surf.ron`) as well.
 3. Run `make sim-all` to validate the new RTL.
-4. Re-run the LibreLane flow with `make build-top`. Check the timing reports. A 16-bit counter at 50 MHz must still pass timing constraints.
+4. Re-run the LibreLane flow with `make build-top`. Check the timing reports. A 16-bit counter at 50 MHz must still pass timing constraints. Then run `make lec`, which proves the new netlist equivalent to the new RTL, now in 16 partitions (see @sec-lec).
 5. Update the bus range of the output pin in the Xschem symbol ([`counter_top.sym`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/counter/schematic/xschem/)), and re-run the gate-level Xschem simulation. The XSPICE model itself is regenerated automatically by `make build-top` (or manually with `make generate-xspice`), and the PEX symbol `counter_top_pex.sym` together with the extracted netlist by `make magic-pex`. Forgetting this step no longer costs you a debugging session: `make symbol-check` runs inside `generate-xspice` and names the eight ports the symbol is now missing. Run `make symbol-gl FORCE=1` in a scratch copy of the macro if you would rather read the widened pin off a fresh scaffold than edit the range by hand.
 
 ::: {.callout-tip}

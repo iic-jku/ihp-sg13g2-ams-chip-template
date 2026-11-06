@@ -671,6 +671,13 @@ make lec-mutant                  # check that lec catches a difference
 
 `lec-mutant` swaps the first `sg13g2_nand2_1` of the netlist for a `sg13g2_nor2_1` in a copy (`flow/eqy/mutant.nl.v`) and passes only if `lec` then fails. Run it after changing the script, to make sure the check can still fail.
 
+`lec` has limits:
+
+- It checks function, not timing. Static timing analysis and gate-level simulation stay.
+- It treats every flop as clocked by one clock, so a flop on the wrong clock net still passes.
+- A register the RTL leaves unknown (`X`) matches any netlist, because EQY takes an `X` in the RTL as don't-care. Deleting the reset from the RTL of the counter still passes against the old netlist.
+- It can fail on a correct netlist. `sg13g2_dfrbpq_1` only resets to 0, so synthesis stores a register that resets to 1 inverted, and the match by name then compares the complement. Such a macro needs extra match rules. Variants of the counter with an asynchronous reset, an internal register or a small FSM pass without any.
+
 LibreLane has an equivalence step of its own (`Yosys.EQY`, enabled with `RUN_EQY`), but it skips every PDK other than sky130A, which is why the macro runs EQY from its Makefile. `lec` was tested with IIC-OSIC-TOOLS `2026.10`.
 
 
@@ -682,10 +689,11 @@ Lints, builds, verifies and simulates the whole macro:
 - `build-fpga`
 - `build-top`
 - `lec`
+- `lec-mutant`
 - `magic-pex`
 - `sim-all`
 
-Linting runs first to fail fast on structural RTL issues. `lec` proves the netlist of this build equivalent to the RTL. The simulations run **after** the build, so the gate-level simulations (`sim-gl-cocotb`, `sim-gl-xschem`) run on the netlists and the XSPICE model produced by this build, not on those of a previous one. `magic-pex` sits between the two, so the post-layout netlist the Xschem testbench includes is extracted from the GDS of this build as well. `klayout-pex` is commented out in the recipe: it works (see [Parasitic Extraction (PEX)](#parasitic-extraction-pex)), but it is a second full extraction that nothing in the flow consumes. The DRC and LVS verification is done within the LibreLane flow.
+Linting runs first to fail fast on structural RTL issues. `lec` proves the netlist of this build equivalent to the RTL, and `lec-mutant` checks that this proof can fail. The simulations run **after** the build, so the gate-level simulations (`sim-gl-cocotb`, `sim-gl-xschem`) run on the netlists and the XSPICE model produced by this build, not on those of a previous one. `magic-pex` sits between the two, so the post-layout netlist the Xschem testbench includes is extracted from the GDS of this build as well. `klayout-pex` is commented out in the recipe: it works (see [Parasitic Extraction (PEX)](#parasitic-extraction-pex)), but it is a second full extraction that nothing in the flow consumes. The DRC and LVS verification is done within the LibreLane flow.
 
 ```sh
 make all
