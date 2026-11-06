@@ -676,7 +676,7 @@ make lec-mutant                  # check that lec catches a difference
 - It checks function, not timing. Static timing analysis and gate-level simulation stay.
 - It treats every flop as clocked by one clock, so a flop on the wrong clock net still passes.
 - A register the RTL leaves unknown (`X`) matches any netlist, because EQY takes an `X` in the RTL as don't-care. Deleting the reset from the RTL of the counter still passes against the old netlist.
-- It can fail on a correct netlist. `sg13g2_dfrbpq_1` only resets to 0, so synthesis stores a register that resets to 1 inverted, and the match by name then compares the complement. Such a macro needs extra match rules. Variants of the counter with an asynchronous reset, an internal register or a small FSM pass without any.
+- It pairs registers by name and has no time limit, so it can fail on a correct netlist or not finish. `sg13g2_dfrbpq_1` only resets to 0, so synthesis stores a register that resets to 1 inverted, and the match by name then compares the complement. A Gray counter with a binary register next to its Gray output fails, and at 16 bits some partitions were still open after 10 minutes. Such a macro needs extra match rules. Variants of the counter with an asynchronous reset, a pipeline stage, a small FSM or only a Gray register pass without any.
 
 LibreLane has an equivalence step of its own (`Yosys.EQY`, enabled with `RUN_EQY`), but it skips every PDK other than sky130A, which is why the macro runs EQY from its Makefile. `lec` was tested with IIC-OSIC-TOOLS `2026.10`.
 
