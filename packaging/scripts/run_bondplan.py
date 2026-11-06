@@ -19,9 +19,9 @@
 #   7. writes the bondplan GDS, a bond report (Markdown or CSV) and
 #      zero-border PNG / SVG images.
 #
-# Usage (from the packaging folder):
-#   python3 scripts/run_bondplan.py config.yaml
-#   klayout -b -r scripts/run_bondplan.py -rd config=config.yaml
+# Usage (from the packaging folder, `make bondplan` passes both values):
+#   python3 scripts/run_bondplan.py config.yaml DESIGN_NAME=<top> VERSION=<version>
+#   DESIGN_NAME=<top> VERSION=<version> klayout -b -r scripts/run_bondplan.py -rd config=config.yaml
 # =============================================================================
 
 import sys
@@ -44,7 +44,7 @@ except ImportError:
 # ---------------------------------------------------------------------------
 
 DEFAULTS = {
-    "DESIGN_NAME": "design",
+    "DESIGN_NAME": None,            # pass DESIGN_NAME=<top> or set it in the env
     "VERSION": None,                # pass VERSION=<v> or set it in the env
     "DIE_CELL": None,                   # default: top cell of DIE_GDS
     "DIE_EXTRACT_CELL": None,           # default: keep original cell name
@@ -139,6 +139,11 @@ def load_config(path, overrides=None):
     merged.update(overrides or {})              # command line KEY=VALUE
     if not merged["VERSION"]:                   # the Makefile exports it
         merged["VERSION"] = os.environ.get("VERSION")
+    if not merged["DESIGN_NAME"]:
+        merged["DESIGN_NAME"] = os.environ.get("DESIGN_NAME")
+    if not merged["DESIGN_NAME"]:
+        die("no design name is set - run 'make bondplan' or pass "
+            "DESIGN_NAME=<top cell>")
 
     subst = {"design": str(merged["DESIGN_NAME"])}
     if merged["VERSION"]:

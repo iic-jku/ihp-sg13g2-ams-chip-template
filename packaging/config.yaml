@@ -2,28 +2,25 @@
 # SPDX-License-Identifier: Apache-2.0 WITH SHL-2.1
 #
 # =============================================================================
-# Bondplan configuration for the ihp-sg13g2 AMS chip template
+# Bondplan configuration of the chip (ihp-sg13g2 Open-PDK)
 #
 # Consumed by scripts/run_bondplan.py (run from this folder):
-#   python3 scripts/run_bondplan.py config.yaml
-#   klayout -b -r scripts/run_bondplan.py -rd config=config.yaml
+#   python3 scripts/run_bondplan.py config.yaml DESIGN_NAME=<top> VERSION=<version>
+#   DESIGN_NAME=<top> VERSION=<version> klayout -b -r scripts/run_bondplan.py -rd config=config.yaml
 #
 # Structured like a LibreLane config.yaml: flat UPPER_CASE keys, `dir::`
 # prefix for paths relative to this file, placement as location/orientation.
-# {design} in any value expands to DESIGN_NAME, {version} to the VERSION
-# passed on the command line (the Makefile does this, so there is no second
-# place where the version number has to be maintained).
+# {design} in any value expands to DESIGN_NAME, {version} to VERSION.
+# `make bondplan` passes both from the Makefile (TOP and VERSION), so neither is set here.
 # =============================================================================
 
 meta:
   version: 1
   flow: Bondplan
 
-DESIGN_NAME: chip_top
-
 # --- Die (chip) --------------------------------------------------------------
 DIE_GDS: dir::../layout/{design}_logo_fill.gds.gz
-# DIE_CELL: chip_top_logo_fill    # default: top cell of DIE_GDS
+# DIE_CELL: "{design}_logo_fill"  # default: top cell of DIE_GDS
 
 # Layers copied into the extracted die view (IHP SG13G2):
 DIE_EXTRACT_LAYERS: ["9/0", "133/0", "134/0"]   # Passiv, TopVia2, TopMetal2

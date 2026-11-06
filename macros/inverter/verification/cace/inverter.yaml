@@ -6,7 +6,7 @@
 #--------------------------------------------------------------
 
 name:           inverter
-description:    Inverter macro for the ihp-sg13g2 chip template
+description:    Inverter macro on the ihp-sg13g2 Open-PDK
 PDK:            ihp-sg13g2
 
 cace_format:    5.2

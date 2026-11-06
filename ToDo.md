@@ -1,9 +1,17 @@
 ﻿# ToDo List
 
+- [ ] logic equivalence checking with Yosys (EQY)
+- [ ] integrate https://github.com/mgolser/Pad-Ring-Planer
+- [ ] update tutorial
+    - no sizing guidance for `DIE_AREA`/`CORE_AREA` or the core ring
+    - no explanation of `chip_top.sdc`
+    - no description of the MACROS entry structure
+    - no post-run checklist
 - [ ] add VCO RF macro in branch `add-rf-macro`
     - status and next steps: section Status in `macros/vco/README.md`
 - [ ] test and merge `hv-stdcell`: https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/test-hv-stdcell
-- [ ] check and merge `gdscheck-drc`: https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/pull/7
+- [ ] fix the Magic DRC upstream, `make regression`, `make build-all` and `make all` stop there until then: the `NBL.f`/`NBL.d` rules against the nBuLay ring of the `pmos` guard ring PCell (https://github.com/IHP-GmbH/IHP-Open-PDK/issues/954) and the subcell overlap errors in the IHP IO pads and the SRAM (flatglobs of https://github.com/IHP-GmbH/IHP-Open-PDK/issues/794), then drop the guard ring notes in the READMEs and the tutorial and regenerate the inverter Magic reports
+- [ ] add `gdscheck-drc-all` to the inverter `all` and get the chip `gdscheck-drc` of `make all` to pass once a gdscheck release with https://github.com/aesc-silicon/gdscheck/pull/51 (merged after 0.2.0, its `main` passes both inverter cells) replaces the `gdscheck@0.2.0` pin of the IIC-OSIC-TOOLS image
 - [ ] `ngspice` & `verilog` RTL Co-Simulation using `Xschem`: https://www.youtube.com/watch?v=PPd7jkcHOgA
 - [ ] add VACASK testbenches to inverter macro (update Makefile + README, see `add-vacask` branch)
 - [ ] add VACASK mixed-signal GL testbenches to counter macro (update Makefile + README, see `add-vacask` branch)

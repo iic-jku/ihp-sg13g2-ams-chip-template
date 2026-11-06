@@ -30,10 +30,12 @@ The three are cross-linked and are written against the design files, not the oth
 | [ihp-sg13g2-Open-PDK/sg13g2_ngspice_mc_mm_guide.md](ihp-sg13g2-Open-PDK/sg13g2_ngspice_mc_mm_guide.md) | How the ngspice model files fit together, what `mm_ok` and `num_sigmas` do, and which corner, Monte Carlo and mismatch runs are possible per device family. |
 | [sizing/](sizing/) | gm/ID techsweep plot overviews for the LV and HV MOS devices, the data behind the sizing notebooks in [macros/inverter/scripts/sizing/](../macros/inverter/scripts/sizing/). |
 
+<!-- template-only -->
 ## Other
 
 [ihp-structure-proposals/](ihp-structure-proposals/) holds four proposed submission-repo layouts for IHP shuttle chips (an ADC, an LNA, an MCU and an op-amp), contributed to the discussion around a common directory structure. They are PDK-independent. The generator script that produced them, `gen_structure.py`, is deliberately not tracked (see [.gitignore](../.gitignore)).
 
+<!-- /template-only -->
 ## Provenance and caveats
 
 - **The two PDK PDFs come from `libs.doc/doc/` of the PDK**, renamed to lower case to match the folder convention. Both are byte-identical to the copies the PDK ships as of 2026-08-25 (`IHP-Open-PDK @ bf898e9`, the PDK in the IIC-OSIC-TOOLS 2026.08 image): layout rules **Rev. 0.4 (2024-12-19)**, process specification **Rev. 1.2 (2023-12-20)**. The revision is on the title page of each document. A repo copy of a PDK document ages silently, so check that stamp against `$PDK_ROOT/$PDK/libs.doc/doc/` before letting one of these decide a rule.

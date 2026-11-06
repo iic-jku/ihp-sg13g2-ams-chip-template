@@ -3,7 +3,7 @@
 ## Automated Bondplan Generation
 
 The bondplan (die placed in the package cavity + all bondwires + pin table)
-is generated fully automatically by [scripts/run_bondplan.py](scripts/run_bondplan.py), driven by [config.yaml](config.yaml). The config is structured like a LibreLane `config.yaml`: flat `UPPER_CASE` keys, `dir::` paths relative to the config file, and placement as `location` / `orientation`. No new config style to learn. `{design}` in any value expands to `DESIGN_NAME`, so file and cell names follow a rename automatically.
+is generated fully automatically by [scripts/run_bondplan.py](scripts/run_bondplan.py), driven by [config.yaml](config.yaml). The config is structured like a LibreLane `config.yaml`: flat `UPPER_CASE` keys, `dir::` paths relative to the config file, and placement as `location` / `orientation`. No new config style to learn. `{design}` in any value expands to `DESIGN_NAME`, which `make bondplan` passes from `TOP` in the top-level `Makefile`, so file and cell names follow a rename automatically.
 
 ### Requirements
 
@@ -22,10 +22,10 @@ or directly:
 
 ```bash
 cd packaging
-python3 scripts/run_bondplan.py config.yaml VERSION=1.0.0
+python3 scripts/run_bondplan.py config.yaml DESIGN_NAME=chip_top VERSION=1.0.0
 ```
 
-Any config key can be overridden with `KEY=VALUE` on the command line. The Makefile passes its `VERSION` this way, so the version number lives in the Makefile only and never has to be maintained in `config.yaml`. It is available as the `{version}` placeholder (used in the `Die` title block field).
+Any config key can be overridden with `KEY=VALUE` on the command line. The Makefile passes `TOP` as `DESIGN_NAME` and its `VERSION` this way, so both live in the Makefile only and are not set in `config.yaml`. Without `DESIGN_NAME` the flow stops with an error. Both are also read from the environment, which is how to pass them to `klayout -b -r scripts/run_bondplan.py -rd config=config.yaml`. They are available as the `{design}` and `{version}` placeholders (both used in the `Die` title block field).
 
 ### Directory Structure
 
@@ -136,7 +136,7 @@ Everything reachable via a `{placeholder}` is **derived from the layouts and the
 | `{pad_pitch_um}`, `{pad_opening_um}` | detected `Passiv` bondpad openings |
 | `{max_wire_length_mm}`, `{min_wire_length_um}`, `{wire_count}`, `{min_gap_um}` | the generated bondwires / checker |
 | `{bondwire_width_um}` | `BONDWIRE_WIDTH` |
-| `{design}`, `{date}` | `DESIGN_NAME`, system date |
+| `{design}`, `{date}` | `DESIGN_NAME` (`TOP`, passed on the command line by the Makefile), system date |
 | `{version}` | `VERSION`, passed on the command line by the Makefile |
 
 The remaining fields are **manual entries**, assembly decisions the layout cannot know: `Request`, `MPW`, `Die-thickness`, `Qty packaged`, `Qty naked`, `Die Attach`, the wire material, the `LID` choice and any free-text notes.
@@ -171,7 +171,7 @@ Every key has a sensible default. A minimal config only needs `DIE_GDS`, `DIE_EX
 
 ### Porting to another Package / Chip
 
-The flow is not specific to this template chip. For a different chip or package you need: a die GDS with labeled `Passiv` pad openings, a package GDS whose footprint cell contains one lead polygon per pin plus numeric pin texts, and an updated `PINOUT`. Everything else (pad/lead detection, inner border, placement, checks, rendering) is derived from the geometry.
+The flow is not specific to this chip. For a different chip or package you need: a die GDS with labeled `Passiv` pad openings, a package GDS whose footprint cell contains one lead polygon per pin plus numeric pin texts, and an updated `PINOUT`. Everything else (pad/lead detection, inner border, placement, checks, rendering) is derived from the geometry.
 
 ## Useful Links
 

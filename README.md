@@ -1,4 +1,5 @@
-﻿# An Open-Source Analog Mixed-Signal Chip Design Template & Tutorial for the ihp-sg13g2 Open-PDK
+﻿<!-- template-only -->
+# An Open-Source Analog Mixed-Signal Chip Design Template & Tutorial for the ihp-sg13g2 Open-PDK
 
 [![License: Solderpad Hardware License v2.1](https://img.shields.io/badge/License-Solderpad%20Hardware%20License%20v2.1-blue.svg)](LICENSE)
 [![Quarto Publish](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/actions/workflows/quarto-publish.yml/badge.svg?branch=main)](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/actions/workflows/quarto-publish.yml)
@@ -11,9 +12,12 @@
 
 Institute for Integrated Circuits and Quantum Computing, Johannes Kepler University (JKU), Linz, Austria
 
+<!-- /template-only -->
 > [!IMPORTANT]
 > This repository requires the [IIC-OSIC-TOOLS](https://github.com/iic-jku/IIC-OSIC-TOOLS) container with tag `2026.10` or later.
 
+
+<!-- template-only -->
 <p align="center">
   <a href="render/img/chip_top_black.png">
     <img src="render/img/chip_top_black.png" alt="Chip render of the ihp-sg13g2 analog mixed-signal template chip (1.6 mm x 1.6 mm)" width=70%>
@@ -42,6 +46,7 @@ This Makefile-driven repository simulates, builds, and fully verifies (DRC, LVS,
 - [**Ngspice**](https://github.com/danchitnis/ngspice-sf-mirror), [**VACASK**](https://codeberg.org/arpadbuermen/VACASK) and [**CACE**](https://github.com/fossi-foundation/cace) for analog simulation
 - [**KLayout**](https://github.com/KLayout/klayout) for viewing and routing of the layout
 - [**Magic**](https://github.com/rtimothyedwards/magic) + [**Netgen**](https://github.com/rtimothyedwards/netgen) and [**KLayout**](https://github.com/KLayout/klayout) for DRC, LVS and PEX verification
+- [**gdscheck**](https://github.com/aesc-silicon/gdscheck) as a third, standalone DRC engine with its own rule decks
 - **SystemVerilog**, [**Verilator**](https://github.com/verilator/verilator), [**iverilog**](https://github.com/steveicarus/iverilog), [**cocotb**](https://github.com/cocotb/cocotb), [**GTKWave**](https://github.com/gtkwave/gtkwave) and [**Surfer**](https://gitlab.com/surfer-project/surfer) for linting and simulation of digital macros
 
 The repository is the starting point for your own custom silicon and provides a universal design flow solution: Just clone the repo, enter the IIC-OSIC-TOOLS container, and run `make all` to get a tapeout-ready analog mixed-signal chip. Focus on your design and do not worry about the tools and the design flow!
@@ -75,6 +80,7 @@ Examples based on this template are:
 - [Multi-Project Chip](https://github.com/iic-jku/gf180mcu-jku-projects) for the wafer.space gf180mcuD MPW run
 
 
+<!-- /template-only -->
 ## Chip Documentation
 
 A designer-oriented description of this chip can be found in [doc/](doc/):
@@ -266,7 +272,7 @@ A designer-oriented description of this chip can be found in [doc/](doc/):
 
 ## Xschem Configuration
 
-Xschem reads exactly one `xschemrc` at start-up, and that file decides which symbol libraries are visible and where netlists and simulation output are written. This template ships one per folder that holds schematics:
+Xschem reads exactly one `xschemrc` at start-up, and that file decides which symbol libraries are visible and where netlists and simulation output are written. This repository ships one per folder that holds schematics:
 
 | `xschemrc` | Belongs to |
 | --- | --- |
@@ -354,7 +360,7 @@ Solid arrows are direct `$(MAKE) <target>` calls within a single Makefile. Dashe
 At the top level, `make all` runs four steps in this order:
 
 1. `build-all` initialises the submodules and builds every component by calling its own `all` target: bondpad, logos, digital macro, analog macro, and finally the chip assembly with `build-top` (LibreLane, copy-back of all artifacts, logo and fill insertion, final GDS render).
-2. `magic-drc` runs the DRC of the final `chip_top` and `chip_top_logo_fill` GDS. The KLayout DRC is not part of `make all` to shorten the runtime. Run it separately with `klayout-drc-minimum` or `klayout-drc-regular`.
+2. `magic-drc` and `gdscheck-drc` run the DRC of the final `chip_top` and `chip_top_logo_fill` GDS. A violation stops `make all`, and both flag IHP's own cells until the fixes are in the container (see [Design Rule Check (DRC)](#design-rule-check-drc)). The KLayout DRC, the sign-off deck, is not part of `make all` to shorten the runtime. Run it separately with `klayout-drc-minimum` or `klayout-drc-regular`.
 3. `sim-all` runs the top-level RTL and gate-level simulations on the netlists produced by this build.
 4. `bondplan` generates the bonding diagram, the bondwires, and the pin table.
 
@@ -682,7 +688,7 @@ The FPGA part of that build emulates the macro on a board. It covers three board
 
 #### Build Analog Macros
 
-Each analog macro has its own `klayout-verify` and `magic-verify` targets that run DRC, LVS, and PEX for the top-level cell.
+Each analog macro has its own `klayout-verify` and `magic-verify` targets that run DRC, LVS, and PEX for the top-level cell, and a `gdscheck-drc` target for the gdscheck DRC.
 
 To build the inverter macro:
 
@@ -729,7 +735,7 @@ To add the chip logo (PNG -> GDS) and the fill structures on top of the LibreLan
 make add-logo-fill
 ```
 
-This calls `scripts/add_logo_fill.sh` and writes `layout/chip_top_logo_fill.gds.gz`. The step is also called from `make build-top`.
+This calls `scripts/add_logo_fill.sh` with `TOP` and writes `layout/chip_top_logo_fill.gds.gz`. The step is also called from `make build-top`.
 
 > [!NOTE]
 > In the future, it is planned to replace this script and Makefile target with a custom LibreLane step.
@@ -737,9 +743,9 @@ This calls `scripts/add_logo_fill.sh` and writes `layout/chip_top_logo_fill.gds.
 
 ### Design Rule Check (DRC)
 
-Runs DRC on the GDS layout in `layout/`. Both flows use `sak-drc.sh` and write their reports into per-cell run folders: `verification/drc/<CELL>.magic.drc/` (Magic) and `verification/drc/<CELL>.klayout.drc/` (KLayout, `.lyrdb`). The run folders are wiped at the start of each run, so they always reflect the latest run only.
+Runs DRC on the GDS layout in `layout/`. All three flows use `sak-drc.sh` and write their reports into per-cell run folders: `verification/drc/<CELL>.magic.drc/` (Magic), `verification/drc/<CELL>.klayout.drc/` (KLayout, `.lyrdb`) and `verification/drc/<CELL>.gdscheck.drc/` (gdscheck, `.lyrdb`). The run folders are wiped at the start of each run, so they always reflect the latest run only.
 
-The `DRC_LEVEL` parameter selects the KLayout DRC level (`sak-drc.sh -l`). It is ignored by `magic-drc`, since Magic has no selectable rule decks and always runs the full rule set compiled into the PDK's Magic tech file:
+The `DRC_LEVEL` parameter selects the KLayout DRC level and the gdscheck suite (`sak-drc.sh -l`). It is ignored by `magic-drc`, since Magic has no selectable rule decks and always runs the full rule set compiled into the PDK's Magic tech file:
 
 - `precheck` = the foundry precheck rule set and the pin checks (fast iteration)
 - `macro` = block-in-isolation sign-off: the full FEOL and BEOL rules with off-grid, angle, recommended and pin checks, without chip-level density, the extra rules and antenna (default)
@@ -758,6 +764,8 @@ For the IHP Open-PDK, `sak-drc.sh` passes `--precheck_drc --no_density --no_offg
 | Density (full-chip fill) | – | – | ✓ |
 | Antenna | – | – | ✓ |
 
+The `DRC_JOBS` parameter (`sak-drc.sh -j`) sets how many jobs one run uses at most. The default is 4, or the CPU count if lower, for KLayout and every CPU the container may use for gdscheck, which runs as one process with that many threads. Up to 4 jobs, `precheck` and `macro` run as one KLayout process with that many threads, and `regular` runs its four rule sets (main, extra rules, density and antenna) as parallel processes and writes the reports of the last three into the subfolders `maximal/`, `density/` and `antenna/` of the run folder. Above 4, `run_drc.py` splits the rule deck into its tables, one process each, and merges their reports into one. That only pays off for large layouts, for example `DRC_JOBS=8` to `16` for the full chip on a server, since every KLayout process needs about 0.5 GiB of RAM plus the layout.
+
 **KLayout DRC (minimum)** runs a pre-check (`precheck`) KLayout DRC on the final top-level layout with logo and fill structures:
 
 ```sh
@@ -768,6 +776,7 @@ make klayout-drc-minimum
 
 ```sh
 make klayout-drc-regular
+make klayout-drc-regular DRC_JOBS=16
 ```
 
 **KLayout DRC** runs a KLayout DRC at the selected `DRC_LEVEL`:
@@ -778,12 +787,43 @@ make klayout-drc CELL=chip_top
 make klayout-drc CELL=chip_top DRC_LEVEL=regular
 ```
 
-**Magic DRC** runs a Magic DRC with all subcells flattened (`sak-drc.sh -f "*"`):
+**Magic DRC** runs Magic's full DRC on the layout (`sak-drc.sh -m`), hierarchically and without flattening any cell:
 
 ```sh
 make magic-drc
 make magic-drc CELL=chip_top
 ```
+
+**gdscheck DRC** runs [gdscheck](https://github.com/aesc-silicon/gdscheck) (`sak-drc.sh -g`), a standalone DRC engine with its own IHP rule decks built into the binary. The DRC levels map onto its suites: `precheck` runs `precheck` (IHP's open-source precheck subset, which includes the density rules, so a single macro fails it), `macro` runs `core` (all geometric rules without density and antenna) and `regular` runs `main` (all rules, density and antenna included). The `GDSCHECK_SUITE` parameter (`sak-drc.sh -s`) replaces this mapping and also reaches the suites `density`, `antenna` and `recommended` (the advisory rules whose names end in `R`, not part of `main`). `gdscheck list-suites --process ihp-sg13g2` lists them. The `GDSCHECK_DECKS` parameter (`sak-drc.sh -D`) runs single rule decks instead of a suite, comma-separated, for example `activ,gatpoly` while working on those layers, and `gdscheck list-decks --process ihp-sg13g2` lists them. It cannot be combined with `GDSCHECK_SUITE`. The IHP layer decks include their fill and density rules, so a single cell can fail a deck run on a rule that `macro` does not check, for example the JKU logo on `M5.j` and `M5Fil.h` with `GDSCHECK_DECKS=metal5`.
+
+**gdscheck DRC (minimum)** runs the `precheck` suite on the final top-level layout with logo and fill structures:
+
+```sh
+make gdscheck-drc-minimum
+```
+
+**gdscheck DRC (regular)** runs the `main` suite on the final top-level layout with logo and fill structures:
+
+```sh
+make gdscheck-drc-regular
+```
+
+**gdscheck DRC** runs gdscheck at the selected `DRC_LEVEL`, `GDSCHECK_SUITE` or `GDSCHECK_DECKS`:
+
+```sh
+make gdscheck-drc
+make gdscheck-drc CELL=chip_top
+make gdscheck-drc CELL=chip_top_logo_fill GDSCHECK_SUITE=density
+make gdscheck-drc CELL=chip_top_logo_fill GDSCHECK_DECKS=metal1,via1
+```
+
+> [!NOTE]
+> KLayout is the sign-off DRC. Magic and gdscheck give a second and a third opinion, and both report violations in IHP's own cells that the KLayout deck passes:
+>
+> - The `SG13_dev` `pmos` PCell draws an nBuLay ring under its n+ tap ring when `guardRingType` is `nwell`, as in the inverter. Magic reports `NBL.f` between that ring and the PMOS diffusion inside it and `NBL.d` against the NWell next to it, and gdscheck 0.2.0 reports `NBL.f` (1 in `inverter`, 4 in `inverter_top`). The KLayout deck checks `NBL.f` only against P+ Activ in PWell, as IHP aligned it with the commercial deck in [IHP-Open-PDK#700](https://github.com/IHP-GmbH/IHP-Open-PDK/pull/700). Which reading is right is open in [IHP-Open-PDK#954](https://github.com/IHP-GmbH/IHP-Open-PDK/issues/954). gdscheck reads `NBL.f` like the KLayout deck since [aesc-silicon/gdscheck#51](https://github.com/aesc-silicon/gdscheck/pull/51), which came after 0.2.0.
+> - Read hierarchically, Magic reports "This layer can't abut or partially overlap between subcells" in IHP's IO pads, and overlap and `M2.d` errors in the SRAM macro, which flattening the SRAM's subcells removes ([IHP-Open-PDK#794](https://github.com/IHP-GmbH/IHP-Open-PDK/issues/794)).
+>
+> A flow stops on a violation of any engine it calls, so until the fixes are in the container the Magic DRC of the inverter stops `magic-verify`, `make regression`, `make build-all` and `make all`. To continue meanwhile, run the later steps directly (`magic-lvs`, `magic-pex`, `build-top`). Upstream calls gdscheck experimental, so a clean gdscheck run is no sign-off on its own.
 
 
 ### Export Schematic Netlist for LVS
@@ -973,7 +1013,7 @@ make bondplan                        # uses the default VERSION (1.0.0)
 make bondplan VERSION=2.1.0          # stamp another version on the sheet
 ```
 
-The `VERSION` variable is passed to the flow and printed in the title block (`DIE: CHIP_TOP - V.1.0.0`), so the version number is maintained in the Makefile only.
+`TOP` (as `DESIGN_NAME`) and `VERSION` are passed to the flow and printed in the title block (`DIE: CHIP_TOP - V.1.0.0`), so the design name and the version number are maintained in the Makefile only.
 
 The flow ([packaging/scripts/run_bondplan.py](packaging/scripts/run_bondplan.py)) is driven by [packaging/config.yaml](packaging/config.yaml), which holds the full package-pin-to-die-pad `PINOUT` in a LibreLane-style config format. It detects the die bondpads (`Passiv` openings and `TopMetal2.text` labels), places the die in the package cavity, draws the bondwires, and checks wire lengths, crossings, spacing, lead skew and analog guard clearances. Outputs:
 
@@ -985,16 +1025,16 @@ See [packaging/README.md](packaging/README.md) for the full flow documentation a
 
 <p align="center">
   <a href="packaging/render/chip_top_bondplan_white.png">
-    <img src="packaging/render/chip_top_bondplan_white.png" alt="Bonding diagram of the ihp-sg13g2 AMS template chip in a QFN32 package" width=70%>
+    <img src="packaging/render/chip_top_bondplan_white.png" alt="Bonding diagram of the chip in a QFN32 package" width=70%>
   </a>
   <br>
-  <em>Bonding diagram of the ihp-sg13g2 AMS template chip in a QFN32 package.</em>
+  <em>Bonding diagram of the chip in a QFN32 package.</em>
 </p>
 
 
 ### Build, Verify and Simulate All
 
-Runs `build-all` first, followed by Magic DRC for both `chip_top` and `chip_top_logo_fill`, then the chip simulations (`sim-all`) and finally generates the bondplan (`bondplan`) once all checks have passed:
+Runs `build-all` first, followed by the Magic and gdscheck DRC of both `chip_top` and `chip_top_logo_fill`, then the chip simulations (`sim-all`) and finally generates the bondplan (`bondplan`). A violation in either DRC stops the flow, see [Design Rule Check (DRC)](#design-rule-check-drc):
 
 ```sh
 make all
@@ -1045,7 +1085,7 @@ make release VERSION=2.1.0
 
 ### Regression
 
-The `regression` target is the project's end-to-end smoke test for the [IIC-OSIC-TOOLS](https://github.com/iic-jku/IIC-OSIC-TOOLS) environment. Its goal is to exercise **every tool and flow** in the template at least once with the **shortest possible runtime**. It is a tool/flow regression, not a design sign-off.
+The `regression` target is the project's end-to-end smoke test for the [IIC-OSIC-TOOLS](https://github.com/iic-jku/IIC-OSIC-TOOLS) environment. Its goal is to exercise **every tool and flow** in the repository at least once with the **shortest possible runtime**. It is a tool/flow regression, not a design sign-off.
 
 ```sh
 make regression
@@ -1058,6 +1098,7 @@ To keep the runtime low while still covering the full toolchain, the regression 
 - The counter macro is hardened with `librelane-magicdrc` (only **Magic DRC** enabled, the slower KLayout DRC is skipped). Netgen LVS still runs as part of the flow.
 - The chip top-level runs `librelane-nodrc`. All DRC checks are skipped to save runtime on the large top-level assembly. The macros and IP blocks are DRC-checked individually beforehand, so this only leaves the top-level routing/fill unchecked.
 - KLayout DRC (`sak-drc.sh`) is skipped inside the LibreLane runs, but is still exercised in the bondpad and logo IP builds, and in the inverter `klayout-verify`.
+- Magic DRC (`sak-drc.sh -m`) runs in the bondpad and logo IP builds and in the inverter `magic-verify`, where the regression stops until the fixes for IHP's own cells are in the container (see [Design Rule Check (DRC)](#design-rule-check-drc)). gdscheck DRC (`sak-drc.sh -g`) runs once, as `gdscheck-drc` of the bondpad, which passes it, so a broken gdscheck fails the regression.
 - Only **one** logo (`sg13g2_ip__jku`) is regenerated. It is the only step that exercises the PNG to GDS flow. The second logo (`sg13g2_ip__jku_names`) uses an identical toolchain and reuses its committed views.
 - Exactly **one** CACE parameter set is run (the AC VDD sweep `ac_params`, no Monte Carlo). Swap `ac_params` for `ac_mc_params` / `ac_mm_params` in the target to also exercise the Monte Carlo flow.
 
@@ -1069,6 +1110,7 @@ The following tools and flows are checked:
 | --- | --- |
 | git submodules | `init-submodules` |
 | KLayout scripting (bondpad generator), KLayout DRC, Magic DRC | `build-bondpad` |
+| gdscheck DRC (`sak-drc.sh -g`) | bondpad `gdscheck-drc` |
 | PNG to GDS logo generation, KLayout DRC, Magic DRC | `sg13g2_ip__jku all` (single logo) |
 | Xschem + ngspice (analog simulation) | inverter `sim-xschem` (`inverter_tb_dc_vout`) |
 | CACE (+ ngspice) | inverter CACE, single parameter set (`ac_params`) |
@@ -1119,24 +1161,35 @@ make all
 > The chip top-level testbench includes the counter XSPICE model `macros/counter/netlist/xspice/counter_top.xspice`, which `clean-all` removes. Run `make build-counter` (or the full `make all`) once before `make sim-gl-xschem`, otherwise the include fails.
 
 
+<!-- template-only -->
 ## Start a New Chip from This Template
 
-This repository is itself the template for a new chip. Fork it or copy it, then work outwards from the top level:
-
-1. Run `make clean-all` so that no output of the example chip is left behind.
-2. Set `TOP` in the `Makefile` and `DESIGN` in [`scripts/add_logo_fill.sh`](scripts/add_logo_fill.sh).
-3. Rename the RTL in [`rtl/`](rtl/), the Xschem schematic, symbols and testbenches in [`schematic/xschem/`](schematic/xschem/) and [`testbenches/`](testbenches/), and the plotting script in `testbenches/xschem/plot_simulations/`.
-4. Update [`flow/librelane/config.yaml`](flow/librelane/config.yaml): `DESIGN_NAME`, `VERILOG_FILES`, `CLOCK_PORT`, `DIE_AREA`, the `MACROS` entries with their instance placements, and the IO pad ring. Rename `flow/librelane/chip_top.sdc` and update the three `*_SDC_FILE` keys that point at it.
-5. Update [`packaging/config.yaml`](packaging/config.yaml): `DESIGN_NAME` and the `PINOUT` map. The `{design}` placeholder expands to `DESIGN_NAME`, so the bondplan output names follow automatically.
-6. Replace or remove the example macros under [`macros/`](macros/) and the logos under [`ip/`](ip/), and adjust `build-macros`, `build-logos` and `clean-all` in the `Makefile` to match.
-7. Update `CITATION.cff`, this `README.md` and the tutorial under [`tutorial/`](tutorial/).
-
-Then build from the clean tree:
+This repository is itself the template for a new chip. Create your own repository from it (**Use this template** on GitHub, a fork or a copy) and name it `ihp-sg13g2-<name>` after the chip, so that `git clone` gives its folder the same name. Clone it and run in the IIC-OSIC-TOOLS container:
 
 ```sh
-make clean-all
-make all
+make project NAME=<name> DRY_RUN=1   # list the changes, touch nothing
+make project NAME=<name>             # start the chip <name>
 ```
+
+`NAME` is a lowercase letter followed by lowercase letters, digits or underscores, and it must not be the name of a macro or an IP. The target needs no PDK. It refuses to run in a git tree with uncommitted changes and in a checkout whose `origin` is this template, `FORCE=1` skips both checks. Every change is planned first, so a refused run leaves the tree untouched. Then the target:
+
+1. Runs `make clean`, which deletes the committed outputs of the template chip. The macros and IPs keep their committed views, so the new chip builds without rebuilding them.
+2. Removes what only makes sense in the template: `tutorial/`, `.github/workflows/quarto-publish.yml`, `doc/ihp-structure-proposals/`, `CITATION.cff`, the content of `release/`, and every block between `template-only` markers in this README, `AGENTS.md`, the `Makefile` and the configuration files. Figures that a remaining file still shows move to `doc/fig/`, and `ToDo.md` starts empty.
+3. Renames `chip_top`, `chip_core` and `chip_logo` to `<name>_top`, `<name>_core` and `<name>_logo`, in file names and in file contents.
+4. Gives this README a new header that records the template version, and deletes itself (`scripts/new_project.py` and the `project` target).
+5. Checks that no old name, no link into a deleted path and no marker is left, runs `reuse lint` when it is installed, and lists what is left for you: the die area, the pad ring and the macro placements in [`flow/librelane/config.yaml`](flow/librelane/config.yaml), the `PINOUT` in [`packaging/config.yaml`](packaging/config.yaml), the chip documentation in [`doc/`](doc/), and the `regression` target once you replace the example macros. When the folder is not named `ihp-sg13g2-<name>`, the list also gives the steps to rename it together with the GitHub repository and `origin`.
+
+Review the result, commit it and build the new chip:
+
+```sh
+git status             # undo: git reset --hard && git clean -fd
+git add -A
+git commit -m "started <name> from ihp-sg13g2-ams-chip-template"
+make init-submodules   # the logo and fill step needs flow/artistic
+make build-top         # or make all, which also fetches it
+```
+
+The example macros and the logos stay, and two of the logos put the template's identity on the die: [`ip/sg13g2_ip__jku_names/`](ip/sg13g2_ip__jku_names/) draws the names of the template authors and `flow/logo/chip_logo_mono.png` the "AMS CHIP" artwork. Replace them, and the JKU logo in [`ip/sg13g2_ip__jku/`](ip/sg13g2_ip__jku/) where it does not apply, before a tapeout. The tutorial walks through the same steps in [Start Your Own Chip](https://iic-jku.github.io/ihp-sg13g2-ams-chip-template/index.html#sec-new-chip).
 
 The two example macros are themselves templates for the two kinds of block. `make macro FROM=<macro> NAME=<name>` in [`macros/`](macros/) starts a new macro as a renamed copy of one of them, see [Start a New Macro from an Existing One](macros/README.md#start-a-new-macro-from-an-existing-one).
 
@@ -1179,6 +1232,7 @@ This project is funded by the JKU/SAL [IWS Lab](https://research.jku.at/de/proje
   </tr>
 </table>
 
+<!-- /template-only -->
 ## License
 
 Licensed under the **Solderpad Hardware License v2.1**, see [`LICENSE`](LICENSE).

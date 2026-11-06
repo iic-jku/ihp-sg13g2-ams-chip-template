@@ -2,7 +2,7 @@
 
 Guidance for coding agents and contributors working in this repo (a Makefile-driven analog mixed-signal chip on the ihp-sg13g2 Open-PDK).
 
-This repo is the ihp-sg13g2 AMS chip template or a chip copied from it. Items marked (template) describe the shipped example content (the `counter`, `inverter` and `vco` macros, the logos, the tutorial), which a derived chip renames, replaces or removes. `README.md` documents every top-level target, and `macros/README.md` and each `macros/<name>/README.md` document the macro targets.
+This repo is the ihp-sg13g2 AMS template or a chip started from it. Items marked (template) describe the shipped example content (the `counter`, `inverter` and `vco` macros, the logos), which a derived chip renames, replaces or removes. `README.md` documents every top-level target, and `macros/README.md` and each `macros/<name>/README.md` document the macro targets.
 
 ## Repository layout
 
@@ -18,7 +18,9 @@ This repo is the ihp-sg13g2 AMS chip template or a chip copied from it. Items ma
 - `schematic/xschem/`, `testbenches/xschem/`, `testbenches/cocotb/`: chip schematic, symbols and testbenches. Every folder holding schematics has its own `xschemrc`, see "Xschem Configuration" in `README.md`.
 - `layout/`, `netlist/`, `verification/`, `render/img/`: build outputs, committed. `packaging/` holds `config.yaml` and `scripts/run_bondplan.py` for `make bondplan` plus their committed outputs. `release/v.<VERSION>/` holds published versions.
 - `doc/`: hand-maintained `specifications.md`, `pinout.md` and `floorplan.md` plus tool and PDK notes. A number changed in `flow/librelane/config.yaml`, `rtl/` or `packaging/config.yaml` is mirrored there.
+<!-- template-only -->
 - `tutorial/` (template): the Quarto tutorial, `make -C tutorial` renders it locally.
+<!-- /template-only -->
 
 ## Environment and PDK
 
@@ -32,7 +34,7 @@ This repo is the ihp-sg13g2 AMS chip template or a chip copied from it. Items ma
 
 ```sh
 make help                          # targets and variables
-make all                           # build-all, magic-drc of chip_top and chip_top_logo_fill, sim-all, bondplan
+make all                           # build-all, Magic and gdscheck DRC of chip_top and chip_top_logo_fill, sim-all, bondplan
 make build-all                     # submodules, bondpad, logos, macros, build-top
 make build-top                     # librelane-nodrc, copy reports/GDS/netlists/render, add-logo-fill, render-gds
 make sim-rtl-cocotb                # chip RTL simulation (cocotb on Icarus Verilog)
@@ -40,6 +42,7 @@ make sim-all                       # RTL and gate-level cocotb, gate-level Xsche
 make klayout-drc-regular           # full KLayout DRC of layout/chip_top_logo_fill.gds.gz
 make klayout-verify CELL=<cell>    # KLayout DRC, LVS and PEX of layout/<cell>.gds.gz
 make magic-verify CELL=<cell>      # Magic DRC, Magic/Netgen LVS and Magic PEX
+make gdscheck-drc CELL=<cell>      # gdscheck DRC of layout/<cell>.gds.gz
 make regression                    # the CI smoke test
 make -C macros/counter lint-verilog-all     # Verilator lint (template macro)
 make -C macros/counter sim-rtl-verilog      # Icarus Verilog testbench
@@ -53,7 +56,8 @@ make -C macros/inverter all                 # KLayout and Magic DRC/LVS/PEX, LEF
 - `make all` and the `build-*` and `copy-*` targets overwrite committed outputs. Check `git status` afterwards and commit outputs only when they belong to the change.
 - The Xschem targets netlist in batch mode and run `ngspice -b`, so `plot` commands in a testbench `.control` block do nothing. Testbenches write results with `wrdata` to `testbenches/xschem/plot_simulations/data/`, and `sim-view-xschem` plots them.
 - The top-level `sim-gl-xschem` includes `macros/counter/netlist/xspice/counter_top.xspice` (template), which `clean-all` deletes. Run `make build-counter` before it.
-- `build-top` runs `librelane-nodrc` on purpose until IHP fixes the `metal1_pin_offgrid` errors (see the comment in `Makefile`). Run DRC separately with `magic-drc`, `klayout-drc-minimum` or `klayout-drc-regular`.
+- `build-top` runs `librelane-nodrc` on purpose until IHP fixes the `metal1_pin_offgrid` errors (see the comment in `Makefile`). Run DRC separately with `magic-drc`, `klayout-drc-minimum`, `klayout-drc-regular` or the matching `gdscheck-drc-*` targets. `DRC_JOBS=<n>` caps the KLayout processes and sets the gdscheck threads (default 4 and every CPU). More than 4 only pays off for the full chip on a server.
+- KLayout is the sign-off DRC. Magic and gdscheck flag IHP's own cells (the nBuLay ring of the `pmos` guard ring PCell, IHP-Open-PDK#954, fixed in gdscheck after 0.2.0, and, for Magic, the IO pads and the SRAM read hierarchically), so until the upstream fixes are in the image `magic-verify`, `make regression`, `make build-all` and `make all` stop at Magic. Fix such a report upstream, not with make's `-` prefix in a flow. Keep `-f` patterns for Magic away from the top cell: `sak-drc.sh` refuses one that matches it, because Magic would check an empty cell.
 
 ## Conventions
 
@@ -61,6 +65,9 @@ make -C macros/inverter all                 # KLayout and Magic DRC/LVS/PEX, LEF
 - A new target that does not read the PDK goes into `PDK_FREE_GOALS`, every other target inherits the guard.
 - Verification and simulation targets take `CELL=<cell>` (default `TOP`) to work on a subcell.
 - New macro: run `make macro FROM=<macro> NAME=<name>` in `macros/` (`NAME` is a lowercase identifier), then register it in every place listed under "Register the Macro at the Chip Top-Level" in `macros/README.md`. There is no central macro list. `.gitignore` and `REUSE.toml` already cover `macros/*/`.
+<!-- template-only -->
+- New chip: `make project NAME=<name>` (`scripts/new_project.py`) deletes the template-only paths listed at the top of the script, deletes every block between `template-only` markers, renames `chip_top`, `chip_core` and `chip_logo` to `<name>_top`, `<name>_core` and `<name>_logo`, and then deletes itself. The markers are `<!-- template-only -->` and `<!-- /template-only -->` in Markdown, `# template-only` and `# /template-only` in the `Makefile`, YAML, TOML and `.gitignore`, each on a line of its own. Text that only makes sense in the template goes between markers, and a new template-only file or folder goes into `TEMPLATE_ONLY_PATHS` in the script.
+<!-- /template-only -->
 - RTL is SystemVerilog. Each file starts with the SPDX lines and a `// Description:` comment. Modules sit between `` `default_nettype none `` and `` `default_nettype wire ``, and macro RTL also has an include guard (`` `ifndef __COUNTER_TOP__ ``).
 - Shared constants are `` `define `` macros in `rtl/constants.sv` of the digital macro, not a package, because Yosys 0.64 cannot parse `import pkg::*` in a module header. That file compiles first.
 - A digital macro lists its RTL files in four places: `MODULES_SYNTH` and `MODULES_SIM` in its `Makefile`, `VERILOG_FILES` in `flow/librelane/config.yaml`, `DUT_SRCS` in `fpga/dut.mk` and `sources` in `testbenches/cocotb/<TOP>_tb.py`. Keep them in step.
@@ -78,14 +85,19 @@ make -C macros/inverter all                 # KLayout and Magic DRC/LVS/PEX, LEF
 ## CI
 
 - `.github/workflows/license-check.yml`: `reuse lint` on every push and pull request to `main`.
+<!-- template-only -->
+- The `project-check` job of `license-check.yml` runs `make project NAME=demo FORCE=1` on the checkout and `reuse lint` on the result, so that a change to the template that breaks the target fails in CI.
+<!-- /template-only -->
 - `.github/workflows/regression.yml`: `make regression` in `hpretl/iic-osic-tools:latest` with `PDK=ihp-sg13g2`, nightly at 02:00 UTC (skipped when nothing was committed in the previous 25 hours) and on manual dispatch. It is a tool and flow smoke test with DRC skipped in the chip LibreLane run, not a sign-off. Logs go to the `regression-logs` artifact.
+<!-- template-only -->
 - `.github/workflows/quarto-publish.yml` (template): renders `tutorial/` and publishes it to `gh-pages` on every push to `main`. It installs `tutorial/requirements.txt`, so keep that file while the workflow exists.
+<!-- /template-only -->
 
 ## Do not break
 
 - Run `make clean` or `make clean-all` only when asked. Most of what they delete is committed, and the LibreLane runs in `flow/librelane/runs/` are not tracked at all.
 - Never hand-edit generated files: the top-level `layout/`, `netlist/` and `verification/`, and per macro `final/`, `netlist/` and `*_pex.sym`. Rerun the target that writes them. Leave `release/` alone, it holds published versions.
-- Renaming `TOP` in `Makefile` also needs `DESIGN` in `scripts/add_logo_fill.sh` (step 2 of "Start a New Chip from This Template" in `README.md`) and the `chip_top` file names in `REUSE.toml`.
+- Renaming `TOP` in `Makefile` also needs the `chip_top` file names in `REUSE.toml`. `make add-logo-fill` and `make bondplan` pass `TOP` to `scripts/add_logo_fill.sh` and `packaging/scripts/run_bondplan.py`, so never hard-code the name in either.
 - The `Makefile` reads `PACKAGE_NAME:` from `packaging/config.yaml` with `sed`, so keep it a plain `key: value` line.
 
 ## Writing style

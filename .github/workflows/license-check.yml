@@ -33,3 +33,30 @@ jobs:
 
       - name: Check licenses
         run: reuse lint
+  # template-only
+
+  # Starts a chip from the template the way a user does and checks the result
+  project-check:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v5
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.x'
+
+      - name: Install REUSE
+        run: |
+          python -m pip install --upgrade pip
+          pip install reuse
+
+      # FORCE=1, because origin is the template itself here
+      - name: Start a project
+        run: make project NAME=demo FORCE=1
+
+      - name: Check licenses of the project
+        run: reuse lint
+  # /template-only
