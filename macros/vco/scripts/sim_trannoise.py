@@ -106,7 +106,7 @@ def main():
     parser.add_argument("--seeds", type=int, default=8, help="number of seeds, one VACASK process each (default: 8)")
     parser.add_argument("--stop", help="length of the noisy record, overriding the bench, for a trial (for example 2n)")
     parser.add_argument("--no-run", action="store_true", help="only read the rawfiles of an earlier run")
-    parser.add_argument("--fres", type=float, default=1e6, help="Welch resolution in Hz (default: 1 MHz)")
+    parser.add_argument("--fres", type=float, default=500e3, help="Welch resolution in Hz (default: 500 kHz)")
     parser.add_argument("--pnoise", required=True, help="PNOISE table of vco_top_tb_pss_vacask")
     parser.add_argument("--pss", required=True, help="PSS table of vco_top_tb_pss_vacask")
     parser.add_argument("--data", required=True, help="L(f) table to write")

@@ -103,7 +103,7 @@ control
   // Noiseless up to the limit cycle, then the record from that state. noisefmin: the default of noisefmax/1000 would
   // generate no flicker noise below 100 MHz. sim_trannoise.py sets the seed and runs one VACASK per seed.
   analysis settle tran stop=6n step=0.25p maxstep=0.25p icmode=\\"uic\\" ic=\{\\"x1:rf_p\\", 0.8, \\"x1:rf_n\\", 0.7\} store=\\"lc\\"
-  analysis noisy tran stop=2.5u step=0.25p maxstep=0.25p icmode=\\"uic\\" ic=\\"lc\\" noisemode=\\"sde\\" noiseseed=0 noisefmax=100G noisefmin=100k oversample=2
+  analysis noisy tran stop=5u step=0.25p maxstep=0.25p icmode=\\"uic\\" ic=\\"lc\\" noisemode=\\"sde\\" noiseseed=0 noisefmax=100G noisefmin=100k oversample=2
 endc
 "}
 C {devices/simulator_commands_shown.sym} 1980 -1330 0 0 {name=Libs_VACASK
