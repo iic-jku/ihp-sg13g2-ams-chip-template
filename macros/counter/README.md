@@ -660,6 +660,7 @@ A gate-level simulation checks the netlist only for the stimuli of its testbench
 ```sh
 make lec                         # final/nl/counter_top.nl.v against the RTL
 make lec LEC_NETLIST=<netlist>   # another netlist, e.g. the synthesis netlist of a run
+make lec LEC_TIMEOUT=<seconds>   # another time limit per partition (default: 300)
 make lec-mutant                  # check that lec catches a difference
 ```
 
@@ -668,7 +669,7 @@ make lec-mutant                  # check that lec catches a difference
 - The RTL is read with the other front end than synthesis: yosys-slang while `USE_SLANG` is off in `flow/librelane/config.yaml`, and Yosys' own `read_verilog -sv` when it is on. With the same front end on both sides, a front end that misreads the RTL would produce the same mistake in the netlist and prove it equivalent.
 - The functions of the standard cells come from the Liberty file of the PDK, not from its Verilog models. `-ignore_miss_func` skips the cells without a function (e.g. the clock gate `sg13g2_lgcp_1`), and `hierarchy -check` together with `select -assert-none t:sg13g2_*` makes the run fail if the netlist uses a cell without a model, instead of treating it as an empty box that proves trivially.
 - `clk2fflogic` on both sides makes the clock an input of the proof. Without it, EQY's own SBY script assumes one clock, and a flop on the wrong clock net still proves equivalent.
-- Each partition is proved with SBY and the ABC engine `pdr`, which needs no depth bound.
+- Each partition is proved with SBY and the ABC engine `pdr`, which needs no depth bound. A partition that runs into `LEC_TIMEOUT` counts as not proved, so `lec` fails instead of running on.
 
 `lec-mutant` changes two copies of the netlist: `flow/eqy/mutant_cell.nl.v` has its first `sg13g2_nand2_1` swapped for a `sg13g2_nor2_1`, and `flow/eqy/mutant_clock.nl.v` has its first flop clocked by `enable_i`. It passes only if a partition of `lec` reports `FAIL` on each, so a `lec` that never ran a proof (a missing tool, a broken script) fails it too. Run it after changing the script, to make sure the check can still fail.
 
@@ -676,7 +677,7 @@ make lec-mutant                  # check that lec catches a difference
 
 - It checks function, not timing. Static timing analysis and gate-level simulation stay.
 - A register the RTL leaves unknown (`X`) matches any netlist, because EQY takes an `X` in the RTL as don't-care. Deleting the reset from the RTL of the counter still passes against the old netlist.
-- It pairs registers by name and has no time limit, so it can fail on a correct netlist or not finish. `sg13g2_dfrbpq_1` only resets to 0, so synthesis stores a register that resets to 1 inverted, and the match by name then compares the complement. A Gray counter with a binary register next to its Gray output fails, and at 16 bits some partitions were still open after 10 minutes. Such a macro needs extra match rules. Variants of the counter with an asynchronous reset, a pipeline stage, a small FSM or only a Gray register pass without any.
+- It pairs registers by name, so it can fail on a correct netlist or run into `LEC_TIMEOUT`. `sg13g2_dfrbpq_1` only resets to 0, so synthesis stores a register that resets to 1 inverted, and the match by name then compares the complement. A Gray counter with a binary register next to its Gray output fails, and some of its partitions also run into the limit. Such a macro needs extra match rules. Variants of the counter with an asynchronous reset, a pipeline stage, a small FSM or only a Gray register pass without any.
 
 LibreLane has an equivalence step of its own (`Yosys.EQY`, enabled with `RUN_EQY`), but it skips every PDK other than sky130A, which is why the macro runs EQY from its Makefile. `lec` was tested with IIC-OSIC-TOOLS `2026.10`.
 

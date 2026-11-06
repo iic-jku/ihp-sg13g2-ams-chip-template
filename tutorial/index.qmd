@@ -576,6 +576,7 @@ A gate-level simulation checks the netlist only for the stimuli of its testbench
 ```sh
 make lec                         # final/nl/counter_top.nl.v against the RTL
 make lec LEC_NETLIST=<netlist>   # another netlist, e.g. the synthesis netlist of a run
+make lec LEC_TIMEOUT=<seconds>   # another time limit per partition (default: 300)
 make lec-mutant                  # check that lec catches a difference
 ```
 
@@ -590,7 +591,7 @@ Change `COUNTER_MAX_DEFAULT` in `rtl/constants.sv` from 255 to 199 and run `make
 :::
 
 ::: {.callout-note}
-`make lec` has limits. It checks function, not timing, so static timing analysis and gate-level simulation stay. A register the RTL leaves unknown (`X`), for example after deleting its reset, matches any netlist. And because it pairs registers by name, it can fail on a correct netlist or not finish: `sg13g2_dfrbpq_1` only resets to 0, so synthesis stores a register that resets to 1 inverted, and the match by name then compares the complement. Such a macro needs extra match rules.
+`make lec` has limits. It checks function, not timing, so static timing analysis and gate-level simulation stay. A register the RTL leaves unknown (`X`), for example after deleting its reset, matches any netlist. And because it pairs registers by name, it can fail on a correct netlist or run into its time limit: `sg13g2_dfrbpq_1` only resets to 0, so synthesis stores a register that resets to 1 inverted, and the match by name then compares the complement. Such a macro needs extra match rules.
 :::
 
 ## Lint, Build, Verify and Simulate Everything
@@ -1974,7 +1975,7 @@ Repeat @sec-digital for a 16-bit synchronous down-counter that wraps from 0 back
 ::: {.callout-tip}
 ## Bonus for advanced designers
 
-Replace the binary counter with a 16-bit Gray counter (only one bit toggles per transition). Keep only the Gray register, and `make lec` proves the design in seconds. With a binary register next to the Gray output, `make lec` fails on a correct netlist and some partitions do not finish, so `make all` stops there (see @sec-lec).
+Replace the binary counter with a 16-bit Gray counter (only one bit toggles per transition). Keep only the Gray register, and `make lec` proves the design in seconds. With a binary register next to the Gray output, `make lec` fails on a correct netlist, with some partitions running into `LEC_TIMEOUT`, so `make all` stops there (see @sec-lec).
 :::
 
 ## Exercise 2: Self-Biased Single-Ended Inverter Amplifier {#sec-exercise2}

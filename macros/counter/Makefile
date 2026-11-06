@@ -63,6 +63,10 @@ OPEN_ARGS ?=
 # Override with: make lec LEC_NETLIST=<netlist>
 LEC_NETLIST ?= final/nl/$(TOP).nl.v
 
+# Time limit of lec per partition in seconds, a partition that runs into it counts as not proved
+# Override with: make lec LEC_TIMEOUT=<seconds>
+LEC_TIMEOUT ?= 300
+
 # Folder structure
 COCOTB_DIR      := testbenches/cocotb
 VERILOG_TB_DIR 	:= testbenches/verilog
@@ -122,6 +126,7 @@ help: ## Show this help message
 	@echo 'OPEN_ARGS passes extra options to sak-open.py for the open target (e.g. --all).'
 	@echo 'FORCE=1 lets symbol-gl overwrite an existing symbol instead of refusing.'
 	@echo 'LEC_NETLIST selects the netlist for lec (default: final/nl/$(TOP).nl.v).'
+	@echo 'LEC_TIMEOUT sets the time limit of lec per partition in seconds (default: 300).'
 	@echo 'REQUIRED_PDK defaults to $(REQUIRED_PDK). Every target except help and clean aborts if $$PDK differs.'
 .PHONY: help
 # ================================================================================================
@@ -438,7 +443,7 @@ endif
 
 # clk2fflogic on both sides makes the clock an input of the proof: EQY's own SBY script assumes one clock,
 # so without it a flop on the wrong clock net would pass
-lec: ## Prove the gate-level netlist equivalent to the RTL with EQY (usage: make lec [LEC_NETLIST=<netlist>])
+lec: ## Prove the gate-level netlist equivalent to the RTL with EQY (usage: make lec [LEC_NETLIST=<netlist>] [LEC_TIMEOUT=<seconds>])
 	@if [ ! -f $(LEC_NETLIST) ]; then \
 		echo "No netlist $(LEC_NETLIST) found. Run 'make build-top' (or 'make copy-final') first."; \
 		exit 1; \
@@ -463,6 +468,7 @@ lec: ## Prove the gate-level netlist equivalent to the RTL with EQY (usage: make
 		'' \
 		'[strategy sby]' \
 		'use sby' \
+		'timeout $(LEC_TIMEOUT)' \
 		'engine abc pdr' > $(LEC_DIR)/$(TOP).eqy
 	cd $(LEC_DIR) && eqy -f $(TOP).eqy -d work
 .PHONY: lec
