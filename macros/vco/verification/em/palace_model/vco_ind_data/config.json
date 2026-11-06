@@ -25,7 +25,7 @@
             "MaxIts": 400,
             "ComplexCoarseSolve": true
         },
-        "Order": 2,
+        "Order": 3,
         "Device": "CPU",
         "Driven": {
             "Samples": [

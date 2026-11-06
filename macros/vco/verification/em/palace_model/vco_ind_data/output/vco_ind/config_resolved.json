@@ -237,7 +237,7 @@
     },
     "Linear": {
       "AMGAggressiveCoarsening": false,
-      "AMSMaxIts": 2,
+      "AMSMaxIts": 3,
       "AMSSingularOperator": false,
       "AMSVectorInterpolation": false,
       "ColumnOrdering": "Default",
@@ -260,7 +260,7 @@
       "MGSmoothEigScaleMax": 1.0,
       "MGSmoothEigScaleMin": 0.0,
       "MGSmoothIts": 1,
-      "MGSmoothOrder": 4,
+      "MGSmoothOrder": 6,
       "MGUseMesh": true,
       "MaxIts": 400,
       "MaxSize": 400,
@@ -276,7 +276,7 @@
       "Tol": 1e-06,
       "Type": "SuperLU"
     },
-    "Order": 2,
+    "Order": 3,
     "PartialAssemblyOrder": 1,
     "QuadratureOrderExtra": 0,
     "QuadratureOrderJacobian": false
