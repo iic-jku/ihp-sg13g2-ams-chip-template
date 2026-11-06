@@ -668,7 +668,7 @@ The following command builds the `counter` digital macro:
 make build-counter
 ```
 
-For each digital macro this dispatches to its in-tree `make all`, which runs the macro's full flow: lint, build (FPGA and LibreLane, including netlists and the XSPICE model), verify (DRC and LVS within the LibreLane flow), extract (`magic-pex` on the hardened GDS) and simulate. The simulations run after the build, so the gate-level simulations run on the netlists produced by this build.
+For each digital macro this dispatches to its in-tree `make all`, which runs the macro's full flow: lint, build (FPGA and LibreLane, including netlists and the XSPICE model), verify (DRC and LVS within the LibreLane flow, then `lec` and `lec-mutant` against the RTL), extract (`magic-pex` on the hardened GDS) and simulate. The simulations run after the build, so the gate-level simulations run on the netlists produced by this build.
 
 The FPGA part of that build emulates the macro on a board. It covers three boards across two FPGA architectures (Lattice iCE40 and Lattice ECP5), selected with `BOARD=`, and defaults to the pico-ice. See [macros/counter/fpga/README.md](macros/counter/fpga/README.md) for the board list, the toolchain notes, and how to add a further one.
 
@@ -1092,7 +1092,7 @@ To keep the runtime low while still covering the full toolchain, the regression 
 - Only **one** logo (`sg13g2_ip__jku`) is regenerated. It is the only step that exercises the PNG to GDS flow. The second logo (`sg13g2_ip__jku_names`) uses an identical toolchain and reuses its committed views.
 - Exactly **one** CACE parameter set is run (the AC VDD sweep `ac_params`, no Monte Carlo). Swap `ac_params` for `ac_mc_params` / `ac_mm_params` in the target to also exercise the Monte Carlo flow.
 
-The regression runs bottom-up: first the inverter and counter macros, then the top-level prerequisites (submodules, bondpad, logo) and finally the chip top-level LibreLane run that integrates the freshly built macros and IP. After the counter is hardened, `copy-final` copies its fresh `flow/final/` views into `macros/counter/final/`, so that the gate-level simulation (`sim-gl-cocotb`) and the chip top-level integration use the freshly built outputs rather than the committed ones.
+The regression runs bottom-up: first the inverter and counter macros, then the top-level prerequisites (submodules, bondpad, logo) and finally the chip top-level LibreLane run that integrates the freshly built macros and IP. After the counter is hardened, `copy-final` copies its fresh `flow/final/` views into `macros/counter/final/`, so that the logic equivalence check (`lec`), the gate-level simulation (`sim-gl-cocotb`) and the chip top-level integration use the freshly built outputs rather than the committed ones.
 
 The following tools and flows are checked:
 
@@ -1113,6 +1113,7 @@ The following tools and flows are checked:
 | Yosys + nextpnr-ice40 + icepack (FPGA) | counter `build-fpga` |
 | LibreLane (OpenROAD / Yosys / KLayout streamout / Netgen LVS) | counter `librelane-magicdrc`, chip `librelane-nodrc` |
 | Magic DRC (sign-off, run inside LibreLane) | counter `librelane-magicdrc` |
+| EQY + yosys-slang (logic equivalence check of the netlist against the RTL) | counter `lec`, `lec-mutant` |
 | `verilog2sym.py` (Xschem symbol check) + `spi2xspice.py` + `sak-pin-reorder.py` (XSPICE model) | counter `generate-xspice` |
 | Xschem gate-level | counter `sim-gl-xschem` |
 
