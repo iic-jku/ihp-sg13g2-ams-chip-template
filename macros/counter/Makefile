@@ -486,6 +486,7 @@ all: ## Lint, build, verify and simulate the macro
 	$(MAKE) build-fpga
 	$(MAKE) build-top
 	$(MAKE) lec
+	$(MAKE) lec-mutant
 	$(MAKE) magic-pex
 #	$(MAKE) klayout-pex
 	$(MAKE) sim-all
