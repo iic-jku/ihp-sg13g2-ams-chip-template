@@ -226,7 +226,9 @@ def main():
         for job, v, env in pool.map(run, jobs):
             row = {k: job[k] for k in ("seq", "corner", "temp", "vtune")}
             row.update(v)
-            if not v.get("swing_v", 0) >= V_SWING_MIN:
+            if not v:
+                row["status"] = "no result, see the log"
+            elif not v.get("swing_v", 0) >= V_SWING_MIN:
                 row["status"] = "no oscillation"
             elif v["vpeak_v"] > args.vpeak_max:
                 row["status"] = f"peak above {args.vpeak_max} V"

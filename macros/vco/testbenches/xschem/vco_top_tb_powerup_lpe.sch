@@ -104,11 +104,12 @@ value="
 .temp 27
 * rshunt gives the varactor's internal node a DC path, the operating point
 * takes about 8 s with it instead of more than a minute of gmin stepping
-.options savecurrents klu method=gear reltol=1e-4 abstol=1e-15 gmin=1e-15 rshunt=1e12
+.options klu method=gear reltol=1e-4 abstol=1e-15 gmin=1e-15 rshunt=1e12
 * No kick as in the start-up bench: the layout's asymmetry starts the tank, so this bench only works post-layout.
 .control
 
 set filetype=binary
+* Only these: 500 ns of everything, with savecurrents, is over 20 GB per run
 save v(x1.rf_p) v(x1.rf_n) v(vout_p) v(vout_n) i(VDD) i(Vcore)
 
 * Transient Analysis
