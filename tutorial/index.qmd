@@ -1863,7 +1863,7 @@ The comprehensive simulation, build, and DRC pass for the complete chip is run w
 make all
 ```
 
-This calls `build-all` first, then the Magic and gdscheck DRC of both `chip_top` and `chip_top_logo_fill`, which stop the flow on a violation (see the DRC section above), then `sim-all` (RTL and gate-level cocotb plus the gate-level Xschem run), and finally `bondplan`. The simulations therefore run on the netlists that this build has just produced. To shorten the runtime, the KLayout DRC, the sign-off deck, is currently not included in `make all`. However, depending on the hardware used, `make all` can still take a while.
+This calls `build-all` first, then the gdscheck DRC of both `chip_top` and `chip_top_logo_fill`, which stops the flow on a violation (see the DRC section above), then `sim-all` (RTL and gate-level cocotb plus the gate-level Xschem run), and finally `bondplan`. The simulations therefore run on the netlists that this build has just produced. To shorten the runtime, the KLayout DRC, the sign-off deck, is currently not included in `make all`. However, depending on the hardware used, `make all` can still take a while.
 
 ## Releasing for Tapeout
 
