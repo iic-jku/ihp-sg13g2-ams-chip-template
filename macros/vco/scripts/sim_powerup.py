@@ -19,11 +19,17 @@ V_SWING_MIN = 0.5
 SETTLED = 20e-9  # s, the window that defines the settled values, before di_en falls or the run ends
 F_AVG = 100  # periods of the moving average that reads the frequency's settling
 DF_SETTLED = 10e6  # Hz, how close to its settled value the frequency has to come
+DRIFT_AT = 0.8  # of the enable window: the output and the current there must already match its end
+DRIFT_MAX = 1.0  # %, above this the window is too short to call anything settled
 
 # Times in s, overriding the .param lines of the bench. Tr is the supply ramp, Ten_r the rise of di_en, Tdis its fall.
 SEQUENCES = {
-    # Supplies first, then di_en up and down: what the enable does to the output and to the running core
-    "enable": dict(Tr=10e-9, Tvdd=0, Tcore=0, Ten=100e-9, Ten_r=100e-12, Tdis=460e-9, Tstop=500e-9),
+    # Supplies first, then di_en up and down. The bias filters take the buffer current to 99 % in 6.3 us at worst,
+    # and the 2 us after di_en falls show the output while vbg_buf decays.
+    "enable": dict(Tr=10e-9, Tvdd=0, Tcore=0, Ten=100e-9, Ten_r=100e-12, Tdis=8.1e-6, Tstop=10.1e-6),
+    # di_en stays low: the tank's start and the disabled output, short enough for all corners
+    "disabled": dict(Tr=10e-9, Tvdd=0, Tcore=0, Ten=1, Ten_r=100e-12, Tdis=2, Tstop=100e-9),
+    # The sequences below read only the tank's start and peak, the buffer does not settle in their windows.
     # Everything at once, di_en tied to VDD
     "together": dict(Tr=10e-9, Tvdd=0, Tcore=0, Ten=0, Ten_r=10e-9, Tdis=1, Tstop=400e-9),
     # The same at a tenth of the ramp, the hardest step on the center tap
@@ -85,8 +91,19 @@ def read_raw(path):
     return {name: data[i::n_vars][:n_points] for i, name in enumerate(names)}
 
 
+def period_mean(t, y, tc):
+    """Time-weighted mean of y over each period. The steps of ngspice are not uniform, so a plain mean of the samples is biased."""
+    q = np.concatenate(([0.0], np.cumsum(0.5 * (y[1:] + y[:-1]) * np.diff(t))))
+    return np.diff(np.interp(tc, t, q)) / np.diff(tc)
+
+
+def frequency(tc_mid, mask):
+    n = np.count_nonzero(mask)
+    return (n - 1) / (tc_mid[mask][-1] - tc_mid[mask][0]) if n > 1 else math.nan
+
+
 def per_period(raw):
-    """Crossing times of the tank's differential voltage, and between them its swing, the output's and the highest node."""
+    """Crossing times of the tank's differential voltage, and between them its swing, the output's and the supply currents."""
     t, vp, vn, vo = raw["time"], raw["v(x1.rf_p)"], raw["v(x1.rf_n)"], raw["v(vout_p)"]
     vd = vp - vn
     i = np.flatnonzero((vd[:-1] < 0) & (vd[1:] >= 0))
@@ -96,7 +113,7 @@ def per_period(raw):
     idx = i[:-1], i[1:]
     swing = np.array([np.ptp(vd[a:b + 1]) for a, b in zip(*idx)])
     vout = np.array([np.ptp(vo[a:b + 1]) for a, b in zip(*idx)])
-    return tc, swing, vout
+    return tc, swing, vout, period_mean(t, -raw["i(vdd)"], tc), period_mean(t, -raw["i(vcore)"], tc)
 
 
 def first_settled(tc, y, target):
@@ -114,73 +131,88 @@ def measure(raw, seq):
     pp = per_period(raw)
     if pp is None:
         return row
-    tc, swing, vout = pp
+    tc, swing, vout, idd, icore = pp
     tc_mid = tc[:-1]
     t_end = min(tm["Tdis"], tm["Tstop"])
     settled = (tc_mid > t_end - SETTLED) & (tc_mid <= t_end)
     if not settled.any():
         return row
     win = (t > t_end - SETTLED) & (t <= t_end)
-    sw, vo = swing[settled].mean(), vout[settled].mean()
-    f0 = (np.count_nonzero(settled) - 1) / (tc_mid[settled][-1] - tc_mid[settled][0])
+    sw = swing[settled].mean()
     core_up = tm["Tcore"] + tm["Tr"]
     # Before di_en falls, so the run's end does not count as the output settling
     upto = tc_mid <= t_end
-    avg = F_AVG / (tc[F_AVG:] - tc[:-F_AVG])
-    off = avg[(tc[:-F_AVG] > t_end - SETTLED - F_AVG / f0) & (tc[F_AVG:] <= t_end)]
-    f_final = off.mean() if off.size else f0
-    bad = np.flatnonzero((np.abs(avg - f_final) > DF_SETTLED) & (tc[F_AVG:] <= t_end))
-    en_up = tm["Ten"] + (tm["Ten_r"] if seq != "enable" else 0)
     row.update({
-        "f0_ghz": f0 / 1e9,
         "swing_v": sw,
         "vtank_settled_v": raw["v(x1.rf_p)"][win].max(),
-        "vout_pp_mv": vo * 1e3,
         # From the moment the supply of the core is up: negative if the tank starts during the ramp
         "t_osc_ns": (first_settled(tc_mid[upto], swing[upto], 0.9 * sw) - core_up) * 1e9,
-        "t_en90_ns": (first_settled(tc_mid[upto], vout[upto], 0.9 * vo) - en_up) * 1e9,
-        "t_en99_ns": (first_settled(tc_mid[upto], vout[upto], 0.99 * vo) - en_up) * 1e9,
-        "t_f10mhz_ns": (tc[F_AVG:][bad[-1] + 1] - en_up) * 1e9 if bad.size and bad[-1] + 1 < avg.size else math.nan,
-        "idd_ma": -raw["i(vdd)"][win].mean() * 1e3,
-        "icore_ma": -raw["i(vcore)"][win].mean() * 1e3,
+        "icore_ma": icore[settled].mean() * 1e3,
     })
-    if seq == "enable":
-        before = (t > tm["Ten"] - SETTLED) & (t <= tm["Ten"])
-        pre = (tc_mid > tm["Ten"] - SETTLED) & (tc_mid <= tm["Ten"])
-        f_off = (np.count_nonzero(pre) - 1) / (tc_mid[pre][-1] - tc_mid[pre][0]) if pre.sum() > 1 else math.nan
-        late = tc_mid > tm["Tdis"]
-        low = np.flatnonzero(vout[late] <= 0.1 * vo)
+    if seq == "disabled":
         row.update({
-            "df_en_mhz": (f0 - f_off) / 1e6,
-            "vout_off_mv": vout[pre].mean() * 1e3 if pre.any() else math.nan,
-            "t_dis10_ns": (tc_mid[late][low[0]] - tm["Tdis"]) * 1e9 if low.size else math.nan,
-            "idd_off_ua": -raw["i(vdd)"][before].mean() * 1e6,
+            "f0_ghz": frequency(tc_mid, settled) / 1e9,
+            "vout_off_mv": vout[settled].mean() * 1e3,
+            "idd_off_ua": idd[settled].mean() * 1e6,
         })
+    if seq == "enable":
+        pre = (tc_mid > tm["Ten"] - SETTLED) & (tc_mid <= tm["Ten"])
+        t_check = tm["Ten"] + DRIFT_AT * (tm["Tdis"] - tm["Ten"])
+        check = (tc_mid > t_check - SETTLED) & (tc_mid <= t_check)
+        last = tc_mid > tm["Tstop"] - SETTLED
+        vo, i0, f0 = vout[settled].mean(), idd[settled].mean(), frequency(tc_mid, settled)
+        vo_off = vout[pre].mean() if pre.any() else math.nan
+        drift = max(abs(vout[check].mean() / vo - 1), abs(idd[check].mean() / i0 - 1)) * 100
+        avg = F_AVG / (tc[F_AVG:] - tc[:-F_AVG])
+        off = avg[(tc[:-F_AVG] > t_end - SETTLED - F_AVG / f0) & (tc[F_AVG:] <= t_end)]
+        f_final = off.mean() if off.size else f0
+        bad = np.flatnonzero((np.abs(avg - f_final) > DF_SETTLED) & (tc[F_AVG:] <= t_end))
+        # Measured against the disabled level, since feedthrough keeps the output far above 10 % of its settled swing
+        late = tc_mid > tm["Tdis"]
+        low = np.flatnonzero(vout[late] <= vo_off + 0.1 * (vo - vo_off))
+        row.update({
+            "f0_ghz": f0 / 1e9,
+            "vout_pp_mv": vo * 1e3,
+            "idd_ma": i0 * 1e3,
+            "t_en90_ns": (first_settled(tc_mid[upto], vout[upto], 0.9 * vo) - tm["Ten"]) * 1e9,
+            "t_en99_ns": (first_settled(tc_mid[upto], vout[upto], 0.99 * vo) - tm["Ten"]) * 1e9,
+            "t_f10mhz_ns": (tc[F_AVG:][bad[-1] + 1] - tm["Ten"]) * 1e9 if bad.size and bad[-1] + 1 < avg.size else math.nan,
+            "df_en_mhz": (f0 - frequency(tc_mid, pre)) / 1e6,
+            "drift_pct": drift,
+            "vout_off_mv": vo_off * 1e3,
+            "idd_off_ua": idd[pre].mean() * 1e6,
+            "t_dis10_ns": (tc_mid[late][low[0]] - tm["Tdis"]) * 1e9 if low.size else math.nan,
+            "vout_dis_mv": vout[last].mean() * 1e3,
+            "idd_dis_ua": idd[last].mean() * 1e6,
+        })
+        if drift > DRIFT_MAX or abs(frequency(tc_mid, check) - f0) > DF_SETTLED or not low.size:
+            row["status"] = "not settled"
     return row
 
 
 def envelope(raw, points=600):
     """The run per period, thinned out for a plot: time, frequency, swing, output and supply currents."""
     pp = per_period(raw)
-    tc, swing, vout = pp
+    tc, swing, vout, idd, icore = pp
     t = tc[:-1]
     avg = np.full(t.size, np.nan)
     avg[:-F_AVG + 1] = F_AVG / (tc[F_AVG:] - tc[:-F_AVG])
     grid = np.linspace(t[0], raw["time"][-1], points)
     k = np.minimum(np.searchsorted(t, grid), t.size - 1)
-    return np.column_stack((t[k], avg[k], swing[k], vout[k],
-                            -np.interp(t[k], raw["time"], raw["i(vdd)"]), -np.interp(t[k], raw["time"], raw["i(vcore)"])))
+    return np.column_stack((t[k], avg[k], swing[k], vout[k], idd[k], icore[k]))
 
 
 def run(job):
     path = job["deck"]
     log = path[:-len(".spice")] + ".log"
-    with open(log, "w", encoding="utf-8") as f:
-        subprocess.run(["ngspice", "-b", path], stdout=f, stderr=subprocess.STDOUT, cwd=os.path.dirname(path), check=False)
+    if not job["no_run"]:
+        with open(log, "w", encoding="utf-8") as f:
+            subprocess.run(["ngspice", "-b", path], stdout=f, stderr=subprocess.STDOUT, cwd=os.path.dirname(path), check=False)
     raw = read_raw(job["raw"]) if os.path.exists(job["raw"]) else None
     row = measure(raw, job["seq"]) if raw else {}
     env = envelope(raw) if raw and job.get("keep") and per_period(raw) else None
-    if raw:
+    # An enable run takes hours, so its rawfile stays for --no-run
+    if raw and job["seq"] != "enable":
         os.remove(job["raw"])
     return job, row, env
 
@@ -190,11 +222,12 @@ def main():
     parser.add_argument("netlist", help="netlist of vco_top_tb_powerup_lpe, written by make netlist-xschem")
     parser.add_argument("--vcore", type=float, default=0.79, help="vdd_core in V (default: 0.79)")
     parser.add_argument("--sequences", nargs="+", default=list(SEQUENCES), choices=list(SEQUENCES), help="which supply orders to run")
-    parser.add_argument("--all-corners-for", nargs="+", default=["enable"], help="sequences run at all 18 corners, the others at 5 (default: enable)")
+    parser.add_argument("--all-corners-for", nargs="+", default=["disabled"], help="sequences run at all 18 corners, the others at 5 (default: disabled)")
     parser.add_argument("--smoke", action="store_true", help="only the nominal point of each sequence")
     parser.add_argument("--jobs", type=int, default=4, help="ngspice runs in parallel (default: 4)")
     parser.add_argument("--threads", type=int, default=2, help="threads of each ngspice run, without a limit each takes every CPU (default: 2)")
     parser.add_argument("--vpeak-max", type=float, default=V_PEAK_MAX, help=f"a tank node above this fails the run (default: {V_PEAK_MAX} V)")
+    parser.add_argument("--no-run", action="store_true", help="only measure the rawfiles of an earlier enable run, and write only those rows")
     parser.add_argument("--csv", required=True, help="output table")
     parser.add_argument("--data", help="per-period record of the nominal enable run, for the plot")
     args = parser.parse_args()
@@ -202,7 +235,7 @@ def main():
     run_dir = os.path.join(os.path.dirname(os.path.abspath(args.netlist)), "powerup")
     os.makedirs(run_dir, exist_ok=True)
     jobs = []
-    for seq in args.sequences:
+    for seq in ["enable"] if args.no_run else args.sequences:
         corners = WORST_CORNERS[:1] if args.smoke else ALL_CORNERS if seq in args.all_corners_for else WORST_CORNERS
         if seq in args.all_corners_for and not args.smoke:
             corners = WORST_CORNERS[:1] + corners  # the nominal point, which the corners do not hold
@@ -213,12 +246,12 @@ def main():
             with open(path, "w", encoding="utf-8") as f:
                 f.write(deck(args.netlist, seq, corner, temp, args.vcore, vtune, raw, args.threads))
             nominal = (corner, temp, vtune) == WORST_CORNERS[0]
-            jobs.append({"deck": path, "raw": raw, "seq": seq, "corner": corner, "temp": temp, "vtune": vtune, "keep": seq == "enable" and nominal})
+            jobs.append({"deck": path, "raw": raw, "seq": seq, "corner": corner, "temp": temp, "vtune": vtune, "keep": seq == "enable" and nominal, "no_run": args.no_run})
 
     print(f"sim_powerup.py: {len(jobs)} transients, {args.jobs} at a time, in {run_dir}", flush=True)
     rows, failed = [], 0
-    fields = ["seq", "corner", "temp", "vtune", "status", "f0_ghz", "swing_v", "vpeak_v", "vtank_settled_v", "vout_pp_mv", "t_osc_ns", "t_en90_ns", "t_en99_ns",
-              "t_f10mhz_ns", "df_en_mhz", "vout_off_mv", "t_dis10_ns", "idd_ma", "icore_ma", "idd_off_ua"]
+    fields = ["seq", "corner", "temp", "vtune", "status", "f0_ghz", "swing_v", "vpeak_v", "vtank_settled_v", "t_osc_ns", "icore_ma", "vout_off_mv", "idd_off_ua", "vout_pp_mv", "idd_ma",
+              "t_en90_ns", "t_en99_ns", "t_f10mhz_ns", "df_en_mhz", "drift_pct", "t_dis10_ns", "vout_dis_mv", "idd_dis_ua"]
     os.makedirs(os.path.dirname(os.path.abspath(args.csv)), exist_ok=True)
     with ThreadPoolExecutor(max_workers=args.jobs) as pool, open(args.csv, "w", newline="", encoding="utf-8") as f:
         w = csv.DictWriter(f, fieldnames=fields, restval="")
@@ -233,20 +266,20 @@ def main():
             elif v["vpeak_v"] > args.vpeak_max:
                 row["status"] = f"peak above {args.vpeak_max} V"
             else:
-                row["status"] = "ok"
+                row.setdefault("status", "ok")
             failed += row["status"] != "ok"
             rows.append(row)
             w.writerow({k: (f"{x:.5g}" if isinstance(x, float) else x) for k, x in row.items()})
             f.flush()
             g = lambda k: v.get(k, math.nan)  # noqa: E731
-            print(f"  {row['seq']:10s} {row['corner']:7s} {row['temp']:4.0f} C vtune {row['vtune']:.2f}: {g('f0_ghz'):7.3f} GHz  swing {g('swing_v'):.3f} V  "
-                  f"peak {g('vpeak_v'):.3f} V (settled {g('vtank_settled_v'):.3f})  t_osc {g('t_osc_ns'):7.2f} ns  t_en99 {g('t_en99_ns'):7.1f} ns  {row['status']}", flush=True)
+            print(f"  {row['seq']:10s} {row['corner']:7s} {row['temp']:4.0f} C vtune {row['vtune']:.2f}: swing {g('swing_v'):.3f} V  peak {g('vpeak_v'):.3f} V  t_osc {g('t_osc_ns'):5.2f} ns  "
+                  f"{g('f0_ghz'):7.3f} GHz  out {g('vout_pp_mv'):5.1f} mV  t_en99 {g('t_en99_ns'):7.1f} ns  t_dis10 {g('t_dis10_ns'):6.1f} ns  {row['status']}", flush=True)
             if env is not None and args.data:
                 os.makedirs(os.path.dirname(os.path.abspath(args.data)), exist_ok=True)
                 np.savetxt(args.data, env, header="time f_avg_hz tank_swing_v vout_pp_v idd_a icore_a", comments="", fmt="%.6e")
-    ok = [r for r in rows if r["status"] == "ok"]
-    if ok:
-        print(f"sim_powerup.py: highest node {max(r['vpeak_v'] for r in ok):.3f} V, slowest start {max(r['t_osc_ns'] for r in ok):.2f} ns, wrote {args.csv}")
+    started = [r for r in rows if "t_osc_ns" in r]
+    if started:
+        print(f"sim_powerup.py: highest node {max(r['vpeak_v'] for r in started):.3f} V, slowest start {max(r['t_osc_ns'] for r in started):.2f} ns, wrote {args.csv}")
     if failed:
         sys.exit(f"sim_powerup.py: {failed} of {len(rows)} runs failed, see the status column")
 
