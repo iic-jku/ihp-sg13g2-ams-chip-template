@@ -581,7 +581,7 @@ make lec-mutant                  # check that lec catches a difference
 
 `make lec` writes an [EQY](https://github.com/YosysHQ/eqy) script to `flow/eqy/counter_top.eqy` and runs it in `flow/eqy/work/`. EQY pairs the signals of both designs by name, splits the design into partitions, and proves each of them. On the counter, these are 8 partitions, one per bit of `counter_value_o`, and the target exits with 0 only when all of them are equivalent. The RTL is read with a different front end than synthesis used, so that a front end that misreads the RTL cannot make the same mistake on both sides. The standard cells get their function from the Liberty file of the PDK, and a cell without a function fails the run.
 
-`make lec-mutant` swaps one `sg13g2_nand2_1` for a `sg13g2_nor2_1` in a copy of the netlist and passes only if `lec` then fails: a check that cannot fail proves nothing.
+`make lec-mutant` swaps one `sg13g2_nand2_1` for a `sg13g2_nor2_1` in a copy of the netlist and passes only if a partition of `lec` then reports `FAIL`: a check that cannot fail proves nothing, and neither does a `lec` that never ran a proof.
 
 ::: {.callout-tip}
 ## See it fail

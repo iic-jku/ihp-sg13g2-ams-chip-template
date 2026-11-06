@@ -470,11 +470,13 @@ lec-mutant: ## Check that lec catches a difference: swap one cell in a copy of t
 		echo "lec-mutant: no sg13g2_nand2_1 cell to swap in $(LEC_NETLIST)"; \
 		exit 1; \
 	fi
-	@if $(MAKE) --no-print-directory lec LEC_NETLIST=$(LEC_DIR)/mutant.nl.v; then \
-		echo "lec-mutant: FAIL, lec proved the changed netlist equivalent"; \
-		exit 1; \
-	else \
+	@$(MAKE) --no-print-directory lec LEC_NETLIST=$(LEC_DIR)/mutant.nl.v || true
+#	Only a partition's own FAIL counts: lec also exits non-zero when it never ran a proof
+	@if grep -qx FAIL $(LEC_DIR)/work/strategies/*/sby/status 2>/dev/null; then \
 		echo "lec-mutant: PASS, lec found the swapped cell"; \
+	else \
+		echo "lec-mutant: FAIL, no partition failed: lec proved the changed netlist equivalent or never ran a proof"; \
+		exit 1; \
 	fi
 .PHONY: lec-mutant
 # ================================================================================================

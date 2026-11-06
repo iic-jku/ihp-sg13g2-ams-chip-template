@@ -669,7 +669,7 @@ make lec-mutant                  # check that lec catches a difference
 - The functions of the standard cells come from the Liberty file of the PDK, not from its Verilog models. `-ignore_miss_func` skips the cells without a function (e.g. the clock gate `sg13g2_lgcp_1`), and `hierarchy -check` together with `select -assert-none t:sg13g2_*` makes the run fail if the netlist uses a cell without a model, instead of treating it as an empty box that proves trivially.
 - Each partition is proved with SBY and the ABC engine `pdr`, which needs no depth bound.
 
-`lec-mutant` swaps the first `sg13g2_nand2_1` of the netlist for a `sg13g2_nor2_1` in a copy (`flow/eqy/mutant.nl.v`) and passes only if `lec` then fails. Run it after changing the script, to make sure the check can still fail.
+`lec-mutant` swaps the first `sg13g2_nand2_1` of the netlist for a `sg13g2_nor2_1` in a copy (`flow/eqy/mutant.nl.v`) and passes only if a partition of `lec` then reports `FAIL`, so a `lec` that never ran a proof (a missing tool, a broken script) fails it too. Run it after changing the script, to make sure the check can still fail.
 
 `lec` has limits:
 
