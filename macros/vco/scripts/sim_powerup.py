@@ -37,7 +37,7 @@ ALL_CORNERS = [(c, t, v) for c in ("mos_tt", "mos_ss", "mos_ff") for t in (-40.0
 WORST_CORNERS = [("mos_tt", 27.0, 0.75), ("mos_ss", -40.0, 0.0), ("mos_ss", 85.0, 0.0), ("mos_ff", -40.0, 0.0), ("mos_ff", -40.0, 1.5)]
 
 
-def deck(src, seq, corner, temp, vcore, vtune, raw):
+def deck(src, seq, corner, temp, vcore, vtune, raw, threads):
     times = SEQUENCES[seq]
     netlist_dir = os.path.dirname(os.path.abspath(src))
     out = []
@@ -54,6 +54,9 @@ def deck(src, seq, corner, temp, vcore, vtune, raw):
                 s = re.sub(rf"^\.param {name}=.*", f".param {name}={value:g}", s)
             s = re.sub(r"^tran (\S+) \S+$", rf"tran \1 {times['Tstop']:g}", s)
             s = re.sub(r"^write \S+", f"write {raw}", s)
+            if s == "set filetype=binary":
+                s += f"
+set num_threads={threads}"
             if s.startswith(("wrdata", "set wr_", "+ v(")):
                 s = "* " + s
             out.append(s)
@@ -191,6 +194,7 @@ def main():
     parser.add_argument("--all-corners-for", nargs="+", default=["enable"], help="sequences run at all 18 corners, the others at 5 (default: enable)")
     parser.add_argument("--smoke", action="store_true", help="only the nominal point of each sequence")
     parser.add_argument("--jobs", type=int, default=4, help="ngspice runs in parallel (default: 4)")
+    parser.add_argument("--threads", type=int, default=2, help="threads of each ngspice run, without a limit each takes every CPU (default: 2)")
     parser.add_argument("--vpeak-max", type=float, default=V_PEAK_MAX, help=f"a tank node above this fails the run (default: {V_PEAK_MAX} V)")
     parser.add_argument("--csv", required=True, help="output table")
     parser.add_argument("--data", help="per-period record of the nominal enable run, for the plot")
@@ -208,7 +212,7 @@ def main():
             path = os.path.join(run_dir, f"{name}.spice")
             raw = os.path.join(run_dir, f"{name}.raw")
             with open(path, "w", encoding="utf-8") as f:
-                f.write(deck(args.netlist, seq, corner, temp, args.vcore, vtune, raw))
+                f.write(deck(args.netlist, seq, corner, temp, args.vcore, vtune, raw, args.threads))
             nominal = (corner, temp, vtune) == WORST_CORNERS[0]
             jobs.append({"deck": path, "raw": raw, "seq": seq, "corner": corner, "temp": temp, "vtune": vtune, "keep": seq == "enable" and nominal})
 
