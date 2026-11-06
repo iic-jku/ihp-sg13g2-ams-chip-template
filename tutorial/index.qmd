@@ -1286,11 +1286,11 @@ The core in @fig-vco-core-schematic has no current source. The center tap of the
 
 | Parameter | Target | Schematic | Post-layout |
 | :--- | :--- | :--- | :--- |
-| Oscillation frequency at `vtune` = 0.75 V | 20 GHz | 22.54 GHz | 20.06 GHz |
-| Tuning range, `vtune` from 0 V to 1.5 V | about 2 GHz | 21.66 GHz to 24.08 GHz | 19.43 GHz to 21.24 GHz |
-| Phase noise at 1 MHz offset | reported | -101.8 dBc/Hz | not simulated |
+| Oscillation frequency at `vtune` = 0.75 V | 20 GHz | 22.51 GHz | 20.01 GHz |
+| Tuning range, `vtune` from 0 V to 1.5 V | about 2 GHz | 21.63 GHz to 24.04 GHz | 19.39 GHz to 21.19 GHz |
+| Phase noise at 1 MHz offset | reported | -101.9 dBc/Hz | not simulated |
 | Output power per output into 50 $\Omega$ | -10 dBm or more | -8.9 dBm | -10.3 dBm |
-| Supply currents (`VDD`, `vdd_core`) | | 6.3 mA, 4.9 mA | 5.6 mA, 5.2 mA |
+| Supply currents (`VDD`, `vdd_core`) | | 6.3 mA, 4.8 mA | 5.6 mA, 5.2 mA |
 
 : Results of the `vco` at TT and 27 C. The schematic frequency is from the transient, the phase noise and the schematic output power are from the PSS (@sec-rf-sim), and the post-layout values are from the transient of @sec-rf-postlayout. {#tbl-vco-results}
 
@@ -1327,7 +1327,7 @@ The [Makefile](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main
 
 : Flow steps of the `vco` and their Makefile targets. {#tbl-rf-flow tbl-colwidths="[20,22,30,28]"}
 
-`make all` runs `klayout-script-all`, `klayout-verify-all`, `magic-verify-all`, `build-top` and `sim-all`, in about 6 minutes. It leaves out the EM simulation of the coil, which takes about three hours at third order, and the corners. Their results are committed, so `make all` simulates with the coil model of the last EM run.
+`make all` runs `klayout-script-all`, `klayout-verify-all`, `magic-verify-all`, `build-top` and `sim-all`, in about 6 minutes. It leaves out the EM simulation of the coil, which takes 35 minutes on a compute host, and the corners. Their results are committed, so `make all` simulates with the coil model of the last EM run.
 
 ## Layout Generation {#sec-rf-layout}
 
@@ -1431,7 +1431,7 @@ make klayout-pex-leads   # netlist/pex/vco_top_leads_klayout_pex_3.spice
 ```
 
 - [`drop_subcells.py`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/vco/scripts/drop_subcells.py) writes `vco_top` without the two subcells and puts a port where each of their pins lands on the remaining metal. The coil model and the varactor array then attach where they really connect, and the extraction keeps all the wiring between them and the pins of the macro.
-- **The full-RC thresholds are ten times finer than in the inverter**: `THRESHOLD=1000` (1 $\Omega$), `MINRES=100` (0.1 $\Omega$) and `MINDELAY=0`. At the defaults, every net except `VSS` came out without resistance, the tank leads included. With the coil's own 2.5 $\Omega$ per side, a lead of 1 $\Omega$ is part of the tank.
+- **The full-RC thresholds are ten times finer than in the inverter**: `THRESHOLD=1000` (1 $\Omega$), `MINRES=100` (0.1 $\Omega$) and `MINDELAY=0`. At the defaults, every net except `VSS` came out without resistance, the tank leads included. With the coil's own 2.4 $\Omega$ per side, a lead of 1 $\Omega$ is part of the tank.
 - **The capacitances come from a C-coupled run of the same layout.** Magic's resistance extraction counts the coupling capacitance of a net with a resistor network a second time ([magic#557](https://github.com/RTimothyEdwards/magic/issues/557)), so [`pex_caps.py`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/vco/scripts/pex_caps.py) keeps the resistors and devices of the full-RC run and scales its capacitors to the totals of the C-coupled run.
 
 The [Parasitic Extraction (PEX)](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/vco/README.md#parasitic-extraction-pex) section of the README covers the details, among them a net without a resistor network and why the extraction runs in KPEX and not in `sak-pex.sh`.
@@ -1466,16 +1466,16 @@ make sim-em NP=8   # more MPI processes
 | Process stackup | `SG13G2_200um.xml` of the PDK, with its 200 $\mu$m lossy substrate |
 | Ports | three 50 $\Omega$ lumped ports at `LA`, `LB` and the center tap `LC` |
 | Metal model | volume: the current is solved inside the metal, via arrays merged into blocks with their resistance corrected (`fill_factor_correction`) |
-| Mesh | 2 $\mu$m cells in TopMetal1 and TopMetal2, 1 $\mu$m in the committed second-order result |
+| Mesh | 2 $\mu$m cells in TopMetal1 and TopMetal2 |
 | Element order | 3, 2 in the committed result |
 | Frequency sweep | 0 Hz to 60 GHz in 0.75 GHz steps (gds2palace replaces 0 Hz by 10 MHz and 20 MHz), adaptive, to cover the third harmonic |
-| Cost | 50 minutes and 8 GB with `NP=4` at second order, the setting of the committed result, about 3 hours and 7 GB with `NP=6` at third order |
+| Cost | 35 minutes and 9.8 GB with `NP=16` on a compute host |
 
 : Palace settings of the coil. {#tbl-vco-em-settings tbl-colwidths="[25,75]"}
 
 ::: {.callout-important}
 ## Check the EM Result Against Something You Can Calculate
-gds2palace models a metal either as a hollow shell with a surface impedance on every face (its default) or as a solid volume. The coil's traces are 4 $\mu$m wide and 2 $\mu$m to 3 $\mu$m thick, where the surface model is least accurate. The DC resistance shows which model is right, because it follows from the drawn lengths and the sheet resistances of the stackup by hand. For the first coil of this macro, the traces and the via fields add up to 2.8 $\Omega$. The volume model gave 2.93 $\Omega$ at 10 MHz, the surface model 1.65 $\Omega$, less than the traces alone, and a Q 46 % too high at 20 GHz. Check the mesh the same way: a finer mesh or a higher element order has to leave the result unchanged. On the coil of the ihp-sg13cmos5l template, going from second to third order changed the Q by 2.0 % at 20 GHz, so this coil moves to third order as well.
+gds2palace models a metal either as a hollow shell with a surface impedance on every face (its default) or as a solid volume. The coil's traces are 4 $\mu$m wide and 2 $\mu$m to 3 $\mu$m thick, where the surface model is least accurate. The DC resistance shows which model is right, because it follows from the drawn lengths and the sheet resistances of the stackup by hand. For the first coil of this macro, the traces and the via fields add up to 2.8 $\Omega$. The volume model gave 2.93 $\Omega$ at 10 MHz, the surface model 1.65 $\Omega$, less than the traces alone, and a Q 46 % too high at 20 GHz. Check the mesh the same way: a finer mesh or a higher element order has to leave the result unchanged. Going from second to third order changed the Q of this coil by 2.3 % at 20 GHz.
 :::
 
 ## Lumped-Element Models with snp2le {#sec-rf-snp2le}
@@ -1492,7 +1492,7 @@ make snp2le EM=<structure> SNP=<file.sNp> LE_MODEL=universal ORDER=8
 
 The coil uses `inductor-ct`, the wideband model of a center-tapped coil: two coupled half coils with their skin effect and substrate network, fitted over the whole band of the EM data. The file stem, the `.SUBCKT` name and the name of the symbol are the same (`vco_ind_le`), so a new fit drops into the schematic without an edit. The SPARX documentation explains both modes, the passivity enforcement and the noise in its [snp2le](https://iic-jku.github.io/SG13CMOS_SPARX/#sec-snp2le) chapter.
 
-`vco_ind.sch` holds two views of the coil. The PDK's `inductor3` is what KLayout LVS compares with the layout, and every simulation netlist skips it. The model `vco_ind_le` is what the simulations use, and the LVS netlist skips it. The testbench `vco_ind_tb_acsp_vacask` checks the model against the EM data with VACASK's S-parameter analysis (ACSP), @fig-vco-ind-acsp. From 1.5 GHz to 40 GHz the model is within 3 % of the EM inductance and within 4 % of its Q, and at 20.25 GHz it gives 425 pH and a Q of 10.4 against 417 pH and 10.6 from EM.
+`vco_ind.sch` holds two views of the coil. The PDK's `inductor3` is what KLayout LVS compares with the layout, and every simulation netlist skips it. The model `vco_ind_le` is what the simulations use, and the LVS netlist skips it. The testbench `vco_ind_tb_acsp_vacask` checks the model against the EM data with VACASK's S-parameter analysis (ACSP), @fig-vco-ind-acsp. From 1.5 GHz to 40 GHz the model is within 2.9 % of the EM inductance and within 3.7 % of its Q, and at 20.25 GHz it gives 427 pH and a Q of 10.6 against 418 pH and 10.9 from EM.
 
 ![The tank coil from EM (dots) and from its snp2le model in VACASK's ACSP (lines): differential inductance and Q, reflection and transmission.](fig/vco_top/vco_ind_tb_acsp_vacask.svg){#fig-vco-ind-acsp}
 
@@ -1582,13 +1582,13 @@ A PSS finds a periodic solution, but it does not show that the oscillator reache
 
 ### Results
 
-The start-up transient of @fig-vco-tran reaches its full amplitude within a few periods of the kick and oscillates at 22.54 GHz, with the tank nodes swinging from 0.10 V to 1.56 V. The kick is an initial condition on the tank, not a power-up, so the start-up from a supply ramp and the enable are still to be simulated. The PSS of @fig-vco-pss agrees on the frequency within 0.2 % and gives the output power at the fundamental, -8.9 dBm per output.
+The start-up transient of @fig-vco-tran reaches its full amplitude within a few periods of the kick and oscillates at 22.51 GHz, with the tank nodes swinging from 0.10 V to 1.56 V. The kick is an initial condition on the tank, not a power-up, so the start-up from a supply ramp and the enable are still to be simulated. The PSS of @fig-vco-pss agrees on the frequency within 0.2 % and gives the output power at the fundamental, -8.9 dBm per output.
 
 ![Start-up transient of the schematic (ngspice): the differential tank voltage, and the last 200 ps of the tank nodes and the differential output.](fig/vco_top/vco_top_tb_tran.svg){#fig-vco-tran}
 
 ![Oscillator PSS (VACASK): one period of the tank and the outputs, and the spectrum of the output.](fig/vco_top/vco_top_tb_pss_vacask_pss.svg){#fig-vco-pss}
 
-@fig-vco-pnoise shows the phase noise from PNOISE and the tuning gain from PAC. The phase noise is -101.8 dBc/Hz at 1 MHz offset. Its contributions show where it comes from: 47 % from the core (pair, varactors and coil) and 40 % from the bias of the buffer, whose input capacitance loads the tank and moves the frequency with its bias current. Below 1 MHz that bias takes over: its noise passes the 170 kHz low-pass of the bias filters, so its share grows by 40 dB to 48 dB per decade towards lower offsets, against 20 dB for the core. The tuning gain from PAC agrees within about 2 % with the slope of the tuning curve of @fig-vco-tune, whose frequencies the plot script takes from the zero crossings of each tuning transient.
+@fig-vco-pnoise shows the phase noise from PNOISE and the tuning gain from PAC. The phase noise is -101.9 dBc/Hz at 1 MHz offset. Its contributions show where it comes from: 48 % from the core (pair, varactors and coil) and 41 % from the bias of the buffer, whose input capacitance loads the tank and moves the frequency with its bias current. Below 1 MHz that bias takes over: its noise passes the 170 kHz low-pass of the bias filters, so its share grows by 40 dB to 48 dB per decade towards lower offsets, against 20 dB for the core. The tuning gain from PAC agrees within about 2 % with the slope of the tuning curve of @fig-vco-tune, whose frequencies the plot script takes from the zero crossings of each tuning transient.
 
 ![Phase noise from PNOISE and tuning gain $K_\mathrm{VCO}$ from PAC (VACASK), at `vtune` = 0.75 V.](fig/vco_top/vco_top_tb_pss_vacask_pnoise_pac.svg){#fig-vco-pnoise}
 
@@ -1613,7 +1613,7 @@ make sim-corners TB=vco_top_tb_tran_lpe             # the same with the post-lay
 make sim-corners TB=vco_top_tb_tran_lpe VCORE="0.77 0.81"   # the edges of the vdd_core window
 ```
 
-`sim-corners` netlists a transient testbench once and runs [`sim_corners.py`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/vco/scripts/sim_corners.py), which writes one copy of the netlist per MOS corner, temperature, `vdd_core` and `vtune`, runs ngspice on four of them at a time, and writes a CSV table. It fails when a run does not oscillate or when a tank node passes 1.5 V on the post-layout testbench. Post-layout, every corner starts, the tuning range covers 20 GHz at every corner (19.14 GHz to 21.43 GHz in all), and no tank node passes 1.43 V. The voltage-biased core has a narrow window, though: `vdd_core` has 20 mV of room either way between no start at SS and a tank above 1.5 V at FF, see [Corners](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/vco/README.md#corners) in the README.
+`sim-corners` netlists a transient testbench once and runs [`sim_corners.py`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/vco/scripts/sim_corners.py), which writes one copy of the netlist per MOS corner, temperature, `vdd_core` and `vtune`, runs ngspice on four of them at a time, and writes a CSV table. It fails when a run does not oscillate or when a tank node passes 1.5 V on the post-layout testbench. Post-layout, every corner starts, the tuning range covers 20 GHz at every corner (19.10 GHz to 21.38 GHz in all), and no tank node passes 1.43 V. The voltage-biased core has a narrow window, though: `vdd_core` has 20 mV of room either way between no start at SS and a tank above 1.5 V at FF, see [Corners](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/vco/README.md#corners) in the README.
 
 ## Post-Layout Simulation {#sec-rf-postlayout}
 
@@ -1626,10 +1626,10 @@ make sim-xschem TB=vco_top_tb_tran_lpe
 
 | TT, 27 C, `vtune` = 0.75 V | Schematic | Post-layout |
 | :--- | :--- | :--- |
-| Frequency | 22.54 GHz | 20.06 GHz |
-| Tuning range | 21.66 GHz to 24.08 GHz | 19.43 GHz to 21.24 GHz |
+| Frequency | 22.51 GHz | 20.01 GHz |
+| Tuning range | 21.63 GHz to 24.04 GHz | 19.39 GHz to 21.19 GHz |
 | Tank nodes | 0.10 V to 1.56 V | 0.23 V to 1.32 V |
-| Output, from the peak-to-peak swing | -7.8 dBm | -10.3 dBm |
+| Output, from the peak-to-peak swing | -7.7 dBm | -10.3 dBm |
 
 : Schematic against post-layout, both from the ngspice transient. {#tbl-vco-postlayout}
 
@@ -1639,7 +1639,7 @@ make sim-xschem TB=vco_top_tb_tran_lpe
 - **The swing is smaller**, because the resistance of the leads adds to the coil's own loss: from the coil's feed 1.3 $\Omega$ to the varactors, 2.0 $\Omega$ to the pair's drains and 4.8 $\Omega$ to its gates.
 - **The macro is centered on this simulation.** The varactors are sized so that 20 GHz sits in the middle of the post-layout tuning range, and `vdd_core` in the middle of its post-layout window.
 
-The post-layout simulation changed the layout twice. The first core joined the source bar of the pair to `VSS` through a single via stack, which the extraction showed as 14.7 $\Omega$ in series with the core current. Later, with every resistance extracted, half of the corners did not start: the leads had several ohms in series with the tank, and the `VSS` strap of the macro, 2 $\mu$m of the thin Metal5, put 5.1 $\Omega$ between the pin and the pair. Via rows along the gate pads, tank lines doubled on Metal4, via stacks along the source bar and a TopMetal2 strap over the `VSS` strap fixed both, and the path from the `VSS` pin to the sources has 1.7 $\Omega$ now.
+The post-layout simulation changed the layout three times. The first core joined the source bar of the pair to `VSS` through a single via stack, which the extraction showed as 14.7 $\Omega$ in series with the core current. Later, with every resistance extracted, half of the corners did not start: the leads had several ohms in series with the tank, and the `VSS` strap of the macro, 2 $\mu$m of the thin Metal5, put 5.1 $\Omega$ between the pin and the pair. Via rows along the gate pads, tank lines doubled on Metal4, via stacks along the source bar and a TopMetal2 strap over the `VSS` strap fixed both, and the path from the `VSS` pin to the sources has 1.7 $\Omega$ now. The gate lines of the buffer came last: Magic reads a net that only drives gates as one node, so a port on each input (`LEADS_PROBES`) had to make the extraction keep their resistance, and two via rows along the gate pads hold it at 5.8 $\Omega$.
 
 ::: {.callout-note}
 The post-layout simulation is a transient in ngspice. VACASK does not read the SPICE netlist of the extraction directly, so the post-layout phase noise is not simulated yet. VACASK ships a converter for ngspice netlists (`ng2vc.py`), which is the way to get there.

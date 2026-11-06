@@ -11,7 +11,7 @@ the center tap of the coil sits on its own supply vdd_core (0.79 V, own pad).
 The tank common mode is vdd_core, so vtune from 0 V to VDD sweeps the
 accumulation-mode varactors across their C-V transition at 0 V gate-to-well.
 Each tank node swings from about 0.10 V to 1.56 V, 0.23 V to 1.32 V post-layout.
-The pair draws 4.9 mA at Vgs = vdd_core. Cct1 and Cct2 (4.9 pF) decouple
+The pair draws 4.8 mA at Vgs = vdd_core. Cct1 and Cct2 (4.9 pF) decouple
 vdd_core at the center tap.} 1440 -1440 0 0 0.3 0.3 {}
 N 1120 -280 1340 -280 {lab=VSS}
 N 880 -1260 880 -1220 {lab=vdd_core}
