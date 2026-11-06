@@ -34,9 +34,9 @@ ORDER = 3
 # hollow shell with a surface impedance. It is cheaper, but it counts the side walls as extra cross-section, which
 # for traces about as thick as they are wide puts the resistance too low.
 METALS = "volume"
-# Cell size in um inside the coil metals in volume mode (skin depth of TopMetal2 at 20 GHz: 0.65 um). On the
-# ihp-sg13cmos5l coil, second-order elements at 1 um read Q 2.0 % lower at 20.25 GHz, and on the first coil here
-# halving their cells moved Q by 1.6 %, so the element order and not the cell limited the result.
+# Cell size in um inside the coil metals in volume mode (skin depth of TopMetal2 at 20 GHz: 0.65 um). Second-order
+# elements at 1 um read Q 2.3 % lower at 20.25 GHz, and halving their cells moved Q by 1.6 %, so the element order
+# and not the cell limited the result.
 METAL_CELLSIZE = 2
 
 # GDS layers (layer, datatype)

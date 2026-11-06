@@ -1,4 +1,4 @@
-** sch_path: /foss/designs/_wt/ihp-sg13g2-ams-chip-template-rf/macros/vco/schematic/xschem/vco_bias.sch
+** sch_path: /foss/designs/ihp-sg13g2-ams-chip-template/macros/vco/schematic/xschem/vco_bias.sch
 .subckt vco_bias ibias_100u di_en VDD VSS vbg_buf vbn_buf
 *.PININFO VDD:B VSS:B di_en:I ibias_100u:I vbn_buf:B vbg_buf:B
 MMPi1 en_b di_en VDD VDD sg13_lv_pmos w=1u l=0.13u ng=1
