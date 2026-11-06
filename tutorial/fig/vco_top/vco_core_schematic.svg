@@ -250,7 +250,7 @@ text {font-family: Sans-Serif;}
 <path class="l7" d="M323.295 345.112L330.814 345.112"/>
 <path class="l7" d="M390.969 345.112L398.488 345.112"/>
 <path class="l7" d="M375.93 360.151L375.93 367.671"/>
-<text fill="#222222"  xml:space="preserve" font-size="15.6403" transform="translate(714.302, 667.608)" >2026-11-03  23:57:02</text>
+<text fill="#222222"  xml:space="preserve" font-size="15.6403" transform="translate(714.302, 667.608)" >2026-11-06  07:22:16</text>
 <text fill="#222222"  xml:space="preserve" font-size="15.6403" transform="translate(477.442, 637.531)" >Simon Dorrer</text>
 <text fill="#222222"  xml:space="preserve" font-size="15.6403" transform="translate(477.442, 667.608)" >Page  of </text>
 <text fill="#222222"  xml:space="preserve" font-size="15.6403" transform="translate(605.271, 667.608)" >Rev. 1.0</text>
@@ -388,6 +388,6 @@ text {font-family: Sans-Serif;}
 <text fill="#222222"  xml:space="preserve" font-size="5.86512" transform="translate(571.434, 153.35)" >The tank common mode is vdd_core, so vtune from 0 V to VDD sweeps the</text>
 <text fill="#222222"  xml:space="preserve" font-size="5.86512" transform="translate(571.434, 160.077)" >accumulation-mode varactors across their C-V transition at 0 V gate-to-well.</text>
 <text fill="#222222"  xml:space="preserve" font-size="5.86512" transform="translate(571.434, 166.804)" >Each tank node swings from about 0.10 V to 1.56 V, 0.23 V to 1.32 V post-layout.</text>
-<text fill="#222222"  xml:space="preserve" font-size="5.86512" transform="translate(571.434, 173.532)" >The pair draws 4.9 mA at Vgs = vdd_core. Cct1 and Cct2 (4.9 pF) decouple</text>
+<text fill="#222222"  xml:space="preserve" font-size="5.86512" transform="translate(571.434, 173.532)" >The pair draws 4.8 mA at Vgs = vdd_core. Cct1 and Cct2 (4.9 pF) decouple</text>
 <text fill="#222222"  xml:space="preserve" font-size="5.86512" transform="translate(571.434, 180.259)" >vdd_core at the center tap.</text>
 </svg>

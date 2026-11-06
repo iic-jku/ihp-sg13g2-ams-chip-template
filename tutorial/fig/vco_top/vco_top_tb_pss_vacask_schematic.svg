@@ -330,7 +330,7 @@ text {font-family: Sans-Serif;}
 <path class="l7" d="M389.678 296.921L396.617 296.921"/>
 <path class="l7" d="M479.878 303.859L486.817 303.859"/>
 <path class="l7" d="M479.878 317.736L486.817 317.736"/>
-<text fill="#222222"  xml:space="preserve" font-size="14.432" transform="translate(646.402, 643.072)" >2026-11-04  14:18:15</text>
+<text fill="#222222"  xml:space="preserve" font-size="14.432" transform="translate(646.402, 643.072)" >2026-11-05  18:15:38</text>
 <text fill="#222222"  xml:space="preserve" font-size="14.432" transform="translate(427.84, 615.318)" >Simon Dorrer</text>
 <text fill="#222222"  xml:space="preserve" font-size="14.432" transform="translate(427.84, 643.072)" >Page  of </text>
 <text fill="#222222"  xml:space="preserve" font-size="14.432" transform="translate(545.794, 643.072)" >Rev. 1.0</text>
@@ -405,19 +405,20 @@ text {font-family: Sans-Serif;}
 <text fill="#222222"  xml:space="preserve" font-size="5.41202" style="font-family:Monospace;" transform="translate(41.0193, 220.483)" >  save dv(vout_p) dv(vout_n) dv("x1:rf_p") dv("x1:rf_n")</text>
 <text fill="#222222"  xml:space="preserve" font-size="5.41202" style="font-family:Monospace;" transform="translate(41.0193, 232.898)" >  // Oscillator PSS: the period is solved for, tper is the guess. ic kicks the tank away</text>
 <text fill="#222222"  xml:space="preserve" font-size="5.41202" style="font-family:Monospace;" transform="translate(41.0193, 239.105)" >  // from the symmetric operating point, tstab lets the oscillation build up (at 3 ns the shooting fails).</text>
-<text fill="#222222"  xml:space="preserve" font-size="5.41202" style="font-family:Monospace;" transform="translate(41.0193, 245.313)" >  analysis pss pss oscillator=1 tper=44.3p tstab=6n maxharm=20 ic={"x1:rf_p", 0.8, "x1:rf_n", 0.7} store="osc"</text>
-<text fill="#222222"  xml:space="preserve" font-size="5.41202" style="font-family:Monospace;" transform="translate(41.0193, 257.728)" >  // VACASK up to 7c38094 restarts the period that pnoise and pac integrate with a backward-Euler step at</text>
-<text fill="#222222"  xml:space="preserve" font-size="5.41202" style="font-family:Monospace;" transform="translate(41.0193, 263.936)" >  // every Jacobian sample, which reads the phase noise and the tuning gain low below a few MHz (2.3 dB at</text>
-<text fill="#222222"  xml:space="preserve" font-size="5.41202" style="font-family:Monospace;" transform="translate(41.0193, 270.143)" >  // 1 MHz on this VCO). tran_fbr shortens those steps. The option is global, so the line restates the others.</text>
-<text fill="#222222"  xml:space="preserve" font-size="5.41202" style="font-family:Monospace;" transform="translate(41.0193, 276.351)" >  options strictsave=1 pss_minpts=4000 reltol=3e-5 tran_fbr=0.02</text>
-<text fill="#222222"  xml:space="preserve" font-size="5.41202" style="font-family:Monospace;" transform="translate(41.0193, 288.766)" >  // Output noise around the first harmonic, linearised at the stored PSS. With oscillator=1 it is computed as</text>
-<text fill="#222222"  xml:space="preserve" font-size="5.41202" style="font-family:Monospace;" transform="translate(41.0193, 294.974)" >  // for a driven circuit, so it is the total noise, which close to the carrier is the phase noise.</text>
-<text fill="#222222"  xml:space="preserve" font-size="5.41202" style="font-family:Monospace;" transform="translate(41.0193, 301.181)" >  // in names the source the gain output refers to, pnoise needs one.</text>
-<text fill="#222222"  xml:space="preserve" font-size="5.41202" style="font-family:Monospace;" transform="translate(41.0193, 307.389)" >  analysis pnoise pnoise psssolve=0 ic="osc" truncharm=20 in="Vtune" out=["vout_p", "vout_n"] outharm=1 from=10k to=100M mode="dec" points=10</text>
-<text fill="#222222"  xml:space="preserve" font-size="5.41202" style="font-family:Monospace;" transform="translate(41.0193, 319.804)" >  // Tuning sensitivity: the upper FM sideband of the 1 V small-signal tone on vtune (spur 0, smag 1).</text>
-<text fill="#222222"  xml:space="preserve" font-size="5.41202" style="font-family:Monospace;" transform="translate(41.0193, 326.012)" >  analysis pac pac psssolve=0 ic="osc" truncharm=20 outharm=1 from=10k to=100M mode="dec" points=10</text>
-<text fill="#222222"  xml:space="preserve" font-size="5.41202" style="font-family:Monospace;" transform="translate(41.0193, 338.427)" >  postprocess(PYTHON, "../plot_simulations/vacask2data.py", "vco_top_tb_pss_vacask")</text>
-<text fill="#222222"  xml:space="preserve" font-size="5.41202" style="font-family:Monospace;" transform="translate(41.0193, 344.634)" >endc</text>
+<text fill="#222222"  xml:space="preserve" font-size="5.41202" style="font-family:Monospace;" transform="translate(41.0193, 245.313)" >  // stabstep: at tper/4000 the stabilisation transient stops at t = 0 with the coil model (Timestep too small).</text>
+<text fill="#222222"  xml:space="preserve" font-size="5.41202" style="font-family:Monospace;" transform="translate(41.0193, 251.521)" >  analysis pss pss oscillator=1 tper=44.3p tstab=6n stabstep=0.5p maxharm=20 ic={"x1:rf_p", 0.8, "x1:rf_n", 0.7} store="osc"</text>
+<text fill="#222222"  xml:space="preserve" font-size="5.41202" style="font-family:Monospace;" transform="translate(41.0193, 263.936)" >  // VACASK before 7c38094 restarts the period that pnoise and pac integrate with a backward-Euler step at</text>
+<text fill="#222222"  xml:space="preserve" font-size="5.41202" style="font-family:Monospace;" transform="translate(41.0193, 270.143)" >  // every Jacobian sample, which reads the phase noise and the tuning gain low below a few MHz (3.3 dB at</text>
+<text fill="#222222"  xml:space="preserve" font-size="5.41202" style="font-family:Monospace;" transform="translate(41.0193, 276.351)" >  // 1 MHz on this VCO). tran_fbr shortens those steps. The option is global, so the line restates the others.</text>
+<text fill="#222222"  xml:space="preserve" font-size="5.41202" style="font-family:Monospace;" transform="translate(41.0193, 282.558)" >  options strictsave=1 pss_minpts=4000 reltol=3e-5 tran_fbr=0.02</text>
+<text fill="#222222"  xml:space="preserve" font-size="5.41202" style="font-family:Monospace;" transform="translate(41.0193, 294.974)" >  // Output noise around the first harmonic, linearised at the stored PSS. With oscillator=1 it is computed as</text>
+<text fill="#222222"  xml:space="preserve" font-size="5.41202" style="font-family:Monospace;" transform="translate(41.0193, 301.181)" >  // for a driven circuit, so it is the total noise, which close to the carrier is the phase noise.</text>
+<text fill="#222222"  xml:space="preserve" font-size="5.41202" style="font-family:Monospace;" transform="translate(41.0193, 307.389)" >  // in names the source the gain output refers to, pnoise needs one.</text>
+<text fill="#222222"  xml:space="preserve" font-size="5.41202" style="font-family:Monospace;" transform="translate(41.0193, 313.596)" >  analysis pnoise pnoise psssolve=0 ic="osc" truncharm=20 in="Vtune" out=["vout_p", "vout_n"] outharm=1 from=10k to=100M mode="dec" points=10</text>
+<text fill="#222222"  xml:space="preserve" font-size="5.41202" style="font-family:Monospace;" transform="translate(41.0193, 326.012)" >  // Tuning sensitivity: the upper FM sideband of the 1 V small-signal tone on vtune (spur 0, smag 1).</text>
+<text fill="#222222"  xml:space="preserve" font-size="5.41202" style="font-family:Monospace;" transform="translate(41.0193, 332.219)" >  analysis pac pac psssolve=0 ic="osc" truncharm=20 outharm=1 from=10k to=100M mode="dec" points=10</text>
+<text fill="#222222"  xml:space="preserve" font-size="5.41202" style="font-family:Monospace;" transform="translate(41.0193, 344.634)" >  postprocess(PYTHON, "../plot_simulations/vacask2data.py", "vco_top_tb_pss_vacask")</text>
+<text fill="#222222"  xml:space="preserve" font-size="5.41202" style="font-family:Monospace;" transform="translate(41.0193, 350.842)" >endc</text>
 <text fill="#222222"  xml:space="preserve" font-size="5.41202" transform="translate(37.5501, 124.903)" >SIM=vacask</text>
 <text fill="#222222"  xml:space="preserve" font-size="5.41202" transform="translate(703.644, 176.942)" >Libs_VACASK</text>
 <text fill="#222222"  xml:space="preserve" font-size="5.41202" style="font-family:Monospace;" transform="translate(707.114, 198.761)" >include "sg13g2_vacask_common.lib"</text>

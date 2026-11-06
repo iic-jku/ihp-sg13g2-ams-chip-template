@@ -256,7 +256,7 @@ text {font-family: Sans-Serif;}
 <path class="l7" d="M669.186 442.864L676.705 442.864"/>
 <path class="l7" d="M766.938 427.826L774.457 427.826"/>
 <path class="l7" d="M766.938 442.864L774.457 442.864"/>
-<text fill="#222222"  xml:space="preserve" font-size="15.6403" transform="translate(714.302, 667.608)" >2026-11-03  23:45:32</text>
+<text fill="#222222"  xml:space="preserve" font-size="15.6403" transform="translate(714.302, 667.608)" >2026-11-06  07:22:16</text>
 <text fill="#222222"  xml:space="preserve" font-size="15.6403" transform="translate(477.442, 637.531)" >Simon Dorrer</text>
 <text fill="#222222"  xml:space="preserve" font-size="15.6403" transform="translate(477.442, 667.608)" >Page  of </text>
 <text fill="#222222"  xml:space="preserve" font-size="15.6403" transform="translate(605.271, 667.608)" >Rev. 1.0</text>
@@ -325,7 +325,7 @@ text {font-family: Sans-Serif;}
 <path class="l1" d="M774.457 427.826L804.535 427.826"/>
 <path class="l1" d="M774.457 442.864L804.535 442.864"/>
 <text fill="#222222"  xml:space="preserve" font-size="19.5504" transform="translate(142.829, 39.5308)" >20 GHz LC VCO, CMOS Only</text>
-<text fill="#222222"  xml:space="preserve" font-size="7.82016" transform="translate(240.581, 119.112)" >VDD 1.5 V: 6.3 mA (buffer tail 6.1 mA, bias 0.2 mA). vdd_core 0.79 V from its own pad: 4.9 mA.</text>
+<text fill="#222222"  xml:space="preserve" font-size="7.82016" transform="translate(240.581, 119.112)" >VDD 1.5 V: 6.3 mA (buffer tail 6.1 mA, bias 0.2 mA). vdd_core 0.79 V from its own pad: 4.8 mA.</text>
 <text fill="#222222"  xml:space="preserve" font-size="7.82016" transform="translate(240.581, 128.082)" >ibias_100u: 100 uA into the macro. di_en: 1 enables, 0 turns the buffer and bias currents off.</text>
 <text fill="#222222"  xml:space="preserve" font-size="7.82016" transform="translate(240.581, 137.052)" >vtune: 0 V to VDD. rf_out_p/rf_out_n: 50 Ohm back-terminated, AC-couple the load.</text>
 </svg>
