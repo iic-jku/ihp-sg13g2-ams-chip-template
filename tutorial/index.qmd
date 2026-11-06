@@ -551,7 +551,7 @@ The XSPICE model above is a *gate-level* view of the macro: every standard cell 
 ```sh
 make magic-pex                            # full-RC, the default EXT_MODE=3
 make magic-pex EXT_MODE=1                 # C-decoupled, fastest
-make klayout-pex                          # the same with kpex, which runs Magic internally
+make klayout-pex                          # the same with the 2.5D engine of kpex
 make magic-pex EXT_MODE=3 THRESHOLD=5000 MINRES=500 MINDELAY=2   # full-RC with custom extresist settings
 ```
 
@@ -1225,7 +1225,7 @@ Every symbol in this template carries `spectre_format="@name ( @pinlist ) @symna
 :::
 
 ::: {.callout-note}
-Note that [KLayout-PEX (KPEX)](https://github.com/iic-jku/klayout-pex) is currently under development and therefore the Magic engine is used internally for the actual extraction.
+[KLayout-PEX (KPEX)](https://github.com/iic-jku/klayout-pex) extracts with its own 2.5D engine, so `klayout-pex` and `magic-pex` are two independent extractions. It needs kpex 0.7.0 or later and takes much longer than Magic.
 :::
 
 ### Post-Layout Simulation {#sec-postlayout}

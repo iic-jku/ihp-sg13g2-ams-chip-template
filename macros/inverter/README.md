@@ -64,7 +64,8 @@
 │  │  ├─ lookup_commands.ipynb
 │  │  └─ sizing_inverter.ipynb
 │  ├─ check_boundary.py
-│  └─ check_pex_ports.py
+│  ├─ check_pex_ports.py
+│  └─ tie_pex_substrate.py
 ├─ 📁 testbenches/
 │  └─ 📁 xschem/
 │     ├─ 📁 plot_simulations/
@@ -549,13 +550,21 @@ python3 scripts/check_pex_ports.py netlist/pex/inverter_top_magic_pex_2.spice
 python3 scripts/check_pex_ports.py -v netlist/pex/*.spice     # -v also prints the size of each subcircuit
 ```
 
-**KLayout PEX** uses `kpex` with the Magic extraction engine currently (2.5D engine is work in progress):
+**KLayout PEX** uses the 2.5D engine of `kpex` (`kpex extract --2.5D`), which needs kpex 0.7.0 or later:
 
 ```sh
 make klayout-pex
 make klayout-pex CELL=inverter_top
 make klayout-pex CELL=inverter_top EXT_MODE=3
 ```
+
+On top of the extraction the target does three things:
+
+- It passes the CDL netlist of `klayout-lvs-netlist` as schematic, so that kpex checks its own LVS netlist against the device classes and totals of the schematic. A cell without a schematic gets a dummy one. kpex does not read the `$[rhigh]` lines of the CDL netlist, so a cell with resistors only stops `EXT_MODE=3` with `kpex reads no devices from the schematic`.
+- It reduces the full-RC netlist with TICER (`--reduce ticer`), which leaves far fewer elements and a faster simulation, and ngspice with `klu` can lose the operating point of an unreduced netlist (resistors below 1 mOhm).
+- It ties the substrate port `sub!` of the 2.5D netlist to `PEX_SUB_NET` (default `VSS`, [`scripts/tie_pex_substrate.py`](scripts/tie_pex_substrate.py)), as Magic ties the substrate to `VSS`, so the netlist keeps the pins of `<CELL>_pex.sym`.
+
+With the PEX instance swapped in, `inverter_tb_ac_ol` on `inverter` reads a DC gain of 31.46 dB and a UGB of 106.3 MHz from the kpex full-RC netlist, against 31.34 dB and 106.5 MHz from the Magic one.
 
 **Magic PEX** uses `sak-pex.sh`, which extracts the parasitics with Magic (C-decoupled, C-coupled, or full-RC):
 
