@@ -422,6 +422,14 @@ magic-drc: ## Run Magic DRC of the CELL cell (usage: make magic-drc [CELL=<celln
 	sak-drc.sh -d -m -w $(DRC_RPT_DIR) $(LAY_DIR)/$(CELL).$(_GDS_EXT)
 .PHONY: magic-drc
 
+# sak-drc.sh exits with an error on the density rules of any macro without fill, so the check decides.
+klayout-drc-regular: ## Run KLayout DRC of the CELL cell at regular level, only the density rules the chip's fill resolves may fail (usage: make klayout-drc-regular [CELL=<cellname>] [DRC_JOBS=<n>])
+	mkdir -p $(DRC_RPT_DIR)/regular
+	rm -rf $(DRC_RPT_DIR)/regular/$(CELL).klayout.drc
+	-sak-drc.sh -d -k -l regular $(_DRC_JOBS_OPT) -w $(DRC_RPT_DIR)/regular $(LAY_DIR)/$(CELL).$(_GDS_EXT)
+	python3 $(SCRIPTS_DIR)/check_drc_regular.py $(DRC_RPT_DIR)/regular/$(CELL).klayout.drc
+.PHONY: klayout-drc-regular
+
 gdscheck-drc: ## Run gdscheck DRC of the CELL cell (usage: make gdscheck-drc [CELL=<cellname>] [DRC_LEVEL=<precheck|macro|regular>] [GDSCHECK_SUITE=<suite>|GDSCHECK_DECKS=<decks>] [DRC_JOBS=<n>])
 	mkdir -p $(DRC_RPT_DIR)
 	sak-drc.sh -d -g -l $(DRC_LEVEL) $(_GDSCHECK_SUITE_OPT) $(_GDSCHECK_DECKS_OPT) $(_DRC_JOBS_OPT) -w $(DRC_RPT_DIR) $(LAY_DIR)/$(CELL).$(_GDS_EXT)
@@ -612,6 +620,7 @@ klayout-verify-all: ## Verify every cell with KLayout (DRC, LVS), PEX of TOP's l
 	$(MAKE) klayout-verify CELL=vco_core
 	$(MAKE) klayout-verify CELL=vco_top
 	$(MAKE) klayout-pex-leads
+	$(MAKE) klayout-drc-regular CELL=$(TOP)
 .PHONY: klayout-verify-all
 
 magic-verify: ## Verify CELL cell with Magic (usage: make magic-verify [CELL=<cellname>])
