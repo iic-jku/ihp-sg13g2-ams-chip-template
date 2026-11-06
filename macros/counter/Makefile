@@ -436,6 +436,8 @@ else
 LEC_GOLD_READ := 'plugin -i slang' 'read_slang --single-unit --top $(TOP) $(abspath $(MODULES_SIM))'
 endif
 
+# clk2fflogic on both sides makes the clock an input of the proof: EQY's own SBY script assumes one clock,
+# so without it a flop on the wrong clock net would pass
 lec: ## Prove the gate-level netlist equivalent to the RTL with EQY (usage: make lec [LEC_NETLIST=<netlist>])
 	@if [ ! -f $(LEC_NETLIST) ]; then \
 		echo "No netlist $(LEC_NETLIST) found. Run 'make build-top' (or 'make copy-final') first."; \
@@ -449,6 +451,7 @@ lec: ## Prove the gate-level netlist equivalent to the RTL with EQY (usage: make
 		'hierarchy -check -top $(TOP)' \
 		'proc' \
 		'flatten -noscopeinfo' \
+		'clk2fflogic' \
 		'' \
 		'[gate]' \
 		'read_liberty -ignore_miss_func $(LEC_LIB)' \
@@ -456,6 +459,7 @@ lec: ## Prove the gate-level netlist equivalent to the RTL with EQY (usage: make
 		'hierarchy -check -top $(TOP)' \
 		'flatten -noscopeinfo' \
 		'select -assert-none t:sg13g2_*' \
+		'clk2fflogic' \
 		'' \
 		'[strategy sby]' \
 		'use sby' \
@@ -463,21 +467,24 @@ lec: ## Prove the gate-level netlist equivalent to the RTL with EQY (usage: make
 	cd $(LEC_DIR) && eqy -f $(TOP).eqy -d work
 .PHONY: lec
 
-lec-mutant: ## Check that lec catches a difference: swap one cell in a copy of the netlist and expect lec to fail
+lec-mutant: ## Check that lec catches a difference: change one cell and one clock pin in copies of the netlist and expect lec to fail on each
 	mkdir -p $(LEC_DIR)
-	sed '0,/sg13g2_nand2_1 /s//sg13g2_nor2_1 /' $(LEC_NETLIST) > $(LEC_DIR)/mutant.nl.v
-	@if cmp -s $(LEC_NETLIST) $(LEC_DIR)/mutant.nl.v; then \
-		echo "lec-mutant: no sg13g2_nand2_1 cell to swap in $(LEC_NETLIST)"; \
-		exit 1; \
-	fi
-	@$(MAKE) --no-print-directory lec LEC_NETLIST=$(LEC_DIR)/mutant.nl.v || true
+	sed '0,/sg13g2_nand2_1 /s//sg13g2_nor2_1 /' $(LEC_NETLIST) > $(LEC_DIR)/mutant_cell.nl.v
+	sed '0,/\.CLK([^)]*)/s//.CLK(enable_i)/' $(LEC_NETLIST) > $(LEC_DIR)/mutant_clock.nl.v
 #	Only a partition's own FAIL counts: lec also exits non-zero when it never ran a proof
-	@if grep -qx FAIL $(LEC_DIR)/work/strategies/*/sby/status 2>/dev/null; then \
-		echo "lec-mutant: PASS, lec found the swapped cell"; \
-	else \
-		echo "lec-mutant: FAIL, no partition failed: lec proved the changed netlist equivalent or never ran a proof"; \
-		exit 1; \
-	fi
+	@for m in cell clock; do \
+		if cmp -s $(LEC_NETLIST) $(LEC_DIR)/mutant_$$m.nl.v; then \
+			echo "lec-mutant: nothing to change for the $$m mutant in $(LEC_NETLIST)"; \
+			exit 1; \
+		fi; \
+		$(MAKE) --no-print-directory lec LEC_NETLIST=$(LEC_DIR)/mutant_$$m.nl.v || true; \
+		if grep -qx FAIL $(LEC_DIR)/work/strategies/*/sby/status 2>/dev/null; then \
+			echo "lec-mutant: PASS, lec found the $$m mutant"; \
+		else \
+			echo "lec-mutant: FAIL, no partition failed on the $$m mutant: lec proved it equivalent or never ran a proof"; \
+			exit 1; \
+		fi; \
+	done
 .PHONY: lec-mutant
 # ================================================================================================
 
