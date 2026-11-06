@@ -5,7 +5,7 @@ V {}
 S {}
 F {}
 E {}
-T {Testbench for PSS, PNOISE and PAC analysis - 20 GHz VCO, post-layout} 450 -1730 0 0 1 1 {}
+T {Testbench for transient noise - 20 GHz VCO, post-layout} 450 -1730 0 0 1 1 {}
 N 1180 -1120 1180 -1080 {lab=ibias_100u}
 N 1240 -1120 1240 -1080 {lab=di_en}
 N 1300 -1120 1300 -1080 {lab=VDD}
@@ -77,7 +77,7 @@ C {devices/gnd.sym} 700 -770 0 0 {name=l13 lab=GND}
 C {devices/vsource.sym} 820 -840 0 0 {name=Ven value="dc=vdd"}
 C {devices/lab_pin.sym} 820 -910 3 0 {name=l14 sig_type=std_logic lab=di_en}
 C {devices/gnd.sym} 820 -770 0 0 {name=l15 lab=GND}
-C {devices/vsource.sym} 940 -840 0 0 {name=Vtune value="dc=0.75 spur=\{0\} smag=[1]"}
+C {devices/vsource.sym} 940 -840 0 0 {name=Vtune value="dc=0.75"}
 C {devices/lab_pin.sym} 940 -910 3 0 {name=l16 sig_type=std_logic lab=vtune}
 C {devices/gnd.sym} 940 -770 0 0 {name=l17 lab=GND}
 C {devices/isource.sym} 820 -1180 0 0 {name=Ibias value="dc=ibias"}
@@ -95,32 +95,15 @@ control
   var vcore=0.79
   var ibias=100u
 
-  // 4000 steps per period: at the default 1000 the shooting Newton cycles and does not converge.
-  // reltol 3e-5: the buffer bias filters are slow states (1 us against a 44 ps period). At the default 1e-3
-  // the shooting Newton lets them drift by about 70 mV from their DC values, at 1e-5 the operating point fails.
-  options strictsave=1 pss_minpts=4000 reltol=3e-5
-  save v(vout_p) v(vout_n) v(\\"x1:rf_p\\") v(\\"x1:rf_n\\")
-  save dv(vout_p) dv(vout_n) dv(\\"x1:rf_p\\") dv(\\"x1:rf_n\\")
+  // sde: at the default zoh the noise grid's steps abort the run. tran_noiselte: otherwise the noise drives the step
+  // down until the run aborts. gear: trapezoidal integration rings at the period. maxstep gives 180 steps per period.
+  options strictsave=1 strictoutput=0 reltol=3e-5 tran_method=\\"gear\\" tran_noiselte=1e6
+  save v(\\"x1:rf_p\\") v(\\"x1:rf_n\\")
 
-  // Oscillator PSS: the period is solved for, tper is the guess. ic kicks the tank away
-  // from the symmetric operating point, tstab lets the oscillation build up (at 3 ns the shooting fails).
-  // stabstep: at tper/4000 the stabilisation transient stops at t = 0 with the coil model (Timestep too small).
-  analysis pss pss oscillator=1 tper=50p tstab=6n stabstep=0.5p maxharm=20 ic=\{\\"x1:rf_p\\", 0.8, \\"x1:rf_n\\", 0.7\} store=\\"osc\\"
-
-  // VACASK before 7c38094 restarts the period that pnoise and pac integrate with a backward-Euler step at
-  // every Jacobian sample, which reads the phase noise and the tuning gain low below a few MHz (3.3 dB at
-  // 1 MHz on this VCO). tran_fbr shortens those steps. The option is global, so the line restates the others.
-  options strictsave=1 pss_minpts=4000 reltol=3e-5 tran_fbr=0.02
-
-  // Output noise around the first harmonic, linearised at the stored PSS. With oscillator=1 it is computed as
-  // for a driven circuit, so it is the total noise, which close to the carrier is the phase noise.
-  // in names the source the gain output refers to, pnoise needs one.
-  analysis pnoise pnoise psssolve=0 ic=\\"osc\\" truncharm=20 in=\\"Vtune\\" out=[\\"vout_p\\", \\"vout_n\\"] outharm=1 from=10k to=100M mode=\\"dec\\" points=10
-
-  // Tuning sensitivity: the upper FM sideband of the 1 V small-signal tone on vtune (spur 0, smag 1).
-  analysis pac pac psssolve=0 ic=\\"osc\\" truncharm=20 outharm=1 from=10k to=100M mode=\\"dec\\" points=10
-
-  postprocess(PYTHON, \\"../plot_simulations/vacask2data.py\\", \\"vco_top_tb_pss_lpe_vacask\\")
+  // Noiseless up to the limit cycle, then the record from that state. noisefmin: the default of noisefmax/1000 would
+  // generate no flicker noise below 100 MHz. sim_trannoise.py sets the seed and runs one VACASK per seed.
+  analysis settle tran stop=6n step=0.25p maxstep=0.25p icmode=\\"uic\\" ic=\{\\"x1:rf_p\\", 0.8, \\"x1:rf_n\\", 0.7\} store=\\"lc\\"
+  analysis noisy tran stop=4u step=0.25p maxstep=0.25p icmode=\\"uic\\" ic=\\"lc\\" noisemode=\\"sde\\" noiseseed=0 noisefmax=100G noisefmin=100k oversample=2
 endc
 "}
 C {devices/simulator_commands_shown.sym} 1980 -1330 0 0 {name=Libs_VACASK

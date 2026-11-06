@@ -82,8 +82,9 @@ def plot_tran(data_dir, figures_dir, tb, title):
     save(fig, figures_dir, tb, (t_ns, vp, vn, op, on), "time_ns,v_rf_p,v_rf_n,v_out_p,v_out_n")
 
 
-def plot_pss(data_dir, figures_dir, tb="vco_top_tb_pss_vacask", where=""):
+def plot_pss(data_dir, figures_dir):
     """VACASK PSS waveform and output spectrum, phase noise from PNOISE, tuning gain from PAC."""
+    tb = "vco_top_tb_pss_vacask"
     pss = str(data_dir / f"{tb}_pss.txt")
     t = ng.loadngspicecol(pss, "time")
     vp = ng.loadngspicecol(pss, "x1:rf_p")
@@ -130,7 +131,7 @@ def plot_pss(data_dir, figures_dir, tb="vco_top_tb_pss_vacask", where=""):
     print(f"PAC: K_VCO = {np.interp(7, np.log10(fa), kvco) / 1e9:.3f} GHz/V at 10 MHz")
 
     fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(10, 8))
-    fig.suptitle(f'VCO Top - {where}Phase Noise (PNOISE) and Tuning Gain (PAC)')
+    fig.suptitle('VCO Top - Phase Noise (PNOISE) and Tuning Gain (PAC)')
     ax1.semilogx(fm, L, color='#0c5da5', linewidth=2.4)
     ax1.plot(1e6, L1M, 'o', color='#ff6b35', label=f'{L1M:.1f} dBc/Hz at 1 MHz')
     ax1.set_xlabel(r'$f_\mathrm{offset}$ (Hz)')
@@ -209,14 +210,17 @@ def plot_powerup(data_dir, figures_dir):
 
 
 def plot_trannoise(data_dir, figures_dir):
-    """Phase noise from the zero crossings of the VACASK transient noise over seeds, against PNOISE."""
+    """Phase noise from the zero crossings of the VACASK transient noise over seeds, schematic and post-layout, against the schematic's PNOISE."""
     tb = "vco_top_tb_trannoise_vacask"
     file = str(data_dir / f"{tb}.txt")
     f = ng.loadngspicecol(file, "f_offset_hz")
     fig, ax = plt.subplots(figsize=(10, 6.2))
     fig.suptitle('VCO Top - Phase Noise, Transient Noise against PNOISE (VACASK)')
-    ax.semilogx(f, ng.loadngspicecol(file, "L_trannoise_dbc_hz"), color='#ff6b35', linewidth=2.0, label='transient noise')
-    ax.semilogx(f, ng.loadngspicecol(file, "L_pnoise_dbc_hz"), color='#0c5da5', linewidth=2.4, label='PNOISE')
+    ax.semilogx(f, ng.loadngspicecol(file, "L_pnoise_dbc_hz"), color='#0c5da5', linewidth=2.4, label='PNOISE, schematic')
+    ax.semilogx(f, ng.loadngspicecol(file, "L_trannoise_dbc_hz"), color='#ff6b35', linewidth=2.0, label='transient noise, schematic')
+    lpe = data_dir / "vco_top_tb_trannoise_lpe_vacask.txt"
+    if lpe.exists():
+        ax.semilogx(ng.loadngspicecol(str(lpe), "f_offset_hz"), ng.loadngspicecol(str(lpe), "L_trannoise_dbc_hz"), color='#2f855a', linewidth=2.0, label='transient noise, post-layout')
     ax.set_xlabel(r'$f_\mathrm{offset}$ (Hz)')
     ax.set_ylabel(r'$\mathcal{L}$ (dBc/Hz)')
     ax.grid(visible=True, which='both', linestyle='--', alpha=0.45)
@@ -242,8 +246,6 @@ def main():
         f_pss = plot_pss(data_dir, figures_dir)
     if list(data_dir.glob("vco_top_tb_tune_vacask_tune_*.txt")):
         tune = plot_tune(data_dir, figures_dir)
-    if (data_dir / "vco_top_tb_pss_lpe_vacask_pss.txt").exists():
-        plot_pss(data_dir, figures_dir, "vco_top_tb_pss_lpe_vacask", "Post-Layout ")
     if (data_dir / "vco_top_tb_powerup_lpe.txt").exists():
         plot_powerup(data_dir, figures_dir)
     if (data_dir / "vco_top_tb_trannoise_vacask.txt").exists():

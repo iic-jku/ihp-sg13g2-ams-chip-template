@@ -233,6 +233,13 @@ sim-trannoise: ## Run the transient noise of the schematic over SEEDS seeds agai
 		--data $(SIM_PLOT_DIR)/data/vco_top_tb_trannoise_vacask.txt
 .PHONY: sim-trannoise
 
+sim-trannoise-lpe: ## Run the transient noise of the post-layout netlist over SEEDS seeds, its phase noise, about 10 hours on a server (usage: make sim-trannoise-lpe [SEEDS=<n>])
+	$(MAKE) netlist-xschem TB=vco_top_tb_trannoise_lpe_vacask
+	python3 $(SCRIPTS_DIR)/sim_trannoise.py $(XSCHEM_TB_DIR)/simulations/vco_top_tb_trannoise_lpe_vacask.spectre --seeds $(SEEDS) \
+		--pnoise $(SIM_PLOT_DIR)/data/vco_top_tb_pss_vacask_pnoise.txt --pss $(SIM_PLOT_DIR)/data/vco_top_tb_pss_vacask_pss.txt \
+		--data $(SIM_PLOT_DIR)/data/vco_top_tb_trannoise_lpe_vacask.txt
+.PHONY: sim-trannoise-lpe
+
 sim-all: ## Simulate the macro
 	$(MAKE) sim-xschem TB=vco_top_tb_tran
 	$(MAKE) sim-xschem TB=vco_top_tb_pss_vacask

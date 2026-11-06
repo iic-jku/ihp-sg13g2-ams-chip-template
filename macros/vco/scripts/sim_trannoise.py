@@ -27,17 +27,19 @@ def run_seed(args):
     run_dir = os.path.dirname(os.path.abspath(src))
     with open(src, encoding="utf-8") as f:
         text = f.read()
-    text = text.replace("analysis settle ", f"analysis settle_s{seed} ").replace("analysis noisy ", f"analysis noisy_s{seed} ")
+    # VACASK names a rawfile after its analysis, so the benches and seeds that share the folder need their own names
+    stem = os.path.basename(src).replace(".spectre", "")
+    text = text.replace("analysis settle ", f"analysis {stem}_settle_s{seed} ").replace("analysis noisy ", f"analysis {stem}_noisy_s{seed} ")
     text = re.sub(r"\bnoiseseed=\d+", f"noiseseed={seed}", text)
     if stop:
-        text = re.sub(r"(analysis noisy_s\d+ tran stop=)\S+", rf"\g<1>{stop}", text)
+        text = re.sub(r"(analysis \S+_noisy_s\d+ tran stop=)\S+", rf"\g<1>{stop}", text)
     deck = src.replace(".spectre", f"_s{seed}.spectre")
     with open(deck, "w", encoding="utf-8", newline="\n") as f:
         f.write(text)
     log = deck.replace(".spectre", ".log")
     with open(log, "w", encoding="utf-8") as f:
         r = subprocess.run(["vacask", os.path.basename(deck)], stdin=subprocess.DEVNULL, stdout=f, stderr=subprocess.STDOUT, cwd=run_dir, check=False)
-    return seed, r.returncode, os.path.join(run_dir, f"noisy_s{seed}.raw")
+    return seed, r.returncode, os.path.join(run_dir, f"{stem}_noisy_s{seed}.raw")
 
 
 def crossings(raw_path):
@@ -115,7 +117,8 @@ def main():
     src = os.path.abspath(args.netlist)
     run_dir = os.path.dirname(src)
     if args.no_run:
-        raws = [os.path.join(run_dir, f"noisy_s{s}.raw") for s in range(args.seeds)]
+        stem = os.path.basename(src).replace(".spectre", "")
+        raws = [os.path.join(run_dir, f"{stem}_noisy_s{s}.raw") for s in range(args.seeds)]
     else:
         print(f"sim_trannoise.py: {args.seeds} seeds in {run_dir}", flush=True)
         with ThreadPoolExecutor(max_workers=args.seeds) as pool:
