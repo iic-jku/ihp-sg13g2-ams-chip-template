@@ -1372,7 +1372,7 @@ The [Makefile](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main
 | Step | Tools | Make target | Output |
 | :--- | :--- | :--- | :--- |
 | Layout generation | KLayout Python | `klayout-script`, `klayout-script-all` | `layout/` |
-| DRC | KLayout, Magic | `klayout-drc`, `magic-drc` | `verification/drc/` |
+| DRC | KLayout, Magic | `klayout-drc`, `klayout-drc-regular`, `magic-drc` | `verification/drc/` |
 | LVS | Xschem, KLayout, Magic, Netgen | `klayout-lvs`, `magic-lvs` | `verification/lvs/`, `netlist/schematic/`, `netlist/layout/` |
 | PEX | KPEX, Magic | `klayout-pex-leads`, `klayout-pex`, `magic-pex` | `netlist/pex/` |
 | EM simulation | gds2palace, AWS Palace | `sim-em` | `verification/em/layout/`, `verification/em/palace_model/` |
@@ -1464,7 +1464,7 @@ Some of the traps the agent ran into are worth knowing for any KLayout script:
 
 ## DRC, LVS and PEX {#sec-rf-verify}
 
-The verification targets are those of the inverter, see @sec-analog: `klayout-drc`, `magic-drc`, `klayout-lvs`, `magic-lvs`, `klayout-pex`, `magic-pex` and the `*-verify` targets, all with `CELL=<cellname>`. What differs is which check can run on which cell:
+The verification targets are those of the inverter, see @sec-analog: `klayout-drc`, `magic-drc`, `gdscheck-drc`, `klayout-lvs`, `magic-lvs`, `klayout-pex`, `magic-pex` and the `*-verify` targets, all with `CELL=<cellname>`. What differs is which check can run on which cell:
 
 | Cell | KLayout | Magic |
 | :--- | :--- | :--- |
@@ -1479,6 +1479,10 @@ The gaps have three reasons:
 - **Magic extracts the varactor as two two-terminal halves** and does not extract the PDK inductor, so Netgen cannot compare a cell that holds either.
 - **KPEX cannot read Magic's extraction of the varactor**, which Magic writes as a Verilog-A device. Every cell above the array inherits it.
 - **An RC extraction of a coil is not its RF model.** It misses the inductance and the coupling: KPEX turns `vco_ind` into a single 42 fF capacitor. The model of the coil is its EM simulation, see @sec-rf-em.
+
+The KLayout `macro` level of `klayout-drc` leaves out the density rules, and with them rules a macro has to meet on its own, such as the minimum metal areas `Mn.d` and `pSD.b`. So `klayout-verify-all` also runs `klayout-drc-regular` on `TOP`, which fails on any rule but the global densities that only the chip's fill can meet.
+
+`magic-drc` does not pass: `vco_buf`, `vco_var`, `vco_core` and `vco_top` report `LU.d` and `Cnt.a` on `sg13_hv_svaricap` and `MIM.e` and `Slt.c` on `cap_cmim`. A bare PCell of each, with none of this macro's wiring, reports the same rules and KLayout passes them, so they belong to the PDK's cells or Magic's rule deck, as the inverter's `NBL.f` does, and get fixed upstream. Until then `magic-verify-all` and `make all` stop at the first of them, so run the targets after it by hand.
 
 ### Parasitic Extraction at 20 GHz
 
