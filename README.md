@@ -351,7 +351,7 @@ Solid arrows are direct `$(MAKE) <target>` calls within a single Makefile. Dashe
 At the top level, `make all` runs four steps in this order:
 
 1. `build-all` initialises the submodules and builds every component by calling its own `all` target: bondpad, logos, digital macro, analog macro, and finally the chip assembly with `build-top` (LibreLane, copy-back of all artifacts, logo and fill insertion, final GDS render).
-2. `magic-drc` and `gdscheck-drc` run the DRC of the final `chip_top` and `chip_top_logo_fill` GDS. A violation stops `make all`, and both flag IHP's own cells until the fixes are in the container (see [Design Rule Check (DRC)](#design-rule-check-drc)). The KLayout DRC, the sign-off deck, is not part of `make all` to shorten the runtime. Run it separately with `klayout-drc-minimum` or `klayout-drc-regular`.
+2. `gdscheck-drc` runs the DRC of the final `chip_top` and `chip_top_logo_fill` GDS. A violation stops `make all`, and gdscheck flags IHP's own cells until the fix is in the container (see [Design Rule Check (DRC)](#design-rule-check-drc)). `magic-drc` is left out until IHP's IO pads and SRAM are clean in Magic, and it takes about a day on the chip. The KLayout DRC, the sign-off deck, is not part of `make all` to shorten the runtime. Run it separately with `klayout-drc-minimum` or `klayout-drc-regular`.
 3. `sim-all` runs the top-level RTL and gate-level simulations on the netlists produced by this build.
 4. `bondplan` generates the bonding diagram, the bondwires, and the pin table.
 
@@ -1024,7 +1024,7 @@ See [packaging/README.md](packaging/README.md) for the full flow documentation a
 
 ### Build, Verify and Simulate All
 
-Runs `build-all` first, followed by the Magic and gdscheck DRC of both `chip_top` and `chip_top_logo_fill`, then the chip simulations (`sim-all`) and finally generates the bondplan (`bondplan`). A violation in either DRC stops the flow, see [Design Rule Check (DRC)](#design-rule-check-drc):
+Runs `build-all` first, followed by the gdscheck DRC of both `chip_top` and `chip_top_logo_fill`, then the chip simulations (`sim-all`) and finally generates the bondplan (`bondplan`). A violation in the DRC stops the flow, see [Design Rule Check (DRC)](#design-rule-check-drc):
 
 ```sh
 make all
