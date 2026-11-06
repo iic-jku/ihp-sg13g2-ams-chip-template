@@ -82,9 +82,8 @@ def plot_tran(data_dir, figures_dir, tb, title):
     save(fig, figures_dir, tb, (t_ns, vp, vn, op, on), "time_ns,v_rf_p,v_rf_n,v_out_p,v_out_n")
 
 
-def plot_pss(data_dir, figures_dir):
+def plot_pss(data_dir, figures_dir, tb="vco_top_tb_pss_vacask", where=""):
     """VACASK PSS waveform and output spectrum, phase noise from PNOISE, tuning gain from PAC."""
-    tb = "vco_top_tb_pss_vacask"
     pss = str(data_dir / f"{tb}_pss.txt")
     t = ng.loadngspicecol(pss, "time")
     vp = ng.loadngspicecol(pss, "x1:rf_p")
@@ -131,7 +130,7 @@ def plot_pss(data_dir, figures_dir):
     print(f"PAC: K_VCO = {np.interp(7, np.log10(fa), kvco) / 1e9:.3f} GHz/V at 10 MHz")
 
     fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(10, 8))
-    fig.suptitle('VCO Top - Phase Noise (PNOISE) and Tuning Gain (PAC)')
+    fig.suptitle(f'VCO Top - {where}Phase Noise (PNOISE) and Tuning Gain (PAC)')
     ax1.semilogx(fm, L, color='#0c5da5', linewidth=2.4)
     ax1.plot(1e6, L1M, 'o', color='#ff6b35', label=f'{L1M:.1f} dBc/Hz at 1 MHz')
     ax1.set_xlabel(r'$f_\mathrm{offset}$ (Hz)')
@@ -185,6 +184,47 @@ def plot_tune(data_dir, figures_dir):
     return vt, f0
 
 
+def plot_powerup(data_dir, figures_dir):
+    """Post-layout power-up and enable transient, per period: supplies up, di_en up at 100 ns and down at 460 ns."""
+    tb = "vco_top_tb_powerup_lpe"
+    file = str(data_dir / f"{tb}.txt")
+    t = ng.loadngspicecol(file, "time") * 1e9
+    fig, (ax1, ax2, ax3) = plt.subplots(3, 1, figsize=(10, 9), sharex=True)
+    fig.suptitle('VCO Top - Post-Layout Power-Up and Enable Transient (ngspice)')
+    ax1.plot(t, ng.loadngspicecol(file, "tank_swing_v"), color='#0c5da5', linewidth=2.0, label='tank, differential')
+    ax1.plot(t, ng.loadngspicecol(file, "vout_pp_v"), color='#ff6b35', linewidth=2.0, label='rf_out_p into 50 Ohm')
+    ax1.set_ylabel('Swing per period (V)')
+    ax1.legend(loc='center right')
+    ax2.plot(t, ng.loadngspicecol(file, "f_avg_hz") / 1e9, color='#2f855a', linewidth=2.0)
+    ax2.set_ylabel(r'$f_0$ over 100 periods (GHz)')
+    ax3.plot(t, ng.loadngspicecol(file, "idd_a") * 1e3, color='#0c5da5', linewidth=2.0, label='VDD')
+    ax3.plot(t, ng.loadngspicecol(file, "icore_a") * 1e3, color='#ff6b35', linewidth=2.0, label='vdd_core')
+    ax3.set_ylabel('Supply current (mA)')
+    ax3.set_xlabel('Time (ns)')
+    ax3.legend(loc='center right')
+    for ax in (ax1, ax2, ax3):
+        ax.grid(visible=True, which='major', linestyle='--', alpha=0.45)
+    plt.tight_layout()
+    save(fig, figures_dir, tb)
+
+
+def plot_trannoise(data_dir, figures_dir):
+    """Phase noise from the zero crossings of the VACASK transient noise over seeds, against PNOISE."""
+    tb = "vco_top_tb_trannoise_vacask"
+    file = str(data_dir / f"{tb}.txt")
+    f = ng.loadngspicecol(file, "f_offset_hz")
+    fig, ax = plt.subplots(figsize=(10, 6.2))
+    fig.suptitle('VCO Top - Phase Noise, Transient Noise against PNOISE (VACASK)')
+    ax.semilogx(f, ng.loadngspicecol(file, "L_trannoise_dbc_hz"), color='#ff6b35', linewidth=2.0, label='transient noise')
+    ax.semilogx(f, ng.loadngspicecol(file, "L_pnoise_dbc_hz"), color='#0c5da5', linewidth=2.4, label='PNOISE')
+    ax.set_xlabel(r'$f_\mathrm{offset}$ (Hz)')
+    ax.set_ylabel(r'$\mathcal{L}$ (dBc/Hz)')
+    ax.grid(visible=True, which='both', linestyle='--', alpha=0.45)
+    ax.legend(loc='upper right')
+    plt.tight_layout()
+    save(fig, figures_dir, tb)
+
+
 def main():
     # Resolve data and output paths relative to this script
     script_dir = Path(__file__).resolve().parent
@@ -202,6 +242,12 @@ def main():
         f_pss = plot_pss(data_dir, figures_dir)
     if list(data_dir.glob("vco_top_tb_tune_vacask_tune_*.txt")):
         tune = plot_tune(data_dir, figures_dir)
+    if (data_dir / "vco_top_tb_pss_lpe_vacask_pss.txt").exists():
+        plot_pss(data_dir, figures_dir, "vco_top_tb_pss_lpe_vacask", "Post-Layout ")
+    if (data_dir / "vco_top_tb_powerup_lpe.txt").exists():
+        plot_powerup(data_dir, figures_dir)
+    if (data_dir / "vco_top_tb_trannoise_vacask.txt").exists():
+        plot_trannoise(data_dir, figures_dir)
 
     # The shooting PSS can settle a slow state (a bias filter) away from its DC value without failing, which shows as
     # a frequency off the transient's at the same tuning voltage (0.75 V in the PSS bench)

@@ -68,6 +68,11 @@ _GDSCHECK_SUITE_OPT = $(if $(GDSCHECK_SUITE),-s "$(GDSCHECK_SUITE)")
 _GDSCHECK_DECKS_OPT = $(if $(GDSCHECK_DECKS),-D "$(GDSCHECK_DECKS)")
 _DRC_JOBS_OPT = $(if $(DRC_JOBS),-j $(DRC_JOBS))
 
+# ngspice runs in parallel in sim-powerup, and seeds of sim-trannoise, one process each
+# Override with: make <target> SIM_JOBS=<n> SEEDS=<n>
+SIM_JOBS ?= 4
+SEEDS ?= 8
+
 # Floating-point precision (significant digits) for Xschem's ev function
 # Override with: make <target> EV_PRECISION=<digits>
 EV_PRECISION ?= 5
@@ -194,7 +199,7 @@ SCRIPT ?= plot_$(CELL)
 
 # A testbench whose name contains _vacask is netlisted in the Spectre format and run with VACASK, any other one with ngspice.
 # VACASK runs the postprocess script at the end of the testbench's control block, which exports the results to plot_simulations/data/.
-sim-xschem: ## Run TB simulation with Xschem in batch mode, VACASK for TB names with _vacask, ngspice otherwise (usage: make sim-xschem [TB=<testbenchname>])
+netlist-xschem: ## Netlist TB with Xschem in batch mode without simulating it (usage: make netlist-xschem [TB=<testbenchname>])
 	mkdir -p $(XSCHEM_TB_DIR)/simulations
 	mkdir -p $(SIM_PLOT_DIR)/data
 	cd $(XSCHEM_TB_DIR) && xschem -r -x -q --rcfile xschemrc --command ' \
@@ -204,12 +209,29 @@ sim-xschem: ## Run TB simulation with Xschem in batch mode, VACASK for TB names 
 		write_data [save_params] $(abspath $(XSCHEM_TB_DIR)/simulations)/$(TB).save; \
 		xschem netlist \
 	' $(TB).sch
+.PHONY: netlist-xschem
+
+sim-xschem: ## Run TB simulation with Xschem in batch mode, VACASK for TB names with _vacask, ngspice otherwise (usage: make sim-xschem [TB=<testbenchname>])
+	$(MAKE) netlist-xschem TB=$(TB)
 	cd $(XSCHEM_TB_DIR)/simulations && $(if $(findstring _vacask,$(TB)),vacask $(TB).spectre </dev/null,ngspice -b $(TB).spice)
 .PHONY: sim-xschem
 
 sim-view-xschem: ## Plot Xschem simulation results (usage: make sim-view-xschem [SCRIPT=<scriptname>])
 	SHOW_PLOTS=1 python3 $(SIM_PLOT_DIR)/$(SCRIPT).py
 .PHONY: sim-view-xschem
+
+sim-powerup: ## Run the power-up and enable transient of the post-layout netlist over supply orders and corners, hours on a server (usage: make sim-powerup [SIM_JOBS=<n>])
+	$(MAKE) netlist-xschem TB=vco_top_tb_powerup_lpe
+	python3 $(SCRIPTS_DIR)/sim_powerup.py $(XSCHEM_TB_DIR)/simulations/vco_top_tb_powerup_lpe.spice --vcore $(VCORE) --jobs $(SIM_JOBS) \
+		--csv $(SIM_PLOT_DIR)/figures/vco_top_tb_powerup_lpe_corners.csv --data $(SIM_PLOT_DIR)/data/vco_top_tb_powerup_lpe.txt
+.PHONY: sim-powerup
+
+sim-trannoise: ## Run the transient noise of the schematic over SEEDS seeds against PNOISE, hours on a server (usage: make sim-trannoise [SEEDS=<n>])
+	$(MAKE) netlist-xschem TB=vco_top_tb_trannoise_vacask
+	python3 $(SCRIPTS_DIR)/sim_trannoise.py $(XSCHEM_TB_DIR)/simulations/vco_top_tb_trannoise_vacask.spectre --seeds $(SEEDS) \
+		--pnoise $(SIM_PLOT_DIR)/data/vco_top_tb_pss_vacask_pnoise.txt --pss $(SIM_PLOT_DIR)/data/vco_top_tb_pss_vacask_pss.txt \
+		--data $(SIM_PLOT_DIR)/data/vco_top_tb_trannoise_vacask.txt
+.PHONY: sim-trannoise
 
 sim-all: ## Simulate the macro
 	$(MAKE) sim-xschem TB=vco_top_tb_tran
@@ -586,6 +608,8 @@ klayout-pex-leads: ## Run KPEX on TOP without the coil and the varactor array, f
 	rm -f $(TOP)_leads.nodes $(TOP)_leads.sim
 	sak-pin-reorder.py $(XSCHEM_TB_DIR)/$(TOP)_leads.sym $(NET_PEX_DIR)/$(TOP)_leads_klayout_pex_3.spice --format spice
 	python3 $(SCRIPTS_DIR)/check_pex_ports.py $(NET_PEX_DIR)/$(TOP)_leads_klayout_pex_3.spice
+	mkdir -p $(NET_SPECTRE_DIR)
+	python3 $(SCRIPTS_DIR)/spice2spectre.py $(NET_PEX_DIR)/$(TOP)_leads_klayout_pex_3.spice $(NET_SPECTRE_DIR)/$(TOP)_leads.inc
 .PHONY: klayout-pex-leads
 
 magic-pex: ## Run Parasitic Extraction with Magic of the CELL cell (usage: make magic-pex [CELL=<cellname>] [EXT_MODE=<1|2|3>] [THRESHOLD=<mOhm>] [MINRES=<mOhm>] [MINDELAY=<ps>])
