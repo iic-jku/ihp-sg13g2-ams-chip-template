@@ -1024,7 +1024,7 @@ See [packaging/README.md](packaging/README.md) for the full flow documentation a
 
 ### Build, Verify and Simulate All
 
-Runs `build-all` first, followed by the Magic and gdscheck DRC of both `chip_top` and `chip_top_logo_fill`, then the chip simulations (`sim-all`) and finally generates the bondplan (`bondplan`). A violation in either DRC stops the flow, see [Design Rule Check (DRC)](#design-rule-check-drc):
+Runs `build-all` first, followed by the gdscheck DRC of both `chip_top` and `chip_top_logo_fill`, then the chip simulations (`sim-all`) and finally generates the bondplan (`bondplan`). A violation in the DRC stops the flow, see [Design Rule Check (DRC)](#design-rule-check-drc):
 
 ```sh
 make all
