@@ -33,14 +33,14 @@ This repo is the ihp-sg13g2 AMS template or a chip started from it. Items marked
 
 ```sh
 make help                          # targets and variables
-make all                           # build-all, gdscheck DRC of chip_top and chip_top_logo_fill, sim-all, bondplan
+make all                           # build-all, regular KLayout and gdscheck DRC of chip_top_logo_fill, sim-all, bondplan
 make build-all                     # submodules, bondpad, logos, macros, build-top
 make build-top                     # librelane-nodrc, copy reports/GDS/netlists/render, add-logo-fill, render-gds
 make sim-rtl-cocotb                # chip RTL simulation (cocotb on Icarus Verilog)
 make sim-all                       # RTL and gate-level cocotb, gate-level Xschem/ngspice
 make klayout-drc-regular           # full KLayout DRC of layout/chip_top_logo_fill.gds.gz
 make klayout-verify CELL=<cell>    # KLayout DRC, LVS and PEX of layout/<cell>.gds.gz
-make magic-verify CELL=<cell>      # Magic DRC, Magic/Netgen LVS and Magic PEX
+make magic-verify CELL=<cell>      # Magic/Netgen LVS and Magic PEX, its DRC is commented out
 make gdscheck-drc CELL=<cell>      # gdscheck DRC of layout/<cell>.gds.gz
 make regression                    # the CI smoke test
 make -C macros/counter lint-verilog-all     # Verilator lint (template macro)
@@ -49,7 +49,7 @@ make -C macros/counter sim-rtl-cocotb       # cocotb testbench
 make -C macros/counter lec                  # prove the final netlist equivalent to the RTL (EQY)
 make -C macros/counter all                  # lint, FPGA build, LibreLane, LEC, Magic PEX, simulations
 make -C macros/inverter sim-xschem TB=<tb>  # one Xschem testbench in batch mode (template macro)
-make -C macros/inverter all                 # KLayout and Magic DRC/LVS/PEX, LEF/LIB/Verilog stub, simulations, CACE
+make -C macros/inverter all                 # KLayout DRC/LVS/PEX, gdscheck DRC, Magic LVS/PEX, LEF/LIB/Verilog stub, simulations, CACE
 ```
 
 - Start with the narrowest target: lint and RTL simulation before any LibreLane run. CI allows `make regression` up to 360 minutes.
@@ -57,7 +57,7 @@ make -C macros/inverter all                 # KLayout and Magic DRC/LVS/PEX, LEF
 - The Xschem targets netlist in batch mode and run `ngspice -b`, so `plot` commands in a testbench `.control` block do nothing. Testbenches write results with `wrdata` to `testbenches/xschem/plot_simulations/data/`, and `sim-view-xschem` plots them.
 - The top-level `sim-gl-xschem` includes `macros/counter/netlist/xspice/counter_top.xspice` (template), which `clean-all` deletes. Run `make build-counter` before it.
 - `build-top` runs `librelane-nodrc` on purpose until IHP fixes the `metal1_pin_offgrid` errors (see the comment in `Makefile`). Run DRC separately with `magic-drc`, `klayout-drc-minimum`, `klayout-drc-regular` or the matching `gdscheck-drc-*` targets. `DRC_JOBS=<n>` caps the KLayout processes and sets the gdscheck threads (default 4 and every CPU). More than 4 only pays off for the full chip on a server.
-- KLayout is the sign-off DRC. Magic and gdscheck flag IHP's own cells (the nBuLay ring of the `pmos` guard ring PCell, IHP-Open-PDK#954, fixed in gdscheck after 0.2.0), so until the upstream fixes are in the image `magic-verify`, `make regression`, `make build-all` and `make all` stop at Magic. Magic also flags the IO pads and the SRAM read hierarchically and takes about a day on the chip, so `make all` leaves the chip's Magic DRC out. Fix such a report upstream, not with make's `-` prefix in a flow. Keep `-f` patterns for Magic away from the top cell: `sak-drc.sh` refuses one that matches it, because Magic would check an empty cell.
+- KLayout is the sign-off DRC. Magic and gdscheck flag IHP's own cells (the nBuLay ring of the `pmos` guard ring PCell, IHP-Open-PDK#954, fixed in gdscheck after 0.2.0), so until a gdscheck release with that fix is in the image `make build-all` and `make all` stop at gdscheck. Magic also flags the IO pads and the SRAM read hierarchically and takes about a day on the chip, so the flows leave the Magic DRC out: its lines are commented out in `magic-verify`, in the IP `all` and in `make all`. Fix such a report upstream, not with make's `-` prefix in a flow. Keep `-f` patterns for Magic away from the top cell: `sak-drc.sh` refuses one that matches it, because Magic would check an empty cell.
 
 ## Conventions
 
