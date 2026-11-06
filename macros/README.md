@@ -5,7 +5,7 @@ Every folder here is one macro with its own `Makefile` and `README.md`, followin
 | Macro | Kind | Source of truth | Flow |
 | --- | --- | --- | --- |
 | [`counter/`](counter/) | digital | SystemVerilog in `rtl/` | Verilator lint, Icarus Verilog and cocotb simulation, LibreLane hardening with DRC and LVS inside the run, XSPICE model for the mixed-signal Xschem simulation, FPGA emulation on three boards |
-| [`inverter/`](inverter/) | analog | Xschem schematic and hand-drawn GDS in `layout/` | Four Xschem testbenches, KLayout and Magic DRC, LVS and PEX, LEF, Liberty and Verilog stub export by Magic, CACE characterization |
+| [`inverter/`](inverter/) | analog | Xschem schematic and hand-drawn GDS in `layout/` | Four Xschem testbenches, KLayout and Magic DRC, LVS and PEX, gdscheck DRC, LEF, Liberty and Verilog stub export by Magic, CACE characterization |
 
 The `Makefile` in this folder has one job: it starts a new macro as a renamed copy of an existing one.
 
