@@ -218,7 +218,9 @@ A designer-oriented description of this chip can be found in [doc/](doc/):
 ├─ 📁 scripts/
 │  ├─ add_logo_fill.sh
 │  ├─ add_rectangle.py
-│  └─ check_pex_ports.py
+│  ├─ check_pex_ports.py
+│  ├─ test_tie_pex_substrate.py
+│  └─ tie_pex_substrate.py
 ├─ 📁 testbenches/
 │  ├─ 📁 cocotb/
 │  │  ├─ chip_top_tb.gtkw
@@ -943,13 +945,21 @@ python3 scripts/check_pex_ports.py netlist/pex/chip_top_magic_pex_1.spice
 python3 scripts/check_pex_ports.py -v netlist/pex/*.spice     # -v also prints the size of each subcircuit
 ```
 
-**KLayout PEX** currently uses `kpex` with the Magic extraction engine (the 2.5D engine is work in progress):
+**KLayout PEX** uses the 2.5D engine of `kpex` (`kpex extract --2.5D`), which needs kpex 0.7.0 or later:
 
 ```sh
 make klayout-pex
 make klayout-pex CELL=chip_top
 make klayout-pex CELL=chip_top EXT_MODE=3
 ```
+
+On top of the extraction the target does three things:
+
+- It passes the CDL netlist of `klayout-lvs-netlist` as schematic, so that kpex checks its own LVS netlist against the device classes and totals of the schematic. A cell without a schematic gets a dummy one. kpex does not read the `$[rhigh]` lines of the CDL netlist, so a cell with resistors only stops `EXT_MODE=3` with `kpex reads no devices from the schematic`.
+- It reduces the full-RC netlist with TICER (`--reduce ticer`), which leaves far fewer elements and a faster simulation, and ngspice with `klu` can lose the operating point of an unreduced netlist (resistors below 1 mOhm).
+- It ties the substrate port `sub!` of the 2.5D netlist to `PEX_SUB_NET` (default `VSS`, [`scripts/tie_pex_substrate.py`](scripts/tie_pex_substrate.py)), as Magic ties the substrate to `VSS`, so the netlist keeps the pins of `<CELL>_pex.sym`.
+
+The chip top-level has not been extracted with the 2.5D engine yet. `counter_top` alone takes 47 min in `EXT_MODE=2`, so plan a server for `chip_top`.
 
 **Magic PEX** uses `sak-pex.sh`, which extracts the parasitics with Magic (C-decoupled, C-coupled, or full-RC):
 
