@@ -55,8 +55,7 @@ def deck(src, seq, corner, temp, vcore, vtune, raw, threads):
             s = re.sub(r"^tran (\S+) \S+$", rf"tran \1 {times['Tstop']:g}", s)
             s = re.sub(r"^write \S+", f"write {raw}", s)
             if s == "set filetype=binary":
-                s += f"
-set num_threads={threads}"
+                s += f"\nset num_threads={threads}"
             if s.startswith(("wrdata", "set wr_", "+ v(")):
                 s = "* " + s
             out.append(s)
