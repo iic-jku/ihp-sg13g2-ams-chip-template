@@ -69,8 +69,9 @@ x0, x1 = min(b.left for b in tg), max(b.right for b in tg)
 y0, y1 = min(b.bottom for b in tg), max(b.top for b in tg)
 xa, xb_ = x0 - TAP_GAP - TAP_W, x1 + TAP_GAP + TAP_W
 ya = y0 - TAP_GAP - TAP_W
-# Three separate taps, so their contact grids cannot collide at the corners, joined on Metal1
-yu = ya + TAP_W + 0.3
+# Three separate taps, so their contact grids cannot collide at the corners, joined on Metal1. pSD reaches 0.03 um past
+# a tap's Activ, and pSD.b asks 0.31 um between two pSD regions.
+yu = ya + TAP_W + 0.4
 for bx0, by0, bx1, by1 in ((xa, ya, xb_, ya + TAP_W), (xa, yu, xa + TAP_W, y1), (xb_ - TAP_W, yu, xb_, y1)):
     tap = top.pcell("ptap1", w=vl.um(bx1 - bx0), l=vl.um(by1 - by0))
     top.add(tap, bx0, by0)

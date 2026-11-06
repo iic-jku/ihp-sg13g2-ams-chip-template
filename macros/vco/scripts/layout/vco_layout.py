@@ -8,6 +8,7 @@
 # and cells read from several GDS files cannot clash by name.
 
 import importlib
+import math
 import os
 import sys
 
@@ -21,6 +22,9 @@ LAYERS = {
 METALS = ["Metal1", "Metal2", "Metal3", "Metal4", "Metal5", "TopMetal1", "TopMetal2"]
 PIN_DT, TEXT_DT = 2, 25
 GRID = 0.005  # manufacturing grid in um
+# Minimum metal areas in um^2 (rules Mn.d). A lone via_stack lands on pads far below them, so write() grows those pads.
+MIN_AREA = {"Metal1": 0.09, "Metal2": 0.144, "Metal3": 0.144, "Metal4": 0.144, "Metal5": 0.144}
+PAD_CLEARANCE = 0.25  # um from a grown pad to other metal, above the wide-metal spacing Mn.e and not only Mn.b
 
 
 def snap(v):
@@ -134,6 +138,32 @@ def cell_pins(ly, cell, t):
     return pins
 
 
+def grow_small_pads(block, metal):
+    """Grows every piece of metal below its minimum area into free space, along its longer side if that fits."""
+    li, dbu = block.li(metal), block.ly.dbu
+    area_min = round(MIN_AREA[metal] / dbu ** 2)
+    step, clear = round(2 * GRID / dbu), round(PAD_CLEARANCE / dbu)
+    pieces = pya.Region(block.cell.begin_shapes_rec(li)).merged()
+    for piece in [p.dup() for p in pieces.each()]:
+        if piece.area() >= area_min:
+            continue
+        box = piece.bbox()
+        l, b, r, t = box.left, box.bottom, box.right, box.top
+        # In steps of two grid units, so that a pad grown at both ends stays on the grid
+        gx = math.ceil((area_min // box.height() + 1 - box.width()) / step) * step
+        gy = math.ceil((area_min // box.width() + 1 - box.height()) / step) * step
+        along_x = [pya.Box(l - gx // 2, b, r + gx // 2, t), pya.Box(l, b, r + gx, t), pya.Box(l - gx, b, r, t)]
+        along_y = [pya.Box(l, b - gy // 2, r, t + gy // 2), pya.Box(l, b, r, t + gy), pya.Box(l, b - gy, r, t)]
+        others = pieces - pya.Region(piece)
+        for pad in along_x + along_y if box.width() >= box.height() else along_y + along_x:
+            if (others & pya.Region(pad.enlarged(clear, clear))).is_empty():
+                block.cell.shapes(li).insert(pad)
+                pieces = (pieces + pya.Region(pad)).merged()
+                break
+        else:
+            raise RuntimeError(f"{block.cell.name}: no free space to grow the {metal} pad at {box.to_dtype(dbu)}")
+
+
 def write(block, path, drop_texts=(), keep=()):
     """Flattens the block, except instances of the cells named in keep, and writes it alone without PCell context.
 
@@ -143,6 +173,8 @@ def write(block, path, drop_texts=(), keep=()):
     for inst in list(block.cell.each_inst()):
         if inst.cell.name not in keep:
             inst.flatten(-1)
+    for metal in MIN_AREA:
+        grow_small_pads(block, metal)
     texts = block.cell.shapes(block.ly.layer(63, 0))
     for s in [s for s in texts.each() if s.is_text() and s.text_string in drop_texts]:
         texts.erase(s)
