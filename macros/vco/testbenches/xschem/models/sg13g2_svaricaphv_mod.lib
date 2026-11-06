@@ -91,7 +91,9 @@ dsubw (w1 w) dsubw (
 rsubw (w1 bn) sg13g2_default_mod_r (
   r=(rsubw0/(sqrt(pow(nx,rsubwexp))))/(w+rsubwf)
 )
+// rsw for transient noise only: without it the sidewall noise sources keep a flicker exponent of 0, which VACASK rejects.
 model dsubw sp_diode ( 
+  rsw=1e-3
   is=2.45e-17 jsw=5.959e-10 n=4 ns=1.029 cjo=1.444e-15 vj=0.3357 m=0.1052
   cjp=1.117e-09 php=0.457 mjsw=0.2595 fc=0.95 cta=1e-06
 )
