@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<report-database>
+  <description>gdscheck DRC results</description>
+  <generator>gdscheck</generator>
+  <categories>
+  </categories>
+  <cells>
+    <cell>
+      <name>sg13g2_ip__rfpad_70x70</name>
+    </cell>
+  </cells>
+  <items>
+  </items>
+</report-database>
