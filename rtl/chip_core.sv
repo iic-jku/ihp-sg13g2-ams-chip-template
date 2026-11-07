@@ -127,8 +127,9 @@ module chip_core #(
         .vin4 (vss_tie),
         .vout1(inv2_vout1),
         .vout2(inv2_vout2),
-        .vout3(vss_tie),
-        .vout4(vss_tie)
+        // The inputs of the unused channels are tied low, so their outputs drive high and stay open.
+        .vout3(),
+        .vout4()
     );
     // ======================================================
 

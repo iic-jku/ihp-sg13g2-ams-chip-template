@@ -124,7 +124,7 @@ The `output_PAD` bit-to-role mapping is fixed inside [chip_core.sv](../rtl/chip_
 | 7 | `output_PAD[14]`  | `g_outputs[14].output_pad`  | digital         | out       | `inverter1.vout3`                                           |
 | 8 | `output_PAD[15]`  | `g_outputs[15].output_pad`  | digital         | out       | `inverter1.vout4`                                           |
 
-`inverter2` has four channels in total. Only **channels 1 and 2** are exposed off-chip. Channels 3 and 4 have `vin3`, `vout3`, `vin4`, `vout4` tied to `VSS` inside [chip_core.sv](../rtl/chip_core.sv).
+`inverter2` has four channels in total. Only **channels 1 and 2** are exposed off-chip. Channels 3 and 4 have `vin3` and `vin4` tied to `VSS` and `vout3` and `vout4` open inside [chip_core.sv](../rtl/chip_core.sv), because an inverter with a low input drives its output high.
 
 The `sg13g2_IOPadAnalog` cell exposes two internal nodes per pad:
 
