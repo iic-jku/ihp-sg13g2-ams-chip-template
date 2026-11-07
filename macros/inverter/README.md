@@ -324,7 +324,7 @@ The chip flow derives the bounding box of every macro from this layer: Magic map
 
 ### Export LEF
 
-Exports a LEF file (`final/lef/<TOP>.lef`) from the top-level layout GDS in `layout/` using Magic with the `-hide` option:
+Exports a LEF file (`final/lef/<TOP>.lef`) from the top-level layout GDS in `layout/` using Magic with the `-hide` option. It also sets the direction of the signal pins, because the GDS carries no port attributes and the chip flow takes a pin without a direction for a signal input:
 
 ```sh
 make lef

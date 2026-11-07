@@ -208,9 +208,12 @@ check-boundary: ## Check that the TOP cell layout carries the PR boundary box on
 lef: ## Export LEF from the TOP cell layout using Magic
 	rm -rf $(LEF_DIR)
 	mkdir -p $(LEF_DIR)
+	# the GDS carries no port attributes, and the chip flow takes a pin without a direction for a signal input
 	printf '%s\n' \
 		'gds read $(LAY_DIR)/$(TOP).gds' \
 		'load $(TOP)' \
+		'foreach p {vin1 vin2 vin3 vin4} {goto $$p; port class input}' \
+		'foreach p {vout1 vout2 vout3 vout4} {goto $$p; port class output}' \
 		'lef write $(LEF_DIR)/$(TOP).lef -hide -pinonly 2um' | \
 		magic -dnull -noconsole \
 		-rcfile $(PDK_ROOT)/$(PDK)/libs.tech/magic/ihp-sg13g2.magicrc
