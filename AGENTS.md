@@ -13,7 +13,7 @@ This repo is the ihp-sg13g2 AMS template or a chip started from it. Items marked
 - `macros/counter/` (template, digital): `rtl/`, `flow/librelane/`, `fpga/`, `testbenches/{verilog,cocotb,xschem}/`, hardened with LibreLane.
 - `macros/inverter/` (template, analog): `schematic/xschem/`, `layout/`, `testbenches/xschem/`, `verification/cace/`, verified with KLayout and Magic.
 - `macros/Makefile`: one job, `make macro FROM=<macro> NAME=<name>` starts a new macro as a renamed copy of an existing one.
-- `ip/`: bondpad `sg13g2_ip__bondpad_70x70` and the logos `sg13g2_ip__jku` and `sg13g2_ip__jku_names` (template), each with a `Makefile`. `ip/sg13g2_io_custom/` is third-party IHP IO cell data.
+- `ip/`: bondpad `sg13g2_ip__bondpad_70x70`, RF pad `sg13g2_ip__rfpad_70x70` and the logos `sg13g2_ip__jku` and `sg13g2_ip__jku_names` (template), each with a `Makefile`. `ip/sg13g2_io_custom/` is third-party IHP IO cell data.
 - `schematic/xschem/`, `testbenches/xschem/`, `testbenches/cocotb/`: chip schematic, symbols and testbenches. Every folder holding schematics has its own `xschemrc`, see "Xschem Configuration" in `README.md`.
 - `layout/`, `netlist/`, `verification/`, `render/img/`: build outputs, committed. `packaging/` holds `config.yaml` and `scripts/run_bondplan.py` for `make bondplan` plus their committed outputs. `release/v.<VERSION>/` holds published versions.
 - `doc/`: hand-maintained `specifications.md`, `pinout.md` and `floorplan.md` plus tool and PDK notes. A number changed in `flow/librelane/config.yaml`, `rtl/` or `packaging/config.yaml` is mirrored there, and a moved macro or a changed pad list also in the PREP-IC project `doc/prep-ic/chip_top.json`.
@@ -34,7 +34,7 @@ This repo is the ihp-sg13g2 AMS template or a chip started from it. Items marked
 ```sh
 make help                          # targets and variables
 make all                           # build-all, regular KLayout and gdscheck DRC of chip_top_logo_fill, sim-all, bondplan
-make build-all                     # submodules, bondpad, logos, macros, build-top
+make build-all                     # submodules, bondpad, RF pad, logos, macros, build-top
 make build-top                     # librelane-nodrc, copy reports/GDS/netlists/render, add-logo-fill, render-gds
 make sim-rtl-cocotb                # chip RTL simulation (cocotb on Icarus Verilog)
 make sim-all                       # RTL and gate-level cocotb, gate-level Xschem/ngspice
