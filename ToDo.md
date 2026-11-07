@@ -1,6 +1,5 @@
 ﻿# ToDo List
 
-- [ ] logic equivalence checking with Yosys (EQY)
 - [ ] update tutorial
     - no sizing guidance for `DIE_AREA`/`CORE_AREA` or the core ring
     - no explanation of `chip_top.sdc`
