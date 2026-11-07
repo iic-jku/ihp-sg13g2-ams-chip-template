@@ -333,7 +333,7 @@ The [vco Makefile](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/
 | `make copy-sparam` / `make view-em-sim`           | Copy the Touchstone file of the EM simulation to `verification/em/s-parameter/`, and plot it. |
 | `make snp2le` (`LE_MODEL=<structure\|universal>`) | Fit a lumped-element model to the Touchstone file, for ngspice and VACASK.  |
 | `make em-model`                                   | Run `sim-em`, `copy-sparam`, `snp2le` and the ACSP testbench of the coil model. |
-| `make sim-corners` (`TB=<tb>`)                    | Run a start-up transient over MOS corners, temperatures, `vdd_core` and `vtune`. |
+| `make sim-corners` (`TB=<tb>`)                    | Run a start-up transient over MOS and resistor corners, temperatures, `VDD` and `vtune`. |
 | `make klayout-pex-leads`                          | Extract `vco_top` without the coil and the varactor array for the post-layout testbench. |
 | `make all`                                        | Write the layouts, verify, build and simulate, without the EM simulation and the corners. |
 
@@ -1699,7 +1699,8 @@ Further traps of the testbenches, all documented in the README:
 ```sh
 make sim-corners                                    # SS, TT, FF at -40 C, 27 C, 85 C, vtune 0 V and 1.5 V
 make sim-corners TB=vco_top_tb_tran_lpe             # the same with the post-layout netlist
-make sim-corners TB=vco_top_tb_tran_lpe VCORE="0.77 0.81"   # the edges of the vdd_core window
+make sim-corners TB=vco_top_tb_tran_lpe RES_CORNERS=res_wcs VDDS=1.35   # the weak end
+make sim-corners TB=vco_top_tb_tran_lpe RES_CORNERS=res_bcs VDDS=1.65   # the strong end
 ```
 
 `sim-corners` netlists a transient testbench once and runs [`sim_corners.py`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/vco/scripts/sim_corners.py), which writes one copy of the netlist per MOS corner, temperature, `vdd_core` and `vtune`, runs ngspice on four of them at a time, and writes a CSV table. It fails when a run does not oscillate or when a tank node passes 1.5 V on the post-layout testbench. Post-layout, every corner starts, the tuning range covers 20 GHz at every corner (19.10 GHz to 21.38 GHz in all), and no tank node passes 1.43 V. The voltage-biased core has a narrow window, though: `vdd_core` has 20 mV of room either way between no start at SS and a tank above 1.5 V at FF, see [Corners](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/vco/README.md#corners) in the README.
