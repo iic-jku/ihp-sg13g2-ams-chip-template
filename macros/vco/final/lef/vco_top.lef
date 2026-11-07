@@ -14,14 +14,6 @@ MACRO vco_top
         RECT 0.000 32.590 30.350 32.890 ;
     END
   END di_en
-  PIN ibias_100u
-    ANTENNAGATEAREA 2.500000 ;
-    ANTENNADIFFAREA 1.190000 ;
-    PORT
-      LAYER Metal3 ;
-        RECT 0.000 33.100 42.645 33.400 ;
-    END
-  END ibias_100u
   PIN vtune
     ANTENNADIFFAREA 52.605900 ;
     PORT
@@ -33,66 +25,56 @@ MACRO vco_top
     ANTENNADIFFAREA 4.560000 ;
     PORT
       LAYER Metal3 ;
-        RECT 83.200 0.000 83.800 14.095 ;
+        RECT 83.200 0.000 83.800 17.020 ;
     END
   END rf_out_p
   PIN rf_out_n
     ANTENNADIFFAREA 4.560000 ;
     PORT
       LAYER Metal3 ;
-        RECT 59.200 0.000 59.800 14.095 ;
+        RECT 59.200 0.000 59.800 17.020 ;
     END
   END rf_out_n
-  PIN vdd_core
-    ANTENNAGATEAREA 5.200000 ;
-    ANTENNADIFFAREA 7.600000 ;
+  PIN VDD
+    USE POWER ;
     PORT
       LAYER TopMetal1 ;
-        RECT 133.290 0.000 137.290 7.210 ;
+        RECT 0.000 0.000 2.000 1.640 ;
     END
-  END vdd_core
+  END VDD
   PIN VSS
     USE GROUND ;
     PORT
       LAYER TopMetal2 ;
-        RECT 0.000 0.500 2.000 4.500 ;
+        RECT 0.000 0.500 2.000 5.300 ;
     END
   END VSS
-  PIN VDD
-    USE POWER ;
-    PORT
-      LAYER Metal4 ;
-        RECT 0.000 0.000 143.000 2.000 ;
-    END
-  END VDD
   OBS
       LAYER GatPoly ;
-        RECT 5.370 4.500 95.750 77.000 ;
+        RECT 5.370 0.330 141.980 77.000 ;
       LAYER Metal1 ;
-        RECT 0.500 3.470 95.730 76.970 ;
+        RECT 0.500 0.390 141.785 76.970 ;
       LAYER Metal2 ;
-        RECT 0.735 3.565 95.865 74.800 ;
+        RECT 0.735 0.440 141.780 74.800 ;
       LAYER Metal3 ;
-        RECT 0.735 33.610 95.800 74.825 ;
-        RECT 42.855 32.890 95.800 33.610 ;
-        RECT 30.560 32.380 95.800 32.890 ;
-        RECT 0.735 14.305 95.800 32.380 ;
-        RECT 0.735 2.695 58.990 14.305 ;
-        RECT 60.010 2.905 82.990 14.305 ;
-        RECT 60.010 2.695 70.990 2.905 ;
-        RECT 72.010 2.695 82.990 2.905 ;
-        RECT 84.010 2.695 95.800 14.305 ;
+        RECT 0.735 33.100 141.780 74.825 ;
+        RECT 30.560 32.380 141.780 33.100 ;
+        RECT 0.735 17.230 141.780 32.380 ;
+        RECT 0.735 0.390 58.990 17.230 ;
+        RECT 60.010 2.905 82.990 17.230 ;
+        RECT 60.010 0.390 70.990 2.905 ;
+        RECT 72.010 0.390 82.990 2.905 ;
+        RECT 84.010 0.390 141.780 17.230 ;
       LAYER Metal4 ;
-        RECT 0.600 2.210 84.260 75.000 ;
+        RECT 0.600 0.120 141.780 75.000 ;
       LAYER Metal5 ;
-        RECT 0.000 2.500 143.000 76.100 ;
+        RECT 0.000 0.510 143.000 76.100 ;
       LAYER TopMetal1 ;
-        RECT 1.570 8.850 141.290 185.520 ;
-        RECT 1.570 2.550 131.650 8.850 ;
-        RECT 138.930 2.550 141.290 8.850 ;
+        RECT 1.570 3.280 141.290 185.520 ;
+        RECT 3.640 0.000 141.290 3.280 ;
       LAYER TopMetal2 ;
-        RECT 2.000 6.500 143.000 185.520 ;
-        RECT 4.000 0.500 143.000 6.500 ;
+        RECT 2.000 7.300 143.000 185.520 ;
+        RECT 4.000 0.500 143.000 7.300 ;
   END
 END vco_top
 END LIBRARY

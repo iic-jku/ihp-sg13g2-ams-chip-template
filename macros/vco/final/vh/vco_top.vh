@@ -4,10 +4,8 @@ module vco_top (
     inout VSS,
 `endif
     input di_en,
-    inout ibias_100u,
     inout rf_out_n,
     inout rf_out_p,
-    inout vdd_core,
     inout vtune
 );
 endmodule

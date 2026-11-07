@@ -1,11 +1,11 @@
-* Extracted by KLayout with SG13G2 LVS runset on : 06/11/2026 09:38
+* Extracted by KLayout with SG13G2 LVS runset on : 07/11/2026 21:41
 
 .SUBCKT vco_buf VDD VSS rf_n rf_out_n rf_out_p rf_p vbg_buf vbn_buf
-M$1 VSS vbn_buf \$5 VSS sg13_lv_nmos L=0.5u W=150u AS=29.25p AD=29.25p
+M$1 VSS vbn_buf \$6 VSS sg13_lv_nmos L=0.5u W=150u AS=29.25p AD=29.25p
 + PS=166.7u PD=166.7u rfmode=0
-M$31 \$5 \$11 rf_out_n VSS sg13_lv_nmos L=0.13u W=24u AS=4.86p AD=4.86p
+M$31 \$6 \$11 rf_out_n VSS sg13_lv_nmos L=0.13u W=24u AS=4.86p AD=4.86p
 + PS=30.86u PD=30.86u rfmode=0
-M$43 \$5 \$12 rf_out_p VSS sg13_lv_nmos L=0.13u W=24u AS=4.86p AD=4.86p
+M$43 \$6 \$12 rf_out_p VSS sg13_lv_nmos L=0.13u W=24u AS=4.86p AD=4.86p
 + PS=30.86u PD=30.86u rfmode=0
 R$55 rf_out_n VDD VSS rppd w=10u l=1.65u ps=0u b=0 m=1
 R$56 rf_out_p VDD VSS rppd w=10u l=1.65u ps=0u b=0 m=1
