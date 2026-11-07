@@ -62,6 +62,9 @@ The flow is split across four layers, so that a new board touches as little as p
 
 A board directory's `Makefile` holds all of its board's configuration in one place. It includes `dut.mk` for the sources, names the top module and the pin file, sets the device and programmer variables, then includes `fpga.mk` last, which pulls in the `arch/` fragment named by the board's `ARCH`:
 
+<details>
+<summary>Show iCEBreaker <code>Makefile</code></summary>
+
 ```make
 TOP := counter_top
 
@@ -80,6 +83,8 @@ FLASH_CMD = iceprog $(BITSTREAM)
 
 include $(TOP_FPGA_DIR)/fpga.mk
 ```
+
+</details>
 
 ### Set by `dut.mk`
 

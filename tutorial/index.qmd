@@ -350,17 +350,27 @@ The macro is split into a parameterised counter and a top-level wrapper that con
 
 The logic is implemented in [`counter.sv`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/counter/rtl/counter.sv). It is an $N$-bit synchronous up-counter with reset and enable, and it wraps at `CTR_MAX`. $N$ defaults to 8, so the counter counts from 0 to 255 and then wraps back to 0.
 
-```{.systemverilog filename="macros/counter/rtl/counter.sv"}
+<details>
+<summary>`macros/counter/rtl/counter.sv`</summary>
+
+```{.systemverilog}
 {{< include ../macros/counter/rtl/counter.sv >}}
 ```
+
+</details>
 
 ### `counter_top.sv`
 
 [`counter_top.sv`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/counter/rtl/counter_top.sv) wraps the counter and converts the active-low reset (`reset_n_i`) to an active-high signal `reset`.
 
-```{.systemverilog filename="macros/counter/rtl/counter_top.sv"}
+<details>
+<summary>`macros/counter/rtl/counter_top.sv`</summary>
+
+```{.systemverilog}
 {{< include ../macros/counter/rtl/counter_top.sv >}}
 ```
+
+</details>
 
 Shared defaults are defined in [`constants.sv`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/counter/rtl/constants.sv). For example, for the final implementation, the maximum counter value is defined in `constants.sv` with the variable `COUNTER_MAX_DEFAULT`. For the testbenches, `CLK_FREQ_DEFAULT` is defined there to set the default clock frequency (e.g. 50 MHz) for the simulations. They are exposed as `` `define `` macros instead of a SystemVerilog `package`, because Yosys 0.64 cannot parse `import pkg::*` in a module header.
 
@@ -742,6 +752,9 @@ The bare file names work because the container points Ngspice at the `.spiceinit
 
 **5. The control block.** A second `code_shown.sym` block named `NGSPICE` contains the parameters, simulator options, and the `.control` section:
 
+<details>
+<summary>Control Block</summary>
+
 ```spice
 .include ../../../netlist/pex/inverter_magic_pex_3.spice
 .param VDD=1.5
@@ -772,6 +785,8 @@ write @schname.raw
 .endc
 ```
 
+</details>
+
 Read it top to bottom:
 
 - The `.include` line loads the extracted PEX netlist from [`netlist/pex/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/inverter/netlist/pex/), which defines the subcircuit `inverter_pex`. It is not used while `x1` is active, but it must be present for the post-layout swap in @sec-postlayout. The extracted netlists are tracked in the repository, so a fresh clone simulates right away, and `make magic-pex CELL=inverter` refreshes them (see @sec-pex).
@@ -781,6 +796,9 @@ Read it top to bottom:
 - Then the ac analysis sweeps 101 points per decade from $0.1\,\mathrm{Hz}$ to $10\,\mathrm{GHz}$ and appends the result to the same `.raw` file.
 
 **6. The measurements.** After the analysis, the control block computes the open-loop gain and extracts the key numbers:
+
+<details>
+<summary>Measurement Commands</summary>
 
 ```spice
 let Aol = v(vout)/v(vin)
@@ -801,6 +819,8 @@ meas ac UGB when Aol_dB=0 fall=1
 meas ac arg_0dB find Aol_arg when Aol_dB=0
 let PM = 180-abs(arg_0dB)
 ```
+
+</details>
 
 The phase starts at $180°$ because the inverter is an inverting amplifier. With the sizing from @sec-sizing you should measure approximately $A_\mathrm{ol} = 31.3\,\mathrm{dB}$, $f_\mathrm{c} = 2.9\,\mathrm{MHz}$, and $\mathrm{UGB} = 107\,\mathrm{MHz}$ (see @fig-inverter-tb-ac-ol-sim).
 
@@ -1478,7 +1498,10 @@ For your own chip, `make project` renames these files and every reference to the
 
 The padframe wrapper [`chip_top.sv`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/rtl/chip_top.sv) declares the chip's parameters and ports. The parameter block at the top of the module controls the number of pads of each type and is the place to update when the pinout changes.
 
-```{.systemverilog filename="rtl/chip_top.sv (code snippet)"}
+<details>
+<summary>Pad Count Parameters in `rtl/chip_top.sv`</summary>
+
+```{.systemverilog}
 module chip_top #(
     // Power / ground pads for digital core / analog front-end
     parameter int unsigned NUM_VDD_PADS    = 1,
@@ -1496,13 +1519,18 @@ module chip_top #(
 ) ( ... );
 ```
 
+</details>
+
 The remaining code does not need to be modified for a pinout change, since the `generate` blocks automatically instantiate the correct number of I/O cells based on the parameter values. One `generate` block per pad type (`g_vdd_pads`, `g_vss_pads`, `g_iovdd_pads`, `g_iovss_pads`, `g_inputs`, `g_outputs`, `g_bidirs`, `g_analogs`) instantiates the matching IHP I/O cell, plus single instances for the clock and reset pads. An example code snippet of the input pad generation with a `generate` block is shown below. The `input_PAD` signals are exposed as ports of the `chip_top` module and are connected to the pads of the I/O cell, while the `input_PAD2CORE` signals are connected to the internal core logic in `chip_core.sv`. The same structure, or a very similar one, applies to the other pad types.
 
 ::: {.callout-note}
 Normally, only the parameter counts need to be edited in `chip_top.sv`. Only multi-clock and multi-reset chips would require modifications to the clock and reset pad generation, since the current template supports only one clock and one reset pad.
 :::
 
-```{.systemverilog filename="rtl/chip_top.sv (code snippet)"}
+<details>
+<summary>Input Pad Generation in `rtl/chip_top.sv`</summary>
+
+```{.systemverilog}
 generate
     for (genvar i = 0; i < NUM_INPUT_PADS; i++) begin : g_inputs
         sg13g2_IOPadIn input_pad (
@@ -1519,6 +1547,8 @@ generate
 endgenerate
 ```
 
+</details>
+
 ::: {.callout-note}
 The `sg13g2_IOPadAnalog` cell exposes two internal core-side nodes per analog pad:
 
@@ -1532,7 +1562,10 @@ In this template, `inverter2` uses both paths:
 
 Inside `chip_core.sv`, these nets appear as the corresponding lowercase core signals `analog_padres[*]` and `analog_padbare[*]`.
 
-```{.systemverilog filename="rtl/chip_top.sv (code snippet)"}
+<details>
+<summary>Analog Pad Generation in `rtl/chip_top.sv`</summary>
+
+```{.systemverilog}
 generate
     for (genvar i = 0; i < NUM_ANALOG_PADS; i++) begin : g_analogs
         (* keep *)
@@ -1550,13 +1583,19 @@ generate
     end
 endgenerate
 ```
+
+</details>
+
 :::
 
 ## Understanding `chip_core.sv`
 
 The core [`chip_core.sv`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/rtl/chip_core.sv) is where the macros are instantiated and wired to the chip's I/O pads. The `enable` signal is mapped to `input_PAD[0]`, the two `counter_top` instances share the clock and reset, the two `inverter_top` instances are wired up (one digital, one analog), and the SRAM output is XOR-reduced to a single bit on `output_PAD[16]`. The input and output assignments at the top and bottom of the file correspond to the bit-to-role mapping documented in [pinout.md](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/doc/pinout.md). For improved clarity, every assignment is written on a separate line. Advanced designers can also use bus notation for more compact code.
 
-```{.systemverilog filename="rtl/chip_core.sv (code snippet)"}
+<details>
+<summary>Input Assignments in `rtl/chip_core.sv`</summary>
+
+```{.systemverilog}
 // ======================================================
 // Input Assignments
 // ======================================================
@@ -1575,7 +1614,12 @@ wire inv2_vin2 = analog_padres[1];
 // ======================================================
 ```
 
-```{.systemverilog filename="rtl/chip_core.sv (code snippet)"}
+</details>
+
+<details>
+<summary>Output Assignments in `rtl/chip_core.sv`</summary>
+
+```{.systemverilog}
 // ======================================================
 // Output Assignments
 // ======================================================
@@ -1629,6 +1673,8 @@ assign analog_padbare[3] = inv2_vout2;
 // ======================================================
 ```
 
+</details>
+
 ## Understanding `config.yaml`
 
 The top-level LibreLane configuration [`config.yaml`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/flow/librelane/config.yaml) covers the following sections and references `pdn_cfg.tcl` and `chip_top.sdc`.
@@ -1664,7 +1710,10 @@ For macro changes, the bottom of the file is the relevant part. It defines per-i
 
 When new macros are added, the matching `define_pdn_grid` plus `add_pdn_connect` block at the bottom must be extended (or the default grid is used if the macro layers line up with the top-level grid). The custom grid for the inverters is shown below as an example. The comments explain the reasoning behind the layer choices and the connection structure.
 
-```{.tcl filename="flow/librelane/pdn_cfg.tcl (code snippet)"}
+<details>
+<summary>Custom PDN Grid for the Inverters in `flow/librelane/pdn_cfg.tcl`</summary>
+
+```{.tcl}
 # Custom connect for the inverter macros (inverter1, inverter2).
 # The top-level power ring is on TM1 (horizontal) and TM2 (vertical).
 # Each inverter has its own power ring on M5 (horizontal) and TM1 (vertical),
@@ -1685,6 +1734,8 @@ add_pdn_connect \
     -grid inverter_top \
     -layers "$::env(PDN_VERTICAL_LAYER) Metal5"
 ```
+
+</details>
 
 ## Top-Level Simulation
 
