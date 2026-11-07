@@ -110,7 +110,9 @@ control
   // VACASK before 7c38094 restarts the period that pnoise and pac integrate with a backward-Euler step at
   // every Jacobian sample, which reads the phase noise and the tuning gain low below a few MHz (3.3 dB at
   // 1 MHz on this VCO). tran_fbr shortens those steps. The option is global, so the line restates the others.
-  options strictsave=1 pss_minpts=4000 reltol=3e-5 tran_fbr=0.02
+  // relrefres: with the cap_cmim Cg1 and Cg2 on the static vbg_buf the per-node residual reference is so small that the
+  // check fails at NR deltas of 1e-18 (Timestep too small). The largest contribution at the timepoint is the reference.
+  options strictsave=1 pss_minpts=4000 reltol=3e-5 tran_fbr=0.02 relrefres=\\"pointglobal\\"
 
   // Output noise around the first harmonic, linearised at the stored PSS. With oscillator=1 it is computed as
   // for a driven circuit, so it is the total noise, which close to the carrier is the phase noise.
