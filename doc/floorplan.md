@@ -29,7 +29,7 @@ Five hard macros are placed inside the core:
 | Macro instance              | Cell                                  | Size (W × H)       | Lower-left (x, y) | Upper-right (x, y) | Orientation |
 | --------------------------- | ------------------------------------- | ------------------ | ----------------- | ------------------ | ----------- |
 | `i_chip_core.sram_0`        | `RM_IHPSG13_1P_1024x32_c2_bm_bist`    | 416.64 × 336.46 µm | (435, 495)        | (851.64, 831.46)   | N           |
-| `i_chip_core.counter1`      | `counter_top`                         | 200 × 100 µm       | (935, 995)        | (1135, 1095)       | N           |
+| `i_chip_core.counter1`      | `counter_top`                         | 200 × 100 µm       | (700, 995)        | (900, 1095)        | N           |
 | `i_chip_core.counter2`      | `counter_top`                         | 200 × 100 µm       | (935, 495)        | (1135, 595)        | FS          |
 | `i_chip_core.inverter1`     | `inverter_top`                        | 54.18 × 81.92 µm   | (1080.00, 850.08) | (1134.18, 932.00)  | N           |
 | `i_chip_core.inverter2`     | `inverter_top`                        | 54.18 × 81.92 µm   | (1080.00, 658.14) | (1134.18, 740.06)  | N           |
@@ -39,14 +39,14 @@ The values are kept in the `instances` blocks of [config.yaml](../flow/librelane
 
 ## Macro placement (top view)
 
-With the current `CORE_AREA` `[365,365,1235,1235]`, the macros occupy the right-hand side of the core: SRAM and `counter2` in the lower half, `counter1` and both inverter instances in the upper half.
+With the current `CORE_AREA` `[365,365,1235,1235]`, the SRAM and `counter2` sit in the lower half of the core, `counter1` is x-centered on the die in the upper half, and both inverter instances sit on the right. [prep-ic/chip_top.json](prep-ic/chip_top.json) holds the same floorplan as a PREP-IC project.
 
 ```text
 y=1235 ┌───────────────────────────────────────────────┐
        │                                               │
-       │                                  ┌─counter1─┐ │
- 1095  │                                  │(935,995) │ │
-       │                                  └──────────┘ │
+       │                 ┌─counter1─┐                  │
+ 1095  │                 │(700,995) │                  │
+       │                 └──────────┘                  │
        │                                               │
   932  │                                   ┌inv1────┐  │
        │                                   │(1080,  │  │

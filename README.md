@@ -107,6 +107,7 @@ A designer-oriented description of this chip can be found in [doc/](doc/):
 │  ├─ 📁 ihp-structure-proposals/
 │  ├─ 📁 klayout/
 │  ├─ 📁 librelane/
+│  ├─ 📁 prep-ic/
 │  ├─ 📁 sizing/
 │  ├─ 📁 verilog/
 │  ├─ floorplan.md
@@ -1150,6 +1151,34 @@ make all
 
 > [!NOTE]
 > The chip top-level testbench includes the counter XSPICE model `macros/counter/netlist/xspice/counter_top.xspice`, which `clean-all` removes. Run `make build-counter` (or the full `make all`) once before `make sim-gl-xschem`, otherwise the include fails.
+
+
+## Plan the Pad Ring and the Floorplan with PREP-IC
+
+[PREP-IC](https://github.com/iic-jku/prep-ic) plans the pad ring, the pinout, the die size and the early macro floorplan of a chip on the IHP PDKs, in a GUI or from Python, before the first LibreLane run. It places the IO cells, reads the macros from their `final/lef/` folders, draws flylines from the macro pins to their pads, checks the plan, and exports the pin list, a drawing of the pad ring and the LibreLane files. [doc/prep-ic/chip_top.json](doc/prep-ic/chip_top.json) is this chip as a PREP-IC project.
+
+<!-- template-only -->
+<p align="center">
+    <img src="tutorial/fig/prep_ic/chip_top_floorplan.png" alt="The floorplan of this chip in PREP-IC, with the pads, the macros at their config.yaml positions and the flylines from the macro pins to their pads" width=70%>
+</p>
+<!-- /template-only -->
+
+```sh
+pip install prep-ic                                  # Python 3.10 or newer, the container ships it from 2026.11 on
+prep-ic doc/prep-ic/chip_top.json                    # open the project in the GUI, blocks until the window closes
+prep-ic check doc/prep-ic/chip_top.json              # print the findings, needs version 0.1.2 or newer
+prep-ic export doc/prep-ic/chip_top.json --csv pins.csv --svg padframe.svg --librelane <folder>
+```
+
+The export overwrites existing files, so do not point it at `flow/librelane/`. This chip keeps its own `chip_top.sv` and `PAD_*` lists, because the export has no `padbare` connection and writes no PDN and no timing constraints. A moved macro or a changed pad list therefore goes into the project, `flow/librelane/config.yaml` and `doc/` by hand.
+
+<!-- template-only -->
+The [tutorial](https://iic-jku.github.io/ihp-sg13g2-ams-chip-template/index.html#sec-prep-ic) shows how to use it, what it can do, and how to read the plan of this chip.
+
+<p align="center">
+    <img src="tutorial/fig/prep_ic/chip_top_gui.png" alt="This chip in the PREP-IC GUI, with the pad list of each side, the chip view, the stat tiles and the findings" width=100%>
+</p>
+<!-- /template-only -->
 
 
 <!-- template-only -->

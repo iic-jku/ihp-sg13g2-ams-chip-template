@@ -297,9 +297,9 @@ MACROS:
       nom_typ_1p20V_25C:   dir::../../macros/counter/final/lib/nom_typ_1p20V_25C/counter_top__nom_typ_1p20V_25C.lib
       nom_typ_1p50V_25C:   dir::../../macros/counter/final/lib/nom_typ_1p50V_25C/counter_top__nom_typ_1p50V_25C.lib
     instances:
-      # counter1: upper position in the mid-right core (drives output_PAD[3:0] / bidir_PAD[3:0])
+      # counter1: upper position, x-centered on the die (drives output_PAD[3:0] / bidir_PAD[3:0])
       i_chip_core.counter1:
-        location: ["expr::365 + 70 + 500", "expr::365 + 130 + 500"]
+        location: ["expr::$DIE_AREA[2] / 2 - 100", "expr::365 + 130 + 500"]
         orientation: N
       # counter2: lower position in the mid-right core (drives output_PAD[11:4] = south pads)
       i_chip_core.counter2:

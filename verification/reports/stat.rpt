@@ -5,13 +5,13 @@
         +----------Local Count, excluding submodules.
         |        +-Local Area, excluding submodules.
         |        | 
-      265        - wires
-      287        - wire bits
+      263        - wires
+      285        - wire bits
        74        - public wires
        96        - public wire bits
         6        - ports
        28        - port bits
-      231 4.62E+05 cells
+      229 4.62E+05 cells
         1        -   RM_IHPSG13_1P_1024x32_c2_bm_bist
         2        -   counter_top
         2        -   inverter_top
@@ -26,7 +26,7 @@
         1        -   sg13g2_ip__jku
         1        -   sg13g2_ip__jku_names
         3   21.773   sg13g2_tiehi
-      158 1.15E+03   sg13g2_tielo
+      156 1.13E+03   sg13g2_tielo
        20  290.304   sg13g2_xnor2_1
        11  159.667   sg13g2_xor2_1
 
@@ -36,6 +36,6 @@
    Area for cell type \sg13g2_ip__jku_names is unknown!
    Area for cell type \counter_top is unknown!
 
-   Chip area for module '\chip_top': 462418.444800
+   Chip area for module '\chip_top': 462403.929600
      of which used for sequential elements: 0.000000 (0.00%)
 
