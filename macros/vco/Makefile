@@ -13,7 +13,7 @@ TOP = vco_top
 REQUIRED_PDK ?= ihp-sg13g2
 
 # Goals that do not read the PDK
-PDK_FREE_GOALS = help clean
+PDK_FREE_GOALS = help clean check-trannoise
 
 ifneq ($(REQUIRED_PDK),)
 ifneq ($(filter-out $(PDK_FREE_GOALS),$(or $(MAKECMDGOALS),$(.DEFAULT_GOAL))),)
@@ -227,6 +227,7 @@ sim-powerup: ## Run the power-up and enable transient of the post-layout netlist
 .PHONY: sim-powerup
 
 sim-trannoise: ## Run the transient noise of the schematic over SEEDS seeds against PNOISE, hours on a server (usage: make sim-trannoise [SEEDS=<n>])
+	$(MAKE) check-trannoise
 	$(MAKE) netlist-xschem TB=vco_top_tb_trannoise_vacask
 	python3 $(SCRIPTS_DIR)/sim_trannoise.py $(XSCHEM_TB_DIR)/simulations/vco_top_tb_trannoise_vacask.spectre --seeds $(SEEDS) \
 		--pnoise $(SIM_PLOT_DIR)/data/vco_top_tb_pss_vacask_pnoise.txt --pss $(SIM_PLOT_DIR)/data/vco_top_tb_pss_vacask_pss.txt \
@@ -234,11 +235,16 @@ sim-trannoise: ## Run the transient noise of the schematic over SEEDS seeds agai
 .PHONY: sim-trannoise
 
 sim-trannoise-lpe: ## Run the transient noise of the post-layout netlist over SEEDS seeds, its phase noise, about 10 hours on a server (usage: make sim-trannoise-lpe [SEEDS=<n>])
+	$(MAKE) check-trannoise
 	$(MAKE) netlist-xschem TB=vco_top_tb_trannoise_lpe_vacask
 	python3 $(SCRIPTS_DIR)/sim_trannoise.py $(XSCHEM_TB_DIR)/simulations/vco_top_tb_trannoise_lpe_vacask.spectre --seeds $(SEEDS) \
 		--pnoise $(SIM_PLOT_DIR)/data/vco_top_tb_pss_vacask_pnoise.txt --pss $(SIM_PLOT_DIR)/data/vco_top_tb_pss_vacask_pss.txt \
 		--data $(SIM_PLOT_DIR)/data/vco_top_tb_trannoise_lpe_vacask.txt
 .PHONY: sim-trannoise-lpe
+
+check-trannoise: ## Check the spectrum code of sim_trannoise.py on period jitter with a known PSD, without a simulator
+	python3 $(SCRIPTS_DIR)/check_trannoise.py
+.PHONY: check-trannoise
 
 sim-all: ## Simulate the macro
 	$(MAKE) sim-xschem TB=vco_top_tb_tran

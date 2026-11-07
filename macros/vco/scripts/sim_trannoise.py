@@ -68,23 +68,26 @@ def phase_noise(all_crossings, f_res):
     f0 = 1 / t_mean
     nperseg = min(int(f0 / f_res), dphi.shape[1])
     f, s = welch(dphi, fs=f0, window="hann", nperseg=nperseg, noverlap=nperseg // 2, detrend="constant", axis=1)
-    keep = f > 0
-    f, s = f[keep], s[:, keep]
+    # Bin 1 sits in the Hann main lobe of the removed mean and reads 0.8 dB low (5/6), the last bin is Nyquist, which welch does not double.
+    f, s = f[2:-1], s[:, 2:-1]
     s_phi = s / (4 * np.sin(np.pi * f / f0) ** 2)
     per_seed = 10 * np.log10(s_phi / 2)
     return f0, f, per_seed, n * t_mean
 
 
 def smooth(f, y, per_decade=20):
-    """Means of the PSD over log-spaced bands, so that the scatter of single bins does not read as a difference."""
-    edges = np.logspace(np.log10(f[0]), np.log10(f[-1]), int(np.log10(f[-1] / f[0]) * per_decade) + 1)
+    """Means of the PSD over log-spaced bands, so that the scatter of single bins does not read as a difference.
+
+    A band is labeled with the geometric mean of its own bins: the middle of its edges is up to 6 % off where it holds one bin.
+    """
+    n_bands = int(np.log10(f[-1] / f[0]) * per_decade)
+    bands = np.minimum((np.log(f / f[0]) / np.log(f[-1] / f[0]) * n_bands).astype(int), n_bands - 1)
     out_f, out_y, out_n = [], [], []
-    for a, b in zip(edges[:-1], edges[1:]):
-        m = (f >= a) & (f < b)
-        if m.any():
-            out_f.append(np.sqrt(a * b))
-            out_y.append(10 * np.log10(np.mean(10 ** (y[m] / 10))))
-            out_n.append(np.count_nonzero(m))
+    for band in np.unique(bands):
+        m = bands == band
+        out_f.append(np.exp(np.log(f[m]).mean()))
+        out_y.append(10 * np.log10(np.mean(10 ** (y[m] / 10))))
+        out_n.append(np.count_nonzero(m))
     return np.array(out_f), np.array(out_y), np.array(out_n)
 
 
@@ -100,6 +103,11 @@ def reference(pnoise, pss):
     v1 = 2 * np.abs(np.fft.rfft(np.interp(grid, t, vod))[1]) / grid.size
     names = tab.dtype.names
     return tab[names[0]], 10 * np.log10(tab[names[1]] / (v1 ** 2 / 2))
+
+
+def reference_at(f, f_pn, l_pn):
+    """The PNOISE L(f) at the bands, NaN above its sweep, where np.interp would hold its last value up to half the carrier."""
+    return np.interp(np.log10(f), np.log10(f_pn), l_pn, right=np.nan)
 
 
 def main():
@@ -137,7 +145,7 @@ def main():
     fb, lb, _ = smooth(f, mean)
     spread = np.array([smooth(f, s)[1] for s in per_seed]).std(axis=0) / np.sqrt(per_seed.shape[0])
     f_pn, l_pn = reference(args.pnoise, args.pss)
-    np.savetxt(args.data, np.column_stack((fb, lb, spread, np.interp(np.log10(fb), np.log10(f_pn), l_pn))),
+    np.savetxt(args.data, np.column_stack((fb, lb, spread, reference_at(fb, f_pn, l_pn))),
                header="f_offset_hz L_trannoise_dbc_hz seed_error_db L_pnoise_dbc_hz", comments="", fmt="%.6e")
     print(f"sim_trannoise.py: {f0 / 1e9:.3f} GHz, {per_seed.shape[0]} seeds of {length * 1e6:.2f} us, wrote {args.data}")
     for off in OFFSETS:
