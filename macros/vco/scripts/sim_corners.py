@@ -1,6 +1,6 @@
 # SPDX-FileCopyrightText: 2026 Simon Dorrer and Harald Pretl
 # SPDX-License-Identifier: Apache-2.0 WITH SHL-2.1
-# Description: Run the netlisted start-up transient of vco_top at MOS corners, temperatures, vdd_core and vtune values.
+# Description: Run the netlisted start-up transient of vco_top at MOS and resistor corners, temperatures, VDD and vtune values.
 
 import argparse
 import csv
@@ -20,8 +20,8 @@ V_SWING_MIN = 0.5
 R_LOAD = 50.0  # load per output in the bench (Ohm)
 
 
-def deck(src, corner, temp, vcore, vtune, threads):
-    """The bench netlist with one corner, temperature, vdd_core and vtune, writing nothing but its measurements."""
+def deck(src, corner, res, temp, vdd, vtune, threads):
+    """The bench netlist with one corner pair, temperature, VDD and vtune, writing nothing but its measurements."""
     out = []
     netlist_dir = os.path.dirname(os.path.abspath(src))
     for line in open(src):
@@ -29,11 +29,12 @@ def deck(src, corner, temp, vcore, vtune, threads):
         if s.startswith(".include ") and not os.path.isabs(s.split()[1]):
             s = ".include " + os.path.normpath(os.path.join(netlist_dir, s.split()[1]))
         s = re.sub(r"^\.lib (cornerMOS(lv|hv)\.lib) mos_\w+$", rf".lib \1 {corner}", s)
+        s = re.sub(r"^\.lib cornerRES\.lib res_\w+$", f".lib cornerRES.lib {res}", s)
         s = re.sub(r"^\.temp .*", f".temp {temp}", s)
-        s = re.sub(r"^\.param Vcore=.*", f".param Vcore={vcore}", s)
+        s = re.sub(r"^\.param VDD=.*", f".param VDD={vdd}", s)
         s = re.sub(r"^\.param Vtune=.*", f".param Vtune={vtune}", s)
         if s == "save all":
-            s = f"set num_threads={threads}\nsave v(x1.rf_p) v(x1.rf_n) v(vout_p) i(VDD) i(Vcore)"
+            s = f"set num_threads={threads}\nsave v(x1.rf_p) v(x1.rf_n) v(vout_p) i(VDD) v(x1.vdd_core)"
         if s.startswith(("write ", "wrdata", "+ v(x1.rf_p)", "set wr_")):
             s = "* " + s
         out.append(s)
@@ -59,7 +60,8 @@ def main():
     parser.add_argument("--corners", nargs="+", default=["mos_tt", "mos_ss", "mos_ff"],
                         help="MOS corners, applied to the LV and the HV models (default: mos_tt mos_ss mos_ff)")
     parser.add_argument("--temps", nargs="+", type=float, default=[-40.0, 27.0, 85.0], help="temperatures in C")
-    parser.add_argument("--vcore", nargs="+", type=float, default=[0.79], help="vdd_core values in V (default: 0.79)")
+    parser.add_argument("--res", nargs="+", default=["res_typ"], help="resistor corners (default: res_typ)")
+    parser.add_argument("--vdd", nargs="+", type=float, default=[1.5], help="VDD values in V (default: 1.5)")
     parser.add_argument("--vtune", nargs="+", type=float, default=[0.0, 1.5], help="vtune values in V")
     parser.add_argument("--jobs", type=int, default=4, help="ngspice runs in parallel (default: 4)")
     parser.add_argument("--threads", type=int, default=3, help="threads of each ngspice run (default: 3)")
@@ -71,18 +73,18 @@ def main():
     run_dir = os.path.join(os.path.dirname(os.path.abspath(args.netlist)), "corners")
     os.makedirs(run_dir, exist_ok=True)
     jobs = []
-    for corner, temp, vcore, vtune in itertools.product(args.corners, args.temps, args.vcore, args.vtune):
-        name = f"{corner}_t{temp:g}_vc{vcore:g}_vt{vtune:g}"
+    for corner, res, temp, vdd, vtune in itertools.product(args.corners, args.res, args.temps, args.vdd, args.vtune):
+        name = f"{corner}_{res}_t{temp:g}_vdd{vdd:g}_vt{vtune:g}"
         path = os.path.join(run_dir, f"{name}.spice")
         with open(path, "w") as f:
-            f.write(deck(args.netlist, corner, temp, vcore, vtune, args.threads))
-        jobs.append({"deck": path, "corner": corner, "temp": temp, "vcore": vcore, "vtune": vtune})
+            f.write(deck(args.netlist, corner, res, temp, vdd, vtune, args.threads))
+        jobs.append({"deck": path, "corner": corner, "res": res, "temp": temp, "vdd": vdd, "vtune": vtune})
 
     print(f"sim_corners.py: {len(jobs)} transients, {args.jobs} at a time, in {run_dir}")
     rows, failed = [], 0
     with ThreadPoolExecutor(max_workers=args.jobs) as pool:
         for job, v in pool.map(run, jobs):
-            row = {k: job[k] for k in ("corner", "temp", "vcore", "vtune")}
+            row = {k: job[k] for k in ("corner", "res", "temp", "vdd", "vtune")}
             swing = v.get("vtank_max", math.nan) - v.get("vtank_min", math.nan)
             if "f0" not in v or not swing >= V_SWING_MIN:
                 status = "no oscillation"
@@ -98,13 +100,13 @@ def main():
                 "vtank_min_v": v.get("vtank_min", math.nan),
                 "pout_dbm": 10 * math.log10((vpp / 2) ** 2 / 2 / R_LOAD / 1e-3) if vpp > 0 else math.nan,
                 "idd_ma": -v.get("idd", math.nan) * 1e3,
-                "icore_ma": -v.get("icore", math.nan) * 1e3,
+                "vtap_v": v.get("vtap", math.nan),
                 "status": status,
             })
             rows.append(row)
-            print(f"  {row['corner']:7s} {row['temp']:6.0f} C  vdd_core {row['vcore']:.2f} V  vtune {row['vtune']:.2f} V:  "
+            print(f"  {row['corner']:7s} {row['res']:7s} {row['temp']:6.0f} C  VDD {row['vdd']:.2f} V  vtune {row['vtune']:.2f} V:  "
                   f"{row['f0_ghz']:7.3f} GHz  tank {row['vtank_min_v']:.3f} V to {row['vtank_max_v']:.3f} V  "
-                  f"{row['pout_dbm']:6.2f} dBm  core {row['icore_ma']:.2f} mA  VDD {row['idd_ma']:.2f} mA  {status}")
+                  f"{row['pout_dbm']:6.2f} dBm  tap {row['vtap_v']:.3f} V  VDD {row['idd_ma']:.2f} mA  {status}")
 
     os.makedirs(os.path.dirname(os.path.abspath(args.csv)), exist_ok=True)
     with open(args.csv, "w", newline="") as f:

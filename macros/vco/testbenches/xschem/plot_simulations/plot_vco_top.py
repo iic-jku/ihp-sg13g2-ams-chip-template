@@ -186,24 +186,24 @@ def plot_tune(data_dir, figures_dir):
 
 
 def plot_powerup(data_dir, figures_dir):
-    """Post-layout power-up and enable transient, per period: supplies up, di_en up at 100 ns and down at 8.1 us."""
+    """Post-layout power-up and enable transient: VDD up, di_en up at 100 ns and down at 8.1 us."""
     tb = "vco_top_tb_powerup_lpe"
     file = str(data_dir / f"{tb}.txt")
     t = ng.loadngspicecol(file, "time") * 1e6
-    fig, (ax1, ax2, ax3) = plt.subplots(3, 1, figsize=(10, 9), sharex=True)
+    fig, (ax1, ax2, ax3, ax4) = plt.subplots(4, 1, figsize=(10, 11), sharex=True)
     fig.suptitle('VCO Top - Post-Layout Power-Up and Enable Transient (ngspice)')
     ax1.plot(t, ng.loadngspicecol(file, "tank_swing_v"), color='#0c5da5', linewidth=2.0, label='tank, differential')
     ax1.plot(t, ng.loadngspicecol(file, "vout_pp_v"), color='#ff6b35', linewidth=2.0, label='rf_out_p into 50 Ohm')
-    ax1.set_ylabel('Swing per period (V)')
+    ax1.set_ylabel('Swing (V)')
     ax1.legend(loc='center right')
     ax2.plot(t, ng.loadngspicecol(file, "f_avg_hz") / 1e9, color='#2f855a', linewidth=2.0)
-    ax2.set_ylabel(r'$f_0$ over 100 periods (GHz)')
-    ax3.plot(t, ng.loadngspicecol(file, "idd_a") * 1e3, color='#0c5da5', linewidth=2.0, label='VDD')
-    ax3.plot(t, ng.loadngspicecol(file, "icore_a") * 1e3, color='#ff6b35', linewidth=2.0, label='vdd_core')
-    ax3.set_ylabel('Supply current (mA)')
-    ax3.set_xlabel(r'Time ($\mu$s)')
-    ax3.legend(loc='center right')
-    for ax in (ax1, ax2, ax3):
+    ax2.set_ylabel(r'$f_0$ (GHz)')
+    ax3.plot(t, ng.loadngspicecol(file, "idd_a") * 1e3, color='#0c5da5', linewidth=2.0)
+    ax3.set_ylabel(r'$I_\mathrm{VDD}$ (mA)')
+    ax4.plot(t, ng.loadngspicecol(file, "vtap_v"), color='#ff6b35', linewidth=2.0)
+    ax4.set_ylabel('Center tap (V)')
+    ax4.set_xlabel(r'Time ($\mu$s)')
+    for ax in (ax1, ax2, ax3, ax4):
         ax.grid(visible=True, which='major', linestyle='--', alpha=0.45)
     plt.tight_layout()
     save(fig, figures_dir, tb)

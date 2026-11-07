@@ -105,9 +105,13 @@ CORNERS ?= mos_tt mos_ss mos_ff
 # Override with: make sim-corners TEMPS="<C> ..."
 TEMPS ?= -40 27 85
 
-# vdd_core values of sim-corners in V (default: 0.79, the nominal core supply)
-# Override with: make sim-corners VCORE="<V> ..."
-VCORE ?= 0.79
+# Resistor corners of sim-corners (default: res_typ)
+# Override with: make sim-corners RES_CORNERS="<corner> ..."
+RES_CORNERS ?= res_typ
+
+# VDD values of sim-corners in V (default: 1.5, the nominal supply)
+# Override with: make sim-corners VDDS="<V> ..."
+VDDS ?= 1.5
 
 # vtune values of sim-corners in V (default: 0 1.5, the ends of the tuning range)
 # Override with: make sim-corners VTUNE="<V> ..."
@@ -155,7 +159,7 @@ PALACE_SCRIPTS  := $(PDK_ROOT)/$(PDK)/libs.tech/palace/scripts
 
 # Help Target
 help: ## Show this help message
-	@echo 'Usage: make <target> [CELL=<cellname>] [EXT_MODE=<1|2|3>] [THRESHOLD=<mOhm>] [MINRES=<mOhm>] [MINDELAY=<ps>] [DRC_LEVEL=<precheck|macro|regular>] [GDSCHECK_SUITE=<suite>|GDSCHECK_DECKS=<decks>] [DRC_JOBS=<n>] [EV_PRECISION=<digits>] [TB=<testbenchname>] [SCRIPT=<scriptname>] [EM=<structure>] [NP=<processes>] [SNP=<file.sNp>] [LE_MODEL=<structure|universal>] [ORDER=<N>] [CORNERS=<corners>] [TEMPS=<C>] [VCORE=<V>] [VTUNE=<V>] [VPEAK_MAX=<V>] [OPEN_ARGS=<options>]'
+	@echo 'Usage: make <target> [CELL=<cellname>] [EXT_MODE=<1|2|3>] [THRESHOLD=<mOhm>] [MINRES=<mOhm>] [MINDELAY=<ps>] [DRC_LEVEL=<precheck|macro|regular>] [GDSCHECK_SUITE=<suite>|GDSCHECK_DECKS=<decks>] [DRC_JOBS=<n>] [EV_PRECISION=<digits>] [TB=<testbenchname>] [SCRIPT=<scriptname>] [EM=<structure>] [NP=<processes>] [SNP=<file.sNp>] [LE_MODEL=<structure|universal>] [ORDER=<N>] [CORNERS=<corners>] [RES_CORNERS=<corners>] [TEMPS=<C>] [VDDS=<V>] [VTUNE=<V>] [VPEAK_MAX=<V>] [OPEN_ARGS=<options>]'
 	@echo ''
 	@echo 'Available targets:'
 	@grep -E '^[a-zA-Z0-9_.-]+:.*## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*## "}; {printf "  %-20s %s\n", $$1, $$2}'
@@ -174,7 +178,7 @@ help: ## Show this help message
 	@echo 'NP sets the number of MPI processes of Palace (default: 4).'
 	@echo 'SNP selects the Touchstone file for snp2le (default: verification/em/s-parameter/<EM>.s3p).'
 	@echo 'LE_MODEL selects the snp2le model (default: inductor-ct). ORDER sets the order of a universal fit (default: 6).'
-	@echo 'CORNERS, TEMPS, VCORE and VTUNE set the runs of sim-corners (defaults: mos_tt mos_ss mos_ff, -40 27 85 C, 0.79 V, 0 V and 1.5 V).'
+	@echo 'CORNERS, RES_CORNERS, TEMPS, VDDS and VTUNE set the runs of sim-corners (defaults: mos_tt mos_ss mos_ff, res_typ, -40 27 85 C, 1.5 V, 0 V and 1.5 V).'
 	@echo 'VPEAK_MAX fails a sim-corners run whose tank node passes it (default: 1.5 V for the post-layout bench, 0 = report only for the schematic bench).'
 	@echo 'OPEN_ARGS passes extra options to sak-open.py for the open target (e.g. --all).'
 	@echo 'REQUIRED_PDK defaults to $(REQUIRED_PDK). Every target except help and clean aborts if $$PDK differs.'
@@ -220,9 +224,9 @@ sim-view-xschem: ## Plot Xschem simulation results (usage: make sim-view-xschem 
 	SHOW_PLOTS=1 python3 $(SIM_PLOT_DIR)/$(SCRIPT).py
 .PHONY: sim-view-xschem
 
-sim-powerup: ## Run the power-up and enable transient of the post-layout netlist over supply orders and corners, hours on a server (usage: make sim-powerup [SIM_JOBS=<n>])
+sim-powerup: ## Run the power-up and enable transient of the post-layout netlist over VDD and di_en orders and corners, hours on a server (usage: make sim-powerup [SIM_JOBS=<n>])
 	$(MAKE) netlist-xschem TB=vco_top_tb_powerup_lpe
-	python3 $(SCRIPTS_DIR)/sim_powerup.py $(XSCHEM_TB_DIR)/simulations/vco_top_tb_powerup_lpe.spice --vcore $(VCORE) --jobs $(SIM_JOBS) \
+	python3 $(SCRIPTS_DIR)/sim_powerup.py $(XSCHEM_TB_DIR)/simulations/vco_top_tb_powerup_lpe.spice --jobs $(SIM_JOBS) \
 		--csv $(SIM_PLOT_DIR)/figures/vco_top_tb_powerup_lpe_corners.csv --data $(SIM_PLOT_DIR)/data/vco_top_tb_powerup_lpe.txt
 .PHONY: sim-powerup
 
@@ -254,12 +258,12 @@ sim-all: ## Simulate the macro
 .PHONY: sim-all
 
 # sim_corners.py rewrites the netlist of a start-up transient testbench (vco_top_tb_tran or vco_top_tb_tran_lpe) once
-# per corner, temperature, vdd_core and vtune value, runs ngspice on them in parallel and fails when a run does not
+# per corner pair, temperature, VDD and vtune value, runs ngspice on them in parallel and fails when a run does not
 # oscillate or a tank node peaks above VPEAK_MAX.
-sim-corners: ## Run a start-up transient over MOS corners, temperatures, vdd_core and vtune (usage: make sim-corners [TB=<vco_top_tb_tran|vco_top_tb_tran_lpe>] [CORNERS=<corners>] [TEMPS=<C>] [VCORE=<V>] [VTUNE=<V>] [VPEAK_MAX=<V>])
+sim-corners: ## Run a start-up transient over MOS and resistor corners, temperatures, VDD and vtune (usage: make sim-corners [TB=<vco_top_tb_tran|vco_top_tb_tran_lpe>] [CORNERS=<corners>] [RES_CORNERS=<corners>] [TEMPS=<C>] [VDDS=<V>] [VTUNE=<V>] [VPEAK_MAX=<V>])
 	$(MAKE) sim-xschem TB=$(TB)
 	python3 $(SCRIPTS_DIR)/sim_corners.py $(XSCHEM_TB_DIR)/simulations/$(TB).spice \
-		--corners $(CORNERS) --temps $(TEMPS) --vcore $(VCORE) --vtune $(VTUNE) --vpeak-max $(VPEAK_MAX) \
+		--corners $(CORNERS) --res $(RES_CORNERS) --temps $(TEMPS) --vdd $(VDDS) --vtune $(VTUNE) --vpeak-max $(VPEAK_MAX) \
 		--csv $(SIM_PLOT_DIR)/figures/$(TB)_corners.csv
 .PHONY: sim-corners
 # ================================================================================================
@@ -281,6 +285,7 @@ klayout-script-all: ## Generate every layout with its KLayout Python script, sub
 	$(MAKE) klayout-script CELL=vco_bias
 	$(MAKE) klayout-script CELL=vco_buf
 	$(MAKE) klayout-script CELL=vco_core
+	$(MAKE) klayout-script CELL=vco_feed
 	$(MAKE) klayout-script CELL=vco_top
 .PHONY: klayout-script-all
 # ================================================================================================
@@ -473,6 +478,7 @@ gdscheck-drc: ## Run gdscheck DRC of the CELL cell (usage: make gdscheck-drc [CE
 gdscheck-drc-all: ## Run gdscheck DRC of all main subcells
 	$(MAKE) gdscheck-drc CELL=vco_bias
 	$(MAKE) gdscheck-drc CELL=vco_buf
+	$(MAKE) gdscheck-drc CELL=vco_feed
 	$(MAKE) gdscheck-drc CELL=vco_var
 	$(MAKE) gdscheck-drc CELL=vco_ind
 	$(MAKE) gdscheck-drc CELL=vco_core
@@ -652,6 +658,7 @@ klayout-verify: ## Verify CELL cell with KLayout (usage: make klayout-verify [CE
 klayout-verify-all: ## Verify every cell with KLayout (DRC, LVS), PEX of TOP's leads
 	$(MAKE) klayout-verify CELL=vco_bias
 	$(MAKE) klayout-verify CELL=vco_buf
+	$(MAKE) klayout-verify CELL=vco_feed
 	$(MAKE) klayout-verify CELL=vco_var
 	$(MAKE) klayout-verify CELL=vco_ind
 	$(MAKE) klayout-verify CELL=vco_core
@@ -670,6 +677,7 @@ magic-verify: ## Verify CELL cell with Magic, LVS and PEX (usage: make magic-ver
 magic-verify-all: ## Verify with Magic: LVS and PEX of the bias and the buffer, PEX of TOP for its pins
 	$(MAKE) magic-verify CELL=vco_bias
 	$(MAKE) magic-verify CELL=vco_buf
+	$(MAKE) magic-verify CELL=vco_feed
 # Magic extracts sg13_hv_svaricap as two two-terminal halves and does not extract the PDK inductor, so Netgen cannot
 # compare the cells that hold them. The PEX netlist of TOP is for its pin list (make verilog), not for simulation.
 # The flows leave the Magic DRC out until the foundry cells are clean in it, make magic-drc still runs it

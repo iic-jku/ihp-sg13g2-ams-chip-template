@@ -6,7 +6,7 @@ S {}
 F {}
 E {}
 T {VCO Bias and Enable} 300 -1740 0 0 1 1 {}
-T {ibias_100u: 100 uA into the macro. MBt of the buffer mirrors MN0 60:1 for 6 mA.
+T {MPb and Rb feed MN0 from VDD with about 100 uA, the reference. MBt of the buffer mirrors MN0 60:1 for 6 mA.
 MN1 and MP1 copy the reference into MP2, which sets vbg_int to Vgs(MN3) + 100 uA x Rg.
 Rn and MCn1/2 (95 kOhm, 9.4 pF), Rf and MCg1/2 (95 kOhm, 10 pF) filter both buffer biases
 at about 170 kHz: their noise moves the buffer's input capacitance, which the tank sees.
@@ -48,7 +48,7 @@ N 580 -600 640 -600 {lab=en_b}
 N 640 -600 720 -600 {lab=en_b}
 N 640 -600 640 -440 {lab=en_b}
 N 780 -600 860 -600 {lab=en}
-N 460 -1180 1000 -1180 {lab=ibias_100u}
+N 900 -1180 1000 -1180 {lab=ibias_100u}
 N 1000 -470 1000 -280 {lab=VSS}
 N 1000 -500 1040 -500 {lab=VSS}
 N 1040 -500 1040 -280 {lab=VSS}
@@ -182,9 +182,9 @@ spiceprefix=X}
 C {devices/lab_pin.sym} 780 -740 3 0 {name=l3 sig_type=std_logic lab=VDD}
 C {devices/lab_pin.sym} 780 -460 1 0 {name=l4 sig_type=std_logic lab=VSS}
 C {devices/ipin.sym} 460 -600 0 0 {name=p3 lab=di_en}
-C {devices/lab_pin.sym} 640 -440 1 0 {name=l5 sig_type=std_logic lab=en_b}
+C {devices/opin.sym} 640 -440 1 0 {name=p8 lab=en_b}
 C {devices/lab_pin.sym} 860 -600 0 1 {name=l6 sig_type=std_logic lab=en}
-C {devices/ipin.sym} 460 -1180 0 0 {name=p4 lab=ibias_100u}
+C {devices/lab_wire.sym} 950 -1180 0 0 {name=l50 sig_type=std_logic lab=ibias_100u}
 C {sg13g2_pr/sg13_lv_nmos.sym} 980 -500 0 0 {name=MN0
 l=0.5u
 w=2.5u
@@ -351,16 +351,16 @@ C {devices/lab_pin.sym} 2540 -600 0 0 {name=l32 sig_type=std_logic lab=VDD}
 C {devices/lab_pin.sym} 2580 -630 3 0 {name=l33 sig_type=std_logic lab=VDD}
 C {devices/lab_pin.sym} 2580 -570 1 0 {name=l34 sig_type=std_logic lab=VDD}
 C {devices/lab_pin.sym} 2580 -600 0 1 {name=l35 sig_type=std_logic lab=VDD}
-C {sg13g2_pr/sg13_lv_pmos.sym} 2680 -600 0 0 {name=MDp3
-l=0.5u
-w=5u
+C {sg13g2_pr/sg13_lv_pmos.sym} 2680 -600 0 0 {name=MPb
+l=0.13u
+w=2u
 ng=1
 m=1
 model=sg13_lv_pmos
 spiceprefix=X}
-C {devices/lab_pin.sym} 2660 -600 0 0 {name=l36 sig_type=std_logic lab=VDD}
+C {devices/lab_pin.sym} 2660 -600 0 0 {name=l36 sig_type=std_logic lab=en_b}
 C {devices/lab_pin.sym} 2700 -630 3 0 {name=l37 sig_type=std_logic lab=VDD}
-C {devices/lab_pin.sym} 2700 -570 1 0 {name=l38 sig_type=std_logic lab=VDD}
+C {devices/lab_pin.sym} 2700 -570 1 0 {name=l38 sig_type=std_logic lab=nrb}
 C {devices/lab_pin.sym} 2700 -600 0 1 {name=l39 sig_type=std_logic lab=VDD}
 C {sg13g2_pr/sg13_lv_pmos.sym} 2800 -600 0 0 {name=MDp4
 l=0.13u
@@ -373,9 +373,19 @@ C {devices/lab_pin.sym} 2780 -600 0 0 {name=l40 sig_type=std_logic lab=VDD}
 C {devices/lab_pin.sym} 2820 -630 3 0 {name=l41 sig_type=std_logic lab=VDD}
 C {devices/lab_pin.sym} 2820 -570 1 0 {name=l42 sig_type=std_logic lab=VDD}
 C {devices/lab_pin.sym} 2820 -600 0 1 {name=l43 sig_type=std_logic lab=VDD}
+C {sg13g2_pr/rppd.sym} 2900 -540 0 0 {name=Rb
+w=0.5e-6
+l=13.1e-6
+m=1
+b=0
+model=rppd
+body=VSS
+spiceprefix=X}
+C {devices/lab_pin.sym} 2900 -570 3 0 {name=l48 sig_type=std_logic lab=nrb}
+C {devices/lab_pin.sym} 2900 -510 1 0 {name=l49 sig_type=std_logic lab=ibias_100u}
 C {sg13g2_pr/cap_cmim.sym} 2700 -1000 0 0 {name=Cg1
 model=cap_cmim
-w=19.5e-6
+w=17.5e-6
 l=19.1e-6
 m=1
 spiceprefix=X}

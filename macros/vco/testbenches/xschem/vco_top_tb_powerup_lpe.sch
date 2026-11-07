@@ -6,14 +6,10 @@ S {}
 F {}
 E {}
 T {Testbench for the power-up and enable transient - 20 GHz VCO, post-layout} 450 -1730 0 0 1 1 {}
-N 1180 -1120 1180 -1080 {lab=ibias_100u}
 N 1240 -1120 1240 -1080 {lab=di_en}
 N 1300 -1120 1300 -1080 {lab=VDD}
 N 1300 -880 1300 -840 {lab=GND}
 N 1020 -980 1080 -980 {lab=vtune}
-N 1020 -1020 1080 -1020 {lab=vdd_core}
-N 1060 -910 1060 -870 {lab=vdd_core}
-N 1060 -810 1060 -770 {lab=GND}
 N 1360 -1000 1480 -1000 {lab=rf_out_p}
 N 1540 -1000 1600 -1000 {lab=vout_p}
 N 1600 -1000 1600 -970 {lab=vout_p}
@@ -32,19 +28,12 @@ N 820 -910 820 -870 {lab=di_en}
 N 820 -810 820 -770 {lab=GND}
 N 940 -910 940 -870 {lab=vtune}
 N 940 -810 940 -770 {lab=GND}
-N 820 -1250 820 -1210 {lab=VDD}
-N 820 -1150 820 -1110 {lab=ibias_100u}
 C {title-3.sym} 0 0 0 0 {name=l1 author="Simon Dorrer" rev=1.0 lock=true}
 C {vco_top_lpe.sym} 1100 -900 0 0 {name=x1}
-C {devices/lab_pin.sym} 1180 -1120 3 0 {name=l1 sig_type=std_logic lab=ibias_100u}
 C {devices/lab_pin.sym} 1240 -1120 3 0 {name=l2 sig_type=std_logic lab=di_en}
 C {devices/vdd.sym} 1300 -1120 0 0 {name=l3 lab=VDD}
 C {devices/gnd.sym} 1300 -840 0 0 {name=l4 lab=GND}
 C {devices/lab_pin.sym} 1020 -980 0 0 {name=l5 sig_type=std_logic lab=vtune}
-C {devices/lab_pin.sym} 1020 -1020 0 0 {name=l20 sig_type=std_logic lab=vdd_core}
-C {devices/vsource.sym} 1060 -840 0 0 {name=Vcore value="pwl(0 0 \{Tcore+1p\} 0 \{Tcore+1p+Tr\} \{Vcore\})"}
-C {devices/lab_pin.sym} 1060 -910 3 0 {name=l21 sig_type=std_logic lab=vdd_core}
-C {devices/gnd.sym} 1060 -770 0 0 {name=l22 lab=GND}
 C {devices/lab_wire.sym} 1440 -1000 0 0 {name=l6 sig_type=std_logic lab=rf_out_p}
 C {devices/capa.sym} 1510 -1000 1 0 {name=Cp
 m=1
@@ -80,9 +69,6 @@ C {devices/gnd.sym} 820 -770 0 0 {name=l15 lab=GND}
 C {devices/vsource.sym} 940 -840 0 0 {name=Vtune value="\{Vtune\}"}
 C {devices/lab_pin.sym} 940 -910 3 0 {name=l16 sig_type=std_logic lab=vtune}
 C {devices/gnd.sym} 940 -770 0 0 {name=l17 lab=GND}
-C {devices/isource.sym} 820 -1180 0 0 {name=Ibias value="pwl(0 0 \{Tvdd+1p\} 0 \{Tvdd+1p+Tr\} \{Ibias\})"}
-C {devices/vdd.sym} 820 -1250 0 0 {name=l18 lab=VDD}
-C {devices/lab_pin.sym} 820 -1110 1 0 {name=l19 sig_type=std_logic lab=ibias_100u}
 C {devices/code_shown.sym} 60 -1410 0 0 {name=NGSPICE
 only_toplevel=true
 value="
@@ -90,14 +76,10 @@ value="
 * KPEX netlist (full RC) of the macro without the coil and the varactor array, written by make klayout-pex-leads
 .include ../../../netlist/pex/vco_top_leads_klayout_pex_3.spice
 .param VDD=1.5
-.param Vcore=0.79
 .param Vtune=0.75
-.param Ibias=100u
-* The ramp of the supplies and of the reference current, when each starts, and di_en's rise and fall.
-* scripts/sim_powerup.py overrides them per supply order.
+* The ramp of VDD, when it starts, and di_en's rise and fall. scripts/sim_powerup.py overrides them per sequence.
 .param Tr=10n
 .param Tvdd=0
-.param Tcore=0
 .param Ten=100n
 .param Ten_r=100p
 .param Tdis=460n
@@ -110,7 +92,7 @@ value="
 
 set filetype=binary
 * Only these: 500 ns of everything, with savecurrents, is over 20 GB per run
-save v(x1.rf_p) v(x1.rf_n) v(vout_p) v(vout_n) i(VDD) i(Vcore)
+save v(x1.rf_p) v(x1.rf_n) v(vout_p) v(vout_n) i(VDD) v(x1.vdd_core)
 
 * Transient Analysis
 tran 0.5p 500n
