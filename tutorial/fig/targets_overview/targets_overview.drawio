@@ -103,11 +103,14 @@
         <mxCell id="dgL3" value="&lt;font face=&quot;Courier New&quot; style=&quot;font-size: 11px;&quot;&gt;&lt;b&gt;build-top&lt;/b&gt;&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fontSize=11;fillColor=#dae8fc;strokeColor=#6c8ebf;strokeWidth=1;fontStyle=0;verticalAlign=middle;sketch=0;" parent="1" vertex="1">
           <mxGeometry x="-160" y="580" width="140" height="30" as="geometry" />
         </mxCell>
-        <mxCell id="dgL5" value="&lt;font face=&quot;Courier New&quot; style=&quot;font-size: 11px;&quot;&gt;&lt;b&gt;magic-pex&lt;/b&gt;&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fontSize=11;fillColor=#dae8fc;strokeColor=#6c8ebf;strokeWidth=1;fontStyle=0;verticalAlign=middle;sketch=0;" parent="1" vertex="1">
+        <mxCell id="dgL6" value="&lt;font face=&quot;Courier New&quot; style=&quot;font-size: 11px;&quot;&gt;&lt;b&gt;lec + lec-mutant&lt;/b&gt;&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fontSize=11;fillColor=#dae8fc;strokeColor=#6c8ebf;strokeWidth=1;fontStyle=0;verticalAlign=middle;sketch=0;" parent="1" vertex="1">
           <mxGeometry x="-160" y="615" width="140" height="30" as="geometry" />
         </mxCell>
-        <mxCell id="dgL4" value="&lt;font face=&quot;Courier New&quot; style=&quot;font-size: 11px;&quot;&gt;&lt;b&gt;sim-all&lt;/b&gt;&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fontSize=11;fillColor=#dae8fc;strokeColor=#6c8ebf;strokeWidth=1;fontStyle=0;verticalAlign=middle;sketch=0;" parent="1" vertex="1">
+        <mxCell id="dgL5" value="&lt;font face=&quot;Courier New&quot; style=&quot;font-size: 11px;&quot;&gt;&lt;b&gt;magic-pex&lt;/b&gt;&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fontSize=11;fillColor=#dae8fc;strokeColor=#6c8ebf;strokeWidth=1;fontStyle=0;verticalAlign=middle;sketch=0;" parent="1" vertex="1">
           <mxGeometry x="-160" y="650" width="140" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="dgL4" value="&lt;font face=&quot;Courier New&quot; style=&quot;font-size: 11px;&quot;&gt;&lt;b&gt;sim-all&lt;/b&gt;&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fontSize=11;fillColor=#dae8fc;strokeColor=#6c8ebf;strokeWidth=1;fontStyle=0;verticalAlign=middle;sketch=0;" parent="1" vertex="1">
+          <mxGeometry x="-160" y="685" width="140" height="30" as="geometry" />
         </mxCell>
         <mxCell id="anL1" value="&lt;font face=&quot;Courier New&quot; style=&quot;font-size: 11px;&quot;&gt;&lt;b&gt;klayout-verify-all&lt;/b&gt;&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fontSize=11;fillColor=#d5e8d4;strokeColor=#82b366;strokeWidth=1;fontStyle=0;verticalAlign=middle;sketch=0;" parent="1" vertex="1">
           <mxGeometry x="60" y="510" width="140" height="30" as="geometry" />
