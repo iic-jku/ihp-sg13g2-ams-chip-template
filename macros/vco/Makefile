@@ -660,21 +660,23 @@ klayout-verify-all: ## Verify every cell with KLayout (DRC, LVS), PEX of TOP's l
 	$(MAKE) klayout-drc-regular CELL=$(TOP)
 .PHONY: klayout-verify-all
 
-magic-verify: ## Verify CELL cell with Magic (usage: make magic-verify [CELL=<cellname>])
-	$(MAKE) magic-drc CELL=$(CELL)
+magic-verify: ## Verify CELL cell with Magic, LVS and PEX (usage: make magic-verify [CELL=<cellname>])
+# The flows leave the Magic DRC out until the foundry cells are clean in it, make magic-drc still runs it
+#	$(MAKE) magic-drc CELL=$(CELL)
 	$(MAKE) magic-lvs CELL=$(CELL)
 	$(MAKE) magic-pex CELL=$(CELL)
 .PHONY: magic-verify
 
-magic-verify-all: ## Verify with Magic: DRC, LVS and PEX of the bias and the buffer, DRC of the others, PEX of TOP for its pins
+magic-verify-all: ## Verify with Magic: LVS and PEX of the bias and the buffer, PEX of TOP for its pins
 	$(MAKE) magic-verify CELL=vco_bias
 	$(MAKE) magic-verify CELL=vco_buf
 # Magic extracts sg13_hv_svaricap as two two-terminal halves and does not extract the PDK inductor, so Netgen cannot
 # compare the cells that hold them. The PEX netlist of TOP is for its pin list (make verilog), not for simulation.
-	$(MAKE) magic-drc CELL=vco_var
-	$(MAKE) magic-drc CELL=vco_ind
-	$(MAKE) magic-drc CELL=vco_core
-	$(MAKE) magic-drc CELL=vco_top
+# The flows leave the Magic DRC out until the foundry cells are clean in it, make magic-drc still runs it
+#	$(MAKE) magic-drc CELL=vco_var
+#	$(MAKE) magic-drc CELL=vco_ind
+#	$(MAKE) magic-drc CELL=vco_core
+#	$(MAKE) magic-drc CELL=vco_top
 	$(MAKE) magic-pex CELL=$(TOP)
 .PHONY: magic-verify-all
 # ================================================================================================
@@ -684,6 +686,7 @@ magic-verify-all: ## Verify with Magic: DRC, LVS and PEX of the bias and the buf
 all: ## Generate the layouts, verify, build and simulate the TOP cell
 	$(MAKE) klayout-script-all
 	$(MAKE) klayout-verify-all
+	$(MAKE) gdscheck-drc-all
 	$(MAKE) magic-verify-all
 	$(MAKE) build-top
 	$(MAKE) sim-all
