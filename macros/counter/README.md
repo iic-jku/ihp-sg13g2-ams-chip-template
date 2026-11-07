@@ -381,6 +381,8 @@ Additional targets are available for different DRC configurations:
 
 After the LibreLane flow completes successfully, the generated views are saved under `flow/final/`. `flow/final/` is included in `.gitignore`.
 
+To harden the macro on another standard cell library, see [Standard Cell Libraries](#standard-cell-libraries).
+
 
 ### View the Design
 
@@ -773,6 +775,216 @@ make all
 
 > [!NOTE]
 > The Xschem testbench `.include`s both the XSPICE model `netlist/xspice/counter_top.xspice` and the extracted netlist `netlist/pex/counter_top_magic_pex_3.spice`, and the gate-level cocotb run needs the netlists in `netlist/`. Directly after `make clean`, run `make build-top` **and** `make magic-pex` (or the full `make all`, which does both) once before `make sim-gl-xschem` or `make sim-gl-cocotb`, otherwise the includes fail.
+
+
+## Standard Cell Libraries
+
+The `ihp-sg13g2` PDK in the IIC-OSIC-TOOLS container ships three standard cell libraries, and this macro hardens on the first one: the IHP low-voltage library `sg13g2_stdcell` (IHP LV), the IHP high-voltage library `sg13g2_stdcell_hv` (IHP HV), and version 1.1 of [`ez130_8t`](https://iip.ethz.ch/ez-library/ihp130-8t.html) (ETH LV), an [open library from ETH Zurich](https://arxiv.org/abs/2609.29965) on the same thin-oxide transistors as IHP LV, available since image tag `2026.10`. The following numbers are read from the library views.
+
+| | IHP LV | IHP HV | ETH LV |
+|---|---|---|---|
+| Library | `sg13g2_stdcell` | `sg13g2_stdcell_hv` | `ez130_8t` |
+| Row height | 3.78 µm | 7.14 µm | 3.36 µm |
+| Tracks per row at 0.42 µm pitch | 9 | 17 | 8 |
+| Site width | 0.48 µm | 0.48 µm | 0.42 µm |
+| Transistors | `sg13_lv_*` | `sg13_hv_*` | `sg13_lv_*` |
+| Liberty corners | 1.08 V to 1.65 V (6) | 3.0 V to 3.6 V (3) | 1.08 V to 1.32 V (3) |
+| Cells in Liberty / LEF | 84 / 84 | 84 / 84 | 214 / 220 |
+| Combinational functions | 28 | 28 | 61 |
+| Buffer drive strengths | 5 | 5 | 13 |
+| Inverter (`inv_1`, `INVX3`) | 5.44 µm² | 13.71 µm² | 4.23 µm² |
+| Flip-flop with asynchronous reset (`dfrbpq_1`, `DFFRQX3`) | 48.99 µm² | 147.37 µm² | 28.22 µm² |
+| Flip-flop without reset (`DFFQX1`) | none | none | 22.58 µm² |
+| Well and substrate ties | in every cell | in every cell | separate `WELLTAP` cell |
+| Dynamic power data in Liberty | yes | no | yes |
+| Views besides Liberty, LEF, GDS, Verilog, CDL | SPICE, Xschem, VACASK | SPICE, Xschem | none |
+| LibreLane configuration in the PDK | yes | yes | no |
+
+So IHP LV is a 9-track library and ETH LV an 8-track library. IHP HV is neither: its thick-oxide cells need 17 tracks. Rows of different height do not abut, so the library is a choice per macro.
+
+Every combinational function of IHP LV also exists in ETH LV, and ETH LV adds 33 more. IHP HV has the same cell set as IHP LV. ETH LV additionally has:
+
+- **Arithmetic:** the full adder `FAX1`, the half adder `HAX2`, the minority gate `MIN3X*`, and the three-input `XOR3X*` and `XNOR3X*`.
+- **Multiplexer:** the inverting `MUXI2X*`.
+- **Complex gates:** `AO211`, `AO22`, `AO31`, `AOI211`, `AOI31`, `OA21`, `OA211`, `OAI22`, `OAI211`, `OAI221`, `OAI31`, `AOAI211` and `OAOI211`.
+- **Gates with inverted inputs:** `AND3B`, `OR3B`, `NAND4B`, `NAND4BB`, `NOR3B`, `NOR4B`, `NOR4BB`, `AOI21B`, `AOI2B1`, `AOI2B2`, `AOI2B2B`, `AOI2BB2`, `OAI2BB2` and `OAI2B2B`.
+- **Sequential cells:** the flip-flop without reset `DFFQX*`, the flip-flop banks `DFFRQ2X*` (2 bits) and `DFFRQ4X*` (4 bits, double height) with a shared clock and reset, which the open flow does not infer, and the active-low latch without reset `LATNQX*`.
+- **Physical cells:** `WELLTAP`, `FILLER16`, `DECAP16`, `DECAP32`, and the antenna diodes `ANTENNA2`, `ANTENNA4` and `ANTENNA8`.
+
+IHP LV keeps a few cells that ETH LV lacks: the bus keeper `sg13g2_sighold`, the scan flip-flop with set and reset `sg13g2_sdfbbp_1`, and three delay gates against the single `DLY1X2`.
+
+The drive digit is not comparable between the libraries. `BUFX3` has the `max_capacitance` of `sg13g2_buf_1` (0.3 pF), `BUFX12` that of `sg13g2_buf_4` and `BUFX48` that of `sg13g2_buf_16`. A cell with the same drive is smaller by the ratio of the sites, (0.42 × 3.36) / (0.48 × 3.78) = 0.78, and the flip-flops shrink more than that. `INVX1`, `INVX2` and `INVX3` even share one footprint and differ only in transistor width, so a higher digit costs no area but more input capacitance.
+
+### Switching the Library
+
+The library is selected in [`flow/librelane/config.yaml`](flow/librelane/config.yaml). `STD_CELL_LIBRARY` alone is not enough, because the configuration also names the Liberty files and the corners of IHP LV. For IHP HV, replace the block from `# Define Standard Cells` to `DEFAULT_CORNER` with the following lines. The PDK configuration of the library supplies the rest.
+
+<details>
+<summary>Show Configuration for IHP HV</summary>
+
+```yaml
+# Define Standard Cells
+STD_CELL_LIBRARY: sg13g2_stdcell_hv
+
+# Technology LIBs
+LIB:
+  "*_fast_3p60V_m40C":
+    - pdk_dir::libs.ref/sg13g2_stdcell_hv/lib/sg13g2_stdcell_hv_fast_3p60V_m40C.lib
+
+  "*_slow_3p00V_125C":
+    - pdk_dir::libs.ref/sg13g2_stdcell_hv/lib/sg13g2_stdcell_hv_slow_3p00V_125C.lib
+
+  "*_typ_3p30V_25C":
+    - pdk_dir::libs.ref/sg13g2_stdcell_hv/lib/sg13g2_stdcell_hv_typ_3p30V_25C.lib
+
+# Corners
+STA_CORNERS:
+  - nom_fast_3p60V_m40C
+  - nom_slow_3p00V_125C
+  - nom_typ_3p30V_25C
+
+DEFAULT_CORNER: nom_typ_3p30V_25C
+```
+
+</details>
+
+ETH LV takes more. The image ships its views but no LibreLane configuration, so `STD_CELL_LIBRARY: ez130_8t` stops right away with `no files matched glob pattern .../ez130_8t/lef/sg13g2_tech.lef`. Keep the name of the default library instead and replace everything it implies. Replace the same block with the first of the following two listings, and save the second one as `flow/librelane/tracks_ez130.info`.
+
+<details>
+<summary>Show Configuration for ETH LV</summary>
+
+```yaml
+# Define Standard Cells
+# The name stays at the PDK default, every view it implies is replaced below
+STD_CELL_LIBRARY: sg13g2_stdcell
+
+# Views
+TECH_LEFS:
+  "*": pdk_dir::libs.ref/ez130_8t/lef/ez130_sg13g2_tech.lef
+CELL_LEFS: [pdk_dir::libs.ref/ez130_8t/lef/ez130_8t.lef]
+CELL_GDS: [pdk_dir::libs.ref/ez130_8t/gds/ez130_8t.gds]
+CELL_VERILOG_MODELS: [pdk_dir::libs.ref/ez130_8t/verilog/ez130_8t.v]
+CELL_SPICE_MODELS: [pdk_dir::libs.ref/ez130_8t/cdl/ez130_8t.cdl]
+CELL_CDLS: [pdk_dir::libs.ref/ez130_8t/cdl/ez130_8t.cdl]
+FP_TRACKS_INFO: dir::tracks_ez130.info
+
+# Well and substrate ties
+WELLTAP_CELL: WELLTAP
+FP_TAPCELL_DIST: 20
+
+# Role cells, matched to the IHP LV defaults on max_capacitance
+SYNTH_DRIVING_CELL: BUFX12/Y
+SYNTH_CLK_DRIVING_CELL: BUFX12/Y
+SYNTH_BUFFER_CELL: BUFX3/A/Y
+SYNTH_TIEHI_CELL: TIEHI/Y
+SYNTH_TIELO_CELL: TIELO/Y
+FILL_CELLS: [FILLER1, FILLER2, FILLER4, FILLER8, FILLER16]
+DECAP_CELLS: [DECAP4, DECAP8, DECAP16, DECAP32]
+CELL_PAD_EXCLUDE: ["FILLER*", "DECAP*"]
+TRISTATE_CELLS: ["TBUFX*", "TINVX*"]
+DIODE_CELL: ANTENNA2/A
+PDN_RAIL_WIDTH: 0.32
+CTS_ROOT_BUFFER: BUFX48
+CTS_CLK_BUFFERS: [BUFX24, BUFX12, BUFX6]
+
+# Technology LIBs
+LIB:
+  "*_fast_1p32V_m40C":
+    - pdk_dir::libs.ref/ez130_8t/lib/ez130_8t_ff_1p32v_m40c.lib
+
+  "*_slow_1p08V_125C":
+    - pdk_dir::libs.ref/ez130_8t/lib/ez130_8t_ss_1p08v_125c.lib
+
+  "*_typ_1p20V_25C":
+    - pdk_dir::libs.ref/ez130_8t/lib/ez130_8t_tt_1p20v_25c.lib
+
+# Corners
+STA_CORNERS:
+  - nom_fast_1p32V_m40C
+  - nom_slow_1p08V_125C
+  - nom_typ_1p20V_25C
+
+DEFAULT_CORNER: nom_typ_1p20V_25C
+```
+
+</details>
+
+<details>
+<summary>Show Track File for ETH LV</summary>
+
+```text
+Metal1 X 0.21 0.42
+Metal1 Y 0.0 0.42
+Metal2 X 0.21 0.42
+Metal2 Y 0.0 0.42
+Metal3 X 0.21 0.42
+Metal3 Y 0.0 0.42
+Metal4 X 0.21 0.42
+Metal4 Y 0.0 0.42
+Metal5 X 0.21 0.42
+Metal5 Y 0.0 0.42
+TopMetal1 X 0.0 3.36
+TopMetal1 Y 0.0 3.36
+TopMetal2 X 0.0 4.0
+TopMetal2 Y 0.0 4.0
+```
+
+</details>
+
+- `TECH_LEFS`: `ez130_8t` has its own technology LEF with a 0.42 µm vertical routing pitch and the site of 0.42 µm × 3.36 µm. The stock `sg13g2_tech.lef` does not fit the cells.
+- `FP_TRACKS_INFO`: the file follows that LEF. With the tracks of the PDK, detailed routing still reports 0 errors, but on the counter Magic then flags 41 and KLayout 5 `M1.b` errors.
+- `WELLTAP_CELL`: the cells carry no well and substrate ties. Without tap cells, routing, LVS, antenna and timing stay clean, and only DRC fails: 3914 `LU.a` and `LU.b` errors in Magic and 49 `LU.b` errors in KLayout. With taps every 20 µm the counter gets 103 tap cells (436 µm²).
+- `CELL_SPICE_MODELS`: the library ships no SPICE view, so the CDL also serves LVS.
+- Role cells: the digit is matched on `max_capacitance`, as explained above. A smaller clock buffer is worth trying.
+- Not in the block, since the counter does not need them: `SYNTH_LATCH_MAP` and `SYNTH_TRISTATE_MAP` still name IHP LV cells, so a design with latches or tri-states needs its own maps. `SYNTH_EXCLUDED_CELL_FILE` and `PNR_EXCLUDED_CELL_FILE` still list IHP LV cells, which is harmless apart from the `[STA-0122] cell 'sg13g2_lgcp_1' not found` warnings, but they leave the clock gates and the scan flip-flop of ETH LV selectable.
+
+### What Works After the Switch
+
+`make librelane` runs through on all three libraries with 0 DRC, LVS and antenna errors and timing met. The targets after LibreLane are still written for IHP LV:
+
+| Target | IHP HV | ETH LV |
+|---|---|---|
+| `make librelane`, `librelane-nodrc` | works | works |
+| `make copy-final`, `copy-netlist`, `copy-render`, `render-gds`, `magic-pex` | works | works |
+| `make copy-reports`, and with it `make build-top` | stops, it names the six IHP LV corners | stops for the same reason |
+| `make generate-xspice` | exits 0 with an empty model, because the recipe names the IHP LV Liberty. With the HV Liberty in the recipe and 3.3 V in the testbench, `make sim-gl-xschem` counts | exits 0 with an empty model, and `spi2xspice.py` cannot read the ETH Liberty yet |
+| `make sim-gl-cocotb` | passes with `SCL=sg13g2_stdcell_hv` | fails with `SCL=ez130_8t`: the library has no `sg13g2_udp.v` and no Verilog models for `WELLTAP` and `FILLER*`. It passes after dropping that source and adding empty modules |
+
+> [!WARNING]
+> `make copy-reports` deletes `verification/` before it stops, and `make copy-final` and `make copy-netlist` overwrite committed files. Restore them with `git restore .` in this folder after trying another library.
+
+> [!IMPORTANT]
+> <details>
+> <summary>Show Consequences at the Chip Top-Level</summary>
+>
+> The library of a macro also has consequences at the chip top-level. The template chip runs its core at 1.5 V ([`doc/specifications.md`](../../doc/specifications.md)), which is outside the 1.08 V to 1.32 V of ETH LV, so a chip with an ETH LV macro has to run its core at 1.2 V. A test run of the chip with the ETH LV counter routes with 0 errors and LVS matches, where LVS at the chip top-level compares the macro by its pins and its interior is checked in its own LibreLane run. It takes three changes in the top-level [`config.yaml`](../../flow/librelane/config.yaml): remove the three corners above 1.32 V from `STA_CORNERS` and from the `lib` list of `counter_top`, set `DEFAULT_CORNER: nom_typ_1p20V_25C`, and add `STA_MACRO_PRIORITIZE_NL: false`, which makes STA read the timing model in `final/lib/` of the macro and not its netlist. Without that line STA finds no Liberty for the ETH LV cells and turns them into black boxes, so all paths through the counter disappear, and only the `Creating black box` lines in `sta.log` give it away. With it, the worst setup slack through a counter is +10.43 ns against +10.50 ns with IHP LV in the same mode, while the worst path of the chip starts at the SRAM and reads +2.30 ns with both. The hold slack from `rst_n_PAD` into `counter2` drops to +0.11 ns against +0.36 ns in the fast corner at 1.32 V. The full-chip DRC was not part of that test. An IHP HV macro needs a 3.3 V domain and level shifters towards the core, which the template chip does not have.
+>
+> </details>
+
+### Measured Results
+
+Same RTL, 200 µm × 100 µm die, `SYNTH_STRATEGY: DELAY 4` and the configurations above in image tag `2026.10`, with the typical corner at 1.2 V for IHP LV and ETH LV and at 3.3 V for IHP HV.
+
+| | IHP LV | IHP HV | ETH LV |
+|---|---|---|---|
+| Synthesised cell area (`stat.rpt`) | 742 µm² | 2293 µm² | 401 µm² |
+| Standard cell area after place and route | 1285 µm² | 2910 µm² | 1184 µm², 748 µm² without tap cells |
+| Core area and rows | 12802 µm², 18 | 8061 µm², 6 | 13395 µm², 21 |
+| Utilisation | 10.0 % | 36.1 % | 8.8 % |
+| Flip-flops | `sg13g2_dfrbpq_1` + `sg13g2_tiehi` | `sg13g2_hv_dfrbpq_1` + `sg13g2_hv_tiehi` | `DFFQX1` |
+| Worst setup slack at 20 ns | 13.44 ns | 13.75 ns | 14.50 ns |
+| Shortest period that closes | 1.6 ns | 3.0 ns | 1.7 ns |
+| Total power in `power.rpt`, 50 MHz | 52.6 µW | leakage only | 46.0 µW |
+| Supply power at transistor level, 50 MHz | 57.2 µW | 779 µW | 55.7 µW |
+| Static power at transistor level | 0.74 µW | 0.0036 µW | 1.70 µW |
+
+The shortest period comes from a sweep of `CLOCK_PERIOD` with `make librelane-nodrc`. The transistor-level values come from `make magic-pex EXT_MODE=2` and an ngspice run with the nominal supply, 6 fF on each output and a 50 MHz clock, averaged over 16 counting cycles.
+
+ETH LV nearly halves the synthesised area, mostly because of the flip-flop without reset: IHP LV spends 56 µm² per bit on a flip-flop with an unused asynchronous reset plus its tie cell, ETH LV 23 µm². After place and route the gap narrows: timing repair adds hold buffers (20 `sg13g2_dlygate4sd3_1` with 327 µm² in IHP LV, 29 `BUFX3` with 164 µm² in ETH LV), and the tap cells of ETH LV follow the core and not the logic, which costs 436 µm² on this large, nearly empty die. IHP HV costs three times the area of IHP LV but needs no hold buffers.
+
+In speed, the two thin-oxide libraries are close. At 20 ns the worst path starts at `enable_i` and runs through the hold buffers, so that slack says little about the library. The shortest period compares register-to-register paths, where IHP LV is slightly ahead. IHP HV closes at about 1.9 times that period.
+
+The power numbers come with three caveats. First, on this nearly empty die the leakage is almost entirely decap fill (97 % in IHP LV and 99 % in ETH LV), which leaks more per area in ETH LV, while the logic of ETH LV alone leaks 12 nW against 22 nW in IHP LV. Second, the clock buffers decide more than the library: with `sg13g2_buf_4` and `BUFX12` as root buffer, the supply power drops to 37.2 µW for IHP LV and 29.4 µW for ETH LV, and the advantage of ETH LV grows from 2.5 % to 21 %. Third, the `power.rpt` numbers are vectorless estimates: they sit below the transistor-level values, more for ETH LV than for IHP LV, and for IHP HV the dynamic part is missing altogether. At 3.3 V, the supply power of IHP HV is 13.6 times that of IHP LV.
 
 
 ## Start a New Digital Macro from This Template
