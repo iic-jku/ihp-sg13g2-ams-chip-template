@@ -443,13 +443,14 @@ klayout-verify-all: ## Verify all main subcells with KLayout (DRC, LVS, PEX)
 	$(MAKE) klayout-verify CELL=inverter_top
 .PHONY: klayout-verify-all
 
-magic-verify: ## Verify CELL cell with Magic (usage: make magic-verify [CELL=<cellname>])
-	$(MAKE) magic-drc CELL=$(CELL)
+magic-verify: ## Verify CELL cell with Magic, LVS and PEX (usage: make magic-verify [CELL=<cellname>])
+# The flows leave the Magic DRC out until the foundry cells are clean in it, make magic-drc still runs it
+#	$(MAKE) magic-drc CELL=$(CELL)
 	$(MAKE) magic-lvs CELL=$(CELL)
 	$(MAKE) magic-pex CELL=$(CELL)
 .PHONY: magic-verify
 
-magic-verify-all: ## Verify all main subcells with Magic (DRC, LVS, PEX)
+magic-verify-all: ## Verify all main subcells with Magic (LVS, PEX)
 	$(MAKE) magic-verify CELL=inverter
 	$(MAKE) magic-verify CELL=inverter_top
 .PHONY: magic-verify-all
@@ -459,6 +460,7 @@ magic-verify-all: ## Verify all main subcells with Magic (DRC, LVS, PEX)
 # Verify, Build and Simulate All Target
 all: ## Verify, build and simulate the TOP cell
 	$(MAKE) klayout-verify-all
+	$(MAKE) gdscheck-drc-all
 	$(MAKE) magic-verify-all
 	$(MAKE) build-top
 	$(MAKE) sim-all

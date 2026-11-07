@@ -180,6 +180,8 @@ all: ## Build and verify the logo
 	$(MAKE) lib
 	$(MAKE) verilog
 	$(MAKE) klayout-drc
-	$(MAKE) magic-drc
+	$(MAKE) gdscheck-drc
+# The flows leave the Magic DRC out until the foundry cells are clean in it, make magic-drc still runs it
+#	$(MAKE) magic-drc
 .PHONY: all
 # ================================================================================================

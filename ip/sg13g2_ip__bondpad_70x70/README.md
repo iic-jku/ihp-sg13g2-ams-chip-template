@@ -108,14 +108,14 @@ make klayout-drc CELL=sg13g2_ip__bondpad_70x70
 make klayout-drc DRC_LEVEL=regular
 ```
 
-**Magic DRC** uses `sak-drc.sh`:
+**Magic DRC** uses `sak-drc.sh`. `make all` leaves it out until the foundry cells of the chip are clean in Magic:
 
 ```sh
 make magic-drc
 make magic-drc CELL=sg13g2_ip__bondpad_70x70
 ```
 
-**gdscheck DRC** runs the standalone [gdscheck](https://github.com/aesc-silicon/gdscheck) engine (`sak-drc.sh -g`). `DRC_LEVEL` selects its suite (`precheck`, `core` for the default `macro`, or `main` for `regular`) and `GDSCHECK_SUITE` replaces it, or `GDSCHECK_DECKS` runs single rule decks instead, see the [top-level README](../../README.md#design-rule-check-drc). It is not part of `make all`:
+**gdscheck DRC** runs the standalone [gdscheck](https://github.com/aesc-silicon/gdscheck) engine (`sak-drc.sh -g`). `DRC_LEVEL` selects its suite (`precheck`, `core` for the default `macro`, or `main` for `regular`) and `GDSCHECK_SUITE` replaces it, or `GDSCHECK_DECKS` runs single rule decks instead, see the [top-level README](../../README.md#design-rule-check-drc). `make all` runs it:
 
 ```sh
 make gdscheck-drc
