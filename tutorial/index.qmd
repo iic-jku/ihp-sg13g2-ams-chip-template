@@ -1653,6 +1653,80 @@ This section covers the top-level assembly and padframe generation. The top-leve
 
 For your own chip, `make project` renames these files and every reference to them in one step (@sec-new-chip), and their content is what you then adapt.
 
+## Planning the Chip with PREP-IC {#sec-prep-ic}
+
+Before you edit the files below, plan the chip as a whole: which pad sits where, how far each macro is from its pads, and whether everything fits on the die. [PREP-IC](https://github.com/iic-jku/prep-ic) (Pinout, Ring and Early floorplan Planner for ICs) does that for the IHP SG13G2 and SG13CMOS5L PDKs and their IO cells, and it knows the EUROPRACTICE packages. It needs neither RTL nor a LibreLane run, and one project file holds the whole plan.
+
+[`doc/prep-ic/chip_top.json`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/doc/prep-ic/chip_top.json) is this chip as a PREP-IC project. @fig-prep-ic-gui shows it in the GUI, and @fig-prep-ic-floorplan shows the floorplan on its own.
+
+![This chip in the PREP-IC GUI: the pad list of each side on the left, the chip view on the right, and the stat tiles and findings below it.](fig/prep_ic/chip_top_gui.png){#fig-prep-ic-gui}
+
+![The floorplan of this chip in PREP-IC: the pads with their package pin numbers, the macros at their `config.yaml` positions, and the flylines from the marked macro pins to their pads.](fig/prep_ic/chip_top_floorplan.png){#fig-prep-ic-floorplan width=75%}
+
+### Installing and Starting
+
+The IIC-OSIC-TOOLS container ships PREP-IC from tag `2026.11` on. On an older image, or on your own machine with Python 3.10 or newer, install it with pip:
+
+```sh
+pip install prep-ic
+```
+
+Then, from the top of the repository:
+
+```sh
+prep-ic doc/prep-ic/chip_top.json          # open this chip in the GUI, blocks until the window closes
+prep-ic check doc/prep-ic/chip_top.json    # print the findings, exit code 1 if there are any
+```
+
+The GUI needs the container desktop. `prep-ic check` needs version 0.1.2 or newer, which `pip install --upgrade prep-ic` installs. The GUI does not follow the file on disk, so reopen a project you changed from outside.
+
+### What It Can Do
+
+**Pad ring and die.** The *Pads* tab has one editor per side, with one line per pad. The tag selects the IO cell:
+
+| Line | Pad |
+| --- | --- |
+| `clk [in]` | digital input |
+| `dout[0] [out] [4mA]` | digital output with its drive strength, `[tri]` and `[io]` alike |
+| `ain [analog]` | analog pad |
+| `VDD [vdd]` | core supply, `[vss]`, `[iovdd]` and `[iovss]` alike |
+| `RFIN [gsg]`, `LO [gsgsg]` | an RF pad between two grounds, a differential pair with three grounds |
+| empty line | a free slot of one pitch |
+| `=== NAME` | a power split that cuts the ring and starts the domain `NAME` |
+
+Tag every pad: without a tag, PREP-IC guesses the function from the name, and the guess can be wrong without a message. The PDK, the package, the pad pitch and whether the die size is fixed are in the *Settings* tab, and a die that is not fixed follows the pads.
+
+**Macros.** In the *Macros* tab, *Add Macro...* reads the size and the pins of a macro from the `final/lef/` folder of its directory, and *Add Placeholder...* stands in for a macro that does not exist yet. Tick the pins that go off-chip and drag the macro in the *Chip* tab. A flyline then runs from each ticked pin to its pad. *Add Missing Pads* adds a pad per ticked pin without one, *Suggest Supply Pads* proposes supply pads for macros without one in reach, and *Optimize Pad Order* sorts the connected pads of each side by their macro pins.
+
+**Checks.** The stat tiles and the warning line under the chip view report pads that do not fit, missing supply pads, a signal used twice, crossing flylines, pins without a pad, split differential pairs, a sensitive pad next to a noisy one, long analog flylines, and macros that overlap or leave the core. They are planning hints: a flyline is a straight line and not a route, and the limits are defaults you set in the *Settings* tab. A supply check only asks whether a supply pad is in reach, it knows nothing about current or ESD.
+
+**Export.** The same plan gives the pin list, a drawing of the pad ring and the LibreLane files:
+
+```sh
+prep-ic export doc/prep-ic/chip_top.json \
+    --csv pins.csv --svg padframe.svg --librelane <folder>
+```
+
+The folder receives `pad_cfg.tcl` and `padring_config.yaml` (pad positions and die area), `macros.yaml` (macro views and positions), `chip_top.sv` and `chip_core_template.sv` (the pad instances and a starting point for the core), and `bondplan_pinout.yaml` for the bonding diagram of @sec-packaging. Existing files are overwritten without asking, so do not point it at `flow/librelane/` of this chip. In the GUI, the *File* menu exports the same files.
+
+### Reading the Plan of This Chip
+
+- **A pad belongs to a macro pin by its name**, so the pads carry pin names such as `clock_i` and `counter_value_o[0]`, not the port names of [`doc/pinout.md`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/doc/pinout.md). When two instances tick the same pin, the pad name needs the instance as well: `inverter1_vout1` and `inverter2_vout1`, while only `inverter1` ticks `vout3`, which stays `vout3`. A pad connects to one pin only, so `clock_i` draws a line to `counter1`, although the clock also feeds `counter2` and the SRAM.
+- **`sram_0` is a placeholder of the size of its LEF**, drawn dashed, because the SRAM comes from the PDK and has no macro directory.
+- **`counter2` has no flylines.** PREP-IC rotates a macro but does not mirror it, and `counter2` is placed with the orientation `FS`.
+- **Two findings remain:** `inverter1_vout1` sits next to `inverter2_vout2`, and the flylines of `vin2` and `inverter2_vout1` cross. Both come from the pad order of this chip and do not stop the flow. Swap `vin2` and `inverter2_vout1` in the *Pads* tab and the crossing disappears.
+
+### From the Plan to This Flow
+
+This chip keeps its own [`rtl/chip_top.sv`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/rtl/chip_top.sv) and the `PAD_*` lists instead of the export, because the export has no `padbare` connection: its analog pads reach the core through `padres`, behind the secondary ESD resistor, which the analog outputs of this chip avoid. It also writes no PDN and no timing constraints, those stay in [`pdn_cfg.tcl`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/flow/librelane/pdn_cfg.tcl) and [`chip_top.sdc`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/flow/librelane/chip_top.sdc). So use the plan to settle the pad order and the positions, then carry them over by hand:
+
+| In the plan | In this repository |
+| --- | --- |
+| Pad order per side | `PAD_WEST`, `PAD_NORTH`, `PAD_SOUTH`, `PAD_EAST` in `config.yaml`. The GUI shows the left and right sides top to bottom, `PAD_WEST` and `PAD_EAST` list them bottom to top. |
+| Pad pitch | `PAD_SPACING_MULTIPLE` in `config.yaml`, see the comment above it for the arithmetic |
+| Macro positions | The `instances` of the `MACROS` block in `config.yaml`. *Export MACROS...* in the *Chip* tab shows them in that form. PREP-IC does not know the strap grid of the PDN, so check the result with `--to OpenROAD.GeneratePDN` or a full run. |
+| Pad and macro tables | [`doc/pinout.md`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/doc/pinout.md) and [`doc/floorplan.md`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/doc/floorplan.md) |
+
 ## Understanding `chip_top.sv`
 
 The padframe wrapper [`chip_top.sv`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/rtl/chip_top.sv) declares the chip's parameters and ports. The parameter block at the top of the module controls the number of pads of each type and is the place to update when the pinout changes.
@@ -2197,7 +2271,7 @@ Repeat @sec-analog for a three-stage ring oscillator with an output buffer, deri
 
 ## Exercise 4: Update Pinout and Floorplan of the Top-Level {#sec-exercise4}
 
-Building on @sec-exercise1 and @sec-exercise3, swap `inverter2` for the ring oscillator, delete `counter2`, and connect the now 16-bit `counter1` to the freed-up south-side pads. The recommended steps are:
+Building on @sec-exercise1 and @sec-exercise3, swap `inverter2` for the ring oscillator, delete `counter2`, and connect the now 16-bit `counter1` to the freed-up south-side pads. Try the new pad order and the macro positions in PREP-IC first (@sec-prep-ic). The recommended steps are:
 
 1. Replace `inverter2` with the ring oscillator macro in [`chip_core.sv`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/rtl/chip_core.sv).
 2. Replace three of the four analog pads with VSS pads, and connect the ring oscillator's output to the fourth analog pad.
