@@ -819,6 +819,9 @@ The drive digit is not comparable between the libraries. `BUFX3` has the `max_ca
 
 The library is selected in [`flow/librelane/config.yaml`](flow/librelane/config.yaml). `STD_CELL_LIBRARY` alone is not enough, because the configuration also names the Liberty files and the corners of IHP LV. For IHP HV, replace the block from `# Define Standard Cells` to `DEFAULT_CORNER` with the following lines. The PDK configuration of the library supplies the rest.
 
+<details>
+<summary>Show Configuration for IHP HV</summary>
+
 ```yaml
 # Define Standard Cells
 STD_CELL_LIBRARY: sg13g2_stdcell_hv
@@ -843,7 +846,12 @@ STA_CORNERS:
 DEFAULT_CORNER: nom_typ_3p30V_25C
 ```
 
+</details>
+
 ETH LV takes more. The image ships its views but no LibreLane configuration, so `STD_CELL_LIBRARY: ez130_8t` stops right away with `no files matched glob pattern .../ez130_8t/lef/sg13g2_tech.lef`. Keep the name of the default library instead and replace everything it implies. Replace the same block with the first of the following two listings, and save the second one as `flow/librelane/tracks_ez130.info`.
+
+<details>
+<summary>Show Configuration for ETH LV</summary>
 
 ```yaml
 # Define Standard Cells
@@ -899,6 +907,11 @@ STA_CORNERS:
 DEFAULT_CORNER: nom_typ_1p20V_25C
 ```
 
+</details>
+
+<details>
+<summary>Show Track File for ETH LV</summary>
+
 ```text
 Metal1 X 0.21 0.42
 Metal1 Y 0.0 0.42
@@ -915,6 +928,8 @@ TopMetal1 Y 0.0 3.36
 TopMetal2 X 0.0 4.0
 TopMetal2 Y 0.0 4.0
 ```
+
+</details>
 
 - `TECH_LEFS`: `ez130_8t` has its own technology LEF with a 0.42 µm vertical routing pitch and the site of 0.42 µm × 3.36 µm. The stock `sg13g2_tech.lef` does not fit the cells.
 - `FP_TRACKS_INFO`: the file follows that LEF. With the tracks of the PDK, detailed routing still reports 0 errors, but on the counter Magic then flags 41 and KLayout 5 `M1.b` errors.
