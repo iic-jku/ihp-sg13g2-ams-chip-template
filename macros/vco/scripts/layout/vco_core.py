@@ -57,14 +57,11 @@ for name, x, s in (("rf_p", -XF, -1), ("rf_n", XF, 1)):
     top.via(x + 0.75 * s, (Y_BOT + Y_FV - 1.4) / 2, "Metal3", "Metal4", cols=4, rows=int((Y_FV - 1.4 - Y_BOT - 0.8) / 0.41))
 
 # Cross-coupled pair, gates on top: M1 (drain rf_p) left, M2 (drain rf_n) its image in x
-pair = vl.mos(ly, "Mpair", "nmos", 20.0, 0.13, 10, tap="merge")
+pair = vl.mos(ly, "Mpair", "nmos", 20.0, 0.13, 10, tap="merge", d_metal="Metal3", s_strap=True)
 paw = pair.ports["ACT"][1].width()
 m1 = top.place(pair, -GAP - paw, Y_PAIR, mirror=True)
 m2 = top.place(pair, GAP + paw, Y_PAIR, rot=180)
-# Drains: a via array over each strap onto Metal3, which reaches the device's tank line
-for p in (m1, m2):
-    d = p["D"][1]
-    top.via(d.center().x, d.center().y, "Metal2", "Metal3", cols=9, rows=4)
+# Drains: the straps on Metal3 reach the device's tank line
 # Gates: Metal1 and Metal2 over each gate pad, two rows of vias along it. M1's gate (rf_n) runs on Metal2 to the rf_n
 # line, M2's gate (rf_p) drops to Metal3 left of the rf_n line and runs to the rf_p line. With one via per level, at
 # 9 Ohm per cut, the extraction put 41 Ohm and 23 Ohm in series with the gates.
@@ -110,8 +107,10 @@ for x0, y0, w, l in (CCT1, CCT2):
     tc = top.add(cell, x0, y0)
     plates.append((top.shapes(cell, tc, "Metal5")[0], top.shapes(cell, tc, "TopMetal1")[0]))
 (m5a, tma), (m5b, tmb) = plates
-# The plates of the two caps joined at the right edge, the top plates over a TopMetal1 tab inside both MIM areas
-top.rect("Metal5", m5b.right - 2.0, m5b.top - 0.1, m5b.right, m5a.bottom + 0.1)
+# The plates of the two caps joined at the right edge, the top plates over a TopMetal1 tab inside both MIM areas. The
+# core's whole current returns over this Metal5.
+W_JOINT = 8.0
+top.rect("Metal5", m5b.right - W_JOINT, m5b.top - 0.1, m5b.right, m5a.bottom + 0.1)
 top.rect("TopMetal1", tmb.right - 8.0, tmb.top - 0.1, tmb.right - 1.0, tma.bottom + 0.1)
 
 # vdd_core: the center tap's TopMetal1 spine down to a bar into Cct1's top plate, and a pin under Cct2
@@ -131,7 +130,8 @@ sbar = top.rect("Metal1", XS - 0.5, s1.bottom, s2.right + 2.4, s1.top)
 # The pair's sources carry the whole core current, and its 2 f0 pulses: via stacks all along the source bar, clear of the
 # rf lines, up to a Metal5 bar that runs straight into Cct1's bottom plate, the cell's widest VSS conductor
 for x in (-11.0, -6.0, -3.0, 0.0, 3.0, 6.0, 12.0):  # their Metal3 and Metal4 clear of the rf lines
-    top.via(x, sbar.center().y, "Metal1", "Metal5", cols=4, rows=2)
+    # The two on the devices' source rails start from the rails' Metal2
+    top.via(x, sbar.center().y, "Metal2" if abs(x) == 6.0 else "Metal1", "Metal5", cols=4, rows=2)
 top.rect("Metal5", XS - 0.5, sbar.bottom - 1.2, CCT1[0], sbar.top + 2.5)  # 4.7 um, Metal5 is thin
 vss_var = vpins["VSS"][1]
 top.rect("Metal1", XS - 0.5, vss_var.bottom, vss_var.left + 0.1, vss_var.top)
@@ -139,6 +139,10 @@ top.rect("Metal5", XS - 0.5, Y_VSS - 0.5, m5a.left + 0.1, Y_VSS + 0.5)
 top.via(XS, Y_VSS, "Metal1", "Metal5", cols=2, rows=2)
 vss = top.rect("Metal5", m5b.left, Y_CELL_BOT, m5b.left + 4.0, m5b.bottom + 0.1)
 top.pin("Metal5", "VSS", pya.DBox(vss.left, vss.bottom, vss.right, vss.bottom + 1.0))
+
+vl.check_source_strip("pair source strip", vl.I_CORE / 10)
+vl.check_cuts("pair sources to VSS", "Via4", 7 * 8, vl.I_CORE)
+vl.check_wire("Metal5 between Cct1 and Cct2", "Metal5", W_JOINT, vl.I_CORE)
 
 vl.write(top, vl.out_path("vco_core", __file__), keep=("vco_ind", "vco_var"))
 # ==============================================================================

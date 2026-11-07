@@ -25,10 +25,40 @@ GRID = 0.005  # manufacturing grid in um
 # Minimum metal areas in um^2 (rules Mn.d). A lone via_stack lands on pads far below them, so write() grows those pads.
 MIN_AREA = {"Metal1": 0.09, "Metal2": 0.144, "Metal3": 0.144, "Metal4": 0.144, "Metal5": 0.144}
 PAD_CLEARANCE = 0.25  # um from a grown pad to other metal, above the wide-metal spacing Mn.e and not only Mn.b
+# DC limits, 11 years at 105 C by the ihp-sg13cmos5l process specification: (mA/um, up to this width, flat mA there). No DRC deck checks them.
+WIRE_LIMIT = {"Metal1": (1.0, 0.36, 0.36), "Metal2": (2.0, 0.3, 0.6), "Metal3": (2.0, 0.3, 0.6), "Metal4": (2.0, 0.3, 0.6),
+              "Metal5": (2.0, 0.3, 0.6), "TopMetal1": (15.0, 0.0, 0.0), "TopMetal2": (16.0, 0.0, 0.0)}
+CUT_LIMIT = {"Cont": 0.3, "Via1": 0.4, "Via2": 0.4, "Via3": 0.4, "Via4": 0.4, "TopVia1": 1.4, "TopVia2": 10.0}  # mA per cut
+I_CORE, I_TAIL, I_BIAS = 6.2, 7.7, 0.4  # mA, post-layout at the limits' 105 C, FF, res_bcs, VDD 1.65 V: core, buffer tail, bias rows
+STRIP_M2, STRIP_M1 = 0.7, 0.3  # how a source stripe's current splits between a 0.29 um Metal2 strip and its 0.16 um Metal1, by sheet resistance
 
 
 def snap(v):
     return round(v / GRID) * GRID
+
+
+def _check_current(name, what, current, limit):
+    ratio = current / limit
+    print(f"current: {name}: {what}, {current:.2f} mA of {limit:.2f} mA, ratio {ratio:.2f}")
+    if ratio > 1.0:
+        raise RuntimeError(f"vco_layout: {name} carries {current:.2f} mA, its limit is {limit:.2f} mA")
+
+
+def check_wire(name, layer, width, current):
+    """Stops the script when a wire carries more than its DC limit (current in mA, width in um)."""
+    per_um, flat_w, flat = WIRE_LIMIT[layer]
+    _check_current(name, f"{layer} {width:.2f} um", current, flat if width <= flat_w else per_um * width)
+
+
+def check_source_strip(name, current):
+    """A stripe under s_strap of mos(), with current in mA, on both of its metals."""
+    check_wire(f"{name}, Metal2", "Metal2", 0.29, current * STRIP_M2)
+    check_wire(f"{name}, Metal1", "Metal1", 0.16, current * STRIP_M1)
+
+
+def check_cuts(name, cut, n, current):
+    """Stops the script when n parallel cuts carry more than their DC limit (current in mA)."""
+    _check_current(name, f"{n} {cut}", current, n * CUT_LIMIT[cut])
 
 
 def load_pdk():
@@ -205,7 +235,7 @@ def out_path(name, script):
     return out if isinstance(out, str) else os.path.join(os.path.dirname(os.path.abspath(script)), "..", "..", "layout", f"{name}.gds")
 
 
-def mos(ly, name, kind, w, l, ng, tap=None, d_metal="Metal2", gext=1.0, cap=False):
+def mos(ly, name, kind, w, l, ng, tap=None, d_metal="Metal2", gext=1.0, cap=False, s_strap=False, s_width=None):
     """A MOSFET with its wiring: gate contacts on a poly strap below the fingers (port G, Metal1), sources up to a
     Metal1 rail above (port S), drains joined by a strap across the middle (port D, d_metal).
 
@@ -213,6 +243,9 @@ def mos(ly, name, kind, w, l, ng, tap=None, d_metal="Metal2", gext=1.0, cap=Fals
     (a tap of its own above the source rail, port B). Even stripes are sources, odd ones drains.
     gext: how far the gate pad reaches left of the device, so a via on it clears the drain's via column.
     cap: a MOS capacitor, every stripe goes up to the source rail and there is no drain strap (no port D).
+    s_strap: Metal2 over the source stripes and the rail, vias all along, for a source current above Metal1's 0.36 mA
+    per stripe. Needs d_metal="Metal3". A via stack on the rail starts from Metal2, the rail's own via row is Metal1 to Metal2.
+    s_width: Metal1 width of the source stripes, for the same reason where the finger pitch leaves room.
     """
     b = Block(ly, name)
     model = "sg13_lv_nmos" if kind == "nmos" else "sg13_lv_pmos"
@@ -238,7 +271,17 @@ def mos(ly, name, kind, w, l, ng, tap=None, d_metal="Metal2", gext=1.0, cap=Fals
     rail_y0, rail_y1 = act.top + 0.25, act.top + 0.85
     for s in stripes if cap else stripes[0::2]:
         b.rect("Metal1", s.left, s.top, s.right, rail_y0)
+        if s_width:
+            xc = s.center().x
+            b.rect("Metal1", max(act.left, xc - s_width / 2), s.bottom, min(act.right, xc + s_width / 2), rail_y0)
     b.ports["S"] = ("Metal1", b.rect("Metal1", act.left, rail_y0, act.right, rail_y1))
+    if s_strap:
+        srows = max(1, int((wf - 0.1 + 0.22) / 0.41))
+        for s in stripes[0::2]:
+            b.via(s.center().x, act.center().y, "Metal1", "Metal2", cols=1, rows=srows)
+            b.rect("Metal2", s.center().x - 0.145, act.bottom + 0.05, s.center().x + 0.145, rail_y1)
+        b.rect("Metal2", act.left, rail_y0, act.right, rail_y1)
+        b.via(act.center().x, (rail_y0 + rail_y1) / 2, "Metal1", "Metal2", cols=int((act.width() - 0.1) / 0.41), rows=1)
 
     # Drains: a via column on every odd stripe and a strap across them, inside the active area's height
     if not cap:
