@@ -1564,10 +1564,10 @@ A current source on the center tap sets the tank's common mode by the pair's gat
 | :--- | :--- | :--- | :--- |
 | Oscillation frequency at `vtune` = 0.75 V | 20 GHz | 22.55 GHz | 20.00 GHz |
 | Tuning range, `vtune` from 0 V to 1.5 V | about 2 GHz | 21.64 GHz to 24.04 GHz | 19.34 GHz to 21.18 GHz |
-| Phase noise at 1 MHz offset | reported | -101.2 dBc/Hz (PNOISE), (pending) dBc/Hz (transient noise) | (pending) dBc/Hz (transient noise) |
+| Phase noise at 1 MHz offset | reported | -101.2 dBc/Hz (PNOISE), -99.4 dBc/Hz (transient noise) | (pending) dBc/Hz (transient noise) |
 | Output power per output into 50 $\Omega$ | -10 dBm or more | -8.3 dBm | -10.0 dBm |
 | Supply current from `VDD` = 1.5 V | | 11.6 mA | 10.9 mA |
-| Disabled | | | (pending), no oscillation |
+| Disabled | | | 9 nA, no oscillation |
 
 : Results of the `vco` at TT and 27 C. The schematic frequency is from the PSS, the post-layout one and the post-layout output power from the transient of @sec-rf-postlayout, and the schematic output power is the fundamental from the PSS. {#tbl-vco-results}
 
@@ -1931,7 +1931,20 @@ make sim-view-xschem            # the plot of the nominal run, with the others
 
 [`sim_powerup.py`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/vco/scripts/sim_powerup.py) runs that sequence and five more: `di_en` low throughout, `di_en` tied to `VDD`, the same with a 1 ns ramp, `di_en` high before `VDD`, and `di_en` 300 ns after it, at the nominal point and at the corners closest to not starting and to the highest tank node. It measures each run period by period and fails when the tank does not start, a node passes 1.5 V, a disabled run oscillates, or the output has not settled.
 
-The rerun of this part is still running on a compute host, its results follow.
+![Post-layout power-up and enable at TT, 27 C (ngspice): the swing of the tank and of the output, the frequency, the current from `VDD` and the voltage of the center tap, period by period.](fig/vco_top/vco_top_tb_powerup_lpe.svg){#fig-vco-powerup}
+
+| Sequence | Runs | Result | Tank up after | Highest node |
+| :--- | :--- | :--- | :--- | :--- |
+| `VDD` first, `di_en` up at 100 ns and down at 8.1 us | 5 | 5 ok | 6.4 ns at most | 1.342 V |
+| `di_en` low | 19 | 19 without oscillation, tank swing below 1 nV, at most 0.6 uA from `VDD` | | |
+| `di_en` tied to `VDD`, 10 ns ramp | 5 | 5 ok | 3.6 ns at most | 1.337 V |
+| `di_en` tied to `VDD`, 1 ns ramp | 5 | 5 ok | 5.3 ns at most | 1.339 V |
+| `di_en` before `VDD` | 5 | 5 ok | 3.6 ns at most | 1.337 V |
+| `di_en` 300 ns after `VDD` | 5 | 5 ok | 3.7 ns at most | 1.342 V |
+
+: Post-layout power-up and enable, from `vco_top_tb_powerup_lpe_corners.csv`. {#tbl-vco-powerup}
+
+Every run passes. With `di_en` rising at 100 ns, the tank is up after 3.8 ns at TT, 27 C, and after 6.4 ns at the slowest corner. The output takes longer: the bias filters of the buffer (170 kHz) set its current, so the output reaches 99 % of its final swing after 4.8 us at TT and 5.6 us at worst, and the frequency comes within 10 MHz of its final value after 3.6 us. When `di_en` falls, the output drops below 10 % within 3 ns, and the macro draws 9 nA from `VDD` at TT, 27 C with `di_en` low.
 
 ## Transient Noise and the Post-Layout Phase Noise {#sec-rf-trannoise}
 
@@ -1944,7 +1957,17 @@ make sim-trannoise-lpe    # the post-layout netlist, 8 seeds
 
 The benches settle the oscillation for 6 ns, store the state, and run a noisy transient of 5 $\mu$s (4 $\mu$s post-layout) from it, at a fixed step of 0.25 ps with noise from 100 kHz to 100 GHz, one VACASK process per seed. [`sim_trannoise.py`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/vco/scripts/sim_trannoise.py) takes the zero crossings of the tank's differential voltage, computes the phase from the period-to-period differences, and averages the spectra of the seeds. Since every seed starts from the same state, what they share is a drift and not noise, and the script subtracts it. `make check-trannoise` tests that spectrum code on synthetic jitter with a known spectrum.
 
-The rerun of this part is still running on a compute host, its results follow.
+| Offset | PNOISE, schematic | Transient noise, schematic | Transient noise, post-layout |
+| :--- | :--- | :--- | :--- |
+| 1 MHz | -101.2 dBc/Hz | -99.4 dBc/Hz | (pending) |
+| 3 MHz | -113.5 dBc/Hz | -112.5 dBc/Hz | (pending) |
+| 10 MHz | -124.7 dBc/Hz | -124.9 dBc/Hz | (pending) |
+| 30 MHz | -134.5 dBc/Hz | -134.9 dBc/Hz | (pending) |
+| 100 MHz | -145.1 dBc/Hz | -145.8 dBc/Hz | (pending) |
+
+: Phase noise from PNOISE and from transient noise. {#tbl-vco-trannoise}
+
+`make sim-trannoise` checks PNOISE with an analysis that shares no code with it: on the schematic, transient noise over 8 seeds and PNOISE differ by -0.7 dB to +1.9 dB from 1 MHz to 100 MHz, with a scatter of the seeds of about 0.9 dB at 1 MHz. The post-layout run is still going on a compute host, its column follows.
 
 ## Post-Layout Simulation {#sec-rf-postlayout}
 
