@@ -20,7 +20,8 @@ def main():
     parser.add_argument("report_dir", help="folder with the .lyrdb report of sak-drc.sh -k -l regular")
     args = parser.parse_args()
 
-    reports = glob.glob(os.path.join(args.report_dir, "*.lyrdb"))
+    # sak-drc.sh writes the extra rules, the density and the antenna checks into subfolders of the run folder
+    reports = glob.glob(os.path.join(args.report_dir, "**", "*.lyrdb"), recursive=True)
     if not reports:
         sys.exit(f"check_drc_regular.py: no .lyrdb report in {args.report_dir}, did the DRC run?")
     counts = collections.Counter()
