@@ -1,10 +1,10 @@
-* Extracted by KLayout with SG13G2 LVS runset on : 07/11/2026 21:42
+* Extracted by KLayout with SG13G2 LVS runset on : 07/11/2026 22:24
 
 .SUBCKT vco_top VDD VSS di_en rf_out_n rf_out_p vtune
 X$1 VSS rf_out_n rf_out_p \$7 VDD \$13 \$14 \$12 vco_buf
 X$2 \$7 VSS \$12 \$5 di_en VDD vco_bias
 X$3 VSS VDD \$8 \$5 vco_feed
-X$4 \$8 \$13 vtune \$14 VSS vco_core
+X$4 VSS \$8 \$13 vtune \$14 vco_core
 .ENDS vco_top
 
 .SUBCKT vco_feed VSS VDD vdd_core en_b
@@ -73,7 +73,7 @@ C$59 \$11 rf_p cap_cmim w=10u l=10u A=100p P=40u m=1
 C$60 \$12 rf_n cap_cmim w=10u l=10u A=100p P=40u m=1
 .ENDS vco_buf
 
-.SUBCKT vco_core vdd_core rf_p vtune rf_n VSS
+.SUBCKT vco_core VSS vdd_core rf_p vtune rf_n
 X$1 VSS vdd_core rf_n rf_p vco_ind
 X$2 VSS rf_p vtune rf_n vco_var
 M$1 VSS rf_p rf_n VSS sg13_lv_nmos L=0.13u W=20u AS=4.1p AD=4.1p PS=26.1u

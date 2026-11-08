@@ -1,4 +1,4 @@
-** sch_path: /foss/designs/_wt/ihp-sg13g2-ams-chip-template-rf/macros/vco/schematic/xschem/vco_buf.sch
+** sch_path: /foss/designs/ihp-sg13g2-ams-chip-template/macros/vco/schematic/xschem/vco_buf.sch
 .subckt vco_buf vbn_buf vbg_buf VDD VSS rf_p rf_n rf_out_p rf_out_n
 *.PININFO VDD:B VSS:B rf_out_n:B rf_out_p:B vbn_buf:I rf_p:B rf_n:B vbg_buf:I
 MMB1 rf_out_n gp tail VSS sg13_lv_nmos w=24u l=0.13u ng=12

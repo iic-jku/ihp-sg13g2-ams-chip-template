@@ -1,4 +1,4 @@
-* Extracted by KLayout with SG13G2 LVS runset on : 07/11/2026 21:41
+* Extracted by KLayout with SG13G2 LVS runset on : 07/11/2026 22:23
 
 .SUBCKT vco_feed VDD VSS en_b vdd_core
 M$1 VDD en_b \$8 VDD sg13_lv_pmos L=0.13u W=96u AS=18.69p AD=18.69p PS=111.46u

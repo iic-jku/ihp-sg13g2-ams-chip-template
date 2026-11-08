@@ -1,4 +1,4 @@
-* Extracted by KLayout with SG13G2 LVS runset on : 07/11/2026 21:42
+* Extracted by KLayout with SG13G2 LVS runset on : 07/11/2026 22:24
 
 .SUBCKT vco_core VSS rf_n rf_p vdd_core vtune
 X$1 VSS vdd_core rf_n rf_p vco_ind

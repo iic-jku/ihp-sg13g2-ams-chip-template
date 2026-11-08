@@ -47,6 +47,9 @@ MiM cap spacing to unrelated metal6 < 0.6um (MIM.e)
  141.160um 36.530um 141.500um 75.470um
  85.500um 36.500um 141.500um 36.530um
  57.000um 32.380um 67.000um 32.400um
+ 6.600um 30.140um 24.100um 30.300um
+ 6.600um 11.360um 7.220um 30.140um
+ 23.480um 11.360um 24.100um 30.140um
  57.000um 22.420um 57.020um 32.380um
  66.980um 22.420um 67.000um 32.380um
  57.000um 22.400um 67.000um 22.420um
@@ -55,6 +58,11 @@ MiM cap spacing to unrelated metal6 < 0.6um (MIM.e)
  85.980um 22.420um 86.000um 32.380um
  76.000um 22.400um 86.000um 22.420um
  99.500um 32.290um 141.500um 32.500um
+ 6.600um 11.200um 24.100um 11.360um
+ 28.300um 17.930um 41.900um 18.480um
+ 28.300um 11.750um 28.860um 17.930um
+ 41.340um 11.750um 41.900um 17.930um
+ 28.300um 11.200um 41.900um 11.750um
  99.500um 7.210um 99.770um 32.290um
  141.230um 7.210um 141.500um 32.290um
  99.500um 7.000um 141.500um 7.210um
@@ -74,6 +82,6 @@ poly contact width        < 0.16um (Cnt.a)
  71.460um 41.270um 71.485um 41.430um
  71.830um 41.270um 71.860um 41.430um
 ----------------------------------------
-[INFO] COUNT: 62
+[INFO] COUNT: 70
 [INFO] Should be divided by 3 or 4
 
