@@ -22,9 +22,9 @@ This is a simple VCO to learn the RF flow on, not an optimized design. It goes t
 | --- | --- | --- |
 | Oscillation frequency | 20 GHz | 20.00 GHz post-layout at `vtune` = 0.75 V, 22.55 GHz in the schematic |
 | Tuning range | about 2 GHz, with 20 GHz inside it at every corner | 1.84 GHz post-layout, 19.34 GHz to 21.18 GHz for `vtune` from 0 V to 1.5 V, 2.40 GHz in the schematic (21.64 GHz to 24.04 GHz) |
-| Tuning gain | | 0.71 GHz/V to 2.04 GHz/V, 1.83 GHz/V at 0.75 V, in the schematic |
+| Tuning gain | | 0.47 GHz/V to 1.68 GHz/V post-layout (1.50 GHz/V at 0.75 V), 0.71 GHz/V to 2.04 GHz/V in the schematic (1.83 GHz/V at 0.75 V) |
 | Phase noise | not optimized, reported | (pending) dBc/Hz at 1 MHz post-layout (transient noise), -101.2 dBc/Hz in the schematic (PNOISE), see [Phase Noise](#phase-noise) |
-| Output power | -10 dBm or more per output into 50 Ohm | -8.3 dBm in the schematic (PSS), -10.0 dBm post-layout from the peak-to-peak swing, which reads about 1 dB high |
+| Output power | -10 dBm or more per output into 50 Ohm | -8.3 dBm in the schematic (PSS), -10.0 dBm post-layout from the peak-to-peak swing, which counts the harmonics and reads up to about 1 dB high |
 | Supply | `VDD` = 1.5 V from a quiet pad of its own, see [Limitations](#limitations) | 10.9 mA post-layout: core 4.7 mA, buffer tail 6.0 mA, the rest the bias |
 | Bias | from `VDD`, no reference input: `MPb` and `Rb` set about 100 uA in `MN0` | |
 | Power down | `di_en` low stops the core, the buffer and the bias | no oscillation and 9 nA from `VDD` post-layout, see [Power-Up and Enable](#power-up-and-enable) |
@@ -80,14 +80,32 @@ All results are from the testbenches in [`testbenches/xschem/`](testbenches/xsch
 | --- | --- | --- | --- |
 | `vco_top_tb_tran` | ngspice | start-up transient, 2 ns | 22.51 GHz, tank 0.10 V to 1.53 V, 270 mVpp per output (-7.4 dBm), `VDD` 11.6 mA, tap 0.78 V |
 | `vco_top_tb_pss_vacask` | VACASK | oscillator PSS, PNOISE, PAC | 22.55 GHz, -8.3 dBm per output at the fundamental, -101.2 dBc/Hz at 1 MHz, K_VCO 1.87 GHz/V at 10 MHz (PAC) |
-| `vco_top_tb_tune_vacask` | VACASK | one 1.5 ns transient per tuning voltage | 21.64 GHz to 24.04 GHz for `vtune` from 0 V to 1.5 V |
+| `vco_top_tb_tune_vacask` | VACASK | one 1.5 ns transient per tuning voltage, on the schematic | 21.64 GHz to 24.04 GHz for `vtune` from 0 V to 1.5 V |
 | `vco_top_tb_tran_lpe` | ngspice | start-up transient of the post-layout netlist | 20.00 GHz, tank 0.24 V to 1.23 V, `VDD` 10.9 mA, see [Post-Layout Simulation](#post-layout-simulation) |
+| `vco_top_tb_tran_lpe`, by `make sim-tune-lpe` | ngspice | the post-layout transient at seven tuning voltages, at TT, 27 C | 19.34 GHz to 21.18 GHz for `vtune` from 0 V to 1.5 V, 20 GHz at `vtune` = 0.75 V, see [Tuning Curve](#tuning-curve) |
 | `vco_top_tb_powerup_lpe` | ngspice | 44 post-layout transients from a supply ramp, over the orders of `VDD` and `di_en` | 44 of 44 runs ok: every order starts, no tank node above 1.34 V, nothing oscillates while disabled, see [Power-Up and Enable](#power-up-and-enable) |
 | `vco_top_tb_trannoise_vacask` | VACASK | transient noise of the schematic, 8 seeds | -99.4 dBc/Hz at 1 MHz, against -101.2 dBc/Hz from PNOISE, see [Phase Noise](#phase-noise) |
 | `vco_top_tb_trannoise_lpe_vacask` | VACASK | transient noise of the post-layout netlist, 8 seeds | (pending) dBc/Hz at 1 MHz |
 | `vco_ind_tb_acsp_vacask` | VACASK | ACSP, S-parameters of the coil model from 0 Hz to 60 GHz | 426.8 pH and Q 10.6 at 20.25 GHz, against 418 pH and Q 10.9 from EM |
 
 The ngspice transient and the VACASK PSS agree on the oscillation frequency within 0.2 % (the VACASK tuning transient within 0.1 %), and the tuning gain from PAC agrees with the slope of the tuning curve within about 2 %.
+
+
+### Tuning Curve
+
+The macro is centered on the post-layout frequencies. The schematic has no leads, so it runs about 13 % higher and does not reach 20 GHz. Post-layout from `make sim-tune-lpe` (ngspice), schematic from `vco_top_tb_tune_vacask` (VACASK), both at TT, 27 C, `res_typ` and `VDD` = 1.5 V:
+
+| `vtune` | Frequency, post-layout | `K_VCO`, post-layout | Frequency, schematic |
+| --- | --- | --- | --- |
+| 0 V | 19.34 GHz | 0.47 GHz/V | 21.64 GHz |
+| 0.25 V | 19.46 GHz | 0.65 GHz/V | 21.82 GHz |
+| 0.5 V | 19.67 GHz | 1.07 GHz/V | 22.12 GHz |
+| 0.75 V | 20.00 GHz | 1.50 GHz/V | 22.53 GHz |
+| 1 V | 20.42 GHz | 1.68 GHz/V | 23.03 GHz |
+| 1.25 V | 20.84 GHz | 1.53 GHz/V | 23.56 GHz |
+| 1.5 V | 21.18 GHz | 1.38 GHz/V | 24.04 GHz |
+
+20 GHz is at `vtune` = 0.75 V. It stays inside the post-layout tuning range at all 81 combinations of MOS corner, temperature, resistor corner and `VDD`, with at least 0.39 GHz of room towards the low end and 0.84 GHz towards the high end. The coil model's inductance is about 2 % above the EM result, so the real frequency should sit about 0.2 GHz higher, which takes that much off the room at the low end.
 
 
 ### Corners
@@ -439,7 +457,7 @@ make sim-view-xschem                          # the testbenches of vco_top (plot
 make sim-view-xschem SCRIPT=plot_vco_ind      # the coil, same as make view-em-sim
 ```
 
-[`plot_vco_top.py`](testbenches/xschem/plot_simulations/plot_vco_top.py) plots whatever the testbenches of `vco_top` have written to `data/`: the start-up transients of the schematic and the post-layout netlist, the PSS waveform and output spectrum, the phase noise and the tuning gain from PNOISE and PAC, the tuning curve, whose frequencies it takes from the zero crossings of the last 0.5 ns of each transient, the power-up and enable transient, and the phase noise from transient noise against PNOISE. It also checks the PSS against the tuning transient at the PSS bench's tuning voltage and warns when the two frequencies differ by more than 0.3 %, the symptom of a PSS that settled a slow state wrongly. [`plot_vco_ind.py`](testbenches/xschem/plot_simulations/plot_vco_ind.py) plots the differential inductance and Q and the S-parameters of the coil from the EM result, and from the ACSP testbench next to it once that has run. Both write the figures and CSV files to `testbenches/xschem/plot_simulations/figures/` and open the plot windows when a display is available.
+[`plot_vco_top.py`](testbenches/xschem/plot_simulations/plot_vco_top.py) plots whatever the testbenches of `vco_top` have written to `data/`: the start-up transients of the schematic and the post-layout netlist, the PSS waveform and output spectrum, the phase noise and the tuning gain from PNOISE and PAC, the schematic's tuning curve, whose frequencies it takes from the zero crossings of the last 0.5 ns of each transient, the post-layout tuning curve, the power-up and enable transient, and the phase noise from transient noise against PNOISE. It also checks the PSS against the tuning transient at the PSS bench's tuning voltage and warns when the two frequencies differ by more than 0.3 %, the symptom of a PSS that settled a slow state wrongly. [`plot_vco_ind.py`](testbenches/xschem/plot_simulations/plot_vco_ind.py) plots the differential inductance and Q and the S-parameters of the coil from the EM result, and from the ACSP testbench next to it once that has run. Both write the figures and CSV files to `testbenches/xschem/plot_simulations/figures/` and open the plot windows when a display is available.
 
 
 ### Simulate All
@@ -448,7 +466,7 @@ make sim-view-xschem SCRIPT=plot_vco_ind      # the coil, same as make view-em-s
 make sim-all
 ```
 
-Runs `vco_top_tb_tran`, `vco_top_tb_pss_vacask`, `vco_top_tb_tune_vacask` and `vco_top_tb_tran_lpe` in sequence. The corners, the power-up transient and the transient noise are not part of it, see the next three sections. `sim-view-xschem` is not part of it either, because it blocks until the plot windows are closed.
+Runs `vco_top_tb_tran`, `vco_top_tb_pss_vacask`, `vco_top_tb_tune_vacask` and `vco_top_tb_tran_lpe` in sequence. The corners, the post-layout tuning curve, the power-up transient and the transient noise are not part of it, see the next four sections. `sim-view-xschem` is not part of it either, because it blocks until the plot windows are closed.
 
 
 ### Simulate Over Corners
@@ -461,6 +479,15 @@ make sim-corners CORNERS=mos_ss TEMPS=-40 VTUNE=0   # one case
 ```
 
 Netlists the transient testbench `TB` (default `vco_top_tb_tran`) and runs [`sim_corners.py`](scripts/sim_corners.py), which writes one copy of the netlist per MOS corner, resistor corner, temperature, `VDD` and `vtune` value into `testbenches/xschem/simulations/corners/`, every combination of the lists, runs ngspice on four of them at a time, and writes the table `<TB>_corners.csv` to `plot_simulations/figures/`. It fails when a run does not oscillate (a tank swing below 0.5 V) or a tank node passes `VPEAK_MAX`: 1.5 V on the post-layout testbench, which the macro is centered on, and no limit on the schematic one, whose peaks the table still records. The 18 default runs take about 15 seconds, a minute post-layout. The committed tables hold all three resistor corners at all three supplies, 162 runs each, see [Corners](#corners).
+
+
+### Post-Layout Tuning Curve
+
+```sh
+make sim-tune-lpe
+```
+
+Netlists `vco_top_tb_tran_lpe` and runs [`sim_corners.py`](scripts/sim_corners.py) at TT, 27 C, `res_typ` and 1.5 V for the seven tuning voltages of `vco_top_tb_tune_vacask`, in about a minute on a compute host. The table goes to `plot_simulations/figures/vco_top_tb_tune_lpe_corners.csv` and `sim-view-xschem` plots it, see [Tuning Curve](#tuning-curve) for the results.
 
 
 ### Power-Up and Enable Transient
@@ -493,7 +520,7 @@ make sim-trannoise SEEDS=16     # more seeds
 make check-trannoise            # the spectrum code against period jitter with a known PSD
 ```
 
-Transient noise is a plain transient with random noise sources, without a linearization around a periodic solution, so it shares no code with PNOISE and checks it. It is also the only way to the post-layout phase noise here, because the post-layout PSS of VACASK fails, see [Limitations](#limitations). The benches settle the oscillation for 6 ns, store that state, and run a noisy transient of 5 us (4 us post-layout) from it with `noisemode="sde"`, noise from 100 kHz to 100 GHz and a fixed step of 0.25 ps. [`sim_trannoise.py`](scripts/sim_trannoise.py) runs one VACASK process per seed, takes the rising zero crossings of the tank's differential voltage, drops the first 500 ns in which the noise of the slow bias filters builds up, and computes the phase noise from the period-to-period phase difference with a Welch spectrum. Every seed starts from the same stored state, so what they share is a drift and not noise, and the script subtracts it. It writes `data/<TB>.txt` and prints the comparison with the PNOISE table of `vco_top_tb_pss_vacask`, so run `sim-all` first. `check-trannoise` runs the spectrum code on synthetic period jitter of a known spectrum, and both targets start with it. A run takes 5 hours for the schematic and (pending) post-layout on a compute host, each seed one process.
+Transient noise is a plain transient with random noise sources, without a linearization around a periodic solution, so it shares no code with PNOISE and checks it. It is also the way to the post-layout phase noise with this image, whose VACASK cannot run the post-layout PSS, see [Limitations](#limitations). The benches settle the oscillation for 6 ns, store that state, and run a noisy transient of 5 us (4 us post-layout) from it with `noisemode="sde"`, noise from 100 kHz to 100 GHz and a fixed step of 0.25 ps. [`sim_trannoise.py`](scripts/sim_trannoise.py) runs one VACASK process per seed, takes the rising zero crossings of the tank's differential voltage, drops the first 500 ns in which the noise of the slow bias filters builds up, and computes the phase noise from the period-to-period phase difference with a Welch spectrum. Every seed starts from the same stored state, so what they share is a drift and not noise, and the script subtracts it. It writes `data/<TB>.txt` and prints the comparison with the PNOISE table of `vco_top_tb_pss_vacask`, so run `sim-all` first. `check-trannoise` runs the spectrum code on synthetic period jitter of a known spectrum, and both targets start with it. A run takes 5 hours for the schematic and (pending) post-layout on a compute host, each seed one process.
 
 
 ### Build Top Cell
@@ -671,7 +698,7 @@ make sim-xschem TB=vco_top_tb_tran_lpe
 | Center tap | 0.78 V | 0.76 V |
 | `VDD` current | 11.6 mA | 10.9 mA |
 
-Both columns are the same ngspice transient, so the output here is read from the peak-to-peak swing, which counts the harmonics and reads about 1 dB above the fundamental of the PSS.
+Both columns are the same ngspice transient, so the output here is read from the peak-to-peak swing, which counts the harmonics and reads above the fundamental of the PSS, by 0.9 dB in the schematic and (pending) dB post-layout.
 
 - **The frequency falls by 11 %**, through the capacitance of the buffer's inputs and its gate nodes, which the tank sees through the coupling capacitors, and of the leads: 18 fF from `rf_p` and 19 fF from `rf_n` to `VSS`.
 - **The swing is smaller** because the resistance of the leads adds to the coil's own 2.4 Ohm per side: from the coil's feed 1.3 Ohm to the varactors, 2.1 Ohm to the pair's drains and 4.8 Ohm to its gates, 5.8 Ohm from the coupling caps to the buffer's gates, and 1.4 Ohm from the `VSS` pin to the pair's sources. The varactors carry the largest share of the tank current, most at `vtune` 0 V, so the slow corner there is the one that starts last.
@@ -739,9 +766,10 @@ This VCO is kept simple on purpose. These are the places where it falls short, a
 - **`VDD` reaches the tank.** `Rct` passes `VDD` to the center tap, which is the varactor's operating point and the pair's gate voltage: 0.42 GHz/V from `VDD` to the frequency at 1 MHz offset in the schematic. A 1 mV tone on `VDD` gives a spur of -13.6 dBc at 1 MHz, -33.7 dBc at 10 MHz and -53.6 dBc at 100 MHz, and about 30 nV/rtHz on `VDD` at 1 MHz equals the oscillator's own phase noise. Decoupling on the macro does not help: 10 pF on the tap or 50 pF behind 1 Ohm bought at most 1 dB up to 100 MHz. So `VDD` needs a quiet pad of its own and not the digital rail. A regulator would be the fix, and would bring its own noise into the same path.
 - **The tank stops when disabled.** `di_en` low opens `MPs`, so the oscillator restarts from nothing, a PLL around it has to lock again, and the output cannot be switched off with the tank running. That would take an RF switch at the output and a different `di_en`.
 - **The amplitude and the current follow `VDD` and the resistor.** No pin is left to trim the swing or the frequency: over the corners the core takes 3.2 mA to 6.1 mA and the output falls to -15.6 dBm at the weak end, see [Corners](#corners). The window is narrow at the strong end, where the highest node reaches 1.477 V. A per-die trim would need a switched `Rct`.
+- **The outputs are not clean sines.** The buffer is a differential pair driven by the tank's full swing, on resistive loads, so nothing filters its harmonics. The tank itself is clean: its differential third harmonic is (pending) dBc post-layout. At `rf_out_p` the second harmonic is -9.4 dBc in the schematic and (pending) dBc post-layout, the third -20.9 and (pending) dBc. The second harmonic is common mode: between the two outputs it is (pending) dBc post-layout, so a balun or a differential probe removes it. A tuned load would filter the harmonics but takes another coil. An off-chip filter is only worth it for a load that reacts to them.
 - **The feed costs power.** The core draws its current from 1.5 V and not from about 0.8 V, a fixed tap voltage from a pad of its own, so the figure of merit counted on the core's power is about 3 dB worse than with such a pad: (pending) dBc/Hz post-layout, see [Phase Noise](#phase-noise).
 - **The oscillator PSS is fragile.** It needs `pss_minpts=8000`, `reltol=3e-5` and a period guess at the transient's (see the testbench notes), it converges at the nominal tuning voltage but not at every one, which is why the tuning curve uses transients, and a slow state can settle wrong without an error, which the plot script's check against the transient catches.
-- **The post-layout PSS fails in VACASK.** On the extracted netlist the first shooting step reads the charging current of every capacitor over one time step as a residual, and the Newton iteration diverges, with or without the parasitics, reported as [VACASK#173](https://codeberg.org/arpadbuermen/VACASK/issues/173). So the post-layout phase noise comes from transient noise, which gives no contributions per device.
+- **The post-layout PSS needs a newer VACASK.** In this image, VACASK `d7b4db4`, the first shooting step on the extracted netlist reads the charging current of every capacitor over one time step as a residual, and the Newton iteration diverges, with or without the parasitics ([VACASK#173](https://codeberg.org/arpadbuermen/VACASK/issues/173), fixed upstream in `f29d2b0`). So the post-layout phase noise comes from transient noise, which gives no contributions per device. As a cross-check outside this flow, PSS, PNOISE and PAC of the post-layout netlist on VACASK `f29d2b0`, with the period of the post-layout transient as the guess, give (pending) GHz, (pending) dBc/Hz at 1 MHz and a tuning gain of (pending) GHz/V at 10 MHz. The bench can join the flow when an image carries the fix.
 - **PNOISE and PAC need care at low offsets.** With `tran_fbr=0.02` (see the testbench notes) the tuning gain from PAC is flat within 2 % from 100 MHz down to 100 kHz, and the phase noise follows its sources: 20 dB per decade above 3 MHz, steeper below, where the filtered bias noise takes over. Below about 100 kHz the tuning gain falls again and the phase noise flattens, a limit that moves down with a finer time step of the period. So read the phase noise from about 100 kHz up, and check it against transient noise, see [Phase Noise](#phase-noise). With `oscillator=1`, `pnoise` computes the noise as for a driven circuit, so it is the total noise, phase and amplitude, which close to the carrier is the phase noise.
 
 

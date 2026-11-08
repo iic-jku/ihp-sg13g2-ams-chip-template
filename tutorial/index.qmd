@@ -335,6 +335,7 @@ The [vco Makefile](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/
 | `make snp2le` (`LE_MODEL=<structure\|universal>`) | Fit a lumped-element model to the Touchstone file, for ngspice and VACASK.  |
 | `make em-model`                                   | Run `sim-em`, `copy-sparam`, `snp2le` and the ACSP testbench of the coil model. |
 | `make sim-corners` (`TB=<tb>`)                    | Run a start-up transient over MOS and resistor corners, temperatures, `VDD` and `vtune`. |
+| `make sim-tune-lpe`                               | Run the post-layout tuning curve, one ngspice transient per tuning voltage at TT and 27 C. |
 | `make klayout-pex-leads`                          | Extract `vco_top` without the coil and the varactor array for the post-layout testbench. |
 | `make klayout-drc-regular`                        | Run the KLayout DRC of `vco_top` at the regular level, where only the densities the chip's fill meets may fail. |
 | `make sim-powerup` (`SIM_JOBS=<n>`)               | Run the post-layout power-up and enable transient over the orders of `VDD` and `di_en`, hours on a compute host. |
@@ -1598,6 +1599,7 @@ The [Makefile](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main
 | S-parameters | | `copy-sparam`, `view-em-sim` | `verification/em/s-parameter/` |
 | Lumped-element model | snp2le | `snp2le`, `em-model` | `netlist/spice/`, `netlist/spectre/` |
 | Circuit simulation | Xschem, ngspice, VACASK | `sim-xschem`, `sim-all`, `sim-corners` | `testbenches/xschem/plot_simulations/` |
+| Post-layout tuning curve | ngspice | `sim-tune-lpe` | `testbenches/xschem/plot_simulations/figures/` |
 | Power-up and enable | ngspice | `sim-powerup` | `testbenches/xschem/plot_simulations/` |
 | Transient noise | VACASK | `sim-trannoise`, `sim-trannoise-lpe` | `testbenches/xschem/plot_simulations/data/` |
 | Plots | Python | `sim-view-xschem` | `testbenches/xschem/plot_simulations/figures/` |
@@ -1883,11 +1885,17 @@ The start-up transient of @fig-vco-tran reaches its full amplitude within a few 
 
 ![Oscillator PSS (VACASK): one period of the tank and the outputs, and the spectrum of the output.](fig/vco_top/vco_top_tb_pss_vacask_pss.svg){#fig-vco-pss}
 
+The spectrum in @fig-vco-pss is that of one output. Its harmonics come from the buffer, a differential pair driven by the tank's full swing into resistive loads, and not from the tank. The second harmonic is -9.4 dBc and the third -20.9 dBc here, and (pending) and (pending) dBc post-layout. The second is common mode, so it cancels between the two outputs ((pending) dBc post-layout).
+
 @fig-vco-pnoise shows the phase noise from PNOISE and the tuning gain from PAC. The phase noise is -101.2 dBc/Hz at 1 MHz offset. Its contributions show where it comes from: 55 % from the core (pair, varactors and coil) and 36 % from the bias of the buffer, whose input capacitance loads the tank and moves the frequency with its bias current. Below 1 MHz that bias takes over: its noise passes the 170 kHz low-pass of the bias filters, so its share grows by 40 dB to 48 dB per decade towards lower offsets, against 20 dB for the core. The tuning gain from PAC, 1.87 GHz/V at 10 MHz, agrees within about 2 % with the slope of the tuning curve of @fig-vco-tune, whose frequencies the plot script takes from the zero crossings of each tuning transient.
 
 ![Phase noise from PNOISE and tuning gain $K_\mathrm{VCO}$ from PAC (VACASK), at `vtune` = 0.75 V.](fig/vco_top/vco_top_tb_pss_vacask_pnoise_pac.svg){#fig-vco-pnoise}
 
-![Tuning curve from one transient per tuning voltage (VACASK).](fig/vco_top/vco_top_tb_tune_vacask.svg){#fig-vco-tune}
+![Schematic tuning curve from one transient per tuning voltage (VACASK).](fig/vco_top/vco_top_tb_tune_vacask.svg){#fig-vco-tune}
+
+![Post-layout tuning curve from `make sim-tune-lpe`, one ngspice transient per tuning voltage at TT, 27 C.](fig/vco_top/vco_top_tb_tune_lpe.svg){#fig-vco-tune-lpe}
+
+The schematic has no leads, so @fig-vco-tune runs about 13 % high and never reaches 20 GHz. The macro is centered on @fig-vco-tune-lpe: 20 GHz is at `vtune` = 0.75 V, and it stays inside the tuning range at every corner (@sec-rf-corners).
 
 ::: {.callout-note}
 With `oscillator=1`, VACASK's `pnoise` computes the noise as for a driven circuit, so it is the total output noise, phase and amplitude noise together. Close to the carrier that is the phase noise. Below about 100 kHz the result loses accuracy, so read it from there up, and check it against transient noise (@sec-rf-trannoise). The [Limitations](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/vco/README.md#limitations) of the README list what is known.
@@ -1948,7 +1956,7 @@ Every run passes. With `di_en` rising at 100 ns, the tank is up after 3.8 ns at 
 
 ## Transient Noise and the Post-Layout Phase Noise {#sec-rf-trannoise}
 
-PNOISE linearizes the circuit around one periodic solution. Transient noise does not: it adds random noise sources to an ordinary transient and reads the phase noise from the zero crossings of the result. It needs no PSS, so it also works on the post-layout netlist, whose PSS VACASK cannot solve yet ([VACASK#173](https://codeberg.org/arpadbuermen/VACASK/issues/173)).
+PNOISE linearizes the circuit around one periodic solution. Transient noise does not: it adds random noise sources to an ordinary transient and reads the phase noise from the zero crossings of the result. It needs no PSS, so it also works on the post-layout netlist, whose PSS the VACASK of this image cannot solve ([VACASK#173](https://codeberg.org/arpadbuermen/VACASK/issues/173), fixed upstream in `f29d2b0`, after this image).
 
 ```sh
 make sim-trannoise        # the schematic, 8 seeds, against PNOISE
@@ -2003,6 +2011,7 @@ The post-layout simulation changed the layout three times. The first core joined
 make all                  # layouts, verification, deliverables and simulations, about 28 minutes
 make em-model             # EM simulation of the coil, its model and the ACSP check, 35 minutes on a compute host
 make sim-corners TB=vco_top_tb_tran_lpe RES_CORNERS="res_typ res_wcs res_bcs" VDDS="1.35 1.5 1.65"
+make sim-tune-lpe         # post-layout tuning curve, about a minute
 make sim-powerup          # power-up and enable, hours on a compute host
 make sim-trannoise        # transient noise of the schematic against PNOISE, hours
 make sim-trannoise-lpe    # post-layout phase noise, hours
