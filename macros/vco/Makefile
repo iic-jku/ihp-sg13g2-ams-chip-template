@@ -266,6 +266,12 @@ sim-corners: ## Run a start-up transient over MOS and resistor corners, temperat
 		--corners $(CORNERS) --res $(RES_CORNERS) --temps $(TEMPS) --vdd $(VDDS) --vtune $(VTUNE) --vpeak-max $(VPEAK_MAX) \
 		--csv $(SIM_PLOT_DIR)/figures/$(TB)_corners.csv
 .PHONY: sim-corners
+
+# The post-layout tuning curve: vco_top_tb_tran_lpe at the tuning voltages of vco_top_tb_tune_vacask, at TT, 27 C, res_typ and 1.5 V
+sim-tune-lpe: ## Run the post-layout tuning curve, one ngspice transient per tuning voltage at TT and 27 C
+	$(MAKE) netlist-xschem TB=vco_top_tb_tran_lpe
+	python3 $(SCRIPTS_DIR)/sim_corners.py $(XSCHEM_TB_DIR)/simulations/vco_top_tb_tran_lpe.spice 		--corners mos_tt --temps 27 --vtune 0 0.25 0.5 0.75 1 1.25 1.5 --vpeak-max 1.5 		--csv $(SIM_PLOT_DIR)/figures/vco_top_tb_tune_lpe_corners.csv
+.PHONY: sim-tune-lpe
 # ================================================================================================
 
 

@@ -167,12 +167,25 @@ def plot_tune(data_dir, figures_dir):
     f0 = np.array(f0)
     order = np.argsort(vt)
     vt, f0 = vt[order], f0[order]
+    tune_figure(figures_dir, tb, 'VCO Top - Schematic Tuning Curve (VACASK transient)', vt, f0)
+    return vt, f0
+
+
+def plot_tune_lpe(figures_dir):
+    """Post-layout tuning curve from the ngspice transients of make sim-tune-lpe."""
+    rows = np.genfromtxt(figures_dir / "vco_top_tb_tune_lpe_corners.csv", delimiter=",", names=True, dtype=None, encoding="utf-8")
+    order = np.argsort(rows["vtune"])
+    tune_figure(figures_dir, "vco_top_tb_tune_lpe", 'VCO Top - Post-Layout Tuning Curve (ngspice transient)', rows["vtune"][order], rows["f0_ghz"][order] * 1e9)
+
+
+def tune_figure(figures_dir, name, title, vt, f0):
+    """A tuning curve and its slope over the tuning voltage, f0 in Hz."""
     kvco = np.gradient(f0, vt)
     for v, f, k in zip(vt, f0, kvco):
         print(f"tune: vtune = {v:.2f} V, f0 = {f / 1e9:.3f} GHz, K_VCO = {k / 1e9:.2f} GHz/V")
 
     fig, ax1 = plt.subplots(figsize=(10, 6.2))
-    fig.suptitle('VCO Top - Tuning Curve (VACASK transient)')
+    fig.suptitle(title)
     ax1.plot(vt, f0 / 1e9, 'o-', color='#0c5da5', linewidth=2.4, label=r'$f_0$')
     ax1.set_xlabel(r'$V_\mathrm{tune}$ (V)')
     ax1.set_ylabel(r'$f_0$ (GHz)', color='#0c5da5')
@@ -181,8 +194,7 @@ def plot_tune(data_dir, figures_dir):
     ax2.plot(vt, kvco / 1e9, 's--', color='#ff6b35', linewidth=2.0, label=r'$K_\mathrm{VCO}$')
     ax2.set_ylabel(r'$K_\mathrm{VCO}$ (GHz/V)', color='#ff6b35')
     plt.tight_layout()
-    save(fig, figures_dir, tb, (vt, f0, kvco), "vtune_v,f0_hz,kvco_hz_per_v")
-    return vt, f0
+    save(fig, figures_dir, name, (vt, f0, kvco), "vtune_v,f0_hz,kvco_hz_per_v")
 
 
 def plot_powerup(data_dir, figures_dir):
@@ -246,6 +258,8 @@ def main():
         f_pss = plot_pss(data_dir, figures_dir)
     if list(data_dir.glob("vco_top_tb_tune_vacask_tune_*.txt")):
         tune = plot_tune(data_dir, figures_dir)
+    if (figures_dir / "vco_top_tb_tune_lpe_corners.csv").exists():
+        plot_tune_lpe(figures_dir)
     if (data_dir / "vco_top_tb_powerup_lpe.txt").exists():
         plot_powerup(data_dir, figures_dir)
     if (data_dir / "vco_top_tb_trannoise_vacask.txt").exists():
