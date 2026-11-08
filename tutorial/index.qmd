@@ -196,7 +196,7 @@ The repository is organised into the following top-level folders. The full listi
 | ------------ | ---------------------------------------------------------- |
 | [`doc/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/doc/) | Designer documentation, including [specifications](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/doc/specifications.md), [pinout](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/doc/pinout.md), [floorplan](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/doc/floorplan.md), and the [PDK and tool cheatsheets](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/doc/librelane/librelane_cheatsheet.md). |
 | [`flow/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/flow/) | LibreLane top-level configuration with [config.yaml](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/flow/librelane/config.yaml), [pdn_cfg.tcl](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/flow/librelane/pdn_cfg.tcl), [chip_top.sdc](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/flow/librelane/chip_top.sdc), plus the [ArtistIC](https://github.com/pulp-platform/artistic) logo flow. |
-| [`ip/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/ip/) | External IP cells including bondpads, custom IO cells, and logos. |
+| [`ip/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/ip/) | External IP cells including bondpads, an RF pad, custom IO cells, and logos. |
 | [`layout/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/layout/) | Compressed GDS streams of the top-level chip, including chip_top.gds.gz and chip_top_logo_fill.gds.gz. |
 | [`LICENSES/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/LICENSES/) | License texts referenced by the SPDX headers and [REUSE.toml](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/REUSE.toml) annotations. |
 | [`macros/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/) | Recursive-style macros such as [counter/](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/counter/), [inverter/](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/inverter/) and [vco/](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/vco/), each with its own Makefile and README. |
@@ -235,6 +235,7 @@ The colour scheme groups targets by the final deliverable they produce, so begin
 
 - **Orange (top chip / main)**: This branch includes `make all` and all targets that contribute to the top-level chip GDS. In the `build-top` chain of the [top-level Makefile](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/Makefile), these are `librelane-nodrc`, `copy-*`, `add-logo-fill`, and `render-gds`.
 - **Yellow (bondpad IP)**: This branch includes `build-bondpad` and all targets inside [`ip/sg13g2_ip__bondpad_70x70/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/ip/sg13g2_ip__bondpad_70x70/).
+- **Teal (RF pad IP)**: This branch includes `build-rfpad` and all targets inside [`ip/sg13g2_ip__rfpad_70x70/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/ip/sg13g2_ip__rfpad_70x70/).
 - **Purple (logos IP)**: This branch includes `build-logos` and the two sub-Makefiles under [`ip/sg13g2_ip__jku/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/ip/sg13g2_ip__jku/) and [`ip/sg13g2_ip__jku_names/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/ip/sg13g2_ip__jku_names/).
 - **Blue (digital macro)**: This branch includes `build-counter` and the [`macros/counter/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/counter/) Makefile.
 - **Green (analog macro)**: This branch includes `build-inverter` and the [`macros/inverter/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/inverter/) Makefile.
@@ -243,7 +244,7 @@ The colour scheme groups targets by the final deliverable they produce, so begin
 
 Solid arrows represent direct `$(MAKE) <target>` calls within a single Makefile. Dashed arrows represent calls that descend into a subdirectory: recursive `$(MAKE) -C <dir> all` calls into a sub-Makefile (one per coloured deliverable), or the Python bondplan flow in `packaging/`. The numbers on the second level indicate the execution order of `make all` (build, verify, simulate, package), and the vertical order inside the coloured boxes reflects the execution order of each sub-Makefile's `all` target.
 
-![Overview of the Makefile targets that `make all` resolves to. Every coloured branch corresponds to one deliverable (top chip, bondpad, logos, digital macro, analog macro, packaging). The grey targets connect `make all` to those branches.](fig/targets_overview/targets_overview.svg){#fig-targets-overview}
+![Overview of the Makefile targets that `make all` resolves to. Every coloured branch corresponds to one deliverable (top chip, bondpad, RF pad, logos, digital macro, analog macro, packaging). The grey targets connect `make all` to those branches.](fig/targets_overview/targets_overview.svg){#fig-targets-overview}
 
 ### Top-level targets
 
@@ -259,10 +260,10 @@ The [top-level Makefile](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template
 | `make sim-view-cocotb` | Open the latest cocotb waveform in GTKWave (or Surfer with `WAVEFORM_VIEWER=surfer`).              |
 | `make librelane` / `librelane-nodrc` | Run the LibreLane flow for the top-level (with / without DRC steps).                  |
 | `make copy-reports` / `copy-gds` / `copy-netlist` / `copy-render` | Copy the latest LibreLane artifacts back into the source tree. |
-| `make build-bondpad` / `build-logos` | Build the bondpad and the logos under `ip/`.                                     |
+| `make build-bondpad` / `build-rfpad` / `build-logos` | Build the bondpad, the RF pad and the logos under `ip/`.         |
 | `make build-counter` / `build-inverter` / `build-macros` | Build the digital and analog macros individually or together. |
 | `make build-top`    | Run LibreLane on the top-level, copy back all artifacts, add logos and fill structures, and render the final GDS. |
-| `make build-all`    | Init submodules, build bondpad, build logos, build macros, and build top-level.                           |
+| `make build-all`    | Init submodules, build bondpad, build RF pad, build logos, build macros, and build top-level.             |
 | `make klayout-verify` / `magic-verify` | Run DRC, LVS, and PEX with KLayout, or LVS and PEX with Magic, for a given cell.   |
 | `make gdscheck-drc` (`DRC_LEVEL=<precheck\|macro\|regular>`, `GDSCHECK_SUITE=<suite>` or `GDSCHECK_DECKS=<decks>`) | Run the standalone gdscheck DRC for a given cell. |
 | `make bondplan`     | Generate the bondplan (die in package, bondwires, pin table) in `packaging/` (see @sec-packaging).        |
@@ -1992,7 +1993,7 @@ A new RF macro starts as a renamed copy of this one: `make macro FROM=vco NAME=<
 :::
 
 
-# Bondpad and Logo Implementation {#sec-ip}
+# Bondpad, RF Pad and Logo Implementation {#sec-ip}
 
 The [`ip/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/ip/) folder holds the three custom IP cells that the top-level chip relies on: a bondpad and two logos. These IPs are generated and require zero hand drawing. Each IP ships with a Python script and Makefile targets that produce the final GDS and LEF, and run KLayout and gdscheck DRC. This makes it easy to re-spin a different bondpad size or shape, swap the logo image, or move the artwork to another metal layer without touching layout tools.
 
@@ -2002,7 +2003,7 @@ The three IP cells covered in this section are:
 - [`sg13g2_ip__jku`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/ip/sg13g2_ip__jku/), the [Johannes Kepler University Linz](https://www.jku.at/) logo, generated from a PNG image,
 - [`sg13g2_ip__jku_names`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/ip/sg13g2_ip__jku_names/), a companion text block with the names of the institute, generated the same way as the JKU logo.
 
-All three IPs follow the same folder structure (`script/`, `final/`, `verification/`) and the same Makefile conventions as the digital and analog macros (`make help`, `make all`, `make clean`, `make klayout-drc`, `make magic-drc`, `make gdscheck-drc`). The logo folders `sg13g2_ip__jku` and `sg13g2_ip__jku_names` have an additional `logo/` folder that contains the source PNG image.
+All three IPs follow the same folder structure (`script/`, `final/`, `verification/`) and the same Makefile conventions as the digital and analog macros (`make help`, `make all`, `make clean`, `make klayout-drc`, `make magic-drc`, `make gdscheck-drc`). The logo folders `sg13g2_ip__jku` and `sg13g2_ip__jku_names` have an additional `logo/` folder that contains the source PNG image. The folder also holds an RF pad, which the chip does not use by default, see @sec-rf-pad.
 
 ## Directory Structure
 
@@ -2072,6 +2073,31 @@ The `bondpad` target accepts the geometry and metal-stack variables as command-l
 make bondpad DIAMETER=80 SHAPE=octagon BOTTOM_METAL=2
 ```
 
+## RF Pad Generation {#sec-rf-pad}
+
+A signal in the GHz range feels the load of `sg13g2_IOPadAnalog`: about 475 fF at the pad, from 144 fF of devices (ngspice, 20 GHz), 229 fF of cell metal and 100 fF of bondpad (Magic). [`sg13g2_ip__rfpad_70x70`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/ip/sg13g2_ip__rfpad_70x70/) is one cell of 80 µm × 250 µm that takes the slot of an analog pad plus its bondpad and loads the node with about 204 fF in total, metal and ESD included, with a defined return path under the pad. Its generator [`script/rfpad.py`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/ip/sg13g2_ip__rfpad_70x70/script/rfpad.py) has no parameters, the cell is fixed:
+
+```sh
+cd ip/sg13g2_ip__rfpad_70x70
+make all
+ke final/gds/sg13g2_ip__rfpad_70x70.gds
+```
+
+![`sg13g2_ip__rfpad_70x70` with the die edge at the bottom: the octagonal pad over its Metal1 shield, the RF line in its corridor through the IO rails, the ESD diode pair under the core rails, and the supply clamp on both sides of the line.](fig/bondpad_logo/rfpad_layout.png){#fig-rfpad-layout width=30%}
+
+The capacitance comes down through four layout decisions:
+
+- **A Metal1 shield under the plate.** Metal below TopMetal2 is only a ring in the `bondpad` PCell, so the plate looks straight down into the substrate, a lossy return path. A solid Metal1 plate on `vss` turns it into a capacitor to a defined ground.
+- **A corridor through the rails.** The TopMetal2 and TopMetal1 rails are cut around the RF line, 5 µm clear on either side, and `iovss` and `iovdd` cross it on Metal3 to Metal5 and Metal2. Cutting TopMetal1, the layer right under the line, is worth 6.8 fF, the 5 µm gap against the `TM2.b` minimum of 2.0 µm another 2.5 fF (Magic).
+- **A teardrop exit.** TopMetal2 allows only 0°, 45° and 90°, and `Pad.fR` asks for 7 µm of unchanged metal past the pad, so the line holds 14.92 µm for 7 µm and then tapers at 45° onto 4.92 µm. Past the ESD tap it narrows to 2.0 µm, because it no longer carries the strike.
+- **Small ESD devices on the core rails.** `diodevss_2kv` and `diodevdd_2kv` add 52 fF. They connect to `vss` and `vdd`, so an RC-triggered clamp between `vdd` and `vss` sits in the same cell, under the IO bands.
+
+Two kinds of faults are invisible to the usual checks: LVS compares devices, and the rails carry none, while DRC reads two touching shapes as one polygon. A pad shorted to a rail or a floating shield therefore passes both. `rfpad.py` checks the geometry and probes the connectivity before it writes any view, and stops if a check fails. Try it: set `TM2_RAIL_GAP` in the script to `4.0` and run `make rfpad`.
+
+KLayout reports 7 `Pad.fR_M1` markers on the cell, because the shield's 3 µm collar crosses `dfpad` and the 80 µm cell has no room for the 7 µm the recommended rule asks for. The collar is what keeps the rim field of the pad off the substrate, so `make klayout-drc` waives exactly those 7 markers and fails on any other count. gdscheck flags the same collar as 3 `Pad.fR` in its `recommended` suite and is clean otherwise, and `make klayout-lvs` matches the schematic.
+
+The chip does not use this pad by default. Its height needs a change in the pad ring step, because the rail bands of the cell abut its neighbours only when its outer edge sits where the outer edges of the bondpads are. The [RF pad README](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/ip/sg13g2_ip__rfpad_70x70/README.md#using-the-rf-pad-on-a-chip) lists what a chip needs in its `config.yaml`, together with the capacitance budget and what the ESD diodes draw when a circuit on a higher supply lifts the pad above `vdd`.
+
 ## Logo Generation
 
 Both logo IPs share the same Makefile targets and PNG-to-GDS converter [`script/img2lay.py`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/ip/sg13g2_ip__jku/script/img2lay.py), built on the `klayout.db` Python module. The conversion proceeds in five steps:
@@ -2138,10 +2164,11 @@ For top-level assembly, the [top-level Makefile](https://github.com/iic-jku/ihp-
 
 ```sh
 make build-bondpad      # build ip/sg13g2_ip__bondpad_70x70
+make build-rfpad        # build ip/sg13g2_ip__rfpad_70x70
 make build-logos        # build ip/sg13g2_ip__jku and ip/sg13g2_ip__jku_names
 ```
 
-Both targets are part of `make build-all` (see @sec-top), so the IP cells are refreshed automatically before the chip is hardened with LibreLane. The generated GDS, LEF, Verilog stub and Liberty files are referenced by [`flow/librelane/config.yaml`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/flow/librelane/config.yaml) when assembling the chip top-level. Furthermore, the Verilog stubs are instantiated in [`rtl/chip_top.sv`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/rtl/chip_top.sv).
+All three targets are part of `make build-all` (see @sec-top), so the IP cells are refreshed automatically before the chip is hardened with LibreLane. The generated GDS, LEF, Verilog stub and Liberty files are referenced by [`flow/librelane/config.yaml`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/flow/librelane/config.yaml) when assembling the chip top-level. Furthermore, the Verilog stubs are instantiated in [`rtl/chip_top.sv`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/rtl/chip_top.sv).
 
 
 # Top-Level Implementation {#sec-top}
@@ -2504,7 +2531,7 @@ When the floorplan and pinout are planned and configured, the chip can be built 
 make build-all
 ```
 
-This runs the steps in order, `init-submodules`, `build-bondpad`, `build-logos`, `build-macros`, and `build-top`. It is the right starting point on a fresh machine after cloning the repository and entering the IIC-OSIC-TOOLS container.
+This runs the steps in order, `init-submodules`, `build-bondpad`, `build-rfpad`, `build-logos`, `build-macros`, and `build-top`. It is the right starting point on a fresh machine after cloning the repository and entering the IIC-OSIC-TOOLS container.
 
 To re-run only the top-level flow (for example after a change in [`config.yaml`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/flow/librelane/config.yaml) or [`chip_core.sv`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/rtl/chip_core.sv)), without rebuilding the bondpad, logos, or macros, run the following command.
 

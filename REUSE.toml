@@ -34,7 +34,7 @@ SPDX-FileCopyrightText = "2026 Simon Dorrer and Harald Pretl"
 SPDX-License-Identifier = "Apache-2.0 WITH SHL-2.1"
 
 [[annotations]]
-path = ["ip/*/README.md", "ip/*/final/**", "ip/*/logo/**", "ip/*/verification/**"]
+path = ["ip/*/README.md", "ip/*/final/**", "ip/*/logo/**", "ip/*/netlist/**", "ip/*/schematic/**", "ip/*/verification/**"]
 SPDX-FileCopyrightText = "2026 Simon Dorrer and Harald Pretl"
 SPDX-License-Identifier = "Apache-2.0 WITH SHL-2.1"
 

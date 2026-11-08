@@ -1,0 +1,15 @@
+* Extracted by KLayout with SG13G2 LVS runset on : 07/11/2026 21:54
+
+.SUBCKT sg13g2_ip__rfpad_70x70 pad vdd vss
+M$1 vss \$8 vss vss sg13_hv_nmos L=9.5u W=126u AS=51.84p AD=51.84p PS=173.52u
++ PD=173.52u rfmode=0
+M$12 vss \$8 \$15 vss sg13_hv_nmos L=0.5u W=108u AS=38.88p AD=38.88p PS=133.02u
++ PD=133.02u rfmode=0
+M$31 vss \$15 vdd vss sg13_hv_nmos L=0.6u W=1512u AS=693.36p AD=693.36p
++ PS=1702.08u PD=1702.08u rfmode=0
+M$199 vdd \$8 \$15 vdd sg13_hv_pmos L=0.5u W=350u AS=116.48p AD=116.48p
++ PS=397.28u PD=397.28u rfmode=0
+R$273 \$8 vdd vss rppd w=1u l=500u ps=0u b=0 m=1
+D$274 vss vdd pad diodevdd_2kv m=1
+D$275 vdd vss pad diodevss_2kv m=1
+.ENDS sg13g2_ip__rfpad_70x70
