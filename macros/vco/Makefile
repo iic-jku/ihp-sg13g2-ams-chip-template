@@ -674,7 +674,7 @@ magic-verify: ## Verify CELL cell with Magic, LVS and PEX (usage: make magic-ver
 	$(MAKE) magic-pex CELL=$(CELL)
 .PHONY: magic-verify
 
-magic-verify-all: ## Verify with Magic: LVS and PEX of the bias and the buffer, PEX of TOP for its pins
+magic-verify-all: ## Verify with Magic: LVS and PEX of the bias, the buffer and the tap feed, PEX of TOP for its pins
 	$(MAKE) magic-verify CELL=vco_bias
 	$(MAKE) magic-verify CELL=vco_buf
 	$(MAKE) magic-verify CELL=vco_feed

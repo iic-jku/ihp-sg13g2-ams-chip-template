@@ -24,7 +24,7 @@ def deck(src, corner, res, temp, vdd, vtune, threads):
     """The bench netlist with one corner pair, temperature, VDD and vtune, writing nothing but its measurements."""
     out = []
     netlist_dir = os.path.dirname(os.path.abspath(src))
-    for line in open(src):
+    for line in open(src, encoding="utf-8"):
         s = line.rstrip("\n")
         if s.startswith(".include ") and not os.path.isabs(s.split()[1]):
             s = ".include " + os.path.normpath(os.path.join(netlist_dir, s.split()[1]))
@@ -44,10 +44,10 @@ def deck(src, corner, res, temp, vdd, vtune, threads):
 def run(job):
     path = job["deck"]
     log = path[:-len(".spice")] + ".log"
-    with open(log, "w") as f:
+    with open(log, "w", encoding="utf-8") as f:
         subprocess.run(["ngspice", "-b", path], stdout=f, stderr=subprocess.STDOUT, cwd=os.path.dirname(path))
     vals = {}
-    for line in open(log, errors="replace"):
+    for line in open(log, encoding="utf-8", errors="replace"):
         m = re.match(r"^(\w+)\s+=\s+([-+0-9.eE]+)", line)
         if m:
             vals[m.group(1)] = float(m.group(2))
@@ -76,7 +76,7 @@ def main():
     for corner, res, temp, vdd, vtune in itertools.product(args.corners, args.res, args.temps, args.vdd, args.vtune):
         name = f"{corner}_{res}_t{temp:g}_vdd{vdd:g}_vt{vtune:g}"
         path = os.path.join(run_dir, f"{name}.spice")
-        with open(path, "w") as f:
+        with open(path, "w", encoding="utf-8") as f:
             f.write(deck(args.netlist, corner, res, temp, vdd, vtune, args.threads))
         jobs.append({"deck": path, "corner": corner, "res": res, "temp": temp, "vdd": vdd, "vtune": vtune})
 
@@ -109,7 +109,7 @@ def main():
                   f"{row['pout_dbm']:6.2f} dBm  tap {row['vtap_v']:.3f} V  VDD {row['idd_ma']:.2f} mA  {status}")
 
     os.makedirs(os.path.dirname(os.path.abspath(args.csv)), exist_ok=True)
-    with open(args.csv, "w", newline="") as f:
+    with open(args.csv, "w", newline="", encoding="utf-8") as f:
         w = csv.DictWriter(f, fieldnames=list(rows[0]))
         w.writeheader()
         w.writerows(rows)

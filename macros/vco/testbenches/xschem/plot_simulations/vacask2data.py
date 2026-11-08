@@ -32,7 +32,7 @@ def write_table(raw_path, txt_path):
         else:
             names.append(name)
             cols.append(np.real(vec))
-    with open(txt_path, "w") as f:
+    with open(txt_path, "w", encoding="utf-8") as f:
         f.write(" ".join(f"{n:<15s}" for n in names) + "\n")
         for row in np.column_stack(cols):
             f.write(" ".join(f"{v:.8e}" for v in row) + "\n")

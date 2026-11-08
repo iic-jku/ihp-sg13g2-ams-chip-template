@@ -76,7 +76,7 @@ value="
 control
   abort always
 
-  // Supplies and reference current, read by the sources.
+  // Supply, read by the source.
   var vdd=1.5
 
   // sde: at the default zoh the noise grid's steps abort the run. tran_noiselte: otherwise the noise drives the step

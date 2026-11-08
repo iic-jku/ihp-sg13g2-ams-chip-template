@@ -76,7 +76,7 @@ value="
 control
   abort always
 
-  // Supplies and reference current, read by the sources.
+  // Supply, read by the source.
   var vdd=1.5
 
   // 8000 steps per period: at the default 1000 the shooting Newton cycles, at 4000 it can settle on a period
