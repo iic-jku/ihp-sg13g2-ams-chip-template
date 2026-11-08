@@ -1565,7 +1565,7 @@ A current source on the center tap sets the tank's common mode by the pair's gat
 | :--- | :--- | :--- | :--- |
 | Oscillation frequency at `vtune` = 0.75 V | 20 GHz | 22.55 GHz | 20.00 GHz |
 | Tuning range, `vtune` from 0 V to 1.5 V | about 2 GHz | 21.64 GHz to 24.04 GHz | 19.34 GHz to 21.18 GHz |
-| Phase noise at 1 MHz offset | reported | -101.2 dBc/Hz (PNOISE), -99.4 dBc/Hz (transient noise) | (pending) dBc/Hz (transient noise) |
+| Phase noise at 1 MHz offset | reported | -101.2 dBc/Hz (PNOISE), -99.4 dBc/Hz (transient noise) | -101.1 dBc/Hz (transient noise) |
 | Output power per output into 50 $\Omega$ | -10 dBm or more | -8.3 dBm | -10.0 dBm |
 | Supply current from `VDD` = 1.5 V | | 11.6 mA | 10.9 mA |
 | Disabled | | | 9 nA, no oscillation |
@@ -1885,7 +1885,7 @@ The start-up transient of @fig-vco-tran reaches its full amplitude within a few 
 
 ![Oscillator PSS (VACASK): one period of the tank and the outputs, and the spectrum of the output.](fig/vco_top/vco_top_tb_pss_vacask_pss.svg){#fig-vco-pss}
 
-The spectrum in @fig-vco-pss is that of one output. Its harmonics come from the buffer, a differential pair driven by the tank's full swing into resistive loads, and not from the tank. The second harmonic is -9.4 dBc and the third -20.9 dBc here, and (pending) and (pending) dBc post-layout. The second is common mode, so it cancels between the two outputs ((pending) dBc post-layout).
+The spectrum in @fig-vco-pss is that of one output. Its harmonics come from the buffer, a differential pair driven by the tank's full swing into resistive loads, and not from the tank. The second harmonic is -9.4 dBc and the third -20.9 dBc here, and -16.8 and -27.6 dBc post-layout. The second is common mode, so it cancels between the two outputs (-48.9 dBc in the schematic).
 
 @fig-vco-pnoise shows the phase noise from PNOISE and the tuning gain from PAC. The phase noise is -101.2 dBc/Hz at 1 MHz offset. Its contributions show where it comes from: 55 % from the core (pair, varactors and coil) and 36 % from the bias of the buffer, whose input capacitance loads the tank and moves the frequency with its bias current. Below 1 MHz that bias takes over: its noise passes the 170 kHz low-pass of the bias filters, so its share grows by 40 dB to 48 dB per decade towards lower offsets, against 20 dB for the core. The tuning gain from PAC, 1.87 GHz/V at 10 MHz, agrees within about 2 % with the slope of the tuning curve of @fig-vco-tune, whose frequencies the plot script takes from the zero crossings of each tuning transient.
 
@@ -1965,17 +1965,19 @@ make sim-trannoise-lpe    # the post-layout netlist, 8 seeds
 
 The benches settle the oscillation for 6 ns, store the state, and run a noisy transient of 5 $\mu$s (4 $\mu$s post-layout) from it, at a fixed step of 0.25 ps with noise from 100 kHz to 100 GHz, one VACASK process per seed. [`sim_trannoise.py`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/vco/scripts/sim_trannoise.py) takes the zero crossings of the tank's differential voltage, computes the phase from the period-to-period differences, and averages the spectra of the seeds. Since every seed starts from the same state, what they share is a drift and not noise, and the script subtracts it. `make check-trannoise` tests that spectrum code on synthetic jitter with a known spectrum.
 
+![Phase noise from transient noise (VACASK, 8 seeds) against PNOISE: the schematic and the post-layout netlist.](fig/vco_top/vco_top_tb_trannoise_vacask.svg){#fig-vco-trannoise}
+
 | Offset | PNOISE, schematic | Transient noise, schematic | Transient noise, post-layout |
 | :--- | :--- | :--- | :--- |
-| 1 MHz | -101.2 dBc/Hz | -99.4 dBc/Hz | (pending) |
-| 3 MHz | -113.5 dBc/Hz | -112.5 dBc/Hz | (pending) |
-| 10 MHz | -124.7 dBc/Hz | -124.9 dBc/Hz | (pending) |
-| 30 MHz | -134.5 dBc/Hz | -134.9 dBc/Hz | (pending) |
-| 100 MHz | -145.1 dBc/Hz | -145.8 dBc/Hz | (pending) |
+| 1 MHz | -101.2 dBc/Hz | -99.4 dBc/Hz | -101.1 dBc/Hz |
+| 3 MHz | -113.5 dBc/Hz | -112.5 dBc/Hz | -110.9 dBc/Hz |
+| 10 MHz | -124.7 dBc/Hz | -124.9 dBc/Hz | -123.5 dBc/Hz |
+| 30 MHz | -134.5 dBc/Hz | -134.9 dBc/Hz | -133.8 dBc/Hz |
+| 100 MHz | -145.1 dBc/Hz | -145.8 dBc/Hz | -143.7 dBc/Hz |
 
 : Phase noise from PNOISE and from transient noise. {#tbl-vco-trannoise}
 
-`make sim-trannoise` checks PNOISE with an analysis that shares no code with it: on the schematic, transient noise over 8 seeds and PNOISE differ by -0.7 dB to +1.9 dB from 1 MHz to 100 MHz, with a scatter of the seeds of about 0.9 dB at 1 MHz. The post-layout run is still going on a compute host, its column follows.
+`make sim-trannoise` checks PNOISE with an analysis that shares no code with it: on the schematic, transient noise over 8 seeds and PNOISE differ by -0.7 dB to +1.9 dB from 1 MHz to 100 MHz, with a scatter of the seeds of about 0.9 dB at 1 MHz. At 1 MHz the post-layout phase noise is 1.7 dB below the schematic's: about 1 dB of that is the lower carrier, and the rest is within the scatter of the seeds.
 
 ## Post-Layout Simulation {#sec-rf-postlayout}
 
