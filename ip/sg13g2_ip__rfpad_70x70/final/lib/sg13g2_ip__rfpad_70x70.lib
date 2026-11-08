@@ -1,0 +1,62 @@
+/*
+ * Liberty view of sg13g2_ip__rfpad_70x70, written by script/rfpad.py.
+ * The capacitance on pad and padbare is measured, see the README.
+ * No timing arc: a pad is not a delay element, there is nothing for STA to time.
+ */
+library (sg13g2_ip__rfpad_70x70) {
+  delay_model : table_lookup;
+  capacitive_load_unit (1,pf);
+  current_unit : "1uA";
+  leakage_power_unit : "1pW";
+  pulling_resistance_unit : "1kohm";
+  time_unit : "1ns";
+  voltage_unit : "1V";
+
+  input_threshold_pct_fall : 50;
+  input_threshold_pct_rise : 50;
+  output_threshold_pct_fall : 50;
+  output_threshold_pct_rise : 50;
+  slew_derate_from_library : 1;
+  slew_lower_threshold_pct_fall : 10;
+  slew_lower_threshold_pct_rise : 10;
+  slew_upper_threshold_pct_fall : 90;
+  slew_upper_threshold_pct_rise : 90;
+
+  nom_process : 1.0;
+  nom_temperature : 25.0;
+  nom_voltage : 1.20;
+
+  operating_conditions (typ) {
+    process : 1.0;
+    temperature : 25.0;
+    voltage : 1.20;
+    tree_type : balanced_tree;
+  }
+  default_operating_conditions : typ;
+
+  cell (sg13g2_ip__rfpad_70x70) {
+    area : 20000;
+    dont_touch : true;
+    dont_use : true;
+    pad_cell : true;
+    timing_model_type : abstracted;
+
+    pg_pin (vss)   { pg_type : primary_ground; voltage_name : "vss"; }
+    pg_pin (vdd)   { pg_type : primary_power;  voltage_name : "vdd"; }
+    pg_pin (iovss) { pg_type : primary_ground; voltage_name : "iovss"; }
+    pg_pin (iovdd) { pg_type : primary_power;  voltage_name : "iovdd"; }
+
+    pin (pad) {
+      direction : inout;
+      capacitance : 0.2040;
+      related_ground_pin : vss;
+      related_power_pin : vdd;
+    }
+    pin (padbare) {
+      direction : inout;
+      capacitance : 0.2040;
+      related_ground_pin : vss;
+      related_power_pin : vdd;
+    }
+  }
+}

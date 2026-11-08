@@ -130,6 +130,14 @@ A designer-oriented description of this chip can be found in [doc/](doc/):
 │  │  ├─ 📁 verification/
 │  │  ├─ Makefile
 │  │  └─ README.md
+│  ├─ 📁 sg13g2_ip__rfpad_70x70/
+│  │  ├─ 📁 final/
+│  │  ├─ 📁 netlist/
+│  │  ├─ 📁 schematic/
+│  │  ├─ 📁 script/
+│  │  ├─ 📁 verification/
+│  │  ├─ Makefile
+│  │  └─ README.md
 │  ├─ 📁 sg13g2_ip__jku/
 │  │  ├─ 📁 final/
 │  │  ├─ 📁 logo/
@@ -272,6 +280,7 @@ Xschem reads exactly one `xschemrc` at start-up, and that file decides which sym
 | --- | --- |
 | [`schematic/xschem/xschemrc`](schematic/xschem/xschemrc) | chip top-level schematics |
 | [`testbenches/xschem/xschemrc`](testbenches/xschem/xschemrc) | chip top-level testbenches |
+| [`ip/sg13g2_ip__rfpad_70x70/schematic/xschem/xschemrc`](ip/sg13g2_ip__rfpad_70x70/schematic/xschem/xschemrc) | RF pad schematic |
 | [`macros/inverter/schematic/xschem/xschemrc`](macros/inverter/schematic/xschem/xschemrc) | inverter schematics |
 | [`macros/inverter/testbenches/xschem/xschemrc`](macros/inverter/testbenches/xschem/xschemrc) | inverter testbenches |
 | [`macros/inverter/verification/cace/templates/xschemrc`](macros/inverter/verification/cace/templates/xschemrc) | CACE testbench templates |
@@ -345,13 +354,13 @@ The whole flow is driven by Makefiles. The top-level `Makefile` builds the chip,
   <em>Overview of the Makefile targets.</em>
 </p>
 
-Every coloured branch corresponds to one deliverable (top chip, bondpad, logos, digital macro, analog macro, packaging). The grey targets connect `make all` to those branches.
+Every coloured branch corresponds to one deliverable (top chip, bondpad, RF pad, logos, digital macro, analog macro, packaging). The grey targets connect `make all` to those branches.
 
 Solid arrows are direct `$(MAKE) <target>` calls within a single Makefile. Dashed arrows descend into a subdirectory, either as a recursive `$(MAKE) -C <dir> all` call into a sub-Makefile or as the Python bondplan flow in `packaging/`. The numbers on the second level give the execution order of `make all`, and the vertical order inside the coloured boxes gives the execution order of each sub-Makefile.
 
 At the top level, `make all` runs four steps in this order:
 
-1. `build-all` initialises the submodules and builds every component by calling its own `all` target: bondpad, logos, digital macro, analog macro, and finally the chip assembly with `build-top` (LibreLane, copy-back of all artifacts, logo and fill insertion, final GDS render).
+1. `build-all` initialises the submodules and builds every component by calling its own `all` target: bondpad, RF pad, logos, digital macro, analog macro, and finally the chip assembly with `build-top` (LibreLane, copy-back of all artifacts, logo and fill insertion, final GDS render).
 2. `klayout-drc-regular` (the sign-off deck) and `gdscheck-drc-regular` run the DRC of the final `chip_top_logo_fill` GDS. A violation stops `make all`, and gdscheck flags IHP's own cells until the fix is in the container (see [Design Rule Check (DRC)](#design-rule-check-drc)). `magic-drc` is left out until IHP's IO pads and SRAM are clean in Magic, and it takes about a day on the chip.
 3. `sim-all` runs the top-level RTL and gate-level simulations on the netlists produced by this build.
 4. `bondplan` generates the bonding diagram, the bondwires, and the pin table.
@@ -362,7 +371,7 @@ Every component follows the same principle. The simulations always run last, so 
 | --- | --- |
 | [`macros/counter/`](macros/counter/) (digital) | lint -> build (FPGA and LibreLane, including the XSPICE model) -> extract (PEX of the hardened GDS) -> simulate. DRC and LVS run inside the LibreLane flow. |
 | [`macros/inverter/`](macros/inverter/) (analog) | verify (DRC, LVS, PEX) -> build (LEF, LIB, Verilog stub, GDS, render) -> simulate |
-| [`ip/*`](ip/) (bondpad, logos) | build -> verify (DRC) |
+| [`ip/*`](ip/) (bondpad, RF pad, logos) | build -> verify (DRC, and LVS on the RF pad) |
 | top level | build -> verify (DRC) -> simulate -> package |
 
 The following sections describe the top-level targets in detail. The macro and IP targets are documented in the `README.md` of the respective subfolder.
@@ -644,6 +653,15 @@ make build-bondpad
 ```
 
 
+### Build RF Pad
+
+To build the [RF pad](ip/sg13g2_ip__rfpad_70x70/README.md) in the `ip` folder, run the following command. The chip does not use it by default, the README of the IP lists what a chip needs for it.
+
+```sh
+make build-rfpad
+```
+
+
 ### Build Logos
 
 To build the logos in the `ip` folder, run the following command:
@@ -709,7 +727,7 @@ Internally this executes (in order): `librelane-nodrc` -> `copy-reports` -> `cop
 
 ### Build All
 
-To initialise submodules, build the bondpad, build the logos, build the macros, and run the full `build-top` flow, run:
+To initialise submodules, build the bondpad and the RF pad, build the logos, build the macros, and run the full `build-top` flow, run:
 
 ```sh
 make build-all
@@ -1088,12 +1106,12 @@ To keep the runtime low while still covering the full toolchain, the regression 
 
 - The counter macro is hardened with `librelane-magicdrc` (only **Magic DRC** enabled, the slower KLayout DRC is skipped). Netgen LVS still runs as part of the flow.
 - The chip top-level runs `librelane-nodrc`. All DRC checks are skipped to save runtime on the large top-level assembly. The macros and IP blocks are DRC-checked individually beforehand, so this only leaves the top-level routing/fill unchecked.
-- KLayout DRC (`sak-drc.sh`) is skipped inside the LibreLane runs, but is still exercised in the bondpad and logo IP builds, and in the inverter `klayout-verify`.
-- Magic DRC (`sak-drc.sh -m`) runs once, as `magic-drc` of the bondpad, which passes it, so a broken Magic fails the regression. gdscheck DRC (`sak-drc.sh -g`) runs in the bondpad and logo IP builds.
+- KLayout DRC (`sak-drc.sh`) is skipped inside the LibreLane runs, but is still exercised in the bondpad, RF pad and logo IP builds, and in the inverter `klayout-verify`.
+- Magic DRC (`sak-drc.sh -m`) runs once, as `magic-drc` of the bondpad, which passes it, so a broken Magic fails the regression. gdscheck DRC (`sak-drc.sh -g`) runs in the bondpad, RF pad and logo IP builds.
 - Only **one** logo (`sg13g2_ip__jku`) is regenerated. It is the only step that exercises the PNG to GDS flow. The second logo (`sg13g2_ip__jku_names`) uses an identical toolchain and reuses its committed views.
 - Exactly **one** CACE parameter set is run (the AC VDD sweep `ac_params`, no Monte Carlo). Swap `ac_params` for `ac_mc_params` / `ac_mm_params` in the target to also exercise the Monte Carlo flow.
 
-The regression runs bottom-up: first the inverter and counter macros, then the top-level prerequisites (submodules, bondpad, logo) and finally the chip top-level LibreLane run that integrates the freshly built macros and IP. After the counter is hardened, `copy-final` copies its fresh `flow/final/` views into `macros/counter/final/`, so that the logic equivalence check (`lec`), the gate-level simulation (`sim-gl-cocotb`) and the chip top-level integration use the freshly built outputs rather than the committed ones.
+The regression runs bottom-up: first the inverter and counter macros, then the top-level prerequisites (submodules, bondpad, RF pad, logo) and finally the chip top-level LibreLane run that integrates the freshly built macros and IP. After the counter is hardened, `copy-final` copies its fresh `flow/final/` views into `macros/counter/final/`, so that the logic equivalence check (`lec`), the gate-level simulation (`sim-gl-cocotb`) and the chip top-level integration use the freshly built outputs rather than the committed ones.
 
 The following tools and flows are checked:
 
@@ -1102,6 +1120,7 @@ The following tools and flows are checked:
 | git submodules | `init-submodules` |
 | KLayout scripting (bondpad generator), KLayout DRC, gdscheck DRC | `build-bondpad` |
 | Magic DRC (`sak-drc.sh -m`) | bondpad `magic-drc` |
+| KLayout generator with connectivity checks, KLayout LVS of a generated cell | `build-rfpad` |
 | PNG to GDS logo generation, KLayout DRC, gdscheck DRC | `sg13g2_ip__jku all` (single logo) |
 | Xschem + ngspice (analog simulation) | inverter `sim-xschem` (`inverter_tb_dc_vout`) |
 | CACE (+ ngspice) | inverter CACE, single parameter set (`ac_params`) |

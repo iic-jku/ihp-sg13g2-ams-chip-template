@@ -1,0 +1,11 @@
+** sch_path: /foss/designs/ihp-sg13g2-ams-chip-template/ip/sg13g2_ip__rfpad_70x70/schematic/xschem/sg13g2_ip__rfpad_70x70.sch
+.subckt sg13g2_ip__rfpad_70x70 vss vdd iovss iovdd pad
+*.PININFO vss:B vdd:B iovss:B iovdd:B pad:B
+DDesd_vdd vdd pad vss diodevdd_2kv
+DDesd_vss vdd pad vss diodevss_2kv
+MMclamp vdd clamp_g vss vss sg13_hv_nmos w=1512u l=0.6u ng=168
+MMcap vss clamp_rc vss vss sg13_hv_nmos w=126u l=9.5u ng=14
+MMinv_n clamp_g clamp_rc vss vss sg13_hv_nmos w=108u l=0.5u ng=16
+MMinv_p clamp_g clamp_rc vdd vdd sg13_hv_pmos w=350u l=0.5u ng=50
+RRtrig vdd clamp_rc 129.3k $SUB=vss $[rppd] w=1e-6 l=500e-6 b=0
+.ends
