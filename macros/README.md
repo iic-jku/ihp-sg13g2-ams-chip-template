@@ -85,7 +85,7 @@ The new macro still implements the copied design under its new name. What follow
 
 #### From the Inverter (Analog)
 
-1. Replace the design: the schematics and symbols in `schematic/xschem/`, the layout sources `layout/<NAME>.gds` and `layout/<NAME>_top.klay.gds`, and the export `layout/<NAME>_top.gds`, see [Layout Sources and the Exported Tapeout GDS](inverter/README.md#layout-sources-and-the-exported-tapeout-gds). Keep the box on the `prBoundary` layer (`189/0`) around the top cell and resize it with the macro, `make check-boundary` verifies it.
+1. Replace the design: the schematics and symbols in `schematic/xschem/`, the layout sources `layout/<NAME>.gds` and `layout/<NAME>_top.klay.gds`, and the export `layout/<NAME>_top.gds`, see [Layout Sources and the Exported Tapeout GDS](inverter/README.md#layout-sources-and-the-exported-tapeout-gds). Keep the box on the `prBoundary` layer (`189/0`) around the top cell and resize it with the macro, `make check-boundary` verifies it. List the pins of the new layout in the `lef` target of the `Makefile`, which sets their LEF directions.
 2. Rewrite the testbenches in `testbenches/xschem/` and the plot scripts in `testbenches/xschem/plot_simulations/` for the new pins and measurements. `make symbol-pex` rebuilds `<CELL>_pex.sym` from the cell symbol, so only the cell symbol needs drawing.
 3. Adapt the CACE datasheet `verification/cace/<NAME>.yaml` with its template and script, or delete the CACE folder together with the `sim-cace` line of `sim-all`.
 4. The sizing notebook `scripts/sizing/sizing_<NAME>.ipynb` and the figures next to it are specific to the inverter, adapt or delete them.

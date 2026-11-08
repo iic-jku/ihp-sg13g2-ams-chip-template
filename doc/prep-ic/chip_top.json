@@ -1,0 +1,473 @@
+{
+  "mode": "ccw",
+  "align": "center",
+  "square": true,
+  "cellh": 120.0,
+  "std": {
+    "pitch": 114,
+    "w": 60.0,
+    "h": 60.0
+  },
+  "rf": {
+    "pitch": 114,
+    "w": 70.0,
+    "h": 70.0
+  },
+  "fixed_die": true,
+  "die_w": 1600,
+  "die_h": 1600,
+  "pdk": "ihp-sg13g2",
+  "package": "OP_QFN32_A4_FIT",
+  "fixed_core": false,
+  "core_w": 1500.0,
+  "core_h": 1200.0,
+  "grid": 10.0,
+  "halo": 20.0,
+  "spacing": 100.0,
+  "max_flyline": 900.0,
+  "max_supply_dist": 1000.0,
+  "format": 2,
+  "sides": {
+    "T": "counter_value_o[7] [io] [30mA]\ncounter_value_o[6] [io] [30mA]\ncounter_value_o[5] [io] [30mA]\ncounter_value_o[4] [io] [30mA]\ncounter_value_o[3] [out] [30mA]\ncounter_value_o[2] [out] [30mA]\ncounter_value_o[1] [out] [30mA]\ncounter_value_o[0] [out] [30mA]",
+    "R": "vin1 [analog]\nvin2 [analog]\ninverter2_vout1 [analog]\ninverter2_vout2 [analog]\ninverter1_vout1 [out] [30mA]\ninverter1_vout2 [out] [30mA]\nvout3 [out] [30mA]\nvout4 [out] [30mA]",
+    "B": "counter2_value[0] [out] [30mA]\ncounter2_value[1] [out] [30mA]\ncounter2_value[2] [out] [30mA]\ncounter2_value[3] [out] [30mA]\ncounter2_value[4] [out] [30mA]\ncounter2_value[5] [out] [30mA]\ncounter2_value[6] [out] [30mA]\ncounter2_value[7] [out] [30mA]",
+    "L": "clock_i [in]\nreset_n_i [in]\nenable_i [in]\nIOVDD [iovdd]\nIOVSS [iovss]\nVDD [vdd]\nVSS [vss]\nsram_parity [out] [30mA]"
+  },
+  "floorplan": {
+    "macros": [
+      {
+        "name": "counter1",
+        "macro": "counter_top",
+        "path": "../../macros/counter",
+        "x": 335.0,
+        "y": 140.0,
+        "rot": 0,
+        "io": [
+          "counter_value_o[0]",
+          "counter_value_o[1]",
+          "counter_value_o[2]",
+          "counter_value_o[3]",
+          "counter_value_o[4]",
+          "counter_value_o[5]",
+          "counter_value_o[6]",
+          "counter_value_o[7]",
+          "clock_i",
+          "reset_n_i",
+          "enable_i"
+        ],
+        "class": "noisy",
+        "domain": "",
+        "cache": {
+          "name": "counter_top",
+          "w": 200.0,
+          "h": 100.0,
+          "pins": [
+            {
+              "name": "VDD",
+              "dir": "INOUT",
+              "use": "POWER",
+              "x": 19.36,
+              "y": 50.86
+            },
+            {
+              "name": "VSS",
+              "dir": "INOUT",
+              "use": "GROUND",
+              "x": 25.560000000000002,
+              "y": 50.86
+            },
+            {
+              "name": "clock_i",
+              "dir": "INPUT",
+              "use": "SIGNAL",
+              "x": 0.2,
+              "y": 17.25999999999999
+            },
+            {
+              "name": "counter_value_o[0]",
+              "dir": "OUTPUT",
+              "use": "SIGNAL",
+              "x": 12.0,
+              "y": 0.20000000000000284
+            },
+            {
+              "name": "counter_value_o[1]",
+              "dir": "OUTPUT",
+              "use": "SIGNAL",
+              "x": 36.959999999999994,
+              "y": 0.20000000000000284
+            },
+            {
+              "name": "counter_value_o[2]",
+              "dir": "OUTPUT",
+              "use": "SIGNAL",
+              "x": 61.92,
+              "y": 0.20000000000000284
+            },
+            {
+              "name": "counter_value_o[3]",
+              "dir": "OUTPUT",
+              "use": "SIGNAL",
+              "x": 86.88,
+              "y": 0.20000000000000284
+            },
+            {
+              "name": "counter_value_o[4]",
+              "dir": "OUTPUT",
+              "use": "SIGNAL",
+              "x": 111.84,
+              "y": 0.20000000000000284
+            },
+            {
+              "name": "counter_value_o[5]",
+              "dir": "OUTPUT",
+              "use": "SIGNAL",
+              "x": 136.8,
+              "y": 0.20000000000000284
+            },
+            {
+              "name": "counter_value_o[6]",
+              "dir": "OUTPUT",
+              "use": "SIGNAL",
+              "x": 161.76,
+              "y": 0.20000000000000284
+            },
+            {
+              "name": "counter_value_o[7]",
+              "dir": "OUTPUT",
+              "use": "SIGNAL",
+              "x": 186.72,
+              "y": 0.20000000000000284
+            },
+            {
+              "name": "enable_i",
+              "dir": "INPUT",
+              "use": "SIGNAL",
+              "x": 0.2,
+              "y": 82.78
+            },
+            {
+              "name": "reset_n_i",
+              "dir": "INPUT",
+              "use": "SIGNAL",
+              "x": 0.2,
+              "y": 50.019999999999996
+            }
+          ]
+        }
+      },
+      {
+        "name": "counter2",
+        "macro": "counter_top",
+        "path": "../../macros/counter",
+        "x": 570.0,
+        "y": 640.0,
+        "rot": 0,
+        "io": [],
+        "class": "noisy",
+        "domain": "",
+        "cache": {
+          "name": "counter_top",
+          "w": 200.0,
+          "h": 100.0,
+          "pins": [
+            {
+              "name": "VDD",
+              "dir": "INOUT",
+              "use": "POWER",
+              "x": 19.36,
+              "y": 50.86
+            },
+            {
+              "name": "VSS",
+              "dir": "INOUT",
+              "use": "GROUND",
+              "x": 25.560000000000002,
+              "y": 50.86
+            },
+            {
+              "name": "clock_i",
+              "dir": "INPUT",
+              "use": "SIGNAL",
+              "x": 0.2,
+              "y": 17.25999999999999
+            },
+            {
+              "name": "counter_value_o[0]",
+              "dir": "OUTPUT",
+              "use": "SIGNAL",
+              "x": 12.0,
+              "y": 0.20000000000000284
+            },
+            {
+              "name": "counter_value_o[1]",
+              "dir": "OUTPUT",
+              "use": "SIGNAL",
+              "x": 36.959999999999994,
+              "y": 0.20000000000000284
+            },
+            {
+              "name": "counter_value_o[2]",
+              "dir": "OUTPUT",
+              "use": "SIGNAL",
+              "x": 61.92,
+              "y": 0.20000000000000284
+            },
+            {
+              "name": "counter_value_o[3]",
+              "dir": "OUTPUT",
+              "use": "SIGNAL",
+              "x": 86.88,
+              "y": 0.20000000000000284
+            },
+            {
+              "name": "counter_value_o[4]",
+              "dir": "OUTPUT",
+              "use": "SIGNAL",
+              "x": 111.84,
+              "y": 0.20000000000000284
+            },
+            {
+              "name": "counter_value_o[5]",
+              "dir": "OUTPUT",
+              "use": "SIGNAL",
+              "x": 136.8,
+              "y": 0.20000000000000284
+            },
+            {
+              "name": "counter_value_o[6]",
+              "dir": "OUTPUT",
+              "use": "SIGNAL",
+              "x": 161.76,
+              "y": 0.20000000000000284
+            },
+            {
+              "name": "counter_value_o[7]",
+              "dir": "OUTPUT",
+              "use": "SIGNAL",
+              "x": 186.72,
+              "y": 0.20000000000000284
+            },
+            {
+              "name": "enable_i",
+              "dir": "INPUT",
+              "use": "SIGNAL",
+              "x": 0.2,
+              "y": 82.78
+            },
+            {
+              "name": "reset_n_i",
+              "dir": "INPUT",
+              "use": "SIGNAL",
+              "x": 0.2,
+              "y": 50.019999999999996
+            }
+          ]
+        }
+      },
+      {
+        "name": "inverter1",
+        "macro": "inverter_top",
+        "path": "../../macros/inverter",
+        "x": 715.0,
+        "y": 303.0,
+        "rot": 0,
+        "io": [
+          "vout1",
+          "vout2",
+          "vout3",
+          "vout4"
+        ],
+        "class": "normal",
+        "domain": "",
+        "cache": {
+          "name": "inverter_top",
+          "w": 54.18,
+          "h": 81.92,
+          "pins": [
+            {
+              "name": "vin1",
+              "dir": "INPUT",
+              "use": "SIGNAL",
+              "x": 19.8075,
+              "y": 66.29
+            },
+            {
+              "name": "vin2",
+              "dir": "INPUT",
+              "use": "SIGNAL",
+              "x": 19.8075,
+              "y": 46.190000000000005
+            },
+            {
+              "name": "vin3",
+              "dir": "INPUT",
+              "use": "SIGNAL",
+              "x": 19.8075,
+              "y": 35.730000000000004
+            },
+            {
+              "name": "vin4",
+              "dir": "INPUT",
+              "use": "SIGNAL",
+              "x": 19.8075,
+              "y": 15.629999999999995
+            },
+            {
+              "name": "vout1",
+              "dir": "OUTPUT",
+              "use": "SIGNAL",
+              "x": 34.175,
+              "y": 66.29
+            },
+            {
+              "name": "vout2",
+              "dir": "OUTPUT",
+              "use": "SIGNAL",
+              "x": 34.175,
+              "y": 46.190000000000005
+            },
+            {
+              "name": "vout3",
+              "dir": "OUTPUT",
+              "use": "SIGNAL",
+              "x": 34.175,
+              "y": 35.730000000000004
+            },
+            {
+              "name": "vout4",
+              "dir": "OUTPUT",
+              "use": "SIGNAL",
+              "x": 34.175,
+              "y": 15.629999999999995
+            },
+            {
+              "name": "VSS",
+              "dir": "",
+              "use": "GROUND",
+              "x": 27.09,
+              "y": 80.82000000000001
+            },
+            {
+              "name": "VDD",
+              "dir": "",
+              "use": "POWER",
+              "x": 27.09,
+              "y": 76.62
+            }
+          ]
+        }
+      },
+      {
+        "name": "inverter2",
+        "macro": "inverter_top",
+        "path": "../../macros/inverter",
+        "x": 715.0,
+        "y": 494.94000000000005,
+        "rot": 0,
+        "io": [
+          "vin1",
+          "vin2",
+          "vout1",
+          "vout2"
+        ],
+        "class": "normal",
+        "domain": "",
+        "cache": {
+          "name": "inverter_top",
+          "w": 54.18,
+          "h": 81.92,
+          "pins": [
+            {
+              "name": "vin1",
+              "dir": "INPUT",
+              "use": "SIGNAL",
+              "x": 19.8075,
+              "y": 66.29
+            },
+            {
+              "name": "vin2",
+              "dir": "INPUT",
+              "use": "SIGNAL",
+              "x": 19.8075,
+              "y": 46.190000000000005
+            },
+            {
+              "name": "vin3",
+              "dir": "INPUT",
+              "use": "SIGNAL",
+              "x": 19.8075,
+              "y": 35.730000000000004
+            },
+            {
+              "name": "vin4",
+              "dir": "INPUT",
+              "use": "SIGNAL",
+              "x": 19.8075,
+              "y": 15.629999999999995
+            },
+            {
+              "name": "vout1",
+              "dir": "OUTPUT",
+              "use": "SIGNAL",
+              "x": 34.175,
+              "y": 66.29
+            },
+            {
+              "name": "vout2",
+              "dir": "OUTPUT",
+              "use": "SIGNAL",
+              "x": 34.175,
+              "y": 46.190000000000005
+            },
+            {
+              "name": "vout3",
+              "dir": "OUTPUT",
+              "use": "SIGNAL",
+              "x": 34.175,
+              "y": 35.730000000000004
+            },
+            {
+              "name": "vout4",
+              "dir": "OUTPUT",
+              "use": "SIGNAL",
+              "x": 34.175,
+              "y": 15.629999999999995
+            },
+            {
+              "name": "VSS",
+              "dir": "",
+              "use": "GROUND",
+              "x": 27.09,
+              "y": 80.82000000000001
+            },
+            {
+              "name": "VDD",
+              "dir": "",
+              "use": "POWER",
+              "x": 27.09,
+              "y": 76.62
+            }
+          ]
+        }
+      },
+      {
+        "name": "sram_0",
+        "macro": "",
+        "path": "",
+        "x": 70.0,
+        "y": 403.53999999999996,
+        "rot": 0,
+        "io": [],
+        "class": "noisy",
+        "domain": "",
+        "cache": {
+          "name": "RM_IHPSG13_1P_1024x32_c2_bm_bist",
+          "w": 416.64,
+          "h": 336.46,
+          "pins": []
+        }
+      }
+    ]
+  }
+}

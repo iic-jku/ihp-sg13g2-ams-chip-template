@@ -155,8 +155,8 @@ N 2280 -1420 2390 -1420 {lab=analog_PAD[2]}
 N 2020 -1300 2240 -1300 {lab=analog_PAD[3]}
 N 2240 -1630 2240 -1300 {lab=analog_PAD[3]}
 N 2240 -1630 2390 -1630 {lab=analog_PAD[3]}
-N 2020 -1340 2040 -1340 {lab=VSS}
-N 2020 -1380 2040 -1380 {lab=VSS}
+N 2020 -1340 2040 -1340 {lab=inv2_vout3_open}
+N 2020 -1380 2040 -1380 {lab=inv2_vout4_open}
 N 1760 -1380 1780 -1380 {lab=VSS}
 N 1760 -1340 1780 -1340 {lab=VSS}
 N 840 -1100 840 -830 {lab=counter2_value0}
@@ -361,8 +361,8 @@ C {lab_pin.sym} 1160 -2320 1 0 {name=p35 sig_type=std_logic lab=VDD}
 C {lab_pin.sym} 1960 -2320 1 0 {name=p36 sig_type=std_logic lab=VDD}
 C {lab_pin.sym} 1900 -1480 1 0 {name=p37 sig_type=std_logic lab=VDD}
 C {lab_pin.sym} 1160 -1400 1 0 {name=p38 sig_type=std_logic lab=VDD}
-C {lab_pin.sym} 2040 -1340 2 0 {name=p39 sig_type=std_logic lab=VSS}
-C {lab_pin.sym} 2040 -1380 2 0 {name=p40 sig_type=std_logic lab=VSS}
+C {lab_pin.sym} 2040 -1340 2 0 {name=p39 sig_type=std_logic lab=inv2_vout3_open}
+C {lab_pin.sym} 2040 -1380 2 0 {name=p40 sig_type=std_logic lab=inv2_vout4_open}
 C {lab_pin.sym} 1760 -1380 0 0 {name=p41 sig_type=std_logic lab=VSS}
 C {lab_pin.sym} 1760 -1340 0 0 {name=p42 sig_type=std_logic lab=VSS}
 C {devices/lab_wire.sym} 1600 -2200 2 1 {name=p43 sig_type=std_logic lab=counter1_value[0..7]}
