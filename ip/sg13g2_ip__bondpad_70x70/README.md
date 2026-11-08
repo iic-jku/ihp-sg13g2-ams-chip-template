@@ -89,7 +89,7 @@ make bondpad DIAMETER=70.0 SHAPE=octagon BOTTOM_METAL=2
 The `script/bondpad.py` script runs in KLayout batch mode. It:
 
 1. Instantiates the `bondpad` PCell from the `SG13_dev` library
-2. Flattens the PCell into a static layout
+2. Places it in a top cell named after the output file, as the static child cell `bondpad`
 3. Exports the layout as GDSII
 4. Generates a matching LEF file (with the `pad` pin on every metal the PCell draws, from `BOTTOM_METAL` up to TopMetal2, and metal obstruction layers) and stops if the GDS draws no metal on a pin layer
 
