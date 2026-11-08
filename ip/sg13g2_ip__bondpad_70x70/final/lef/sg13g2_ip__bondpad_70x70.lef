@@ -10,8 +10,6 @@ MACRO sg13g2_ip__bondpad_70x70
   PIN pad
     USE SIGNAL ;
     PORT
-      LAYER Metal2 ;
-        RECT 0 0 70.0 70.0 ;
       LAYER Metal3 ;
         RECT 0 0 70.0 70.0 ;
       LAYER Metal4 ;
