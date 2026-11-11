@@ -1,0 +1,6 @@
+** sch_path: /foss/designs/ihp-sg13g2-ams-chip-template/macros/vco/schematic/xschem/vco_feed.sch
+.subckt vco_feed en_b VDD VSS vdd_core
+*.PININFO VDD:B VSS:B en_b:I vdd_core:B
+XMPs n1 en_b VDD VDD sg13_lv_pmos w=96u l=0.13u ng=32 m=1 mm_ok=1
+XRct n1 vdd_core VSS rppd w=17.3e-6 l=8.8e-6 m=1 b=0 mm_ok=1
+.ends

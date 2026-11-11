@@ -48,6 +48,11 @@ This tutorial is a step-by-step walk-through of the open-source analog mixed-sig
   - Monte Carlo / mismatch characterisation with [CACE](https://github.com/fossi-foundation/cace)
   - Layout in [KLayout](https://github.com/KLayout/klayout)
   - Verification with DRC, LVS, PEX using [KLayout](https://github.com/KLayout/klayout), [Magic](https://github.com/rtimothyedwards/magic) + [Netgen](https://github.com/rtimothyedwards/netgen), plus [gdscheck](https://github.com/aesc-silicon/gdscheck) as a third DRC engine
+- [RF macro design](#sec-rf)
+  - Layouts written as KLayout Python scripts, and programmatic layouts with [GDSFactory](https://github.com/gdsfactory/gdsfactory)
+  - EM simulation of RF passives with [AWS Palace](https://github.com/awslabs/palace) and [gds2palace](https://github.com/VolkerMuehlhaus/gds2palace_ihp_sg13g2)
+  - Lumped-element models of the EM results with [snp2le](https://github.com/iic-jku/snp2le)
+  - Large-signal RF simulation (PSS, PNOISE, PAC, ACSP) with [VACASK](https://codeberg.org/arpadbuermen/VACASK) and a post-layout simulation at 20 GHz
 - [Top-level assembly and padframe generation](#sec-top) with logos and fill structures using SystemVerilog and the [LibreLane](https://github.com/librelane/librelane) flow.
 - [Starting your own chip](#sec-new-chip) from the template with a single `make project` target.
 
@@ -167,6 +172,7 @@ This Makefile-driven repository simulates, builds, and fully verifies (DRC, LVS,
 - [**KLayout**](https://github.com/KLayout/klayout) for viewing and routing of the layout
 - [**Magic**](https://github.com/rtimothyedwards/magic) + [**Netgen**](https://github.com/rtimothyedwards/netgen) and [**KLayout**](https://github.com/KLayout/klayout) for DRC, LVS and PEX verification
 - [**gdscheck**](https://github.com/aesc-silicon/gdscheck) as a third, standalone DRC engine with its own rule decks
+- [**AWS Palace**](https://github.com/awslabs/palace), [**gds2palace**](https://github.com/VolkerMuehlhaus/gds2palace_ihp_sg13g2) and [**snp2le**](https://github.com/iic-jku/snp2le) for the EM simulation of RF passives and their lumped-element models
 - **SystemVerilog**, [**cocotb**](https://github.com/cocotb/cocotb), [**GTKWave**](https://github.com/gtkwave/gtkwave) and [**Surfer**](https://gitlab.com/surfer-project/surfer) for digital simulation
 
 The repository is the starting point for your own custom silicon and provides a universal design flow solution: Just clone the repo, enter the IIC-OSIC-TOOLS container, and run `make all` to get a tapeout-ready analog mixed-signal chip. Focus on your design and do not worry about the tools and the design flow!
@@ -193,7 +199,7 @@ The repository is organised into the following top-level folders. The full listi
 | [`ip/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/ip/) | External IP cells including bondpads, an RF pad, custom IO cells, and logos. |
 | [`layout/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/layout/) | Compressed GDS streams of the top-level chip, including chip_top.gds.gz and chip_top_logo_fill.gds.gz. |
 | [`LICENSES/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/LICENSES/) | License texts referenced by the SPDX headers and [REUSE.toml](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/REUSE.toml) annotations. |
-| [`macros/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/) | Recursive-style macros such as [counter/](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/counter/) and [inverter/](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/inverter/), each with its own Makefile and README. |
+| [`macros/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/) | Recursive-style macros such as [counter/](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/counter/), [inverter/](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/inverter/) and [vco/](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/vco/), each with its own Makefile and README. |
 | [`netlist/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/netlist/) | Synthesis, schematic, layout, and PEX netlists used for top-level LVS and simulation. |
 | [`packaging/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/packaging/) | Automated bondplan generation: config, flow script, package and bondplan GDS, bonding diagrams, and bond report (see @sec-packaging). |
 | [`release/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/release/) | Tapeout submission artifacts grouped by version. |
@@ -316,6 +322,27 @@ The [inverter Makefile](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/
 | `make clean`                                      | Delete all generated files and folders of the macro, including the CACE outputs. |
 
 See the [inverter README](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/inverter/README.md) for more details and how to use the Makefile targets.
+
+### RF macro targets
+
+The [vco Makefile](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/vco/Makefile) provides every target of the inverter except `sim-cace`, plus:
+
+| Target                                            | What it does                                                                |
+| ----------------------------------- | ----------------------------------------------------------------- |
+| `make klayout-script` / `klayout-script-all`      | Write `layout/<CELL>.gds` with the KLayout Python script `scripts/layout/<CELL>.py`, or every layout, subcells first. |
+| `make sim-em` (`NP=<processes>`)                  | Run the EM simulation of the coil with gds2palace and AWS Palace.           |
+| `make copy-sparam` / `make view-em-sim`           | Copy the Touchstone file of the EM simulation to `verification/em/s-parameter/`, and plot it. |
+| `make snp2le` (`LE_MODEL=<structure\|universal>`) | Fit a lumped-element model to the Touchstone file, for ngspice and VACASK.  |
+| `make em-model`                                   | Run `sim-em`, `copy-sparam`, `snp2le` and the ACSP testbench of the coil model. |
+| `make sim-corners` (`TB=<tb>`)                    | Run a start-up transient over MOS and resistor corners, temperatures, `VDD` and `vtune`. |
+| `make sim-tune-lpe`                               | Run the post-layout tuning curve, one ngspice transient per tuning voltage at TT and 27 C. |
+| `make klayout-pex-leads`                          | Extract `vco_top` without the coil and the varactor array for the post-layout testbench. |
+| `make klayout-drc-regular`                        | Run the KLayout DRC of `vco_top` at the regular level, where only the densities the chip's fill meets may fail. |
+| `make sim-powerup` (`SIM_JOBS=<n>`)               | Run the post-layout power-up and enable transient over the orders of `VDD` and `di_en`, hours on a compute host. |
+| `make sim-trannoise` / `sim-trannoise-lpe` (`SEEDS=<n>`) | Run the transient noise of the schematic against PNOISE, or of the post-layout netlist, hours on a compute host. |
+| `make all`                                        | Write the layouts, verify, build and simulate, without the EM simulation, the corners and the long runs. |
+
+See the [vco README](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/vco/README.md) and @sec-rf for more details.
 
 
 # Digital Macro Implementation {#sec-digital}
@@ -1489,6 +1516,517 @@ make all
 This calls `klayout-verify-all`, `gdscheck-drc-all`, `magic-verify-all`, `build-top`, and `sim-all` (Xschem + CACE) in sequence. The simulations run last, so the `inverter_top` testbench includes the PEX netlist produced by this run. Depending on the hardware used, a full pass can take a few minutes, especially the CACE simulation step.
 
 
+# RF Macro Implementation {#sec-rf}
+
+The [`vco`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/vco/) macro is the RF reference macro of the template: a 20 GHz LC voltage-controlled oscillator (VCO) built from CMOS devices only. It follows the analog flow of @sec-analog (Xschem, DRC, LVS and PEX with KLayout and Magic) and adds the steps an RF block needs on top:
+
+- **Layouts from scripts.** Every layout is written by a KLayout Python script (@sec-rf-layout).
+- **EM simulation of the passives.** The tank coil is simulated with [AWS Palace](https://github.com/awslabs/palace), set up from its layout by [gds2palace](https://github.com/VolkerMuehlhaus/gds2palace_ihp_sg13g2) (@sec-rf-em).
+- **Lumped-element models.** [snp2le](https://github.com/iic-jku/snp2le) turns the S-parameters of the EM simulation into netlists for ngspice and VACASK (@sec-rf-snp2le).
+- **Large-signal RF analyses.** [VACASK](https://codeberg.org/arpadbuermen/VACASK) computes the S-parameters of the coil model (ACSP), the periodic steady state of the oscillator (PSS), its phase noise (PNOISE) and its tuning gain (PAC) (@sec-rf-sim).
+- **Post-layout simulation at 20 GHz.** The extracted netlist of the macro is simulated with the EM model of the coil in place: the start-up over corners (@sec-rf-corners), the power-up and the enable (@sec-rf-powerup), and the phase noise from transient noise (@sec-rf-trannoise).
+
+The VCO is a simple design to learn the RF flow on, not an optimized one. It goes through each step once, and the [vco README](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/vco/README.md) lists where it falls short and what a better design would change.
+
+::: {.callout-note}
+The VCO is not part of the chip top-level yet. Its integration needs a quiet analog pad of its own for the macro's `VDD`, RF pads or a divider for the 20 GHz output, and a gap in the chip power grid, since the coil occupies both TopMetal layers. The open steps are listed under [Open Points](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/vco/README.md#open-points) in the README.
+:::
+
+## Circuit {#sec-rf-circuit}
+
+The core follows a published design, the 27 GHz cross-coupled VCO of Jung and Park ([Electronics Letters, 2008](https://doi.org/10.1049/el:20080527)), scaled to 20 GHz and to the devices of this PDK. @fig-vco-top-schematic shows the macro and @tbl-vco-cells its cells. It needs four pins besides its outputs: the supply `VDD`, `VSS`, the enable `di_en` and the tuning voltage `vtune`.
+
+| Cell | Function |
+| :--- | :--- |
+| `vco_top` | the macro: bias, tap feed, core and buffer, and the pins |
+| `vco_core` | LC tank and negative resistance: the coil, the cross-coupled NMOS pair, the varactor array, and the decoupling capacitors of the center tap `vdd_core` |
+| `vco_ind` | the center-tapped tank coil: the PDK `inductor3` for LVS, the lumped-element model `vco_ind_le` for simulation |
+| `vco_var` | the varactor array: three `sg13_hv_svaricap`, gates on the tank, wells on `vtune` |
+| `vco_buf` | AC-coupled differential output buffer with 50 $\Omega$ back-termination |
+| `vco_feed` | the feed of the center tap from `VDD`: the switch `MPs` and the resistor `Rct` |
+| `vco_bias` | the 100 $\mu$A reference from `VDD`, the enable logic, the two bias voltages of the buffer, each behind an RC low-pass filter, and the RF decoupling of `vbg_buf` |
+
+: Cells of the `vco` macro. {#tbl-vco-cells tbl-colwidths="[15,85]"}
+
+![Schematic of `vco_top`: bias (top), tap feed, LC core and output buffer.](fig/vco_top/vco_top_schematic.svg){#fig-vco-top-schematic}
+
+The core in @fig-vco-core-schematic has no current source. The center tap of the coil hangs on a resistor from `VDD` (@fig-vco-feed-schematic), so it finds its own voltage, 0.76 V post-layout, which sets the common mode of the tank and the gate-source voltage of the pair at once, and with it the current and the amplitude. A slow corner draws less current, so the tap rises and gives the pair more gate voltage, a fast corner the other way round. The varactors sit with their gates on the tank and their wells on `vtune`, so a tuning voltage from 0 V to `VDD` = 1.5 V sweeps them across their capacitance transition around 0 V gate-to-well voltage. A differential pair buffers the tank into two outputs with 50 $\Omega$ back-termination. `di_en` low opens the switch of the tap and of the reference, so the core, the buffer and the bias stop. The [Circuit](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/vco/README.md#circuit) section of the README explains the sizing and why the design ended up this way.
+
+![Schematic of `vco_core`: the coil `vco_ind`, the varactor array `vco_var`, the cross-coupled pair `M1`/`M2` and the decoupling capacitors `Cct1`/`Cct2` of the center tap.](fig/vco_top/vco_core_schematic.svg){#fig-vco-core-schematic}
+
+![Schematic of `vco_feed`: the switch `MPs` (96 $\mu$m / 0.13 $\mu$m) and `Rct` (17.3 $\mu$m by 8.8 $\mu$m of `rppd`) from `VDD` to the center tap.](fig/vco_top/vco_feed_schematic.svg){#fig-vco-feed-schematic width=60%}
+
+::: {.callout-tip}
+## Why a Resistor and Not a Current Source
+A current source on the center tap sets the tank's common mode by the pair's gate-source voltage at a fixed current, so the noise of the bias moves the varactors' operating point, and with it the frequency. A PMOS mirror from `VDD` in place of `Rct` gives -98.3 dBc/Hz at 1 MHz behind a 190 k$\Omega$ and 10 pF filter and -88.8 dBc/Hz without one, against -101.3 dBc/Hz with the resistor. The resistor has its own price: noise on `VDD` reaches the tap and the frequency, so the macro's `VDD` needs a quiet pad of its own.
+:::
+
+| Parameter | Target | Schematic | Post-layout |
+| :--- | :--- | :--- | :--- |
+| Oscillation frequency at `vtune` = 0.75 V | 20 GHz | 22.55 GHz | 20.00 GHz |
+| Tuning range, `vtune` from 0 V to 1.5 V | about 2 GHz | 21.64 GHz to 24.04 GHz | 19.34 GHz to 21.18 GHz |
+| Phase noise at 1 MHz offset | reported | -101.2 dBc/Hz (PNOISE), -99.4 dBc/Hz (transient noise) | -101.1 dBc/Hz (transient noise) |
+| Output power per output into 50 $\Omega$ | -10 dBm or more | -8.3 dBm | -10.0 dBm |
+| Supply current from `VDD` = 1.5 V | | 11.6 mA | 10.9 mA |
+| Disabled | | | 9 nA, no oscillation |
+
+: Results of the `vco` at TT and 27 C. The schematic frequency is from the PSS, the post-layout one and the post-layout output power from the transient of @sec-rf-postlayout, and the schematic output power is the fundamental from the PSS. {#tbl-vco-results}
+
+## Directory Structure {#sec-rf-dirs}
+
+The design files are located in [`macros/vco/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/vco/). The folders of the inverter are all there (@sec-analog), plus the ones for the layout scripts and the EM simulation:
+
+| Folder | Content |
+| :--- | :--- |
+| [`schematic/xschem/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/vco/schematic/xschem/) | Schematics and symbols of the seven cells, the generated PEX symbols, and `vco_ind_le.sym` for the coil model. |
+| [`scripts/layout/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/vco/scripts/layout/) | One KLayout Python script per cell and the shared helpers `vco_layout.py`. |
+| [`layout/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/vco/layout/) | The GDS of every cell, written by its script. |
+| [`scripts/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/vco/scripts/) | The checks of the inverter, the post-layout extraction helpers `drop_subcells.py`, `pex_caps.py` and `spice2spectre.py`, and the scripted runs `sim_corners.py`, `sim_powerup.py` and `sim_trannoise.py`. |
+| [`verification/em/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/vco/verification/em/) | `scripts/palace_vco_ind.py` (the EM setup), `layout/` (the EM layout with its ports), `palace_model/` (the Palace configuration and results) and `s-parameter/` (the Touchstone file the model is fitted to). |
+| [`netlist/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/vco/netlist/) | `schematic/`, `layout/` and `pex/` as in the inverter, plus the coil model for ngspice (`spice/vco_ind_le.spice`) and for VACASK (`spectre/vco_ind_le.inc`), and the post-layout netlist for VACASK (`spectre/vco_top_leads.inc`). |
+| [`testbenches/xschem/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/vco/testbenches/xschem/) | The ngspice and VACASK testbenches, the post-layout wrapper `vco_top_lpe.sch`, a patched model file in `models/`, and the plot scripts in `plot_simulations/`. |
+| [`verification/drc/`, `verification/lvs/`, `final/`, `render/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/vco/) | Reports, deliverables and renders, as in the inverter. |
+
+The [Makefile](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/vco/Makefile) has every target of the inverter and adds the RF steps. @tbl-rf-flow lists the flow in the order of its steps.
+
+| Step | Tools | Make target | Output |
+| :--- | :--- | :--- | :--- |
+| Layout generation | KLayout Python | `klayout-script`, `klayout-script-all` | `layout/` |
+| DRC | KLayout, gdscheck, Magic | `klayout-drc`, `klayout-drc-regular`, `gdscheck-drc`, `magic-drc` | `verification/drc/` |
+| LVS | Xschem, KLayout, Magic, Netgen | `klayout-lvs`, `magic-lvs` | `verification/lvs/`, `netlist/schematic/`, `netlist/layout/` |
+| PEX | KPEX, Magic | `klayout-pex-leads`, `klayout-pex`, `magic-pex` | `netlist/pex/`, `netlist/spectre/` |
+| EM simulation | gds2palace, AWS Palace | `sim-em` | `verification/em/layout/`, `verification/em/palace_model/` |
+| S-parameters | | `copy-sparam`, `view-em-sim` | `verification/em/s-parameter/` |
+| Lumped-element model | snp2le | `snp2le`, `em-model` | `netlist/spice/`, `netlist/spectre/` |
+| Circuit simulation | Xschem, ngspice, VACASK | `sim-xschem`, `sim-all`, `sim-corners` | `testbenches/xschem/plot_simulations/` |
+| Post-layout tuning curve | ngspice | `sim-tune-lpe` | `testbenches/xschem/plot_simulations/figures/` |
+| Power-up and enable | ngspice | `sim-powerup` | `testbenches/xschem/plot_simulations/` |
+| Transient noise | VACASK | `sim-trannoise`, `sim-trannoise-lpe` | `testbenches/xschem/plot_simulations/data/` |
+| Plots | Python | `sim-view-xschem` | `testbenches/xschem/plot_simulations/figures/` |
+| Deliverables | Magic, `sak-render.py` | `build-top` | `final/`, `render/img/` |
+| Everything but EM and the long runs | all of the above | `all` | |
+
+: Flow steps of the `vco` and their Makefile targets. {#tbl-rf-flow tbl-colwidths="[20,22,30,28]"}
+
+`make all` runs `klayout-script-all`, `klayout-verify-all`, `gdscheck-drc-all`, `magic-verify-all`, `build-top` and `sim-all`, in about 28 minutes on a compute host. It leaves out the EM simulation of the coil, which takes 35 minutes on a compute host, the corners, and the two long runs: the power-up transient and the transient noise take hours each. Their results are committed, so `make all` simulates with the coil model of the last EM run.
+
+## Layout Generation {#sec-rf-layout}
+
+A layout can be drawn by hand, generated by a parametric library, or written as a script. This template and its RF sibling [SPARX](https://github.com/iic-jku/SG13CMOS_SPARX) have an example of each:
+
+| Method | Example | Strong at | Weak at |
+| :--- | :--- | :--- | :--- |
+| Hand drawing in KLayout | the `inverter` (@sec-draw-layout) | full control, learning the rules, small cells | every change is manual, and a GDS diff shows nothing a reviewer can read |
+| GDSFactory generator | the SPARX receiver | parametric passives, a whole chip from a few design inputs | a structure needs a generator before it can be drawn |
+| KLayout Python scripts written by an AI coding agent | the `vco` | a design in review: every change is a script diff, and every layout is rebuilt in seconds | the agent sees the layout through DRC, LVS and PEX only, so the designer reviews it in KLayout |
+
+: Three ways to a layout. {#tbl-layout-methods tbl-colwidths="[24,20,28,28]"}
+
+### Drawing by Hand
+
+Hand drawing works for RF cells as it does for the inverter in @sec-draw-layout. Place the PDK's `inductor3` PCell from the `SG13_dev` library for a coil, set its parameters with `Q`, route it, and export the layout with `File > Export Layout For Tapeout`. Three rules matter more at RF than in an analog cell:
+
+- **Keep the coil's keep-out free.** The PCell draws a keep-out of the outer diameter plus 60 $\mu$m with the `IND` layer and the no-fill layers, so no fill lands under or next to the windings. Keep the other circuits out of it as well.
+- **Close no loop around the coil.** A closed ring of metal around a coil, a guard ring or a supply ring, carries the induced eddy current and lowers its inductance and its Q.
+- **Short and wide leads.** At 20 GHz, the lead from the coil to the transistors is part of the tank, see @sec-rf-postlayout.
+
+### Programmatic Layout with GDSFactory
+
+[GDSFactory](https://github.com/gdsfactory/gdsfactory) is a Python library for parametric layouts. The [IHP-GDSFactory-Addon](https://github.com/iic-jku/IHP-GDSFactory-Addon) wraps the PCells and the layer stack of the IHP Open-PDK for it, and adds a library of RF structures: transmission lines and corners, the branch-line coupler, the Wilkinson power divider, coupled-line and hairpin bandpass filters, a directional coupler and a quarter-wave transformer.
+
+SPARX, a 160 GHz six-port receiver, is built that way. Its generator takes the design frequency as the only design input, computes every line width and length from closed-form models, and writes the complete chip with fill, pads and seal ring, together with the EM sub-structures and their port markers. The EM simulation therefore always solves the structures that are in the chip.
+
+```sh
+make build-layout            # the 160 GHz chip
+make build-layout FREQ=77    # the same receiver for 77 GHz
+```
+
+The [Programmatic Layout Generation](https://iic-jku.github.io/SG13CMOS_SPARX/#sec-layout) chapter of the SPARX documentation explains the generator, and its [Design Flow](https://iic-jku.github.io/SG13CMOS_SPARX/#sec-flow) chapter the Makefile targets around it.
+
+### KLayout Python Scripts Written by an AI Coding Agent
+
+Every layout of the `vco` is a KLayout Python script in [`scripts/layout/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/vco/scripts/layout/), run in batch mode, which writes `layout/<CELL>.gds`. Nothing is drawn by hand: to change a layout, change its script, rerun it, and rerun DRC and LVS.
+
+```sh
+make klayout-script CELL=vco_ind   # klayout -b -r scripts/layout/vco_ind.py
+make klayout-script-all            # every cell, subcells before the cells that place them
+```
+
+The scripts use the Python API of KLayout (`pya`) and the PCells of the PDK. The coil, for example, is the `inductor3` PCell with its pin labels, shortened from [`vco_ind.py`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/vco/scripts/layout/vco_ind.py):
+
+```python
+ly = pya.Layout()
+ly.dbu = 0.001
+top = ly.create_cell("vco_ind")
+# subE=0, not False: the PCell draws the backside etch layer LBE for the boolean False
+ind = ly.create_cell("inductor3", "SG13_dev", {"w": "4u", "s": "4u", "d": "52u", "nr_r": 2, "subE": 0})
+top.insert(pya.CellInstArray(ind.cell_index(), pya.Trans()))
+top.flatten(-1, True)                    # no PCell context left in the GDS
+for text, (layer, datatype), x, y in LABELS:
+    top.shapes(ly.layer(layer, datatype)).insert(pya.DText(text, x, y))
+ly.write(out_file, opt)
+```
+
+The scripts of the larger cells place transistors, resistors and capacitors from the PDK's `SG13_dev` library and route them with the helpers of [`vco_layout.py`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/vco/scripts/layout/vco_layout.py), which build a transistor with its wiring, snap every coordinate to the 5 nm grid, merge each metal into one polygon per connected piece, and check every DC path against the current limits of the process (@sec-rf-current-density).
+
+These scripts were written by an AI coding agent that ran the flow in the IIC-OSIC-TOOLS container. It worked from the schematic, a floorplan and the rules of the template: it wrote a script, ran it, ran DRC and LVS, read the reports, and changed the script until both were clean. The designer reviewed the layout in KLayout and the script as a diff. The loop works because every step is a Make target that writes a text report. What it does not replace is the review: a layout that passes DRC and LVS can still be a poor RF layout. The first core of this macro joined the source bar of the pair to `VSS` through one via stack, and only the post-layout netlist showed the 14.7 $\Omega$ in series with the core current (@sec-rf-postlayout).
+
+::: {.callout-tip}
+## What the Scripts Had to Learn
+Some of the traps the agent ran into are worth knowing for any KLayout script:
+
+- A KLayout batch script that ends in `SystemExit` exits with code 0 and prints nothing, so a failed check leaves the old GDS in place. Raise `RuntimeError` instead, which KLayout reports and `make` stops on.
+- PDK PCells write their terminal names as texts (`inductor3` its `LA`, `LB` and `LC`). KLayout LVS names a net after each text, and a net with a second name fails the strict port check. Repeat the PCell's names in the pin labels, or drop the texts once the cell is flat.
+- The resistor and MIM PCells compute a dimension from R or C by default. Pass `Calculate="R"` and `Calculate="C"` to keep the drawn width and length.
+- KLayout LVS does not combine parallel devices (`m`) with a multi-finger device, so a transistor drawn as one device with 30 fingers is `ng=30` in the schematic.
+- A metal line that touches the first source stripe of a transistor can short a net that DRC cannot see. Here the enable line of the tap's switch did, and only LVS found it.
+:::
+
+@fig-vco-top-layout shows the result. The coil and its keep-out take 60 % of the 143 $\mu$m by 215.5 $\mu$m macro, and the core's tank lines run straight down from the coil's feeds to the pair and the varactors below. The bias sits on the left, the decoupling capacitors of the center tap on the right, the buffer under the core and the tap feed in the bottom right corner, next to the supply straps along the bottom edge. The [Generate the Layouts](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/vco/README.md#generate-the-layouts-with-klayout-python-scripts) section of the README describes the floorplan of every cell.
+
+![Layout of `vco_top`, written by the KLayout Python scripts, annotated: the coil at the top, below it the core's column with the pair and the varactor array, the buffer at the bottom, the bias on the left, the decoupling capacitors on the right and the tap feed in the bottom right corner. The render ends at the coil's top turn.](fig/vco_top/vco_top_annotated.png){#fig-vco-top-layout}
+
+## DRC, LVS and PEX {#sec-rf-verify}
+
+The verification targets are those of the inverter, see @sec-analog: `klayout-drc`, `gdscheck-drc`, `magic-drc`, `klayout-lvs`, `magic-lvs`, `klayout-pex`, `magic-pex` and the `*-verify` targets, all with `CELL=<cellname>`. What differs is which check can run on which cell:
+
+| Cell | KLayout | gdscheck | Magic |
+| :--- | :--- | :--- | :--- |
+| `vco_bias`, `vco_buf`, `vco_feed` | DRC, LVS | DRC | LVS, PEX |
+| `vco_var`, `vco_ind`, `vco_core` | DRC, LVS | DRC | |
+| `vco_top` | DRC, regular DRC, LVS, PEX without the coil and the varactor array (`klayout-pex-leads`) | DRC | PEX for the pin list of the Verilog stub |
+
+: Checks per cell, as `klayout-verify-all`, `gdscheck-drc-all` and `magic-verify-all` run them. {#tbl-vco-checks}
+
+The gaps have three reasons:
+
+- **Magic extracts the varactor as two two-terminal halves** and does not extract the PDK inductor, so Netgen cannot compare a cell that holds either.
+- **KPEX cannot read Magic's extraction of the varactor**, which Magic writes as a Verilog-A device. Every cell above the array inherits it.
+- **An RC extraction of a coil is not its RF model.** It misses the inductance and the coupling: KPEX turns `vco_ind` into a single 42 fF capacitor. The model of the coil is its EM simulation, see @sec-rf-em.
+
+The KLayout `macro` level of `klayout-drc` leaves out the density rules, and with them rules a macro has to meet on its own, such as the minimum metal areas `Mn.d` and `pSD.b`. So `klayout-verify-all` also runs `klayout-drc-regular` on `vco_top`, which fails on any rule but the global densities that only the chip's fill can meet.
+
+The Magic DRC stays out of the flows, as in the inverter: `magic-drc` reports `LU.d` and `Cnt.a` on `sg13_hv_svaricap` and `MIM.e` and `Slt.c` on `cap_cmim`. A bare PCell of each, with none of this macro's wiring, reports the same rules and KLayout passes them, so they belong to the PDK's cells or Magic's rule deck and get fixed upstream.
+
+### Current Density {#sec-rf-current-density}
+
+No DRC deck checks electromigration, so the layout scripts do. Every DC path of the macro, each wire and each via array, is held against the limits of the process for 11 years at 105 C, for example 2 mA per $\mu$m of width on Metal2 to Metal5 and 0.4 mA per cut of Via1 to Via4:
+
+```python
+check_wire("drain plate of MPs", "Metal3", width, I_CORE)
+check_cuts("tap's stack, top", "TopVia1", n_cuts, I_CORE)
+```
+
+The currents are the highest of the post-layout corners at that temperature, FF with the strong resistor corner and `VDD` at 1.65 V: 5.9 mA in the core and 7.6 mA in the buffer's tail. A script prints the ratio of each path and stops above 1, so a layout that would wear out does not get written. The highest ratio is 0.76, on the drain plate of the tap's switch. Two things came out of it: a source stripe at the finger pitch of a short transistor cannot be wider than 0.16 $\mu$m on Metal1, so those transistors carry a Metal2 strip over every source stripe, and the macro's `VDD` strap moved from 2 $\mu$m of Metal4, rated for 4 mA, to TopMetal1.
+
+### Parasitic Extraction at 20 GHz
+
+The post-layout netlist of the macro comes from `klayout-pex-leads`: one extraction of `vco_top` without the coil and the varactor array, which have models of their own.
+
+```sh
+make klayout-pex-leads   # netlist/pex/vco_top_leads_klayout_pex_3.spice and netlist/spectre/vco_top_leads.inc
+```
+
+- [`drop_subcells.py`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/vco/scripts/drop_subcells.py) writes `vco_top` without the two subcells and puts a port where each of their pins lands on the remaining metal. The coil model and the varactor array then attach where they really connect, and the extraction keeps all the wiring between them and the pins of the macro.
+- **The full-RC thresholds are ten times finer than in the inverter**: `THRESHOLD=1000` (1 $\Omega$), `MINRES=100` (0.1 $\Omega$) and `MINDELAY=0`. At the defaults, every net except `VSS` came out without resistance, the tank leads included. With the coil's own 2.4 $\Omega$ per side, a lead of 1 $\Omega$ is part of the tank.
+- **The capacitances come from a C-coupled run of the same layout.** Magic's resistance extraction counts the coupling capacitance of a net with a resistor network a second time ([magic#557](https://github.com/RTimothyEdwards/magic/issues/557)), so [`pex_caps.py`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/vco/scripts/pex_caps.py) keeps the resistors and devices of the full-RC run and scales its capacitors to the totals of the C-coupled run.
+- [`spice2spectre.py`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/vco/scripts/spice2spectre.py) translates the netlist for VACASK, for the post-layout transient noise (@sec-rf-trannoise).
+
+The [Parasitic Extraction (PEX)](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/vco/README.md#parasitic-extraction-pex) section of the README covers the details, among them a net without a resistor network and why the extraction runs in KPEX and not in `sak-pex.sh`.
+
+## EM Simulation of RF Passives {#sec-rf-em}
+
+At 20 GHz, the coil is the tank. Its inductance sets the frequency, and its loss sets the swing and the phase noise. Both depend on how the current flows in the windings (skin and proximity effect), on the eddy currents in the substrate, and on the capacitance between the turns and to the substrate. An RC extraction sees none of this, and the PDK has no SPICE model of its `inductor3`. A 3D field solver does: it solves Maxwell's equations on a mesh of the layout and returns the S-parameters of the structure at its ports.
+
+The open-source flow for the IHP Open-PDK uses two tools:
+
+- [**gds2palace**](https://github.com/VolkerMuehlhaus/gds2palace_ihp_sg13g2) by Volker Mühlhaus reads the GDS, the process stackup of the PDK (an XML file in `libs.tech/palace/`) and the port markers, and writes the mesh and the solver configuration.
+- [**AWS Palace**](https://github.com/awslabs/palace) solves it with the finite element method in the frequency domain, in parallel with MPI. An adaptive frequency sweep solves the full model at a few frequencies only and fills in the rest from a reduced-order model.
+
+The same flow simulates any planar passive: inductors and transformers, MIM and MoM capacitors, microstrip lines, filters, branch-line couplers and power dividers. SPARX simulates its couplers, its divider, its filter and its complete seven-port core at 160 GHz, see the [EM Simulation](https://iic-jku.github.io/SG13CMOS_SPARX/#sec-em) chapter of its documentation for the settings, the metal models and the cost.
+
+### The EM Simulation of the Coil
+
+```sh
+make sim-em        # EM layout, Palace model, solve, Touchstone files
+make copy-sparam   # copy the result to verification/em/s-parameter/vco_ind.s3p
+make view-em-sim   # plot L, Q and the S-parameters
+make em-model      # sim-em, copy-sparam, snp2le and the ACSP testbench in one go
+make sim-em NP=8   # more MPI processes
+```
+
+`sim-em` runs [`palace_vco_ind.py`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/vco/verification/em/scripts/palace_vco_ind.py), which reads `layout/vco_ind.gds` and builds the EM layout of @fig-vco-ind-em-layout: the coil metals, a Metal1 ground frame half a coil diameter away from the windings, a ground tongue under the feeds, and three 50 $\Omega$ lumped ports as vertical sheets from the tongue up to the pins. The script reads the diameter and the pins from the layout, so it follows a change of the coil. From that layout and the settings of @tbl-vco-em-settings, gds2palace writes the Palace model, Palace solves it, and the PDK's `combine_extend_snp.py` writes the Touchstone file `vco_ind.s3p`.
+
+![EM layout of the coil: TopMetal2 windings, TopMetal1 underpass and feeds, the Metal1 ground frame and the three lumped ports in the order of snp2le's center-tapped coil model.](fig/vco_top/vco_ind_em_layout.svg){#fig-vco-ind-em-layout width=70%}
+
+| Setting | Value |
+| :--- | :--- |
+| Process stackup | `SG13G2_200um.xml` of the PDK, with its 200 $\mu$m lossy substrate |
+| Ports | three 50 $\Omega$ lumped ports at `LA`, `LB` and the center tap `LC` |
+| Metal model | volume: the current is solved inside the metal, via arrays merged into blocks with their resistance corrected (`fill_factor_correction`) |
+| Mesh | 2 $\mu$m cells in TopMetal1 and TopMetal2 |
+| Element order | 3 |
+| Frequency sweep | 0 Hz to 60 GHz in 0.75 GHz steps (gds2palace replaces 0 Hz by 10 MHz and 20 MHz), adaptive, to cover the third harmonic |
+| Cost | 35 minutes and 9.8 GB with `NP=16` on a compute host |
+
+: Palace settings of the coil. {#tbl-vco-em-settings tbl-colwidths="[25,75]"}
+
+::: {.callout-important}
+## Check the EM Result Against Something You Can Calculate
+gds2palace models a metal either as a hollow shell with a surface impedance on every face (its default) or as a solid volume. The coil's traces are 4 $\mu$m wide and 2 $\mu$m to 3 $\mu$m thick, where the surface model is least accurate. The DC resistance shows which model is right, because it follows from the drawn lengths and the sheet resistances of the stackup by hand. For the first coil of this macro, the traces and the via fields add up to 2.8 $\Omega$. The volume model gave 2.93 $\Omega$ at 10 MHz, the surface model 1.65 $\Omega$, less than the traces alone, and a Q 46 % too high at 20 GHz. Check the mesh the same way: a finer mesh or a higher element order has to leave the result unchanged. Going from second to third order changed the Q of this coil by 2.3 % at 20 GHz.
+:::
+
+## Lumped-Element Models with snp2le {#sec-rf-snp2le}
+
+A circuit simulator does not read S-parameters in a transient or a PSS. [snp2le](https://github.com/iic-jku/snp2le) turns a Touchstone file into a lumped-element netlist for both simulators of the flow, `netlist/spice/<name>.spice` for ngspice and `netlist/spectre/<name>.inc` for VACASK. It has two modes:
+
+- **Universal.** A vector fit of the S-parameters with [scikit-rf](https://scikit-rf.org), synthesized into resistors, capacitors and controlled sources, with passivity enforced. It works for any structure and any number of ports, but its elements have no physical meaning. Its resistors are therefore noiseless, and `--thermal-noise` adds the thermal noise the passive really has.
+- **Structure-specific.** A physical topology fitted to the data, so every element maps to the structure: `inductor-pi`, `inductor-wideband` and `inductor-ct` for coils, `mim-cap` for MIM and MoM capacitors, `tline-rlgc` for transmission lines, and models of the Wilkinson divider, the branch-line coupler and the balun. Its resistors are the loss of the structure and carry their thermal noise.
+
+```sh
+make snp2le                                                         # inductor-ct fit of verification/em/s-parameter/vco_ind.s3p
+make snp2le EM=<structure> SNP=<file.sNp> LE_MODEL=universal ORDER=8
+```
+
+The coil uses `inductor-ct`, the wideband model of a center-tapped coil: two coupled half coils with their skin effect and substrate network, fitted over the whole band of the EM data. The file stem, the `.SUBCKT` name and the name of the symbol are the same (`vco_ind_le`), so a new fit drops into the schematic without an edit. The SPARX documentation explains both modes, the passivity enforcement and the noise in its [snp2le](https://iic-jku.github.io/SG13CMOS_SPARX/#sec-snp2le) chapter.
+
+`vco_ind.sch` holds two views of the coil. The PDK's `inductor3` is what KLayout LVS compares with the layout, and every simulation netlist skips it. The model `vco_ind_le` is what the simulations use, and the LVS netlist skips it. The testbench `vco_ind_tb_acsp_vacask` checks the model against the EM data with VACASK's S-parameter analysis (ACSP), @fig-vco-ind-acsp. From 1.5 GHz to 40 GHz the model is within 2.9 % of the EM inductance and within 3.7 % of its Q, and at 20.25 GHz it gives 427 pH and a Q of 10.6 against 418 pH and 10.9 from EM.
+
+![The tank coil from EM (dots) and from its snp2le model in VACASK's ACSP (lines): differential inductance and Q, reflection and transmission.](fig/vco_top/vco_ind_tb_acsp_vacask.svg){#fig-vco-ind-acsp}
+
+::: {.callout-note}
+The substrate network of the coil model returns to the global ground node `0`, so `VSS` has to be the ground of every testbench that uses it.
+:::
+
+## Circuit Simulation with Xschem and VACASK {#sec-rf-sim}
+
+### Why VACASK
+
+[VACASK](https://codeberg.org/arpadbuermen/VACASK) by Árpád Bűrmen is a circuit simulator with a Spectre-like netlist syntax, whose device models are Verilog-A compiled with OpenVAF. The IIC-OSIC-TOOLS container ships it with the complete set of RF analyses since its `2026.10` release: ACSP, transient noise, HB, HBAC, HBNOISE, PSS, PAC and PNOISE. ngspice, the other simulator of the flow, has an S-parameter analysis and transient noise, but no periodic small-signal or noise analysis in its releases. The `vco` therefore uses both simulators: ngspice for the transients (start-up, corners, power-up, post-layout), VACASK for everything that needs the periodic steady state and for the transient noise. Two simulators that share no solver code also check each other: the tuning transient of VACASK agrees with the transient of ngspice within 0.1 % in frequency.
+
+Xschem netlists a testbench for VACASK in the Spectre format. The Makefile picks the simulator from the name of the testbench:
+
+```sh
+make sim-xschem                              # vco_top_tb_tran, ngspice
+make sim-xschem TB=vco_top_tb_pss_vacask     # oscillator PSS, PNOISE and PAC, VACASK
+make sim-xschem TB=vco_top_tb_tune_vacask    # tuning curve, one transient per tuning voltage, VACASK
+make sim-xschem TB=vco_ind_tb_acsp_vacask    # S-parameters of the coil model, VACASK
+make sim-all                                 # the testbenches of vco_top in sequence
+make sim-view-xschem                         # plot what they wrote
+```
+
+A name with `_vacask` is netlisted with `xschem set netlist_type spectre` and run with VACASK, any other name with `ngspice -b`. Both write their results as text tables to `testbenches/xschem/plot_simulations/data/`: ngspice with `wrdata`, VACASK with a postprocess hook at the end of its control block that converts every rawfile ([`vacask2data.py`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/vco/testbenches/xschem/plot_simulations/vacask2data.py)). The plot scripts read both the same way.
+
+### Large-Signal Analyses
+
+An oscillator has no input, and its DC operating point is the unstable solution it leaves at start-up. Everything that describes it, the frequency, the amplitude, the phase noise and the tuning gain, belongs to its large periodic solution, so an AC or noise analysis at the DC operating point says nothing about it. The RF analyses work in two steps instead:
+
+1. **Large-signal step.** The periodic steady state is computed directly, either in the time domain by shooting (PSS) or in the frequency domain by harmonic balance (HB), without simulating the start-up.
+2. **Small-signal step.** The circuit is linearized around that periodic solution, which gives a linear periodically time-varying system. PAC and HBAC compute its transfer from one sideband to another, PNOISE and HBNOISE its noise with all the noise folded in from the harmonics.
+
+Transient noise is the exception: it injects random noise into an ordinary transient without any linearization, and shares no code with the periodic analyses, which makes it their independent cross-check (@sec-rf-trannoise).
+
+| Analysis | What it computes | In the `vco` |
+| :--- | :--- | :--- |
+| `tran` | transient | start-up (`vco_top_tb_tran`), tuning curve (`vco_top_tb_tune_vacask`), corners, power-up and post-layout |
+| `acsp` | S-parameters from an AC analysis with ports | the coil model against its EM data (`vco_ind_tb_acsp_vacask`) |
+| `pss` | periodic steady state by shooting, for an oscillator with the period as an unknown (`oscillator=1`) | frequency, waveform and output power (`vco_top_tb_pss_vacask`) |
+| `pac` | small-signal transfer around the PSS, sideband to sideband | the tuning gain $K_\mathrm{VCO}$ from a small tone on `vtune` |
+| `pnoise` | noise around the PSS, modulated and folded | the phase noise and its contributions |
+| transient noise | `tran` with random noise sources | the phase noise of the schematic against PNOISE, and of the post-layout netlist (`vco_top_tb_trannoise_vacask`, `vco_top_tb_trannoise_lpe_vacask`) |
+| `hb` | periodic or multi-tone steady state by harmonic balance | not used, it suits driven circuits such as the buffer, mixers and detectors |
+| `hbac`, `hbnoise` | small-signal transfer and noise around the HB solution | not used, the HB counterparts of `pac` and `pnoise` |
+
+: VACASK analyses and where the `vco` uses them. {#tbl-rf-analyses tbl-colwidths="[15,45,40]"}
+
+::: {.callout-tip}
+## RF Circuit Simulation in the RFIC Course
+The appendix [RF Circuit Simulation](https://iic-jku.github.io/radio-frequency-integrated-circuits/rfic.html#sec-simulation) of the JKU course Radio-Frequency Integrated Circuits explains every analysis of @tbl-rf-analyses, from the DC operating point to PNOISE and HBNOISE, shows how to check their results against each other, and recommends analyses for LNAs, mixers, oscillators, switched-capacitor circuits, power detectors and power amplifiers. SPARX uses HB, HBAC, HBNOISE and transient noise on its 160 GHz power detector and checks them against PSS, PAC and PNOISE, see the [Circuit Simulation](https://iic-jku.github.io/SG13CMOS_SPARX/#sec-sim) chapter of its documentation.
+:::
+
+### Anatomy of the PSS Testbench {#sec-rf-tb-pss}
+
+@fig-vco-tb-pss shows `vco_top_tb_pss_vacask`. The macro drives an AC-coupled 50 $\Omega$ load per output, and the sources set the supply, the enable and the tuning voltage. The analyses are in the VACASK control block, here without its comments:
+
+```text
+control
+  abort always
+  var vdd=1.5
+  options strictsave=1 pss_minpts=8000 reltol=3e-5
+  save v(vout_p) v(vout_n) v("x1:rf_p") v("x1:rf_n")
+  save dv(vout_p) dv(vout_n) dv("x1:rf_p") dv("x1:rf_n")
+  analysis pss pss oscillator=1 tper=44.3p tstab=12n stabstep=0.5p maxharm=20 ic={"x1:rf_p", 0.8, "x1:rf_n", 0.7} store="osc"
+  options strictsave=1 pss_minpts=8000 reltol=3e-5 tran_fbr=0.02 relrefres="pointglobal"
+  analysis pnoise pnoise psssolve=0 ic="osc" truncharm=20 in="Vtune" out=["vout_p", "vout_n"] outharm=1 from=10k to=100M mode="dec" points=10
+  analysis pac pac psssolve=0 ic="osc" truncharm=20 outharm=1 from=10k to=100M mode="dec" points=10
+  postprocess(PYTHON, "../plot_simulations/vacask2data.py", "vco_top_tb_pss_vacask")
+endc
+```
+
+![Xschem testbench `vco_top_tb_pss_vacask` with its VACASK control block.](fig/vco_top/vco_top_tb_pss_vacask_schematic.svg){#fig-vco-tb-pss}
+
+- **`abort always`** stops VACASK with a nonzero exit code when an analysis fails. Without it, VACASK exits 0 and the plot scripts read the rawfiles of the previous run.
+- **`pss oscillator=1`** solves for the period as well, with `tper` as the guess. The initial condition `ic` kicks the tank away from its symmetric operating point, and the stabilization transient `tstab` lets the oscillation build up before the shooting Newton starts. `stabstep` limits its first time step. `store="osc"` keeps the solution for the analyses that follow.
+- **`pss_minpts=8000`** gives the shooting at least 8000 time steps per period. At the default 1000 its Newton iteration cycles without converging, and at 4000 it can settle on a period that reads false noise on one buffer device, 4 dB too much at 1 MHz, without an error.
+- **`reltol=3e-5`** is for the bias filters of the buffer. Their time constant is 1 $\mu$s against a 44 ps period, so they barely move over one period, and at the default tolerance the shooting settled them 70 mV away from their DC values without an error.
+- **`pnoise` and `pac`** start from the stored solution (`psssolve=0 ic="osc"`) and observe the first harmonic at the outputs (`outharm=1`). `pac` drives the small-signal tone of the source `Vtune` (`smag=1`, 1 V) and observes the sideband it modulates onto the carrier, from which the plot script computes the tuning gain.
+- **`tran_fbr=0.02`** works around a VACASK bug that is fixed in its sources since commit `7c38094` (November 2026): the period that `pnoise` and `pac` integrate restarts with a backward-Euler step at every sample, which reads the phase noise and the tuning gain low at small offsets, here the phase noise by 3.3 dB at 1 MHz. **`relrefres="pointglobal"`** takes the residual reference of the Newton from the largest contribution at the time point, since the RF decaps `Cg1` and `Cg2` on the static `vbg_buf` make the reference of that node so small that the check fails on residuals of 1e-18. The options are global, so the second `options` line restates the others.
+
+::: {.callout-warning}
+## PSS Does Not Prove Start-Up
+A PSS finds a periodic solution, but it does not show that the oscillator reaches it after power-up. The start-up is checked with transients, at every corner (@sec-rf-corners) and from the supply ramp (@sec-rf-powerup). And a PSS can settle a slow state wrongly without an error, so [`plot_vco_top.py`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/vco/testbenches/xschem/plot_simulations/plot_vco_top.py) compares its frequency with the tuning transient at the same tuning voltage and warns above 0.3 %.
+:::
+
+### Results
+
+The start-up transient of @fig-vco-tran reaches its full amplitude within a few periods of the kick and oscillates at 22.51 GHz, with the tank nodes swinging from 0.10 V to 1.53 V. The PSS of @fig-vco-pss agrees on the frequency within 0.2 % and gives the output power at the fundamental, -8.3 dBm per output.
+
+![Start-up transient of the schematic (ngspice): the differential tank voltage, and the last 200 ps of the tank nodes and the differential output.](fig/vco_top/vco_top_tb_tran.svg){#fig-vco-tran}
+
+![Oscillator PSS (VACASK): one period of the tank and the outputs, and the spectrum of the output.](fig/vco_top/vco_top_tb_pss_vacask_pss.svg){#fig-vco-pss}
+
+The spectrum in @fig-vco-pss is that of one output. Its harmonics come from the buffer, a differential pair driven by the tank's full swing into resistive loads, and not from the tank. The second harmonic is -9.4 dBc and the third -20.9 dBc here, and -16.8 and -27.6 dBc post-layout. The second is common mode, so it cancels between the two outputs (-48.9 dBc in the schematic).
+
+@fig-vco-pnoise shows the phase noise from PNOISE and the tuning gain from PAC. The phase noise is -101.2 dBc/Hz at 1 MHz offset. Its contributions show where it comes from: 55 % from the core (pair, varactors and coil) and 36 % from the bias of the buffer, whose input capacitance loads the tank and moves the frequency with its bias current. Below 1 MHz that bias takes over: its noise passes the 170 kHz low-pass of the bias filters, so its share grows by 40 dB to 48 dB per decade towards lower offsets, against 20 dB for the core. The tuning gain from PAC, 1.87 GHz/V at 10 MHz, agrees within about 2 % with the slope of the tuning curve of @fig-vco-tune, whose frequencies the plot script takes from the zero crossings of each tuning transient.
+
+![Phase noise from PNOISE and tuning gain $K_\mathrm{VCO}$ from PAC (VACASK), at `vtune` = 0.75 V.](fig/vco_top/vco_top_tb_pss_vacask_pnoise_pac.svg){#fig-vco-pnoise}
+
+![Schematic tuning curve from one transient per tuning voltage (VACASK).](fig/vco_top/vco_top_tb_tune_vacask.svg){#fig-vco-tune}
+
+![Post-layout tuning curve from `make sim-tune-lpe`, one ngspice transient per tuning voltage at TT, 27 C.](fig/vco_top/vco_top_tb_tune_lpe.svg){#fig-vco-tune-lpe}
+
+The schematic has no leads, so @fig-vco-tune runs about 13 % high and never reaches 20 GHz. The macro is centered on @fig-vco-tune-lpe: 20 GHz is at `vtune` = 0.75 V, and it stays inside the tuning range at every corner (@sec-rf-corners).
+
+::: {.callout-note}
+With `oscillator=1`, VACASK's `pnoise` computes the noise as for a driven circuit, so it is the total output noise, phase and amplitude noise together. Close to the carrier that is the phase noise. Below about 100 kHz the result loses accuracy, so read it from there up, and check it against transient noise (@sec-rf-trannoise). The [Limitations](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/vco/README.md#limitations) of the README list what is known.
+:::
+
+Further traps of the testbenches, all documented in the README:
+
+- **Symbols need `spectre_format`.** Without it, an instance drops out of the Spectre netlist without a warning (see @sec-pex).
+- **VACASK is case sensitive** where ngspice is not, so `VSS` and `vss` are two nodes.
+- **The PDK's VACASK model of the HV varactor** keeps an ngspice voltage term that VACASK cannot evaluate. Its coefficients are all 0, so the testbenches read a copy of the corner file from `testbenches/xschem/models/` with the term removed.
+- **The ngspice transient needs `rshunt=1e12`**, because the varactor model has a node without a DC path, and the operating point otherwise takes more than a minute of gmin stepping.
+
+## Corners {#sec-rf-corners}
+
+```sh
+make sim-corners                                    # SS, TT, FF at -40 C, 27 C, 85 C, vtune 0 V and 1.5 V
+make sim-corners TB=vco_top_tb_tran_lpe             # the same with the post-layout netlist
+make sim-corners TB=vco_top_tb_tran_lpe RES_CORNERS="res_typ res_wcs res_bcs" VDDS="1.35 1.5 1.65"
+```
+
+`sim-corners` netlists a transient testbench once and runs [`sim_corners.py`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/vco/scripts/sim_corners.py), which writes one copy of the netlist per MOS corner, resistor corner, temperature, `VDD` and `vtune`, every combination of the lists, runs ngspice on four of them at a time, and writes a CSV table. It fails when a run does not oscillate or when a tank node passes 1.5 V on the post-layout testbench. The resistors count as much as the transistors here: `Rct` feeds the core and `Rb` sets the bias, so the weak end is the high resistor corner `res_wcs` with `VDD` at 1.35 V, and the strong end `res_bcs` with 1.65 V. @tbl-vco-corners shows the three cases from the committed post-layout table, 18 runs each.
+
+| Resistors, `VDD` | Frequency | Center tap | `VDD` current | Highest node | Lowest output |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| `res_typ`, 1.5 V | 19.05 GHz to 21.31 GHz | 0.73 V to 0.81 V | 9.6 mA to 12.1 mA | 1.31 V | -12.3 dBm |
+| `res_wcs`, 1.35 V | 19.10 GHz to 21.44 GHz | 0.68 V to 0.77 V | 7.1 mA to 9.2 mA | 1.16 V | -15.6 dBm |
+| `res_bcs`, 1.65 V | 19.00 GHz to 21.16 GHz | 0.79 V to 0.86 V | 12.5 mA to 15.4 mA | 1.48 V | -10.1 dBm |
+
+: Post-layout corners: SS, TT and FF at -40 C, 27 C and 85 C, `vtune` at 0 V and 1.5 V, for each resistor corner and supply. {#tbl-vco-corners}
+
+Every one of the 162 post-layout runs starts, the tuning range covers 20 GHz at every corner (19.00 GHz to 21.44 GHz in all), and the highest tank node reaches 1.477 V. The window is narrow at the strong end, where the highest node comes close to the 1.5 V that the thin-oxide pair may see, see [Corners](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/vco/README.md#corners) in the README.
+
+## Power-Up and Enable {#sec-rf-powerup}
+
+A kick on the tank shows that the oscillator runs, not that it starts from a supply ramp. `vco_top_tb_powerup_lpe` simulates the post-layout macro from zero: `VDD` ramps in 10 ns, `di_en` rises at 100 ns and falls at 8.1 $\mu$s, and the run ends at 10.1 $\mu$s.
+
+```sh
+make sim-powerup                # 44 post-layout transients, hours on a compute host
+make sim-view-xschem            # the plot of the nominal run, with the others
+```
+
+[`sim_powerup.py`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/vco/scripts/sim_powerup.py) runs that sequence and five more: `di_en` low throughout, `di_en` tied to `VDD`, the same with a 1 ns ramp, `di_en` high before `VDD`, and `di_en` 300 ns after it, at the nominal point and at the corners closest to not starting and to the highest tank node. It measures each run period by period and fails when the tank does not start, a node passes 1.5 V, a disabled run oscillates, or the output has not settled.
+
+![Post-layout power-up and enable at TT, 27 C (ngspice): the swing of the tank and of the output, the frequency, the current from `VDD` and the voltage of the center tap, period by period.](fig/vco_top/vco_top_tb_powerup_lpe.svg){#fig-vco-powerup}
+
+| Sequence | Runs | Result | Tank up after | Highest node |
+| :--- | :--- | :--- | :--- | :--- |
+| `VDD` first, `di_en` up at 100 ns and down at 8.1 us | 5 | 5 ok | 6.4 ns at most | 1.342 V |
+| `di_en` low | 19 | 19 without oscillation, tank swing below 1 nV, at most 0.6 uA from `VDD` | | |
+| `di_en` tied to `VDD`, 10 ns ramp | 5 | 5 ok | 3.6 ns at most | 1.337 V |
+| `di_en` tied to `VDD`, 1 ns ramp | 5 | 5 ok | 5.3 ns at most | 1.339 V |
+| `di_en` before `VDD` | 5 | 5 ok | 3.6 ns at most | 1.337 V |
+| `di_en` 300 ns after `VDD` | 5 | 5 ok | 3.7 ns at most | 1.342 V |
+
+: Post-layout power-up and enable, from `vco_top_tb_powerup_lpe_corners.csv`. {#tbl-vco-powerup}
+
+Every run passes. With `di_en` rising at 100 ns, the tank is up after 3.8 ns at TT, 27 C, and after 6.4 ns at the slowest corner. The output takes longer: the bias filters of the buffer (170 kHz) set its current, so the output reaches 99 % of its final swing after 4.8 us at TT and 5.6 us at worst, and the frequency comes within 10 MHz of its final value after 3.6 us. When `di_en` falls, the output drops below 10 % within 3 ns, and the macro draws 9 nA from `VDD` at TT, 27 C with `di_en` low.
+
+## Transient Noise and the Post-Layout Phase Noise {#sec-rf-trannoise}
+
+PNOISE linearizes the circuit around one periodic solution. Transient noise does not: it adds random noise sources to an ordinary transient and reads the phase noise from the zero crossings of the result. It needs no PSS, so it also works on the post-layout netlist, whose PSS the VACASK of this image cannot solve ([VACASK#173](https://codeberg.org/arpadbuermen/VACASK/issues/173), fixed upstream in `f29d2b0`, after this image).
+
+```sh
+make sim-trannoise        # the schematic, 8 seeds, against PNOISE
+make sim-trannoise-lpe    # the post-layout netlist, 8 seeds
+```
+
+The benches settle the oscillation for 6 ns, store the state, and run a noisy transient of 5 $\mu$s (4 $\mu$s post-layout) from it, at a fixed step of 0.25 ps with noise from 100 kHz to 100 GHz, one VACASK process per seed. [`sim_trannoise.py`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/vco/scripts/sim_trannoise.py) takes the zero crossings of the tank's differential voltage, computes the phase from the period-to-period differences, and averages the spectra of the seeds. Since every seed starts from the same state, what they share is a drift and not noise, and the script subtracts it. `make check-trannoise` tests that spectrum code on synthetic jitter with a known spectrum.
+
+![Phase noise from transient noise (VACASK, 8 seeds) against PNOISE: the schematic and the post-layout netlist.](fig/vco_top/vco_top_tb_trannoise_vacask.svg){#fig-vco-trannoise}
+
+| Offset | PNOISE, schematic | Transient noise, schematic | Transient noise, post-layout |
+| :--- | :--- | :--- | :--- |
+| 1 MHz | -101.2 dBc/Hz | -99.4 dBc/Hz | -101.1 dBc/Hz |
+| 3 MHz | -113.5 dBc/Hz | -112.5 dBc/Hz | -110.9 dBc/Hz |
+| 10 MHz | -124.7 dBc/Hz | -124.9 dBc/Hz | -123.5 dBc/Hz |
+| 30 MHz | -134.5 dBc/Hz | -134.9 dBc/Hz | -133.8 dBc/Hz |
+| 100 MHz | -145.1 dBc/Hz | -145.8 dBc/Hz | -143.7 dBc/Hz |
+
+: Phase noise from PNOISE and from transient noise. {#tbl-vco-trannoise}
+
+`make sim-trannoise` checks PNOISE with an analysis that shares no code with it: on the schematic, transient noise over 8 seeds and PNOISE differ by -0.7 dB to +1.9 dB from 1 MHz to 100 MHz, with a scatter of the seeds of about 0.9 dB at 1 MHz. At 1 MHz the post-layout phase noise is 1.7 dB below the schematic's: about 1 dB of that is the lower carrier, and the rest is within the scatter of the seeds.
+
+## Post-Layout Simulation {#sec-rf-postlayout}
+
+The post-layout testbench `vco_top_tb_tran_lpe` is the start-up transient around the wrapper [`vco_top_lpe.sch`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/vco/testbenches/xschem/vco_top_lpe.sch), which puts three models together: the extraction of the macro without the coil and the varactor array (@sec-rf-verify), the EM model of the coil at the coil's feeds, and the schematic of the varactor array at the middle of its buses. The corners, the power-up and the post-layout transient noise place the same wrapper.
+
+```sh
+make klayout-pex-leads
+make sim-xschem TB=vco_top_tb_tran_lpe
+```
+
+| TT, 27 C, `vtune` = 0.75 V | Schematic | Post-layout |
+| :--- | :--- | :--- |
+| Frequency | 22.51 GHz | 20.00 GHz |
+| Tuning range, `vtune` 0 V to 1.5 V | 21.62 GHz to 24.01 GHz | 19.34 GHz to 21.18 GHz |
+| Tank nodes | 0.10 V to 1.53 V | 0.24 V to 1.23 V |
+| Output, from the peak-to-peak swing | -7.4 dBm | -10.0 dBm |
+| Center tap | 0.78 V | 0.76 V |
+| `VDD` current | 11.6 mA | 10.9 mA |
+
+: Schematic against post-layout, both from the ngspice transient. {#tbl-vco-postlayout}
+
+![Start-up transient of the post-layout netlist (ngspice).](fig/vco_top/vco_top_tb_tran_lpe.svg){#fig-vco-tran-lpe}
+
+- **The frequency falls by 11 %**, through the capacitance of the leads and of the buffer's input, which the tank sees through the coupling capacitors.
+- **The swing is smaller**, because the resistance of the leads adds to the coil's own loss: from the coil's feed 1.3 $\Omega$ to the varactors, 2.1 $\Omega$ to the pair's drains and 4.8 $\Omega$ to its gates.
+- **The macro is centered on this simulation.** The varactors are sized so that 20 GHz sits in the middle of the post-layout tuning range, and `Rct` so that every post-layout corner starts and stays below 1.5 V.
+
+The post-layout simulation changed the layout three times. The first core joined the source bar of the pair to `VSS` through a single via stack, which the extraction showed as 14.7 $\Omega$ in series with the core current. Later, with every resistance extracted, half of the corners did not start: the leads had several ohms in series with the tank, and the `VSS` strap of the macro, 2 $\mu$m of the thin Metal5, put 5.1 $\Omega$ between the pin and the pair. Via rows along the gate pads, tank lines doubled on Metal4, via stacks along the source bar and a TopMetal2 strap over the `VSS` strap fixed both, and the path from the `VSS` pin to the sources has 1.4 $\Omega$ now. The gate lines of the buffer came last: Magic reads a net that only drives gates as one node, so a port on each input (`LEADS_PROBES`) had to make the extraction keep their resistance, and two via rows along the gate pads hold it at 5.8 $\Omega$.
+
+## Full RF Macro Flow {#sec-full-rf-flow}
+
+```sh
+make all                  # layouts, verification, deliverables and simulations, about 28 minutes
+make em-model             # EM simulation of the coil, its model and the ACSP check, 35 minutes on a compute host
+make sim-corners TB=vco_top_tb_tran_lpe RES_CORNERS="res_typ res_wcs res_bcs" VDDS="1.35 1.5 1.65"
+make sim-tune-lpe         # post-layout tuning curve, about a minute
+make sim-powerup          # power-up and enable, hours on a compute host
+make sim-trannoise        # transient noise of the schematic against PNOISE, hours
+make sim-trannoise-lpe    # post-layout phase noise, hours
+```
+
+A new RF macro starts as a renamed copy of this one: `make macro FROM=vco NAME=<name>` in [`macros/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/), as for the digital and the analog macro.
+
+::: {.callout-tip}
+## More Open-Source RF Designs
+[SPARX](https://github.com/iic-jku/SG13CMOS_SPARX) goes further on every step of this chapter: a 160 GHz six-port receiver generated with GDSFactory, the EM simulation of multi-port passives, vector-fit models of its seven-port core, and HB, HBAC, HBNOISE and transient noise on a power detector. Its [documentation](https://iic-jku.github.io/SG13CMOS_SPARX/) walks through the flow.
+:::
+
+
 # Bondpad, RF Pad and Logo Implementation {#sec-ip}
 
 The [`ip/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/ip/) folder holds the three custom IP cells that the top-level chip relies on: a bondpad and two logos. These IPs are generated and require zero hand drawing. Each IP ships with a Python script and Makefile targets that produce the final GDS and LEF, and run KLayout and gdscheck DRC. This makes it easy to re-spin a different bondpad size or shape, swap the logo image, or move the artwork to another metal layer without touching layout tools.
@@ -2363,11 +2901,6 @@ In speed, the two thin-oxide libraries are close. At 20 ns the worst path starts
 
 The power numbers come with three caveats. First, on this nearly empty die the leakage is almost entirely decap fill (97 % in IHP LV and 99 % in ETH LV), which leaks more per area in ETH LV, while the logic of ETH LV alone leaks 12 nW against 22 nW in IHP LV. Second, the clock buffers decide more than the library: with `sg13g2_buf_4` and `BUFX12` as root buffer, the supply power drops to 37.2 µW for IHP LV and 29.4 µW for ETH LV, and the advantage of ETH LV grows from 2.5 % to 21 %. Third, the `power.rpt` numbers are vectorless estimates: they sit below the transistor-level values, more for ETH LV than for IHP LV, and for IHP HV the dynamic part is missing altogether. At 3.3 V, the supply power of IHP HV is 13.6 times that of IHP LV.
 :::
-
-
-# RFIC Flow
-
-Are you interested in an open-source RFIC flow? Check it out [here](https://github.com/iic-jku/SG13CMOS_SPARX).
 
 
 # Acknowledgements

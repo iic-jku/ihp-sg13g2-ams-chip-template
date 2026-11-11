@@ -1,0 +1,95 @@
+* Extracted by KLayout with SG13G2 LVS runset on : 07/11/2026 22:24
+
+.SUBCKT vco_top VDD VSS di_en rf_out_n rf_out_p vtune
+X$1 VSS rf_out_n rf_out_p \$7 VDD \$13 \$14 \$12 vco_buf
+X$2 \$7 VSS \$12 \$5 di_en VDD vco_bias
+X$3 VSS VDD \$8 \$5 vco_feed
+X$4 VSS \$8 \$13 vtune \$14 vco_core
+.ENDS vco_top
+
+.SUBCKT vco_feed VSS VDD vdd_core en_b
+M$1 VDD en_b \$8 VDD sg13_lv_pmos L=0.13u W=96u AS=18.69p AD=18.69p PS=111.46u
++ PD=111.46u rfmode=0
+R$33 vdd_core \$8 VSS rppd w=17.3u l=8.8u ps=0u b=0 m=1
+.ENDS vco_feed
+
+.SUBCKT vco_bias vbn_buf VSS vbg_buf en_b di_en VDD
+M$1 VSS vbn_buf VSS VSS sg13_lv_nmos L=10u W=80u AS=17.6p AD=17.6p PS=100.4u
++ PD=100.4u rfmode=0
+M$11 VSS vbg_buf VSS VSS sg13_lv_nmos L=10u W=80u AS=17.6p AD=17.6p PS=100.4u
++ PD=100.4u rfmode=0
+M$16 VSS \$9 \$9 VSS sg13_lv_nmos L=0.5u W=2.5u AS=0.85p AD=0.85p PS=5.68u
++ PD=5.68u rfmode=0
+M$17 VSS VSS VSS VSS sg13_lv_nmos L=0.5u W=5u AS=1.7p AD=1.7p PS=11.36u
++ PD=11.36u rfmode=0
+M$18 VSS en_b vbn_buf VSS sg13_lv_nmos L=0.13u W=1u AS=0.34p AD=0.34p PS=2.68u
++ PD=2.68u rfmode=0
+M$19 VSS \$6 \$6 VSS sg13_lv_nmos L=0.5u W=2.5u AS=0.85p AD=0.85p PS=5.68u
++ PD=5.68u rfmode=0
+M$25 VSS di_en en_b VSS sg13_lv_nmos L=0.13u W=0.5u AS=0.17p AD=0.17p PS=1.68u
++ PD=1.68u rfmode=0
+M$26 VSS en_b \$17 VSS sg13_lv_nmos L=0.13u W=0.5u AS=0.17p AD=0.17p PS=1.68u
++ PD=1.68u rfmode=0
+M$27 VSS \$6 \$14 VSS sg13_lv_nmos L=0.5u W=2.5u AS=0.85p AD=0.85p PS=5.68u
++ PD=5.68u rfmode=0
+M$28 VSS en_b \$6 VSS sg13_lv_nmos L=0.13u W=1u AS=0.34p AD=0.34p PS=2.68u
++ PD=2.68u rfmode=0
+M$30 VDD VDD VDD VDD sg13_lv_pmos L=0.5u W=10u AS=3.4p AD=3.4p PS=21.36u
++ PD=21.36u rfmode=0
+M$31 VDD \$14 \$14 VDD sg13_lv_pmos L=0.5u W=5u AS=1.7p AD=1.7p PS=10.68u
++ PD=10.68u rfmode=0
+M$32 VDD \$14 \$31 VDD sg13_lv_pmos L=0.5u W=5u AS=1.7p AD=1.7p PS=10.68u
++ PD=10.68u rfmode=0
+M$33 VDD en_b \$17 VDD sg13_lv_pmos L=0.13u W=1u AS=0.34p AD=0.34p PS=2.68u
++ PD=2.68u rfmode=0
+M$34 VDD en_b \$30 VDD sg13_lv_pmos L=0.13u W=2u AS=0.68p AD=0.68p PS=4.68u
++ PD=4.68u rfmode=0
+M$35 VDD di_en en_b VDD sg13_lv_pmos L=0.13u W=1u AS=0.34p AD=0.34p PS=2.68u
++ PD=2.68u rfmode=0
+M$36 VDD \$17 \$14 VDD sg13_lv_pmos L=0.13u W=1u AS=0.34p AD=0.34p PS=2.68u
++ PD=2.68u rfmode=0
+M$38 VDD VDD VDD VDD sg13_lv_pmos L=0.13u W=1u AS=0.34p AD=0.34p PS=2.68u
++ PD=2.68u rfmode=0
+R$39 \$9 \$31 VSS rppd w=0.5u l=8.5u ps=0u b=0 m=1
+R$40 \$6 \$30 VSS rppd w=0.5u l=13.1u ps=0u b=0 m=1
+R$41 vbn_buf \$6 VSS rhigh w=0.5u l=32u ps=0u b=0 m=1
+R$42 vbg_buf \$31 VSS rhigh w=0.5u l=32u ps=0u b=0 m=1
+C$43 vbg_buf VSS cap_cmim w=17.5u l=19.1u A=334.25p P=73.2u m=1
+C$44 vbg_buf VSS cap_cmim w=13.6u l=7.28u A=99.008p P=41.76u m=1
+.ENDS vco_bias
+
+.SUBCKT vco_buf VSS rf_out_n rf_out_p vbn_buf VDD rf_p rf_n vbg_buf
+M$1 VSS vbn_buf \$6 VSS sg13_lv_nmos L=0.5u W=150u AS=29.25p AD=29.25p
++ PS=166.7u PD=166.7u rfmode=0
+M$31 \$6 \$11 rf_out_n VSS sg13_lv_nmos L=0.13u W=24u AS=4.86p AD=4.86p
++ PS=30.86u PD=30.86u rfmode=0
+M$43 \$6 \$12 rf_out_p VSS sg13_lv_nmos L=0.13u W=24u AS=4.86p AD=4.86p
++ PS=30.86u PD=30.86u rfmode=0
+R$55 rf_out_n VDD VSS rppd w=10u l=1.65u ps=0u b=0 m=1
+R$56 rf_out_p VDD VSS rppd w=10u l=1.65u ps=0u b=0 m=1
+R$57 \$11 vbg_buf VSS rhigh w=0.5u l=8u ps=0u b=0 m=1
+R$58 \$12 vbg_buf VSS rhigh w=0.5u l=8u ps=0u b=0 m=1
+C$59 \$11 rf_p cap_cmim w=10u l=10u A=100p P=40u m=1
+C$60 \$12 rf_n cap_cmim w=10u l=10u A=100p P=40u m=1
+.ENDS vco_buf
+
+.SUBCKT vco_core VSS vdd_core rf_p vtune rf_n
+X$1 VSS vdd_core rf_n rf_p vco_ind
+X$2 VSS rf_p vtune rf_n vco_var
+M$1 VSS rf_p rf_n VSS sg13_lv_nmos L=0.13u W=20u AS=4.1p AD=4.1p PS=26.1u
++ PD=26.1u rfmode=0
+M$11 VSS rf_n rf_p VSS sg13_lv_nmos L=0.13u W=20u AS=4.1p AD=4.1p PS=26.1u
++ PD=26.1u rfmode=0
+C$21 vdd_core VSS cap_cmim w=56u l=39u A=2184p P=190u m=1
+C$22 vdd_core VSS cap_cmim w=42u l=25.5u A=1071p P=135u m=1
+.ENDS vco_core
+
+.SUBCKT vco_var VSS rf_p vtune rf_n
+C$1 rf_p vtune rf_n VSS sg13_hv_svaricap w=3.74u l=0.3u Nx=7
+C$2 rf_p vtune rf_n VSS sg13_hv_svaricap w=3.74u l=0.3u Nx=7
+C$3 rf_p vtune rf_n VSS sg13_hv_svaricap w=3.74u l=0.3u Nx=7
+.ENDS vco_var
+
+.SUBCKT vco_ind VSS LC LB LA
+L$1 LA LC LB VSS inductor3 w=4u s=3.999u d=52.022u nr_r=2
+.ENDS vco_ind

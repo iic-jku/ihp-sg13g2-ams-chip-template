@@ -6,6 +6,7 @@
     - no description of the MACROS entry structure
     - no post-run checklist
 - [ ] add VCO RF macro in branch `add-rf-macro`
+    - status and next steps: section Status in `macros/vco/README.md`
 - [ ] test and merge `hv-stdcell`: https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/test-hv-stdcell
 - [ ] fix the Magic DRC upstream and comment its lines back in (`magic-verify`, the IP `all`, `make all`): the `NBL.f`/`NBL.d` rules against the nBuLay ring of the `pmos` guard ring PCell (https://github.com/IHP-GmbH/IHP-Open-PDK/issues/954) and the subcell overlap errors in the IHP IO pads and the SRAM (flatglobs of https://github.com/IHP-GmbH/IHP-Open-PDK/issues/794), then drop the guard ring notes in the READMEs and the tutorial and regenerate the inverter Magic reports
 - [ ] get `gdscheck-drc-all` of the inverter `all` and the chip `gdscheck-drc-regular` of `make all` to pass once a gdscheck release with https://github.com/aesc-silicon/gdscheck/pull/51 (merged after 0.2.0, its `main` passes both inverter cells) replaces the `gdscheck@0.2.0` pin of the IIC-OSIC-TOOLS image

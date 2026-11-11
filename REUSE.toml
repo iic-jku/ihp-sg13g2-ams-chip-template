@@ -64,7 +64,7 @@ SPDX-FileCopyrightText = "2026 Simon Dorrer and Harald Pretl"
 SPDX-License-Identifier = "Apache-2.0 WITH SHL-2.1"
 
 [[annotations]]
-path = ["verification/**", "macros/*/verification/*", "macros/*/verification/drc/**", "macros/*/verification/lvs/**", "macros/*/verification/cace/results/**", "macros/*/verification/cace/templates/**", "macros/*/verification/cace/scripts/*.csv"]
+path = ["verification/**", "macros/*/verification/*", "macros/*/verification/drc/**", "macros/*/verification/lvs/**", "macros/*/verification/em/layout/**", "macros/*/verification/em/palace_model/**", "macros/*/verification/em/s-parameter/**", "macros/*/verification/cace/results/**", "macros/*/verification/cace/templates/**", "macros/*/verification/cace/scripts/*.csv"]
 SPDX-FileCopyrightText = "2026 Simon Dorrer and Harald Pretl"
 SPDX-License-Identifier = "Apache-2.0 WITH SHL-2.1"
 
@@ -103,7 +103,7 @@ SPDX-License-Identifier = "Apache-2.0 WITH SHL-2.1"
 # Third-party files keep their original copyright and license.
 
 [[annotations]]
-path = ["ip/sg13g2_io_custom/**", "testbenches/xschem/models/**"]
+path = ["ip/sg13g2_io_custom/**", "testbenches/xschem/models/**", "macros/*/testbenches/xschem/models/**"]
 SPDX-FileCopyrightText = "2024-2025 IHP PDK Authors"
 SPDX-License-Identifier = "Apache-2.0"
 

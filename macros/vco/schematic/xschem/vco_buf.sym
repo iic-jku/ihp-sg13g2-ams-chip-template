@@ -1,0 +1,42 @@
+v {xschem version=3.4.8RC file_version=1.3}
+G {}
+K {type=subcircuit
+format="@name @pinlist @symname"
+spectre_format="@name ( @pinlist ) @symname"
+template="name=x1"
+}
+V {}
+S {}
+F {}
+E {}
+L 4 0 0 240 0 {}
+L 4 240 0 240 -160 {}
+L 4 240 -160 0 -160 {}
+L 4 0 -160 0 0 {}
+L 4 80 -180 80 -160 {}
+L 4 140 -180 140 -160 {}
+L 7 200 -180 200 -160 {}
+L 7 200 20 200 0 {}
+L 7 -20 -100 0 -100 {}
+L 7 -20 -60 0 -60 {}
+L 7 260 -100 240 -100 {}
+L 7 260 -60 240 -60 {}
+B 5 77.5 -182.5 82.5 -177.5 {name=vbn_buf dir=in}
+B 5 137.5 -182.5 142.5 -177.5 {name=vbg_buf dir=in}
+B 5 197.5 -182.5 202.5 -177.5 {name=VDD dir=inout}
+B 5 197.5 17.5 202.5 22.5 {name=VSS dir=inout}
+B 5 -22.5 -102.5 -17.5 -97.5 {name=rf_p dir=inout}
+B 5 -22.5 -62.5 -17.5 -57.5 {name=rf_n dir=inout}
+B 5 257.5 -102.5 262.5 -97.5 {name=rf_out_p dir=inout}
+B 5 257.5 -62.5 262.5 -57.5 {name=rf_out_n dir=inout}
+T {@symname} 0 0 0 0 0.2 0.2 {}
+T {@name} 0 -172 0 0 0.2 0.2 {}
+T {buffer} 120 -88 0 0 0.3 0.3 {hcenter=true}
+T {vbn_buf} 80 -155 0 0 0.2 0.2 {hcenter=true}
+T {vbg_buf} 140 -155 0 0 0.2 0.2 {hcenter=true}
+T {VDD} 200 -155 0 0 0.2 0.2 {hcenter=true}
+T {VSS} 200 -15 0 0 0.2 0.2 {hcenter=true}
+T {rf_p} 5 -104 0 0 0.2 0.2 {}
+T {rf_n} 5 -64 0 0 0.2 0.2 {}
+T {rf_out_p} 235 -104 0 1 0.2 0.2 {}
+T {rf_out_n} 235 -64 0 1 0.2 0.2 {}

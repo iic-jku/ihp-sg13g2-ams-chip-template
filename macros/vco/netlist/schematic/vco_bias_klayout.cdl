@@ -1,0 +1,32 @@
+** sch_path: /foss/designs/ihp-sg13g2-ams-chip-template/macros/vco/schematic/xschem/vco_bias.sch
+.subckt vco_bias di_en VDD VSS vbg_buf vbn_buf en_b
+*.PININFO VDD:B VSS:B di_en:I en_b:O vbn_buf:B vbg_buf:B
+MMPi1 en_b di_en VDD VDD sg13_lv_pmos w=1u l=0.13u ng=1
+MMNi1 en_b di_en VSS VSS sg13_lv_nmos w=0.5u l=0.13u ng=1
+MMPi2 en en_b VDD VDD sg13_lv_pmos w=1u l=0.13u ng=1
+MMNi2 en en_b VSS VSS sg13_lv_nmos w=0.5u l=0.13u ng=1
+MMN0 ibias_100u ibias_100u VSS VSS sg13_lv_nmos w=2.5u l=0.5u ng=1
+MMNd0 ibias_100u en_b VSS VSS sg13_lv_nmos w=1u l=0.13u ng=1
+RRn ibias_100u vbn_buf 94.929k $SUB=VSS $[rhigh] w=0.5e-6 l=32e-6 b=0
+MMNd1 vbn_buf en_b VSS VSS sg13_lv_nmos w=1u l=0.13u ng=1
+MMN1 vbp_ref ibias_100u VSS VSS sg13_lv_nmos w=2.5u l=0.5u ng=1
+MMP1 vbp_ref vbp_ref VDD VDD sg13_lv_pmos w=5u l=0.5u ng=1
+MMPd vbp_ref en VDD VDD sg13_lv_pmos w=1u l=0.13u ng=1
+MMP2 vbg_int vbp_ref VDD VDD sg13_lv_pmos w=5u l=0.5u ng=1
+RRg vbg_int nbg 4.5076k $SUB=VSS $[rppd] w=0.5e-6 l=8.5e-6 b=0
+MMN3 nbg nbg VSS VSS sg13_lv_nmos w=2.5u l=0.5u ng=1
+MMCn1 VSS vbn_buf VSS VSS sg13_lv_nmos w=40u l=10u ng=5
+MMCn2 VSS vbn_buf VSS VSS sg13_lv_nmos w=40u l=10u ng=5
+RRf vbg_int vbg_buf 94.929k $SUB=VSS $[rhigh] w=0.5e-6 l=32e-6 b=0
+MMCg1 VSS vbg_buf VSS VSS sg13_lv_nmos w=40u l=10u ng=5
+MMCg2 VSS vbg_buf VSS VSS sg13_lv_nmos w=40u l=10u ng=5
+MMDn1 VSS VSS VSS VSS sg13_lv_nmos w=2.5u l=0.5u ng=1
+MMDn2 VSS VSS VSS VSS sg13_lv_nmos w=2.5u l=0.5u ng=1
+MMDp1 VDD VDD VDD VDD sg13_lv_pmos w=5u l=0.5u ng=1
+MMDp2 VDD VDD VDD VDD sg13_lv_pmos w=5u l=0.5u ng=1
+MMPb nrb en_b VDD VDD sg13_lv_pmos w=2u l=0.13u ng=1
+MMDp4 VDD VDD VDD VDD sg13_lv_pmos w=1u l=0.13u ng=1
+RRb nrb ibias_100u 6.8712k $SUB=VSS $[rppd] w=0.5e-6 l=13.1e-6 b=0
+CCg1 vbg_buf VSS cap_cmim w=17.5e-6 l=19.1e-6
+CCg2 vbg_buf VSS cap_cmim w=13.6e-6 l=7.28e-6
+.ends

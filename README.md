@@ -185,6 +185,13 @@ A designer-oriented description of this chip can be found in [doc/](doc/):
 │  │  ├─ Makefile
 │  │  └─ README.md
 │  ├─ 📁 scripts/
+│  ├─ 📁 vco/
+│  │  ├─ 📁 netlist/
+│  │  ├─ 📁 schematic/
+│  │  ├─ 📁 scripts/
+│  │  ├─ 📁 testbenches/
+│  │  ├─ Makefile
+│  │  └─ README.md
 │  ├─ Makefile
 │  └─ README.md
 ├─ 📁 netlist/
@@ -286,6 +293,8 @@ Xschem reads exactly one `xschemrc` at start-up, and that file decides which sym
 | [`macros/inverter/verification/cace/templates/xschemrc`](macros/inverter/verification/cace/templates/xschemrc) | CACE testbench templates |
 | [`macros/counter/schematic/xschem/xschemrc`](macros/counter/schematic/xschem/xschemrc) | counter schematics |
 | [`macros/counter/testbenches/xschem/xschemrc`](macros/counter/testbenches/xschem/xschemrc) | counter testbenches |
+| [`macros/vco/schematic/xschem/xschemrc`](macros/vco/schematic/xschem/xschemrc) | VCO schematics |
+| [`macros/vco/testbenches/xschem/xschemrc`](macros/vco/testbenches/xschem/xschemrc) | VCO testbenches |
 
 
 ### What Every File Does
@@ -371,6 +380,7 @@ Every component follows the same principle. The simulations always run last, so 
 | --- | --- |
 | [`macros/counter/`](macros/counter/) (digital) | lint -> build (FPGA and LibreLane, including the XSPICE model) -> extract (PEX of the hardened GDS) -> simulate. DRC and LVS run inside the LibreLane flow. |
 | [`macros/inverter/`](macros/inverter/) (analog) | verify (DRC, LVS, PEX) -> build (LEF, LIB, Verilog stub, GDS, render) -> simulate |
+| [`macros/vco/`](macros/vco/) (RF) | layouts (KLayout Python scripts) -> coil EM (Palace) -> lumped-element model (snp2le) -> verify (DRC, LVS, PEX) -> build (LEF, LIB, Verilog stub, GDS, render) -> simulate (ngspice and VACASK). Not part of the chip build yet. |
 | [`ip/*`](ip/) (bondpad, RF pad, logos) | build -> verify (DRC, and LVS on the RF pad) |
 | top level | build -> verify (DRC) -> simulate -> package |
 

@@ -1,0 +1,63 @@
+
+Circuit 1 cell sg13_lv_pmos and Circuit 2 cell sg13_lv_pmos are black boxes.
+Warning: Equate pins:  cell sg13_lv_pmos is a placeholder, treated as a black box.
+Warning: Equate pins:  cell sg13_lv_pmos is a placeholder, treated as a black box.
+
+Subcircuit pins:
+Circuit 1: sg13_lv_pmos                    |Circuit 2: sg13_lv_pmos                    
+-------------------------------------------|-------------------------------------------
+1                                          |1                                          
+2                                          |2                                          
+3                                          |3                                          
+4                                          |4                                          
+---------------------------------------------------------------------------------------
+Cell pin lists are equivalent.
+Device classes sg13_lv_pmos and sg13_lv_pmos are equivalent.
+
+Circuit 1 cell rppd and Circuit 2 cell rppd are black boxes.
+Warning: Equate pins:  cell rppd is a placeholder, treated as a black box.
+Warning: Equate pins:  cell rppd is a placeholder, treated as a black box.
+
+Subcircuit pins:
+Circuit 1: rppd                            |Circuit 2: rppd                            
+-------------------------------------------|-------------------------------------------
+1                                          |1                                          
+2                                          |2                                          
+3                                          |3                                          
+---------------------------------------------------------------------------------------
+Cell pin lists are equivalent.
+Device classes rppd and rppd are equivalent.
+
+Class vco_feed (0):  Merged 31 parallel devices.
+Subcircuit summary:
+Circuit 1: vco_feed                        |Circuit 2: vco_feed                        
+-------------------------------------------|-------------------------------------------
+sg13_lv_pmos (32->1)                       |sg13_lv_pmos (1)                           
+rppd (1)                                   |rppd (1)                                   
+Number of devices: 2                       |Number of devices: 2                       
+Number of nets: 5                          |Number of nets: 5                          
+---------------------------------------------------------------------------------------
+Netlists match uniquely with property errors.
+rppd:31 vs. rppd:Rct:
+Property mm_ok in circuit2 has no matching property in circuit1
+rppd:31 vs. rppd:Rct:
+Property mm_ok in circuit2 has no matching property in circuit1
+sg13_lv_pmos:0 vs. sg13_lv_pmos:MPs:
+Property mm_ok in circuit2 has no matching property in circuit1
+
+Subcircuit pins:
+Circuit 1: vco_feed                        |Circuit 2: vco_feed                        
+-------------------------------------------|-------------------------------------------
+en_b                                       |en_b                                       
+vdd_core                                   |vdd_core                                   
+VSS                                        |VSS                                        
+VDD                                        |VDD                                        
+---------------------------------------------------------------------------------------
+Cell pin lists are equivalent.
+Device classes vco_feed and vco_feed are equivalent.
+
+Final result: Circuits match uniquely.
+Property errors were found.
+
+The following cells had property errors:
+ vco_feed

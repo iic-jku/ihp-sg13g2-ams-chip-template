@@ -1,0 +1,329 @@
+# SPDX-FileCopyrightText: 2026 Simon Dorrer and Harald Pretl
+# SPDX-License-Identifier: Apache-2.0 WITH SHL-2.1
+# Description: Helpers shared by the KLayout layout scripts of the vco macro: PDK cells, blocks with ports, vias, metal, pins.
+# ============================================
+#
+# Coordinates are in um. A Block is a cell built from PDK PCells and shapes, with named ports (layer, box) that move with
+# it when it is placed in another block. write() flattens the cell, so its GDS holds plain shapes and no PCell context,
+# and cells read from several GDS files cannot clash by name.
+
+import importlib
+import math
+import os
+import sys
+
+import pya
+
+LAYERS = {
+    "Activ": (1, 0), "GatPoly": (5, 0), "Cont": (6, 0), "pSD": (14, 0), "NWell": (31, 0),
+    "Metal1": (8, 0), "Metal2": (10, 0), "Metal3": (30, 0), "Metal4": (50, 0), "Metal5": (67, 0),
+    "TopMetal1": (126, 0), "TopMetal2": (134, 0), "prBoundary": (189, 0),
+}
+METALS = ["Metal1", "Metal2", "Metal3", "Metal4", "Metal5", "TopMetal1", "TopMetal2"]
+PIN_DT, TEXT_DT = 2, 25
+GRID = 0.005  # manufacturing grid in um
+# Minimum metal areas in um^2 (rules Mn.d). A lone via_stack lands on pads far below them, so write() grows those pads.
+MIN_AREA = {"Metal1": 0.09, "Metal2": 0.144, "Metal3": 0.144, "Metal4": 0.144, "Metal5": 0.144}
+PAD_CLEARANCE = 0.25  # um from a grown pad to other metal, above the wide-metal spacing Mn.e and not only Mn.b
+# DC limits, 11 years at 105 C by the ihp-sg13cmos5l process specification: (mA/um, up to this width, flat mA there). No DRC deck checks them.
+WIRE_LIMIT = {"Metal1": (1.0, 0.36, 0.36), "Metal2": (2.0, 0.3, 0.6), "Metal3": (2.0, 0.3, 0.6), "Metal4": (2.0, 0.3, 0.6),
+              "Metal5": (2.0, 0.3, 0.6), "TopMetal1": (15.0, 0.0, 0.0), "TopMetal2": (16.0, 0.0, 0.0)}
+CUT_LIMIT = {"Cont": 0.3, "Via1": 0.4, "Via2": 0.4, "Via3": 0.4, "Via4": 0.4, "TopVia1": 1.4, "TopVia2": 10.0}  # mA per cut
+I_CORE, I_TAIL, I_BIAS = 6.2, 7.7, 0.4  # mA, post-layout at the limits' 105 C, FF, res_bcs, VDD 1.65 V: core, buffer tail, bias rows
+STRIP_M2, STRIP_M1 = 0.7, 0.3  # how a source stripe's current splits between a 0.29 um Metal2 strip and its 0.16 um Metal1, by sheet resistance
+
+
+def snap(v):
+    return round(v / GRID) * GRID
+
+
+def _check_current(name, what, current, limit):
+    ratio = current / limit
+    print(f"current: {name}: {what}, {current:.2f} mA of {limit:.2f} mA, ratio {ratio:.2f}")
+    if ratio > 1.0:
+        raise RuntimeError(f"vco_layout: {name} carries {current:.2f} mA, its limit is {limit:.2f} mA")
+
+
+def check_wire(name, layer, width, current):
+    """Stops the script when a wire carries more than its DC limit (current in mA, width in um)."""
+    per_um, flat_w, flat = WIRE_LIMIT[layer]
+    _check_current(name, f"{layer} {width:.2f} um", current, flat if width <= flat_w else per_um * width)
+
+
+def check_source_strip(name, current):
+    """A stripe under s_strap of mos(), with current in mA, on both of its metals."""
+    check_wire(f"{name}, Metal2", "Metal2", 0.29, current * STRIP_M2)
+    check_wire(f"{name}, Metal1", "Metal1", 0.16, current * STRIP_M1)
+
+
+def check_cuts(name, cut, n, current):
+    """Stops the script when n parallel cuts carry more than their DC limit (current in mA)."""
+    _check_current(name, f"{n} {cut}", current, n * CUT_LIMIT[cut])
+
+
+def load_pdk():
+    # Batch mode does not run the PDK's autorun macros, so register the SG13_dev library here
+    kl = os.path.join(os.environ["PDK_ROOT"], os.environ["PDK"], "libs.tech", "klayout", "python")
+    for d in (kl, os.path.join(kl, "pycell4klayout-api", "source", "python")):
+        if d not in sys.path:
+            sys.path.append(d)
+    if pya.Library.library_by_name("SG13_dev", "sg13g2") is None:
+        importlib.import_module("sg13g2_pycell_lib")
+
+
+def new_layout():
+    load_pdk()
+    ly = pya.Layout()
+    ly.dbu = 0.001
+    ly.technology_name = "sg13g2"
+    return ly
+
+
+def um(v):
+    return f"{v:.4g}u"
+
+
+class Block:
+    """A cell with named ports. Ports are (layer, DBox) in the block's own coordinates."""
+
+    def __init__(self, ly, name):
+        self.ly = ly
+        self.cell = ly.create_cell(name)
+        self.ports = {}
+
+    def li(self, layer):
+        return self.ly.layer(*LAYERS[layer])
+
+    def pcell(self, name, **params):
+        cell = self.ly.create_cell(name, "SG13_dev", params)
+        if cell is None:
+            raise RuntimeError(f"vco_layout: PCell {name} not found in SG13_dev")
+        return cell
+
+    def add(self, cell, x=0.0, y=0.0, rot=0, mirror=False):
+        t = pya.DCplxTrans(1.0, rot, mirror, snap(x), snap(y))
+        self.cell.insert(pya.DCellInstArray(cell.cell_index(), t))
+        return t
+
+    def rect(self, layer, x1, y1, x2, y2):
+        box = pya.DBox(snap(min(x1, x2)), snap(min(y1, y2)), snap(max(x1, x2)), snap(max(y1, y2)))
+        self.cell.shapes(self.li(layer)).insert(box)
+        return box
+
+    def shapes(self, cell, t, layer):
+        """Merged boxes of one layer of a placed cell, in this block's coordinates, sorted by x then y."""
+        r = pya.Region(cell.begin_shapes_rec(self.li(layer))).merged()
+        boxes = [t * p.bbox().to_dtype(self.ly.dbu) for p in r.each()]
+        return sorted(boxes, key=lambda b: (round(b.left, 3), round(b.bottom, 3)))
+
+    def via(self, x, y, bottom, top, cols=1, rows=1, tcols=1, trows=1):
+        """A PDK via_stack centered at (x, y). Returns the boxes of its bottom and top layer."""
+        cell = self.pcell("via_stack", b_layer=bottom, t_layer=top, vn_columns=cols, vn_rows=rows,
+                          vt1_columns=tcols, vt1_rows=trows, vt2_columns=tcols, vt2_rows=trows)
+        t = self.add(cell, x, y)
+        return self.shapes(cell, t, bottom)[0], self.shapes(cell, t, top)[0]
+
+    def place(self, block, x=0.0, y=0.0, rot=0, mirror=False):
+        """Places a block and returns its ports in this block's coordinates."""
+        t = self.add(block.cell, x, y, rot, mirror)
+        return {k: (layer, t * box) for k, (layer, box) in block.ports.items()}
+
+    def pin(self, layer, name, box):
+        """A pin shape and its label at the box center, the convention of the template's macros."""
+        lay, _ = LAYERS[layer]
+        self.cell.shapes(self.ly.layer(lay, PIN_DT)).insert(box)
+        self.label(layer, name, box.center().x, box.center().y)
+
+    def label(self, layer, name, x, y):
+        lay, _ = LAYERS[layer]
+        self.cell.shapes(self.ly.layer(lay, TEXT_DT)).insert(pya.DText(name, x, y))
+
+    def bbox(self):
+        return self.cell.dbbox()
+
+
+def read_cell(ly, name, script):
+    """Reads layout/<name>.gds, written by the cell's own script, and returns its cell."""
+    path = os.path.join(os.path.dirname(os.path.abspath(script)), "..", "..", "layout", f"{name}.gds")
+    ly.read(path)
+    cell = ly.cell(name)
+    if cell is None:
+        raise RuntimeError(f"vco_layout: no cell {name} in {path}, run its layout script first")
+    return cell
+
+
+def cell_pins(ly, cell, t):
+    """The pins of a placed cell: {label: (metal, DBox)} from its own pin shapes and the labels on them.
+    Subcells are not searched, their pins of the same name are not the cell's."""
+    pins = {}
+    for metal in METALS:
+        lay, _ = LAYERS[metal]
+        boxes = [p.bbox() for p in pya.Region(cell.shapes(ly.layer(lay, PIN_DT))).merged().each()]
+        for s in cell.shapes(ly.layer(lay, TEXT_DT)).each():
+            if s.is_text():
+                pt = s.text.trans.disp.to_p()
+                for b in boxes:
+                    if b.contains(pt):
+                        pins[s.text_string] = (metal, t * b.to_dtype(ly.dbu))
+    return pins
+
+
+def grow_small_pads(block, metal):
+    """Grows every piece of metal below its minimum area into free space, along its longer side if that fits."""
+    li, dbu = block.li(metal), block.ly.dbu
+    area_min = round(MIN_AREA[metal] / dbu ** 2)
+    step, clear = round(2 * GRID / dbu), round(PAD_CLEARANCE / dbu)
+    pieces = pya.Region(block.cell.begin_shapes_rec(li)).merged()
+    for piece in [p.dup() for p in pieces.each()]:
+        if piece.area() >= area_min:
+            continue
+        box = piece.bbox()
+        l, b, r, t = box.left, box.bottom, box.right, box.top
+        # In steps of two grid units, so that a pad grown at both ends stays on the grid
+        gx = math.ceil((area_min // box.height() + 1 - box.width()) / step) * step
+        gy = math.ceil((area_min // box.width() + 1 - box.height()) / step) * step
+        along_x = [pya.Box(l - gx // 2, b, r + gx // 2, t), pya.Box(l, b, r + gx, t), pya.Box(l - gx, b, r, t)]
+        along_y = [pya.Box(l, b - gy // 2, r, t + gy // 2), pya.Box(l, b, r, t + gy), pya.Box(l, b - gy, r, t)]
+        others = pieces - pya.Region(piece)
+        for pad in along_x + along_y if box.width() >= box.height() else along_y + along_x:
+            if (others & pya.Region(pad.enlarged(clear, clear))).is_empty():
+                block.cell.shapes(li).insert(pad)
+                pieces = (pieces + pya.Region(pad)).merged()
+                break
+        else:
+            raise RuntimeError(f"{block.cell.name}: no free space to grow the {metal} pad at {box.to_dtype(dbu)}")
+
+
+def write(block, path, drop_texts=(), keep=()):
+    """Flattens the block, except instances of the cells named in keep, and writes it alone without PCell context.
+
+    drop_texts: terminal names a PCell writes on TEXT 63/0. KLayout LVS names a net after them, and a net with a second
+    name fails the strict port check, so they go once the cell is flat. Device recognition texts stay.
+    """
+    for inst in list(block.cell.each_inst()):
+        if inst.cell.name not in keep:
+            inst.flatten(-1)
+    for metal in MIN_AREA:
+        grow_small_pads(block, metal)
+    texts = block.cell.shapes(block.ly.layer(63, 0))
+    for s in [s for s in texts.each() if s.is_text() and s.text_string in drop_texts]:
+        texts.erase(s)
+    # ntap1 also writes "well" on the NWell drawing layer, which Magic, and so KPEX, turns into a dangling port.
+    # KLayout LVS reads the tap labels from TEXT 63/0 only.
+    nwell = block.cell.shapes(block.ly.layer(*LAYERS["NWell"]))
+    for s in [s for s in nwell.each() if s.is_text()]:
+        nwell.erase(s)
+    # One polygon per connected piece of each metal, so no internal outline reads as broken metal in a review
+    for metal in METALS:
+        shapes = block.cell.shapes(block.li(metal))
+        region = pya.Region()
+        for s in [s for s in shapes.each() if s.is_box() or s.is_polygon() or s.is_path()]:
+            region.insert(s.polygon)
+            shapes.erase(s)
+        shapes.insert(region.merged())
+    opt = pya.SaveLayoutOptions()
+    opt.write_context_info = False
+    opt.gds2_write_timestamps = False  # a rerun with the same geometry writes the same bytes
+    opt.select_cell(block.cell.cell_index())
+    block.ly.write(path, opt)
+    print(f"{block.cell.name}: wrote {os.path.normpath(path)}, bbox {block.cell.dbbox()}")
+
+
+def out_path(name, script):
+    """The -rd out=... path of the batch call, or layout/<name>.gds next to the scripts folder."""
+    out = sys.modules["__main__"].__dict__.get("out")
+    return out if isinstance(out, str) else os.path.join(os.path.dirname(os.path.abspath(script)), "..", "..", "layout", f"{name}.gds")
+
+
+def mos(ly, name, kind, w, l, ng, tap=None, d_metal="Metal2", gext=1.0, cap=False, s_strap=False, s_width=None):
+    """A MOSFET with its wiring: gate contacts on a poly strap below the fingers (port G, Metal1), sources up to a
+    Metal1 rail above (port S), drains joined by a strap across the middle (port D, d_metal).
+
+    tap: None, "merge" (substrate or well tap under the source rail, so S is also the body) or "separate"
+    (a tap of its own above the source rail, port B). Even stripes are sources, odd ones drains.
+    gext: how far the gate pad reaches left of the device, so a via on it clears the drain's via column.
+    cap: a MOS capacitor, every stripe goes up to the source rail and there is no drain strap (no port D).
+    s_strap: Metal2 over the source stripes and the rail, vias all along, for a source current above Metal1's 0.36 mA
+    per stripe. Needs d_metal="Metal3". A via stack on the rail starts from Metal2, the rail's own via row is Metal1 to Metal2.
+    s_width: Metal1 width of the source stripes, for the same reason where the finger pitch leaves room.
+    """
+    b = Block(ly, name)
+    model = "sg13_lv_nmos" if kind == "nmos" else "sg13_lv_pmos"
+    dev = b.pcell(kind, model=model, w=um(w), l=um(l), ng=ng)
+    t = b.add(dev)
+    act = b.shapes(dev, t, "Activ")[0]
+    stripes = [s for s in b.shapes(dev, t, "Metal1")]
+    gates = b.shapes(dev, t, "GatPoly")
+    wf = act.height()
+
+    # Gate: a poly strap joins the finger ends below the active area, contacts on it, a Metal1 pad below them.
+    # The contacts sit 0.25 um from the active area (Cnt.e 0.14) and the pad keeps 0.25 um from the drain stripes.
+    gy1, gy0 = act.bottom - 0.18, act.bottom - 0.48
+    b.rect("GatPoly", gates[0].left, gy0, gates[-1].right, gy1)
+    glen = gates[-1].right - gates[0].left
+    cols = max(1, int((glen - 0.14) / 0.34))
+    b.via((gates[0].left + gates[-1].right) / 2, act.bottom - 0.33, "GatPoly", "Metal1", cols=cols, rows=1)
+    gx0 = min(gates[0].left, (gates[0].left + gates[-1].right) / 2 - cols * 0.17)
+    gx1 = max(gates[-1].right, (gates[0].left + gates[-1].right) / 2 + cols * 0.17)
+    b.ports["G"] = ("Metal1", b.rect("Metal1", gx0 - gext, act.bottom - 0.85, gx1, act.bottom - 0.25))
+
+    # Sources: every even stripe up to a Metal1 rail 0.25 um above the active area
+    rail_y0, rail_y1 = act.top + 0.25, act.top + 0.85
+    for s in stripes if cap else stripes[0::2]:
+        b.rect("Metal1", s.left, s.top, s.right, rail_y0)
+        if s_width:
+            xc = s.center().x
+            b.rect("Metal1", max(act.left, xc - s_width / 2), s.bottom, min(act.right, xc + s_width / 2), rail_y0)
+    b.ports["S"] = ("Metal1", b.rect("Metal1", act.left, rail_y0, act.right, rail_y1))
+    if s_strap:
+        srows = max(1, int((wf - 0.1 + 0.22) / 0.41))
+        for s in stripes[0::2]:
+            b.via(s.center().x, act.center().y, "Metal1", "Metal2", cols=1, rows=srows)
+            b.rect("Metal2", s.center().x - 0.145, act.bottom + 0.05, s.center().x + 0.145, rail_y1)
+        b.rect("Metal2", act.left, rail_y0, act.right, rail_y1)
+        b.via(act.center().x, (rail_y0 + rail_y1) / 2, "Metal1", "Metal2", cols=int((act.width() - 0.1) / 0.41), rows=1)
+
+    # Drains: a via column on every odd stripe and a strap across them, inside the active area's height
+    if not cap:
+        rows = max(1, min(8, int((wf - 0.1 + 0.22) / 0.41)))
+        dboxes = [b.via(s.center().x, act.center().y, "Metal1", d_metal, cols=1, rows=rows)[1] for s in stripes[1::2]]
+        d = dboxes[0]
+        for x in dboxes[1:]:
+            d = d + x
+        b.ports["D"] = (d_metal, b.rect(d_metal, d.left, d.bottom, d.right, d.top))
+
+    # Tap: a ptap1 (nmos) or ntap1 (pmos) strip over the full device length
+    if tap:
+        ty0 = rail_y0 + 0.55 if tap == "merge" else rail_y1 + 0.45
+        tcell = b.pcell("ptap1" if kind == "nmos" else "ntap1", w=um(act.width()), l=um(0.6))
+        tt = b.add(tcell, act.left, ty0)
+        tm1 = b.shapes(tcell, tt, "Metal1")[0]
+        if tap == "merge":
+            b.rect("Metal1", act.left, rail_y0, act.right, tm1.top)
+            b.ports["S"] = ("Metal1", pya.DBox(act.left, rail_y0, act.right, tm1.top))
+        else:
+            b.ports["B"] = ("Metal1", tm1)
+        if kind == "pmos":
+            b.rect("NWell", act.left - 0.31, act.bottom - 0.31, act.right + 0.31, ty0 + 0.6 + 0.31)
+    b.ports["ACT"] = ("Activ", act)
+    return b
+
+
+def stub(b, port, x, y, layer="Metal2", track="Metal3"):
+    """Joins a Metal1 or Metal2 port at x to a horizontal track at height y: a vertical strip on layer from the port's
+    center to y, with the vias at both ends. Returns x for sizing the track."""
+    player, box = port
+    yp = box.center().y
+    if player == "Metal1":
+        b.via(x, yp, "Metal1", layer)
+    elif player != layer:
+        raise RuntimeError(f"stub: port on {player}, expected Metal1 or {layer}")
+    b.rect(layer, x - 0.15, min(yp, y) - 0.1, x + 0.15, max(yp, y) + 0.1)
+    b.via(x, y, *sorted((layer, track), key=METALS.index))
+    return x
+
+
+def track(b, y, xs, layer="Metal3", w=0.4, ext=0.3):
+    """A horizontal track at height y over all x in xs."""
+    return b.rect(layer, min(xs) - ext, y - w / 2, max(xs) + ext, y + w / 2)
+
