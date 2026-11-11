@@ -2,9 +2,9 @@
 # SPDX-FileCopyrightText: 2026 Simon Dorrer and Harald Pretl
 # SPDX-License-Identifier: Apache-2.0 WITH SHL-2.1
 # Author: Simon Dorrer
-# Description: Plots of the VCO top macro from the ngspice transients (schematic and post-layout), the VACASK PSS, PNOISE and PAC bench and the VACASK tuning bench.
+# Description: Plots of the VCO top macro from the ngspice transients (schematic and post-layout), the VACASK PSS, PNOISE and PAC benches (schematic and post-layout) and the VACASK tuning bench.
 # Created: 17.10.2026
-# Last Modified: 04.11.2026
+# Last Modified: 11.11.2026
 # ============================================
 
 # Imports
@@ -82,9 +82,8 @@ def plot_tran(data_dir, figures_dir, tb, title):
     save(fig, figures_dir, tb, (t_ns, vp, vn, op, on), "time_ns,v_rf_p,v_rf_n,v_out_p,v_out_n")
 
 
-def plot_pss(data_dir, figures_dir):
-    """VACASK PSS waveform and output spectrum, phase noise from PNOISE, tuning gain from PAC."""
-    tb = "vco_top_tb_pss_vacask"
+def plot_pss(data_dir, figures_dir, tb="vco_top_tb_pss_vacask", which=""):
+    """VACASK PSS waveform and output spectrum, phase noise from PNOISE, tuning gain from PAC, of the bench tb."""
     pss = str(data_dir / f"{tb}_pss.txt")
     t = ng.loadngspicecol(pss, "time")
     vp = ng.loadngspicecol(pss, "x1:rf_p")
@@ -98,7 +97,7 @@ def plot_pss(data_dir, figures_dir):
           f"{10 * np.log10(abs(c_op[1]) ** 2 / 2 / R_LOAD / 1e-3):.2f} dBm per output")
 
     fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(10, 8))
-    fig.suptitle(f'VCO Top - Periodic Steady State (VACASK), $f_0$ = {f0 / 1e9:.3f} GHz')
+    fig.suptitle(f'VCO Top - {which}Periodic Steady State (VACASK), $f_0$ = {f0 / 1e9:.3f} GHz')
     ax1.plot(t * 1e12, vp, color='#0c5da5', linewidth=2.0, label=r'$V_\mathrm{rf,p}$')
     ax1.plot(t * 1e12, vn, color='#ff6b35', linewidth=2.0, linestyle='--', label=r'$V_\mathrm{rf,n}$')
     ax1.plot(t * 1e12, vod, color='#2f855a', linewidth=2.0, label=r'$V_\mathrm{out,p} - V_\mathrm{out,n}$')
@@ -131,7 +130,7 @@ def plot_pss(data_dir, figures_dir):
     print(f"PAC: K_VCO = {np.interp(7, np.log10(fa), kvco) / 1e9:.3f} GHz/V at 10 MHz")
 
     fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(10, 8))
-    fig.suptitle('VCO Top - Phase Noise (PNOISE) and Tuning Gain (PAC)')
+    fig.suptitle(f'VCO Top - {which}Phase Noise (PNOISE) and Tuning Gain (PAC)')
     ax1.semilogx(fm, L, color='#0c5da5', linewidth=2.4)
     ax1.plot(1e6, L1M, 'o', color='#ff6b35', label=f'{L1M:.1f} dBc/Hz at 1 MHz')
     ax1.set_xlabel(r'$f_\mathrm{offset}$ (Hz)')
@@ -144,7 +143,7 @@ def plot_pss(data_dir, figures_dir):
     ax2.grid(visible=True, which='both', linestyle='--', alpha=0.45)
     plt.tight_layout()
     save(fig, figures_dir, f"{tb}_pnoise_pac", (fm, L, kvco), "f_offset_hz,L_dbc_hz,kvco_hz_per_v")
-    return f0
+    return f0, fm, L
 
 
 def frequency(t, v, t_start):
@@ -176,6 +175,7 @@ def plot_tune_lpe(figures_dir):
     rows = np.genfromtxt(figures_dir / "vco_top_tb_tune_lpe_corners.csv", delimiter=",", names=True, dtype=None, encoding="utf-8")
     order = np.argsort(rows["vtune"])
     tune_figure(figures_dir, "vco_top_tb_tune_lpe", 'VCO Top - Post-Layout Tuning Curve (ngspice transient)', rows["vtune"][order], rows["f0_ghz"][order] * 1e9)
+    return rows["vtune"][order], rows["f0_ghz"][order] * 1e9
 
 
 def tune_figure(figures_dir, name, title, vt, f0):
@@ -221,8 +221,8 @@ def plot_powerup(data_dir, figures_dir):
     save(fig, figures_dir, tb)
 
 
-def plot_trannoise(data_dir, figures_dir):
-    """Phase noise from the zero crossings of the VACASK transient noise over seeds, schematic and post-layout, against the schematic's PNOISE."""
+def plot_trannoise(data_dir, figures_dir, pnoise_lpe=None):
+    """Phase noise from the zero crossings of the VACASK transient noise over seeds, schematic and post-layout, against PNOISE of the schematic and, if given as (f, L), of the post-layout netlist."""
     tb = "vco_top_tb_trannoise_vacask"
     file = str(data_dir / f"{tb}.txt")
     f = ng.loadngspicecol(file, "f_offset_hz")
@@ -233,6 +233,8 @@ def plot_trannoise(data_dir, figures_dir):
     lpe = data_dir / "vco_top_tb_trannoise_lpe_vacask.txt"
     if lpe.exists():
         ax.semilogx(ng.loadngspicecol(str(lpe), "f_offset_hz"), ng.loadngspicecol(str(lpe), "L_trannoise_dbc_hz"), color='#2f855a', linewidth=2.0, label='transient noise, post-layout')
+    if pnoise_lpe is not None:
+        ax.semilogx(*pnoise_lpe, color='#6f42c1', linewidth=2.0, linestyle='--', label='PNOISE, post-layout')
     ax.set_xlabel(r'$f_\mathrm{offset}$ (Hz)')
     ax.set_ylabel(r'$\mathcal{L}$ (dBc/Hz)')
     ax.grid(visible=True, which='both', linestyle='--', alpha=0.45)
@@ -253,26 +255,29 @@ def main():
         plot_tran(data_dir, figures_dir, "vco_top_tb_tran", "VCO Top - Transient Response (ngspice)")
     if (data_dir / "vco_top_tb_tran_lpe.txt").exists():
         plot_tran(data_dir, figures_dir, "vco_top_tb_tran_lpe", "VCO Top - Post-Layout Transient Response (ngspice)")
-    f_pss = tune = None
+    f_pss = tune = f_pss_lpe = tune_lpe = pnoise_lpe = None
     if (data_dir / "vco_top_tb_pss_vacask_pss.txt").exists():
-        f_pss = plot_pss(data_dir, figures_dir)
+        f_pss = plot_pss(data_dir, figures_dir)[0]
+    if (data_dir / "vco_top_tb_pss_lpe_vacask_pss.txt").exists():
+        f_pss_lpe, *pnoise_lpe = plot_pss(data_dir, figures_dir, "vco_top_tb_pss_lpe_vacask", "Post-Layout ")
     if list(data_dir.glob("vco_top_tb_tune_vacask_tune_*.txt")):
         tune = plot_tune(data_dir, figures_dir)
     if (figures_dir / "vco_top_tb_tune_lpe_corners.csv").exists():
-        plot_tune_lpe(figures_dir)
+        tune_lpe = plot_tune_lpe(figures_dir)
     if (data_dir / "vco_top_tb_powerup_lpe.txt").exists():
         plot_powerup(data_dir, figures_dir)
     if (data_dir / "vco_top_tb_trannoise_vacask.txt").exists():
-        plot_trannoise(data_dir, figures_dir)
+        plot_trannoise(data_dir, figures_dir, pnoise_lpe)
 
     # The shooting PSS can settle a slow state (a bias filter) away from its DC value without failing, which shows as
-    # a frequency off the transient's at the same tuning voltage (0.75 V in the PSS bench)
-    if f_pss is not None and tune is not None:
-        f_tran = np.interp(0.75, *tune)
-        dev = (f_pss - f_tran) / f_tran
-        print(f"check: PSS f0 deviates {dev * 100:+.2f} % from the transient at vtune = 0.75 V")
-        if abs(dev) > 3e-3:
-            print("WARNING: PSS and transient disagree by more than 0.3 %, do not trust PNOISE and PAC")
+    # a frequency off the transient's at the same tuning voltage (0.75 V in the PSS benches)
+    for which, f, curve in (("", f_pss, tune), ("post-layout ", f_pss_lpe, tune_lpe)):
+        if f is not None and curve is not None:
+            f_tran = np.interp(0.75, *curve)
+            dev = (f - f_tran) / f_tran
+            print(f"check: {which}PSS f0 deviates {dev * 100:+.2f} % from the transient at vtune = 0.75 V")
+            if abs(dev) > 3e-3:
+                print(f"WARNING: {which}PSS and transient disagree by more than 0.3 %, do not trust PNOISE and PAC")
 
     # Open the plot windows (blocks until they are closed)
     plt.show()
