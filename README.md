@@ -1034,7 +1034,7 @@ make bondplan VERSION=2.1.0          # stamp another version on the sheet
 
 `TOP` (as `DESIGN_NAME`) and `VERSION` are passed to the flow and printed in the title block (`DIE: CHIP_TOP - V.1.0.0`), so the design name and the version number are maintained in the Makefile only.
 
-The flow ([packaging/scripts/run_bondplan.py](packaging/scripts/run_bondplan.py)) is driven by [packaging/config.yaml](packaging/config.yaml), which holds the full package-pin-to-die-pad `PINOUT` in a LibreLane-style config format. It detects the die bondpads (`Passiv` openings and `TopMetal2.text` labels), places the die in the package cavity, draws the bondwires, and checks wire lengths, crossings, spacing, lead skew and analog guard clearances. Outputs:
+The flow ([packaging/scripts/run_bondplan.py](packaging/scripts/run_bondplan.py)) is driven by [packaging/config.yaml](packaging/config.yaml), which holds the full package-pin-to-die-pad `PINOUT` in a LibreLane-style config format. It detects the die bondpads (`Passiv` openings and `TopMetal2.text` labels), places the die in the package cavity, draws the bondwires, bonds the ground only through the cavity (`EPAD_NETS`), and checks wire lengths, crossings, spacing, lead skew and analog guard clearances. Outputs:
 
 - `packaging/layout/chip_top_bondplan.gds`: the bondplan GDS
 - [packaging/result.md](packaging/result.md): bond report with summary and bond table
