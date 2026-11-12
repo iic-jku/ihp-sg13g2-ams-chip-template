@@ -117,7 +117,7 @@ SHEET_FIELDS:
   "Die-thickness": "200 um"
   "Extra Info": "{wire_count} wires, min gap {min_gap_um} um, mount the lid with its white dot at pin 1"
   "Qty packaged": "10"
-  "Qty naked": "20"
+  "Qty naked": "40"
   "Die Attach": "conductive epoxy"
   "Wire": "Gold, {bondwire_width_um} um"
 
