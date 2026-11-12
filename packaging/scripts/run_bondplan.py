@@ -11,7 +11,8 @@
 #   2. generates the package sheet from the EUROPRACTICE package library
 #      and detects its lead frame, pin numbers and inner border,
 #   3. places the die into the package cavity,
-#   4. draws the bondwires and exposed-pad downbonds on Exchange0.drawing,
+#   4. draws the bondwires, exposed-pad downbonds and lead-to-cavity
+#      bonds on Exchange0.drawing,
 #      plus a bond table and re-aligned pin numbers,
 #   5. fills the title block of the drawing sheet and converts all texts
 #      to polygon glyphs,
@@ -52,6 +53,7 @@ DEFAULTS = {
     "DIE_PAD_LAYER": "9/0",
     "DIE_PAD_MIN_SIZE": 40.0,
     "DIE_PAD_LABEL_LAYER": "134/25",
+    "DIE_PAD_LABEL_SEARCH": 0.0,        # um, label may sit this far outside
     "PACKAGE_LIBRARY_GDS": None,        # package library (e.g. EP_PACKAGES_*.gds)
     "PACKAGE_NAME": None,               # sheet cell to generate PACKAGE_GDS from
     "PACKAGE_GDS": None,                # default: <library dir>/<PACKAGE_NAME>.gds
@@ -81,6 +83,12 @@ DEFAULTS = {
     "GUARDED_PINS": [],                 # pins or [groups] needing extra clearance
     "GUARD_SPACING": 100.0,             # um, min gap around guarded wires
     "EPAD_WIRE_LENGTH": 500.0,
+    "EPAD_NETS": [],                    # nets bonded only via the cavity
+    "EPAD_LEAD_WIRE_LENGTH": 500.0,     # um, lead-to-cavity bond length
+    "EPAD_DIE_CLEARANCE": 100.0,        # um, cavity landing to die edge
+    "PACKAGE_PADDLE": None,             # um, paddle side; default: lead tips
+    "EPAD_PADDLE_CLEARANCE": 0.0,       # um, cavity landing to paddle edge
+    "EPAD_LANDING_GAP": 0.0,            # um, downbond stops short of its aim
     "BONDPLAN_CELL": "bondplan",
     "BONDPLAN_DELETE_LAYERS": [],
     "BONDPLAN_REPORT": None,
@@ -294,6 +302,10 @@ def detect_die_pads(cfg):
     pads = []
     for poly in region.each():
         bb = poly.bbox()
+        # A seal ring's Passiv is a frame with a hole, its bbox the die.
+        # No area test: the rfpad opening is an octagon.
+        if poly.holes():
+            continue
         if bb.width() >= min_size and bb.height() >= min_size:
             pads.append({"name": None,
                          "x": bb.center().x * dbu, "y": bb.center().y * dbu,
@@ -311,16 +323,21 @@ def detect_die_pads(cfg):
             shape = it.shape()
             if shape.is_text():
                 t = shape.text.transformed(it.trans())
-                labels.append((shape.text.string, t.x * dbu, t.y * dbu))
+                own = it.cell_index() == cell.cell_index()
+                labels.append((shape.text.string, t.x * dbu, t.y * dbu, own))
             it.next()
+        # Top-cell labels (the chip's ports) beat a pad cell's own pin
+        # labels; DIE_PAD_LABEL_SEARCH admits a port label just off the
+        # opening (a pad with no bondpad cell gets its terminal on its pin).
+        grow = float(cfg["DIE_PAD_LABEL_SEARCH"])
         for pad in pads:
             best = None
-            for name, x, y in labels:
-                if (abs(x - pad["x"]) <= pad["w"] / 2.0
-                        and abs(y - pad["y"]) <= pad["h"] / 2.0):
-                    d = math.hypot(x - pad["x"], y - pad["y"])
-                    if best is None or d < best[0]:
-                        best = (d, name)
+            for name, x, y, own in labels:
+                if (abs(x - pad["x"]) <= pad["w"] / 2.0 + grow
+                        and abs(y - pad["y"]) <= pad["h"] / 2.0 + grow):
+                    rank = (not own, math.hypot(x - pad["x"], y - pad["y"]))
+                    if best is None or rank < best[0]:
+                        best = (rank, name)
             if best:
                 pad["name"] = best[1]
 
@@ -642,6 +659,13 @@ def analyze_package(cfg):
 # Step 3: die placement transformation
 # ---------------------------------------------------------------------------
 
+def paddle_half(cfg, pkg):
+    """Half the paddle side, um: PACKAGE_PADDLE, else the lead tips."""
+    if cfg["PACKAGE_PADDLE"]:
+        return float(cfg["PACKAGE_PADDLE"]) / 2.0
+    return pkg["inner"]
+
+
 def die_transform(cfg, die_bbox, pkg):
     placement = cfg.get("DIE_PLACEMENT") or {}
     orient = placement.get("orientation", "N")
@@ -673,6 +697,12 @@ def die_transform(cfg, die_bbox, pkg):
             "does not fit the package inner area (%.0f x %.0f um)"
             % (placed.width(), placed.height(), orient,
                float(location[0]), float(location[1]), side, side))
+
+    half = paddle_half(cfg, pkg)
+    if not placed.inside(pya.DBox(pkg["center"].x - half, pkg["center"].y - half,
+                                  pkg["center"].x + half, pkg["center"].y + half)):
+        die("die (%.0f x %.0f um) is not on the %.0f um paddle"
+            % (placed.width(), placed.height(), 2 * half))
 
     info("die: placed at inner border + (%.1f, %.1f) um, orientation %s"
          % (float(location[0]), float(location[1]), orient))
@@ -712,9 +742,15 @@ def guard_groups(cfg):
     return groups
 
 
-def assign_wires(cfg, pads, pkg, die_center):
+def assign_wires(cfg, pads, pkg, die_box):
+    """PINOUT --> wires. A net in EPAD_NETS gets no pad-to-lead wire: each
+    of its pads downbonds to the cavity and each of its leads bonds to the
+    cavity, so the paddle is the node."""
     pinout = cfg["PINOUT"]
+    die_center = (die_box.center().x, die_box.center().y)
     epad_names = normalize_targets(pinout.get("EPAD"))
+    epad_nets = set(normalize_targets(cfg["EPAD_NETS"]))
+    cavity_pins = []
 
     pads_by_name = {}
     for pad in pads:
@@ -732,7 +768,10 @@ def assign_wires(cfg, pads, pkg, die_center):
             die("pin %d not found on the package (numbered pins: %d..%d)"
                 % (pin, min(pkg["bond_pts"]), max(pkg["bond_pts"])))
         for name in normalize_targets(value):
-            requests.setdefault(name, []).append(pin)
+            if name in epad_nets:
+                cavity_pins.append((pin, name))
+            else:
+                requests.setdefault(name, []).append(pin)
 
     # Shortest-wire assignment per pad name (handles VDD/VSS/... groups)
     wires = []
@@ -750,6 +789,7 @@ def assign_wires(cfg, pads, pkg, die_center):
                 pairs.append((math.hypot(pad["x"] - bp.x, pad["y"] - bp.y),
                               i, j))
         pairs.sort()
+        group = []
         done_pins, done_pads = set(), set()
         for dist, i, j in pairs:
             if i in done_pins or j in done_pads:
@@ -763,7 +803,42 @@ def assign_wires(cfg, pads, pkg, die_center):
                     "p0": (pad["x"], pad["y"]), "p1": (bp.x, bp.y),
                     "length": dist}
             wire_geometry(wire, pkg["lead_dirs"].get(pin_list[i]))
-            wires.append(wire)
+            group.append(wire)
+
+        # Greedy shortest-first can cross two wires of one name: swap their
+        # pads until none cross.
+        swapped = True
+        while swapped:
+            swapped = False
+            for a in group:
+                for b in group:
+                    if a is not b and seg_cross(a["p0"], a["p1"],
+                                                b["p0"], b["p1"]):
+                        a["p0"], b["p0"] = b["p0"], a["p0"]
+                        swapped = True
+        for wire in group:
+            wire["length"] = math.hypot(wire["p1"][0] - wire["p0"][0],
+                                        wire["p1"][1] - wire["p0"][1])
+            wire_geometry(wire, pkg["lead_dirs"].get(wire["pin"]))
+        wires += group
+
+    # Lead-to-cavity bonds: inward along the lead axis. p0 is the cavity end.
+    lead_len = float(cfg["EPAD_LEAD_WIRE_LENGTH"])
+    for pin, net in cavity_pins:
+        bp, d = pkg["bond_pts"][pin], pkg["lead_dirs"][pin]
+        wire = {"pin": pin, "name": "EPAD", "cavity": True, "net": net,
+                "p0": (bp.x - lead_len * d[0], bp.y - lead_len * d[1]),
+                "p1": (bp.x, bp.y), "length": lead_len}
+        wire_geometry(wire, d)
+        wires.append(wire)
+
+    # Every pad of an EPAD net downbonds, on top of any explicit EPAD list
+    for net in sorted(epad_nets):
+        free = [p for p in pads_by_name.get(net, []) if not p.get("used")]
+        if not free:
+            die("EPAD_NETS names '%s' but the die has no free pad of that name"
+                % net)
+        epad_names += [net] * len(free)
 
     # Exposed-pad downbonds: stubs from leftover pads, oriented parallel
     # to the neighboring bondwires (radial from die center as fallback)
@@ -782,7 +857,37 @@ def assign_wires(cfg, pads, pkg, die_center):
             norm = math.hypot(vx, vy) or 1.0
         return vx / norm, vy / norm
 
+    # An EPAD_NETS pad aims at a landing of its own net's lead-to-cavity
+    # bonds, nearest pairs first, so pad, paddle and lead read as one line.
+    # A stub parallel to its neighbours can converge on a signal wire.
+    aim, lead_of = {}, {}
+    pairs = []
+    landings = [w["p0"] for w in wires if w.get("cavity")]
+    nets = [w["net"] for w in wires if w.get("cavity")]
+    leads = [w["pin"] for w in wires if w.get("cavity")]
+    for net in epad_nets:
+        for pad in pads_by_name.get(net, []):
+            if pad.get("used"):
+                continue
+            for j, (x, y) in enumerate(landings):
+                if nets[j] == net:
+                    pairs.append((math.hypot(x - pad["x"], y - pad["y"]),
+                                  id(pad), j))
+    done_pads, done_lands = set(), set()
+    for dist, pid, j in sorted(pairs):
+        if pid not in done_pads and j not in done_lands:
+            done_pads.add(pid)
+            done_lands.add(j)
+            aim[pid] = landings[j]
+            lead_of[pid] = leads[j]
+
+    def clearance(p0, p1, skip=None):
+        """Smallest centreline distance to the wires drawn so far, um."""
+        return min((seg_seg_dist(p0, p1, w["p0"], w["p1"]) for w in wires
+                    if w["p0"] != skip), default=float("inf"))
+
     stub = float(cfg["EPAD_WIRE_LENGTH"])
+    gap = float(cfg["EPAD_LANDING_GAP"])
     for name in epad_names:
         left = [p for p in pads_by_name.get(name, []) if not p.get("used")]
         if not left:
@@ -790,13 +895,53 @@ def assign_wires(cfg, pads, pkg, die_center):
                 % name)
         pad = sorted(left, key=lambda p: (p["x"], p["y"]))[0]
         pad["used"] = True
-        direction = stub_direction(pad)
-        p1 = (pad["x"] + stub * direction[0],
-              pad["y"] + stub * direction[1])
-        wire = {"pin": "EPAD", "name": name,
-                "p0": (pad["x"], pad["y"]), "p1": p1, "length": stub}
+        p0 = (pad["x"], pad["y"])
+        direction, length = stub_direction(pad), stub
+        if id(pad) in aim:          # never onto or past the landing it aims at
+            target = aim[id(pad)]
+            dx, dy = target[0] - pad["x"], target[1] - pad["y"]
+            dist = math.hypot(dx, dy)
+            aimed = (dx / dist, dy / dist)
+            a_len = min(stub, dist - gap)
+            # The aim stays only where it clears the other wires at least as
+            # well as the parallel stub: on TinyWhisper the IOVSS pad's line
+            # to pin 15 crosses the pin 14 wire.
+            if (clearance(p0, (p0[0] + a_len * aimed[0],
+                               p0[1] + a_len * aimed[1]), target)
+                    >= clearance(p0, (p0[0] + length * direction[0],
+                                      p0[1] + length * direction[1]))):
+                direction, length = aimed, a_len
+        p1 = (pad["x"] + length * direction[0],
+              pad["y"] + length * direction[1])
+        # A downbond counts as the lead it is paired with in GUARDED_PINS, so
+        # a ground pad between guarded pads keeps the exemption its
+        # pad-to-lead wire had.
+        wire = {"pin": "EPAD", "name": name, "cavity": True,
+                "lead": lead_of.get(id(pad)),
+                "p0": (pad["x"], pad["y"]), "p1": p1, "length": length}
         wire_geometry(wire)                     # bearing only, no lead skew
         wires.append(wire)
+
+    # A cavity landing must be on the paddle, EPAD_PADDLE_CLEARANCE inside
+    # its edge, and off the die by EPAD_DIE_CLEARANCE (die attach fillet,
+    # capillary). Without PACKAGE_PADDLE the lead tips stand in for the edge,
+    # which only holds where the tips reach the paddle.
+    clear = float(cfg["EPAD_DIE_CLEARANCE"])
+    cx, cy = pkg["center"].x, pkg["center"].y
+    edge = paddle_half(cfg, pkg) - float(cfg["EPAD_PADDLE_CLEARANCE"])
+    keep_out = die_box.enlarged(clear, clear)
+    for wire in wires:
+        if not wire.get("cavity"):
+            continue
+        x, y = wire["p1"] if wire["pin"] == "EPAD" else wire["p0"]
+        if max(abs(x - cx), abs(y - cy)) > edge:
+            die("cavity bond pin %s (%s) lands %.0f um off the centre, "
+                "past the paddle limit of %.0f um"
+                % (wire["pin"], wire["name"],
+                   max(abs(x - cx), abs(y - cy)), edge))
+        if keep_out.contains(pya.DPoint(x, y)):
+            die("cavity bond pin %s (%s) lands within %.0f um of the die"
+                % (wire["pin"], wire["name"], clear))
 
     unbonded = [p["name"] for p in pads if p["name"] and not p.get("used")]
     if unbonded:
@@ -813,7 +958,7 @@ def assign_wires(cfg, pads, pkg, die_center):
 
 def sheet_stats(cfg, pads, die_bbox, wires):
     """Computed values available as {placeholders} in SHEET_FIELDS."""
-    lengths = [w["length"] for w in wires if w["pin"] != "EPAD"]
+    lengths = [w["length"] for w in wires if not w.get("cavity")]
     gaps = [w["min_gap"] for w in wires if w.get("min_gap") is not None]
     openings = sorted(p["w"] for p in pads)
     pitches = sorted(
@@ -1130,6 +1275,7 @@ def build_bondplan(cfg, pkg, die_layout, die_cell, die_trans, wires, stats):
 # ---------------------------------------------------------------------------
 
 def check_wires(cfg, wires):
+    """Logs the checks and returns the number of crossing wire pairs."""
     max_len = float(cfg["BONDWIRE_MAX_LENGTH"])
     width = float(cfg["BONDWIRE_WIDTH"])
     for wire in wires:
@@ -1140,6 +1286,7 @@ def check_wires(cfg, wires):
     guards = guard_groups(cfg)
     guard_gap = float(cfg["GUARD_SPACING"])
     min_gap, min_pair = None, None
+    crossings = 0
     for i in range(len(wires)):
         for j in range(i + 1, len(wires)):
             a, b = wires[i], wires[j]
@@ -1149,6 +1296,7 @@ def check_wires(cfg, wires):
             if seg_cross(a["p0"], a["p1"], b["p0"], b["p1"]):
                 warn("wires cross: pin %s (%s) x pin %s (%s)"
                      % (a["pin"], a["name"], b["pin"], b["name"]))
+                crossings += 1
             gap = seg_seg_dist(a["p0"], a["p1"], b["p0"], b["p1"]) - width
             if min_gap is None or gap < min_gap:
                 min_gap, min_pair = gap, (a, b)
@@ -1156,7 +1304,8 @@ def check_wires(cfg, wires):
                 wire["min_gap"] = min(gap, wire.get("min_gap", float("inf")))
             # guarded wires need GUARD_SPACING to everything outside
             # their own guard group
-            ga, gb = guards.get(a["pin"]), guards.get(b["pin"])
+            ga = guards.get(a.get("lead") or a["pin"])
+            gb = guards.get(b.get("lead") or b["pin"])
             if ((ga is not None or gb is not None) and ga != gb
                     and gap < guard_gap):
                 warn("guard spacing: pin %s (%s) has only %.1f um to "
@@ -1181,10 +1330,11 @@ def check_wires(cfg, wires):
         info("wire lead skew: max %.1f deg (pin %s %s)"
              % (worst["skew"], worst["pin"], worst["name"]))
 
-    lengths = [w["length"] for w in wires if w["pin"] != "EPAD"]
+    lengths = [w["length"] for w in wires if not w.get("cavity")]
     if lengths:
         info("wire lengths: min %.0f / max %.0f um"
              % (min(lengths), max(lengths)))
+    return crossings
 
 
 def write_report(cfg, wires, stats):
@@ -1223,6 +1373,7 @@ def _write_csv_report(rows, out):
 
 def _write_markdown_report(cfg, rows, stats, out):
     epad = sum(1 for w in rows if w["pin"] == "EPAD")
+    cavity = sum(1 for w in rows if w.get("cavity")) - epad
     skews = [w["skew"] for w in rows if w.get("skew") is not None]
     title = cfg["DESIGN_NAME"]
     if cfg["VERSION"]:
@@ -1245,8 +1396,9 @@ def _write_markdown_report(cfg, rows, stats, out):
                                          stats["die_height_mm"])),
             ("Pad pitch / opening", "%s / %s um" % (stats["pad_pitch_um"],
                                                     stats["pad_opening_um"])),
-            ("Bondwires", "%d (%d to leads, %d exposed-pad downbonds)"
-             % (len(rows), len(rows) - epad, epad)),
+            ("Bondwires", "%d (%d pad to lead, %d pad to cavity, "
+             "%d lead to cavity)"
+             % (len(rows), len(rows) - epad - cavity, epad, cavity)),
             ("Wire width", "%g um" % float(cfg["BONDWIRE_WIDTH"])),
             ("Wire length", "%s .. %s um" % (stats["min_wire_length_um"],
                                              stats["max_wire_length_um"])),
@@ -1438,15 +1590,17 @@ def main():
     for pad in pads:                            # die --> bondplan coordinates
         p = trans * pya.DPoint(pad["x"], pad["y"])
         pad["x"], pad["y"] = p.x, p.y
-    center = trans * die_bbox.center()
-
-    wires = assign_wires(cfg, pads, pkg, (center.x, center.y))
-    check_wires(cfg, wires)                     # also fills per-wire min_gap
+    wires = assign_wires(cfg, pads, pkg, die_bbox.transformed(trans))
+    crossings = check_wires(cfg, wires)         # also fills per-wire min_gap
     stats = sheet_stats(cfg, pads, die_bbox, wires)
     out, bp_layout, bp_top, table_box = build_bondplan(
         cfg, pkg, die_layout, die_cell, trans, wires, stats)
     write_report(cfg, wires, stats)
     export_images(cfg, pkg, out, bp_layout, bp_top, table_box)
+    # After the outputs, so that the drawing shows the crossing
+    if crossings:
+        die("%d wire crossing(s), EUROPRACTICE rejects crossing wires"
+            % crossings)
     info("done!")
 
 
