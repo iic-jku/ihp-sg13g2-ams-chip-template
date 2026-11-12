@@ -340,6 +340,7 @@ The [vco Makefile](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/
 | `make klayout-drc-regular`                        | Run the KLayout DRC of `vco_top` at the regular level, where only the densities the chip's fill meets may fail. |
 | `make sim-powerup` (`SIM_JOBS=<n>`)               | Run the post-layout power-up and enable transient over the orders of `VDD` and `di_en`, hours on a compute host. |
 | `make sim-trannoise` / `sim-trannoise-lpe` (`SEEDS=<n>`) | Run the transient noise of the schematic against PNOISE, or of the post-layout netlist, hours on a compute host. |
+| `make sim-pss-lpe`                                 | Run the PSS, PNOISE and PAC of the post-layout netlist, about 1.5 hours on a compute host. |
 | `make all`                                        | Write the layouts, verify, build and simulate, without the EM simulation, the corners and the long runs. |
 
 See the [vco README](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/vco/README.md) and @sec-rf for more details.
@@ -1565,12 +1566,12 @@ A current source on the center tap sets the tank's common mode by the pair's gat
 | :--- | :--- | :--- | :--- |
 | Oscillation frequency at `vtune` = 0.75 V | 20 GHz | 22.55 GHz | 20.00 GHz |
 | Tuning range, `vtune` from 0 V to 1.5 V | about 2 GHz | 21.64 GHz to 24.04 GHz | 19.34 GHz to 21.18 GHz |
-| Phase noise at 1 MHz offset | reported | -101.2 dBc/Hz (PNOISE), -99.4 dBc/Hz (transient noise) | -101.1 dBc/Hz (transient noise) |
+| Phase noise at 1 MHz offset | reported | -101.2 dBc/Hz (PNOISE), -99.4 dBc/Hz (transient noise) | -101.5 dBc/Hz (PNOISE), -101.1 dBc/Hz (transient noise) |
 | Output power per output into 50 $\Omega$ | -10 dBm or more | -8.3 dBm | -10.0 dBm |
 | Supply current from `VDD` = 1.5 V | | 11.6 mA | 10.9 mA |
 | Disabled | | | 9 nA, no oscillation |
 
-: Results of the `vco` at TT and 27 C. The schematic frequency is from the PSS, the post-layout one and the post-layout output power from the transient of @sec-rf-postlayout, and the schematic output power is the fundamental from the PSS. {#tbl-vco-results}
+: Results of the `vco` at TT and 27 C. The schematic frequency is from the PSS, the post-layout one from the transient of @sec-rf-postlayout, and both output powers are the fundamental from the PSS. {#tbl-vco-results}
 
 ## Directory Structure {#sec-rf-dirs}
 
@@ -1602,13 +1603,14 @@ The [Makefile](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main
 | Post-layout tuning curve | ngspice | `sim-tune-lpe` | `testbenches/xschem/plot_simulations/figures/` |
 | Power-up and enable | ngspice | `sim-powerup` | `testbenches/xschem/plot_simulations/` |
 | Transient noise | VACASK | `sim-trannoise`, `sim-trannoise-lpe` | `testbenches/xschem/plot_simulations/data/` |
+| Post-layout PSS | VACASK | `sim-pss-lpe` | `testbenches/xschem/plot_simulations/data/` |
 | Plots | Python | `sim-view-xschem` | `testbenches/xschem/plot_simulations/figures/` |
 | Deliverables | Magic, `sak-render.py` | `build-top` | `final/`, `render/img/` |
 | Everything but EM and the long runs | all of the above | `all` | |
 
 : Flow steps of the `vco` and their Makefile targets. {#tbl-rf-flow tbl-colwidths="[20,22,30,28]"}
 
-`make all` runs `klayout-script-all`, `klayout-verify-all`, `gdscheck-drc-all`, `magic-verify-all`, `build-top` and `sim-all`, in about 28 minutes on a compute host. It leaves out the EM simulation of the coil, which takes 35 minutes on a compute host, the corners, and the two long runs: the power-up transient and the transient noise take hours each. Their results are committed, so `make all` simulates with the coil model of the last EM run.
+`make all` runs `klayout-script-all`, `klayout-verify-all`, `gdscheck-drc-all`, `magic-verify-all`, `build-top` and `sim-all`, in about 28 minutes on a compute host. It leaves out the EM simulation of the coil, which takes 35 minutes on a compute host, the corners, and the long runs: the power-up transient and the transient noise take hours each, the post-layout PSS 1.5 hours. Their results are committed, so `make all` simulates with the coil model of the last EM run.
 
 ## Layout Generation {#sec-rf-layout}
 
@@ -1830,7 +1832,7 @@ Transient noise is the exception: it injects random noise into an ordinary trans
 | :--- | :--- | :--- |
 | `tran` | transient | start-up (`vco_top_tb_tran`), tuning curve (`vco_top_tb_tune_vacask`), corners, power-up and post-layout |
 | `acsp` | S-parameters from an AC analysis with ports | the coil model against its EM data (`vco_ind_tb_acsp_vacask`) |
-| `pss` | periodic steady state by shooting, for an oscillator with the period as an unknown (`oscillator=1`) | frequency, waveform and output power (`vco_top_tb_pss_vacask`) |
+| `pss` | periodic steady state by shooting, for an oscillator with the period as an unknown (`oscillator=1`) | frequency, waveform and output power (`vco_top_tb_pss_vacask`, post-layout `vco_top_tb_pss_lpe_vacask`) |
 | `pac` | small-signal transfer around the PSS, sideband to sideband | the tuning gain $K_\mathrm{VCO}$ from a small tone on `vtune` |
 | `pnoise` | noise around the PSS, modulated and folded | the phase noise and its contributions |
 | transient noise | `tran` with random noise sources | the phase noise of the schematic against PNOISE, and of the post-layout netlist (`vco_top_tb_trannoise_vacask`, `vco_top_tb_trannoise_lpe_vacask`) |
@@ -1885,7 +1887,7 @@ The start-up transient of @fig-vco-tran reaches its full amplitude within a few 
 
 ![Oscillator PSS (VACASK): one period of the tank and the outputs, and the spectrum of the output.](fig/vco_top/vco_top_tb_pss_vacask_pss.svg){#fig-vco-pss}
 
-The spectrum in @fig-vco-pss is that of one output. Its harmonics come from the buffer, a differential pair driven by the tank's full swing into resistive loads, and not from the tank. The second harmonic is -9.4 dBc and the third -20.9 dBc here, and -16.8 and -27.6 dBc post-layout. The second is common mode, so it cancels between the two outputs (-48.9 dBc in the schematic).
+The spectrum in @fig-vco-pss is that of one output. Its harmonics come from the buffer, a differential pair driven by the tank's full swing into resistive loads, and not from the tank. The second harmonic is -9.4 dBc and the third -20.9 dBc here, and -16.1 and -27.6 dBc post-layout. The second is common mode, so it cancels between the two outputs (-48.9 dBc in the schematic, -54.4 dBc post-layout).
 
 @fig-vco-pnoise shows the phase noise from PNOISE and the tuning gain from PAC. The phase noise is -101.2 dBc/Hz at 1 MHz offset. Its contributions show where it comes from: 55 % from the core (pair, varactors and coil) and 36 % from the bias of the buffer, whose input capacitance loads the tank and moves the frequency with its bias current. Below 1 MHz that bias takes over: its noise passes the 170 kHz low-pass of the bias filters, so its share grows by 40 dB to 48 dB per decade towards lower offsets, against 20 dB for the core. The tuning gain from PAC, 1.87 GHz/V at 10 MHz, agrees within about 2 % with the slope of the tuning curve of @fig-vco-tune, whose frequencies the plot script takes from the zero crossings of each tuning transient.
 
@@ -1898,7 +1900,7 @@ The spectrum in @fig-vco-pss is that of one output. Its harmonics come from the 
 The schematic has no leads, so @fig-vco-tune runs about 13 % high and never reaches 20 GHz. The macro is centered on @fig-vco-tune-lpe: 20 GHz is at `vtune` = 0.75 V, and it stays inside the tuning range at every corner (@sec-rf-corners).
 
 ::: {.callout-note}
-With `oscillator=1`, VACASK's `pnoise` computes the noise as for a driven circuit, so it is the total output noise, phase and amplitude noise together. Close to the carrier that is the phase noise. Below about 100 kHz the result loses accuracy, so read it from there up, and check it against transient noise (@sec-rf-trannoise). The [Limitations](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/vco/README.md#limitations) of the README list what is known.
+With `oscillator=1`, VACASK's `pnoise` computes the noise as for a driven circuit, so it is the total output noise, phase and amplitude noise together. Close to the carrier that is the phase noise. Below about 100 kHz the result loses accuracy, post-layout already below about 1 MHz, so read it from there up, and check it against transient noise (@sec-rf-trannoise). The [Limitations](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/vco/README.md#limitations) of the README list what is known.
 :::
 
 Further traps of the testbenches, all documented in the README:
@@ -1956,32 +1958,33 @@ Every run passes. With `di_en` rising at 100 ns, the tank is up after 3.8 ns at 
 
 ## Transient Noise and the Post-Layout Phase Noise {#sec-rf-trannoise}
 
-PNOISE linearizes the circuit around one periodic solution. Transient noise does not: it adds random noise sources to an ordinary transient and reads the phase noise from the zero crossings of the result. It needs no PSS, so it also works on the post-layout netlist, whose PSS the VACASK of this image cannot solve ([VACASK#173](https://codeberg.org/arpadbuermen/VACASK/issues/173), fixed upstream in `f29d2b0`, after this image).
+PNOISE linearizes the circuit around one periodic solution. Transient noise does not: it adds random noise sources to an ordinary transient and reads the phase noise from the zero crossings of the result. It shares no code with PNOISE and checks it, on the schematic and on the post-layout netlist. The post-layout PSS, `vco_top_tb_pss_lpe_vacask`, runs the analyses of @sec-rf-tb-pss on the post-layout wrapper of @sec-rf-postlayout with gear integration, since with the trapezoidal rule its shooting does not converge ([VACASK#174](https://codeberg.org/arpadbuermen/VACASK/issues/174)). It needs VACASK `f29d2b0` or later ([VACASK#173](https://codeberg.org/arpadbuermen/VACASK/issues/173)).
 
 ```sh
 make sim-trannoise        # the schematic, 8 seeds, against PNOISE
 make sim-trannoise-lpe    # the post-layout netlist, 8 seeds
+make sim-pss-lpe          # the post-layout PSS, PNOISE and PAC, 1.5 hours
 ```
 
 The benches settle the oscillation for 6 ns, store the state, and run a noisy transient of 5 $\mu$s (4 $\mu$s post-layout) from it, at a fixed step of 0.25 ps with noise from 100 kHz to 100 GHz, one VACASK process per seed. [`sim_trannoise.py`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/vco/scripts/sim_trannoise.py) takes the zero crossings of the tank's differential voltage, computes the phase from the period-to-period differences, and averages the spectra of the seeds. Since every seed starts from the same state, what they share is a drift and not noise, and the script subtracts it. `make check-trannoise` tests that spectrum code on synthetic jitter with a known spectrum.
 
 ![Phase noise from transient noise (VACASK, 8 seeds) against PNOISE: the schematic and the post-layout netlist.](fig/vco_top/vco_top_tb_trannoise_vacask.svg){#fig-vco-trannoise}
 
-| Offset | PNOISE, schematic | Transient noise, schematic | Transient noise, post-layout |
-| :--- | :--- | :--- | :--- |
-| 1 MHz | -101.2 dBc/Hz | -99.4 dBc/Hz | -101.1 dBc/Hz |
-| 3 MHz | -113.5 dBc/Hz | -112.5 dBc/Hz | -110.9 dBc/Hz |
-| 10 MHz | -124.7 dBc/Hz | -124.9 dBc/Hz | -123.5 dBc/Hz |
-| 30 MHz | -134.5 dBc/Hz | -134.9 dBc/Hz | -133.8 dBc/Hz |
-| 100 MHz | -145.1 dBc/Hz | -145.8 dBc/Hz | -143.7 dBc/Hz |
+| Offset | PNOISE, schematic | Transient noise, schematic | PNOISE, post-layout | Transient noise, post-layout |
+| :--- | :--- | :--- | :--- | :--- |
+| 1 MHz | -101.2 dBc/Hz | -99.4 dBc/Hz | -101.5 dBc/Hz | -101.1 dBc/Hz |
+| 3 MHz | -113.5 dBc/Hz | -112.5 dBc/Hz | -112.4 dBc/Hz | -110.9 dBc/Hz |
+| 10 MHz | -124.7 dBc/Hz | -124.9 dBc/Hz | -123.3 dBc/Hz | -123.5 dBc/Hz |
+| 30 MHz | -134.5 dBc/Hz | -134.9 dBc/Hz | -133.0 dBc/Hz | -133.8 dBc/Hz |
+| 100 MHz | -145.1 dBc/Hz | -145.8 dBc/Hz | -143.6 dBc/Hz | -143.7 dBc/Hz |
 
 : Phase noise from PNOISE and from transient noise. {#tbl-vco-trannoise}
 
-`make sim-trannoise` checks PNOISE with an analysis that shares no code with it: on the schematic, transient noise over 8 seeds and PNOISE differ by -0.7 dB to +1.9 dB from 1 MHz to 100 MHz, with a scatter of the seeds of about 0.9 dB at 1 MHz. At 1 MHz the post-layout phase noise is 1.7 dB below the schematic's: about 1 dB of that is the lower carrier, and the rest is within the scatter of the seeds.
+`make sim-trannoise` checks PNOISE with an analysis that shares no code with it: on the schematic, transient noise over 8 seeds and PNOISE differ by -0.7 dB to +1.9 dB from 1 MHz to 100 MHz, with a scatter of the seeds of about 0.9 dB at 1 MHz. Post-layout they differ by -0.8 dB to +1.5 dB, with a scatter of 1.0 dB at 1 MHz. At 1 MHz the post-layout PNOISE is 0.3 dB below the schematic's, less than the 1.0 dB that the lower carrier alone would give.
 
 ## Post-Layout Simulation {#sec-rf-postlayout}
 
-The post-layout testbench `vco_top_tb_tran_lpe` is the start-up transient around the wrapper [`vco_top_lpe.sch`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/vco/testbenches/xschem/vco_top_lpe.sch), which puts three models together: the extraction of the macro without the coil and the varactor array (@sec-rf-verify), the EM model of the coil at the coil's feeds, and the schematic of the varactor array at the middle of its buses. The corners, the power-up and the post-layout transient noise place the same wrapper.
+The post-layout testbench `vco_top_tb_tran_lpe` is the start-up transient around the wrapper [`vco_top_lpe.sch`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/vco/testbenches/xschem/vco_top_lpe.sch), which puts three models together: the extraction of the macro without the coil and the varactor array (@sec-rf-verify), the EM model of the coil at the coil's feeds, and the schematic of the varactor array at the middle of its buses. The corners, the power-up, the post-layout transient noise and the post-layout PSS place the same wrapper.
 
 ```sh
 make klayout-pex-leads
@@ -2017,6 +2020,7 @@ make sim-tune-lpe         # post-layout tuning curve, about a minute
 make sim-powerup          # power-up and enable, hours on a compute host
 make sim-trannoise        # transient noise of the schematic against PNOISE, hours
 make sim-trannoise-lpe    # post-layout phase noise, hours
+make sim-pss-lpe          # post-layout PSS, PNOISE and PAC, about 1.5 hours
 ```
 
 A new RF macro starts as a renamed copy of this one: `make macro FROM=vco NAME=<name>` in [`macros/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/), as for the digital and the analog macro.

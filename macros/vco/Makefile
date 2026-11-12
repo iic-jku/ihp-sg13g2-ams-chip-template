@@ -246,6 +246,10 @@ sim-trannoise-lpe: ## Run the transient noise of the post-layout netlist over SE
 		--data $(SIM_PLOT_DIR)/data/vco_top_tb_trannoise_lpe_vacask.txt
 .PHONY: sim-trannoise-lpe
 
+sim-pss-lpe: ## Run PSS, PNOISE and PAC of the post-layout netlist with VACASK f29d2b0 or later, about 1.5 hours on a server
+	$(MAKE) sim-xschem TB=vco_top_tb_pss_lpe_vacask
+.PHONY: sim-pss-lpe
+
 check-trannoise: ## Check the spectrum code of sim_trannoise.py on period jitter with a known PSD, without a simulator
 	python3 $(SCRIPTS_DIR)/check_trannoise.py
 .PHONY: check-trannoise
