@@ -1610,7 +1610,7 @@ The [Makefile](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main
 
 : Flow steps of the `vco` and their Makefile targets. {#tbl-rf-flow tbl-colwidths="[20,22,30,28]"}
 
-`make all` runs `klayout-script-all`, `klayout-verify-all`, `gdscheck-drc-all`, `magic-verify-all`, `build-top` and `sim-all`, in about 28 minutes on a compute host. It leaves out the EM simulation of the coil, which takes 35 minutes on a compute host, the corners, and the two long runs: the power-up transient and the transient noise take hours each. Their results are committed, so `make all` simulates with the coil model of the last EM run.
+`make all` runs `klayout-script-all`, `klayout-verify-all`, `gdscheck-drc-all`, `magic-verify-all`, `build-top` and `sim-all`, in about 28 minutes on a compute host. It leaves out the EM simulation of the coil, which takes 35 minutes on a compute host, the corners, and the long runs: the power-up transient and the transient noise take hours each, the post-layout PSS 1.5 hours. Their results are committed, so `make all` simulates with the coil model of the last EM run.
 
 ## Layout Generation {#sec-rf-layout}
 
@@ -1963,7 +1963,7 @@ PNOISE linearizes the circuit around one periodic solution. Transient noise does
 ```sh
 make sim-trannoise        # the schematic, 8 seeds, against PNOISE
 make sim-trannoise-lpe    # the post-layout netlist, 8 seeds
-make sim-pss-lpe          # PSS, PNOISE and PAC of the post-layout netlist, about 1.5 hours
+make sim-pss-lpe          # the post-layout PSS, PNOISE and PAC, 1.5 hours
 ```
 
 The benches settle the oscillation for 6 ns, store the state, and run a noisy transient of 5 $\mu$s (4 $\mu$s post-layout) from it, at a fixed step of 0.25 ps with noise from 100 kHz to 100 GHz, one VACASK process per seed. [`sim_trannoise.py`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/vco/scripts/sim_trannoise.py) takes the zero crossings of the tank's differential voltage, computes the phase from the period-to-period differences, and averages the spectra of the seeds. Since every seed starts from the same state, what they share is a drift and not noise, and the script subtracts it. `make check-trannoise` tests that spectrum code on synthetic jitter with a known spectrum.

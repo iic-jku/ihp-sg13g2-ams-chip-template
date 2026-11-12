@@ -759,7 +759,7 @@ make magic-verify-all          # LVS and PEX of the bias, the buffer and the tap
 make all
 ```
 
-Runs `klayout-script-all`, `klayout-verify-all`, `gdscheck-drc-all`, `magic-verify-all`, `build-top` and `sim-all`: the inverter's chain, which first writes the layouts from their scripts. It takes about 28 minutes on a compute host. As in the inverter, verification runs before the simulations, so the post-layout testbench reads the extraction of this run. The EM simulation of the coil, the corners, the power-up transient and the transient noise are not part of it.
+Runs `klayout-script-all`, `klayout-verify-all`, `gdscheck-drc-all`, `magic-verify-all`, `build-top` and `sim-all`: the inverter's chain, which first writes the layouts from their scripts. It takes about 28 minutes on a compute host. As in the inverter, verification runs before the simulations, so the post-layout testbench reads the extraction of this run. The EM simulation of the coil, the corners, the power-up transient, the transient noise and the post-layout PSS are not part of it.
 
 
 ### Clean
