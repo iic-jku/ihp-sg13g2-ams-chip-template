@@ -60,16 +60,16 @@ Supported packages in `EP_PACKAGES_08022018.gds`, with a lead frame and numbered
 
 The library's remaining drawings (DIL, CLCC, CPGA, CERQUAD, and the larger QFN/SOIC variants) use older drawing conventions without a machine-readable lead frame and are rejected with a descriptive error.
 
-Infeasible configurations abort with clear messages: an unknown `PACKAGE_NAME` (the error lists all available cells), a `PINOUT` pin number beyond the package's pin count, a package drawing without a usable lead frame, and a die that (with its `DIE_PLACEMENT`) does not fit into the package inner area.
+Infeasible configurations abort with clear messages: an unknown `PACKAGE_NAME` (the error lists all available cells), a `PINOUT` pin number beyond the package's pin count, a package drawing without a usable lead frame, a die that (with its `DIE_PLACEMENT`) does not fit into the package inner area or onto the paddle, and a cavity bond that lands off the paddle or too close to the die.
 
 ### How the Flow Works
 
 1. **Extract**: reads the die layout GDS with a layer map so only `DIE_EXTRACT_LAYERS` (Passiv, TopVia2, TopMetal2) are loaded and writes the lightweight die view `DIE_EXTRACT_GDS` (top cell renamed to `DIE_EXTRACT_CELL`).
-2. **Detect die pads**: merged `Passiv` (9/0) openings larger than `DIE_PAD_MIN_SIZE` are the bondpads. Their names come from the `TopMetal2.text` (134/25) labels placed on the pad centers by LibreLane. No LEF file is needed.
+2. **Detect die pads**: merged `Passiv` (9/0) openings larger than `DIE_PAD_MIN_SIZE` are the bondpads. A `Passiv` polygon with a hole is the seal ring and is skipped. Their names come from the `TopMetal2.text` (134/25) labels placed on the pad centers by LibreLane. A label of the top cell wins over a pad cell's own pin label, and `DIE_PAD_LABEL_SEARCH` admits a label just outside the opening. No LEF file is needed.
 3. **Analyze the package**: inside the lead frame cell (auto-detected, or set via `PACKAGE_FOOTPRINT_CELL`) the lead polygons (210/0) and the pin number texts (211/0) are read. Each pin number is matched to its nearest lead. The bond point lies on the ray from the package center through the lead (`BONDWIRE_LEAD_SITE`: 0 = lead tip, 1 = outer end). The package *inner border* (the square touching the lead tips) is derived from the lead geometry.
 4. **Place the die**: `DIE_PLACEMENT.location` is the lower-left corner of the (oriented) die outline relative to the lower-left corner of the inner border. Omit it to center the die. `orientation` accepts the LibreLane/DEF values `N/S/E/W/FN/FS/FE/FW`.
-5. **Draw the bondwires**: `PINOUT` maps each package pin to a die pad name. Wires are `BONDWIRE_WIDTH` wide paths on `BONDWIRE_LAYER` (`Exchange0.drawing - 190/0`, a documentation-only layer, nothing in the PDK consumes it). A bond table (`pin pad`) is written on `BONDWIRE_TEXT_LAYER` next to the plan. In sheet mode the lead frame is shifted automatically so that plan and table sit inside the drawing frame with equal side margins. The package pin numbers are re-drawn centered on their wire attach points, just outside the package outline (`PACKAGE_PIN_LABEL_OFFSET`).
-6. **Check & export**: wire lengths (`BONDWIRE_MAX_LENGTH`), wire crossings, the minimum wire-to-wire gap, the landing skew of each wire on its lead (`BONDWIRE_MAX_SKEW`) and guard clearances (see below) are checked and reported. Outputs are the bondplan GDS, a bond report and zero-border PNG / SVG images in `_white` / `_black` variants (following the `sak-render.py` naming convention). The report (`BONDPLAN_REPORT`) is a Markdown summary plus a bond table with per-wire length, bearing, lead skew and minimum gap. A `.csv` extension writes raw CSV instead.
+5. **Draw the bondwires**: `PINOUT` maps each package pin to a die pad name. Pads and leads of a net in `EPAD_NETS` are bonded to the paddle instead (see Cavity Bonds). Wires are `BONDWIRE_WIDTH` wide paths on `BONDWIRE_LAYER` (`Exchange0.drawing - 190/0`, a documentation-only layer, nothing in the PDK consumes it). A bond table (`pin pad`) is written on `BONDWIRE_TEXT_LAYER` next to the plan. In sheet mode the lead frame is shifted automatically so that plan and table sit inside the drawing frame with equal side margins. The package pin numbers are re-drawn centered on their wire attach points, just outside the package outline (`PACKAGE_PIN_LABEL_OFFSET`).
+6. **Check & export**: wire lengths (`BONDWIRE_MAX_LENGTH`), wire crossings, the minimum wire-to-wire gap, the landing skew of each wire on its lead (`BONDWIRE_MAX_SKEW`) and guard clearances (see below) are checked and reported. A wire crossing fails the run with exit code 1 after all outputs are written, because EUROPRACTICE does not allow crossing wires (Packaging Design Rules 2024, item 9). Outputs are the bondplan GDS, a bond report and zero-border PNG / SVG images in `_white` / `_black` variants (following the `sak-render.py` naming convention). The report (`BONDPLAN_REPORT`) is a Markdown summary plus a bond table with per-wire length, bearing, lead skew and minimum gap. A `.csv` extension writes raw CSV instead.
 
 ### Pinout Format
 
@@ -85,6 +85,25 @@ PINOUT:
 ```
 
 Unlisted pins are reported as NC. Unbonded named pads are reported too, so a forgotten connection is visible in the log.
+
+### Cavity Bonds
+
+A net in `EPAD_NETS` gets no pad-to-lead wire. Each of its die pads downbonds to the paddle, and each `PINOUT` pin naming it bonds from the lead to the paddle, so the paddle is the node. A bond from the VSS lead to the cavity is what the EUROPRACTICE Packaging Design Rules 2024 (item 8) ask for when VSS should reach the substrate through the cavity. The template bonds `VSS` and `IOVSS` this way:
+
+```yaml
+EPAD_NETS: ["VSS", "IOVSS"]
+PACKAGE_PADDLE: 3400              # um, the EUROPRACTICE drawing has no paddle
+EPAD_WIRE_LENGTH: 500             # um, pad downbond
+EPAD_LEAD_WIRE_LENGTH: 500        # um, lead to cavity, inward along the lead
+EPAD_DIE_CLEARANCE: 100           # um, a cavity landing stays this far off the die
+EPAD_PADDLE_CLEARANCE: 50         # um, and this far inside the paddle edge
+EPAD_LANDING_GAP: 100             # um, pad downbond to its lead bond's landing
+```
+
+- A lead-to-cavity bond runs `EPAD_LEAD_WIRE_LENGTH` inward along the lead axis, so its skew is 0.
+- A pad downbond aims at the nearest landing of its own net's lead-to-cavity bonds and stops `EPAD_LANDING_GAP` short of it. It keeps that direction only if it clears the other wires at least as well as a stub parallel to its neighbouring wires, otherwise it takes the parallel stub.
+- A downbond counts as the lead it is paired with in `GUARDED_PINS`, so a ground pad between guarded pads keeps the exemption its pad-to-lead wire had.
+- Every cavity landing must lie on the paddle, `EPAD_PADDLE_CLEARANCE` inside its edge, and `EPAD_DIE_CLEARANCE` off the die, or the run aborts. Without `PACKAGE_PADDLE` the lead tips stand in for the paddle edge, which overestimates it on the QFN32: the lead tips stop 150 um short of the paddle.
 
 ### Guarded Wires
 
@@ -159,6 +178,12 @@ Every key has a sensible default. A minimal config only needs `DIE_GDS`, `DIE_EX
 | `BONDWIRE_MAX_SKEW` (30 deg) | max wire angle vs. lead axis before warning |
 | `GUARDED_PINS` ([]) / `GUARD_SPACING` (100 um) | clearance check around sensitive wires |
 | `EPAD_WIRE_LENGTH` (500 um) | length of exposed-pad downbond stubs |
+| `EPAD_NETS` ([]) | nets bonded only through the cavity (see Cavity Bonds) |
+| `EPAD_LEAD_WIRE_LENGTH` (500 um) | length of a lead-to-cavity bond |
+| `PACKAGE_PADDLE` (lead tips) | paddle side length, for the die and cavity landing checks |
+| `EPAD_DIE_CLEARANCE` (100 um) / `EPAD_PADDLE_CLEARANCE` (0 um) | cavity landing distance to the die / inside the paddle edge |
+| `EPAD_LANDING_GAP` (0 um) | a downbond stops this far short of the landing it aims at |
+| `DIE_PAD_LABEL_SEARCH` (0 um) | a pad name label may sit this far outside the opening |
 | `PACKAGE_PIN_LABEL_OFFSET` (250 um) | pin number distance outside the package outline |
 | `PACKAGE_PIN_LABEL_SIZE` (from sheet) / `TABLE_TEXT_SIZE` (100 um) | font sizes of pin numbers / bond table |
 | `TABLE_GAP` (400 um) | gap between plan and bond table (side margins stay equal automatically) |
@@ -181,5 +206,6 @@ The flow is not specific to this chip. For a different chip or package you need:
 - EUROPRACTICE - ASIC Packaging - Overview: https://europractice-ic.com/services/packaging/asic-packaging/
 - EUROPRACTICE - ASIC Packaging - DRC: https://europractice-ic.com/wp-content/uploads/2020/06/ASIC_Prototype_Packaging_Design_Rules_2024.pdf
 - EUROPRACTICE - ASIC Packaging - QFN-48: https://europractice-ic.com/wp-content/uploads/2019/06/MLP7X7-48-OP-02-R2-ECN-10501.pdf
+- QP Technologies - QP-QFN32-5MM-0.50MM (cavity, paddle and lead dimensions): https://www.qptechnologies.com/wp-content/uploads/2020/11/QP-QFN32-5MM-0.50MM.pdf
 - EUROPRACTICE - ASIC Packaging - GDS: https://europractice-ic.com/wp-content/uploads/2019/07/EP_PACKAGES_08022018.gds_.gz
 - Take the DXF file from here: https://www.mirrorsemi.com/OpenChip.html and use https://www.artwork.com/gdsii/asm3500/windows/interface.htm to get the GDS file.
