@@ -1,0 +1,2 @@
+module sg13g2_ip__template_name;
+endmodule
