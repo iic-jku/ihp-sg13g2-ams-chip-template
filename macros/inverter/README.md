@@ -564,7 +564,7 @@ On top of the extraction the target does three things:
 - It reduces the full-RC netlist with TICER (`--reduce ticer`), which leaves far fewer elements and a faster simulation, and ngspice with `klu` can lose the operating point of an unreduced netlist (resistors below 1 mOhm).
 - It ties the substrate port `sub!` of the 2.5D netlist to `PEX_SUB_NET` (default `VSS`, [`scripts/tie_pex_substrate.py`](scripts/tie_pex_substrate.py)), as Magic ties the substrate to `VSS`, so the netlist keeps the pins of `<CELL>_pex.sym`.
 
-With the PEX instance swapped in, `inverter_tb_ac_ol` on `inverter` reads a DC gain of 31.46 dB and a UGB of 106.3 MHz from the kpex full-RC netlist, against 31.34 dB and 106.5 MHz from the Magic one.
+With the PEX instance swapped in, `inverter_tb_ac_ol` on `inverter` reads a DC gain of 31.46 dB and a UGB of 106.2 MHz from the kpex full-RC netlist, against 31.34 dB and 106.5 MHz from the Magic one.
 
 **Magic PEX** uses `sak-pex.sh`, which extracts the parasitics with Magic (C-decoupled, C-coupled, or full-RC):
 
