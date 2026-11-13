@@ -8,8 +8,8 @@ from pathlib import Path
 
 import cocotb
 from cocotb.clock import Clock
-from cocotb.triggers import Timer, RisingEdge, ClockCycles
-from cocotb_tools.runner import get_runner
+from cocotb.triggers import RisingEdge, FallingEdge, ClockCycles
+from cocotb_tools.runner import get_results, get_runner
 
 sim      = os.getenv("SIM", "icarus")
 pdk_root = os.getenv("PDK_ROOT", Path("~/.ciel").expanduser())
@@ -17,6 +17,10 @@ pdk      = os.getenv("PDK", "ihp-sg13g2")
 scl      = os.getenv("SCL", "sg13g2_stdcell")
 # GL=1 selects the gate-level netlist; anything else (unset, "0", "") stays in RTL mode.
 gl       = os.getenv("GL", "0").strip().lower() in ("1", "true", "yes", "on")
+# SDF=1 adds the delays of the SDF file of SDF_CORNER to the netlist, SDF_TRIPLE selects the min, typ or max value of each delay.
+sdf        = os.getenv("SDF", "0").strip().lower() in ("1", "true", "yes", "on")
+sdf_corner = os.getenv("SDF_CORNER", "nom_typ_1p50V_25C")
+sdf_triple = os.getenv("SDF_TRIPLE", "typ")
 
 hdl_toplevel = "counter_top"
 
@@ -53,8 +57,10 @@ async def reset(dut, cycles=2):
     dut.reset_n_i.value = 0
     dut.enable_i.value  = 0
     await ClockCycles(dut.clock_i, cycles)
+    # Change the inputs at the falling edge, so that they cannot race the clock tree of the timed netlist
+    await FallingEdge(dut.clock_i)
     dut.reset_n_i.value = 1
-    await RisingEdge(dut.clock_i)
+    await FallingEdge(dut.clock_i)
 
     cocotb.log.info("Reset deasserted.")
 
@@ -110,7 +116,7 @@ async def test_increments_when_enabled(dut):
     expected = 1
     for _ in range(min(8, CTR_MAX + 1)):
         await RisingEdge(dut.clock_i)
-        await Timer(1, "ns")  # let combinational settle past edge
+        await FallingEdge(dut.clock_i)  # sample half a period after the edge
         got = int(dut.counter_value_o.value)
         assert got == expected, f"expected {expected}, got {got}"
         expected += 1
@@ -134,7 +140,7 @@ async def test_wraps_at_max(dut):
     prev     = 0
     for _ in range(2 * (CTR_MAX + 1) + 4):
         await RisingEdge(dut.clock_i)
-        await Timer(1, "ns")
+        await FallingEdge(dut.clock_i)
         cur = int(dut.counter_value_o.value)
         if cur == CTR_MAX:
             saw_max = True
@@ -172,12 +178,26 @@ def counter_top_runner():
         sources.append(proj_path / "../../rtl/counter.sv")
         sources.append(proj_path / "../../rtl/counter_top.sv")
 
+    toplevel   = hdl_toplevel
     build_args = []
+    plusargs   = []
 
     if sim == "icarus":
-        # -gno-specify: skip specify blocks; sg13g2_stdcell.v uses
-        # `ifnone with edge-sensitive paths`, which iverilog can't parse.
+        # -gno-specify: ignore the specify blocks, so every cell switches without delay.
         build_args = ["-DSIM", "-gno-specify"]
+
+    if gl and sdf:
+        if sim != "icarus":
+            raise SystemExit("The timed gate-level simulation (SDF=1) needs SIM=icarus.")
+        sdf_file = proj_path / f"../../final/sdf/{sdf_corner}/{hdl_toplevel}__{sdf_corner}.sdf"
+        if not sdf_file.is_file():
+            raise SystemExit(f"No SDF file {sdf_file} found. Run 'make build-top' (or 'make copy-final') first.")
+        # The wrapper instantiates the netlist and annotates the SDF file. -gspecify keeps the delays of the cell
+        # models, -ginterconnect the wire delays of the layout, and -T selects the value of each min:typ:max delay.
+        toplevel   = f"{hdl_toplevel}_sdf"
+        sources   += [proj_path / "../../rtl/constants.sv", proj_path / f"{toplevel}.sv"]
+        build_args = ["-DSIM", "-gspecify", "-ginterconnect", f"-T{sdf_triple}"]
+        plusargs   = [f"+SDF={sdf_file.resolve()}"]
 
     if sim == "verilator":
         build_args = ["--timing", "--trace", "--trace-fst", "--trace-structs"]
@@ -185,7 +205,7 @@ def counter_top_runner():
     runner = get_runner(sim)
     runner.build(
         sources=sources,
-        hdl_toplevel=hdl_toplevel,
+        hdl_toplevel=toplevel,
         defines=defines,
         always=True,
         includes=includes,
@@ -194,14 +214,17 @@ def counter_top_runner():
         timescale=("1ns", "1fs")
     )
 
-    plusargs = []
-
-    runner.test(
-        hdl_toplevel=hdl_toplevel,
+    results_xml = runner.test(
+        hdl_toplevel=toplevel,
         test_module="counter_top_tb",
         plusargs=plusargs,
         waves=True,
     )
+
+    # Outside pytest a failing test leaves the exit status at 0, so check the results
+    num_tests, num_failed = get_results(results_xml)
+    if num_failed:
+        raise SystemExit(f"FAIL: {num_failed} of {num_tests} tests failed")
 
 
 if __name__ == "__main__":

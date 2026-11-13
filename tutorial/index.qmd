@@ -284,6 +284,7 @@ The [counter Makefile](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/b
 | `make lint-verilog` / `make lint-verilog-all`     | Lint a single cell or the full counter design with Verilator.               |
 | `make sim-rtl-verilog`                            | Run the testbench with Icarus Verilog (`<CELL>_tb.sv`, falling back to `<CELL>_tb.v`). |
 | `make sim-rtl-cocotb` / `sim-gl-cocotb`           | Run the cocotb RTL / gate-level simulation.                                 |
+| `make sim-gl-sdf-cocotb`                          | Run the cocotb gate-level simulation with the SDF delays of the layout.     |
 | `make sim-view-verilog` / `sim-view-cocotb`       | Open the latest waveform in GTKWave or Surfer.                              |
 | `make librelane` (and `-nodrc`, `-magicdrc`, …)   | Run the LibreLane flow for the counter macro.                               |
 | `make symbol-gl` (`FORCE=1`)                      | Scaffold the Xschem symbol `<CELL>.sym` from the ports of `netlist/pnl/<CELL>.pnl.v`. For a new macro, refuses to overwrite an existing symbol. |
@@ -431,6 +432,7 @@ The [cocotb](https://www.cocotb.org/) testbench ([`counter_top_tb.py`](https://g
 ```sh
 make sim-rtl-cocotb                # RTL simulation
 make sim-gl-cocotb                 # post-synthesis gate-level simulation
+make sim-gl-sdf-cocotb             # gate-level simulation with the SDF delays of the layout
 make sim-view-cocotb               # view in GTKWave
 make sim-view-cocotb WAVEFORM_VIEWER=surfer
 ```

@@ -615,6 +615,7 @@ regression: ## Regression test target for IIC-OSIC-TOOLS
 	$(MAKE) -C $(MACROS_DIR)/counter lec
 	$(MAKE) -C $(MACROS_DIR)/counter lec-mutant
 	$(MAKE) -C $(MACROS_DIR)/counter sim-gl-cocotb
+	$(MAKE) -C $(MACROS_DIR)/counter sim-gl-sdf-cocotb
 	$(MAKE) -C $(MACROS_DIR)/counter generate-xspice
 	$(MAKE) -C $(MACROS_DIR)/counter sim-gl-xschem
 
