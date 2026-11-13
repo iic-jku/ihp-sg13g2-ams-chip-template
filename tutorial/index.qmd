@@ -761,7 +761,7 @@ The XSPICE model above is a *gate-level* view of the macro: every standard cell 
 ```sh
 make magic-pex                            # full-RC, the default EXT_MODE=3
 make magic-pex EXT_MODE=1                 # C-decoupled, fastest
-make klayout-pex                          # the same with kpex, which runs Magic internally
+make klayout-pex                          # the same with the 2.5D engine of kpex
 make magic-pex EXT_MODE=3 THRESHOLD=5000 MINRES=500 MINDELAY=2   # full-RC with custom extresist settings
 ```
 
@@ -1460,7 +1460,7 @@ Every symbol in this template carries `spectre_format="@name ( @pinlist ) @symna
 :::
 
 ::: {.callout-note}
-Note that [KLayout-PEX (KPEX)](https://github.com/iic-jku/klayout-pex) is currently under development and therefore the Magic engine is used internally for the actual extraction.
+[KLayout-PEX (KPEX)](https://github.com/iic-jku/klayout-pex) extracts with its own 2.5D engine, so `klayout-pex` and `magic-pex` are two independent extractions. It needs kpex 0.9.0 or later and takes much longer than Magic.
 :::
 
 ### Post-Layout Simulation {#sec-postlayout}
@@ -1703,8 +1703,8 @@ The verification targets are those of the inverter, see @sec-analog: `klayout-dr
 The gaps have three reasons:
 
 - **Magic extracts the varactor as two two-terminal halves** and does not extract the PDK inductor, so Netgen cannot compare a cell that holds either.
-- **KPEX cannot read Magic's extraction of the varactor**, which Magic writes as a Verilog-A device. Every cell above the array inherits it.
-- **An RC extraction of a coil is not its RF model.** It misses the inductance and the coupling: KPEX turns `vco_ind` into a single 42 fF capacitor. The model of the coil is its EM simulation, see @sec-rf-em.
+- **The Magic engine of KPEX cannot read Magic's extraction of the varactor**, which Magic writes as a Verilog-A device. Every cell above the array inherits it.
+- **An RC extraction of a coil is not its RF model.** It misses the inductance and the coupling: the Magic engine of KPEX turns `vco_ind` into a single 42 fF capacitor. The model of the coil is its EM simulation, see @sec-rf-em.
 
 The KLayout `macro` level of `klayout-drc` leaves out the density rules, and with them rules a macro has to meet on its own, such as the minimum metal areas `Mn.d` and `pSD.b`. So `klayout-verify-all` also runs `klayout-drc-regular` on `vco_top`, which fails on any rule but the global densities that only the chip's fill can meet.
 

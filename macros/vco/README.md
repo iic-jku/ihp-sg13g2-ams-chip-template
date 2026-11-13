@@ -244,7 +244,8 @@ The phase noise at 1 MHz offset in PNOISE comes 55 % from the core (pair 38 %, v
 │  ├─ sim_corners.py
 │  ├─ sim_powerup.py
 │  ├─ sim_trannoise.py
-│  └─ spice2spectre.py
+│  ├─ spice2spectre.py
+│  └─ tie_pex_substrate.py
 ├─ 📁 testbenches/
 │  └─ 📁 xschem/
 │     ├─ 📁 models/
@@ -672,9 +673,9 @@ make symbol-pex CELL=vco_bias
 
 ### Parasitic Extraction (PEX)
 
-`magic-pex` and `klayout-pex` are those of the inverter, see [Parasitic Extraction (PEX)](../inverter/README.md#parasitic-extraction-pex), with the same `EXT_MODE` and the same three full-RC parameters. Two things differ.
+`magic-pex` and `klayout-pex` are those of the inverter, see [Parasitic Extraction (PEX)](../inverter/README.md#parasitic-extraction-pex), with the same `EXT_MODE`. `magic-pex` takes the same three full-RC parameters, and `klayout-pex` runs the 2.5D engine of kpex, which has none of them. Two things differ.
 
-**The full-RC parameters are ten times finer**: `THRESHOLD=1000` (1 Ohm), `MINRES=100` (0.1 Ohm) and `MINDELAY=0`, so that `THRESHOLD` also gates the extracted resistance. At Magic's defaults, the inverter's 10 Ohm, 1 Ohm and 1 ps, every net of the VCO except `VSS` came out without resistance, the tank leads and the gate lines of the pair among them. At 20 GHz the coil's own series resistance is 2.4 Ohm per side, so a lead of 1 Ohm is a part of the tank. `klayout-pex` and `klayout-pex-leads` pass the same three values to KPEX (`--magic_thresh`, `--magic_minres`, `--magic_mindel`).
+**The full-RC parameters are ten times finer**: `THRESHOLD=1000` (1 Ohm), `MINRES=100` (0.1 Ohm) and `MINDELAY=0`, so that `THRESHOLD` also gates the extracted resistance. At Magic's defaults, the inverter's 10 Ohm, 1 Ohm and 1 ps, every net of the VCO except `VSS` came out without resistance, the tank leads and the gate lines of the pair among them. At 20 GHz the coil's own series resistance is 2.4 Ohm per side, so a lead of 1 Ohm is a part of the tank. `klayout-pex-leads` passes the same three values to the Magic engine of KPEX (`--magic-thresh`, `--magic-minres`, `--magic-mindel`).
 
 **The post-layout netlist is one extraction of the whole macro**, without the two parts that have models of their own:
 
@@ -687,7 +688,7 @@ make klayout-pex-leads THRESHOLD=10000 MINRES=1000 MINDELAY=1   # Magic's defaul
 - **A net without a resistor network keeps one of its ports.** Magic builds no network on a net without a device that carries current, at any threshold, and then keeps one of its ports and leaves the others unconnected. `drop_subcells.py` records which pins share a net in the layout (`--ties`), and [`pex_caps.py`](scripts/pex_caps.py) joins such a port to its net through 1 mOhm. [`check_pex_ports.py`](scripts/check_pex_ports.py) fails on any port that is still unconnected.
 - **A net that only drives gates gets its network from a port.** Without one, Magic reads such a net as one node at 0 Ohm, here the buffer's inputs from the coupling caps to the 12 gates of each side. `LEADS_PROBES` puts a port on each (`drop_subcells.py --probe`), which keeps their 5.8 Ohm in the netlist, and `pex_caps.py --internal` takes the port off the subcircuit again.
 - **The capacitances come from a C-coupled run of the same layout.** Magic's `extresist` counts the coupling capacitance of a net that gets a resistor network a second time, as capacitance to the substrate on the network's nodes (magic#557): here the full-RC run has 0.663 pF of wiring capacitance, the C-coupled run 0.555 pF. `klayout-pex-leads` runs KPEX twice, and `pex_caps.py` keeps the resistors and devices of the full-RC netlist and scales its capacitors per net pair to the C-coupled totals.
-- **The extraction runs in KPEX, not in `sak-pex.sh`.** `sak-pex.sh` hits the same double count in full RC, and in the VCO of the ihp-sg13cmos5l template its C-coupled run left out the substrate capacitance of the tank nets altogether (0 fF from `rf_p` to `VSS` where KPEX found 17 fF), so it cannot serve as the reference either. The cell netlists of `magic-pex` (bias, buffer and tap feed) are verification outputs that no testbench reads.
+- **The extraction runs in the Magic engine of KPEX, not in `sak-pex.sh`.** `sak-pex.sh` hits the same double count in full RC, and in the VCO of the ihp-sg13cmos5l template its C-coupled run left out the substrate capacitance of the tank nets altogether (0 fF from `rf_p` to `VSS` where KPEX found 17 fF), so it cannot serve as the reference either. The ports of `drop_subcells.py` and the capacitance scaling of `pex_caps.py` are built on Magic's netlist, so `klayout-pex-leads` stays on Magic while `klayout-pex` runs the 2.5D engine. The cell netlists of `magic-pex` (bias, buffer and tap feed) are verification outputs that no testbench reads.
 - **This macro has no MoM caps to cut out.** Magic reads the comb of a MoM capacitor as plain metal, so `klayout-pex-leads` can cut such combs out of their markers (`LEADS_CUT`) and put the PDK device back with its EM parasitics ([`momf_lpe.py`](scripts/momf_lpe.py)), which the VCO of the ihp-sg13cmos5l template does for the `cap_cmomf` coupling caps of its buffer (`LEADS_CUT_GEOS`). Here `LEADS_CUT` is empty: Magic extracts the MIM capacitors as devices.
 - The pins of the netlist are reordered to [`vco_top_leads.sym`](testbenches/xschem/vco_top_leads.sym), the symbol [`vco_top_lpe`](testbenches/xschem/vco_top_lpe.sch) places, see [Post-Layout Simulation](#post-layout-simulation). [`spice2spectre.py`](scripts/spice2spectre.py) translates the netlist for VACASK into `netlist/spectre/vco_top_leads.inc`, which the post-layout transient noise reads.
 
@@ -739,8 +740,8 @@ make klayout-verify-all
 `klayout-verify-all`, `gdscheck-drc-all` and `magic-verify-all` run exactly that. The gaps have three reasons:
 
 - **Magic extracts `sg13_hv_svaricap` as two two-terminal halves** and does not extract the PDK inductor, so Netgen cannot compare a cell that holds either.
-- **KPEX cannot read Magic's extraction of the varactor.** Magic writes it as a `veriloga` device, and KPEX's parser of the `.ext` file stops on `'veriloga' is not a valid DeviceType`. Every cell above the array inherits it.
-- **A parasitic extraction of a cell that contains the coil is not its RF model.** RC extraction misses the coil's inductance and its coupling: KPEX turns `vco_ind` into a single 42 fF capacitor. The coil's model is its EM simulation.
+- **The Magic engine of KPEX cannot read Magic's extraction of the varactor.** Magic writes it as a `veriloga` device, and KPEX's parser of the `.ext` file stops on `'veriloga' is not a valid DeviceType`. Every cell above the array inherits it.
+- **A parasitic extraction of a cell that contains the coil is not its RF model.** RC extraction misses the coil's inductance and its coupling: the Magic engine of KPEX turns `vco_ind` into a single 42 fF capacitor. The coil's model is its EM simulation.
 
 
 ### Verify with Magic
