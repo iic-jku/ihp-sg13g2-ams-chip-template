@@ -112,7 +112,7 @@ _TB_EXT = $(if $(wildcard $(VERILOG_TB_DIR)/$(CELL)_tb.sv),sv,v)
 
 # Help Target
 help: ## Show this help message
-	@echo 'Usage: make <target> [CELL=<cellname>] [EXT_MODE=<1|2|3>] [THRESHOLD=<mOhm>] [MINRES=<mOhm>] [MINDELAY=<ps>] [WAVEFORM_VIEWER=<gtkwave|surfer>] [TB=<testbenchname>] [SCRIPT=<scriptname>] [OPEN_ARGS=<options>] [FORCE=1]'
+	@echo 'Usage: make <target> [CELL=<cellname>] [EXT_MODE=<1|2|3>] [THRESHOLD=<mOhm>] [MINRES=<mOhm>] [MINDELAY=<ps>] [WAVEFORM_VIEWER=<gtkwave|surfer>] [SDF_CORNER=<corner>] [SDF_TRIPLE=<min|typ|max>] [TB=<testbenchname>] [SCRIPT=<scriptname>] [OPEN_ARGS=<options>] [FORCE=1]'
 	@echo ''
 	@echo 'Available targets:'
 	@grep -E '^[a-zA-Z0-9_.-]+:.*## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*## "}; {printf "  %-20s %s\n", $$1, $$2}'
@@ -121,6 +121,8 @@ help: ## Show this help message
 	@echo 'EXT_MODE defaults to 3 (full-RC). 1=C-decoupled, 2=C-coupled.'
 	@echo 'THRESHOLD/MINRES/MINDELAY are full-RC (EXT_MODE=3) extresist settings for magic-pex (defaults 10000 mOhm / 1000 mOhm / 1 ps).'
 	@echo 'WAVEFORM_VIEWER defaults to gtkwave. Use surfer to launch Surfer instead.'
+	@echo 'SDF_CORNER selects the LibreLane corner of the SDF file for sim-gl-sdf-cocotb (default: $(SDF_CORNER)).'
+	@echo 'SDF_TRIPLE selects the min, typ or max value of each SDF delay for sim-gl-sdf-cocotb (default: typ).'
 	@echo 'TB selects the Xschem testbench for sim-gl-xschem (default: <CELL>_tb_tran).'
 	@echo 'SCRIPT selects the plotting script for sim-view-xschem (default: plot_<CELL>).'
 	@echo 'OPEN_ARGS passes extra options to sak-open.py for the open target (e.g. --all).'
@@ -158,6 +160,12 @@ TB ?= $(CELL)_tb_tran
 # Plotting script for sim-view-xschem (default: plot_<CELL>)
 # Override with: make <target> SCRIPT=<scriptname>
 SCRIPT ?= plot_$(CELL)
+# LibreLane corner of the SDF file for sim-gl-sdf-cocotb (default: DEFAULT_CORNER of flow/librelane/config.yaml)
+# Override with: make sim-gl-sdf-cocotb SDF_CORNER=<corner>
+SDF_CORNER ?= nom_typ_1p50V_25C
+# Value of each min:typ:max delay in the SDF file for sim-gl-sdf-cocotb (iverilog -T)
+# Override with: make sim-gl-sdf-cocotb SDF_TRIPLE=<min|typ|max>
+SDF_TRIPLE ?= typ
 
 sim-rtl-verilog: ## Run RTL simulation of CELL cell with Icarus Verilog (usage: make sim-rtl-verilog [CELL=<cellname>])
 	iverilog -g2012 -DSIM -o $(VERILOG_TB_DIR)/test_$(CELL) $(_SIM_SRCS) $(VERILOG_TB_DIR)/$(CELL)_tb.$(_TB_EXT)
@@ -182,6 +190,10 @@ sim-rtl-cocotb: ## Run RTL simulation of CELL cell with cocotb (usage: make sim-
 sim-gl-cocotb: ## Run gate-level simulation of CELL cell with cocotb (usage: make sim-gl-cocotb [CELL=<cellname>])
 	cd $(COCOTB_DIR) && GL=1 python3 $(CELL)_tb.py
 .PHONY: sim-gl-cocotb
+
+sim-gl-sdf-cocotb: ## Run timed gate-level simulation of CELL cell with cocotb and the SDF delays of one corner (usage: make sim-gl-sdf-cocotb [CELL=<cellname>] [SDF_CORNER=<corner>] [SDF_TRIPLE=<min|typ|max>])
+	cd $(COCOTB_DIR) && GL=1 SDF=1 SDF_CORNER=$(SDF_CORNER) SDF_TRIPLE=$(SDF_TRIPLE) python3 $(CELL)_tb.py
+.PHONY: sim-gl-sdf-cocotb
 
 sim-view-cocotb: ## View CELL cell cocotb simulation waveforms (usage: make sim-view-cocotb [CELL=<cellname>] [WAVEFORM_VIEWER=<gtkwave|surfer>])
 	@if [ "$(WAVEFORM_VIEWER)" = "gtkwave" ]; then \
@@ -210,10 +222,11 @@ sim-view-xschem: ## Plot Xschem simulation results (usage: make sim-view-xschem 
 	SHOW_PLOTS=1 python3 $(SIM_PLOT_DIR)/$(SCRIPT).py
 .PHONY: sim-view-xschem
 
-sim-all: ## Simulate the macro (RTL Verilog + RTL/GL cocotb + GL Xschem for counter_top)
+sim-all: ## Simulate the macro (RTL Verilog + RTL/GL/timed GL cocotb + GL Xschem for counter_top)
 	$(MAKE) sim-rtl-verilog
 	$(MAKE) sim-rtl-cocotb
 	$(MAKE) sim-gl-cocotb
+	$(MAKE) sim-gl-sdf-cocotb
 	$(MAKE) sim-gl-xschem
 .PHONY: sim-all
 # ================================================================================================
@@ -271,7 +284,7 @@ copy-reports: ## Copy yosys, antenna, STA, power, IR-drop, DRC, LVS and manufact
 	cp $(LIBRELANE_DIR)/runs/${RUN_TAG}/*-misc-reportmanufacturability/manufacturability.rpt $(REPORT_DIR)/manufacturability.rpt
 .PHONY: copy-reports
 
-copy-final: ## Copy final output gds, lef, lib, nl, pnl, spef, and vh folders from the last LibreLane run to final/
+copy-final: ## Copy final output gds, lef, lib, nl, pnl, sdf, spef, and vh folders from the last LibreLane run to final/
 	rm -rf $(FINAL_DIR)/
 	mkdir -p $(FINAL_DIR)/
 	cp -r $(FLOW_FINAL_DIR)/gds  $(FINAL_DIR)/gds
@@ -279,6 +292,7 @@ copy-final: ## Copy final output gds, lef, lib, nl, pnl, spef, and vh folders fr
 	cp -r $(FLOW_FINAL_DIR)/lib  $(FINAL_DIR)/lib
 	cp -r $(FLOW_FINAL_DIR)/nl   $(FINAL_DIR)/nl
 	cp -r $(FLOW_FINAL_DIR)/pnl  $(FINAL_DIR)/pnl
+	cp -r $(FLOW_FINAL_DIR)/sdf  $(FINAL_DIR)/sdf
 	cp -r $(FLOW_FINAL_DIR)/spef $(FINAL_DIR)/spef
 	cp -r $(FLOW_FINAL_DIR)/vh   $(FINAL_DIR)/vh
 .PHONY: copy-final

@@ -32,6 +32,13 @@
 │  │  └─ counter_top.nl.v
 │  ├─ 📁 pnl/
 │  │  └─ counter_top.pnl.v
+│  ├─ 📁 sdf/
+│  │  ├─ 📁 nom_fast_1p32V_m40C/
+│  │  ├─ 📁 nom_fast_1p65V_m40C/
+│  │  ├─ 📁 nom_slow_1p08V_125C/
+│  │  ├─ 📁 nom_slow_1p35V_125C/
+│  │  ├─ 📁 nom_typ_1p20V_25C/
+│  │  └─ 📁 nom_typ_1p50V_25C/
 │  ├─ 📁 spef/
 │  │  └─ 📁 nom/
 │  └─ 📁 vh/
@@ -105,6 +112,7 @@
 │  └─ verilog2sym.py
 ├─ 📁 testbenches/
 │  ├─ 📁 cocotb/
+│  │  ├─ counter_top_sdf.sv
 │  │  ├─ counter_top_tb.gtkw
 │  │  ├─ counter_top_tb.py
 │  │  └─ counter_top_tb.surf.ron
@@ -305,6 +313,25 @@ make sim-view-cocotb WAVEFORM_VIEWER=surfer           # use Surfer instead
 The cocotb folder contains a pre-configured waveform layout file (`counter_top_tb.gtkw` for GTKWave, `counter_top_tb.surf.ron` for Surfer).
 The view target loads it automatically together with the current `.fst`, so signal formatting is preserved across runs.
 
+#### Timed Gate-Level cocotb Simulation
+
+`sim-gl-sdf-cocotb` runs the same cocotb testbench on the final netlist with the cell and wire delays of the layout, the timing simulation of the [VLSI design course](https://iic-jku.github.io/vlsi-design/vlsi.html#sec-verification-gl-sdf). LibreLane writes one SDF (Standard Delay Format) file per STA corner, and `make copy-final` copies them to `final/sdf/<corner>/`. The wrapper `testbenches/cocotb/counter_top_sdf.sv` instantiates the netlist and annotates the SDF file with `$sdf_annotate()`, and Icarus Verilog compiles with `-gspecify` for the cell delays and `-ginterconnect` for the wire delays:
+
+```sh
+make sim-gl-sdf-cocotb                                                 # default corner nom_typ_1p50V_25C, typical delays
+make sim-gl-sdf-cocotb SDF_CORNER=nom_slow_1p08V_125C SDF_TRIPLE=max  # slow corner, maximum delays
+make sim-gl-sdf-cocotb SDF_CORNER=nom_fast_1p65V_m40C SDF_TRIPLE=min  # fast corner, minimum delays
+```
+
+Every delay in the SDF file is a `min:typ:max` triple, and `SDF_TRIPLE` selects the value that Icarus Verilog uses (`iverilog -T`). In the files of LibreLane the typical value is the mean of the other two. The log of a clean run shows:
+
+- `SDF ERROR: ... Chosen value not defined` twice, for the `VOLTAGE` and `TEMPERATURE` lines of the header, which have no typical value (none with `SDF_TRIPLE=min` or `max`). Any other `SDF ERROR` means that a delay was not annotated.
+- `SDF WARNING: ... TIMINGCHECK not supported` once per flip-flop. Icarus Verilog annotates the delays but checks no setup, hold, recovery or removal time, so a timing violation shows only if a flip-flop captures a wrong value. Signoff rests on STA (`verification/stapostpnr_summary.rpt`).
+
+A clean log does not prove that the delays arrived. Check one path in the waveform `testbenches/cocotb/sim_build/counter_top_sdf.fst`: the time from an edge of `clock_i` to the pin `CLK` of a flip-flop equals the sum of the `IOPATH` and `INTERCONNECT` delays along its clock path in the SDF file, each rounded to the 10 ps of the cell models (`` `timescale 1ns/10ps ``).
+
+In the netlist the clock tree delays the clock at every flip-flop, and an output follows the clock edge only after its clock-to-output delay. An input that changes at the rising edge of `clock_i` can reach a flip-flop before its clock does and be captured one cycle early, and an output sampled shortly after the edge can still show its old value, which the RTL never shows. The testbench therefore changes the inputs and samples the outputs at the falling edge.
+
 #### Gate-Level Xschem Simulation
 
 Runs the mixed-signal gate-level transient simulation testbench in `testbenches/xschem/<CELL>_tb_tran.sch`:
@@ -357,7 +384,8 @@ This executes the following targets in order:
 1. `sim-rtl-verilog` (default: `counter_top`)
 2. `sim-rtl-cocotb` (default: `counter_top`)
 3. `sim-gl-cocotb` (default: `counter_top`)
-4. `sim-gl-xschem` (default: `counter_top`)
+4. `sim-gl-sdf-cocotb` (default: `counter_top`)
+5. `sim-gl-xschem` (default: `counter_top`)
 
 > [!NOTE]
 > The `sim-view-verilog` and `sim-view-cocotb` targets are intentionally **not** called by `sim-all`.
@@ -412,7 +440,7 @@ This only works if at least one LibreLane run exists in `flow/librelane/runs/` a
 
 ### Copy the Final Folders
 
-To copy the latest GDS, LEF, LIB, NL, PNL, SPEF, and VH from `flow/final/` into `final/`, run:
+To copy the latest GDS, LEF, LIB, NL, PNL, SDF, SPEF, and VH from `flow/final/` into `final/`, run:
 
 ```sh
 make copy-final

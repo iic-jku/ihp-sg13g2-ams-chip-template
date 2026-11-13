@@ -1128,7 +1128,7 @@ To keep the runtime low while still covering the full toolchain, the regression 
 - Only **one** logo (`sg13g2_ip__jku`) is regenerated. It is the only step that exercises the PNG to GDS flow. The other two logos (`sg13g2_ip__jku_names`, `sg13g2_ip__template_name`) use an identical toolchain and reuse their committed views.
 - Exactly **one** CACE parameter set is run (the AC VDD sweep `ac_params`, no Monte Carlo). Swap `ac_params` for `ac_mc_params` / `ac_mm_params` in the target to also exercise the Monte Carlo flow.
 
-The regression runs bottom-up: first the inverter and counter macros, then the top-level prerequisites (submodules, bondpad, RF pad, logo) and finally the chip top-level LibreLane run that integrates the freshly built macros and IP. After the counter is hardened, `copy-final` copies its fresh `flow/final/` views into `macros/counter/final/`, so that the logic equivalence check (`lec`), the gate-level simulation (`sim-gl-cocotb`) and the chip top-level integration use the freshly built outputs rather than the committed ones.
+The regression runs bottom-up: first the inverter and counter macros, then the top-level prerequisites (submodules, bondpad, RF pad, logo) and finally the chip top-level LibreLane run that integrates the freshly built macros and IP. After the counter is hardened, `copy-final` copies its fresh `flow/final/` views into `macros/counter/final/`, so that the logic equivalence check (`lec`), the gate-level simulations (`sim-gl-cocotb`, `sim-gl-sdf-cocotb`) and the chip top-level integration use the freshly built outputs rather than the committed ones.
 
 The following tools and flows are checked:
 
@@ -1146,7 +1146,7 @@ The following tools and flows are checked:
 | Magic LEF export + LIB + Verilog stub + `sak-render.py` render | inverter `build-top` |
 | Verilator lint | counter `lint-verilog-all` |
 | Icarus Verilog (`iverilog`/`vvp`) | counter `sim-rtl-verilog` |
-| cocotb (RTL + gate-level) | counter `sim-rtl-cocotb`, `sim-gl-cocotb` |
+| cocotb (RTL + gate-level + timed gate-level with the SDF delays) | counter `sim-rtl-cocotb`, `sim-gl-cocotb`, `sim-gl-sdf-cocotb` |
 | Yosys + nextpnr-ice40 + icepack (FPGA) | counter `build-fpga` |
 | LibreLane (OpenROAD / Yosys / KLayout streamout / Netgen LVS) | counter `librelane-magicdrc`, chip `librelane-nodrc` |
 | Magic DRC (sign-off, run inside LibreLane) | counter `librelane-magicdrc` |
