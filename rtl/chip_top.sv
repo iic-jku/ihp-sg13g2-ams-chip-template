@@ -286,6 +286,10 @@ module chip_top #(
     // JKU names
     (* keep *)
     sg13g2_ip__jku_names jku_names ();
+
+    // Template name
+    (* keep *)
+    sg13g2_ip__template_name template_name ();
     // ======================================================
 
 endmodule

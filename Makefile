@@ -328,9 +328,10 @@ build-rfpad: ## Build the RF pad in ip/sg13g2_ip__rfpad_70x70/
 	@$(MAKE) -C $(IP_DIR)/sg13g2_ip__rfpad_70x70 all
 .PHONY: build-rfpad
 
-build-logos: ## Build the logos in ip/sg13g2_ip__jku/ and ip/sg13g2_ip__jku_names/
+build-logos: ## Build the logos in ip/sg13g2_ip__jku/, ip/sg13g2_ip__jku_names/ and ip/sg13g2_ip__template_name/
 	@$(MAKE) -C $(IP_DIR)/sg13g2_ip__jku all
 	@$(MAKE) -C $(IP_DIR)/sg13g2_ip__jku_names all
+	@$(MAKE) -C $(IP_DIR)/sg13g2_ip__template_name all
 .PHONY: build-logos
 
 build-counter: ## Build the counter macro
@@ -653,6 +654,7 @@ clean-all: ## Delete all generated files of the chip top-level, the IPs and the 
 	$(MAKE) -C $(IP_DIR)/sg13g2_ip__rfpad_70x70 clean
 	$(MAKE) -C $(IP_DIR)/sg13g2_ip__jku clean
 	$(MAKE) -C $(IP_DIR)/sg13g2_ip__jku_names clean
+	$(MAKE) -C $(IP_DIR)/sg13g2_ip__template_name clean
 	$(MAKE) -C $(MACROS_DIR)/counter clean
 	$(MAKE) -C $(MACROS_DIR)/inverter clean
 .PHONY: clean-all
