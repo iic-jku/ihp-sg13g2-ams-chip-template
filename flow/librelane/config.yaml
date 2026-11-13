@@ -175,6 +175,7 @@ IGNORE_DISCONNECTED_MODULES:
 - sg13g2_ip__bondpad_70x70
 - sg13g2_ip__jku
 - sg13g2_ip__jku_names
+- sg13g2_ip__template_name
 
 # PDN
 PDN_CORE_RING: True
@@ -396,6 +397,21 @@ MACROS:
     instances:
       jku_names:
         location: ["expr::$DIE_AREA[2] - 36.4 - 120.4", "expr::$DIE_AREA[3] - 36.4 - 120.4"]
+        orientation: N
+
+  sg13g2_ip__template_name:
+    gds:
+      - dir::../../ip/sg13g2_ip__template_name/final/gds/sg13g2_ip__template_name.gds
+    lef:
+      - dir::../../ip/sg13g2_ip__template_name/final/lef/sg13g2_ip__template_name.lef
+    vh:
+      - dir::../../ip/sg13g2_ip__template_name/final/vh/sg13g2_ip__template_name.vh
+    lib:
+      "*":
+        - dir::../../ip/sg13g2_ip__template_name/final/lib/sg13g2_ip__template_name.lib
+    instances:
+      template_name:
+        location: ["expr::$DIE_AREA[0] + 36.4 + 20.4", "expr::$DIE_AREA[1] + 36.4 + 20.4"]
         orientation: N
 
 MAGIC_GDS_FLATGLOB:

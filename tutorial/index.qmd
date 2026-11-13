@@ -236,7 +236,7 @@ The colour scheme groups targets by the final deliverable they produce, so begin
 - **Orange (top chip / main)**: This branch includes `make all` and all targets that contribute to the top-level chip GDS. In the `build-top` chain of the [top-level Makefile](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/Makefile), these are `librelane-nodrc`, `copy-*`, `add-logo-fill`, and `render-gds`.
 - **Yellow (bondpad IP)**: This branch includes `build-bondpad` and all targets inside [`ip/sg13g2_ip__bondpad_70x70/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/ip/sg13g2_ip__bondpad_70x70/).
 - **Teal (RF pad IP)**: This branch includes `build-rfpad` and all targets inside [`ip/sg13g2_ip__rfpad_70x70/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/ip/sg13g2_ip__rfpad_70x70/).
-- **Purple (logos IP)**: This branch includes `build-logos` and the two sub-Makefiles under [`ip/sg13g2_ip__jku/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/ip/sg13g2_ip__jku/) and [`ip/sg13g2_ip__jku_names/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/ip/sg13g2_ip__jku_names/).
+- **Purple (logos IP)**: This branch includes `build-logos` and the three sub-Makefiles under [`ip/sg13g2_ip__jku/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/ip/sg13g2_ip__jku/), [`ip/sg13g2_ip__jku_names/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/ip/sg13g2_ip__jku_names/) and [`ip/sg13g2_ip__template_name/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/ip/sg13g2_ip__template_name/).
 - **Blue (digital macro)**: This branch includes `build-counter` and the [`macros/counter/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/counter/) Makefile.
 - **Green (analog macro)**: This branch includes `build-inverter` and the [`macros/inverter/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/inverter/) Makefile.
 - **Red (packaging)**: This branch includes `bondplan` and the automated bondplan flow in [`packaging/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/packaging/) (see @sec-packaging).
@@ -2033,15 +2033,16 @@ A new RF macro starts as a renamed copy of this one: `make macro FROM=vco NAME=<
 
 # Bondpad, RF Pad and Logo Implementation {#sec-ip}
 
-The [`ip/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/ip/) folder holds the three custom IP cells that the top-level chip relies on: a bondpad and two logos. These IPs are generated and require zero hand drawing. Each IP ships with a Python script and Makefile targets that produce the final GDS and LEF, and run KLayout and gdscheck DRC. This makes it easy to re-spin a different bondpad size or shape, swap the logo image, or move the artwork to another metal layer without touching layout tools.
+The [`ip/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/ip/) folder holds the four custom IP cells that the top-level chip relies on: a bondpad and three logos. These IPs are generated and require zero hand drawing. Each IP ships with a Python script and Makefile targets that produce the final GDS and LEF, and run KLayout and gdscheck DRC. This makes it easy to re-spin a different bondpad size or shape, swap the logo image, or move the artwork to another metal layer without touching layout tools.
 
-The three IP cells covered in this section are:
+The four IP cells covered in this section are:
 
 - [`sg13g2_ip__bondpad_70x70`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/ip/sg13g2_ip__bondpad_70x70/), a 70 µm × 70 µm square bondpad built from IHP's `SG13_dev` KLayout PCell library,
 - [`sg13g2_ip__jku`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/ip/sg13g2_ip__jku/), the [Johannes Kepler University Linz](https://www.jku.at/) logo, generated from a PNG image,
-- [`sg13g2_ip__jku_names`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/ip/sg13g2_ip__jku_names/), a companion text block with the names of the institute, generated the same way as the JKU logo.
+- [`sg13g2_ip__jku_names`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/ip/sg13g2_ip__jku_names/), a companion text block with the names of the institute, generated the same way as the JKU logo,
+- [`sg13g2_ip__template_name`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/ip/sg13g2_ip__template_name/), the text `SG13G2 TEMPLATE` for the bottom-left corner of the die, generated the same way.
 
-All three IPs follow the same folder structure (`script/`, `final/`, `verification/`) and the same Makefile conventions as the digital and analog macros (`make help`, `make all`, `make clean`, `make klayout-drc`, `make magic-drc`, `make gdscheck-drc`). The logo folders `sg13g2_ip__jku` and `sg13g2_ip__jku_names` have an additional `logo/` folder that contains the source PNG image. The folder also holds an RF pad, which the chip does not use by default, see @sec-rf-pad.
+All four IPs follow the same folder structure (`script/`, `final/`, `verification/`) and the same Makefile conventions as the digital and analog macros (`make help`, `make all`, `make clean`, `make klayout-drc`, `make magic-drc`, `make gdscheck-drc`). The logo folders `sg13g2_ip__jku`, `sg13g2_ip__jku_names` and `sg13g2_ip__template_name` have an additional `logo/` folder that contains the source PNG image. The folder also holds an RF pad, which the chip does not use by default, see @sec-rf-pad.
 
 ## Directory Structure
 
@@ -2050,8 +2051,8 @@ The IP design files are located in [`ip/`](https://github.com/iic-jku/ihp-sg13g2
 | Folder                                                                                                                                                                                  | Content                                                                                          |
 | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------ |
 | [`sg13g2_ip__bondpad_70x70/script/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/ip/sg13g2_ip__bondpad_70x70/script/) | KLayout Python script ([`bondpad.py`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/ip/sg13g2_ip__bondpad_70x70/script/bondpad.py)) that instantiates the `SG13_dev::bondpad` PCell and writes the GDS and LEF. |
-| [`sg13g2_ip__jku/logo/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/ip/sg13g2_ip__jku/logo/) and [`sg13g2_ip__jku_names/logo/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/ip/sg13g2_ip__jku_names/logo/) | Source PNG images (`jku_logo.png`, `jku_names.png`) for the two logos. |
-| [`sg13g2_ip__jku/script/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/ip/sg13g2_ip__jku/script/) and [`sg13g2_ip__jku_names/script/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/ip/sg13g2_ip__jku_names/script/) | PNG-to-GDS converter ([`img2lay.py`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/ip/sg13g2_ip__jku/script/img2lay.py)) shared by both logos. |
+| [`sg13g2_ip__jku/logo/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/ip/sg13g2_ip__jku/logo/), [`sg13g2_ip__jku_names/logo/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/ip/sg13g2_ip__jku_names/logo/) and [`sg13g2_ip__template_name/logo/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/ip/sg13g2_ip__template_name/logo/) | Source PNG images (`jku_logo.png`, `jku_names.png`, `template_name.png`) for the three logos. |
+| [`sg13g2_ip__jku/script/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/ip/sg13g2_ip__jku/script/), [`sg13g2_ip__jku_names/script/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/ip/sg13g2_ip__jku_names/script/) and [`sg13g2_ip__template_name/script/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/ip/sg13g2_ip__template_name/script/) | PNG-to-GDS converter ([`img2lay.py`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/ip/sg13g2_ip__jku/script/img2lay.py)) shared by the three logos. |
 | `final/gds/`, `final/lef/`, `final/lib/`, `final/vh/` | Build deliverables for top-level integration: GDS, LEF, Liberty, and Verilog blackbox stubs. |
 | `verification/drc/` | DRC reports produced by `make klayout-drc`, `make magic-drc` and `make gdscheck-drc`. |
 
@@ -2138,9 +2139,9 @@ The chip does not use this pad by default. Its height needs a change in the pad 
 
 ## Logo Generation
 
-Both logo IPs share the same Makefile targets and PNG-to-GDS converter [`script/img2lay.py`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/ip/sg13g2_ip__jku/script/img2lay.py), built on the `klayout.db` Python module. The conversion proceeds in five steps:
+The three logo IPs share the same Makefile targets and PNG-to-GDS converter [`script/img2lay.py`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/ip/sg13g2_ip__jku/script/img2lay.py), built on the `klayout.db` Python module. The conversion proceeds in five steps:
 
-1. Open the source PNG (`logo/jku_logo.png` or `logo/jku_names.png`) and convert it to a binary mask using a brightness threshold (default `128`).
+1. Open the source PNG (`logo/jku_logo.png`, `logo/jku_names.png` or `logo/template_name.png`) and convert it to a binary mask using a brightness threshold (default `128`).
 2. Optionally invert the mask (`--invert`) so that the dark logo regions become the foreground.
 3. For each foreground pixel, draw a square of side `--pixel-size` µm on the selected metal layer.
 4. Merge adjacent rectangles into larger polygons (`--merge`) to keep the GDS small and DRC-friendly.
@@ -2148,14 +2149,14 @@ Both logo IPs share the same Makefile targets and PNG-to-GDS converter [`script/
 
 The Makefile derives the foreground GDS layer number (e.g. `67/0` for `Metal5`) and the LEF obstruction layer name from the same `LAYER` variable, so the artwork in the GDS and the blockage exposed to the router always stay consistent.
 
-Both logos share the same set of Makefile variables as shown below. The `jku_names` logo uses a finer standard pixel size to ensure the readability of the smaller text elements.
+The three logos share the same set of Makefile variables as shown below. The two text blocks `jku_names` and `template_name` use a finer standard pixel size to ensure the readability of the smaller text elements.
 
-| Variable      | Default (`jku` / `jku_names`) | Description                                                                                       |
-| ------------- | ----------------------------- | ------------------------------------------------------------------------------------------------- |
-| `IMG_SIZE_PX` | `750` / `750`                 | Source image side length in pixels. Used to compute the scale factor automatically.               |
-| `BLOCK_SIZE`  | `100`  / `100`                | Physical side length of the rendered logo in µm.                                                  |
-| `PIXEL_SIZE`  | `0.50` / `0.25`               | Edge of one rendered pixel in µm. Must stay ≥ the layer's minimum width (`0.21` µm on `Metal5`).  |
-| `LAYER`       | `Metal5` / `Metal5`           | Foreground metal layer. One of `Metal1`..`Metal5`, `TopMetal1`, `TopMetal2`.                      |
+| Variable      | Default (`jku` / `jku_names` / `template_name`) | Description                                                                                       |
+| ------------- | ----------------------------------------------- | ------------------------------------------------------------------------------------------------- |
+| `IMG_SIZE_PX` | `750` / `750` / `400`                           | Source image side length in pixels. Used to compute the scale factor automatically.               |
+| `BLOCK_SIZE`  | `100`  / `100` / `100`                          | Physical side length of the rendered logo in µm.                                                  |
+| `PIXEL_SIZE`  | `0.50` / `0.25` / `0.25`                        | Edge of one rendered pixel in µm. Must stay ≥ the layer's minimum width (`0.21` µm on `Metal5`).  |
+| `LAYER`       | `Metal5` / `Metal5` / `Metal5`                  | Foreground metal layer. One of `Metal1`..`Metal5`, `TopMetal1`, `TopMetal2`.                      |
 
 The image scale factor is computed automatically as `BLOCK_SIZE / (IMG_SIZE_PX * PIXEL_SIZE)`, so changing any of the three keeps the rendered block at the target physical size.
 
@@ -2203,7 +2204,7 @@ For top-level assembly, the [top-level Makefile](https://github.com/iic-jku/ihp-
 ```sh
 make build-bondpad      # build ip/sg13g2_ip__bondpad_70x70
 make build-rfpad        # build ip/sg13g2_ip__rfpad_70x70
-make build-logos        # build ip/sg13g2_ip__jku and ip/sg13g2_ip__jku_names
+make build-logos        # build ip/sg13g2_ip__jku, ip/sg13g2_ip__jku_names and ip/sg13g2_ip__template_name
 ```
 
 All three targets are part of `make build-all` (see @sec-top), so the IP cells are refreshed automatically before the chip is hardened with LibreLane. The generated GDS, LEF, Verilog stub and Liberty files are referenced by [`flow/librelane/config.yaml`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/flow/librelane/config.yaml) when assembling the chip top-level. Furthermore, the Verilog stubs are instantiated in [`rtl/chip_top.sv`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/rtl/chip_top.sv).
@@ -2771,6 +2772,7 @@ The first build writes the layout, the netlists, the renders and the reports und
 The logos stay, and they put the template's identity on the die. Replace them before a tapeout, @sec-ip shows how the logo IPs are generated from PNG images:
 
 - [`ip/sg13g2_ip__jku_names/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/ip/sg13g2_ip__jku_names/) draws the names of the template authors.
+- [`ip/sg13g2_ip__template_name/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/ip/sg13g2_ip__template_name/) draws the text `SG13G2 TEMPLATE` in the bottom-left corner.
 - `flow/logo/<name>_logo_mono.png` draws the "AMS CHIP" artwork on TopMetal2 (see @fig-chip-top-layout-tm2).
 - [`ip/sg13g2_ip__jku/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/ip/sg13g2_ip__jku/) draws the JKU logo, replace it where it does not apply.
 :::

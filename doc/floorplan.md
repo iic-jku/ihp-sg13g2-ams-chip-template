@@ -19,7 +19,7 @@ Related documents:
 | Core supply              | 1.5 V (`VDD` / `VSS`)                                |
 | I/O supply               | 3.3 V (`IOVDD` / `IOVSS`)                            |
 
-The 365 µm padframe margin holds the [bondpads](../ip/sg13g2_ip__bondpad_70x70/), [JKU](../ip/sg13g2_ip__jku/) and [names](../ip/sg13g2_ip__jku_names/) logos, IHP IO cells, corner cells, fillers and the top-level power ring (TopMetal1 vertical + TopMetal2 horizontal, 15 µm wide, 5 µm spacing, see [config.yaml](../flow/librelane/config.yaml) and [pdn_cfg.tcl](../flow/librelane/pdn_cfg.tcl)).
+The 365 µm padframe margin holds the [bondpads](../ip/sg13g2_ip__bondpad_70x70/), [JKU](../ip/sg13g2_ip__jku/), [names](../ip/sg13g2_ip__jku_names/) and [template name](../ip/sg13g2_ip__template_name/) logos, IHP IO cells, corner cells, fillers and the top-level power ring (TopMetal1 vertical + TopMetal2 horizontal, 15 µm wide, 5 µm spacing, see [config.yaml](../flow/librelane/config.yaml) and [pdn_cfg.tcl](../flow/librelane/pdn_cfg.tcl)).
 
 
 ## Hard macros
@@ -92,14 +92,15 @@ The SRAM has a secondary `VDDARRAY!` supply pin in its LEF in addition to `VDD!`
 
 ## Logos
 
-Two decorative IPs sit in the upper corners of the die (outside the core, between the core ring and the seal ring):
+Three decorative IPs sit in the corners of the die (outside the core, between the core ring and the seal ring), the JKU logo and the names in the upper corners and the template name in the lower left one:
 
-| Instance     | Cell                  | Location                                                                        |
-| ------------ | --------------------- | ----------------------------------------------------------------------          |
-| `jku_logo`   | `sg13g2_ip__jku`      | `($DIE_AREA[0] + 36.4 + 20.4, $DIE_AREA[3] - 36.4 - 120.4)` = (56.8, 1443.2)    |
-| `jku_names`  | `sg13g2_ip__jku_names`| `($DIE_AREA[2] - 36.4 - 120.4, $DIE_AREA[3] - 36.4 - 120.4)` = (1443.2, 1443.2) |
+| Instance        | Cell                       | Location                                                                        |
+| --------------- | -------------------------- | ------------------------------------------------------------------------------- |
+| `jku_logo`      | `sg13g2_ip__jku`           | `($DIE_AREA[0] + 36.4 + 20.4, $DIE_AREA[3] - 36.4 - 120.4)` = (56.8, 1443.2)    |
+| `jku_names`     | `sg13g2_ip__jku_names`     | `($DIE_AREA[2] - 36.4 - 120.4, $DIE_AREA[3] - 36.4 - 120.4)` = (1443.2, 1443.2) |
+| `template_name` | `sg13g2_ip__template_name` | `($DIE_AREA[0] + 36.4 + 20.4, $DIE_AREA[1] + 36.4 + 20.4)` = (56.8, 56.8)       |
 
-Both logos are listed as `IGNORE_DISCONNECTED_MODULES` in [config.yaml](../flow/librelane/config.yaml) so LibreLane does not flag them as floating logic.
+All three logos are listed as `IGNORE_DISCONNECTED_MODULES` in [config.yaml](../flow/librelane/config.yaml) so LibreLane does not flag them as floating logic.
 
 
 ## Constraints when editing the floorplan
