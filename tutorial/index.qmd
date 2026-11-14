@@ -2225,7 +2225,7 @@ For your own chip, `make project` renames these files and every reference to the
 
 ## Planning the Chip with PREP-IC {#sec-prep-ic}
 
-Before you edit the files below, plan the chip as a whole: which pad sits where, how far each macro is from its pads, and whether everything fits on the die. [PREP-IC](https://github.com/iic-jku/prep-ic) (Pinout, Ring and Early floorplan Planner for ICs) does that for the IHP SG13G2 and SG13CMOS5L PDKs and their IO cells, and it knows the EUROPRACTICE packages. It needs neither RTL nor a LibreLane run, and one project file holds the whole plan.
+Before you edit the files below, plan the chip as a whole: which pad sits where, how far each macro is from its pads, and whether everything fits on the die. [PREP-IC](https://github.com/iic-jku/prep-ic) (Pinout, Ring and Early floorplan Planner for ICs) does that with the IO cells of the IHP SG13G2 and SG13CMOS5L PDKs, and since version 0.2.0 also of sky130A and gf180mcuD, and it knows the EUROPRACTICE packages. It needs neither RTL nor a LibreLane run, and one project file holds the whole plan.
 
 [`doc/prep-ic/chip_top.json`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/doc/prep-ic/chip_top.json) is this chip as a PREP-IC project. @fig-prep-ic-gui shows it in the GUI, and @fig-prep-ic-floorplan shows the floorplan on its own.
 
@@ -2248,7 +2248,7 @@ prep-ic doc/prep-ic/chip_top.json          # open this chip in the GUI, blocks u
 prep-ic check doc/prep-ic/chip_top.json    # print the findings, exit code 1 if there are any
 ```
 
-The GUI needs the container desktop. `prep-ic check` needs version 0.1.2 or newer, which `pip install --upgrade prep-ic` installs. The GUI does not follow the file on disk, so reopen a project you changed from outside.
+The GUI needs the container desktop. This section describes version 0.2.1, which `pip install --upgrade prep-ic` installs over an older one. The GUI does not follow the file on disk, so reopen a project you changed from outside.
 
 ### What It Can Do
 
@@ -2259,6 +2259,7 @@ The GUI needs the container desktop. `prep-ic check` needs version 0.1.2 or newe
 | `clk [in]` | digital input |
 | `dout[0] [out] [4mA]` | digital output with its drive strength, `[tri]` and `[io]` alike |
 | `ain [analog]` | analog pad |
+| `RF [analog] [rfpad]` | the RF pad [`ip/sg13g2_ip__rfpad_70x70`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/ip/sg13g2_ip__rfpad_70x70) of this template instead of `IOPadAnalog`, `RFIN [gsg] [rfpad]` for the signal pad of a group |
 | `VDD [vdd]` | core supply, `[vss]`, `[iovdd]` and `[iovss]` alike |
 | `RFIN [gsg]`, `LO [gsgsg]` | an RF pad between two grounds, a differential pair with three grounds |
 | empty line | a free slot of one pitch |
@@ -2268,7 +2269,7 @@ Tag every pad: without a tag, PREP-IC guesses the function from the name, and th
 
 **Macros.** In the *Macros* tab, *Add Macro...* reads the size and the pins of a macro from the `final/lef/` folder of its directory, and *Add Placeholder...* stands in for a macro that does not exist yet. Tick the pins that go off-chip and drag the macro in the *Chip* tab. A flyline then runs from each ticked pin to its pad. *Add Missing Pads* adds a pad per ticked pin without one, *Suggest Supply Pads* proposes supply pads for macros without one in reach, and *Optimize Pad Order* sorts the connected pads of each side by their macro pins.
 
-**Checks.** The stat tiles and the warning line under the chip view report pads that do not fit, missing supply pads, a signal used twice, crossing flylines, pins without a pad, split differential pairs, a sensitive pad next to a noisy one, long analog flylines, and macros that overlap or leave the core. They are planning hints: a flyline is a straight line and not a route, and the limits are defaults you set in the *Settings* tab. A supply check only asks whether a supply pad is in reach, it knows nothing about current or ESD.
+**Checks.** The stat tiles and the warning line under the chip view report pads that do not fit, missing supply pads, a signal used twice, crossing flylines, pins without a pad, split differential pairs, a sensitive pad next to a noisy one, long analog flylines, macros that overlap or leave the core, and problems in the project file itself, such as a tag given twice or a value that does not load. They are planning hints: a flyline is a straight line and not a route, and the limits are defaults you set in the *Settings* tab. A supply check only asks whether a supply pad is in reach, it knows nothing about current or ESD.
 
 **Export.** The same plan gives the pin list, a drawing of the pad ring and the LibreLane files:
 
@@ -2277,7 +2278,7 @@ prep-ic export doc/prep-ic/chip_top.json \
     --csv pins.csv --svg padframe.svg --librelane <folder>
 ```
 
-The folder receives `pad_cfg.tcl` and `padring_config.yaml` (pad positions and die area), `macros.yaml` (macro views and positions), `chip_top.sv` and `chip_core_template.sv` (the pad instances and a starting point for the core), and `bondplan_pinout.yaml` for the bonding diagram of @sec-packaging. Existing files are overwritten without asking, so do not point it at `flow/librelane/` of this chip. In the GUI, the *File* menu exports the same files.
+The folder receives `pad_cfg.tcl` and `padring_config.yaml` (pad positions and die area), `macros.yaml` (macro views and positions), `chip_top.sv` and `chip_core_template.sv` (the pad instances and a starting point for the core), and `bondplan_pinout.yaml` for the bonding diagram of @sec-packaging. The export builds every file before it writes the first and writes all of them or none, but it overwrites existing files without asking, so do not point it at `flow/librelane/` of this chip. With an `[rfpad]` pad, `pad_cfg.tcl` also moves the RF pad outward by the bondpad depth and places its terminal, and `padring_config.yaml` names the four views of the IP to add to `config.yaml`. In the GUI, the *File* menu exports the same files.
 
 ### Reading the Plan of This Chip
 
@@ -2288,7 +2289,7 @@ The folder receives `pad_cfg.tcl` and `padring_config.yaml` (pad positions and d
 
 ### From the Plan to This Flow
 
-This chip keeps its own [`rtl/chip_top.sv`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/rtl/chip_top.sv) and the `PAD_*` lists instead of the export, because the export has no `padbare` connection: its analog pads reach the core through `padres`, behind the secondary ESD resistor, which the analog outputs of this chip avoid. It also writes no PDN and no timing constraints, those stay in [`pdn_cfg.tcl`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/flow/librelane/pdn_cfg.tcl) and [`chip_top.sdc`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/flow/librelane/chip_top.sdc). So use the plan to settle the pad order and the positions, then carry them over by hand:
+This chip keeps its own [`rtl/chip_top.sv`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/rtl/chip_top.sv) and the `PAD_*` lists instead of the export, because the export connects `IOPadAnalog` through `padres`, behind the secondary ESD resistor, which the analog outputs of this chip avoid. Only the RF pad of `[rfpad]` reaches the core through `padbare`. The export also writes no PDN and no timing constraints, which stay in [`pdn_cfg.tcl`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/flow/librelane/pdn_cfg.tcl) and [`chip_top.sdc`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/flow/librelane/chip_top.sdc). So use the plan to settle the pad order and the positions, then carry them over by hand:
 
 | In the plan | In this repository |
 | --- | --- |
