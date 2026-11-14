@@ -1703,7 +1703,7 @@ The verification targets are those of the inverter, see @sec-analog: `klayout-dr
 The gaps have three reasons:
 
 - **Magic extracts the varactor as two two-terminal halves** and does not extract the PDK inductor, so Netgen cannot compare a cell that holds either.
-- **The Magic engine of KPEX cannot read Magic's extraction of the varactor**, which Magic writes as a Verilog-A device. Every cell above the array inherits it.
+- **`klayout-verify` leaves `klayout-pex` out.** The 2.5D engine of KPEX extracts every cell, but the pin reorder fails on `vco_ind`, whose layout labels `LA`, `LB` and `LC` are uppercase and whose symbol pins are lowercase. No testbench reads these cell netlists: the post-layout netlist comes from `klayout-pex-leads`, whose Magic engine could not keep the varactor array anyway, as Magic writes the varactor as a Verilog-A device.
 - **An RC extraction of a coil is not its RF model.** It misses the inductance and the coupling: the Magic engine of KPEX turns `vco_ind` into a single 42 fF capacitor. The model of the coil is its EM simulation, see @sec-rf-em.
 
 The KLayout `macro` level of `klayout-drc` leaves out the density rules, and with them rules a macro has to meet on its own, such as the minimum metal areas `Mn.d` and `pSD.b`. So `klayout-verify-all` also runs `klayout-drc-regular` on `vco_top`, which fails on any rule but the global densities that only the chip's fill can meet.

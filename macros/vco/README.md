@@ -740,7 +740,7 @@ make klayout-verify-all
 `klayout-verify-all`, `gdscheck-drc-all` and `magic-verify-all` run exactly that. The gaps have three reasons:
 
 - **Magic extracts `sg13_hv_svaricap` as two two-terminal halves** and does not extract the PDK inductor, so Netgen cannot compare a cell that holds either.
-- **The Magic engine of KPEX cannot read Magic's extraction of the varactor.** Magic writes it as a `veriloga` device, and KPEX's parser of the `.ext` file stops on `'veriloga' is not a valid DeviceType`. Every cell above the array inherits it.
+- **`klayout-verify` leaves `klayout-pex` out.** The 2.5D engine of KPEX extracts every cell, but the pin reorder fails on `vco_ind`, as its netlist keeps the layout labels `LA`, `LB` and `LC` and the pins of `vco_ind.sym` are `la`, `lb` and `lc`. No testbench reads these cell netlists: the post-layout netlist is the one of `klayout-pex-leads`, whose Magic engine could not keep the varactor array anyway. Magic writes the varactor as a `veriloga` device, and KPEX's parser of the `.ext` file stops on `'veriloga' is not a valid DeviceType`.
 - **A parasitic extraction of a cell that contains the coil is not its RF model.** RC extraction misses the coil's inductance and its coupling: the Magic engine of KPEX turns `vco_ind` into a single 42 fF capacitor. The coil's model is its EM simulation.
 
 

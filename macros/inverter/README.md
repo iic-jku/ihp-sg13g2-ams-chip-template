@@ -560,7 +560,7 @@ make klayout-pex CELL=inverter_top EXT_MODE=3
 
 On top of the extraction the target does three things:
 
-- It passes the CDL netlist of `klayout-lvs-netlist` as schematic, so that kpex checks its own LVS netlist against the device classes and totals of the schematic. A cell without a schematic gets a dummy one.
+- It passes the CDL netlist of `klayout-lvs-netlist` as schematic, so that kpex checks its own LVS netlist against the device classes and totals of the schematic. A mismatch fails the target in full-RC (`EXT_MODE=3`) and is only a warning in C-coupled mode (`EXT_MODE=1` and `2`). A cell without a schematic gets a dummy one.
 - It reduces the full-RC netlist with TICER (`--reduce ticer`), which leaves far fewer elements and a faster simulation, and ngspice with `klu` can lose the operating point of an unreduced netlist (resistors below 1 mOhm).
 - It ties the substrate port `sub!` of the 2.5D netlist to `PEX_SUB_NET` (default `VSS`, [`scripts/tie_pex_substrate.py`](scripts/tie_pex_substrate.py)), as Magic ties the substrate to `VSS`, so the netlist keeps the pins of `<CELL>_pex.sym`.
 
