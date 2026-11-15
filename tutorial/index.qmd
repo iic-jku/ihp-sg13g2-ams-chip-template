@@ -2248,7 +2248,7 @@ prep-ic doc/prep-ic/chip_top.json          # open this chip in the GUI, blocks u
 prep-ic check doc/prep-ic/chip_top.json    # print the findings, exit code 1 if there are any
 ```
 
-The GUI needs the container desktop. This section describes version 0.2.1, which `pip install --upgrade prep-ic` installs over an older one. The GUI does not follow the file on disk, so reopen a project you changed from outside.
+The GUI needs the container desktop. This section describes version 0.2.2, which `pip install --upgrade prep-ic` installs over an older one. The GUI does not follow the file on disk, so reopen a project you changed from outside.
 
 ### What It Can Do
 
