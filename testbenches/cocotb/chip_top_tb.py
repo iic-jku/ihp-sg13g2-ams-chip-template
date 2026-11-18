@@ -323,6 +323,7 @@ def chip_top_runner():
         # Logo IPs
         root_path / "ip/sg13g2_ip__jku/final/vh/sg13g2_ip__jku.vh",
         root_path / "ip/sg13g2_ip__jku_names/final/vh/sg13g2_ip__jku_names.vh",
+        root_path / "ip/sg13g2_ip__template_name/final/vh/sg13g2_ip__template_name.vh",
     ]
 
     build_args = []

@@ -19,7 +19,7 @@ Related documents:
 | Core supply              | 1.5 V (`VDD` / `VSS`)                                |
 | I/O supply               | 3.3 V (`IOVDD` / `IOVSS`)                            |
 
-The 365 µm padframe margin holds the [bondpads](../ip/sg13g2_ip__bondpad_70x70/), [JKU](../ip/sg13g2_ip__jku/) and [names](../ip/sg13g2_ip__jku_names/) logos, IHP IO cells, corner cells, fillers and the top-level power ring (TopMetal1 vertical + TopMetal2 horizontal, 15 µm wide, 5 µm spacing, see [config.yaml](../flow/librelane/config.yaml) and [pdn_cfg.tcl](../flow/librelane/pdn_cfg.tcl)).
+The 365 µm padframe margin holds the [bondpads](../ip/sg13g2_ip__bondpad_70x70/), [JKU](../ip/sg13g2_ip__jku/), [names](../ip/sg13g2_ip__jku_names/) and [template name](../ip/sg13g2_ip__template_name/) logos, IHP IO cells, corner cells, fillers and the top-level power ring (TopMetal1 vertical + TopMetal2 horizontal, 15 µm wide, 5 µm spacing, see [config.yaml](../flow/librelane/config.yaml) and [pdn_cfg.tcl](../flow/librelane/pdn_cfg.tcl)).
 
 
 ## Hard macros
@@ -28,10 +28,10 @@ Five hard macros are placed inside the core:
 
 | Macro instance              | Cell                                  | Size (W × H)       | Lower-left (x, y) | Upper-right (x, y) | Orientation |
 | --------------------------- | ------------------------------------- | ------------------ | ----------------- | ------------------ | ----------- |
-| `i_chip_core.sram_0`        | `RM_IHPSG13_1P_1024x32_c2_bm_bist`    | 416.64 × 336.46 µm | (435, 495)        | (851.64, 831.46)   | N           |
-| `i_chip_core.counter1`      | `counter_top`                         | 200 × 100 µm       | (700, 995)        | (900, 1095)        | N           |
-| `i_chip_core.counter2`      | `counter_top`                         | 200 × 100 µm       | (935, 495)        | (1135, 595)        | FS          |
-| `i_chip_core.inverter1`     | `inverter_top`                        | 54.18 × 81.92 µm   | (1080.00, 850.08) | (1134.18, 932.00)  | N           |
+| `i_chip_core.sram_0`        | `RM_IHPSG13_1P_1024x32_c2_bm_bist`    | 416.64 × 336.46 µm | (435, 493)        | (851.64, 829.46)   | N           |
+| `i_chip_core.counter1`      | `counter_top`                         | 200 × 100 µm       | (700, 997)        | (900, 1097)        | N           |
+| `i_chip_core.counter2`      | `counter_top`                         | 200 × 100 µm       | (935, 498)        | (1135, 598)        | FS          |
+| `i_chip_core.inverter1`     | `inverter_top`                        | 54.18 × 81.92 µm   | (1080.00, 853.86) | (1134.18, 935.78)  | N           |
 | `i_chip_core.inverter2`     | `inverter_top`                        | 54.18 × 81.92 µm   | (1080.00, 658.14) | (1134.18, 740.06)  | N           |
 
 The values are kept in the `instances` blocks of [config.yaml](../flow/librelane/config.yaml). The `inverter_top` coordinates are tied to the `Metal3` routing grid (`X` is a multiple of 0.48 µm, `Y` a multiple of 0.42 µm). See [Librelane Cheatsheet](librelane/librelane_cheatsheet.md) for more details on the orientation and configurations.
@@ -45,21 +45,21 @@ With the current `CORE_AREA` `[365,365,1235,1235]`, the SRAM and `counter2` sit 
 y=1235 ┌───────────────────────────────────────────────┐
        │                                               │
        │                 ┌─counter1─┐                  │
- 1095  │                 │(700,995) │                  │
+ 1097  │                 │(700,997) │                  │
        │                 └──────────┘                  │
        │                                               │
-  932  │                                   ┌inv1────┐  │
+  936  │                                   ┌inv1────┐  │
        │                                   │(1080,  │  │
-       │                                   │ 850.08)│  │
+       │                                   │ 853.86)│  │
   740  │                                   └inv2────┘  │
        │                                   ┌────────┐  │
        │                                   │(1080,  │  │
   658  │                                   │ 658.14)│  │
        │ ┌─sram_0───────────────────────┐  └────────┘  │
-       │ │ (435,495) → (851.64, 831.46) │              │
-  595  │ │                              │ ┌counter2──┐ │
-       │ │                              │ │(935,495) │ │
-  495  │ └──────────────────────────────┘ └──────────┘ │
+       │ │ (435,493) → (851.64, 829.46) │              │
+  598  │ │                              │ ┌counter2──┐ │
+       │ │                              │ │(935,498) │ │
+  493  │ └──────────────────────────────┘ └──────────┘ │
        │                                               │
 y= 365 └───────────────────────────────────────────────┘
        x=365         906       935          1080      1235
@@ -92,14 +92,15 @@ The SRAM has a secondary `VDDARRAY!` supply pin in its LEF in addition to `VDD!`
 
 ## Logos
 
-Two decorative IPs sit in the upper corners of the die (outside the core, between the core ring and the seal ring):
+Three decorative IPs sit in the corners of the die (outside the core, between the core ring and the seal ring), the JKU logo and the names in the upper corners and the template name in the lower left one:
 
-| Instance     | Cell                  | Location                                                                        |
-| ------------ | --------------------- | ----------------------------------------------------------------------          |
-| `jku_logo`   | `sg13g2_ip__jku`      | `($DIE_AREA[0] + 36.4 + 20.4, $DIE_AREA[3] - 36.4 - 120.4)` = (56.8, 1443.2)    |
-| `jku_names`  | `sg13g2_ip__jku_names`| `($DIE_AREA[2] - 36.4 - 120.4, $DIE_AREA[3] - 36.4 - 120.4)` = (1443.2, 1443.2) |
+| Instance        | Cell                       | Location                                                                        |
+| --------------- | -------------------------- | ------------------------------------------------------------------------------- |
+| `jku_logo`      | `sg13g2_ip__jku`           | `($DIE_AREA[0] + 36.4 + 20.4, $DIE_AREA[3] - 36.4 - 120.4)` = (56.8, 1443.2)    |
+| `jku_names`     | `sg13g2_ip__jku_names`     | `($DIE_AREA[2] - 36.4 - 120.4, $DIE_AREA[3] - 36.4 - 120.4)` = (1443.2, 1443.2) |
+| `template_name` | `sg13g2_ip__template_name` | `($DIE_AREA[0] + 36.4 + 20.4, $DIE_AREA[1] + 36.4 + 20.4)` = (56.8, 56.8)       |
 
-Both logos are listed as `IGNORE_DISCONNECTED_MODULES` in [config.yaml](../flow/librelane/config.yaml) so LibreLane does not flag them as floating logic.
+All three logos are listed as `IGNORE_DISCONNECTED_MODULES` in [config.yaml](../flow/librelane/config.yaml) so LibreLane does not flag them as floating logic.
 
 
 ## Constraints when editing the floorplan
@@ -110,3 +111,4 @@ For every macro `M` placed at `(X, Y)` with size `W × H`:
 2. **No overlap** with any other macro rectangle (RePlAce will diverge with `[GPL-0305]` otherwise).
 3. **Aligned to the row grid:** the `inverter_top` macro additionally requires `X` and `Y` to be multiples of the Metal3 pitches (0.48 µm, 0.42 µm).
 4. **Clear of the IO ring:** routing inside the bondpad area is reserved for the padframe.
+5. **Rows cut at `VSS` rails:** the macro and its 10 µm halo (`FP_MACRO_VERTICAL_HALO`) start on a row with `VSS` at the bottom (`N`, `y = 366.66 + k · 7.56` µm) and cover an even number of 3.78 µm rows. A cut at a `VDD` rail leaves the NWell of the cut row and of the full row beside it with a concave corner 0.24 µm from the well ties of the decap cells, and KLayout reports `NW.d` on each tie. For the counters and the SRAM the legal `Y` window is about 1 µm wide, so check the first and the last cut row in the DEF after a move.

@@ -1,4 +1,4 @@
-96. Printing statistics.
+97. Printing statistics.
 
 === chip_top ===
 
@@ -11,7 +11,7 @@
       116        - public wire bits
         6        - ports
        28        - port bits
-       70   460800 cells
+       71   460800 cells
        20        -   $_XNOR_
        11        -   $_XOR_
         1        -   RM_IHPSG13_1P_1024x32_c2_bm_bist
@@ -27,14 +27,16 @@
         1    14400   sg13g2_IOPadVss
         1        -   sg13g2_ip__jku
         1        -   sg13g2_ip__jku_names
+        1        -   sg13g2_ip__template_name
 
    Area for cell type $_XNOR_ is unknown!
    Area for cell type $_XOR_ is unknown!
    Area for cell type \RM_IHPSG13_1P_1024x32_c2_bm_bist is unknown!
+   Area for cell type \counter_top is unknown!
    Area for cell type \inverter_top is unknown!
    Area for cell type \sg13g2_ip__jku is unknown!
    Area for cell type \sg13g2_ip__jku_names is unknown!
-   Area for cell type \counter_top is unknown!
+   Area for cell type \sg13g2_ip__template_name is unknown!
 
    Chip area for module '\chip_top': 460800.000000
      of which used for sequential elements: 0.000000 (0.00%)

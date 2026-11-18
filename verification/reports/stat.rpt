@@ -1,4 +1,4 @@
-110. Printing statistics.
+112. Printing statistics.
 
 === chip_top ===
 
@@ -11,7 +11,7 @@
        96        - public wire bits
         6        - ports
        28        - port bits
-      229 4.62E+05 cells
+      230 4.62E+05 cells
         1        -   RM_IHPSG13_1P_1024x32_c2_bm_bist
         2        -   counter_top
         2        -   inverter_top
@@ -25,16 +25,18 @@
         1    14400   sg13g2_IOPadVss
         1        -   sg13g2_ip__jku
         1        -   sg13g2_ip__jku_names
+        1        -   sg13g2_ip__template_name
         3   21.773   sg13g2_tiehi
       156 1.13E+03   sg13g2_tielo
-       20  290.304   sg13g2_xnor2_1
-       11  159.667   sg13g2_xor2_1
+       28  406.426   sg13g2_xnor2_1
+        3   43.546   sg13g2_xor2_1
 
    Area for cell type \RM_IHPSG13_1P_1024x32_c2_bm_bist is unknown!
+   Area for cell type \counter_top is unknown!
    Area for cell type \inverter_top is unknown!
    Area for cell type \sg13g2_ip__jku is unknown!
    Area for cell type \sg13g2_ip__jku_names is unknown!
-   Area for cell type \counter_top is unknown!
+   Area for cell type \sg13g2_ip__template_name is unknown!
 
    Chip area for module '\chip_top': 462403.929600
      of which used for sequential elements: 0.000000 (0.00%)

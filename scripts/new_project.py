@@ -31,6 +31,7 @@ EMPTIED_FILES = {"ToDo.md": "# ToDo List\n"}
 # Files that put the template's identity on the die
 IDENTITY_FILES = [
     ("ip/sg13g2_ip__jku_names/logo/jku_names.png", "the names of the template authors"),
+    ("ip/sg13g2_ip__template_name/logo/template_name.png", "the template name in the bottom-left corner"),
     ("flow/logo/chip_logo_mono.png", "the AMS CHIP artwork, drawn on TopMetal2"),
     ("ip/sg13g2_ip__jku/logo/jku_logo.png", "the JKU logo"),
 ]

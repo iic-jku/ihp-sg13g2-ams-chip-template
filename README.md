@@ -145,7 +145,14 @@ A designer-oriented description of this chip can be found in [doc/](doc/):
 │  │  ├─ 📁 verification/
 │  │  ├─ Makefile
 │  │  └─ README.md
-│  └─ 📁 sg13g2_ip__jku_names/
+│  ├─ 📁 sg13g2_ip__jku_names/
+│  │  ├─ 📁 final/
+│  │  ├─ 📁 logo/
+│  │  ├─ 📁 script/
+│  │  ├─ 📁 verification/
+│  │  ├─ Makefile
+│  │  └─ README.md
+│  └─ 📁 sg13g2_ip__template_name/
 │     ├─ 📁 final/
 │     ├─ 📁 logo/
 │     ├─ 📁 script/
@@ -1120,7 +1127,7 @@ The `regression` target is the project's end-to-end smoke test for the [IIC-OSIC
 make regression
 ```
 
-This target also runs automatically in continuous integration: the [`regression`](.github/workflows/regression.yml) GitHub Actions workflow runs `make regression` inside the `IIC-OSIC-TOOLS` container nightly (and on manual dispatch), and its status is shown by the *Regression* badge at the top of this README. The scheduled run is gated so it only executes when there have been changes since the previous night.
+This target also runs automatically in continuous integration: the [`regression`](.github/workflows/regression.yml) GitHub Actions workflow runs `make regression` inside the `IIC-OSIC-TOOLS` container on every push to `main` (and on manual dispatch), and its status is shown by the *Regression* badge at the top of this README.
 
 To keep the runtime low while still covering the full toolchain, the regression makes the following trade-offs:
 
@@ -1128,7 +1135,7 @@ To keep the runtime low while still covering the full toolchain, the regression 
 - The chip top-level runs `librelane-nodrc`. All DRC checks are skipped to save runtime on the large top-level assembly. The macros and IP blocks are DRC-checked individually beforehand, so this only leaves the top-level routing/fill unchecked.
 - KLayout DRC (`sak-drc.sh`) is skipped inside the LibreLane runs, but is still exercised in the bondpad, RF pad and logo IP builds, and in the inverter `klayout-verify`.
 - Magic DRC (`sak-drc.sh -m`) runs once, as `magic-drc` of the bondpad, which passes it, so a broken Magic fails the regression. gdscheck DRC (`sak-drc.sh -g`) runs in the bondpad, RF pad and logo IP builds.
-- Only **one** logo (`sg13g2_ip__jku`) is regenerated. It is the only step that exercises the PNG to GDS flow. The second logo (`sg13g2_ip__jku_names`) uses an identical toolchain and reuses its committed views.
+- Only **one** logo (`sg13g2_ip__jku`) is regenerated. It is the only step that exercises the PNG to GDS flow. The other two logos (`sg13g2_ip__jku_names`, `sg13g2_ip__template_name`) use an identical toolchain and reuse their committed views.
 - Exactly **one** CACE parameter set is run (the AC VDD sweep `ac_params`, no Monte Carlo). Swap `ac_params` for `ac_mc_params` / `ac_mm_params` in the target to also exercise the Monte Carlo flow.
 
 The regression runs bottom-up: first the inverter and counter macros, then the top-level prerequisites (submodules, bondpad, RF pad, logo) and finally the chip top-level LibreLane run that integrates the freshly built macros and IP. After the counter is hardened, `copy-final` copies its fresh `flow/final/` views into `macros/counter/final/`, so that the logic equivalence check (`lec`), the gate-level simulation (`sim-gl-cocotb`) and the chip top-level integration use the freshly built outputs rather than the committed ones.
@@ -1194,7 +1201,7 @@ make all
 
 ## Plan the Pad Ring and the Floorplan with PREP-IC
 
-[PREP-IC](https://github.com/iic-jku/prep-ic) plans the pad ring, the pinout, the die size and the early macro floorplan of a chip on the IHP PDKs, in a GUI or from Python, before the first LibreLane run. It places the IO cells, reads the macros from their `final/lef/` folders, draws flylines from the macro pins to their pads, checks the plan, and exports the pin list, a drawing of the pad ring and the LibreLane files. [doc/prep-ic/chip_top.json](doc/prep-ic/chip_top.json) is this chip as a PREP-IC project.
+[PREP-IC](https://github.com/iic-jku/prep-ic) plans the pad ring, the pinout, the die size and the early macro floorplan of a chip on the IHP PDKs, sky130A or gf180mcuD, in a GUI or from Python, before the first LibreLane run. It places the IO cells, reads the macros from their `final/lef/` folders, draws flylines from the macro pins to their pads, checks the plan, and exports the pin list, a drawing of the pad ring and the LibreLane files. [doc/prep-ic/chip_top.json](doc/prep-ic/chip_top.json) is this chip as a PREP-IC project.
 
 <!-- template-only -->
 <p align="center">
@@ -1205,11 +1212,11 @@ make all
 ```sh
 pip install prep-ic                                  # Python 3.10 or newer, the container ships it from 2026.11 on
 prep-ic doc/prep-ic/chip_top.json                    # open the project in the GUI, blocks until the window closes
-prep-ic check doc/prep-ic/chip_top.json              # print the findings, needs version 0.1.2 or newer
+prep-ic check doc/prep-ic/chip_top.json              # print the findings, exit code 1 if there are any
 prep-ic export doc/prep-ic/chip_top.json --csv pins.csv --svg padframe.svg --librelane <folder>
 ```
 
-The export overwrites existing files, so do not point it at `flow/librelane/`. This chip keeps its own `chip_top.sv` and `PAD_*` lists, because the export has no `padbare` connection and writes no PDN and no timing constraints. A moved macro or a changed pad list therefore goes into the project, `flow/librelane/config.yaml` and `doc/` by hand.
+The export writes all files or none but overwrites existing ones, so do not point it at `flow/librelane/`. This chip keeps its own `chip_top.sv` and `PAD_*` lists, because the export connects `IOPadAnalog` through `padres` and writes no PDN and no timing constraints. `[rfpad]` plans the RF pad of `ip/sg13g2_ip__rfpad_70x70`. A moved macro or a changed pad list therefore goes into the project, `flow/librelane/config.yaml` and `doc/` by hand.
 
 <!-- template-only -->
 The [tutorial](https://iic-jku.github.io/ihp-sg13g2-ams-chip-template/index.html#sec-prep-ic) shows how to use it, what it can do, and how to read the plan of this chip.
@@ -1248,7 +1255,7 @@ make init-submodules   # the logo and fill step needs flow/artistic
 make build-top         # or make all, which also fetches it
 ```
 
-The example macros and the logos stay, and two of the logos put the template's identity on the die: [`ip/sg13g2_ip__jku_names/`](ip/sg13g2_ip__jku_names/) draws the names of the template authors and `flow/logo/chip_logo_mono.png` the "AMS CHIP" artwork. Replace them, and the JKU logo in [`ip/sg13g2_ip__jku/`](ip/sg13g2_ip__jku/) where it does not apply, before a tapeout. The tutorial walks through the same steps in [Start Your Own Chip](https://iic-jku.github.io/ihp-sg13g2-ams-chip-template/index.html#sec-new-chip).
+The example macros and the logos stay, and three of the logos put the template's identity on the die: [`ip/sg13g2_ip__jku_names/`](ip/sg13g2_ip__jku_names/) draws the names of the template authors, [`ip/sg13g2_ip__template_name/`](ip/sg13g2_ip__template_name/) the text `SG13G2 TEMPLATE` in the bottom-left corner and `flow/logo/chip_logo_mono.png` the "AMS CHIP" artwork. Replace them, and the JKU logo in [`ip/sg13g2_ip__jku/`](ip/sg13g2_ip__jku/) where it does not apply, before a tapeout. The tutorial walks through the same steps in [Start Your Own Chip](https://iic-jku.github.io/ihp-sg13g2-ams-chip-template/index.html#sec-new-chip).
 
 The two example macros are themselves templates for the two kinds of block. `make macro FROM=<macro> NAME=<name>` in [`macros/`](macros/) starts a new macro as a renamed copy of one of them, see [Start a New Macro from an Existing One](macros/README.md#start-a-new-macro-from-an-existing-one).
 
