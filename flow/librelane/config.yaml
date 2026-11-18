@@ -206,6 +206,8 @@ PDN_MACRO_CONNECTIONS:
 # Custom pad files for PADBARE
 PAD_LEFS:           dir::../../ip/sg13g2_io_custom/lef/sg13g2_io.lef
 PAD_VERILOG_MODELS: dir::../../ip/sg13g2_io_custom/verilog/sg13g2_io.v
+# LVS reads the pads from this SPICE view, the PDK one has no padbare pin
+PAD_SPICE_MODELS:   dir::../../ip/sg13g2_io_custom/spice/sg13g2_io.spi
 # The custom IO Liberty files are listed in LIB below. Clear the PDK PAD_LIBS,
 # which name the stock IO cells (no padbare port) and would be read on top.
 PAD_LIBS: {}
