@@ -1,9 +1,10 @@
+* PEX produced on Thu Nov 19 12:12:08 AM CET 2026 using /foss/tools/sak/sak-pex.sh with m=2 and s=1 (kpex 2.5D: --mode CC --blackbox y, substrate port sub! tied to VSS)
 *********************************************************
-*** NGSPICE file created by KLayout-PEX 0.9.0
+*** NGSPICE file created by KLayout-PEX 0.10.0
 *** -----------------------------------------------------
 ***     Extraction Engine: KPEX/2.5D
 ***     Technology: ihp_sg13g2
-***     Date: 2026-11-13 08:59:03
+***     Date: 2026-11-19 00:12:07
 *********************************************************
 
 .SUBCKT inverter_pex VDD vin vout VSS

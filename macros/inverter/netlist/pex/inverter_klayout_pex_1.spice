@@ -1,9 +1,10 @@
+* PEX produced on Thu Nov 19 12:17:58 AM CET 2026 using /foss/tools/sak/sak-pex.sh with m=1 and s=1 (kpex 2.5D: --mode C --blackbox y, substrate port sub! tied to VSS)
 *********************************************************
-*** NGSPICE file created by KLayout-PEX 0.9.0
+*** NGSPICE file created by KLayout-PEX 0.10.0
 *** -----------------------------------------------------
 ***     Extraction Engine: KPEX/2.5D
 ***     Technology: ihp_sg13g2
-***     Date: 2026-11-13 08:59:12
+***     Date: 2026-11-19 00:17:58
 *********************************************************
 
 .SUBCKT inverter_pex VDD vin vout VSS
@@ -97,17 +98,8 @@ X$44 VDD vin vout \$I57 sg13_lv_pmos w=6e-06 l=1e-06 as=1.14e-12 ad=1.14e-12
 X$45 VDD VDD VDD \$I57 sg13_lv_pmos w=6e-06 l=1e-06 as=1.14e-12 ad=2.04e-12
 + ps=6.38e-06 pd=1.268e-05
 X$46 VDD \$I57 ntap1
-Cext_1 \$I57 VDD 2.86829f
-Cext_2 \$I57 vin 3.42997f
-Cext_3 \$I57 vout 0.279254f
-Cext_4 \$I57 VSS 0.227117f
-Cext_5 VDD vin 14.5779f
-Cext_6 VDD vout 13.0533f
-Cext_7 VDD VSS 1.15691f
-Cext_8 VDD VSS 6.41413f
-Cext_9 vin vout 18.7951f
-Cext_10 VSS vin 7.37843f
-Cext_11 VSS vout 3.47464f
-Cext_13 VSS vin 4.81199f
-Cext_14 VSS vout 0.455231f
+Cext_1 \$I57 VSS 6.80463f
+Cext_2 VDD VSS 38.0706f
+Cext_4 VSS vin 48.9933f
+Cext_5 VSS vout 36.0575f
 .ENDS inverter_pex
