@@ -32,6 +32,13 @@
 │  │  └─ counter_top.nl.v
 │  ├─ 📁 pnl/
 │  │  └─ counter_top.pnl.v
+│  ├─ 📁 sdf/
+│  │  ├─ 📁 nom_fast_1p32V_m40C/
+│  │  ├─ 📁 nom_fast_1p65V_m40C/
+│  │  ├─ 📁 nom_slow_1p08V_125C/
+│  │  ├─ 📁 nom_slow_1p35V_125C/
+│  │  ├─ 📁 nom_typ_1p20V_25C/
+│  │  └─ 📁 nom_typ_1p50V_25C/
 │  ├─ 📁 spef/
 │  │  └─ 📁 nom/
 │  └─ 📁 vh/
@@ -105,6 +112,7 @@
 │  └─ verilog2sym.py
 ├─ 📁 testbenches/
 │  ├─ 📁 cocotb/
+│  │  ├─ counter_top_sdf.sv
 │  │  ├─ counter_top_tb.gtkw
 │  │  ├─ counter_top_tb.py
 │  │  └─ counter_top_tb.surf.ron
@@ -274,18 +282,19 @@ The view target loads it automatically together with the current `.vcd`, so sign
 
 #### RTL / GL cocotb Simulation
 
-The cocotb testbench is located in `testbenches/cocotb/counter_top_tb.py` and exercises:
+The cocotb testbench `testbenches/cocotb/counter_top_tb.py` is built like the testbenches of the [VLSI design course](https://iic-jku.github.io/vlsi-design/vlsi.html#sec-verification-anatomy):
 
-- reset clears the counter to 0
-- the counter holds its value while `enable_i` is low
-- the counter increments by 1 on every rising clock edge while `enable_i` is high
-- the counter wraps from `CTR_MAX` back to 0
+- `driver()` applies one transaction, the values of `reset_n_i` and `enable_i`, per clock cycle right after the falling edge.
+- `monitor()` runs in parallel with each test. At every falling edge it compares `counter_value_o` with the reference model in the class `Scoreboard`, then applies the inputs to the model.
+- `Scoreboard` also counts functional coverage: each cycle falls into one of nine bins, the operation (reset, hold, count) crossed with the counter value (zero, between, `CTR_MAX`), which `report()` prints at the end of each test.
+
+Four directed tests check that the reset clears the counter, also while `enable_i` is high, that the counter holds its value while `enable_i` is low, that it increments by 1 in every cycle, and that it wraps from `CTR_MAX` to 0 and also holds and resets there. `test_random` applies 40 rounds of a reset, a run to a random value or to `CTR_MAX`, and 20 random operations, and fails if a coverage bin stays empty. `CHECK=0` switches the checks off, and `CLK_PERIOD_NS` changes the clock.
 
 ```sh
 make sim-rtl-cocotb               # run counter_top RTL cocotb simulation
 ```
 
-To run the gate-level (GL) cocotb simulation (sources the post-synthesis netlist from `final/nl/`):
+To run the gate-level (GL) cocotb simulation on the final netlist `final/nl/counter_top.nl.v` of the LibreLane run:
 
 ```sh
 make sim-gl-cocotb                # gate-level simulation of counter_top
@@ -304,6 +313,25 @@ make sim-view-cocotb WAVEFORM_VIEWER=surfer           # use Surfer instead
 
 The cocotb folder contains a pre-configured waveform layout file (`counter_top_tb.gtkw` for GTKWave, `counter_top_tb.surf.ron` for Surfer).
 The view target loads it automatically together with the current `.fst`, so signal formatting is preserved across runs.
+
+#### Timed Gate-Level cocotb Simulation
+
+`sim-gl-sdf-cocotb` runs the same cocotb testbench on the final netlist with the cell and wire delays of the layout, the timing simulation of the [VLSI design course](https://iic-jku.github.io/vlsi-design/vlsi.html#sec-verification-gl-sdf). LibreLane writes one SDF (Standard Delay Format) file per STA corner, and `make copy-final` copies them to `final/sdf/<corner>/`. The wrapper `testbenches/cocotb/counter_top_sdf.sv` instantiates the netlist and annotates the SDF file with `$sdf_annotate()`, and Icarus Verilog compiles with `-gspecify` for the cell delays and `-ginterconnect` for the wire delays:
+
+```sh
+make sim-gl-sdf-cocotb                                                 # default corner nom_typ_1p50V_25C, typical delays
+make sim-gl-sdf-cocotb SDF_CORNER=nom_slow_1p08V_125C SDF_TRIPLE=max  # slow corner, maximum delays
+make sim-gl-sdf-cocotb SDF_CORNER=nom_fast_1p65V_m40C SDF_TRIPLE=min  # fast corner, minimum delays
+```
+
+Every delay in the SDF file is a `min:typ:max` triple, and `SDF_TRIPLE` selects the value that Icarus Verilog uses (`iverilog -T`). In the files of LibreLane the typical value is the mean of the other two. The log of a clean run shows:
+
+- `SDF ERROR: ... Chosen value not defined` twice, for the `VOLTAGE` and `TEMPERATURE` lines of the header, which have no typical value (none with `SDF_TRIPLE=min` or `max`). Any other `SDF ERROR` means that a delay was not annotated.
+- `SDF WARNING: ... TIMINGCHECK not supported` once per flip-flop. Icarus Verilog annotates the delays but checks no setup, hold, recovery or removal time, so a timing violation shows only if a flip-flop captures a wrong value. Signoff rests on STA (`verification/stapostpnr_summary.rpt`).
+
+A clean log does not prove that the delays arrived. Open the waveform `testbenches/cocotb/sim_build/counter_top_sdf.fst` with `gtkwave` or `surfer` (`make sim-view-cocotb` opens `counter_top.fst`) and check one path: the time from an edge of `clock_i` to the pin `CLK` of a flip-flop equals the sum of the `IOPATH` and `INTERCONNECT` delays along its clock path in the SDF file, each rounded to the 10 ps of the cell models (`` `timescale 1ns/10ps ``).
+
+In the netlist the clock tree delays the clock at every flip-flop, and an output follows the clock edge only after its clock-to-output delay. An input that changes at the rising edge of `clock_i` can reach a flip-flop before its clock does and be captured one cycle early, and an output sampled shortly after the edge can still show its old value, which the RTL never shows. The testbench therefore changes the inputs and samples the outputs at the falling edge.
 
 #### Gate-Level Xschem Simulation
 
@@ -357,7 +385,8 @@ This executes the following targets in order:
 1. `sim-rtl-verilog` (default: `counter_top`)
 2. `sim-rtl-cocotb` (default: `counter_top`)
 3. `sim-gl-cocotb` (default: `counter_top`)
-4. `sim-gl-xschem` (default: `counter_top`)
+4. `sim-gl-sdf-cocotb` (default: `counter_top`)
+5. `sim-gl-xschem` (default: `counter_top`)
 
 > [!NOTE]
 > The `sim-view-verilog` and `sim-view-cocotb` targets are intentionally **not** called by `sim-all`.
@@ -412,7 +441,7 @@ This only works if at least one LibreLane run exists in `flow/librelane/runs/` a
 
 ### Copy the Final Folders
 
-To copy the latest GDS, LEF, LIB, NL, PNL, SPEF, and VH from `flow/final/` into `final/`, run:
+To copy the latest GDS, LEF, LIB, NL, PNL, SDF, SPEF, and VH from `flow/final/` into `final/`, run:
 
 ```sh
 make copy-final
@@ -698,7 +727,7 @@ Lints, builds, verifies and simulates the whole macro:
 - `magic-pex`
 - `sim-all`
 
-Linting runs first to fail fast on structural RTL issues. `lec` proves the netlist of this build equivalent to the RTL, and `lec-mutant` checks that this proof can fail. The simulations run **after** the build, so the gate-level simulations (`sim-gl-cocotb`, `sim-gl-xschem`) run on the netlists and the XSPICE model produced by this build, not on those of a previous one. `magic-pex` sits between the two, so the post-layout netlist the Xschem testbench includes is extracted from the GDS of this build as well. `klayout-pex` is commented out in the recipe: it works (see [Parasitic Extraction (PEX)](#parasitic-extraction-pex)), but it is a second full extraction that nothing in the flow consumes. The DRC and LVS verification is done within the LibreLane flow.
+Linting runs first to fail fast on structural RTL issues. `lec` proves the netlist of this build equivalent to the RTL, and `lec-mutant` checks that this proof can fail. The simulations run **after** the build, so the gate-level simulations (`sim-gl-cocotb`, `sim-gl-sdf-cocotb`, `sim-gl-xschem`) run on the netlists and the XSPICE model produced by this build, not on those of a previous one. `magic-pex` sits between the two, so the post-layout netlist the Xschem testbench includes is extracted from the GDS of this build as well. `klayout-pex` is commented out in the recipe: it works (see [Parasitic Extraction (PEX)](#parasitic-extraction-pex)), but it is a second full extraction that nothing in the flow consumes. The DRC and LVS verification is done within the LibreLane flow.
 
 ```sh
 make all
@@ -951,6 +980,7 @@ TopMetal2 Y 0.0 4.0
 | `make copy-reports`, and with it `make build-top` | stops, it names the six IHP LV corners | stops for the same reason |
 | `make generate-xspice` | exits 0 with an empty model, because the recipe names the IHP LV Liberty. With the HV Liberty in the recipe and 3.3 V in the testbench, `make sim-gl-xschem` counts | exits 0 with an empty model, and `spi2xspice.py` cannot read the ETH Liberty yet |
 | `make sim-gl-cocotb` | passes with `SCL=sg13g2_stdcell_hv` | fails with `SCL=ez130_8t`: the library has no `sg13g2_udp.v` and no Verilog models for `WELLTAP` and `FILLER*`. It passes after dropping that source and adding empty modules |
+| `make sim-gl-sdf-cocotb` | stops, because `SDF_CORNER` names a corner of IHP LV | stops for the same reason |
 
 > [!WARNING]
 > `make copy-reports` deletes `verification/` before it stops, and `make copy-final` and `make copy-netlist` overwrite committed files. Restore them with `git restore .` in this folder after trying another library.

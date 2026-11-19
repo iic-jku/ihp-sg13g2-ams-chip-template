@@ -106,7 +106,7 @@ The new macro still implements the copied design under its new name. What follow
 
     The symbol has to exist before `generate-xspice` runs, so a `make all` on a macro that has none stops there and says so. Wire the Xschem testbench to the finished symbol afterwards, because its pins are what the testbench connects to by coordinate. See [Build the Xschem Symbol](counter/README.md#build-the-xschem-symbol).
 3. Update `CLOCK_PORT` and `DIE_AREA` in `flow/librelane/config.yaml`, the pin placement in `flow/librelane/pin_order.cfg`, and the constraints in `impl.sdc` and `signoff.sdc`.
-4. Rewrite the testbenches in `testbenches/verilog/`, `testbenches/cocotb/` and `testbenches/xschem/`, and the plot script in `testbenches/xschem/plot_simulations/`.
+4. Rewrite the testbenches in `testbenches/verilog/`, `testbenches/cocotb/` (with the port list of the timed gate-level wrapper `<TOP>_sdf.sv`) and `testbenches/xschem/`, and the plot script in `testbenches/xschem/plot_simulations/`.
 5. Update `DUT_SRCS` in `fpga/dut.mk` and the pin constraint file in each `fpga/<board>/` you care about to the ports of the new design. Delete the board folders you do not need, the dispatcher derives its board list from the folders that are there. See [fpga/README.md](counter/fpga/README.md).
 6. Rewrite `README.md`, `fpga/README.md` and `render/blender/README.md`.
 
