@@ -427,11 +427,11 @@ make sim-view-verilog WAVEFORM_VIEWER=surfer
 
 ### RTL and gate-level with cocotb
 
-The [cocotb](https://www.cocotb.org/) testbench ([`counter_top_tb.py`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/counter/testbenches/cocotb/counter_top_tb.py)) checks the same four cases (reset, hold, increment, and wrap-around) as the SystemVerilog testbench, but implements them in Python.
+The [cocotb](https://www.cocotb.org/) testbench ([`counter_top_tb.py`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/counter/testbenches/cocotb/counter_top_tb.py)) is built like the testbenches of the [VLSI design course](https://iic-jku.github.io/vlsi-design/vlsi.html#sec-verification-anatomy), with a driver, a monitor, a reference model, a scoreboard, and functional coverage. The driver applies `reset_n_i` and `enable_i` once per clock cycle after the falling edge, and the monitor compares `counter_value_o` with a Python model of the counter at every falling edge. Four directed tests check reset, hold, increment, and wrap-around, the cases of the SystemVerilog testbench, and a constrained random test fails unless every operation (reset, hold, count) has met every kind of counter value (zero, between, `CTR_MAX`).
 
 ```sh
 make sim-rtl-cocotb                # RTL simulation
-make sim-gl-cocotb                 # post-synthesis gate-level simulation
+make sim-gl-cocotb                 # gate-level simulation of the final netlist
 make sim-gl-sdf-cocotb             # gate-level simulation with the SDF delays of the layout
 make sim-view-cocotb               # view in GTKWave
 make sim-view-cocotb WAVEFORM_VIEWER=surfer
@@ -439,7 +439,22 @@ make sim-view-cocotb WAVEFORM_VIEWER=surfer
 
 ![Gate-level cocotb waveform of `counter_top` in GTKWave.](fig/counter_top/counter_top_cocotb_gtkwave.png){#fig-counter-top-cocotb-gtkwave}
 
-The gate-level cocotb run uses the gate-level Verilog netlist produced after synthesis: [`netlist/nl/counter_top.nl.v`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/counter/netlist/nl/). In this tutorial, this netlist for the counter already exists. For new designs, run `make build-top` first to execute the LibreLane flow. It also copies the netlists from the latest LibreLane run back into the source tree with `make copy-netlist`.
+The gate-level runs use the final netlist of the LibreLane run, [`final/nl/counter_top.nl.v`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/counter/final/nl/), which `make copy-final` copies from `flow/final/`. In this tutorial, this netlist for the counter already exists. For new designs, run `make build-top` first to execute the LibreLane flow.
+
+### Timed gate-level simulation {#sec-timed-gl}
+
+`make sim-gl-cocotb` checks the function of the netlist, including the reset and unknown start values, but every cell switches without delay. `make sim-gl-sdf-cocotb` runs the same testbench on the same netlist with the delay of every cell and wire of the layout. The static timing analysis of LibreLane writes these delays into one SDF (Standard Delay Format) file per corner, `make copy-final` copies them to `final/sdf/`, and Icarus Verilog annotates them at the start of the simulation. The timed run shows what the zero-delay run hides:
+
+- The clock tree delays the clock at every flip-flop, and every output follows the clock edge only after its clock-to-output delay. An input that changes at the rising edge can reach a flip-flop before its clock does, and an output sampled shortly after the edge can still show its old value. On `ihp-sg13g2`, an input changed at the rising edge reached a flip-flop of the counter only 10 ps after its clock at the fast corner, and the outputs settle 0.76 ns after the edge at the slow corner. The testbench therefore drives and samples at the falling edge, half a period away from the rising edge.
+- The netlist with all its delays has to compute the right function, also at the slow corner with the maximum delays and at the fast corner with the minimum delays.
+
+```sh
+make sim-gl-sdf-cocotb                                                # default corner, typical delays
+make sim-gl-sdf-cocotb SDF_CORNER=nom_slow_1p08V_125C SDF_TRIPLE=max  # slow corner, maximum delays
+make sim-gl-sdf-cocotb SDF_CORNER=nom_fast_1p65V_m40C SDF_TRIPLE=min  # fast corner, minimum delays
+```
+
+It does not replace static timing analysis. Icarus Verilog checks no setup or hold times, so a path fails only if a flip-flop captures a wrong value, and the signoff of the macro rests on STA. The VLSI design course explains the method in [With Delays from an SDF File](https://iic-jku.github.io/vlsi-design/vlsi.html#sec-verification-gl-sdf) and the post-layout case in [Post-Layout Simulation](https://iic-jku.github.io/vlsi-design/vlsi.html#sec-digital-flow-postlayout). The [counter README](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/counter/README.md#timed-gate-level-cocotb-simulation) lists the messages of a clean run and how to check that the delays arrived.
 
 ## LibreLane Hardening
 
