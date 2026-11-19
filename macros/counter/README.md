@@ -329,7 +329,7 @@ Every delay in the SDF file is a `min:typ:max` triple, and `SDF_TRIPLE` selects 
 - `SDF ERROR: ... Chosen value not defined` twice, for the `VOLTAGE` and `TEMPERATURE` lines of the header, which have no typical value (none with `SDF_TRIPLE=min` or `max`). Any other `SDF ERROR` means that a delay was not annotated.
 - `SDF WARNING: ... TIMINGCHECK not supported` once per flip-flop. Icarus Verilog annotates the delays but checks no setup, hold, recovery or removal time, so a timing violation shows only if a flip-flop captures a wrong value. Signoff rests on STA (`verification/stapostpnr_summary.rpt`).
 
-A clean log does not prove that the delays arrived. Check one path in the waveform `testbenches/cocotb/sim_build/counter_top_sdf.fst`: the time from an edge of `clock_i` to the pin `CLK` of a flip-flop equals the sum of the `IOPATH` and `INTERCONNECT` delays along its clock path in the SDF file, each rounded to the 10 ps of the cell models (`` `timescale 1ns/10ps ``).
+A clean log does not prove that the delays arrived. Open the waveform `testbenches/cocotb/sim_build/counter_top_sdf.fst` with `gtkwave` or `surfer` (`make sim-view-cocotb` opens `counter_top.fst`) and check one path: the time from an edge of `clock_i` to the pin `CLK` of a flip-flop equals the sum of the `IOPATH` and `INTERCONNECT` delays along its clock path in the SDF file, each rounded to the 10 ps of the cell models (`` `timescale 1ns/10ps ``).
 
 In the netlist the clock tree delays the clock at every flip-flop, and an output follows the clock edge only after its clock-to-output delay. An input that changes at the rising edge of `clock_i` can reach a flip-flop before its clock does and be captured one cycle early, and an output sampled shortly after the edge can still show its old value, which the RTL never shows. The testbench therefore changes the inputs and samples the outputs at the falling edge.
 
@@ -727,7 +727,7 @@ Lints, builds, verifies and simulates the whole macro:
 - `magic-pex`
 - `sim-all`
 
-Linting runs first to fail fast on structural RTL issues. `lec` proves the netlist of this build equivalent to the RTL, and `lec-mutant` checks that this proof can fail. The simulations run **after** the build, so the gate-level simulations (`sim-gl-cocotb`, `sim-gl-xschem`) run on the netlists and the XSPICE model produced by this build, not on those of a previous one. `magic-pex` sits between the two, so the post-layout netlist the Xschem testbench includes is extracted from the GDS of this build as well. `klayout-pex` is commented out in the recipe: it works (see [Parasitic Extraction (PEX)](#parasitic-extraction-pex)), but it is a second full extraction that nothing in the flow consumes. The DRC and LVS verification is done within the LibreLane flow.
+Linting runs first to fail fast on structural RTL issues. `lec` proves the netlist of this build equivalent to the RTL, and `lec-mutant` checks that this proof can fail. The simulations run **after** the build, so the gate-level simulations (`sim-gl-cocotb`, `sim-gl-sdf-cocotb`, `sim-gl-xschem`) run on the netlists and the XSPICE model produced by this build, not on those of a previous one. `magic-pex` sits between the two, so the post-layout netlist the Xschem testbench includes is extracted from the GDS of this build as well. `klayout-pex` is commented out in the recipe: it works (see [Parasitic Extraction (PEX)](#parasitic-extraction-pex)), but it is a second full extraction that nothing in the flow consumes. The DRC and LVS verification is done within the LibreLane flow.
 
 ```sh
 make all
@@ -980,6 +980,7 @@ TopMetal2 Y 0.0 4.0
 | `make copy-reports`, and with it `make build-top` | stops, it names the six IHP LV corners | stops for the same reason |
 | `make generate-xspice` | exits 0 with an empty model, because the recipe names the IHP LV Liberty. With the HV Liberty in the recipe and 3.3 V in the testbench, `make sim-gl-xschem` counts | exits 0 with an empty model, and `spi2xspice.py` cannot read the ETH Liberty yet |
 | `make sim-gl-cocotb` | passes with `SCL=sg13g2_stdcell_hv` | fails with `SCL=ez130_8t`: the library has no `sg13g2_udp.v` and no Verilog models for `WELLTAP` and `FILLER*`. It passes after dropping that source and adding empty modules |
+| `make sim-gl-sdf-cocotb` | stops, because `SDF_CORNER` names a corner of IHP LV | stops for the same reason |
 
 > [!WARNING]
 > `make copy-reports` deletes `verification/` before it stops, and `make copy-final` and `make copy-netlist` overwrite committed files. Restore them with `git restore .` in this folder after trying another library.
