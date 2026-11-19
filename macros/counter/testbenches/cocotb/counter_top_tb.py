@@ -1,14 +1,18 @@
 # SPDX-FileCopyrightText: 2026 Simon Dorrer and Harald Pretl
 # SPDX-License-Identifier: Apache-2.0 WITH SHL-2.1
+# Description: cocotb testbench for counter_top with a driver, a monitor, a reference model, a scoreboard, and functional coverage, built like the testbenches of the VLSI design course.
+# Environment variables: SIM selects the simulator (default icarus). GL=1 (Icarus only) simulates the netlist final/nl/counter_top.nl.v of the macro, SDF=1 adds the delays of the SDF file of SDF_CORNER, and SDF_TRIPLE selects the min, typ or max value of each delay.
+# CLK_PERIOD_NS sets the clock (default from rtl/constants.sv), and CHECK=0 switches the scoreboard checks off.
 
 import os
+import random
 import re
-import logging
+from collections import Counter
 from pathlib import Path
 
 import cocotb
 from cocotb.clock import Clock
-from cocotb.triggers import RisingEdge, FallingEdge, ClockCycles
+from cocotb.triggers import ClockCycles, FallingEdge, ReadOnly
 from cocotb_tools.runner import get_results, get_runner
 
 sim      = os.getenv("SIM", "icarus")
@@ -30,129 +34,131 @@ _CONSTANTS_SV = Path(__file__).resolve().parent / "../../rtl/constants.sv"
 
 def _read_define(name: str) -> str:
     """Extract the value of a `define <name> <value>` macro from rtl/constants.sv."""
-    text = _CONSTANTS_SV.read_text()
+    text = _CONSTANTS_SV.read_text(encoding="utf-8")
     m = re.search(rf"^\s*`define\s+{re.escape(name)}\s+(\S+)", text, re.MULTILINE)
     if m is None:
         raise RuntimeError(f"`{name} not found in {_CONSTANTS_SV}")
     return m.group(1)
 
 
-CTR_MAX      = int(_read_define("COUNTER_MAX_DEFAULT"))
-CLK_FREQ_HZ      = float(_read_define("CLK_FREQ_DEFAULT"))
-CLK_FREQ_MHZ     = int(CLK_FREQ_HZ / 1e6)
-CTR_BW = (CTR_MAX + 1).bit_length() if CTR_MAX > 0 else 1
+CTR_MAX       = int(_read_define("COUNTER_MAX_DEFAULT"))
+CLK_PERIOD_NS = float(os.getenv("CLK_PERIOD_NS", 1e9 / float(_read_define("CLK_FREQ_DEFAULT"))))
+CHECK         = os.getenv("CHECK", "1") == "1"
 
 
-async def start_clock(clock, freq=CLK_FREQ_MHZ):
-    """Start the clock @ freq MHz"""
-    period_ns = round(1 / freq * 1000, 4)
-    c = Clock(clock, period_ns, "ns")
-    cocotb.start_soon(c.start())
+class Scoreboard:
+    """Reference model of the specification, checks, and coverage."""
+
+    def __init__(self):
+        self.value = 0  # model of counter_value_o
+        self.coverage = Counter()
+
+    def check(self, value):
+        """Compare the output of the DUT with the model."""
+        assert value == self.value, f"counter_value_o = {value}, expected {self.value}"
+
+    def update(self, reset_n, enable):
+        """Count coverage, then apply one clock edge to the model."""
+        state = "zero" if self.value == 0 else "max" if self.value == CTR_MAX else "between"
+        op = "reset" if not reset_n else "count" if enable else "hold"
+        self.coverage[f"{op} at {state}"] += 1
+        if not reset_n:  # the synchronous reset wins over enable_i
+            self.value = 0
+        elif enable:  # wraps from CTR_MAX to 0
+            self.value = 0 if self.value == CTR_MAX else self.value + 1
 
 
-async def reset(dut, cycles=2):
-    """Pulse the active-low reset for `cycles` clock cycles."""
-    cocotb.log.info("Reset asserted...")
+async def monitor(dut, sb):
+    """Sample the DUT at every falling edge, after the driver."""
+    while True:
+        await ReadOnly()
+        if CHECK:
+            sb.check(dut.counter_value_o.value)
+        sb.update(int(dut.reset_n_i.value), int(dut.enable_i.value))
+        await FallingEdge(dut.clock_i)
 
-    dut.reset_n_i.value = 0
-    dut.enable_i.value  = 0
-    await ClockCycles(dut.clock_i, cycles)
-    # Change the inputs at the falling edge, so that they cannot race the clock tree of the timed netlist
-    await FallingEdge(dut.clock_i)
+
+async def driver(dut, transactions):
+    """Apply one (reset_n, enable) transaction per clock cycle."""
+    for reset_n, enable in transactions:
+        dut.reset_n_i.value = reset_n
+        dut.enable_i.value = enable
+        await FallingEdge(dut.clock_i)
     dut.reset_n_i.value = 1
-    await FallingEdge(dut.clock_i)
-
-    cocotb.log.info("Reset deasserted.")
+    dut.enable_i.value = 0
+    await ClockCycles(dut.clock_i, 2)
 
 
 async def start_up(dut):
-    """Startup sequence: clock + reset, counter disabled, value cleared."""
-    await start_clock(dut.clock_i, CLK_FREQ_MHZ)
-    await reset(dut)
+    """Start the clock, reset the DUT, and start the monitor."""
+    cocotb.start_soon(Clock(dut.clock_i, CLK_PERIOD_NS, "ns").start())
+    dut.reset_n_i.value = 0
+    dut.enable_i.value = 0
+    await ClockCycles(dut.clock_i, 2)
+    # The inputs change at the falling edge, so that they cannot race the clock tree of the timed netlist
+    await FallingEdge(dut.clock_i)
+    dut.reset_n_i.value = 1
+    sb = Scoreboard()
+    cocotb.start_soon(monitor(dut, sb))
+    return sb
+
+
+def report(sb):
+    """Log the coverage bins, return the bins that were never hit."""
+    bins = [f"{op} at {state}"
+            for op in ("reset", "hold", "count")
+            for state in ("zero", "between", "max")]
+    for name in bins:
+        cocotb.log.info(f"{name:16s} {sb.coverage[name]:5d}")
+    return [name for name in bins if sb.coverage[name] == 0]
 
 
 @cocotb.test()
 async def test_reset_clears_counter(dut):
-    """After reset deasserts, counter_value_o must be zero."""
-    logger = logging.getLogger("counter_tb")
-
-    logger.info("Startup sequence...")
-    await start_up(dut)
-
-    assert int(dut.counter_value_o.value) == 0, \
-        f"counter not zero after reset (got {int(dut.counter_value_o.value)})"
-
-    logger.info("Done!")
+    """Directed: count to 10, reset while enabled, count again."""
+    sb = await start_up(dut)
+    await driver(dut, [(1, 1)] * 10 + [(0, 1)] * 2 + [(1, 1)] * 5)
+    report(sb)
 
 
 @cocotb.test()
 async def test_holds_when_disabled(dut):
-    """With enable_i = 0, counter_value_o must not change."""
-    logger = logging.getLogger("counter_tb")
-
-    logger.info("Startup sequence...")
-    await start_up(dut)
-
-    dut.enable_i.value = 0
-    await ClockCycles(dut.clock_i, 20)
-
-    assert int(dut.counter_value_o.value) == 0, \
-        f"counter changed while disabled (got {int(dut.counter_value_o.value)})"
-
-    logger.info("Done!")
+    """Directed: hold at zero, count to 5, hold there."""
+    sb = await start_up(dut)
+    await driver(dut, [(1, 0)] * 5 + [(1, 1)] * 5 + [(1, 0)] * 20)
+    report(sb)
 
 
 @cocotb.test()
 async def test_increments_when_enabled(dut):
-    """With enable_i = 1, counter_value_o must increment by 1 every clock."""
-    logger = logging.getLogger("counter_tb")
-
-    logger.info("Startup sequence...")
-    await start_up(dut)
-
-    dut.enable_i.value = 1
-
-    # Sample on a few subsequent clock edges and verify monotonic +1
-    expected = 1
-    for _ in range(min(8, CTR_MAX + 1)):
-        await RisingEdge(dut.clock_i)
-        await FallingEdge(dut.clock_i)  # sample half a period after the edge
-        got = int(dut.counter_value_o.value)
-        assert got == expected, f"expected {expected}, got {got}"
-        expected += 1
-
-    logger.info("Done!")
+    """Directed: increment by one in every cycle."""
+    sb = await start_up(dut)
+    await driver(dut, [(1, 1)] * 16)
+    report(sb)
 
 
 @cocotb.test()
 async def test_wraps_at_max(dut):
-    """Counter must wrap from CTR_MAX back to 0."""
-    logger = logging.getLogger("counter_tb")
+    """Directed: count to CTR_MAX, hold there, wrap to 0, count to CTR_MAX again and reset there."""
+    sb = await start_up(dut)
+    await driver(dut, [(1, 1)] * CTR_MAX + [(1, 0)] * 3 + [(1, 1)] * (CTR_MAX + 1) + [(0, 1)])
+    report(sb)
 
-    logger.info("Startup sequence...")
-    await start_up(dut)
 
-    dut.enable_i.value = 1
-
-    # Run long enough to hit CTR_MAX and wrap
-    saw_max  = False
-    saw_wrap = False
-    prev     = 0
-    for _ in range(2 * (CTR_MAX + 1) + 4):
-        await RisingEdge(dut.clock_i)
-        await FallingEdge(dut.clock_i)
-        cur = int(dut.counter_value_o.value)
-        if cur == CTR_MAX:
-            saw_max = True
-        if saw_max and prev == CTR_MAX and cur == 0:
-            saw_wrap = True
-            break
-        prev = cur
-
-    assert saw_max,  "counter never reached CTR_MAX"
-    assert saw_wrap, "counter did not wrap from CTR_MAX to 0"
-
-    logger.info("Done!")
+@cocotb.test()
+async def test_random(dut):
+    """Random: rounds of a reset, a run to a random value or to CTR_MAX, and random operations."""
+    sb = await start_up(dut)
+    transactions = []
+    for _ in range(40):
+        # Half of the runs stop at CTR_MAX, which plain random stimulus would rarely reach
+        run = random.choice([random.randrange(CTR_MAX), CTR_MAX])
+        transactions += [(0, 0)] + [(1, 1)] * run
+        for _ in range(20):
+            transactions.append((int(random.random() >= 0.2), int(random.random() < 0.5)))
+    await driver(dut, transactions)
+    holes = report(sb)
+    assert not holes, f"coverage holes: {holes}"
 
 
 def counter_top_runner():

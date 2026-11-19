@@ -282,18 +282,19 @@ The view target loads it automatically together with the current `.vcd`, so sign
 
 #### RTL / GL cocotb Simulation
 
-The cocotb testbench is located in `testbenches/cocotb/counter_top_tb.py` and exercises:
+The cocotb testbench `testbenches/cocotb/counter_top_tb.py` is built like the testbenches of the [VLSI design course](https://iic-jku.github.io/vlsi-design/vlsi.html#sec-verification-anatomy):
 
-- reset clears the counter to 0
-- the counter holds its value while `enable_i` is low
-- the counter increments by 1 on every rising clock edge while `enable_i` is high
-- the counter wraps from `CTR_MAX` back to 0
+- `driver()` applies one transaction, the values of `reset_n_i` and `enable_i`, per clock cycle right after the falling edge.
+- `monitor()` runs in parallel with each test. At every falling edge it compares `counter_value_o` with the reference model in the class `Scoreboard`, then applies the inputs to the model.
+- `Scoreboard` also counts functional coverage: each cycle falls into one of nine bins, the operation (reset, hold, count) crossed with the counter value (zero, between, `CTR_MAX`), which `report()` prints at the end of each test.
+
+Four directed tests check that the reset clears the counter, also while `enable_i` is high, that the counter holds its value while `enable_i` is low, that it increments by 1 in every cycle, and that it wraps from `CTR_MAX` to 0 and also holds and resets there. `test_random` applies 40 rounds of a reset, a run to a random value or to `CTR_MAX`, and 20 random operations, and fails if a coverage bin stays empty. `CHECK=0` switches the checks off, and `CLK_PERIOD_NS` changes the clock.
 
 ```sh
 make sim-rtl-cocotb               # run counter_top RTL cocotb simulation
 ```
 
-To run the gate-level (GL) cocotb simulation (sources the post-synthesis netlist from `final/nl/`):
+To run the gate-level (GL) cocotb simulation on the final netlist `final/nl/counter_top.nl.v` of the LibreLane run:
 
 ```sh
 make sim-gl-cocotb                # gate-level simulation of counter_top
