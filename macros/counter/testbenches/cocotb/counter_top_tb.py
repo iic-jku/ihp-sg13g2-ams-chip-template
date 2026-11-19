@@ -19,7 +19,7 @@ sim      = os.getenv("SIM", "icarus")
 pdk_root = os.getenv("PDK_ROOT", Path("~/.ciel").expanduser())
 pdk      = os.getenv("PDK", "ihp-sg13g2")
 scl      = os.getenv("SCL", "sg13g2_stdcell")
-# GL=1 selects the gate-level netlist; anything else (unset, "0", "") stays in RTL mode.
+# GL=1 selects the gate-level netlist. Anything else (unset, "0", "") stays in RTL mode.
 gl       = os.getenv("GL", "0").strip().lower() in ("1", "true", "yes", "on")
 # SDF=1 adds the delays of the SDF file of SDF_CORNER to the netlist, SDF_TRIPLE selects the min, typ or max value of each delay.
 sdf        = os.getenv("SDF", "0").strip().lower() in ("1", "true", "yes", "on")
@@ -42,7 +42,7 @@ def _read_define(name: str) -> str:
 
 
 CTR_MAX       = int(_read_define("COUNTER_MAX_DEFAULT"))
-CLK_PERIOD_NS = float(os.getenv("CLK_PERIOD_NS", 1e9 / float(_read_define("CLK_FREQ_DEFAULT"))))
+CLK_PERIOD_NS = round(float(os.getenv("CLK_PERIOD_NS", 1e9 / float(_read_define("CLK_FREQ_DEFAULT")))), 4)  # cocotb rejects a period that is not a whole number of fs
 CHECK         = os.getenv("CHECK", "1") == "1"
 
 
@@ -150,7 +150,8 @@ async def test_random(dut):
     """Random: rounds of a reset, a run to a random value or to CTR_MAX, and random operations."""
     sb = await start_up(dut)
     transactions = []
-    for _ in range(40):
+    # With 100 rounds a coverage bin stays empty in about one run in 10^8, with 40 in one in 1200
+    for _ in range(100):
         # Half of the runs stop at CTR_MAX, which plain random stimulus would rarely reach
         run = random.choice([random.randrange(CTR_MAX), CTR_MAX])
         transactions += [(0, 0)] + [(1, 1)] * run
@@ -198,8 +199,8 @@ def counter_top_runner():
         sdf_file = proj_path / f"../../final/sdf/{sdf_corner}/{hdl_toplevel}__{sdf_corner}.sdf"
         if not sdf_file.is_file():
             raise SystemExit(f"No SDF file {sdf_file} found. Run 'make build-top' (or 'make copy-final') first.")
-        # The wrapper instantiates the netlist and annotates the SDF file. -gspecify keeps the delays of the cell
-        # models, -ginterconnect the wire delays of the layout, and -T selects the value of each min:typ:max delay.
+        # The wrapper instantiates the netlist and annotates the SDF file.
+        # -gspecify keeps the delays of the cell models, -ginterconnect the wire delays of the layout, and -T selects the value of each min:typ:max delay.
         toplevel   = f"{hdl_toplevel}_sdf"
         sources   += [proj_path / "../../rtl/constants.sv", proj_path / f"{toplevel}.sv"]
         build_args = ["-DSIM", "-gspecify", "-ginterconnect", f"-T{sdf_triple}"]
