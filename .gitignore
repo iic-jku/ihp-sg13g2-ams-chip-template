@@ -3,6 +3,8 @@ lvs_run_*
 drc_*.tcl
 ext_*.tcl
 pex_*.tcl
+.pextmp_*
+*_kpex_schematic.spice
 *.vcd
 *.raw
 *.log

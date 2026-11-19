@@ -829,7 +829,10 @@ XRoff iovdd off sub! rppd l=12.9um w=0.5um
 .ends sg13g2_Clamp_P20N0D
 
 * sg13g2_IOPadAnalog
-.subckt sg13g2_IOPadAnalog vss vdd iovss iovdd pad padres
+.subckt sg13g2_IOPadAnalog vss vdd iovss iovdd pad padres padbare
+* padbare is the pad metal itself (no series resistor), as in the LEF and Verilog view.
+* Netgen 1.5.331 and later fail LVS on a black-box pin missing on one side.
+Rpadbare pad padbare 1m
 Xnclamp iovss iovdd pad sg13g2_Clamp_N20N0D
 Xpclamp iovss iovdd pad sg13g2_Clamp_P20N0D
 Xdcndiode iovss pad iovdd sg13g2_DCNDiode
