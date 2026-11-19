@@ -1734,7 +1734,7 @@ make klayout-pex-leads   # netlist/pex/vco_top_leads_klayout_pex_3.spice and net
 - **The capacitances come from a C-coupled run of the same layout.** Magic's resistance extraction counts the coupling capacitance of a net with a resistor network a second time ([magic#557](https://github.com/RTimothyEdwards/magic/issues/557)), so [`pex_caps.py`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/vco/scripts/pex_caps.py) keeps the resistors and devices of the full-RC run and scales its capacitors to the totals of the C-coupled run.
 - [`spice2spectre.py`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/vco/scripts/spice2spectre.py) translates the netlist for VACASK, for the post-layout transient noise (@sec-rf-trannoise).
 
-The [Parasitic Extraction (PEX)](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/vco/README.md#parasitic-extraction-pex) section of the README covers the details, among them a net without a resistor network and why the extraction runs in KPEX and not in `sak-pex.sh`.
+The [Parasitic Extraction (PEX)](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/vco/README.md#parasitic-extraction-pex) section of the README covers the details, among them a net without a resistor network and why the extraction runs in the Magic engine of KPEX and not in `magic-pex`.
 
 ## EM Simulation of RF Passives {#sec-rf-em}
 
