@@ -472,7 +472,8 @@ magic-verify-all: ## Verify all main subcells with Magic (LVS, PEX)
 
 
 # Verify, Build and Simulate All Target
-all: ## Verify, build and simulate the TOP cell
+all: ## Generate the layouts, verify, build and simulate the TOP cell
+	$(MAKE) klayout-script-all
 	$(MAKE) klayout-verify-all
 	$(MAKE) gdscheck-drc-all
 	$(MAKE) magic-verify-all

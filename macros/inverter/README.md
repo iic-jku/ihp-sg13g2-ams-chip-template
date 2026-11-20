@@ -209,7 +209,7 @@ Two KLayout Python scripts in [`scripts/layout/`](scripts/layout/) draw the hand
 - The PCells stay live in `inverter.gds` and `inverter_top.klay.gds`, so both open and edit in KLayout as if drawn by hand. `inverter_top.gds` is written without PCell context, as `File > Export Layout For Tapeout` does.
 - Every coordinate follows from the device sizes of the schematic, the positions read back from the placed PCells and a few named constants. Two of them keep details of the hand drawing: the 1 µm supply pins of the unit cell sit 10 nm off its centre line, and the pmos drain via stacks right of the centre sit 0.19 µm higher than those left of it.
 - The scripts write no timestamps, so a rerun gives the same bytes and `git status` shows only real changes.
-- A script run overwrites all four files, a hand edit in KLayout included. Carry such an edit into the scripts, or the next `make klayout-script-all` takes it back. `make all` does not run the scripts, so it verifies the files as they are.
+- A script run overwrites all four files, a hand edit in KLayout included, and `make all` starts with one. Carry such an edit into the scripts, or verify and build a hand-drawn layout with the targets on their own (`klayout-verify-all`, `gdscheck-drc-all`, `magic-verify-all`, `build-top`).
 - Like an export, a script run evaluates the PCells of the installed PDK. Rerun DRC, LVS and PEX after a PDK update.
 
 
@@ -647,13 +647,13 @@ make magic-verify-all
 
 ### Verify, Build and Simulate All
 
-Runs the full flow in sequence: KLayout verification, gdscheck DRC, Magic verification, top-level build deliverables, and simulations (`klayout-verify-all`, `gdscheck-drc-all`, `magic-verify-all`, `build-top`, `sim-all`):
+Runs the full flow in sequence: the layouts from their KLayout scripts, KLayout verification, gdscheck DRC, Magic verification, top-level build deliverables, and simulations (`klayout-script-all`, `klayout-verify-all`, `gdscheck-drc-all`, `magic-verify-all`, `build-top`, `sim-all`):
 
 ```sh
 make all
 ```
 
-Verification runs first because DRC/LVS/PEX produce the fresh, pin-reordered PEX netlists from the current layout. The build follows, since the Verilog stub reads its pins from a PEX netlist. The simulations run **last**, so the `inverter_top` testbench includes the PEX netlist produced by this run, not by a previous one.
+The layout scripts run first, so every later step sees what they write, and they cannot move into `build-top`, which comes after the verification. Verification comes next because DRC/LVS/PEX produce the fresh, pin-reordered PEX netlists from the current layout. The build follows, since the Verilog stub reads its pins from a PEX netlist. The simulations run **last**, so the `inverter_top` testbench includes the PEX netlist produced by this run, not by a previous one.
 
 
 ### Clean
