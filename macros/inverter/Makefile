@@ -6,6 +6,15 @@ MAKEFILE_DIR := $(shell dirname $(realpath $(firstword $(MAKEFILE_LIST))))
 # Variables
 TOP = inverter_top
 
+# Layout source (default: script)
+# script: the KLayout scripts in scripts/layout/ write the layouts, and make all runs them first.
+# manual: the layouts are drawn by hand in KLayout, and klayout-script, klayout-script-all and so make all leave them as they are.
+# Set the default here for a hand-drawn layout, or override with: make <target> LAYOUT_SOURCE=<script|manual>
+LAYOUT_SOURCE ?= script
+ifeq ($(filter $(LAYOUT_SOURCE),script manual),)
+$(error LAYOUT_SOURCE is "$(LAYOUT_SOURCE)", but must be script or manual)
+endif
+
 .DEFAULT_GOAL := help
 
 # PDK Guard
@@ -109,12 +118,13 @@ DRC_RPT_DIR     := verification/drc
 
 # Help Target
 help: ## Show this help message
-	@echo 'Usage: make <target> [CELL=<cellname>] [EXT_MODE=<1|2|3>] [KPEX_REDUCE=<none|floating|ticer>] [PEX_SUB_NET=<net>] [THRESHOLD=<mOhm>] [MINRES=<mOhm>] [MINDELAY=<ps>] [DRC_LEVEL=<precheck|macro|regular>] [GDSCHECK_SUITE=<suite>|GDSCHECK_DECKS=<decks>] [DRC_JOBS=<n>] [EV_PRECISION=<digits>] [TB=<testbenchname>] [SCRIPT=<scriptname>] [OPEN_ARGS=<options>]'
+	@echo 'Usage: make <target> [CELL=<cellname>] [LAYOUT_SOURCE=<script|manual>] [EXT_MODE=<1|2|3>] [KPEX_REDUCE=<none|floating|ticer>] [PEX_SUB_NET=<net>] [THRESHOLD=<mOhm>] [MINRES=<mOhm>] [MINDELAY=<ps>] [DRC_LEVEL=<precheck|macro|regular>] [GDSCHECK_SUITE=<suite>|GDSCHECK_DECKS=<decks>] [DRC_JOBS=<n>] [EV_PRECISION=<digits>] [TB=<testbenchname>] [SCRIPT=<scriptname>] [OPEN_ARGS=<options>]'
 	@echo ''
 	@echo 'Available targets:'
 	@grep -E '^[a-zA-Z0-9_.-]+:.*## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*## "}; {printf "  %-20s %s\n", $$1, $$2}'
 	@echo ''
 	@echo 'CELL defaults to $(TOP). Override to verify subcells.'
+	@echo 'LAYOUT_SOURCE defaults to script. manual keeps a hand-drawn layout: klayout-script, klayout-script-all and so make all leave layout/ as it is.'
 	@echo 'EXT_MODE defaults to 3 (full-RC). 1=C-decoupled, 2=C-coupled.'
 	@echo 'THRESHOLD/MINRES/MINDELAY are full-RC (EXT_MODE=3) extresist settings for magic-pex (defaults 10000 mOhm / 1000 mOhm / 1 ps).'
 	@echo 'PEX_SUB_NET defaults to VSS. The port net that klayout-pex ties the substrate port sub! of the kpex 2.5D netlist to (empty keeps sub! as a port).'
@@ -197,18 +207,26 @@ sim-all: ## Simulate the macro
 
 
 # Layout Script Target
-klayout-script: ## Generate layout/<CELL>.gds with the KLayout Python script scripts/layout/<CELL>.py (usage: make klayout-script CELL=<cellname>)
+klayout-script: ## Generate layout/<CELL>.gds with the KLayout Python script scripts/layout/<CELL>.py, skipped with LAYOUT_SOURCE=manual (usage: make klayout-script CELL=<cellname>)
+ifeq ($(LAYOUT_SOURCE),manual)
+	@echo "LAYOUT_SOURCE=manual: $(LAY_DIR)/$(CELL).gds stays as drawn. Pass LAYOUT_SOURCE=script to write it from $(LAY_SCRIPTS_DIR)/$(CELL).py."
+else
 	@if [ ! -f "$(LAY_SCRIPTS_DIR)/$(CELL).py" ]; then \
 		echo "ERROR: no layout script $(LAY_SCRIPTS_DIR)/$(CELL).py. Pass CELL=<cellname>."; \
 		exit 1; \
 	fi
 	mkdir -p $(LAY_DIR)
 	klayout -b -r $(LAY_SCRIPTS_DIR)/$(CELL).py -rd out=$(abspath $(LAY_DIR)/$(CELL).gds)
+endif
 .PHONY: klayout-script
 
-klayout-script-all: ## Generate every layout with its KLayout Python script, subcells before the cells that place them
+klayout-script-all: ## Generate every layout with its KLayout Python script, subcells before the cells that place them, skipped with LAYOUT_SOURCE=manual
+ifeq ($(LAYOUT_SOURCE),manual)
+	@echo "LAYOUT_SOURCE=manual: the layouts in $(LAY_DIR)/ stay as drawn. Pass LAYOUT_SOURCE=script to write them from $(LAY_SCRIPTS_DIR)/."
+else
 	$(MAKE) klayout-script CELL=inverter
 	$(MAKE) klayout-script CELL=inverter_top
+endif
 .PHONY: klayout-script-all
 # ================================================================================================
 
@@ -472,7 +490,7 @@ magic-verify-all: ## Verify all main subcells with Magic (LVS, PEX)
 
 
 # Verify, Build and Simulate All Target
-all: ## Generate the layouts, verify, build and simulate the TOP cell
+all: ## Generate the layouts (unless LAYOUT_SOURCE=manual), verify, build and simulate the TOP cell
 	$(MAKE) klayout-script-all
 	$(MAKE) klayout-verify-all
 	$(MAKE) gdscheck-drc-all

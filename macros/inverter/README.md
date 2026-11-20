@@ -121,7 +121,7 @@ The `sim-xschem` target accepts an optional `TB=<testbenchname>` parameter (defa
 All targets that operate on a specific cell accept an optional `CELL=<cellname>` parameter. The default is the top-level cell (`inverter_top`).
 
 ```sh
-make <target> [CELL=<cellname>] [EXT_MODE=<1|2|3>] [THRESHOLD=<mOhm>] [MINRES=<mOhm>] [MINDELAY=<ps>] [DRC_LEVEL=<precheck|macro|regular>] [GDSCHECK_SUITE=<suite>|GDSCHECK_DECKS=<decks>] [DRC_JOBS=<n>] [EV_PRECISION=<digits>]
+make <target> [CELL=<cellname>] [LAYOUT_SOURCE=<script|manual>] [EXT_MODE=<1|2|3>] [THRESHOLD=<mOhm>] [MINRES=<mOhm>] [MINDELAY=<ps>] [DRC_LEVEL=<precheck|macro|regular>] [GDSCHECK_SUITE=<suite>|GDSCHECK_DECKS=<decks>] [DRC_JOBS=<n>] [EV_PRECISION=<digits>]
 ```
 
 
@@ -209,7 +209,7 @@ Two KLayout Python scripts in [`scripts/layout/`](scripts/layout/) draw the hand
 - The PCells stay live in `inverter.gds` and `inverter_top.klay.gds`, so both open and edit in KLayout as if drawn by hand. `inverter_top.gds` is written without PCell context, as `File > Export Layout For Tapeout` does.
 - Every coordinate follows from the device sizes of the schematic, the positions read back from the placed PCells and a few named constants. Two of them keep details of the hand drawing: the 1 µm supply pins of the unit cell sit 10 nm off its centre line, and the pmos drain via stacks right of the centre sit 0.19 µm higher than those left of it.
 - The scripts write no timestamps, so a rerun gives the same bytes and `git status` shows only real changes.
-- A script run overwrites all four files, a hand edit in KLayout included, and `make all` starts with one. Carry such an edit into the scripts, or verify and build a hand-drawn layout with the targets on their own (`klayout-verify-all`, `gdscheck-drc-all`, `magic-verify-all`, `build-top`).
+- A script run overwrites all four files, a hand edit in KLayout included, and `make all` starts with one. For a layout drawn or edited by hand, set `LAYOUT_SOURCE ?= manual` at the top of the `Makefile`, or pass `LAYOUT_SOURCE=manual`: `klayout-script` and `klayout-script-all`, and so `make all` and the regression, then leave the layout as it is.
 - Like an export, a script run evaluates the PCells of the installed PDK. Rerun DRC, LVS and PEX after a PDK update.
 
 
@@ -653,7 +653,7 @@ Runs the full flow in sequence: the layouts from their KLayout scripts, KLayout 
 make all
 ```
 
-The layout scripts run first, so every later step sees what they write, and they cannot move into `build-top`, which comes after the verification. Verification comes next because DRC/LVS/PEX produce the fresh, pin-reordered PEX netlists from the current layout. The build follows, since the Verilog stub reads its pins from a PEX netlist. The simulations run **last**, so the `inverter_top` testbench includes the PEX netlist produced by this run, not by a previous one.
+The layout scripts run first, so every later step sees what they write, and they cannot move into `build-top`, which comes after the verification. With `LAYOUT_SOURCE=manual` they leave a hand-drawn layout as it is. Verification comes next because DRC/LVS/PEX produce the fresh, pin-reordered PEX netlists from the current layout. The build follows, since the Verilog stub reads its pins from a PEX netlist. The simulations run **last**, so the `inverter_top` testbench includes the PEX netlist produced by this run, not by a previous one.
 
 
 ### Clean
