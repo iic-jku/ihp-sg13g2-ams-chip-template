@@ -1136,8 +1136,9 @@ To keep the runtime low while still covering the full toolchain, the regression 
 - Magic DRC (`sak-drc.sh -m`) runs once, as `magic-drc` of the bondpad, which passes it, so a broken Magic fails the regression. gdscheck DRC (`sak-drc.sh -g`) runs in the bondpad, RF pad and logo IP builds.
 - Only **one** logo (`sg13g2_ip__jku`) is regenerated. It is the only step that exercises the PNG to GDS flow. The other two logos (`sg13g2_ip__jku_names`, `sg13g2_ip__template_name`) use an identical toolchain and reuse their committed views.
 - Exactly **one** CACE parameter set is run (the AC VDD sweep `ac_params`, no Monte Carlo). Swap `ac_params` for `ac_mc_params` / `ac_mm_params` in the target to also exercise the Monte Carlo flow.
+- The vco runs only its layout scripts (`klayout-script-all`), which catch a PDK update that breaks one of them. The chip does not build the vco yet.
 
-The regression runs bottom-up: first the inverter and counter macros, then the top-level prerequisites (submodules, bondpad, RF pad, logo) and finally the chip top-level LibreLane run that integrates the freshly built macros and IP. After the counter is hardened, `copy-final` copies its fresh `flow/final/` views into `macros/counter/final/`, so that the logic equivalence check (`lec`), the gate-level simulations (`sim-gl-cocotb`, `sim-gl-sdf-cocotb`) and the chip top-level integration use the freshly built outputs rather than the committed ones.
+The regression runs bottom-up: first the inverter macro, the layout scripts of the vco and the counter macro, then the top-level prerequisites (submodules, bondpad, RF pad, logo) and finally the chip top-level LibreLane run that integrates the freshly built macros and IP. After the counter is hardened, `copy-final` copies its fresh `flow/final/` views into `macros/counter/final/`, so that the logic equivalence check (`lec`), the gate-level simulations (`sim-gl-cocotb`, `sim-gl-sdf-cocotb`) and the chip top-level integration use the freshly built outputs rather than the committed ones.
 
 The following tools and flows are checked:
 
@@ -1150,6 +1151,7 @@ The following tools and flows are checked:
 | PNG to GDS logo generation, KLayout DRC, gdscheck DRC | `sg13g2_ip__jku all` (single logo) |
 | Xschem + ngspice (analog simulation) | inverter `sim-xschem` (`inverter_tb_dc_vout`) |
 | CACE (+ ngspice) | inverter CACE, single parameter set (`ac_params`) |
+| KLayout layout scripts with the PDK PCells (`klayout -b`) | inverter and vco `klayout-script-all` |
 | KLayout DRC (`sak-drc.sh`) + KLayout LVS (`sak-lvs.sh`) + KLayout PEX (`kpex`) | inverter `klayout-verify CELL=inverter_top` |
 | Magic extract + Netgen LVS (`sak-lvs.sh`) + Magic PEX (`sak-pex.sh`) | inverter `magic-verify CELL=inverter_top` |
 | Magic LEF export + LIB + Verilog stub + `sak-render.py` render | inverter `build-top` |

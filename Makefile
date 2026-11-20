@@ -587,14 +587,19 @@ release: ## Copy the gds, netlist files and chip renders to the release folder (
 
 # Regression Target
 regression: ## Regression test target for IIC-OSIC-TOOLS
-# 	Analog macro: inverter (Xschem + CACE + DRC/LVS/PEX + build-top)
+# 	Analog macro: inverter (Xschem + CACE + layout scripts + DRC/LVS/PEX + build-top)
 	$(MAKE) -C $(MACROS_DIR)/inverter sim-xschem TB=inverter_tb_dc_vout
 # 	ONE CACE run: the lightweight AC VDD sweep (no Monte-Carlo) to keep runtime short.
 	cd $(MACROS_DIR)/inverter/verification/cace && cace inverter.yaml -p ac_params && rm -rf _runs _docs netlist
+# 	The layouts from their KLayout scripts, so the checks below run on what the scripts write with the installed PDK.
+	$(MAKE) -C $(MACROS_DIR)/inverter klayout-script-all
 # 	KLayout DRC, LVS and PEX and Magic LVS and PEX of the inverter_top cell.
 	$(MAKE) -C $(MACROS_DIR)/inverter klayout-verify CELL=inverter_top
 	$(MAKE) -C $(MACROS_DIR)/inverter magic-verify CELL=inverter_top
 	$(MAKE) -C $(MACROS_DIR)/inverter build-top
+
+# 	RF macro: vco, only its KLayout layout scripts, so that a PDK update that breaks one fails the regression.
+	$(MAKE) -C $(MACROS_DIR)/vco klayout-script-all
 
 # 	Digital macro: counter (Verilator, Icarus, cocotb, yosys/FPGA, LibreLane, xspice)
 	$(MAKE) -C $(MACROS_DIR)/counter lint-verilog-all
