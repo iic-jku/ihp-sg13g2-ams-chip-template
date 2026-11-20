@@ -92,6 +92,7 @@ XSCHEM_SCH_DIR  := schematic/xschem
 XSCHEM_TB_DIR   := testbenches/xschem
 LAY_DIR         := layout
 SCRIPTS_DIR     := scripts
+LAY_SCRIPTS_DIR := scripts/layout
 SIM_PLOT_DIR    := testbenches/xschem/plot_simulations
 GDS_DIR         := final/gds
 LEF_DIR         := final/lef
@@ -192,6 +193,23 @@ sim-all: ## Simulate the macro
 	$(MAKE) sim-xschem TB=inverter_top_tb_tran
 	$(MAKE) sim-cace
 .PHONY: sim-all
+# ================================================================================================
+
+
+# Layout Script Target
+klayout-script: ## Generate layout/<CELL>.gds with the KLayout Python script scripts/layout/<CELL>.py (usage: make klayout-script CELL=<cellname>)
+	@if [ ! -f "$(LAY_SCRIPTS_DIR)/$(CELL).py" ]; then \
+		echo "ERROR: no layout script $(LAY_SCRIPTS_DIR)/$(CELL).py. Pass CELL=<cellname>."; \
+		exit 1; \
+	fi
+	mkdir -p $(LAY_DIR)
+	klayout -b -r $(LAY_SCRIPTS_DIR)/$(CELL).py -rd out=$(abspath $(LAY_DIR)/$(CELL).gds)
+.PHONY: klayout-script
+
+klayout-script-all: ## Generate every layout with its KLayout Python script, subcells before the cells that place them
+	$(MAKE) klayout-script CELL=inverter
+	$(MAKE) klayout-script CELL=inverter_top
+.PHONY: klayout-script-all
 # ================================================================================================
 
 
@@ -474,6 +492,6 @@ clean: ## Delete all generated files and folders (final, netlists, render, DRC/L
 	rm -rf $(SIM_PLOT_DIR)/data $(SIM_PLOT_DIR)/figures $(SIM_PLOT_DIR)/__pycache__
 	rm -rf $(CACE_DIR)/_runs $(CACE_DIR)/_docs $(CACE_DIR)/netlist $(CACE_DIR)/results
 	rm -rf $(CACE_DIR)/templates/simulations
-	rm -rf $(SCRIPTS_DIR)/__pycache__
+	rm -rf $(SCRIPTS_DIR)/__pycache__ $(LAY_SCRIPTS_DIR)/__pycache__
 .PHONY: clean
 # ================================================================================================
