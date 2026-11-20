@@ -63,36 +63,25 @@ DRC_RPT_DIR := verification/drc
 
 # Logo parameters
 IMG_FILE    := logo/template_name.png
-# Override with: make <target> IMG_SIZE_PX=<px> BLOCK_SIZE=<um> PIXEL_SIZE=<um>
-IMG_SIZE_PX ?= 400
+# Override with: make <target> BLOCK_SIZE=<um> PIXEL_SIZE=<um>
 BLOCK_SIZE  ?= 100
-# Pixel size in microns. Must be >= minimum layer width to avoid DRC violations.
+# Pixel size in microns. Must be >= 0.21 um, the Metal5 minimum space (Mn.b), because single pixels and single-pixel gaps are drawn as is.
 PIXEL_SIZE  ?= 0.25
-# scale = BLOCK_SIZE / (IMG_SIZE_PX * PIXEL_SIZE)
-SCALE       := $(shell python3 -c "print($(BLOCK_SIZE) / ($(IMG_SIZE_PX) * $(PIXEL_SIZE)))")
 
 # Layer selection for the logo (IHP SG13G2)
 # Override with: make <target> LAYER=<Metal1|Metal2|Metal3|Metal4|Metal5|TopMetal1|TopMetal2>
-# LAYER_NAME is used by the lef target, LAYER_NUM (gds_layer/datatype) by the logo target.
+# The logo target hands the name to img2lay.py, which resolves it through the PDK layer properties, and the lef target writes it as the OBS layer.
 LAYER ?= Metal5
 
-LAYER_NAME := $(LAYER)
-LAYER_NUM  := $(strip \
-    $(if $(filter Metal1,$(LAYER)),8/0,)\
-    $(if $(filter Metal2,$(LAYER)),10/0,)\
-    $(if $(filter Metal3,$(LAYER)),30/0,)\
-    $(if $(filter Metal4,$(LAYER)),50/0,)\
-    $(if $(filter Metal5,$(LAYER)),67/0,)\
-    $(if $(filter TopMetal1,$(LAYER)),126/0,)\
-    $(if $(filter TopMetal2,$(LAYER)),134/0,))
-ifeq ($(LAYER_NUM),)
-$(error Invalid LAYER: '$(LAYER)'. Must be one of Metal1, Metal2, Metal3, Metal4, Metal5, TopMetal1, TopMetal2)
+VALID_LAYERS := Metal1 Metal2 Metal3 Metal4 Metal5 TopMetal1 TopMetal2
+ifeq ($(filter $(LAYER),$(VALID_LAYERS)),)
+$(error Invalid LAYER: '$(LAYER)'. Must be one of $(VALID_LAYERS))
 endif
 
 
 # Help Target
 help: ## Show this help message
-	@echo 'Usage: make [target]'
+	@echo 'Usage: make <target> [LAYER=<Metal1|Metal2|Metal3|Metal4|Metal5|TopMetal1|TopMetal2>] [BLOCK_SIZE=<um>] [PIXEL_SIZE=<um>] [CELL=<cellname>] [DRC_LEVEL=<precheck|macro|regular>] [OPEN_ARGS=<options>]'
 	@echo ''
 	@echo 'Available targets:'
 	@grep -E '^[a-zA-Z0-9_.-]+:.*## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*## "}; {printf "  %-20s %s\n", $$1, $$2}'
@@ -122,11 +111,11 @@ clean: ## Remove generated outputs and reports
 
 
 # Build Target
-# Logo is drawn on $(LAYER) ($(LAYER_NUM)). Override with LAYER=<name>.
-# Boundary layers: 189/0 (prBoundary), 160/0 (NoMetFiller).
+# Logo is drawn on $(LAYER). Override with LAYER=<name>.
+# Boundary layers: prBoundary (189/0) and NoMetFiller (160/0).
 logo: ## Generate GDS from image using Python script
 	mkdir -p $(GDS_DIR)
-	python3 script/img2lay.py $(IMG_FILE) $(GDS_DIR)/$(TOP).gds --cellname $(TOP) --invert --merge --pixel-size $(PIXEL_SIZE) --scale $(SCALE) --foreground "$(LAYER_NUM)" --boundary "189/0" "160/0"
+	python3 script/img2lay.py $(IMG_FILE) $(GDS_DIR)/$(TOP).gds --cellname $(TOP) --invert --merge --pixel-size $(PIXEL_SIZE) --block-size $(BLOCK_SIZE) --foreground $(LAYER) --boundary prBoundary NoMetFiller
 .PHONY: logo
 # ================================================================================================
 
@@ -152,7 +141,7 @@ gdscheck-drc: ## Run gdscheck DRC of the CELL cell (usage: make gdscheck-drc [CE
 # LEF Target
 lef: ## Generate LEF macro definition for the logo
 	mkdir -p $(LEF_DIR)
-	@printf 'VERSION 5.8 ;\n  NOWIREEXTENSIONATPIN ON ;\n  DIVIDERCHAR "/" ;\n  BUSBITCHARS "[]" ;\nMACRO $(TOP)\n  CLASS BLOCK ;\n  FOREIGN $(TOP) ;\n  ORIGIN 0.000 0.000 ;\n  SIZE $(BLOCK_SIZE) BY $(BLOCK_SIZE) ;\n  OBS\n      LAYER $(LAYER_NAME) ;\n        RECT 0.0 0.0 $(BLOCK_SIZE) $(BLOCK_SIZE) ;\n  END\nEND $(TOP)\nEND LIBRARY\n' > $(LEF_DIR)/$(TOP).lef
+	@printf 'VERSION 5.8 ;\n  NOWIREEXTENSIONATPIN ON ;\n  DIVIDERCHAR "/" ;\n  BUSBITCHARS "[]" ;\nMACRO $(TOP)\n  CLASS BLOCK ;\n  FOREIGN $(TOP) ;\n  ORIGIN 0.000 0.000 ;\n  SIZE $(BLOCK_SIZE) BY $(BLOCK_SIZE) ;\n  OBS\n      LAYER $(LAYER) ;\n        RECT 0.0 0.0 $(BLOCK_SIZE) $(BLOCK_SIZE) ;\n  END\nEND $(TOP)\nEND LIBRARY\n' > $(LEF_DIR)/$(TOP).lef
 .PHONY: lef
 # ================================================================================================
 
