@@ -2446,10 +2446,6 @@ wire inv1_din1 = bidir_in[0];
 wire inv1_din2 = bidir_in[1];
 wire inv1_din3 = bidir_in[2];
 wire inv1_din4 = bidir_in[3];
-
-// Inverter 2
-wire inv2_vin1 = analog_padres[0];
-wire inv2_vin2 = analog_padres[1];
 // ======================================================
 ```
 
@@ -2500,12 +2496,10 @@ assign bidir_oe[2]  = enable;
 
 assign bidir_out[3] = counter1_value[7];
 assign bidir_oe[3]  = enable;
-
-// Analog outputs
-assign analog_padbare[2] = inv2_vout1;
-assign analog_padbare[3] = inv2_vout2;
 // ======================================================
 ```
+
+The analog inputs and outputs of `inverter2` connect to `analog_padres` and `analog_padbare` at the instance, with no wire of their own in between. Such a wire can give the merged net its name in synthesis, and then `DRT_ASSIGN_NDR` and `RSZ_DONT_TOUCH_LIST` in [`config.yaml`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/flow/librelane/config.yaml), which match the names `analog_PADRES` and `analog_PADBARE`, miss the analog nets, and the resizer is free to put buffers into the analog paths.
 
 ## Understanding `config.yaml`
 
@@ -2790,7 +2784,7 @@ The difference between `chip_top.gds.gz` and `chip_top_logo_fill.gds.gz` is that
 A finished `make build-top` is not yet a correct chip. Go through the following points after every run. The run folder is the newest one in `flow/librelane/runs/`, and `make copy-reports` copies its main reports to [`verification/reports/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/verification/reports/).
 
 1. **The flow ran to the end.** A failed check, for example setup violations or routing DRC errors, makes LibreLane end with an error that names the check, and `build-top` stops there.
-2. **Warnings.** Read `warning.log` in the run folder and compare it with the one of the previous run. A warning that a change brings in is the one to understand.
+2. **Warnings.** Read `warning.log` in the run folder and compare it with the one of the previous run. A warning that a change brings in is the one to understand. An `STA-0101` warning such as `object 'analog_PADBARE\[2]' not found` means that a name in `RSZ_DONT_TOUCH_LIST` matches no net, so the resizer is free to buffer that analog net.
 3. **Timing.** [`stapostpnr_summary.rpt`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/verification/reports/stapostpnr_summary.rpt) lists the worst setup and hold slack and the violation counts of all six corners, and both slacks have to be positive in every corner. The committed report of this chip has 3.35 ns of setup slack at `nom_slow_1p08V_125C` and 0.096 ns of hold slack at `nom_fast_1p65V_m40C`.
 4. **Slew and capacitance.** The last two columns of the same report count the `max cap` and `max slew` violations, and `checks.rpt` in each corner folder of `*-openroad-stapostpnr/` lists their pins. Neither check stops the flow, since `MAX_SLEW_VIOLATION_CORNERS` and `MAX_CAP_VIOLATION_CORNERS` name no corner. A violation on a net that a standard cell drives is what the repair steps of the flow are for, so look at each one. A violation at the `pad` pin of an IO cell is the output slew of the IO cell itself, from its Liberty file, which no repair step changes. All `max slew` violations of this chip are of this kind, on the 4 bidirectional pads and, in the two slow corners, also on the 17 output pads.
 5. **Untimed pads.** The `check_setup` section of the same `checks.rpt` lists the input ports without an input delay and the unconstrained endpoints. Every pad port of `chip_top` is an `inout`, so the output pads show up in the first list and the input pads in the second. A pad that shows up in both has no timing at all. Apart from `clk_PAD`, the analog pads and the pads driven only by an untimed macro, such as `output_PAD[15:12]` from `inverter1`, such a pad is not matched by `chip_top.sdc` (@sec-top-sdc).

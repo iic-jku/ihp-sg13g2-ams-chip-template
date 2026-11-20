@@ -118,10 +118,10 @@ PAD_SOUTH: [
 
 # East (bottom to top): inverter2 analog ch1/ch2 (4 pads), inverter1 digital out (4 pads)
 PAD_EAST: [
-    "g_analogs\\[0\\].analog_pad",      # analog_PAD[0]  = inv2_vin1  (via padres)
-    "g_analogs\\[1\\].analog_pad",      # analog_PAD[1]  = inv2_vin2  (via padres)
-    "g_analogs\\[2\\].analog_pad",      # analog_PAD[2]  = inv2_vout1 (via padbare)
-    "g_analogs\\[3\\].analog_pad",      # analog_PAD[3]  = inv2_vout2 (via padbare)
+    "g_analogs\\[0\\].analog_pad",      # analog_PAD[0]  = inverter2.vin1  (via padres)
+    "g_analogs\\[1\\].analog_pad",      # analog_PAD[1]  = inverter2.vin2  (via padres)
+    "g_analogs\\[2\\].analog_pad",      # analog_PAD[2]  = inverter2.vout1 (via padbare)
+    "g_analogs\\[3\\].analog_pad",      # analog_PAD[3]  = inverter2.vout2 (via padbare)
     "g_outputs\\[12\\].output_pad",     # output_PAD[12] = inv1_dout1
     "g_outputs\\[13\\].output_pad",     # output_PAD[13] = inv1_dout2
     "g_outputs\\[14\\].output_pad",     # output_PAD[14] = inv1_dout3
