@@ -40,10 +40,6 @@ module chip_core #(
     wire inv1_din2 = bidir_in[1];
     wire inv1_din3 = bidir_in[2];
     wire inv1_din4 = bidir_in[3];
-
-    // Inverter 2 (analog inputs tapped from the pad ring)
-    wire inv2_vin1 = analog_padres[0];
-    wire inv2_vin2 = analog_padres[1];
     // ======================================================
 
     // ======================================================
@@ -113,20 +109,19 @@ module chip_core #(
     wire vss_tie = 1'b0;
     `endif
 
-    wire inv2_vout1;
-    wire inv2_vout2;
-
+    // The analog pins connect to the ports directly, without alias wires.
+    // An alias wire can give the net its name in synthesis, and the NDR and RSZ_DONT_TOUCH_LIST of config.yaml then miss it.
     inverter_top inverter2 (
         `ifdef USE_POWER_PINS
         .VDD  (VDD),
         .VSS  (VSS),
         `endif
-        .vin1 (inv2_vin1),
-        .vin2 (inv2_vin2),
+        .vin1 (analog_padres[0]),
+        .vin2 (analog_padres[1]),
         .vin3 (vss_tie),
         .vin4 (vss_tie),
-        .vout1(inv2_vout1),
-        .vout2(inv2_vout2),
+        .vout1(analog_padbare[2]),
+        .vout2(analog_padbare[3]),
         // The inputs of the unused channels are tied low, so their outputs drive high and stay open.
         .vout3(),
         .vout4()
@@ -207,10 +202,6 @@ module chip_core #(
 
     assign bidir_out[3] = counter1_value[7];
 	assign bidir_oe[3]  = enable;
-
-    // Analog outputs
-    assign analog_padbare[2] = inv2_vout1;
-    assign analog_padbare[3] = inv2_vout2;
     // ======================================================
 endmodule
 

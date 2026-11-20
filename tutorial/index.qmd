@@ -2446,10 +2446,6 @@ wire inv1_din1 = bidir_in[0];
 wire inv1_din2 = bidir_in[1];
 wire inv1_din3 = bidir_in[2];
 wire inv1_din4 = bidir_in[3];
-
-// Inverter 2
-wire inv2_vin1 = analog_padres[0];
-wire inv2_vin2 = analog_padres[1];
 // ======================================================
 ```
 
@@ -2500,12 +2496,10 @@ assign bidir_oe[2]  = enable;
 
 assign bidir_out[3] = counter1_value[7];
 assign bidir_oe[3]  = enable;
-
-// Analog outputs
-assign analog_padbare[2] = inv2_vout1;
-assign analog_padbare[3] = inv2_vout2;
 // ======================================================
 ```
+
+The analog inputs and outputs of `inverter2` connect to `analog_padres` and `analog_padbare` at the instance, with no wire of their own in between. Such a wire can give the merged net its name in synthesis, and then `DRT_ASSIGN_NDR` and `RSZ_DONT_TOUCH_LIST` in [`config.yaml`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/flow/librelane/config.yaml), which match the names `analog_PADRES` and `analog_PADBARE`, miss the analog nets, and the resizer is free to put buffers into the analog paths.
 
 ## Understanding `config.yaml`
 
