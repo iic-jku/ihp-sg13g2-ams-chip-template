@@ -47,7 +47,7 @@ make all
 
 ### PDK Guard
 
-Every target except `help` and `clean` needs the `ihp-sg13g2` PDK. A wrong `$PDK`, for example `ihp-sg13cmos5l` from the sibling CMOS5L template, splits the IP across two technologies: the GDS layer numbers are hard-coded for sg13g2 (`Metal5` is `67/0`), while `sak-drc.sh` runs the DRC against the rule deck of whatever `$PDK` says. The Makefile therefore compares `$PDK` against `REQUIRED_PDK` once when it is parsed, before any target runs:
+Every target except `help` and `clean` needs the `ihp-sg13g2` PDK. A wrong `$PDK`, for example `ihp-sg13cmos5l` from the sibling CMOS5L template, splits the IP across two technologies: `img2lay.py` resolves the `LAYER` name through the layer properties of the active PDK, and `sak-drc.sh` runs the DRC against its rule deck, while the metal stack the logo is meant for is the SG13G2 one. The Makefile therefore compares `$PDK` against `REQUIRED_PDK` once when it is parsed, before any target runs:
 
 ```bash
 $ make all
@@ -62,7 +62,7 @@ The check is a parse-time conditional at the top of the Makefile, not a prerequi
 | Target        | Description                                              |
 |---------------|----------------------------------------------------------|
 | `logo`        | Convert PNG to GDSII using `img2lay.py`                  |
-| `lef`         | Generate LEF macro (CLASS BLOCK, OBS on `$(LAYER_NAME)`) |
+| `lef`         | Generate LEF macro (CLASS BLOCK, OBS on `$(LAYER)`) |
 | `lib`         | Generate Liberty timing stub (empty cell)                |
 | `verilog`     | Generate Verilog blackbox stub (no ports)                |
 | `klayout-drc` | Run KLayout DRC using `sak-drc.sh` (usage: `make klayout-drc [CELL=<cellname>] [DRC_LEVEL=<precheck\|macro\|regular>] [DRC_JOBS=<n>]`) |
@@ -77,30 +77,31 @@ The following Makefile variables can be overridden:
 
 | Variable      | Default  | Description                                                                           |
 |---------------|----------|---------------------------------------------------------------------------------------|
-| `IMG_SIZE_PX` | `400`    | Source image width/height in pixels                                                   |
-| `BLOCK_SIZE`  | `100`    | Desired physical block size in µm                                                     |
-| `PIXEL_SIZE`  | `0.25`   | Pixel size in µm (must be ≥ M5 min width of 0.21 µm to avoid DRC violations)          |
-| `LAYER`       | `Metal5` | Metal layer the logo is drawn on; one of `Metal1`..`Metal5`, `TopMetal1`, `TopMetal2` |
+| `BLOCK_SIZE`  | `100`    | Block edge in µm, the image is scaled to it                                           |
+| `PIXEL_SIZE`  | `0.25`   | Pixel size in µm (must be ≥ 0.21 µm, the Metal5 minimum space, single pixels and single-pixel gaps are drawn as is) |
+| `LAYER`       | `Metal5` | Metal layer the logo is drawn on, one of `Metal1`..`Metal5`, `TopMetal1` or `TopMetal2` |
 
-Setting `LAYER` keeps the GDS artwork (`logo` target) and the LEF obstruction (`lef` target) consistent. The Makefile derives both `LAYER_NUM` (e.g. `67/0`) and `LAYER_NAME` (e.g. `Metal5`) from it.
+Setting `LAYER` keeps the GDS artwork (`logo` target) and the LEF obstruction (`lef` target) consistent. The `logo` target hands the name to `img2lay.py`, which resolves it through the PDK's KLayout layer properties (`Metal5` is `67/0`), and the `lef` target writes the same name into the `OBS`.
 
 ```sh
 make all LAYER=TopMetal1
 ```
 
-The image scale factor is computed automatically.
+The image is scaled to `BLOCK_SIZE`, so the GDS boundary and the LEF `SIZE` always agree.
 
 
 ## Logo Generator Script
 
 The `script/img2lay.py` script converts a PNG image into a GDSII layout:
 
-- Each dark pixel becomes a rectangle on the layer selected via `LAYER` (default `Metal5` → `67/0`)
-- Boundary layers 189/0 (`prBoundary`) and 160/0 (`NoMetFiller`) mark the block outline
+- Each horizontal run of dark pixels becomes a rectangle on the layer selected via `LAYER` (default `Metal5`, resolved to `67/0`)
+- Boundary layers `prBoundary` (189/0) and `NoMetFiller` (160/0) mark the block outline
+- Layers are given as `<layer>/<datatype>` or as a drawing-layer name of the active PDK, read from `$PDK_ROOT/$PDK/libs.tech/klayout/tech/<pdk>.lyp`
 - `--invert` inverts the image (dark ↔ light)
-- `--merge` merges adjacent rectangles to reduce polygon count
+- `--merge` merges the rectangles into polygons to reduce the polygon count
 - `--pixel-size` sets the physical size of each pixel in µm
-- `--scale` downscales the image before conversion
+- `--block-size` scales the image to the given block edge in µm and draws the boundary layers at that size
+- `--scale` downscales the image by a plain factor instead
 
 
 ## Design Rule Check (DRC)
