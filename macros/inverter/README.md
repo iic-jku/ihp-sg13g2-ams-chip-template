@@ -58,6 +58,9 @@
 │     ├─ inverter_top_pex.sym
 │     └─ xschemrc
 ├─ 📁 scripts/
+│  ├─ 📁 layout/
+│  │  ├─ inverter.py
+│  │  └─ inverter_top.py
 │  ├─ 📁 sizing/
 │  │  ├─ 📁 data/
 │  │  ├─ 📁 figures/
@@ -181,12 +184,33 @@ At most 400 buttons are drawn at once, because each one is an X window, and what
 
 ### Layout Sources and the Exported Tapeout GDS
 
-`layout/<TOP>.klay.gds` is the source of truth. It is the KLayout editing source: it references the PDK PCells and pulls the `inverter` cell in as a library through `layout/<TOP>.klay.klib`, so every device is still live and editable. `layout/<TOP>.gds` is exported from it with `File > Export Layout For Tapeout`, which resolves every PCell and library reference into a static cell, and it is what every build and sign-off target reads.
+`layout/<TOP>.klay.gds` is the source of truth. It is the KLayout editing source: it references the PDK PCells and pulls the `inverter` cell in as a library through `layout/<TOP>.klay.klib`, so every device is still live and editable. `layout/<TOP>.gds` is exported from it with `File > Export Layout For Tapeout`, which resolves every PCell and library reference into a static cell, and it is what every build and sign-off target reads. The KLayout Python scripts in [`scripts/layout/`](scripts/layout/) write the same files, see [Generate the Layout with KLayout Python Scripts](#generate-the-layout-with-klayout-python-scripts).
 
 > [!IMPORTANT]
 > Re-export after every layout change and never hand-edit `layout/<TOP>.gds`. Keeping the two in step by editing both is how they drift apart, and the drift is invisible because the sign-off targets only look at the exported file.
 
 The export re-evaluates the PCells against the **installed** PDK, so device geometry can change even though nobody touched the editing source, and the exported file is the only place that shows it. The sibling SG13CMOS5L template hit this for real: for the identical stored parameters its `SG13_dev` `pmos` draws the `NWell` (`31/0`) 0.11 µm tighter on every side than the geometry frozen into its exported GDS, which pulled the two mirrored pmos wells away from the hand-drawn `NWell` straps that bridge them and produced four `NW.b1` markers (min. PWell width between NWell regions) that no sign-off target saw. Measured on the 2026.08 container, this PDK still draws the wider well, so the two are not interchangeable: a layout carried between the templates has to be re-exported under the target PDK and re-checked, not copied. Re-run DRC, LVS and PEX after every export.
+
+
+### Generate the Layout with KLayout Python Scripts
+
+```sh
+make klayout-script CELL=inverter     # the unit cell
+make klayout-script-all               # the unit cell, then the macro
+```
+
+Two KLayout Python scripts in [`scripts/layout/`](scripts/layout/) draw the hand-drawn layout again, run in batch mode like the layout scripts of the [vco](../vco/README.md#generate-the-layouts-with-klayout-python-scripts). The committed layout files are their output:
+
+| Script | Writes | Floorplan |
+| --- | --- | --- |
+| [`inverter.py`](scripts/layout/inverter.py) | `layout/inverter.gds` | the `nmos` row (`M1`) below the `pmos` row (`M2`), each one `SG13_dev` PCell whose outer fingers are the dummies `Mdummy1` and `Mdummy2`, the `VSS` and `VDD` rails on Metal1 to Metal3 below and above the rows, the drains on Metal3 combs joined by the `vout` bar, and the gates on two poly straps that Metal2 risers tie to the `vin` bar |
+| [`inverter_top.py`](scripts/layout/inverter_top.py) | `layout/inverter_top.klay.gds`, `layout/inverter_top.klay.klib`, `layout/inverter_top.gds` | four unit cells, every second one mirrored so that neighbours share a rail, inside the `VSS` and `VDD` rings on Metal5 (horizontal bars) and TopMetal1 (vertical bars), `vin<n>` on Metal2 at the left edge, `vout<n>` on Metal3 at the right edge, and `NWell` straps between the facing pmos rows |
+
+- The PCells stay live in `inverter.gds` and `inverter_top.klay.gds`, so both open and edit in KLayout as if drawn by hand. `inverter_top.gds` is written without PCell context, as `File > Export Layout For Tapeout` does.
+- Every coordinate follows from the device sizes of the schematic, the positions read back from the placed PCells and a few named constants. Two of them keep details of the hand drawing: the 1 µm supply pins of the unit cell sit 10 nm off its centre line, and the pmos drain via stacks right of the centre sit 0.19 µm higher than those left of it.
+- The scripts write no timestamps, so a rerun gives the same bytes and `git status` shows only real changes.
+- A script run overwrites all four files, a hand edit in KLayout included. Carry such an edit into the scripts, or the next `make klayout-script-all` takes it back. `make all` does not run the scripts, so it verifies the files as they are.
+- Like an export, a script run evaluates the PCells of the installed PDK. Rerun DRC, LVS and PEX after a PDK update.
 
 
 ### Layout File Extension Usage
