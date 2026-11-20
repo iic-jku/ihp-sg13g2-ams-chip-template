@@ -488,6 +488,8 @@ Run this after cloning the repository, or whenever submodule pointers are update
 
 We use [cocotb](https://www.cocotb.org/), a Python-based testbench environment, for the verification of the chip.
 The underlying simulator is [Icarus Verilog](https://github.com/steveicarus/iverilog).
+Verilator cannot build the Verilog models of the IO pads, so the chip testbench stops under `SIM=verilator`.
+The cocotb testbench of the `counter` macro also runs on Verilator, see [`macros/counter/README.md`](macros/counter/README.md).
 
 The simulation targets accept an optional `CELL` variable (default: `chip_top`).
 The testbench is located in `testbenches/cocotb/chip_top_tb.py`. To run the RTL simulation, use:

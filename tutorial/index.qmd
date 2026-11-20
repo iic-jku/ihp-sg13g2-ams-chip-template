@@ -437,6 +437,8 @@ make sim-view-cocotb               # view in GTKWave
 make sim-view-cocotb WAVEFORM_VIEWER=surfer
 ```
 
+The RTL simulation also runs on [Verilator](https://www.veripool.org/verilator/) with `make sim-rtl-cocotb SIM=verilator`, and `make sim-view-cocotb SIM=verilator` opens its waveform. The gate-level runs need Icarus Verilog, because Verilator cannot build the UDP models of the standard cells.
+
 ![Gate-level cocotb waveform of `counter_top` in GTKWave.](fig/counter_top/counter_top_cocotb_gtkwave.png){#fig-counter-top-cocotb-gtkwave}
 
 The gate-level runs use the final netlist of the LibreLane run, [`final/nl/counter_top.nl.v`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/counter/final/nl/), which `make copy-final` copies from `flow/final/`. In this tutorial, this netlist for the counter already exists. For new designs, run `make build-top` first to execute the LibreLane flow.
@@ -2529,7 +2531,7 @@ add_pdn_connect \
 
 ## Top-Level Simulation
 
-The same RTL and gate-level cocotb flow as in @sec-digital is available at top level.
+The same RTL and gate-level cocotb flow as in @sec-digital is available at top level. It runs on Icarus Verilog only, because Verilator cannot build the Verilog models of the IO pads.
 
 ```sh
 make sim-rtl-cocotb
