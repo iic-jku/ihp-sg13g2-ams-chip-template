@@ -61,6 +61,7 @@ VH_DIR    	:= final/vh
 DRC_RPT_DIR := verification/drc
 
 # Bondpad parameters
+# Override with: make <target> DIAMETER=<um> SHAPE=<square|octagon|circle> BOTTOM_METAL=<1-6>
 DIAMETER     ?= 70.0
 SHAPE        ?= square
 BOTTOM_METAL ?= 3
