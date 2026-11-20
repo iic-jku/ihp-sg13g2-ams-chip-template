@@ -2530,6 +2530,104 @@ The `NON_DEFAULT_RULES` section defines a dedicated routing rule for the analog 
 The `DRT_ASSIGN_NDR` section applies this rule during detailed routing by matching net names with regular expressions (`^.*PADRES.*$` and `^.*PADBARE.*$`). The `RSZ_DONT_TOUCH_LIST` then protects the same analog nets from resizing, buffering, or other optimization steps, so the routed analog paths remain unchanged.
 :::
 
+### Sizing the Die, the Core and the Core Ring {#sec-top-sizing}
+
+`DIE_AREA` is the outline of the chip and `CORE_AREA` the rectangle inside it that holds the macros and the standard cell rows, both given as `[x0, y0, x1, y1]` in µm (`FP_SIZING: absolute`). The margin between the two holds the pad ring and the core ring, so its width follows from these two rings, while the die size follows from the pads and from what the core has to hold.
+
+@tbl-top-margin breaks the 365 µm margin of this chip down, from the die edge inwards. The positions are read from the DEF of a chip run.
+
+| Band | Depth | Set by |
+| ------ | ----- | -------------------- |
+| Seal ring and bondpads | 140 µm | `PAD_EDGE_SPACING` of the PDK. The `KLayout.SealRing` step draws the seal ring along the die edge, and the 70 µm × 70 µm bondpads sit directly outside the IO cells, from 70 µm to 140 µm. |
+| IO cells | 180 µm | The depth of the IHP IO cells and corner cells. |
+| Clearance | about 6 µm | The rest. |
+| Core ring | 35 µm | Two rings of `PDN_CORE_RING_VWIDTH` (15 µm) with `PDN_CORE_RING_VSPACING` (5 µm) between them. The horizontal sides take the same values from `PDN_CORE_RING_HWIDTH` and `PDN_CORE_RING_HSPACING`. |
+| Ring offset | 4.5 µm | `PDN_CORE_RING_VOFFSET` and `PDN_CORE_RING_HOFFSET` of the PDK, between the inner ring and the core. |
+
+: The margin between the die edge and the core of this chip. {#tbl-top-margin}
+
+The margin per side is therefore `PAD_EDGE_SPACING` + 180 µm + 2 × ring width + ring spacing + ring offset, plus a few µm of clearance. A wider core ring needs a wider margin: each µm of ring width costs 2 µm on every side. The ring carries the whole core current from the supply pads into the core, so its width follows from that current and from the current density of its metals, `TopMetal1` and `TopMetal2` here (see *Metal Stack* in the [LibreLane cheatsheet](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/doc/librelane/librelane_cheatsheet.md#metal-stack)). The comment in `config.yaml` gives 30 µm as the widest ring without slots. `PDN_CORE_RING_CONNECT_TO_PADS` draws the straps from the supply pads to the core ring, and these straps are the only connection between the pad ring and the core ring, so keep it on.
+
+The die size follows from two limits, and the larger one wins:
+
+- **The pads.** Each side offers the die width minus 2 × (140 µm + 180 µm) between its corner cells, 960 µm on this chip, and each IO cell is 80 µm wide. The eight pads of a side take 640 µm, and `OpenROAD.PadRing` spreads the remaining 320 µm as gaps. The comment above `PAD_SPACING_MULTIPLE` in `config.yaml` shows the arithmetic that keeps them on the IO site grid. Pads closer together give a smaller die, but the package and the bond wires limit the pitch: plan it with PREP-IC (@sec-prep-ic) and check the bond wires with `make bondplan` (@sec-packaging).
+- **The core.** The core is the die minus 2 × 365 µm, 870 µm × 870 µm here. It has to hold every macro with its 10 µm halo (`FP_MACRO_HORIZONTAL_HALO` and `FP_MACRO_VERTICAL_HALO`), the standard cells of `chip_core.sv` and the routing channels between the macros and towards the pads. `PL_TARGET_DENSITY_PCT` is only 10, because this core holds little logic outside the macros. Raise it for a core with more logic, with the same method as for a macro (@sec-hardening-sizing).
+
+A new `DIE_AREA` or `CORE_AREA` has to be carried into four more files: the `DIE_*` and `CORE_*` variables of [`scripts/add_logo_fill.sh`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/scripts/add_logo_fill.sh), which place the chip logo, [`doc/floorplan.md`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/doc/floorplan.md), [`doc/specifications.md`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/doc/specifications.md) and the PREP-IC project [`doc/prep-ic/chip_top.json`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/doc/prep-ic/chip_top.json). The logo macros are placed with `expr::` relative to `DIE_AREA` and follow on their own. The other macros sit at absolute positions or relative to the core origin of 365 µm (`expr::365 + 70`), so move them by hand. The standard cell rows start at the lower core edge, so a new `CORE_AREA` also shifts the rows under the macros. Check every macro against the rule "Rows cut at `VSS` rails" of "Constraints when editing the floorplan" in `doc/floorplan.md`, which keeps the macro halos from cutting a row at a `VDD` rail.
+
+A floorplan change can be checked within a minute, without the full flow. The following command stops LibreLane after the PDN, and `make librelane-openroad` shows that run in the OpenROAD GUI.
+
+```sh
+librelane flow/librelane/config.yaml --pdk ${PDK} --pdk-root ${PDK_ROOT} --manual-pdk \
+    --to OpenROAD.GeneratePDN
+make librelane-openroad
+```
+
+The partial run is now the newest one in `flow/librelane/runs/`, which the copy targets read, so run a full `make build-top` before copying anything from it.
+
+### The `MACROS` Block {#sec-top-macros}
+
+`MACROS` lists every hard macro of the chip: the two counters, the SRAM, the two inverters and the three logos. Each entry is named after its cell, which is the module name in the RTL and the macro name in the LEF, and holds the views of the macro and its instances. The entry of the counter uses every part, and @tbl-top-macro-keys lists what each key holds.
+
+<details>
+<summary>The `counter_top` Entry in `flow/librelane/config.yaml`</summary>
+
+```yaml
+MACROS:
+  counter_top:
+    gds:
+      - dir::../../macros/counter/final/gds/counter_top.gds
+    lef:
+      - dir::../../macros/counter/final/lef/counter_top.lef
+    pnl:
+      - dir::../../macros/counter/final/pnl/counter_top.pnl.v
+    nl:
+      - dir::../../macros/counter/final/nl/counter_top.nl.v
+    spef:
+      nom_*: dir::../../macros/counter/final/spef/nom/counter_top.nom.spef
+    lib:
+      nom_fast_1p32V_m40C: dir::../../macros/counter/final/lib/nom_fast_1p32V_m40C/counter_top__nom_fast_1p32V_m40C.lib
+      nom_fast_1p65V_m40C: dir::../../macros/counter/final/lib/nom_fast_1p65V_m40C/counter_top__nom_fast_1p65V_m40C.lib
+      nom_slow_1p08V_125C: dir::../../macros/counter/final/lib/nom_slow_1p08V_125C/counter_top__nom_slow_1p08V_125C.lib
+      nom_slow_1p35V_125C: dir::../../macros/counter/final/lib/nom_slow_1p35V_125C/counter_top__nom_slow_1p35V_125C.lib
+      nom_typ_1p20V_25C:   dir::../../macros/counter/final/lib/nom_typ_1p20V_25C/counter_top__nom_typ_1p20V_25C.lib
+      nom_typ_1p50V_25C:   dir::../../macros/counter/final/lib/nom_typ_1p50V_25C/counter_top__nom_typ_1p50V_25C.lib
+    instances:
+      # counter1: upper position, x-centered on the die (drives output_PAD[3:0] / bidir_PAD[3:0])
+      i_chip_core.counter1:
+        location: ["expr::$DIE_AREA[2] / 2 - 100", 997]
+        orientation: N
+      # counter2: lower position in the mid-right core (drives output_PAD[11:4] = south pads)
+      i_chip_core.counter2:
+        location: ["expr::365 + 70 + 500", 498]
+        orientation: FS
+```
+
+</details>
+
+| Key | View | Read by |
+| ----- | ------------ | ------------ |
+| `gds` | The layout | Streamout, which merges it into the chip GDS. Required. |
+| `lef` | The abstract: outline, pins and blockages | Floorplan, placement, PDN and routing. Required. |
+| `vh` | A Verilog header, the module with its ports and no content | Synthesis |
+| `nl` | The gate-level netlist | Synthesis, and STA together with `spef` |
+| `pnl` | The gate-level netlist with the power pins | Synthesis |
+| `spef` | The parasitics of `nl` | STA, together with `nl` |
+| `lib` | The Liberty timing model | Placement, clock tree synthesis and timing repair, STA where `nl` and `spef` are missing, and synthesis as a last resort |
+| `instances` | The instances of the macro in the chip | Macro placement |
+
+: The keys of a `MACROS` entry that this chip uses. {#tbl-top-macro-keys}
+
+Synthesis needs only the ports of a macro and reads it as a black box from the first view it finds among `vh`, the two netlists and `lib`. Placement, clock tree synthesis and timing repair time a macro through its `lib` only. The STA steps read `nl` with `spef` where a macro has both (`STA_MACRO_PRIORITIZE_NL`, on by default), otherwise `lib`, and a macro with neither is a black box through which no path is timed. The repair steps and the sign-off can therefore see a hardened macro through different views, and their slacks can differ. The keys under `spef` and `lib` are wildcards over the corner names: `nom_*` gives the one SPEF of the counter to all six corners, and each `lib` key names one corner. The macros of this chip carry three sets of views:
+
+- `counter_top` is hardened with LibreLane (@sec-digital) and has every view, which its `make copy-final` copies to `macros/counter/final/`. STA times the paths through both counters with their netlist and parasitics.
+- The SRAM `RM_IHPSG13_1P_1024x32_c2_bm_bist` comes from the PDK (`pdk_dir::`) with `gds`, `lef`, `vh` and `lib`. IHP characterises it at fewer corners than the chip uses, so several corners share one Liberty file, as the comment in its entry explains. The logos carry the same views, with an empty cell in their Liberty files.
+- `inverter_top` is drawn by hand (@sec-analog) and has `gds`, `lef` and `vh`, with its `lib` lines commented out. STA sees a black box, so the paths through the digital inverter `inverter1` to `output_PAD[15:12]` are not timed.
+
+Each key under `instances` is an instance name in the synthesised netlist, with the hierarchy joined by dots: `i_chip_core.counter1` is `counter1` inside `i_chip_core`, the instance of `chip_core` in `chip_top`. A name that matches no instance stops the flow in `OpenROAD.CheckMacroInstances`. `location` is the lower-left corner of the placed macro in µm. It may be an `expr::` expression, which can read other configuration values, as `$DIE_AREA[2]` does for `counter1`. `orientation` is one of the eight LEF/DEF orientations listed in the [LibreLane cheatsheet](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/doc/librelane/librelane_cheatsheet.md#the-eight-lefdef-orientations). `counter2` uses `FS`, mirrored about the x-axis, which turns the output pins on the north edge of the counter (see its [`pin_order.cfg`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/counter/flow/librelane/pin_order.cfg)) towards the south pads that it drives. "Constraints when editing the floorplan" in [`doc/floorplan.md`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/doc/floorplan.md) collects the rules for a legal position: inside the core, no overlap, the routing grid of the inverter, and rows cut at `VSS` rails only.
+
+A new macro needs an entry here, an instance in `chip_core.sv` and, unless the default macro grid fits it, a PDN grid in `pdn_cfg.tcl` (next section). The [macros README](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/README.md#register-the-macro-at-the-chip-top-level) lists every other place where it is registered.
+
 ## Understanding `pdn_cfg.tcl`
 
 [`pdn_cfg.tcl`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/flow/librelane/pdn_cfg.tcl) is the OpenROAD callback that builds the power-distribution network (PDN). Most of the file follows the standard structure provided by LibreLane and OpenLane.
@@ -2563,6 +2661,41 @@ add_pdn_connect \
     -grid inverter_top \
     -layers "$::env(PDN_VERTICAL_LAYER) Metal5"
 ```
+
+## Understanding `chip_top.sdc` {#sec-top-sdc}
+
+[`chip_top.sdc`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/flow/librelane/chip_top.sdc) holds the timing constraints of the chip. `config.yaml` names it as `PNR_SDC_FILE`, which placement, clock tree synthesis, routing and their timing repair read, as `SIGNOFF_SDC_FILE`, which the final STA reads, and as `FALLBACK_SDC`. The flow therefore optimises the chip against the same constraints that sign it off.
+
+The upper part of the file is the base SDC of LibreLane, which takes its numbers from the configuration (@tbl-top-sdc). To change one of them, set the variable in `config.yaml` and leave the SDC alone. Apart from the clock, this chip keeps the defaults of LibreLane and of the PDK, and `resolved.json` in the run folder lists the values that a run used.
+
+| Constraint | Variable | This chip |
+| ------------ | ------------------- | ------------ |
+| Clock | `CLOCK_PORT`, `CLOCK_NET`, `CLOCK_PERIOD` | 20 ns, defined at `clk_pad/p2c` |
+| Input and output delay | `IO_DELAY_CONSTRAINT`, in % of the clock period | 20 %, that is 4 ns |
+| Load on every output | `OUTPUT_CAP_LOAD`, in fF | 6 fF |
+| Fanout limit | `MAX_FANOUT_CONSTRAINT` | 10 |
+| Clock uncertainty | `CLOCK_UNCERTAINTY_CONSTRAINT`, in ns | 0.25 ns |
+| Clock transition | `CLOCK_TRANSITION_CONSTRAINT`, in ns | 0.15 ns |
+| Timing derate, early and late | `TIME_DERATING_CONSTRAINT`, in % | 5 % |
+| Slew and capacitance limits of every net | `MAX_TRANSITION_CONSTRAINT` in ns, `MAX_CAPACITANCE_CONSTRAINT` in pF | not set, the Liberty limits apply |
+
+: The constraints that `chip_top.sdc` takes from the configuration. {#tbl-top-sdc}
+
+The clock is defined at a pin and not at the port, because `CLOCK_NET` differs from `CLOCK_PORT`. `clk_pad/p2c` is the core-side output of the clock pad, so the delay of the clock pad is not part of the clock path. The 6 fF of `OUTPUT_CAP_LOAD`, the default of the PDK, model no board. The pad cells bring their own capacitance from their Liberty files, but a board trace or a probe adds picofarads, so set `OUTPUT_CAP_LOAD` to the expected load when the timing of the output pads matters.
+
+The lower part of the file belongs to this chip. It sorts the digital pad ports into the three groups of @tbl-top-sdc-groups.
+
+| Group | Ports | Constraints |
+| --- | --- | --- |
+| Input-only pads | `rst_n_PAD`, `input_PAD` | Input delay, from 0 to 4 ns |
+| Output-only pads | `output_PAD` | Output delay of 4 ns |
+| Bidirectional pads | `bidir_PAD` | Both |
+
+: The pad groups of `chip_top.sdc`. {#tbl-top-sdc-groups}
+
+`clk_PAD` carries the clock and the `analog_PAD` ports carry no digital signal, so neither is in a group. Every other pad port has to be in one. A port that is in no group, or a pattern that matches no port, does not stop the flow, and STA leaves that pad untimed. A pattern without a match leaves a `[STA-0366] port ... not found` warning in `warning.log`, while a port in no group shows up only in the `check_setup` report of @sec-top-checklist. Extend the groups whenever a digital pad is added, and name whole ports: synthesis writes a one-bit bus as a scalar port, which a pattern such as `input_PAD[*]` does not match.
+
+The base SDC constrains only the first clock in `CLOCK_PORT`. A second clock needs its own `create_clock` in this file, together with the relation between the two clocks, either `set_clock_groups` or constraints on the paths that cross between them.
 
 ## Top-Level Simulation
 
@@ -2652,6 +2785,21 @@ This calls `scripts/add_logo_fill.sh` with `TOP` and writes `layout/chip_top_log
 The difference between `chip_top.gds.gz` and `chip_top_logo_fill.gds.gz` is that the former is the raw top-level layout without any logos or filler cells, while the latter includes the logos and filler cells added for manufacturability and cosmetic purposes. For visual debugging in KLayout, it is recommended to use `chip_top.gds.gz` to avoid the visual clutter of the logos and filler, while for DRC and LVS, `chip_top_logo_fill.gds.gz` should be used since it is the actual layout that will be taped out.
 :::
 
+### Checking the Run {#sec-top-checklist}
+
+A finished `make build-top` is not yet a correct chip. Go through the following points after every run. The run folder is the newest one in `flow/librelane/runs/`, and `make copy-reports` copies its main reports to [`verification/reports/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/verification/reports/).
+
+1. **The flow ran to the end.** A failed check, for example setup violations or routing DRC errors, makes LibreLane end with an error that names the check, and `build-top` stops there.
+2. **Warnings.** Read `warning.log` in the run folder and compare it with the one of the previous run. A warning that a change brings in is the one to understand.
+3. **Timing.** [`stapostpnr_summary.rpt`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/verification/reports/stapostpnr_summary.rpt) lists the worst setup and hold slack and the violation counts of all six corners, and both slacks have to be positive in every corner. The committed report of this chip has 3.35 ns of setup slack at `nom_slow_1p08V_125C` and 0.096 ns of hold slack at `nom_fast_1p65V_m40C`.
+4. **Slew and capacitance.** The last two columns of the same report count the `max cap` and `max slew` violations, and `checks.rpt` in each corner folder of `*-openroad-stapostpnr/` lists their pins. Neither check stops the flow, since `MAX_SLEW_VIOLATION_CORNERS` and `MAX_CAP_VIOLATION_CORNERS` name no corner. A violation on a net that a standard cell drives is what the repair steps of the flow are for, so look at each one. A violation at the `pad` pin of an IO cell is the output slew of the IO cell itself, from its Liberty file, which no repair step changes. All `max slew` violations of this chip are of this kind, on the 4 bidirectional pads and, in the two slow corners, also on the 17 output pads.
+5. **Untimed pads.** The `check_setup` section of the same `checks.rpt` lists the input ports without an input delay and the unconstrained endpoints. Every pad port of `chip_top` is an `inout`, so the output pads show up in the first list and the input pads in the second. A pad that shows up in both has no timing at all. Apart from `clk_PAD`, the analog pads and the pads driven only by an untimed macro, such as `output_PAD[15:12]` from `inverter1`, such a pad is not matched by `chip_top.sdc` (@sec-top-sdc).
+6. **Power grid.** [`irdrop.rpt`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/verification/reports/irdrop.rpt) has to say `All shapes on net VDD are connected` and the same for `VSS`, with a small `Percentage drop` (0.05 % here). The power behind it is what STA computes, so a macro without a Liberty file, such as the inverters, draws nothing in this analysis.
+7. **Antenna and LVS.** [`antenna_summary.rpt`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/verification/reports/antenna_summary.rpt) has to be an empty table, and [`lvs.netgen.rpt`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/verification/reports/lvs.netgen.rpt) has to end with `Circuits match uniquely`. [`manufacturability.rpt`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/verification/reports/manufacturability.rpt) sums both up. Its DRC line reads `N/A`, because `librelane-nodrc` skips the DRC steps.
+8. **The layout.** Look at the renders in [`render/img/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/render/img/) or open the run with `make librelane-openroad`. Every macro and logo has to sit where [`doc/floorplan.md`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/doc/floorplan.md) puts it.
+9. **DRC.** `build-top` leaves out the DRC, so run it on `layout/chip_top_logo_fill.gds.gz` with the targets of @sec-top-verification.
+10. **Git.** `build-top` overwrites committed files in `layout/`, `netlist/`, `render/` and `verification/`. `git status` shows which of them changed, so commit them together with the change that caused them.
+
 ## Viewing the Chip
 
 After a successful build, the chip can be opened with KLayout.
@@ -2665,7 +2813,7 @@ ke layout/chip_top_logo_fill.gds.gz   # Chip layout with logos and filler
 
 ![`chip_top_logo_fill` layout in KLayout with only `TopMetal2` selected.](fig/chip_top/chip_top_black_TM2.png){#fig-chip-top-layout-tm2 width=75%}
 
-## Top-Level Verification
+## Top-Level Verification {#sec-top-verification}
 
 DRC, LVS, and PEX are also available for the full chip.
 
