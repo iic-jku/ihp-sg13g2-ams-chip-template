@@ -472,7 +472,7 @@ magic-lvs: ## Run Magic + Netgen LVS of the CELL cell (usage: make magic-lvs [CE
 
 
 # PEX Targets
-symbol-pex: ## Build the Xschem PEX symbol <CELL>_pex.sym from <CELL>.sym (usage: make symbol-pex [CELL=<cellname>])
+symbol-pex: ## Build the Xschem PEX symbol <CELL>_pex.sym from <CELL>.sym (usage: make symbol-pex [CELL=<cellname>] [PEX_MERGED_PINS="<pin> ..."])
 	@if [ ! -f $(XSCHEM_SCH_DIR)/$(CELL).sym ]; then \
 		echo "No symbol $(XSCHEM_SCH_DIR)/$(CELL).sym found, skipping PEX symbol generation."; \
 	else \

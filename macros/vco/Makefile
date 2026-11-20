@@ -710,6 +710,6 @@ clean: ## Delete all generated files and folders (final, netlists, render, DRC/L
 	rm -rf $(DRC_RPT_DIR) $(LVS_RPT_DIR)
 	rm -rf $(XSCHEM_SCH_DIR)/simulations $(XSCHEM_TB_DIR)/simulations
 	rm -rf $(SIM_PLOT_DIR)/data $(SIM_PLOT_DIR)/figures $(SIM_PLOT_DIR)/__pycache__
-	rm -rf $(SCRIPTS_DIR)/__pycache__
+	rm -rf $(SCRIPTS_DIR)/__pycache__ $(LAY_SCRIPTS_DIR)/__pycache__
 .PHONY: clean
 # ================================================================================================

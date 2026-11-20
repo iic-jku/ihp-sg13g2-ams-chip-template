@@ -101,11 +101,11 @@ def read_text(path):
         text = data.decode("utf-8")
     except UnicodeDecodeError:
         return None
-    return (True, text[1:]) if text.startswith("﻿") else (False, text)
+    return (True, text[1:]) if text.startswith("\ufeff") else (False, text)
 
 
 def write_text(path, bom, text):
-    (ROOT / path).write_bytes((("﻿" if bom else "") + text).encode("utf-8"))
+    (ROOT / path).write_bytes((("\ufeff" if bom else "") + text).encode("utf-8"))
 
 
 def newline_of(text):

@@ -1,4 +1,4 @@
-﻿# ihp-sg13g2 Inverter
+# ihp-sg13g2 Inverter
 
 <p align="center">
   <a href="render/img/inverter_top_white.png">

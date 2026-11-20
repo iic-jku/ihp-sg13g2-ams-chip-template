@@ -1,4 +1,4 @@
-﻿# ihp-sg13g2 Counter
+# ihp-sg13g2 Counter
 
 <p align="center">
   <a href="render/img/counter_top_white.png">
@@ -292,7 +292,10 @@ Four directed tests check that the reset clears the counter, also while `enable_
 
 ```sh
 make sim-rtl-cocotb               # run counter_top RTL cocotb simulation
+make sim-rtl-cocotb SIM=verilator # run it on Verilator instead of Icarus Verilog
 ```
+
+The RTL simulation also runs on [Verilator](https://www.veripool.org/verilator/) with `SIM=verilator`. The gate-level runs need Icarus Verilog, because Verilator cannot build the UDP models of the standard cells.
 
 To run the gate-level (GL) cocotb simulation on the final netlist `final/nl/counter_top.nl.v` of the LibreLane run:
 
@@ -303,12 +306,13 @@ make sim-gl-cocotb                # gate-level simulation of counter_top
 > [!NOTE]
 > Gate-level simulation requires the latest implementation in `flow/final/` (and a `final/nl/counter_top.nl.v` copy via `make copy-final`).
 
-A waveform file is generated under `testbenches/cocotb/sim_build/counter_top.fst`.
+A waveform file is generated under `testbenches/cocotb/sim_build/counter_top.fst`, by Verilator under `testbenches/cocotb/sim_build/dump.fst`.
 To view it:
 
 ```sh
 make sim-view-cocotb                                  # view counter_top waveform
 make sim-view-cocotb WAVEFORM_VIEWER=surfer           # use Surfer instead
+make sim-view-cocotb SIM=verilator                    # view the waveform of the Verilator run
 ```
 
 The cocotb folder contains a pre-configured waveform layout file (`counter_top_tb.gtkw` for GTKWave, `counter_top_tb.surf.ron` for Surfer).
