@@ -1,4 +1,4 @@
-﻿<!-- template-only -->
+<!-- template-only -->
 # An Open-Source Analog Mixed-Signal Chip Design Template & Tutorial for the ihp-sg13g2 Open-PDK
 
 [![License: Solderpad Hardware License v2.1](https://img.shields.io/badge/License-Solderpad%20Hardware%20License%20v2.1-blue.svg)](LICENSE)
@@ -354,8 +354,9 @@ All `simulations/` folders are generated and git-ignored.
 ### Which File Is Used
 
 - The Makefile targets always name one explicitly with `--rcfile`, so a target behaves the same from any working directory.
-- Inside the container, [`.designinit`](.designinit) wraps `xschem` so that a plain `xschem <file>` from anywhere uses `schematic/xschem/xschemrc`.
-- Starting Xschem from within one of the seven folders picks up that folder's file, which is the normal interactive case.
+- Inside the container, [`.designinit`](.designinit) only exports the PDK variables. It does not wrap `xschem`, so a plain `xschem <file>` uses whatever the current directory provides.
+- Starting Xschem from within one of the folders in the table above picks up that folder's file, which is the normal interactive case.
+- `make open` starts Xschem in the file's own directory, so the same rule applies to every button of the file browser, see [Open the Design Files](#open-the-design-files).
 
 
 ## Makefile Structure
