@@ -266,9 +266,9 @@ DRT_ASSIGN_NDR:
   "^.*PADRES.*$":  NDR_analog
   "^.*PADBARE.*$": NDR_analog
 
-# Disable AUTO_TAPER_NDR_NETS
-# When Enabled (1 or true - Default): The router will automatically taper the wide wire down to the minimum width of the pin's metal layer as it makes the final connection.
-# When Disabled (0 or false): The router will attempt to maintain the full NDR width all the way into the pin.
+# Disable the NDR auto-taper on analog traces
+# Default: The router tapers the wide wire down to the minimum metal width as it makes the final connection to a pin.
+# Disabled (nets matching these regular expressions): The router keeps the full NDR width all the way into the pin.
 DRT_DISABLE_AUTO_TAPER:
 - "^.*PADRES.*$"
 - "^.*PADBARE.*$"

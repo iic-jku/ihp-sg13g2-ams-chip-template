@@ -78,7 +78,21 @@ DRT_ASSIGN_NDR:
   "analog_.*": ndr_custom
 ```
 
-### 3. `CTS_APPLY_NDR`
+### 3. `DRT_DISABLE_AUTO_TAPER`
+
+**Step:** `OpenROAD.DetailedRouting`  
+**Type:** `Optional[List[str]]`
+
+Introduced in [PR #978](https://github.com/librelane/librelane/pull/978). By default, the detailed router tapers an NDR wire down to the minimum width near a pin, so that it fits the pin access geometry. Nets matching one of these **regular expressions** keep the full NDR width all the way into the pin. It needs an OpenROAD with `set_routing_auto_taper` ([OpenROAD PR #10805](https://github.com/The-OpenROAD-Project/OpenROAD/pull/10805)), which the IIC-OSIC-TOOLS image ships together with LibreLane 3.1.0.dev6.
+
+#### Example
+
+```yaml
+DRT_DISABLE_AUTO_TAPER:
+  - "analog_.*"
+```
+
+### 4. `CTS_APPLY_NDR`
 
 **Step:** `OpenROAD.CTS`  
 **Type:** `Literal["none", "root_only", "half", "full"]`  
@@ -267,6 +281,7 @@ NDRs are created and assigned in `drt.tcl` right before detailed routing runs:
 
 1. **NDR creation:** If `NON_DEFAULT_RULES` is set, the script iterates over each rule, extracts `width`, `spacing`, and `via`, and calls OpenROAD's `create_ndr`.
 2. **NDR assignment:** If `DRT_ASSIGN_NDR` is set, the script iterates over all nets in the design, matches each net name against the provided regex patterns, and calls `assign_ndr` for matches.
+3. **Auto-taper:** If `DRT_DISABLE_AUTO_TAPER` is set, the script matches each net name against these regex patterns in the same way and calls `set_routing_auto_taper -net <name> -disable` for matches.
 
 This ensures the router respects the wider widths/spacings during detailed routing.
 

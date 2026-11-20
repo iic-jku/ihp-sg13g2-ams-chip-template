@@ -113,7 +113,7 @@ Two test modes are therefore possible:
 
 Channels 3 and 4 are not bonded out: `vin3` and `vin4` are tied to `VSS` and `vout3` and `vout4` stay open inside [chip_core.sv](../rtl/chip_core.sv).
 
-The `padres` path goes through the IO pad's secondary ESD resistor. The `padbare` path bypasses it (lower parasitics, used for the output signals). The corresponding nets are listed in `RSZ_DONT_TOUCH_LIST` in [config.yaml](../flow/librelane/config.yaml) so the resizer leaves them alone, and the `DRT_ASSIGN_NDR` regex applies the wider `NDR_analog` non-default rule to them during detailed routing.
+The `padres` path goes through the IO pad's secondary ESD resistor. The `padbare` path bypasses it (lower parasitics, used for the output signals). The corresponding nets are listed in `RSZ_DONT_TOUCH_LIST` in [config.yaml](../flow/librelane/config.yaml) so the resizer leaves them alone, and the `DRT_ASSIGN_NDR` regex applies the wider `NDR_analog` non-default rule to them during detailed routing. `DRT_DISABLE_AUTO_TAPER` keeps this width all the way into the pins.
 
 ### SRAM
 

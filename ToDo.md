@@ -1,7 +1,6 @@
 ﻿# ToDo List
 
 - [ ] clean up top-level LVS (Magic + Netgen, KLayout ?) --> see / merge `top-level-lvs` branch
-- [ ] merge `fixed-auto-taper` branch (wait until `librelane-openroad` is updated)
 - [ ] finish and merge `exercise-solution` branch
 - [ ] add VCO RF macro in branch `add-rf-macro`
     - status and next steps: section Status in `macros/vco/README.md`
