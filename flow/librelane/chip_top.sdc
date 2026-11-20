@@ -44,10 +44,13 @@ if { [info exists ::env(MAX_CAPACITANCE_CONSTRAINT)] } {
 
 set clocks [get_clocks $clock_port]
 
+# The groups name whole ports, which match a scalar port and every bit of a bus.
+# A pattern such as input_PAD[*] matches nothing once synthesis writes a one-bit bus as a scalar port (STA-0366), and that pad goes untimed.
+
 # Input-only pads
 set clk_core_input_ports [get_ports { 
   rst_n_PAD
-	input_PAD[*]
+	input_PAD
 }] 
 
 set_input_delay -min 0 -clock $clocks $clk_core_input_ports
@@ -55,14 +58,14 @@ set_input_delay -max $input_delay_value -clock $clocks $clk_core_input_ports
 
 # Output-only pads
 set clk_core_output_ports [get_ports { 
-	output_PAD[*]
+	output_PAD
 }] 
 
 set_output_delay $output_delay_value -clock $clocks $clk_core_output_ports
 
 # Bidirectional pads
 set clk_core_inout_ports [get_ports { 
-	bidir_PAD[*]
+	bidir_PAD
 }] 
 
 set_input_delay -min 0 -clock $clocks $clk_core_inout_ports
