@@ -9,7 +9,8 @@ TOP = inverter_top
 # Layout source (default: script)
 # script: the KLayout scripts in scripts/layout/ write the layouts, and make all runs them first.
 # manual: the layouts are drawn by hand in KLayout, and klayout-script, klayout-script-all and so make all leave them as they are.
-# Set the default here for a hand-drawn layout, or override with: make <target> LAYOUT_SOURCE=<script|manual>
+# Set the default here for a hand-drawn layout.
+# Override with: make <target> LAYOUT_SOURCE=<script|manual>
 LAYOUT_SOURCE ?= script
 ifeq ($(filter $(LAYOUT_SOURCE),script manual),)
 $(error LAYOUT_SOURCE is "$(LAYOUT_SOURCE)", but must be script or manual)
