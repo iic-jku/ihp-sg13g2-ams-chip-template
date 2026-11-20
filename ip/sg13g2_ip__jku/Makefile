@@ -63,6 +63,7 @@ DRC_RPT_DIR := verification/drc
 
 # Logo parameters
 IMG_FILE    := logo/jku_logo.png
+# Override with: make <target> IMG_SIZE_PX=<px> BLOCK_SIZE=<um> PIXEL_SIZE=<um>
 IMG_SIZE_PX ?= 750
 BLOCK_SIZE  ?= 100
 # Pixel size in microns. Must be >= minimum layer width to avoid DRC violations.

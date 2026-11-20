@@ -19,6 +19,8 @@ $(foreach v,TOP MODULES_SYNTH PCF_FILE ARCH,$(if $(strip $($(v))),,$(error $(v) 
 
 FPGA_MK_DIR := $(dir $(lastword $(MAKEFILE_LIST)))
 
+# Folder of the build outputs
+# Override with: make <target> BUILD_DIR=<dir>
 BUILD_DIR ?= build
 
 # Cell name for the lint targets (default: top-level cell)
@@ -34,14 +36,17 @@ _LINT_SRCS = $(if $(filter $(CELL),$(TOP)),$(MODULES_SYNTH),$(SRC_DIR)/constants
 # Full synthesis command. Only override this wholesale (instead of TARGET/
 # SYNTH_OPTS) for a toolchain whose synth_* pass does not fit the
 # "$(TARGET) $(SYNTH_OPTS) -top $(TOP)" shape.
+# Override with: make <target> SYNTH_CMD=<command>
 SYNTH_CMD ?= yosys -DFPGA -p '$(TARGET) $(SYNTH_OPTS) -top $(TOP); write_json $(BUILD_DIR)/$(TOP).json;' $(MODULES_SYNTH)
 
 # Extra prerequisites for the place-and-route step beyond $(TOP).json and
 # $(PCF_FILE), for example a one-time-generated chip database.
+# Override with: make <target> PNR_DEPS=<files>
 PNR_DEPS ?=
 
 # Interactive place-and-route. Arch fragments whose place-and-route has a GUI
 # set this, the others leave it empty and pr-gui then refuses to run.
+# Override with: make pr-gui PNR_GUI_CMD=<command>
 PNR_GUI_CMD ?=
 
 .DEFAULT_GOAL := help
