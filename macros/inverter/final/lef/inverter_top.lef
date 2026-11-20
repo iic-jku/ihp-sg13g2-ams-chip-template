@@ -102,11 +102,11 @@ MACRO inverter_top
     END
     PORT
       LAYER TopMetal1 ;
-        RECT 47.780 4.200 49.980 77.720 ;
+        RECT 4.200 4.200 6.400 77.720 ;
     END
     PORT
       LAYER TopMetal1 ;
-        RECT 4.200 4.200 6.400 77.720 ;
+        RECT 47.780 4.200 49.980 77.720 ;
     END
   END VDD
   OBS
