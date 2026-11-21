@@ -1,13 +1,7 @@
 ﻿# ToDo List
 
-- [ ] clean up top-level LVS (Magic + Netgen, KLayout ?) --> see / merge `top-level-lvs` branch
-- [ ] finish and merge `exercise-solution` branch
-- [ ] add VCO RF macro in branch `add-rf-macro`
-    - status and next steps: section Status in `macros/vco/README.md`
-- [ ] test and merge `hv-stdcell`: https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/test-hv-stdcell
-- [ ] fix the Magic DRC upstream and comment its lines back in (`magic-verify`, the IP `all`, `make all`): see https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/issues/45
-- [ ] `ngspice` & `verilog` RTL Co-Simulation using `Xschem`: https://www.youtube.com/watch?v=PPd7jkcHOgA
-- [ ] add VACASK mixed-signal GL testbenches to counter macro (update Makefile + README, see `add-vacask` branch)
+- [ ] add YouTube tutorial
+- [ ] add Blender renders
 - [ ] add custom LibreLane step for filler insertion after ArtistIC added logo --> see / merge `custom-librelane-steps` branch
     - flow without filler (GDS streamout + DRC check) --> default
     - add logo with ArtistIC --> custom
@@ -16,10 +10,14 @@
         - add GDSFill to `config.yaml`: https://github.com/aesc-silicon/gdsfill 
     - GDS streamout + DRC check --> custom
 - [ ] add custom LibreLane step for power estimation (counter macro & top-level)
+- [ ] finish and merge `exercise-solution` branch
+- [ ] add VCO RF macro in branch `add-rf-macro`
+    - status and next steps: section Status in `macros/vco/README.md`
+- [ ] fix the Magic DRC upstream and comment its lines back in (`magic-verify`, the IP `all`, `make all`): see https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/issues/45
+- [ ] `ngspice` & `verilog` RTL Co-Simulation using `Xschem`: https://www.youtube.com/watch?v=PPd7jkcHOgA
+- [ ] add VACASK mixed-signal GL testbenches to counter macro (update Makefile + README, see `add-vacask` branch)
 - [ ] add sg13g2_Filler2000_novdd to split VDD_CORE & VDD_ANA (split voltage domains)
 - [ ] add sg13g2_io_custom to iic-jku/IHP-Open-PDK
-- [ ] add YouTube tutorial
-- [ ] add Blender renders
 - [ ] PR IHP sizing scripts
 - [ ] RTL Co-Simulation using `SpiceBind`
 - [ ] add PF SimulatePARALLEL testbench
