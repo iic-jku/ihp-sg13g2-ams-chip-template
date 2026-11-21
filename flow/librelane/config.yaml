@@ -249,6 +249,10 @@ STA_CORNERS:
 
 DEFAULT_CORNER: nom_typ_1p50V_25C
 
+# Sign-off STA times the hardened macros by their lib, as placement and timing repair do.
+# With nl and spef it reads the chip SPEF and then each macro SPEF, and each read drops the parasitics of the reads before it.
+STA_MACRO_PRIORITIZE_NL: false
+
 # Limit detailed routing to 10 iterations
 # DRT_OPT_ITERS: 10
 
