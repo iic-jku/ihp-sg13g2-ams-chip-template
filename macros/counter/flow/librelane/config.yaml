@@ -66,22 +66,22 @@ STD_CELL_LIBRARY: sg13g2_stdcell
 # Technology LIBs
 LIB:
   "*_fast_1p32V_m40C":
-    - pdk_dir::libs.ref/sg13g2_stdcell/lib/sg13g2_stdcell_fast_1p32V_m40C.lib
+    - pdk_dir::libs.ref/sg13g2_stdcell/lib/sg13g2_stdcell_fast_1p32V_m40C.lib.gz
 
   "*_fast_1p65V_m40C":
-    - pdk_dir::libs.ref/sg13g2_stdcell/lib/sg13g2_stdcell_fast_1p65V_m40C.lib
+    - pdk_dir::libs.ref/sg13g2_stdcell/lib/sg13g2_stdcell_fast_1p65V_m40C.lib.gz
   
   "*_slow_1p08V_125C":
-    - pdk_dir::libs.ref/sg13g2_stdcell/lib/sg13g2_stdcell_slow_1p08V_125C.lib
+    - pdk_dir::libs.ref/sg13g2_stdcell/lib/sg13g2_stdcell_slow_1p08V_125C.lib.gz
 
   "*_slow_1p35V_125C":
-    - pdk_dir::libs.ref/sg13g2_stdcell/lib/sg13g2_stdcell_slow_1p35V_125C.lib
+    - pdk_dir::libs.ref/sg13g2_stdcell/lib/sg13g2_stdcell_slow_1p35V_125C.lib.gz
 
   "*_typ_1p20V_25C":
-    - pdk_dir::libs.ref/sg13g2_stdcell/lib/sg13g2_stdcell_typ_1p20V_25C.lib
+    - pdk_dir::libs.ref/sg13g2_stdcell/lib/sg13g2_stdcell_typ_1p20V_25C.lib.gz
 
   "*_typ_1p50V_25C":
-    - pdk_dir::libs.ref/sg13g2_stdcell/lib/sg13g2_stdcell_typ_1p50V_25C.lib
+    - pdk_dir::libs.ref/sg13g2_stdcell/lib/sg13g2_stdcell_typ_1p50V_25C.lib.gz
 
 # Corners
 STA_CORNERS:
