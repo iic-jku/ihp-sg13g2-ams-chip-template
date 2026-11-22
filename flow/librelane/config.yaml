@@ -215,27 +215,27 @@ PAD_LIBS: {}
 # Technology LIBs
 LIB:
   "*_fast_1p32V_m40C":
-    - pdk_dir::libs.ref/sg13g2_stdcell/lib/sg13g2_stdcell_fast_1p32V_m40C.lib
+    - pdk_dir::libs.ref/sg13g2_stdcell/lib/sg13g2_stdcell_fast_1p32V_m40C.lib.gz
     - dir::../../ip/sg13g2_io_custom/lib/sg13g2_io_fast_1p32V_3p6V_m40C.lib
 
   "*_fast_1p65V_m40C":
-    - pdk_dir::libs.ref/sg13g2_stdcell/lib/sg13g2_stdcell_fast_1p65V_m40C.lib
+    - pdk_dir::libs.ref/sg13g2_stdcell/lib/sg13g2_stdcell_fast_1p65V_m40C.lib.gz
     - dir::../../ip/sg13g2_io_custom/lib/sg13g2_io_fast_1p65V_3p6V_m40C.lib
 
   "*_slow_1p08V_125C":
-    - pdk_dir::libs.ref/sg13g2_stdcell/lib/sg13g2_stdcell_slow_1p08V_125C.lib
+    - pdk_dir::libs.ref/sg13g2_stdcell/lib/sg13g2_stdcell_slow_1p08V_125C.lib.gz
     - dir::../../ip/sg13g2_io_custom/lib/sg13g2_io_slow_1p08V_3p0V_125C.lib
 
   "*_slow_1p35V_125C":
-    - pdk_dir::libs.ref/sg13g2_stdcell/lib/sg13g2_stdcell_slow_1p35V_125C.lib
+    - pdk_dir::libs.ref/sg13g2_stdcell/lib/sg13g2_stdcell_slow_1p35V_125C.lib.gz
     - dir::../../ip/sg13g2_io_custom/lib/sg13g2_io_slow_1p35V_3p0V_125C.lib
 
   "*_typ_1p20V_25C":
-    - pdk_dir::libs.ref/sg13g2_stdcell/lib/sg13g2_stdcell_typ_1p20V_25C.lib
+    - pdk_dir::libs.ref/sg13g2_stdcell/lib/sg13g2_stdcell_typ_1p20V_25C.lib.gz
     - dir::../../ip/sg13g2_io_custom/lib/sg13g2_io_typ_1p2V_3p3V_25C.lib
 
   "*_typ_1p50V_25C":
-    - pdk_dir::libs.ref/sg13g2_stdcell/lib/sg13g2_stdcell_typ_1p50V_25C.lib
+    - pdk_dir::libs.ref/sg13g2_stdcell/lib/sg13g2_stdcell_typ_1p50V_25C.lib.gz
     - dir::../../ip/sg13g2_io_custom/lib/sg13g2_io_typ_1p5V_3p3V_25C.lib
 
 # Corners
@@ -336,17 +336,17 @@ MACROS:
       # for multiple corners. This is not ideal but it allows us to proceed with the tapeout 
       # without waiting for IHP to characterize more corners.
       "*_fast_1p32V_m40C":
-        - pdk_dir::libs.ref/sg13g2_sram/lib/RM_IHPSG13_1P_1024x32_c2_bm_bist_fast_1p32V_m55C.lib
+        - pdk_dir::libs.ref/sg13g2_sram/lib/RM_IHPSG13_1P_1024x32_c2_bm_bist_fast_1p32V_m55C.lib.gz
       "*_fast_1p65V_m40C":
-        - pdk_dir::libs.ref/sg13g2_sram/lib/RM_IHPSG13_1P_1024x32_c2_bm_bist_fast_1p32V_m55C.lib
+        - pdk_dir::libs.ref/sg13g2_sram/lib/RM_IHPSG13_1P_1024x32_c2_bm_bist_fast_1p32V_m55C.lib.gz
       "*_slow_1p08V_125C":
-        - pdk_dir::libs.ref/sg13g2_sram/lib/RM_IHPSG13_1P_1024x32_c2_bm_bist_slow_1p08V_125C.lib
+        - pdk_dir::libs.ref/sg13g2_sram/lib/RM_IHPSG13_1P_1024x32_c2_bm_bist_slow_1p08V_125C.lib.gz
       "*_slow_1p35V_125C":
-        - pdk_dir::libs.ref/sg13g2_sram/lib/RM_IHPSG13_1P_1024x32_c2_bm_bist_fast_1p32V_m55C.lib
+        - pdk_dir::libs.ref/sg13g2_sram/lib/RM_IHPSG13_1P_1024x32_c2_bm_bist_fast_1p32V_m55C.lib.gz
       "*_typ_1p20V_25C":
-        - pdk_dir::libs.ref/sg13g2_sram/lib/RM_IHPSG13_1P_1024x32_c2_bm_bist_typ_1p20V_25C.lib
+        - pdk_dir::libs.ref/sg13g2_sram/lib/RM_IHPSG13_1P_1024x32_c2_bm_bist_typ_1p20V_25C.lib.gz
       "*_typ_1p50V_25C":
-        - pdk_dir::libs.ref/sg13g2_sram/lib/RM_IHPSG13_1P_1024x32_c2_bm_bist_fast_1p32V_m55C.lib
+        - pdk_dir::libs.ref/sg13g2_sram/lib/RM_IHPSG13_1P_1024x32_c2_bm_bist_fast_1p32V_m55C.lib.gz
     instances:
       i_chip_core.sram_0:
         location: ["expr::365 + 70", 493]

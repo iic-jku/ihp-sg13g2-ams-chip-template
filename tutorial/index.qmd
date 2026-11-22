@@ -563,13 +563,13 @@ STD_CELL_LIBRARY: sg13g2_stdcell_hv
 # Technology LIBs
 LIB:
   "*_fast_3p60V_m40C":
-    - pdk_dir::libs.ref/sg13g2_stdcell_hv/lib/sg13g2_stdcell_hv_fast_3p60V_m40C.lib
+    - pdk_dir::libs.ref/sg13g2_stdcell_hv/lib/sg13g2_stdcell_hv_fast_3p60V_m40C.lib.gz
 
   "*_slow_3p00V_125C":
-    - pdk_dir::libs.ref/sg13g2_stdcell_hv/lib/sg13g2_stdcell_hv_slow_3p00V_125C.lib
+    - pdk_dir::libs.ref/sg13g2_stdcell_hv/lib/sg13g2_stdcell_hv_slow_3p00V_125C.lib.gz
 
   "*_typ_3p30V_25C":
-    - pdk_dir::libs.ref/sg13g2_stdcell_hv/lib/sg13g2_stdcell_hv_typ_3p30V_25C.lib
+    - pdk_dir::libs.ref/sg13g2_stdcell_hv/lib/sg13g2_stdcell_hv_typ_3p30V_25C.lib.gz
 
 # Corners
 STA_CORNERS:
@@ -624,13 +624,13 @@ CTS_CLK_BUFFERS: [BUFX24, BUFX12, BUFX6]
 # Technology LIBs
 LIB:
   "*_fast_1p32V_m40C":
-    - pdk_dir::libs.ref/ez130_8t/lib/ez130_8t_ff_1p32v_m40c.lib
+    - pdk_dir::libs.ref/ez130_8t/lib/ez130_8t_ff_1p32v_m40c.lib.gz
 
   "*_slow_1p08V_125C":
-    - pdk_dir::libs.ref/ez130_8t/lib/ez130_8t_ss_1p08v_125c.lib
+    - pdk_dir::libs.ref/ez130_8t/lib/ez130_8t_ss_1p08v_125c.lib.gz
 
   "*_typ_1p20V_25C":
-    - pdk_dir::libs.ref/ez130_8t/lib/ez130_8t_tt_1p20v_25c.lib
+    - pdk_dir::libs.ref/ez130_8t/lib/ez130_8t_tt_1p20v_25c.lib.gz
 
 # Corners
 STA_CORNERS:

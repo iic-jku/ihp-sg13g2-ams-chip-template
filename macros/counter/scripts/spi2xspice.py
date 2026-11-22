@@ -18,6 +18,7 @@
 #             the subcircuit.
 # --------------------------------------------------------------------------
 
+import gzip
 import re
 import sys
 import os
@@ -753,7 +754,9 @@ def read_liberty(filein, debug):
     enarex   = re.compile(r'[ \t]*enable[ \t]*:[ \t]*([^;]+);')
     trirex   = re.compile(r'[ \t]*three_state[ \t]*:[ \t]*([^;]+);')
     funcrex  = re.compile(r'[ \t]*function[ \t]*:[ \t]*"?[ \t]*([^"]+)[ \t]*"?')
-    with open(filein, 'r') as ifile:
+    # The PDK ships its Liberty files gzipped (*.lib.gz)
+    opener = gzip.open if filein.endswith('.gz') else open
+    with opener(filein, 'rt') as ifile:
         lines = ifile.readlines()
         if debug:
             print("Reading liberty file, " + str(len(lines)) + " lines.")
