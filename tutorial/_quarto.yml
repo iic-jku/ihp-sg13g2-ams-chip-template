@@ -50,6 +50,8 @@ format:
     fig-align: center
     lang: en-US
     lightbox: true
+    # Keep the dash widths of every pipe table: the HTML default (auto) drops them in tables with a link, and code spans then break mid-word
+    tbl-colwidths: true
     include-after-body:
       text: |
         <script>
