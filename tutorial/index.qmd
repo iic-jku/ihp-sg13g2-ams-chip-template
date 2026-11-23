@@ -2531,7 +2531,7 @@ The `DRT_ASSIGN_NDR` section applies this rule during detailed routing by matchi
 @tbl-top-margin breaks the 365 µm margin of this chip down, from the die edge inwards. The positions are read from the DEF of a chip run.
 
 | Band | Depth | Set by |
-| ------ | ----- | -------------------- |
+| :----- | :---- | :------------------- |
 | Seal ring and bondpads | 140 µm | `PAD_EDGE_SPACING` of the PDK. The `KLayout.SealRing` step draws the seal ring along the die edge, and the 70 µm × 70 µm bondpads sit directly outside the IO cells, from 70 µm to 140 µm. |
 | IO cells | 180 µm | The depth of the IHP IO cells and corner cells. |
 | Clearance | about 6 µm | The rest. |
@@ -2600,7 +2600,7 @@ MACROS:
 </details>
 
 | Key | View | Read by |
-| ----- | ------------ | ------------ |
+| :---- | :----------- | :----------- |
 | `gds` | The layout | Streamout, which merges it into the chip GDS. Required. |
 | `lef` | The abstract: outline, pins and blockages | Floorplan, placement, PDN and routing. Required. |
 | `vh` | A Verilog header, the module with its ports and no content | Synthesis |
@@ -2663,7 +2663,7 @@ add_pdn_connect \
 The upper part of the file is the base SDC of LibreLane, which takes its numbers from the configuration (@tbl-top-sdc). To change one of them, set the variable in `config.yaml` and leave the SDC alone. Apart from the clock, this chip keeps the defaults of LibreLane and of the PDK, and `resolved.json` in the run folder lists the values that a run used.
 
 | Constraint | Variable | This chip |
-| ------------ | ------------------- | ------------ |
+| :----------- | :------------------ | :----------- |
 | Clock | `CLOCK_PORT`, `CLOCK_NET`, `CLOCK_PERIOD` | 20 ns, defined at `clk_pad/p2c` |
 | Input and output delay | `IO_DELAY_CONSTRAINT`, in % of the clock period | 20 %, that is 4 ns |
 | Load on every output | `OUTPUT_CAP_LOAD`, in fF | 6 fF |
@@ -2680,7 +2680,7 @@ The clock is defined at a pin and not at the port, because `CLOCK_NET` differs f
 The lower part of the file belongs to this chip. It sorts the digital pad ports into the three groups of @tbl-top-sdc-groups.
 
 | Group | Ports | Constraints |
-| --- | --- | --- |
+| :-- | :-- | :-- |
 | Input-only pads | `rst_n_PAD`, `input_PAD` | Input delay, from 0 to 4 ns |
 | Output-only pads | `output_PAD` | Output delay of 4 ns |
 | Bidirectional pads | `bidir_PAD` | Both |
@@ -2926,7 +2926,7 @@ With the repository named `ihp-sg13g2-<name>`, for example `ihp-sg13g2-mychip`, 
 6. **It checks the result.** No old name, no link into a deleted path and no `template-only` marker may be left, and `reuse lint` has to pass when it is installed. The report at the end lists what is left for you.
 
 | Template                                    | After `make project NAME=mychip`                |
-| ------------------------------------------- | ----------------------------------------------- |
+| :------------------------------------------ | :---------------------------------------------- |
 | `TOP = chip_top` in the `Makefile`          | `TOP = mychip_top`                              |
 | `DESIGN_NAME: chip_top` in `config.yaml`    | `DESIGN_NAME: mychip_top`                       |
 | `rtl/chip_top.sv`, `rtl/chip_core.sv`       | `rtl/mychip_top.sv`, `rtl/mychip_core.sv`       |
