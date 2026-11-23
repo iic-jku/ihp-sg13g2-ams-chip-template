@@ -661,6 +661,8 @@ Both targets read `final/gds/<CELL>.gds`, so **`make build-top` (or at least `ma
 
 `klayout-pex` runs `sak-pex.sh -k` as for the analog macros: it keeps MIM and MOM capacitors as devices (`--blackbox y`), reduces the full-RC netlist with TICER (`KPEX_REDUCE`, default `ticer`) and ties the substrate port `sub!` of the 2.5D netlist to `PEX_SUB_NET` (default `VSS`), as Magic ties the substrate to `VSS`, so the netlist keeps the pins of `<CELL>_pex.sym`.
 
+In every `EXT_MODE`, `magic-pex` leaves each parasitic capacitor below `CTHRESH` (`sak-pex.sh -c`, in fF, default `0.01` = 10 aF) out of the netlist. `CTHRESH=0.001` keeps every capacitor Magic can resolve, since it writes smaller ones as `0`, and a larger value gives a smaller netlist, for example `make magic-pex CTHRESH=0.1`.
+
 For full-RC extraction (`EXT_MODE=3`), `magic-pex` additionally exposes the three `extresist` tuning parameters of `sak-pex.sh`. They are ignored in `EXT_MODE=1`/`2`:
 
 | Variable | `sak-pex.sh` option | Default | Meaning |

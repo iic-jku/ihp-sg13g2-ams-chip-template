@@ -41,6 +41,10 @@ PEX_SUB_NET ?= VSS
 # Override with: make klayout-pex KPEX_REDUCE=<none|floating|ticer>
 KPEX_REDUCE ?= ticer
 
+# capacitance threshold of magic-pex and klayout-pex-leads in fF, smaller capacitors are left out of the netlist (sak-pex.sh -c, kpex --magic-cthresh, used in every EXT_MODE, default: 0.01 = 10 aF)
+# Override with: make <target> CTHRESH=<fF>
+CTHRESH ?= 0.01
+
 # The full-RC extresist settings are below Magic's defaults (10 Ohm, 1 Ohm, 1 ps), which leave every net of the VCO
 # but VSS without resistance, the tank leads and the gate lines of the pair among them.
 # full-RC extresist threshold in mOhm (sak-pex.sh -t, kpex --magic-thresh, only used in EXT_MODE=3; default: 1000 = 1 Ohm)
@@ -167,13 +171,14 @@ PALACE_SCRIPTS  := $(PDK_ROOT)/$(PDK)/libs.tech/palace/scripts
 
 # Help Target
 help: ## Show this help message
-	@echo 'Usage: make <target> [CELL=<cellname>] [EXT_MODE=<1|2|3>] [KPEX_REDUCE=<none|floating|ticer>] [PEX_SUB_NET=<net>] [THRESHOLD=<mOhm>] [MINRES=<mOhm>] [MINDELAY=<ps>] [DRC_LEVEL=<precheck|macro|regular>] [GDSCHECK_SUITE=<suite>|GDSCHECK_DECKS=<decks>] [DRC_JOBS=<n>] [EV_PRECISION=<digits>] [TB=<testbenchname>] [SCRIPT=<scriptname>] [EM=<structure>] [NP=<processes>] [SNP=<file.sNp>] [LE_MODEL=<structure|universal>] [ORDER=<N>] [CORNERS=<corners>] [RES_CORNERS=<corners>] [TEMPS=<C>] [VDDS=<V>] [VTUNE=<V>] [VPEAK_MAX=<V>] [OPEN_ARGS=<options>]'
+	@echo 'Usage: make <target> [CELL=<cellname>] [EXT_MODE=<1|2|3>] [KPEX_REDUCE=<none|floating|ticer>] [PEX_SUB_NET=<net>] [CTHRESH=<fF>] [THRESHOLD=<mOhm>] [MINRES=<mOhm>] [MINDELAY=<ps>] [DRC_LEVEL=<precheck|macro|regular>] [GDSCHECK_SUITE=<suite>|GDSCHECK_DECKS=<decks>] [DRC_JOBS=<n>] [EV_PRECISION=<digits>] [TB=<testbenchname>] [SCRIPT=<scriptname>] [EM=<structure>] [NP=<processes>] [SNP=<file.sNp>] [LE_MODEL=<structure|universal>] [ORDER=<N>] [CORNERS=<corners>] [RES_CORNERS=<corners>] [TEMPS=<C>] [VDDS=<V>] [VTUNE=<V>] [VPEAK_MAX=<V>] [OPEN_ARGS=<options>]'
 	@echo ''
 	@echo 'Available targets:'
 	@grep -E '^[a-zA-Z0-9_.-]+:.*## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*## "}; {printf "  %-20s %s\n", $$1, $$2}'
 	@echo ''
 	@echo 'CELL defaults to $(TOP). Override to verify subcells.'
 	@echo 'EXT_MODE defaults to 3 (full-RC). 1=C-decoupled, 2=C-coupled.'
+	@echo 'CTHRESH is the capacitance threshold of magic-pex and klayout-pex-leads in fF in every EXT_MODE, smaller capacitors are left out of the netlist (default 0.01 = 10 aF).'
 	@echo 'THRESHOLD/MINRES/MINDELAY are full-RC (EXT_MODE=3) extresist settings for magic-pex and klayout-pex-leads (defaults 1000 mOhm / 100 mOhm / 0 ps).'
 	@echo 'PEX_SUB_NET defaults to VSS. The port net that klayout-pex ties the substrate port sub! of the kpex 2.5D netlist to (empty keeps sub! as a port).'
 	@echo 'KPEX_REDUCE defaults to ticer. Sets the RC network reduction of klayout-pex in EXT_MODE=3 (none|floating|ticer).'
@@ -606,7 +611,7 @@ LEADS_PARASITICS :=
 # Magic gives a net that only drives gates no resistor network, and the tank drives the buffer's gates through the
 # coupling caps, so a port on each input (cell:metal:x:y:name) makes the extraction keep their resistance.
 LEADS_PROBES := vco_buf:TopMetal1:-2.5:16.5:vco_buf_in_p vco_buf:TopMetal1:2.5:16.5:vco_buf_in_n
-klayout-pex-leads: ## Run KPEX on TOP without the coil and the varactor array, for the post-layout testbench (usage: make klayout-pex-leads [THRESHOLD=<mOhm>] [MINRES=<mOhm>] [MINDELAY=<ps>])
+klayout-pex-leads: ## Run KPEX on TOP without the coil and the varactor array, for the post-layout testbench (usage: make klayout-pex-leads [CTHRESH=<fF>] [THRESHOLD=<mOhm>] [MINRES=<mOhm>] [MINDELAY=<ps>])
 	mkdir -p $(NET_PEX_DIR)
 	python3 $(SCRIPTS_DIR)/drop_subcells.py $(LAY_DIR)/$(TOP).gds $(TOP) $(NET_PEX_DIR)/$(TOP)_leads.gds \
 		--drop $(LEADS_DROP) --skip $(LEADS_SKIP) --name $(TOP)_leads --ties $(NET_PEX_DIR)/$(TOP)_leads_ties.json \
@@ -614,7 +619,7 @@ klayout-pex-leads: ## Run KPEX on TOP without the coil and the varactor array, f
 		$(if $(LEADS_CUT),--cut $(LEADS_CUT) $(if $(LEADS_CUT_GEOS),--cut-only $(LEADS_CUT_GEOS)) --cut-json $(NET_PEX_DIR)/$(TOP)_leads_cut.json)
 	for mode in CC RC; do \
 		kpex extract --pdk $$PDK --cell $(TOP)_leads --gds $(NET_PEX_DIR)/$(TOP)_leads.gds --magic --magic-mode $$mode \
-		--magic-thresh $(THRESHOLD) --magic-minres $(MINRES) --magic-mindel $(MINDELAY) \
+		--magic-cthresh $(CTHRESH) --magic-thresh $(THRESHOLD) --magic-minres $(MINRES) --magic-mindel $(MINDELAY) \
 		--out-dir $(NET_PEX_DIR) --out-netlist $(NET_PEX_DIR)/$(TOP)_leads_$$mode.spice || exit 1; \
 	done
 	python3 $(SCRIPTS_DIR)/pex_caps.py $(NET_PEX_DIR)/$(TOP)_leads_RC.spice $(NET_PEX_DIR)/$(TOP)_leads_CC.spice \
@@ -631,10 +636,10 @@ klayout-pex-leads: ## Run KPEX on TOP without the coil and the varactor array, f
 	python3 $(SCRIPTS_DIR)/spice2spectre.py $(NET_PEX_DIR)/$(TOP)_leads_klayout_pex_3.spice $(NET_SPECTRE_DIR)/$(TOP)_leads.inc
 .PHONY: klayout-pex-leads
 
-magic-pex: ## Run Parasitic Extraction with Magic of the CELL cell (usage: make magic-pex [CELL=<cellname>] [EXT_MODE=<1|2|3>] [THRESHOLD=<mOhm>] [MINRES=<mOhm>] [MINDELAY=<ps>])
+magic-pex: ## Run Parasitic Extraction with Magic of the CELL cell (usage: make magic-pex [CELL=<cellname>] [EXT_MODE=<1|2|3>] [CTHRESH=<fF>] [THRESHOLD=<mOhm>] [MINRES=<mOhm>] [MINDELAY=<ps>])
 	mkdir -p $(NET_PEX_DIR)
 	$(MAKE) symbol-pex CELL=$(CELL)
-	sak-pex.sh -d -m $(EXT_MODE) -n $(CELL)_pex -t $(THRESHOLD) -r $(MINRES) -y $(MINDELAY) -w $(NET_PEX_DIR) $(LAY_DIR)/$(CELL).$(_GDS_EXT)
+	sak-pex.sh -d -m $(EXT_MODE) -n $(CELL)_pex -c $(CTHRESH) -t $(THRESHOLD) -r $(MINRES) -y $(MINDELAY) -w $(NET_PEX_DIR) $(LAY_DIR)/$(CELL).$(_GDS_EXT)
 	mv $(NET_PEX_DIR)/$(CELL).pex.spice $(NET_PEX_DIR)/$(CELL)_magic_pex_$(EXT_MODE).spice
 	rm -f $(NET_PEX_DIR)/pex_$(CELL).tcl
 	@if [ -f $(XSCHEM_SCH_DIR)/$(CELL)_pex.sym ]; then \
