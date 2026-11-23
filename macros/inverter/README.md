@@ -285,12 +285,12 @@ make sim-view-xschem SCRIPT=plot_inverter
 
 Runs [CACE](https://github.com/fossi-foundation/cace) characterization for the inverter macro using `verification/cace/inverter.yaml`.
 
-The `sim-cace` target runs these parameter sets in sequence:
+The `sim-cace` target runs these parameter sets in sequence, in one CACE run:
 - `ac_mm_params`
 - `ac_mc_params`
 - `ac_params`
 
-For each run, selected result plots are copied to `verification/cace/results/inverter/`, and temporary `_runs` folders are cleaned between runs. At the end, `_runs`, `_docs`, and `netlist` under `verification/cace/` are removed.
+The summary of the run and selected result plots are copied to `verification/cace/results/inverter/`. At the end, `_runs`, `_docs`, and `netlist` under `verification/cace/` are removed.
 
 Run with:
 
@@ -298,8 +298,9 @@ Run with:
 make sim-cace
 ```
 
-Result plots are saved to:
+Results are saved to:
 - `verification/cace/results/inverter/`
+  - `summary.md`: every parameter with its limits, values, and pass/fail status
   - `Adc_ol_dB_mm.png`, `fcu_mm.png`
   - `Adc_ol_dB_mc.png`, `fcu_mc.png`
   - `Adc_ol_dB_vs_vdd.png`, `fcu_vs_vdd.png`

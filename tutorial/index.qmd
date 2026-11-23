@@ -1118,7 +1118,7 @@ characterisation YAML file ([`verification/cace/inverter.yaml`](https://github.c
 make sim-cace
 ```
 
-Plots are written to [`verification/cace/results/inverter/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/inverter/verification/cace/results/inverter).
+Plots and the summary table `summary.md` are written to [`verification/cace/results/inverter/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/inverter/verification/cace/results/inverter).
 This step is mainly relevant for advanced designers who want to characterise the analog macro across PVT corners. The following figures show the results of the CACE simulations for 200 iterations.
 
 @fig-inverter-cace-aol shows the process (left) and mismatch (right) variations of the dc open-loop gain $A_\mathrm{ol}$, while @fig-inverter-cace-aol-vdd plots its variation across several process corners at one fixed supply voltage.
