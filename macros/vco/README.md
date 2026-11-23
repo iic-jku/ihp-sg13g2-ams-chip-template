@@ -672,7 +672,7 @@ make symbol-pex CELL=vco_bias
 
 ### Parasitic Extraction (PEX)
 
-`magic-pex` and `klayout-pex` are those of the inverter, see [Parasitic Extraction (PEX)](../inverter/README.md#parasitic-extraction-pex), with the same `EXT_MODE`. `magic-pex` takes the same three full-RC parameters, and `klayout-pex` runs the 2.5D engine of kpex, which has none of them. Two things differ.
+`magic-pex` and `klayout-pex` are those of the inverter, see [Parasitic Extraction (PEX)](../inverter/README.md#parasitic-extraction-pex), with the same `EXT_MODE`. `magic-pex` takes the same `CTHRESH` and the same three full-RC parameters, and `klayout-pex` runs the 2.5D engine of kpex, which has none of them. Two things differ.
 
 **The full-RC parameters are ten times finer**: `THRESHOLD=1000` (1 Ohm), `MINRES=100` (0.1 Ohm) and `MINDELAY=0`, so that `THRESHOLD` also gates the extracted resistance. At Magic's defaults, the inverter's 10 Ohm, 1 Ohm and 1 ps, every net of the VCO except `VSS` came out without resistance, the tank leads and the gate lines of the pair among them. At 20 GHz the coil's own series resistance is 2.4 Ohm per side, so a lead of 1 Ohm is a part of the tank. `klayout-pex-leads` passes the same three values to the Magic engine of KPEX (`--magic-thresh`, `--magic-minres`, `--magic-mindel`).
 

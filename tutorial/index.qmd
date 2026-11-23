@@ -1491,7 +1491,7 @@ The non-interactive PEX can be run with the following Makefile targets. The `CEL
 
 If not set, it defaults to `EXT_MODE=3`.
 
-In every `EXT_MODE`, `magic-pex` leaves each parasitic capacitor below `CTHRESH` (`sak-pex.sh -c`, in fF, default `0.01` = 10 aF) out of the netlist. `CTHRESH=0` keeps all of them, and a larger value gives a smaller netlist, for example `make magic-pex CTHRESH=0.1`.
+In every `EXT_MODE`, `magic-pex` leaves each parasitic capacitor below `CTHRESH` (`sak-pex.sh -c`, in fF, default `0.01` = 10 aF) out of the netlist. `CTHRESH=0.001` keeps every capacitor Magic can resolve, since it writes smaller ones as `0`, and a larger value gives a smaller netlist, for example `make magic-pex CTHRESH=0.1`.
 
 For full-RC extraction (`EXT_MODE=3`), `magic-pex` also exposes the `sak-pex.sh` `extresist` tuning parameters (ignored in `EXT_MODE=1`/`2`):
 
@@ -2851,7 +2851,7 @@ make magic-pex                            # only chip_top (without logo and fill
 make magic-pex EXT_MODE=3 THRESHOLD=5000 MINRES=500 MINDELAY=2   # full-RC with custom extresist settings
 ```
 
-In every `EXT_MODE`, `magic-pex` leaves each parasitic capacitor below `CTHRESH` (`sak-pex.sh -c`, in fF, default `0.01` = 10 aF) out of the netlist. `CTHRESH=0` keeps all of them, and a larger value gives a smaller netlist, for example `make magic-pex CTHRESH=0.1`.
+In every `EXT_MODE`, `magic-pex` leaves each parasitic capacitor below `CTHRESH` (`sak-pex.sh -c`, in fF, default `0.01` = 10 aF) out of the netlist. `CTHRESH=0.001` keeps every capacitor Magic can resolve, since it writes smaller ones as `0`, and a larger value gives a smaller netlist, for example `make magic-pex CTHRESH=0.1`.
 
 For full-RC extraction (`EXT_MODE=3`), `magic-pex` also exposes the `sak-pex.sh` `extresist` tuning parameters `THRESHOLD` (`-t`, default `10000` mOhm), `MINRES` (`-r`, default `1000` mOhm) and `MINDELAY` (`-y`, default `1` ps; `0` = gate by resistance). They are ignored in `EXT_MODE=1`/`2`.
 

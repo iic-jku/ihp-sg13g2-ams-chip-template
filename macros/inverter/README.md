@@ -598,7 +598,7 @@ make magic-pex CELL=inverter_top
 make magic-pex CELL=inverter_top EXT_MODE=3
 ```
 
-In every `EXT_MODE`, `magic-pex` leaves each parasitic capacitor below `CTHRESH` (`sak-pex.sh -c`, in fF, default `0.01` = 10 aF) out of the netlist. `CTHRESH=0` keeps all of them, and a larger value gives a smaller netlist, for example `make magic-pex CTHRESH=0.1`.
+In every `EXT_MODE`, `magic-pex` leaves each parasitic capacitor below `CTHRESH` (`sak-pex.sh -c`, in fF, default `0.01` = 10 aF) out of the netlist. `CTHRESH=0.001` keeps every capacitor Magic can resolve, since it writes smaller ones as `0`, and a larger value gives a smaller netlist, for example `make magic-pex CTHRESH=0.1`.
 
 For full-RC extraction (`EXT_MODE=3`), `magic-pex` additionally exposes the three `extresist` tuning parameters of `sak-pex.sh`. They are ignored in `EXT_MODE=1`/`2`.
 
