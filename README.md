@@ -1007,6 +1007,8 @@ make magic-pex CELL=chip_top
 make magic-pex CELL=chip_top EXT_MODE=3
 ```
 
+In every `EXT_MODE`, `magic-pex` leaves each parasitic capacitor below `CTHRESH` (`sak-pex.sh -c`, in fF, default `0.01` = 10 aF) out of the netlist. `CTHRESH=0` keeps all of them, and a larger value gives a smaller netlist, for example `make magic-pex CTHRESH=0.1`.
+
 For full-RC extraction (`EXT_MODE=3`), `magic-pex` additionally exposes the three `extresist` tuning parameters of `sak-pex.sh`. They are ignored in `EXT_MODE=1`/`2`.
 
 A full-RC extraction of a whole chip would produce a resistor network far too large to simulate, and most of it would be wires so short that their resistance does not matter. The three parameters are the filters Magic applies to keep only the part of the network that is worth having. They run in this order:

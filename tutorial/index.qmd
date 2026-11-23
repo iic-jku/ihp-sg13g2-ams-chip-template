@@ -1491,6 +1491,8 @@ The non-interactive PEX can be run with the following Makefile targets. The `CEL
 
 If not set, it defaults to `EXT_MODE=3`.
 
+In every `EXT_MODE`, `magic-pex` leaves each parasitic capacitor below `CTHRESH` (`sak-pex.sh -c`, in fF, default `0.01` = 10 aF) out of the netlist. `CTHRESH=0` keeps all of them, and a larger value gives a smaller netlist, for example `make magic-pex CTHRESH=0.1`.
+
 For full-RC extraction (`EXT_MODE=3`), `magic-pex` also exposes the `sak-pex.sh` `extresist` tuning parameters (ignored in `EXT_MODE=1`/`2`):
 
 - `THRESHOLD` - extresist threshold in mOhm (`-t`, default `10000` = 10 Ohm),
@@ -1499,7 +1501,7 @@ For full-RC extraction (`EXT_MODE=3`), `magic-pex` also exposes the `sak-pex.sh`
 
 ```sh
 make klayout-pex [CELL=<cellname>] [EXT_MODE=<1|2|3>]   # default CELL=inverter_top, default EXT_MODE=3 (full-RC)
-make magic-pex [CELL=<cellname>] [EXT_MODE=<1|2|3>] [THRESHOLD=<mOhm>] [MINRES=<mOhm>] [MINDELAY=<ps>]   # default CELL=inverter_top, default EXT_MODE=3 (full-RC)
+make magic-pex [CELL=<cellname>] [EXT_MODE=<1|2|3>] [CTHRESH=<fF>] [THRESHOLD=<mOhm>] [MINRES=<mOhm>] [MINDELAY=<ps>]   # default CELL=inverter_top, default EXT_MODE=3 (full-RC)
 ```
 
 PEX writes a SPICE netlist into [`netlist/pex/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/inverter/netlist/pex/). The subcircuit is named `<CELL>_pex`, and the pin order is rearranged to match the Xschem PEX symbol ([`inverter_top_pex.sym`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/inverter/schematic/xschem/inverter_top_pex.sym)).
@@ -2848,6 +2850,8 @@ The following PEX target is available for the top-level.
 make magic-pex                            # only chip_top (without logo and filler), default EXT_MODE=1
 make magic-pex EXT_MODE=3 THRESHOLD=5000 MINRES=500 MINDELAY=2   # full-RC with custom extresist settings
 ```
+
+In every `EXT_MODE`, `magic-pex` leaves each parasitic capacitor below `CTHRESH` (`sak-pex.sh -c`, in fF, default `0.01` = 10 aF) out of the netlist. `CTHRESH=0` keeps all of them, and a larger value gives a smaller netlist, for example `make magic-pex CTHRESH=0.1`.
 
 For full-RC extraction (`EXT_MODE=3`), `magic-pex` also exposes the `sak-pex.sh` `extresist` tuning parameters `THRESHOLD` (`-t`, default `10000` mOhm), `MINRES` (`-r`, default `1000` mOhm) and `MINDELAY` (`-y`, default `1` ps; `0` = gate by resistance). They are ignored in `EXT_MODE=1`/`2`.
 

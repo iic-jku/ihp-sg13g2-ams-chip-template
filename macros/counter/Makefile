@@ -43,6 +43,10 @@ PEX_SUB_NET ?= VSS
 # Override with: make klayout-pex KPEX_REDUCE=<none|floating|ticer>
 KPEX_REDUCE ?= ticer
 
+# capacitance threshold of magic-pex in fF, smaller capacitors are left out of the netlist (sak-pex.sh -c, used in every EXT_MODE, default: 0.01 = 10 aF)
+# Override with: make <target> CTHRESH=<fF>
+CTHRESH ?= 0.01
+
 # full-RC extresist threshold in mOhm (sak-pex.sh -t, only used in EXT_MODE=3; default: 10000 = 10 Ohm)
 # Override with: make <target> THRESHOLD=<mOhm>
 THRESHOLD ?= 10000
@@ -123,13 +127,14 @@ _COCOTB_FST = $(COCOTB_DIR)/sim_build/$(if $(filter verilator,$(SIM)),dump,$(CEL
 
 # Help Target
 help: ## Show this help message
-	@echo 'Usage: make <target> [CELL=<cellname>] [EXT_MODE=<1|2|3>] [KPEX_REDUCE=<none|floating|ticer>] [PEX_SUB_NET=<net>] [THRESHOLD=<mOhm>] [MINRES=<mOhm>] [MINDELAY=<ps>] [WAVEFORM_VIEWER=<gtkwave|surfer>] [SIM=<icarus|verilator>] [SDF_CORNER=<corner>] [SDF_TRIPLE=<min|typ|max>] [TB=<testbenchname>] [SCRIPT=<scriptname>] [OPEN_ARGS=<options>] [FORCE=1]'
+	@echo 'Usage: make <target> [CELL=<cellname>] [EXT_MODE=<1|2|3>] [KPEX_REDUCE=<none|floating|ticer>] [PEX_SUB_NET=<net>] [CTHRESH=<fF>] [THRESHOLD=<mOhm>] [MINRES=<mOhm>] [MINDELAY=<ps>] [WAVEFORM_VIEWER=<gtkwave|surfer>] [SIM=<icarus|verilator>] [SDF_CORNER=<corner>] [SDF_TRIPLE=<min|typ|max>] [TB=<testbenchname>] [SCRIPT=<scriptname>] [OPEN_ARGS=<options>] [FORCE=1]'
 	@echo ''
 	@echo 'Available targets:'
 	@grep -E '^[a-zA-Z0-9_.-]+:.*## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*## "}; {printf "  %-20s %s\n", $$1, $$2}'
 	@echo ''
 	@echo 'CELL defaults to $(TOP). Override to lint or simulate subcells.'
 	@echo 'EXT_MODE defaults to 3 (full-RC). 1=C-decoupled, 2=C-coupled.'
+	@echo 'CTHRESH is the capacitance threshold of magic-pex in fF in every EXT_MODE, smaller capacitors are left out of the netlist (default 0.01 = 10 aF).'
 	@echo 'THRESHOLD/MINRES/MINDELAY are full-RC (EXT_MODE=3) extresist settings for magic-pex (defaults 10000 mOhm / 1000 mOhm / 1 ps).'
 	@echo 'PEX_SUB_NET defaults to VSS. The port net that klayout-pex ties the substrate port sub! of the kpex 2.5D netlist to (empty keeps sub! as a port).'
 	@echo 'KPEX_REDUCE defaults to ticer. Sets the RC network reduction of klayout-pex in EXT_MODE=3 (none|floating|ticer).'
@@ -423,14 +428,14 @@ klayout-pex: ## Run Parasitic Extraction with the KPEX 2.5D engine on the final 
 	python3 $(SCRIPTS_DIR)/check_pex_ports.py $(NET_PEX_DIR)/$(CELL)_klayout_pex_$(EXT_MODE).spice
 .PHONY: klayout-pex
 
-magic-pex: ## Run Parasitic Extraction with Magic on the final GDS (usage: make magic-pex [CELL=<cellname>] [EXT_MODE=<1|2|3>] [THRESHOLD=<mOhm>] [MINRES=<mOhm>] [MINDELAY=<ps>])
+magic-pex: ## Run Parasitic Extraction with Magic on the final GDS (usage: make magic-pex [CELL=<cellname>] [EXT_MODE=<1|2|3>] [CTHRESH=<fF>] [THRESHOLD=<mOhm>] [MINRES=<mOhm>] [MINDELAY=<ps>])
 	@if [ ! -f $(LAY_DIR)/$(CELL).gds ]; then \
 		echo "No layout $(LAY_DIR)/$(CELL).gds found. Run 'make build-top' (or 'make copy-final') first."; \
 		exit 1; \
 	fi
 	mkdir -p $(NET_PEX_DIR)
 	$(MAKE) symbol-pex CELL=$(CELL)
-	sak-pex.sh -d -m $(EXT_MODE) -n $(CELL)_pex -t $(THRESHOLD) -r $(MINRES) -y $(MINDELAY) -w $(NET_PEX_DIR) $(LAY_DIR)/$(CELL).gds
+	sak-pex.sh -d -m $(EXT_MODE) -n $(CELL)_pex -c $(CTHRESH) -t $(THRESHOLD) -r $(MINRES) -y $(MINDELAY) -w $(NET_PEX_DIR) $(LAY_DIR)/$(CELL).gds
 	mv $(NET_PEX_DIR)/$(CELL).pex.spice $(NET_PEX_DIR)/$(CELL)_magic_pex_$(EXT_MODE).spice
 	rm -f $(NET_PEX_DIR)/pex_$(CELL).tcl
 	@if [ -f $(XSCHEM_SCH_DIR)/$(CELL)_pex.sym ]; then \
