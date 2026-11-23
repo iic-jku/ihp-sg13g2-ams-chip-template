@@ -193,7 +193,7 @@ Examples based on this template are:
 The repository is organised into the following top-level folders. The full listing can be found in the [top-level README.md](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/README.md#directory-structure).
 
 | Folder       | Purpose                                                    |
-| ------------ | ---------------------------------------------------------- |
+| ---------------------- | ------------------------------------------------------------------------------ |
 | [`doc/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/doc/) | Designer documentation, including [specifications](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/doc/specifications.md), [pinout](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/doc/pinout.md), [floorplan](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/doc/floorplan.md), and the [PDK and tool cheatsheets](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/doc/librelane/librelane_cheatsheet.md). |
 | [`flow/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/flow/) | LibreLane top-level configuration with [config.yaml](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/flow/librelane/config.yaml), [pdn_cfg.tcl](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/flow/librelane/pdn_cfg.tcl), [chip_top.sdc](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/flow/librelane/chip_top.sdc), plus the [ArtistIC](https://github.com/pulp-platform/artistic) logo flow. |
 | [`ip/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/ip/) | External IP cells including bondpads, an RF pad, custom IO cells, and logos. |
@@ -251,7 +251,7 @@ Solid arrows represent direct `$(MAKE) <target>` calls within a single Makefile.
 The [top-level Makefile](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/Makefile) provides:
 
 | Target              | What it does                                                                                          |
-| ------------------------------ | ---------------------------------------------------------------------- |
+| --------------------------------------------- | ------------------------------------------------------- |
 | `make help`         | Print the help banner and list every target with its description.                                     |
 | `make open`         | Open the design files of this folder in the `sak-open.py` file browser (needs the VNC/X11 desktop).    |
 | `make init-submodules` | Initialise and update git submodules (for example the ArtistIC logo flow).                         |
@@ -265,7 +265,7 @@ The [top-level Makefile](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template
 | `make build-top`    | Run LibreLane on the top-level, copy back all artifacts, add logos and fill structures, and render the final GDS. |
 | `make build-all`    | Init submodules, build bondpad, build RF pad, build logos, build macros, and build top-level.             |
 | `make klayout-verify` / `magic-verify` | Run DRC, LVS, and PEX with KLayout, or LVS and PEX with Magic, for a given cell.   |
-| `make gdscheck-drc` (`DRC_LEVEL=<precheck\|macro\|regular>`, `GDSCHECK_SUITE=<suite>` or `GDSCHECK_DECKS=<decks>`) | Run the standalone gdscheck DRC for a given cell. |
+| `make gdscheck-drc` (`DRC_LEVEL=<precheck|macro|regular>`, `GDSCHECK_SUITE=<suite>` or `GDSCHECK_DECKS=<decks>`) | Run the standalone gdscheck DRC for a given cell. |
 | `make bondplan`     | Generate the bondplan (die in package, bondwires, pin table) in `packaging/` (see @sec-packaging).        |
 | `make all`          | Full build, DRC verification, simulation, and bondplan generation.                        |
 | `make release VERSION=2.1.0` | Copy GDS, netlists, and renders into `release/v.<VERSION>/` for tapeout submission.          |
@@ -279,7 +279,7 @@ See the [top-level README](https://github.com/iic-jku/ihp-sg13g2-ams-chip-templa
 The [counter Makefile](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/counter/Makefile) provides:
 
 | Target                                            | What it does                                                                |
-| ----------------------------------- | ----------------------------------------------------------------- |
+| --------------------------------------------- | ------------------------------------------------------- |
 | `make open`                                       | Open the design files of this folder in the `sak-open.py` file browser.     |
 | `make lint-verilog` / `make lint-verilog-all`     | Lint a single cell or the full counter design with Verilator.               |
 | `make sim-rtl-verilog`                            | Run the testbench with Icarus Verilog (`<CELL>_tb.sv`, falling back to `<CELL>_tb.v`). |
@@ -295,7 +295,7 @@ The [counter Makefile](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/b
 | `make build-top`                                  | Run LibreLane, copy reports, netlists, and final views, generate the XSPICE model, and render the final GDS. |
 | `make lec` / `lec-mutant`                         | Prove the final netlist equivalent to the RTL with EQY (`LEC_NETLIST` selects another netlist), and check that the proof can fail. |
 | `make symbol-pex`                                 | Build the Xschem PEX symbol `<CELL>_pex.sym` from `<CELL>.sym`. Runs automatically before every extraction. |
-| `make klayout-pex` / `magic-pex` (`EXT_MODE=<1\|2\|3>`) | Extract the parasitics of the hardened macro from `final/gds/` into `netlist/pex/`. |
+| `make klayout-pex` / `magic-pex` (`EXT_MODE=<1|2|3>`) | Extract the parasitics of the hardened macro from `final/gds/` into `netlist/pex/`. |
 | `make all`                                        | Run lint, the FPGA build, the full macro build flow, the equivalence check, the parasitic extraction, and all simulations. |
 | `make clean`                                      | Delete all generated files and folders of the macro, including the FPGA outputs. |
 
@@ -306,16 +306,16 @@ See the [counter README](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template
 The [inverter Makefile](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/inverter/Makefile) provides:
 
 | Target                                            | What it does                                                                |
-| ----------------------------------- | ----------------------------------------------------------------- |
+| --------------------------------------------- | ------------------------------------------------------- |
 | `make open`                                       | Open the design files of this folder in the `sak-open.py` file browser.     |
 | `make sim-xschem` / `make sim-view-xschem`        | Run an Xschem testbench (batch mode) and plot its results with Python. `TB` defaults to `<CELL>_tb_tran` and `SCRIPT` to `plot_<CELL>`, override with `TB=<tb>` / `SCRIPT=<script>`. |
 | `make sim-cace`                                   | Run [CACE](https://github.com/fossi-foundation/cace) Monte Carlo / mismatch characterisations. |
 | `make klayout-script` / `klayout-script-all`      | Write `layout/<CELL>.gds` with the KLayout Python script `scripts/layout/<CELL>.py`, or both layouts, the unit cell first. Both skip with `LAYOUT_SOURCE=manual`. |
-| `make klayout-drc` / `magic-drc` (`DRC_LEVEL=<precheck\|macro\|regular>`) | Run DRC using KLayout or Magic.                       |
+| `make klayout-drc` / `magic-drc` (`DRC_LEVEL=<precheck|macro|regular>`) | Run DRC using KLayout or Magic.                       |
 | `make gdscheck-drc` / `gdscheck-drc-all` (`GDSCHECK_SUITE=<suite>` or `GDSCHECK_DECKS=<decks>`) | Run the standalone gdscheck DRC for a given cell, or for `inverter` and `inverter_top`. |
 | `make klayout-lvs` / `magic-lvs`                  | Run LVS using KLayout or Magic + Netgen.                                    |
 | `make symbol-pex`                                 | Build the Xschem PEX symbol `<CELL>_pex.sym` from `<CELL>.sym`. Runs automatically before every extraction. |
-| `make klayout-pex` / `magic-pex` (`EXT_MODE=<1\|2\|3>`) | Run parasitic extraction in C, CC, or full-RC mode.                     |
+| `make klayout-pex` / `magic-pex` (`EXT_MODE=<1|2|3>`) | Run parasitic extraction in C, CC, or full-RC mode.                     |
 | `make klayout-verify` / `magic-verify`            | Run DRC + LVS + PEX with KLayout, or LVS + PEX with Magic, for a given cell. |
 | `make lef` / `make lib` / `make verilog`          | Generate the LEF, the Liberty stub, and the Verilog stub for top-level integration.   |
 | `make check-boundary`                             | Check that the top cell layout carries the PR boundary box on layer 189 that the chip flow needs. |
@@ -330,11 +330,11 @@ See the [inverter README](https://github.com/iic-jku/ihp-sg13g2-ams-chip-templat
 The [vco Makefile](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/vco/Makefile) provides every target of the inverter except `sim-cace`, plus:
 
 | Target                                            | What it does                                                                |
-| ----------------------------------- | ----------------------------------------------------------------- |
+| --------------------------------------------- | ------------------------------------------------------- |
 | `make klayout-script` / `klayout-script-all`      | Write `layout/<CELL>.gds` with the KLayout Python script `scripts/layout/<CELL>.py`, or every layout, subcells first. |
 | `make sim-em` (`NP=<processes>`)                  | Run the EM simulation of the coil with gds2palace and AWS Palace.           |
 | `make copy-sparam` / `make view-em-sim`           | Copy the Touchstone file of the EM simulation to `verification/em/s-parameter/`, and plot it. |
-| `make snp2le` (`LE_MODEL=<structure\|universal>`) | Fit a lumped-element model to the Touchstone file, for ngspice and VACASK.  |
+| `make snp2le` (`LE_MODEL=<structure|universal>`) | Fit a lumped-element model to the Touchstone file, for ngspice and VACASK.  |
 | `make em-model`                                   | Run `sim-em`, `copy-sparam`, `snp2le` and the ACSP testbench of the coil model. |
 | `make sim-corners` (`TB=<tb>`)                    | Run a start-up transient over MOS and resistor corners, temperatures, `VDD` and `vtune`. |
 | `make sim-tune-lpe`                               | Run the post-layout tuning curve, one ngspice transient per tuning voltage at TT and 27 C. |
@@ -675,7 +675,7 @@ TopMetal2 Y 0.0 4.0
 With these changes `make librelane` runs through on all three libraries with 0 DRC, LVS and antenna errors and timing met. The targets after LibreLane are still written for IHP LV:
 
 | Target | IHP HV | ETH LV |
-|---|---|---|
+| --------------------------------------- | ----------------------------------- | -------------------------- |
 | `make librelane`, `librelane-nodrc` | works | works |
 | `make copy-final`, `copy-netlist`, `copy-render`, `render-gds`, `magic-pex` | works | works |
 | `make copy-reports`, and with it `make build-top` | stops, it names the six IHP LV corners | stops for the same reason |
@@ -1205,7 +1205,7 @@ The Jupyter notebook `sizing_inverter.ipynb` runs through the following steps:
 The resulting device geometry is summarised in @tbl-inverter-sizing-geom.
 
 | Device  | $L$ ($\mathrm{\mu m}$) | Fingers ($\mathrm{NF}$) | $W$ / Finger ($\mathrm{\mu m}$) | Total $W$ ($\mathrm{\mu m}$) |
-| :------ | :----------------------: | :-----------------: | :-------------------------------: | :----------------------------: |
+| :------------------- | :--------------: | :----------------: | :----------------------: | :--------------------: |
 | NMOS $M_1$ | 1.0                   | 20              | 1.0                               | 20.0                           |
 | PMOS $M_2$ | 1.0                   | 20              | 6.0                               | 120.0                          |
 | NMOS $M_\mathrm{dummy1}$ | 1.0     | 2               | 1.0                               | 2.0                            |
@@ -1631,7 +1631,7 @@ A current source on the center tap sets the tank's common mode by the pair's gat
 The design files are located in [`macros/vco/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/vco/). The folders of the inverter are all there (@sec-analog), plus the ones for the layout scripts and the EM simulation:
 
 | Folder | Content |
-| :--- | :--- |
+| :----------------------------- | :--------------------------------------------------------------------- |
 | [`schematic/xschem/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/vco/schematic/xschem/) | Schematics and symbols of the seven cells, the generated PEX symbols, and `vco_ind_le.sym` for the coil model. |
 | [`scripts/layout/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/vco/scripts/layout/) | One KLayout Python script per cell and the shared helpers `vco_layout.py`. |
 | [`layout/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/vco/layout/) | The GDS of every cell, written by its script. |
@@ -1661,7 +1661,7 @@ The [Makefile](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main
 | Deliverables | Magic, `sak-render.py` | `build-top` | `final/`, `render/img/` |
 | Everything but EM and the long runs | all of the above | `all` | |
 
-: Flow steps of the `vco` and their Makefile targets. {#tbl-rf-flow tbl-colwidths="[20,22,30,28]"}
+: Flow steps of the `vco` and their Makefile targets. {#tbl-rf-flow tbl-colwidths="[16,16,22,46]"}
 
 `make all` runs `klayout-script-all`, `klayout-verify-all`, `gdscheck-drc-all`, `magic-verify-all`, `build-top` and `sim-all`, in about 28 minutes on a compute host. It leaves out the EM simulation of the coil, which takes 35 minutes on a compute host, the corners, and the long runs: the power-up transient and the transient noise take hours each, the post-layout PSS 1.5 hours. Their results are committed, so `make all` simulates with the coil model of the last EM run.
 
@@ -1753,7 +1753,7 @@ The verification targets are those of the inverter, see @sec-analog: `klayout-dr
 | `vco_var`, `vco_ind`, `vco_core` | DRC, LVS | DRC | |
 | `vco_top` | DRC, regular DRC, LVS, PEX without the coil and the varactor array (`klayout-pex-leads`) | DRC | PEX for the pin list of the Verilog stub |
 
-: Checks per cell, as `klayout-verify-all`, `gdscheck-drc-all` and `magic-verify-all` run them. {#tbl-vco-checks}
+: Checks per cell, as `klayout-verify-all`, `gdscheck-drc-all` and `magic-verify-all` run them. {#tbl-vco-checks tbl-colwidths="[24,36,14,26]"}
 
 The gaps have three reasons:
 
@@ -1894,7 +1894,7 @@ Transient noise is the exception: it injects random noise into an ordinary trans
 | `hb` | periodic or multi-tone steady state by harmonic balance | not used, it suits driven circuits such as the buffer, mixers and detectors |
 | `hbac`, `hbnoise` | small-signal transfer and noise around the HB solution | not used, the HB counterparts of `pac` and `pnoise` |
 
-: VACASK analyses and where the `vco` uses them. {#tbl-rf-analyses tbl-colwidths="[15,45,40]"}
+: VACASK analyses and where the `vco` uses them. {#tbl-rf-analyses tbl-colwidths="[15,42,43]"}
 
 ::: {.callout-tip}
 ## RF Circuit Simulation in the RFIC Course
@@ -2104,7 +2104,7 @@ All four IPs follow the same folder structure (`script/`, `final/`, `verificatio
 The IP design files are located in [`ip/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/ip/), and the relevant folders are:
 
 | Folder                                                                                                                                                                                  | Content                                                                                          |
-| --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------ |
+| ------------------------------------------------------------ | ---------------------------------------- |
 | [`sg13g2_ip__bondpad_70x70/script/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/ip/sg13g2_ip__bondpad_70x70/script/) | KLayout Python script ([`bondpad.py`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/ip/sg13g2_ip__bondpad_70x70/script/bondpad.py)) that instantiates the `SG13_dev::bondpad` PCell and writes the GDS and LEF. |
 | [`sg13g2_ip__jku/logo/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/ip/sg13g2_ip__jku/logo/), [`sg13g2_ip__jku_names/logo/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/ip/sg13g2_ip__jku_names/logo/) and [`sg13g2_ip__template_name/logo/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/ip/sg13g2_ip__template_name/logo/) | Source PNG images (`jku_logo.png`, `jku_names.png`, `template_name.png`) for the three logos. |
 | [`sg13g2_ip__jku/script/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/ip/sg13g2_ip__jku/script/), [`sg13g2_ip__jku_names/script/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/ip/sg13g2_ip__jku_names/script/) and [`sg13g2_ip__template_name/script/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/ip/sg13g2_ip__template_name/script/) | PNG-to-GDS converter ([`img2lay.py`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/ip/sg13g2_ip__jku/script/img2lay.py)) shared by the three logos. |
@@ -2127,7 +2127,7 @@ The bondpad is generated by the Python script [`script/bondpad.py`](https://gith
 Geometry and metal stack are parameterised through three Makefile variables. The defaults match the chip's padframe and the SG13G2 PDK defaults.
 
 | Variable       | Default  | Description                                                                                                                                  |
-| -------------- | -------- | -------------------------------------------------------------------------------------------------------------------------------------------- |
+| ------------------ | ---------- | ------------------------------------------------------------------------ |
 | `DIAMETER`     | `70.0`   | Bondpad diameter / side length in µm.                                                                                                        |
 | `SHAPE`        | `square` | Pad geometry. Allowed: `square`, `octagon`, `circle`.                                                                                        |
 | `BOTTOM_METAL` | `3`      | Lowest metal in the pad stack: `1`=`Metal1` .. `5`=`Metal5`, `6`=`TopMetal1`. Top is fixed to `TopMetal2`. Default `3` matches `bondpad_bottomMetal` in [`sg13g2_tech.json`](https://github.com/IHP-GmbH/IHP-Open-PDK/blob/main/ihp-sg13g2/libs.tech/klayout/python/sg13g2_pycell_lib/sg13g2_tech.json). |
@@ -2135,12 +2135,12 @@ Geometry and metal stack are parameterised through three Makefile variables. The
 The available Makefile targets for the bondpad are summarised below.
 
 | Target        | What it does                                                                                                                                                                                            |
-| ------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `bondpad`     | Generate GDS and LEF via [`bondpad.py`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/ip/sg13g2_ip__bondpad_70x70/script/bondpad.py) (`make bondpad [DIAMETER=<um>] [SHAPE=<square\|octagon\|circle>] [BOTTOM_METAL=<1-6>]`). |
+| -------------------- | -------------------------------------------------------------------------------- |
+| `bondpad`     | Generate GDS and LEF via [`bondpad.py`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/ip/sg13g2_ip__bondpad_70x70/script/bondpad.py) (`make bondpad [DIAMETER=<um>] [SHAPE=<square|octagon|circle>] [BOTTOM_METAL=<1-6>]`). |
 | `verilog`     | Generate a Verilog blackbox stub.                                                                                                                                                                       |
-| `klayout-drc` | Run KLayout DRC (`make klayout-drc [CELL=<cellname>] [DRC_LEVEL=<precheck\|macro\|regular>] [DRC_JOBS=<n>]`).                                                                                                                                                 |
+| `klayout-drc` | Run KLayout DRC (`make klayout-drc [CELL=<cellname>] [DRC_LEVEL=<precheck|macro|regular>] [DRC_JOBS=<n>]`).                                                                                                                                                 |
 | `magic-drc`   | Run Magic DRC (`make magic-drc [CELL=<cellname>]`), not part of `make all`.                                                                                                                                                     |
-| `gdscheck-drc` | Run gdscheck DRC (`make gdscheck-drc [CELL=<cellname>] [DRC_LEVEL=<precheck\|macro\|regular>] [GDSCHECK_SUITE=<suite>\|GDSCHECK_DECKS=<decks>] [DRC_JOBS=<n>]`). |
+| `gdscheck-drc` | Run gdscheck DRC (`make gdscheck-drc [CELL=<cellname>] [DRC_LEVEL=<precheck|macro|regular>] [GDSCHECK_SUITE=<suite>|GDSCHECK_DECKS=<decks>] [DRC_JOBS=<n>]`). |
 | `open`        | Browse this folder with `sak-open.py` and open each file in its tool (needs the VNC/X11 desktop).                                                                                                        |
 | `clean`       | Remove the `final/` and `verification/drc/` output directories.                                                                                                                                         |
 
@@ -2207,7 +2207,7 @@ The `logo` target hands the `LAYER` name to `img2lay.py`, which resolves it thro
 The three logos share the same set of Makefile variables as shown below. The two text blocks `jku_names` and `template_name` use a finer standard pixel size to ensure the readability of the smaller text elements.
 
 | Variable      | Default (`jku` / `jku_names` / `template_name`) | Description                                                                                       |
-| ------------- | ----------------------------------------------- | ------------------------------------------------------------------------------------------------- |
+| ---------------- | ------------------------------ | ------------------------------------------------------ |
 | `BLOCK_SIZE`  | `100`  / `100` / `100`                          | Physical side length of the rendered logo in µm. The image is scaled to it.                       |
 | `PIXEL_SIZE`  | `0.50` / `0.25` / `0.25`                        | Edge of one rendered pixel in µm. Must stay ≥ `0.21` µm, the `Metal5` minimum space, because single pixels and single-pixel gaps are drawn as is. |
 | `LAYER`       | `Metal5` / `Metal5` / `Metal5`                  | Foreground metal layer. One of `Metal1`..`Metal5`, `TopMetal1`, `TopMetal2`.                      |
@@ -2217,7 +2217,7 @@ The image is scaled to `BLOCK_SIZE` by `img2lay.py` (`--block-size`), so the GDS
 The available Makefile targets for the logos are summarised below.
 
 | Target        | What it does                                                                                       |
-| ------------- | -------------------------------------------------------------------------------------------------- |
+| -------------------- | -------------------------------------------------------------------------------- |
 | `logo`        | Convert the PNG into a GDSII layout using [`img2lay.py`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/ip/sg13g2_ip__jku/script/img2lay.py). |
 | `lef`         | Emit a minimal LEF macro (`CLASS BLOCK`, full-area `OBS` on `LAYER`).                              |
 | `lib`         | Emit a Liberty timing stub (empty cell) so the LibreLane flow can pick the cell up.                |
@@ -2309,7 +2309,7 @@ The GUI needs the container desktop. This section describes version 0.2.2, which
 **Pad ring and die.** The *Pads* tab has one editor per side, with one line per pad. The tag selects the IO cell:
 
 | Line | Pad |
-| --- | --- |
+| ------------------------------ | ---------------------------------------------------------------------- |
 | `clk [in]` | digital input |
 | `dout[0] [out] [4mA]` | digital output with its drive strength, `[tri]` and `[io]` alike |
 | `ain [analog]` | analog pad |
@@ -2346,7 +2346,7 @@ The folder receives `pad_cfg.tcl` and `padring_config.yaml` (pad positions and d
 This chip keeps its own [`rtl/chip_top.sv`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/rtl/chip_top.sv) and the `PAD_*` lists instead of the export, because the export connects `IOPadAnalog` through `padres`, behind the secondary ESD resistor, which the analog outputs of this chip avoid. Only the RF pad of `[rfpad]` reaches the core through `padbare`. The export also writes no PDN and no timing constraints, which stay in [`pdn_cfg.tcl`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/flow/librelane/pdn_cfg.tcl) and [`chip_top.sdc`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/flow/librelane/chip_top.sdc). So use the plan to settle the pad order and the positions, then carry them over by hand:
 
 | In the plan | In this repository |
-| --- | --- |
+| ------------------------- | --------------------------------------------------------------------------- |
 | Pad order per side | `PAD_WEST`, `PAD_NORTH`, `PAD_SOUTH`, `PAD_EAST` in `config.yaml`. The GUI shows the left and right sides top to bottom, `PAD_WEST` and `PAD_EAST` list them bottom to top. |
 | Pad pitch | `PAD_SPACING_MULTIPLE` in `config.yaml`, see the comment above it for the arithmetic |
 | Macro positions | The `instances` of the `MACROS` block in `config.yaml`. *Export MACROS...* in the *Chip* tab shows them in that form. PREP-IC does not know the strap grid of the PDN, so check the result with `--to OpenROAD.GeneratePDN` or a full run. |
@@ -3086,7 +3086,7 @@ The clock tree of IHP LV uses `sg13g2_buf_16` as root buffer, far more than eigh
 These are the results for the 200 µm × 100 µm die, `SYNTH_STRATEGY: DELAY 4` and the configurations of @sec-hardening-libraries in image tag `2026.10`, with the typical corner at 1.2 V for IHP LV and ETH LV and at 3.3 V for IHP HV.
 
 | | IHP LV | IHP HV | ETH LV |
-|---|---|---|---|
+| ------------------ | ---------------------------- | ---------------------------- | -------------------------- |
 | Synthesised cell area (`stat.rpt`) | 742 µm² | 2293 µm² | 401 µm² |
 | Standard cell area after place and route | 1285 µm² | 2910 µm² | 1184 µm², 748 µm² without tap cells |
 | Core area and rows | 12802 µm², 18 | 8061 µm², 6 | 13395 µm², 21 |
