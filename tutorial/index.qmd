@@ -1153,6 +1153,23 @@ In the `inverter.yaml` characterisation file, more parameter sweeps can be added
 Do not `print()` from a CACE postprocess hook. The hooks in [`verification/cace/scripts/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/inverter/verification/cace/scripts/) post-process the raw Ngspice results before CACE evaluates them against the specification, and CACE 2.11.0 redirects their stdout into its own rich logger, which writes back to stdout. The first `print()` therefore recurses without end, and `make sim-cace` hangs instead of failing. That is why the debug prints in [`inverter_tb_ac.py`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/inverter/verification/cace/scripts/inverter_tb_ac.py) are commented out. Write intermediate values to a file if you need to inspect them.
 :::
 
+### Parallel Parameter Sweeps in Xschem {#sec-parallel-sweep}
+
+CACE characterises a finished design. While the transistors are still being sized, a sweep over device parameters straight from Xschem is often quicker. The PDK ships an example for this, the testbench [`inv_sweep_tb.sch`](https://github.com/IHP-GmbH/IHP-Open-PDK/blob/dev/ihp-sg13g2/libs.tech/xschem/sg13g2_tests/inv_sweep_tb.sch) in `$PDK_ROOT/ihp-sg13g2/libs.tech/xschem/sg13g2_tests/`. [IHP-Open-PDK PR 546](https://github.com/IHP-GmbH/IHP-Open-PDK/pull/546), which added it, shows the testbench schematic and its plots.
+
+Its **SimulatePARALLEL** launcher (**`Ctrl`**-click) netlists the testbench and calls the Python script `ngspice_parallel_sweep.py` from the same folder, which runs one Ngspice simulation per combination of the swept parameters on a pool of parallel worker processes and plots the results with Matplotlib. Two code blocks of the testbench control the run:
+
+- `SWEEP_SETTINGS` lists the swept parameters between `**parameter_sweep_begin` and `**parameter_sweep_end`, for example `**m1_w_val=Auto:0.1u:20:10u` for 20 points from 0.1 µm to 10 µm (`Lin`, `Dec` and `Log` sweeps exist as well), the number of workers `**nr_workers`, and the results to plot.
+- `SWEEP_SIM` holds the Ngspice control block. Every value it prints between `echo results_sweep_begin` and `echo results_sweep_end` lands in a CSV file in `simulations/results/`.
+
+A swept parameter appears in braces in a device property, for example `w={m1_w_val}`, and the script replaces it with the value of each run. @fig-inv-sweep-tb shows the plots of the example, 20 widths of $M_1$ times 5 widths of $M_2$, 100 runs in total.
+
+![Plots of the SG13G2 testbench `inv_sweep_tb.sch`: passband gain, lower and upper cut-off frequency, and gain-bandwidth product over the widths of $M_1$ (`m1_w_val`) and $M_2$ (`m2_w_val`).](fig/inverter_top/inv_sweep_tb_results.svg){#fig-inv-sweep-tb width=100%}
+
+::: {.callout-note}
+The script reads the netlist from `./simulations/`, relative to the folder Xschem was started in, and the PDK folder is read-only. Copy the testbench into `testbenches/xschem/` and start Xschem there. Set `nr_workers` to the number of CPU cores of your machine, the example sets 50. The sweep runs only from the GUI, no Makefile target calls it, so use it to explore and CACE to characterise.
+:::
+
 ## Transistor Sizing {#sec-sizing}
 
 During simulation, it could happen that some specifications are not fulfilled and that the inverter must be resized. In this tutorial, the inverter is sized with the $g_\mathrm{m}/I_\mathrm{D}$ method (see [Transistor Sizing Using $g_\mathrm{m}/I_\mathrm{D}$ Methodology](https://iic-jku.github.io/analog-circuit-design/aicd.html#sec-gmid-method) for theoretical background). Instead of relying on textbook square-law equations, the method looks up the actual device behaviour from pre-characterised SPICE simulations, parameterised by $g_\mathrm{m}/I_\mathrm{D}$. An overview of these techsweeps can be found in the folder [`doc/sizing/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/doc/sizing). The chosen $g_\mathrm{m}/I_\mathrm{D}$ point sets the inversion level of the transistor and therefore the trade-off between intrinsic gain (high $g_\mathrm{m}/I_\mathrm{D}$, weak inversion) and bandwidth (low $g_\mathrm{m}/I_\mathrm{D}$, strong inversion). These trade-offs are discussed in @sec-tradeoffs. For each chosen operating point the lookup tables return all relevant figures of merit ($I_\mathrm{D}/W$, $g_\mathrm{m}/g_\mathrm{ds}$, $g_\mathrm{m}/C_\mathrm{gg}$, $S_\mathrm{TH}$, etc.) at the actual bias condition, which is then used to compute $W$ for a given drain current.

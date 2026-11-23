@@ -304,6 +304,12 @@ Result plots are saved to:
   - `Adc_ol_dB_mc.png`, `fcu_mc.png`
   - `Adc_ol_dB_vs_vdd.png`, `fcu_vs_vdd.png`
 
+> [!NOTE]
+> CACE characterizes the finished inverter. To sweep device sizes quickly during the design, the PDK ships the Xschem testbench `inv_sweep_tb.sch` in `$PDK_ROOT/ihp-sg13g2/libs.tech/xschem/sg13g2_tests/`. [IHP-Open-PDK PR 546](https://github.com/IHP-GmbH/IHP-Open-PDK/pull/546), which added it, shows the testbench and its plots.
+> A `Ctrl`-click on its `SimulatePARALLEL` launcher runs `ngspice_parallel_sweep.py` from the same folder, which simulates every combination of the parameters swept in the `SWEEP_SETTINGS` code block on `nr_workers` parallel ngspice processes, writes the results to `simulations/results/` and plots them with Matplotlib.
+> The script reads the netlist from `./simulations/` and the PDK folder is read-only, so copy the testbench into `testbenches/xschem/` and start Xschem there. Set `nr_workers` to the number of CPU cores of your machine, the example sets 50.
+> The sweep runs only from the GUI, no Makefile target calls it.
+
 
 ### Simulate All
 
