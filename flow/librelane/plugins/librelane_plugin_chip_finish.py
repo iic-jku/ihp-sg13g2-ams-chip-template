@@ -4,6 +4,7 @@
 """Chip finishing steps of the LibreLane chip flow: logo and fill.
 
 ChipFinish.Logo and ChipFinish.Fill write the view logo_fill_gds, the file <DESIGN_NAME>_logo_fill.gds with the top cell <DESIGN_NAME>_logo_fill around the chip, the logo and the fill. The GDS view keeps the unfilled chip, so --save-views-to writes both files into its gds/ folder.
+ChipFinish.FillInPlace fills the GDS view itself instead, for a chip whose flow GDS is the tapeout GDS.
 LibreLane loads this module because its folder is on PYTHONPATH, see LIBRELANE in the Makefile.
 """
 
@@ -170,6 +171,10 @@ class Fill(Step):
     inputs = [LOGO_FILL_GDS]
     outputs = [LOGO_FILL_GDS]
 
+    # The view this step fills and the suffix of its top cell and file name after DESIGN_NAME
+    view = LOGO_FILL_GDS
+    suffix = "_logo_fill"
+
     config_vars = [
         Variable(
             "CHIP_FINISH_FILLER",
@@ -214,21 +219,22 @@ class Fill(Step):
         env["PDK_ROOT"] = self.config["PDK_ROOT"]
         env["PDK"] = self.config["PDK"]
 
-        in_gds = str(state_in[LOGO_FILL_GDS])
-        out_gds = os.path.join(self.step_dir, f"{self.config['DESIGN_NAME']}_logo_fill.gds")
+        in_gds = str(state_in[self.view])
+        top_name = f"{self.config['DESIGN_NAME']}{self.suffix}"
+        out_gds = os.path.join(self.step_dir, f"{top_name}.gds")
 
         filler = self.config["CHIP_FINISH_FILLER"]
         info(f"Filling with {filler}…")
         if filler == "klayout":
             self.fill_klayout(in_gds, out_gds, env)
         elif filler == "magic":
-            self.fill_magic(in_gds, out_gds, env)
+            self.fill_magic(in_gds, out_gds, top_name, env)
         else:
             self.fill_gdsfill(in_gds, out_gds, env)
 
         self.check_and_outline(out_gds, filler)
 
-        return {LOGO_FILL_GDS: Path(out_gds)}, {}
+        return {self.view: Path(out_gds)}, {}
 
     def fill_klayout(self, in_gds: str, out_gds: str, env: Dict[str, str]):
         script = self.config["KLAYOUT_FILLER_SCRIPT"]
@@ -261,13 +267,18 @@ class Fill(Step):
             env = {**env, "PDK_ROOT": root}
 
         defines = [arg for key, value in (self.config["KLAYOUT_FILLER_DEFINES"] or {}).items() for arg in ("-rd", f"{key}={value}")]
+        # The two calls of LibreLane's KLayout.Filler: the IHP filler.py takes the input as the layout to open, other PDKs' scripts (gf180mcuD's fill_all.rb) take -rd input
+        if self.config["PDK"] in ("ihp-sg13g2", "ihp-sg13cmos5l"):
+            io_args = ["-rd", f"output_file={out_gds}", *defines, in_gds]
+        else:
+            io_args = ["-rd", f"input={in_gds}", "-rd", f"output={out_gds}", *defines]
         self.run_subprocess(
-            ["klayout", "-b", "-zz", "-r", str(script), "-rd", f"output_file={out_gds}", *defines, in_gds],
+            ["klayout", "-b", "-zz", "-r", str(script), *io_args],
             log_to=os.path.join(self.step_dir, "klayout_filler.log"),
             env=env,
         )
 
-    def fill_magic(self, in_gds: str, out_gds: str, env: Dict[str, str]):
+    def fill_magic(self, in_gds: str, out_gds: str, top_name: str, env: Dict[str, str]):
         script = self.config["MAGIC_FILLER_SCRIPT"]
         if script is None:
             raise StepError(f"MAGIC_FILLER_SCRIPT is unset, the Magic filler does not support {self.config['PDK']}.")
@@ -275,7 +286,6 @@ class Fill(Step):
         # generate_fill.py loads the cell named like the GDS file and writes its tiles and <name>_fill_pattern.gds.gz next to it, the only output name every PDK's version accepts
         work = os.path.join(self.step_dir, "magic")
         os.makedirs(work, exist_ok=True)
-        top_name = f"{self.config['DESIGN_NAME']}_logo_fill"
         top_gds = os.path.join(work, f"{top_name}.gds")
         fill_gds = os.path.join(work, f"{top_name}_fill_pattern.gds.gz")
         shutil.copyfile(in_gds, top_gds)
@@ -372,3 +382,19 @@ class Fill(Step):
         if outline := self.config["CHIP_FINISH_DIE_OUTLINE_LAYER"]:
             top.shapes(layout.layer(*_layer(outline))).insert(top.bbox())
         layout.write(gds)
+
+
+@Step.factory.register()
+class FillInPlace(Fill):
+    """
+    Fills the GDS of the flow itself in place of KLayout.Filler, for a chip whose flow GDS is the tapeout GDS and is checked by the flow's own density and DRC steps (the wafer.space slots of gf180mcuD).
+    """
+
+    id = "ChipFinish.FillInPlace"
+    name = "Fill in Place"
+
+    inputs = [DesignFormat.GDS]
+    outputs = [DesignFormat.GDS]
+
+    view = DesignFormat.GDS
+    suffix = ""
