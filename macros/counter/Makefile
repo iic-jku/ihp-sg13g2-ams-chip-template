@@ -127,7 +127,7 @@ _COCOTB_FST = $(COCOTB_DIR)/sim_build/$(if $(filter verilator,$(SIM)),dump,$(CEL
 
 # Help Target
 help: ## Show this help message
-	@echo 'Usage: make <target> [CELL=<cellname>] [EXT_MODE=<1|2|3>] [KPEX_REDUCE=<none|floating|ticer>] [PEX_SUB_NET=<net>] [CTHRESH=<fF>] [THRESHOLD=<mOhm>] [MINRES=<mOhm>] [MINDELAY=<ps>] [WAVEFORM_VIEWER=<gtkwave|surfer>] [SIM=<icarus|verilator>] [SDF_CORNER=<corner>] [SDF_TRIPLE=<min|typ|max>] [TB=<testbenchname>] [SCRIPT=<scriptname>] [OPEN_ARGS=<options>] [FORCE=1]'
+	@echo 'Usage: make <target> [CELL=<cellname>] [EXT_MODE=<1|2|3>] [KPEX_REDUCE=<none|floating|ticer>] [PEX_SUB_NET=<net>] [CTHRESH=<fF>] [THRESHOLD=<mOhm>] [MINRES=<mOhm>] [MINDELAY=<ps>] [WAVEFORM_VIEWER=<gtkwave|surfer>] [SIM=<icarus|verilator>] [SDF_CORNER=<corner>] [SDF_TRIPLE=<min|typ|max>] [TB=<testbenchname>] [TB_RTL=<testbenchname>] [SCRIPT=<scriptname>] [OPEN_ARGS=<options>] [FORCE=1]'
 	@echo ''
 	@echo 'Available targets:'
 	@grep -E '^[a-zA-Z0-9_.-]+:.*## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*## "}; {printf "  %-20s %s\n", $$1, $$2}'
@@ -143,6 +143,7 @@ help: ## Show this help message
 	@echo 'SDF_CORNER selects the LibreLane corner of the SDF file for sim-gl-sdf-cocotb (default: $(SDF_CORNER)).'
 	@echo 'SDF_TRIPLE selects the min, typ or max value of each SDF delay for sim-gl-sdf-cocotb (default: typ).'
 	@echo 'TB selects the Xschem testbench for sim-gl-xschem (default: <CELL>_tb_tran).'
+	@echo 'TB_RTL selects the Xschem testbench for sim-rtl-xschem (default: <CELL>_tb_tran_rtl).'
 	@echo 'SCRIPT selects the plotting script for sim-view-xschem (default: plot_<CELL>).'
 	@echo 'OPEN_ARGS passes extra options to sak-open.py for the open target (e.g. --all).'
 	@echo 'FORCE=1 lets symbol-gl overwrite an existing symbol instead of refusing.'
@@ -176,6 +177,9 @@ lint-verilog-all: ## Lint all Verilog source files (counter, counter_top)
 # Testbench for the Xschem simulation targets (default: <CELL>_tb_tran)
 # Override with: make <target> TB=<testbenchname>
 TB ?= $(CELL)_tb_tran
+# Testbench for sim-rtl-xschem (default: <CELL>_tb_tran_rtl)
+# Override with: make sim-rtl-xschem TB_RTL=<testbenchname>
+TB_RTL ?= $(CELL)_tb_tran_rtl
 # Plotting script for sim-view-xschem (default: plot_<CELL>)
 # Override with: make <target> SCRIPT=<scriptname>
 SCRIPT ?= plot_$(CELL)
@@ -227,6 +231,22 @@ sim-view-cocotb: ## View CELL cell cocotb simulation waveforms (usage: make sim-
 	fi
 .PHONY: sim-view-cocotb
 
+# The RTL has no `timescale, and without one Icarus Verilog counts in seconds and the counter never sees a clock edge.
+# +timescale+ gives every module without a `timescale the one of the Verilog testbench.
+sim-rtl-xschem: ## Run RTL simulation of CELL cell with Xschem in batch mode, the RTL runs in Icarus Verilog inside ngspice (usage: make sim-rtl-xschem [CELL=<cellname>] [TB_RTL=<testbenchname>])
+	mkdir -p $(XSCHEM_TB_DIR)/simulations
+	mkdir -p $(SIM_PLOT_DIR)/data
+	echo '+timescale+1ns/1ps' > $(XSCHEM_TB_DIR)/simulations/timescale.f
+	iverilog -g2012 -DSIM -s $(CELL) -c $(XSCHEM_TB_DIR)/simulations/timescale.f -o $(XSCHEM_TB_DIR)/simulations/$(CELL).vvp $(_SIM_SRCS)
+	cd $(XSCHEM_TB_DIR) && xschem -r -x -q --rcfile xschemrc --command ' \
+		xschem set netlist_type spice; \
+		set netlist_dir $(abspath $(XSCHEM_TB_DIR)/simulations); \
+		xschem save; \
+		xschem netlist \
+	' $(TB_RTL).sch
+	cd $(XSCHEM_TB_DIR)/simulations && ngspice -b $(TB_RTL).spice
+.PHONY: sim-rtl-xschem
+
 sim-gl-xschem: ## Run gate-level simulation of CELL cell with Xschem in batch mode (usage: make sim-gl-xschem [CELL=<cellname>] [TB=<testbenchname>])
 	mkdir -p $(XSCHEM_TB_DIR)/simulations
 	mkdir -p $(SIM_PLOT_DIR)/data
@@ -244,9 +264,10 @@ sim-view-xschem: ## Plot Xschem simulation results (usage: make sim-view-xschem 
 	SHOW_PLOTS=1 python3 $(SIM_PLOT_DIR)/$(SCRIPT).py
 .PHONY: sim-view-xschem
 
-sim-all: ## Simulate the macro (RTL Verilog + RTL/GL/timed GL cocotb + GL Xschem for counter_top)
+sim-all: ## Simulate the macro (RTL Verilog + RTL cocotb + RTL Xschem + GL/timed GL cocotb + GL Xschem for counter_top)
 	$(MAKE) sim-rtl-verilog
 	$(MAKE) sim-rtl-cocotb
+	$(MAKE) sim-rtl-xschem
 	$(MAKE) sim-gl-cocotb
 	$(MAKE) sim-gl-sdf-cocotb
 	$(MAKE) sim-gl-xschem
