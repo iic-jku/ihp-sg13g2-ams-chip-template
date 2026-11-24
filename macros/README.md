@@ -115,7 +115,7 @@ The new macro still implements the copied design under its new name. What follow
 
 There is no central macro list. A new macro is added in these places, all relative to the repository root:
 
-1. `Makefile`: a `build-<NAME>` target, its line in `build-macros`, and a `clean` line in `clean-all`.
+1. `Makefile`: a `build-<NAME>` target, its line in `build-macros`, and a `clean` line in `clean-all`. For `sim-gl-power-cocotb`, a macro hardened as a netlist adds its final netlist to `POWER_NETLISTS` and its cell name with its nominal SPEF to `POWER_MACRO_SPEFS`, and a hard macro with power data adds its Liberty file of the default corner to `POWER_LIBS`. A macro left out counts as 0 W in the report, without an error.
 2. `rtl/chip_core.sv`: instantiate the macro.
 3. `flow/librelane/config.yaml`: a `MACROS` entry with the view paths (`dir::../../macros/<NAME>/final/...`) and the instance placement. The placement of an analog macro snaps to the Metal3 routing grid, see [doc/floorplan.md](../doc/floorplan.md).
 4. `flow/librelane/pdn_cfg.tcl`: a `define_pdn_grid -macro` block when the power pins of the macro are not on the layers of the default grid, see the `inverter_top` blocks at the end of the file.

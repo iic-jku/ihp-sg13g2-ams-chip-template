@@ -256,6 +256,7 @@ The [top-level Makefile](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template
 | `make open`         | Open the design files of this folder in the `sak-open.py` file browser (needs the VNC/X11 desktop).    |
 | `make init-submodules` | Initialise and update git submodules (for example the ArtistIC logo flow).                         |
 | `make sim-rtl-cocotb` / `sim-gl-cocotb` | Run the RTL / gate-level (GL) cocotb testbench for the top-level.                       |
+| `make sim-gl-power-cocotb` | Estimate the power of the chip with OpenSTA from the switching activity of the GL cocotb simulation. |
 | `make sim-gl-xschem` | Run the gate-level Xschem testbench in batch mode (`TB` defaults to `<CELL>_tb_tran`). Part of `sim-all`, but it may take a long time depending on the hardware used. |
 | `make sim-view-cocotb` | Open the latest cocotb waveform in GTKWave (or Surfer with `WAVEFORM_VIEWER=surfer`).              |
 | `make librelane` / `librelane-nodrc` | Run the LibreLane flow for the top-level (with / without DRC steps).                  |
@@ -285,6 +286,7 @@ The [counter Makefile](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/b
 | `make sim-rtl-verilog`                            | Run the testbench with Icarus Verilog (`<CELL>_tb.sv`, falling back to `<CELL>_tb.v`). |
 | `make sim-rtl-cocotb` / `sim-gl-cocotb`           | Run the cocotb RTL / gate-level simulation.                                 |
 | `make sim-gl-sdf-cocotb`                          | Run the cocotb gate-level simulation with the SDF delays of the layout.     |
+| `make sim-gl-power-cocotb`                        | Estimate the power of the final netlist with OpenSTA from the switching activity of the gate-level simulation. |
 | `make sim-view-verilog` / `sim-view-cocotb`       | Open the latest waveform in GTKWave or Surfer.                              |
 | `make librelane` (and `-nodrc`, `-magicdrc`, …)   | Run the LibreLane flow for the counter macro.                               |
 | `make symbol-gl` (`FORCE=1`)                      | Scaffold the Xschem symbol `<CELL>.sym` from the ports of `netlist/pnl/<CELL>.pnl.v`. For a new macro, refuses to overwrite an existing symbol. |
@@ -434,6 +436,7 @@ The [cocotb](https://www.cocotb.org/) testbench ([`counter_top_tb.py`](https://g
 make sim-rtl-cocotb                # RTL simulation
 make sim-gl-cocotb                 # gate-level simulation of the final netlist
 make sim-gl-sdf-cocotb             # gate-level simulation with the SDF delays of the layout
+make sim-gl-power-cocotb           # power of the final netlist from the gate-level simulation
 make sim-view-cocotb               # view in GTKWave
 make sim-view-cocotb WAVEFORM_VIEWER=surfer
 ```
@@ -2717,6 +2720,7 @@ The same RTL and gate-level cocotb flow as in @sec-digital is available at top l
 ```sh
 make sim-rtl-cocotb
 make sim-gl-cocotb
+make sim-gl-power-cocotb                            # power of the chip from the gate-level simulation
 make sim-view-cocotb                                # use GTKWave as waveform viewer
 make sim-view-cocotb WAVEFORM_VIEWER=surfer         # use Surfer as waveform viewer
 ```
