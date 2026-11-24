@@ -27,10 +27,10 @@ puts $f "Liberty: [join [lmap lib $::env(POWER_LIBS) {file tail $lib}] {, }]"
 puts $f ""
 close $f
 report_activity_annotation >> $rpt
-report_power -digits 4 >> $rpt
+report_power -digits 3 >> $rpt
 set macros [get_cells -hierarchical -filter "is_hierarchical == true || is_memory == true"]
 if {[llength $macros] > 0} {
-	report_power -digits 4 -instances $macros >> $rpt
+	report_power -digits 3 -instances $macros >> $rpt
 }
 
 # read_vcd reports no error when its scope or the netlist does not match the simulation, and every pin it misses keeps the default activity
