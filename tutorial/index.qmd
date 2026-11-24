@@ -478,7 +478,9 @@ The gate-level simulation knows the activity of every net, and `make sim-gl-powe
 
 : Inputs of `make sim-gl-power-cocotb` for the counter. {#tbl-counter-power-inputs}
 
-The target runs `make sim-gl-cocotb`, converts its waveform with `fst2vcd`, since Icarus Verilog writes FST for cocotb and OpenSTA reads only VCD, and runs OpenSTA with [`scripts/sim_gl_power.tcl`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/counter/scripts/sim_gl_power.tcl). The Makefile passes the files in environment variables, so the same script serves the macro and the chip (@sec-top-power). Without the report header and the macros of the chip, it reads:
+![Flow of `make sim-gl-power-cocotb`, the same for the counter and the chip. The netlist of the LibreLane run feeds both the gate-level simulation and OpenSTA, which takes the activity of every pin from the waveform.](fig/power_flow/power_flow.svg){#fig-power-flow}
+
+As @fig-power-flow shows, the target runs `make sim-gl-cocotb`, converts its waveform with `fst2vcd`, since Icarus Verilog writes FST for cocotb and OpenSTA reads only VCD, and runs OpenSTA with [`scripts/sim_gl_power.tcl`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/counter/scripts/sim_gl_power.tcl). The Makefile passes the files in environment variables, so the same script serves the macro and the chip (@sec-top-power). Without the report header and the macros of the chip, it reads:
 
 ```tcl
 foreach lib $::env(POWER_LIBS) {
