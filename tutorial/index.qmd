@@ -462,6 +462,64 @@ make sim-gl-sdf-cocotb SDF_CORNER=nom_fast_1p65V_m40C SDF_TRIPLE=min  # fast cor
 
 It does not replace static timing analysis. Icarus Verilog checks no setup or hold times, so a path fails only if a flip-flop captures a wrong value, and the signoff of the macro rests on STA. The VLSI design course explains the method in [With Delays from an SDF File](https://iic-jku.github.io/vlsi-design/vlsi.html#sec-verification-gl-sdf) and the post-layout case in [Post-Layout Simulation](https://iic-jku.github.io/vlsi-design/vlsi.html#sec-digital-flow-postlayout). The [counter README](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/counter/README.md#timed-gate-level-cocotb-simulation) lists the messages of a clean run and how to check that the delays arrived.
 
+### Gate-level power estimation {#sec-gl-power}
+
+LibreLane reports the power of the macro after place and route, for the default corner in [`verification/stapostpnr_nom_typ_1p50V_25C_power.rpt`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/counter/verification/stapostpnr_nom_typ_1p50V_25C_power.rpt). OpenSTA computes it from the Liberty file, which gives the input capacitance, the internal energy per transition and the leakage of each cell, from the wire capacitance of the layout, and from the activity of each net: how often it toggles and how long it is high. LibreLane runs no simulation, so OpenSTA assumes that every input toggles in one of ten clock cycles and is high half of the time, and it propagates these values through the logic. The VLSI design course explains the parts of the power and this analysis in [Power Consumption](https://iic-jku.github.io/vlsi-design/vlsi.html#sec-synth-opt-power).
+
+The gate-level simulation knows the activity of every net, and `make sim-gl-power-cocotb` hands it to OpenSTA. The target needs five inputs (@tbl-counter-power-inputs). The Liberty file, the SPEF and the SDC belong to the default corner `nom_typ_1p50V_25C` of the LibreLane run, and `make copy-final` copies the netlist, the SPEF and the SDC from that run.
+
+| Input | File | What OpenSTA takes from it |
+| --- | --- | --- |
+| Liberty file | `sg13g2_stdcell_typ_1p50V_25C.lib.gz` of the PDK | the capacitance, the internal power and the leakage of each cell |
+| Netlist | [`final/nl/counter_top.nl.v`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/counter/final/nl/) | the cells and their nets, the netlist of the simulation |
+| SPEF | [`final/spef/nom/counter_top.nom.spef`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/counter/final/spef/) | the capacitance of each wire in the layout |
+| SDC | [`final/sdc/counter_top.sdc`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/counter/final/sdc/) | the clock period, the drivers of the inputs and the loads of the outputs |
+| Waveform | `testbenches/cocotb/sim_build/counter_top.vcd` | the toggles and the high time of each pin in the simulation |
+
+: Inputs of `make sim-gl-power-cocotb` for the counter. {#tbl-counter-power-inputs}
+
+The target runs `make sim-gl-cocotb`, converts its waveform with `fst2vcd`, since Icarus Verilog writes FST for cocotb and OpenSTA reads only VCD, and runs OpenSTA with [`scripts/sim_gl_power.tcl`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/counter/scripts/sim_gl_power.tcl). The Makefile passes the files in environment variables, so the same script serves the macro and the chip (@sec-top-power). Without the report header and the macros of the chip, it reads:
+
+```tcl
+foreach lib $::env(POWER_LIBS) {
+	read_liberty $lib
+}
+foreach netlist $::env(POWER_NETLISTS) {
+	read_verilog $netlist
+}
+link_design $::env(POWER_TOP)
+read_spef $::env(POWER_SPEF)
+read_sdc $::env(POWER_SDC)
+read_vcd -scope $::env(POWER_TOP) $::env(POWER_VCD)
+report_activity_annotation >> $rpt
+report_power -digits 3 >> $rpt
+```
+
+The gate-level waveform holds every pin of the netlist under its instance name, so `read_vcd` finds all 219 pins of the counter and gives each pin the toggle rate and the high time of the simulation. A waveform of the RTL would not do, since synthesis renames and removes nets, and only the ports would match. If the scope or the netlist does not match the waveform, `read_vcd` reports no error, and every pin it misses keeps the default activity. The script therefore looks for the line `unannotated 0` of `report_activity_annotation` and fails without it. OpenSTA also takes the clock from the SDC and every other toggle rate from the waveform, so the testbench has to run at the clock of the SDC, 50 MHz here.
+
+```sh
+make sim-gl-power-cocotb
+```
+
+The report [`verification/sim_gl_power_cocotb.rpt`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/counter/verification/sim_gl_power_cocotb.rpt) sorts the cells into the same groups as the LibreLane report (@tbl-counter-power).
+
+| Group | LibreLane `power.rpt` | `sim_gl_power_cocotb.rpt` |
+| --- | ---: | ---: |
+| `Clock`, the clock tree | 48.0 µW | 48.0 µW |
+| `Sequential`, the flip-flops | 34.4 µW | 42.3 µW |
+| `Combinational`, the logic | 4.6 µW | 16.3 µW |
+| Total | 86.9 µW | 106.7 µW |
+
+: Power of `counter_top` at `nom_typ_1p50V_25C` and 50 MHz, without and with the activity of the gate-level simulation. {#tbl-counter-power}
+
+The clock tree costs the same in both, 45 % of the simulated total, because the clock toggles twice per cycle whatever the counter does. The flip-flops and the logic depend on the stimulus. The testbench counts in most cycles, so bit 0 toggles in almost every cycle, while the default activity also toggles the reset and keeps the counter in reset half of the time. With the reset held inactive by `set_power_activity -input_ports reset_n_i -activity 0 -duty 1`, as in the VLSI design course, the estimate without simulation rises by 33 %, above the simulated value. A default activity can miss in either direction, and the simulation replaces it with the activity of a real stimulus.
+
+The estimate has three limits:
+
+- It is the mean over the whole testbench run, reset and idle phases included. For the power of one operating mode, run a test that stays in that mode.
+- The gate-level simulation has no delays, so it shows no glitches, the short pulses at the output of a gate whose inputs change at different times. Their power is missing.
+- Each output drives the 6 fF of `OUTPUT_CAP_LOAD` in the SDC, not the load of its real environment.
+
 ## LibreLane Hardening
 
 The LibreLane flow synthesises, places, and routes the macro, runs the verification steps, and writes its final output files to `flow/final/`. The wrapper target `make build-top` runs the flow, renders the final GDS, and copies the reports, final folders, netlists, and render output back into the source tree.
@@ -2766,6 +2824,39 @@ When the testbench is opened in Xschem, the schematic of `chip_top` can be inspe
 ![Xschem symbol of `chip_top`, showing the pinout of the chip.](fig/chip_top/chip_top_symbol.svg){#fig-chip-top-symbol width=60%}
 
 ![Xschem schematic of `chip_top`, showing the connections between the padframe and the core macros.](fig/chip_top/chip_top_schematic.svg){#fig-chip-top-schematic}
+
+### Gate-Level Power Estimation {#sec-top-power}
+
+LibreLane reports the power of the chip in [`verification/reports/stapostpnr_nom_typ_1p50V_25C_power.rpt`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/verification/reports/stapostpnr_nom_typ_1p50V_25C_power.rpt), but it counts both counters with 0 W: the Liberty file that LibreLane writes for a hardened macro, [`final/lib/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/counter/final/lib/) of the counter, holds its timing but no power. The inverters have no Liberty file at all. `make sim-gl-power-cocotb` estimates the power of the chip from `make sim-gl-cocotb` with the script of @sec-gl-power and three more inputs:
+
+- The Liberty files of the IO cells and the SRAM, the same files that LibreLane reads at the default corner. The PDK has no SRAM model at 1.5 V, so the script uses the one for 1.32 V and -55 °C, like LibreLane.
+- The final netlist of `counter_top` next to the chip netlist, so OpenSTA sees the cells inside both counters and needs no power model of the macro.
+- The SPEF of `counter_top`, read once per instance with `-path` after the SPEF of the chip, so each counter keeps the wire capacitance of its own layout:
+
+```tcl
+read_spef $::env(POWER_SPEF)
+foreach {cell spef} $::env(POWER_MACRO_SPEFS) {
+	foreach inst [get_cells -hierarchical -filter "ref_name == $cell"] {
+		read_spef -path [get_full_name $inst] $spef
+	}
+}
+```
+
+The chip netlist, SPEF and SDC come from [`netlist/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/netlist/), where `make copy-netlist` puts them at the end of `make build-top`, and the counter views from `macros/counter/final/`. [`macros/README.md`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/README.md#register-the-macro-at-the-chip-top-level) lists what a new macro adds to these inputs. The cells of the counters land in the groups `Sequential`, `Combinational` and `Clock` together with the cells of the chip, so the report [`verification/reports/sim_gl_power_cocotb.rpt`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/verification/reports/sim_gl_power_cocotb.rpt) also lists the power of each macro instance (@tbl-chip-power).
+
+| Part | Power | Share |
+| --- | ---: | ---: |
+| IO cells (`Pad`) | 6.15 mW | 63.6 % |
+| SRAM `sram_0` (`Macro`) | 3.10 mW | 32.0 % |
+| `counter1` and `counter2` | 112 and 113 µW | 2.3 % |
+| Rest of the core | 0.20 mW | 2.1 % |
+| Total | 9.67 mW | 100 % |
+
+: Power of `chip_top` at `nom_typ_1p50V_25C` and 50 MHz from the gate-level simulation. {#tbl-chip-power}
+
+Each counter takes close to the 107 µW of the macro alone under its own testbench. The rest of the core is mostly the leakage of the decap cells that fill the empty core, which the report counts under `Clock`. The IO cells take most of the power, above all the output pads of the counter bits. Each toggle of a pad costs far more energy than a toggle in the core, so the pads of bit 0 of the two counters take 1.45 mW each, since bit 0 toggles in almost every cycle, and each higher bit takes half as much as the bit below. The IO cells cost 27 times as much as the two counters.
+
+The limits of @sec-gl-power hold here too. In addition, the inverters count with 0 W, each pad drives the 6 fF of `OUTPUT_CAP_LOAD` instead of a board, and the SRAM model belongs to another corner than the standard cells.
 
 ## Building the Chip
 
