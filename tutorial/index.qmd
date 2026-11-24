@@ -233,7 +233,7 @@ Each macro under [`macros/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-temp
 
 The colour scheme groups targets by the final deliverable they produce, so beginners can follow one colour from `make all` to the generated outputs:
 
-- **Orange (top chip / main)**: This branch includes `make all` and all targets that contribute to the top-level chip GDS. In the `build-top` chain of the [top-level Makefile](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/Makefile), these are `librelane-nodrc`, `copy-*`, `add-logo-fill`, and `render-gds`.
+- **Orange (top chip / main)**: This branch includes `make all` and all targets that contribute to the top-level chip GDS. In the `build-top` chain of the [top-level Makefile](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/Makefile), these are `librelane-nodrc` (with the logo and fill steps), `copy-*`, and `render-gds`.
 - **Yellow (bondpad IP)**: This branch includes `build-bondpad` and all targets inside [`ip/sg13g2_ip__bondpad_70x70/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/ip/sg13g2_ip__bondpad_70x70/).
 - **Teal (RF pad IP)**: This branch includes `build-rfpad` and all targets inside [`ip/sg13g2_ip__rfpad_70x70/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/ip/sg13g2_ip__rfpad_70x70/).
 - **Purple (logos IP)**: This branch includes `build-logos` and the three sub-Makefiles under [`ip/sg13g2_ip__jku/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/ip/sg13g2_ip__jku/), [`ip/sg13g2_ip__jku_names/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/ip/sg13g2_ip__jku_names/) and [`ip/sg13g2_ip__template_name/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/ip/sg13g2_ip__template_name/).
@@ -263,7 +263,7 @@ The [top-level Makefile](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template
 | `make copy-reports` / `copy-gds` / `copy-netlist` / `copy-render` | Copy the latest LibreLane artifacts back into the source tree. |
 | `make build-bondpad` / `build-rfpad` / `build-logos` | Build the bondpad, the RF pad and the logos under `ip/`.         |
 | `make build-counter` / `build-inverter` / `build-macros` | Build the digital and analog macros individually or together. |
-| `make build-top`    | Run LibreLane on the top-level, copy back all artifacts, add logos and fill structures, and render the final GDS. |
+| `make build-top`    | Run LibreLane on the top-level with logos and fill structures, copy back all artifacts, and render the final GDS. |
 | `make build-all`    | Init submodules, build bondpad, build RF pad, build logos, build macros, and build top-level.             |
 | `make klayout-verify` / `magic-verify` | Run DRC, LVS, and PEX with KLayout, or LVS and PEX with Magic, for a given cell.   |
 | `make gdscheck-drc` (`DRC_LEVEL=<precheck|macro|regular>`, `GDSCHECK_SUITE=<suite>` or `GDSCHECK_DECKS=<decks>`) | Run the standalone gdscheck DRC for a given cell. |
@@ -2631,17 +2631,17 @@ The die size follows from two limits, and the larger one wins:
 - **The pads.** Each side offers the die width minus 2 × (140 µm + 180 µm) between its corner cells, 960 µm on this chip, and each IO cell is 80 µm wide. The eight pads of a side take 640 µm, and `OpenROAD.PadRing` spreads the remaining 320 µm as gaps. The comment above `PAD_SPACING_MULTIPLE` in `config.yaml` shows the arithmetic that keeps them on the IO site grid. Pads closer together give a smaller die, but the package and the bond wires limit the pitch: plan it with PREP-IC (@sec-prep-ic) and check the bond wires with `make bondplan` (@sec-packaging).
 - **The core.** The core is the die minus 2 × 365 µm, 870 µm × 870 µm here. It has to hold every macro with its 10 µm halo (`FP_MACRO_HORIZONTAL_HALO` and `FP_MACRO_VERTICAL_HALO`), the standard cells of `chip_core.sv` and the routing channels between the macros and towards the pads. `PL_TARGET_DENSITY_PCT` is only 10, because this core holds little logic outside the macros. Raise it for a core with more logic, with the same method as for a macro (@sec-hardening-sizing).
 
-A new `DIE_AREA` or `CORE_AREA` has to be carried into four more files: the `DIE_*` and `CORE_*` variables of [`scripts/add_logo_fill.sh`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/scripts/add_logo_fill.sh), which place the chip logo, [`doc/floorplan.md`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/doc/floorplan.md), [`doc/specifications.md`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/doc/specifications.md) and the PREP-IC project [`doc/prep-ic/chip_top.json`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/doc/prep-ic/chip_top.json). The logo macros are placed with `expr::` relative to `DIE_AREA` and follow on their own. The other macros sit at absolute positions or relative to the core origin of 365 µm (`expr::365 + 70`), so move them by hand. The standard cell rows start at the lower core edge, so a new `CORE_AREA` also shifts the rows under the macros. Check every macro against the rule "Rows cut at `VSS` rails" of "Constraints when editing the floorplan" in `doc/floorplan.md`, which keeps the macro halos from cutting a row at a `VDD` rail.
+A new `DIE_AREA` or `CORE_AREA` has to be carried into three more files: [`doc/floorplan.md`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/doc/floorplan.md), [`doc/specifications.md`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/doc/specifications.md) and the PREP-IC project [`doc/prep-ic/chip_top.json`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/doc/prep-ic/chip_top.json). The logo macros are placed with `expr::` relative to `DIE_AREA`, and the chip logo with `CHIP_FINISH_LOGO_POSITION` relative to `CORE_AREA`, so they follow on their own. The other macros sit at absolute positions or relative to the core origin of 365 µm (`expr::365 + 70`), so move them by hand. The standard cell rows start at the lower core edge, so a new `CORE_AREA` also shifts the rows under the macros. Check every macro against the rule "Rows cut at `VSS` rails" of "Constraints when editing the floorplan" in `doc/floorplan.md`, which keeps the macro halos from cutting a row at a `VDD` rail.
 
-A floorplan change can be checked within a minute, without the full flow. The following command stops LibreLane after the PDN, and `make librelane-openroad` shows that run in the OpenROAD GUI.
+A floorplan change can be checked within a minute, without the full flow. The following command stops LibreLane after the PDN, and `make librelane-openroad` shows that run in the OpenROAD GUI. `PYTHONPATH` lets LibreLane find the chip finishing steps of `flow/librelane/plugins/`, which `config.yaml` names.
 
 ```sh
-librelane flow/librelane/config.yaml --pdk ${PDK} --pdk-root ${PDK_ROOT} --manual-pdk \
+PYTHONPATH=flow/librelane/plugins librelane flow/librelane/config.yaml --pdk ${PDK} --pdk-root ${PDK_ROOT} --manual-pdk \
     --to OpenROAD.GeneratePDN
 make librelane-openroad
 ```
 
-The partial run is now the newest one in `flow/librelane/runs/`, which the copy targets read, so run a full `make build-top` before copying anything from it.
+The partial run is now the newest one in `flow/librelane/runs/`, which the copy targets and `make add-logo-fill` read, so run a full `make build-top` before copying anything from it.
 
 ### The `MACROS` Block {#sec-top-macros}
 
@@ -2878,19 +2878,18 @@ To re-run only the top-level flow (for example after a change in [`config.yaml`]
 make build-top
 ```
 
-Internally, `build-top` runs `librelane-nodrc`, `copy-reports`, `copy-gds`, `copy-netlist`, `copy-render`, `add-logo-fill`, and
+Internally, `build-top` runs `librelane-nodrc` (which also adds the chip logo and the fill structures), `copy-reports`, `copy-gds`, `copy-netlist`, `copy-render`, and
 `render-gds`. The final GDS is written to [`layout/chip_top_logo_fill.gds.gz`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/layout/chip_top_logo_fill.gds.gz).
 
 The renders generated by `sak-render.py`, which runs during the `render-gds` step, are located in [`render/img/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/render/img/). The verification reports (Yosys, antenna, STA, IR-drop, LVS, manufacturability) from the top-level LibreLane flow can be found in [`verification/reports/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/verification/reports/). The netlists are located in [`netlist/`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/netlist/).
 
 ::: {.callout-note}
-Note that currently the LibreLane flow streams out the top-level GDS `layout/chip_top.gds.gz` without the logos and the fill structures. To add the chip logo (PNG → GDS) and the fill structures on top of the LibreLane output, run:
+The LibreLane flow adds the chip logo (PNG → GDS) and the fill structures with two steps of its own, `ChipFinish.Logo` and `ChipFinish.Fill` from the plugin [`librelane_plugin_chip_finish.py`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/flow/librelane/plugins/librelane_plugin_chip_finish.py). They write `chip_top_logo_fill.gds` next to the unfilled `chip_top.gds`, and `copy-gds` copies both into `layout/`. `FILLER` selects the fill tool: `klayout` (the default), `magic` or `gdsfill`. To redo only the logo and the fill on the last LibreLane run, for example with another fill tool, run:
 
 ```sh
 make add-logo-fill
+make add-logo-fill FILLER=gdsfill
 ```
-
-This calls `scripts/add_logo_fill.sh` with `TOP` and writes `layout/chip_top_logo_fill.gds.gz`. This step is already called by `make build-top`. In the future, it is planned to replace this script and Makefile target with a custom LibreLane step.
 :::
 
 ::: {.callout-tip}

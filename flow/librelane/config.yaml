@@ -21,9 +21,9 @@ meta:
     #KLayout.Antenna: null
     #Checker.KLayoutAntenna: null
 
-    # Disable KLayout density check
-    #KLayout.Density: null
-    #Checker.KLayoutDensity: null
+    # The GDS of the flow carries no fill, klayout-drc-regular and gdscheck-drc-regular check the density of chip_top_logo_fill
+    KLayout.Density: null
+    Checker.KLayoutDensity: null
 
     # Save time
     #OpenROAD.IRDropReport: null
@@ -31,16 +31,9 @@ meta:
     #Netgen.LVS: null
     #Checker.LVS: null
 
-    # Use Magic.Filler instead of KLayout.Filler
-    # This can help in some cases where the target
-    # density cannot be met using KLayout.
-    #KLayout.Filler: Magic.Filler
-
-    # Disable KLayout filler (all layers)
-    # TODO: add custom LibreLane step for filler insertion after ArtistIC added logo.
-    KLayout.Filler: null
-
-    # TODO: Add GDSFill
+    # Chip finishing from plugins/librelane_plugin_chip_finish.py: the logo and the fill go into chip_top_logo_fill.gds, the GDS of the flow stays unfilled. FILLER in the Makefile picks the fill tool.
+    KLayout.Filler: ChipFinish.Logo
+    +ChipFinish.Logo: ChipFinish.Fill
 
     # Disable setup-violation errors
     #Checker.SetupViolations: null
@@ -156,6 +149,43 @@ CLOCK_PERIOD: 20 # in ns == 50 MHz
 FP_SIZING: absolute
 DIE_AREA:  [0, 0, 1600, 1600]
 CORE_AREA: [365, 365, 1235, 1235]
+
+# Chip logo (ChipFinish.Logo), drawn on TopMetal2
+CHIP_FINISH_ARTISTIC_DIR: dir::../artistic/scripts
+CHIP_FINISH_LOGO_IMAGE: dir::../logo/chip_logo_mono.png
+CHIP_FINISH_LOGO_LAYER: "134/0"
+# Each image pixel becomes 2 um, so the 400 x 270 px image covers 800 x 540 um from this corner
+CHIP_FINISH_LOGO_POSITION: ["expr::$CORE_AREA[0] + 35", "expr::$CORE_AREA[1] + 165"]
+# Nofill rectangles on TopMetal2 and TopMetal1 keep the fill 20 um away from the logo
+CHIP_FINISH_LOGO_NOFILL_LAYERS: ["134/23", "126/23"]
+CHIP_FINISH_LOGO_NOFILL_MARGIN: 20
+
+# Fill (ChipFinish.Fill): every fill layer with the layers its fill must stay out of, its drawing, the nofill datatype 23 and on the metals NoMetFiller (160/0) of the corner logos
+CHIP_FINISH_FILL_LAYERS:
+  "1/22": ["1/0", "1/23"]
+  "5/22": ["5/0", "5/23"]
+  "8/22": ["8/0", "8/23", "160/0"]
+  "10/22": ["10/0", "10/23", "160/0"]
+  "30/22": ["30/0", "30/23", "160/0"]
+  "50/22": ["50/0", "50/23", "160/0"]
+  "67/22": ["67/0", "67/23", "160/0"]
+  "126/22": ["126/0", "126/23", "160/0"]
+  "134/22": ["134/0", "134/23", "160/0"]
+
+# Distances between the KLayout fill shapes in um, set for the density windows of the regular KLayout DRC on this chip (PDK defaults: Metal1 and Metal2 1.5, Metal3 to Metal5 2.0). 0.75 puts Metal3 to Metal5 above the 60 % maximum. TopMetal1 and TopMetal2 share `distance`, which stays at the PDK default of 3.05 because TM1Fil.b and TM2Fil.b need 3.0.
+CHIP_FINISH_KLAYOUT_DISTANCES:
+  distance_m1: 0.75
+  distance_m2: 0.75
+  distance_m3: 1.25
+  distance_m4: 1.25
+  distance_m5: 1.25
+  distance: 3.05
+
+# Fill outside the area the seal ring (EdgeSeal, 39/0) encloses fails the step
+CHIP_FINISH_FILL_BOUNDARY_LAYER: "39/0"
+
+# The density checks of the regular KLayout DRC take the chip area from prBoundary (189/0), which the chip itself only carries inside its macros, so the filled chip gets the die outline on it
+CHIP_FINISH_DIE_OUTLINE_LAYER: "189/0"
 
 # Increase for more logic on your die
 PL_TARGET_DENSITY_PCT: 10
