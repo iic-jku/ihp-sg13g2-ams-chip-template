@@ -2927,13 +2927,14 @@ The exit code of an LVS run is not the verdict. The KLayout deck fails the compa
 ```text
 top-level LVS of chip_top_logo_fill, klayout: PASS
 circuit pairs: 89 Match
-expected port mismatches: 341, the wrapper chip_top_logo_fill has no labels, so KLayout names no net of the chip flattened into it
+expected port mismatches: 312, nets inside the chip, which the wrapper chip_top_logo_fill gives no name
+expected port mismatches: 29, pad nets that the wrapper chip_top_logo_fill names <instance>.<label>, with the label of the reference
 devices in the reference, counted flat: 400797
 ```
 
 Every circuit pair has to match. A cell that fails turns every cell above it `Skipped`, without a mismatch of its own, so the summary names the failing cells and why their parents were skipped. To see a mismatch in the layout, open `layout/<CELL>.gds.gz` in KLayout, then `Tools > Netlist Browser` and `File > Open` on the `.lvsdb` of the run folder. The browser shows each circuit pair, the nets and devices that do not match, and highlights them in the layout. The `.lvsdb` takes 130 to 270 MB and is not committed, `make klayout-lvs` writes it again.
 
-Inside a matched pair KLayout also records errors, and `check` fails on every one except two kinds of port mismatch. On `chip_top` the net of the joined grounds carries both labels, `IOVSS` and `VSS`, where the reference has one port. On `chip_top_logo_fill` no net of the chip has a name, because the wrapper has no labels and KLayout flattens the chip into it. There the pin names are checked by the run on `chip_top` and by Netgen, which keeps the labels of the chip. Two swapped pad labels fail as a port mismatch, see the next step.
+Inside a matched pair KLayout also records errors, and `check` fails on every one except two kinds of port mismatch. On `chip_top` the net of the joined grounds carries both labels, `IOVSS` and `VSS`, where the reference has one port. On `chip_top_logo_fill` KLayout flattens the chip into the wrapper, which has no labels, so the nets inside the chip have no names and the pad nets are named `<instance>.<label>`. `check` accepts the unnamed nets and compares the label of each pad net with the port name of the reference. A missing pad label looks like an unnamed net there, the run on `chip_top` fails on it. Two swapped pad labels fail as a port mismatch, see the next step.
 
 #### Step 5: Proving that the check can fail
 
@@ -2964,7 +2965,7 @@ With Magic + Netgen (`lvs_top.py netlist --engine magic --plant ...`, then `lvs_
 
 - With `VSS` and `IOVSS` joined, a metal short between them is invisible. LibreLane's DEF-based LVS keeps them apart and catches it.
 - Netgen sees the SRAM by its pins only.
-- On `chip_top_logo_fill`, KLayout cannot check pin names, the run on `chip_top` and Netgen do.
+- On `chip_top_logo_fill`, KLayout cannot tell a missing pad label from a net inside the chip. The run on `chip_top` fails on it.
 - LVS compares devices and their connections. A wire that is too thin for its current or a missing ESD path is a matter for other checks.
 
 ### PEX

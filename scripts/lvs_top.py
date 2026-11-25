@@ -922,8 +922,15 @@ def expected_port_mismatch(msg, cell, top, joins):
     if not m:
         return None
     lay, ref = m.group(1).split(","), m.group(2).upper()
-    if cell != top and all(n.startswith("$") for n in lay):
-        return "the wrapper %s has no labels, so KLayout names no net of the chip flattened into it" % cell
+    if cell != top:
+        # the chip is flattened into the wrapper, which has no labels: inner nets get no name, pad nets <instance>.<label>
+        lay = [re.sub(r"^\$\d+\.", "", n) for n in lay]
+        named = [n for n in lay if not re.fullmatch(r"\$I?\d+", n)]
+        if not named:
+            return "nets inside the chip, which the wrapper %s gives no name" % cell
+        if all(n.upper() == ref for n in named):
+            return "pad nets that the wrapper %s names <instance>.<label>, with the label of the reference" % cell
+        lay = named
     for group in joins:
         if {n.upper() for n in lay} == {n.upper() for n in group} and ref == group[0].upper():
             return "the layout keeps both labels of the joined nets %s" % ", ".join(group)
@@ -950,9 +957,12 @@ def check(args):
                 if ln.startswith("Z("):
                     xref = True
                 elif xref:
-                    e = re.match(r"\s*M\(E B\('(.*)'\)\)", ln)
-                    if e:
+                    if re.match(r"\s*M\(E\b", ln):
                         # an error inside a circuit pair, KLayout still counts the pair as matched
+                        e = re.search(r"B\('((?:[^'\\]|\\.)*)'\)", ln)
+                        if not e:
+                            bad.append("%s: unparsed error %s" % (circuit, ln.strip()))
+                            continue
                         msg = re.sub(r"\\(.)", r"\1", e.group(1))
                         why = expected_port_mismatch(msg, args.cell, top, joins)
                         if why:
