@@ -1070,6 +1070,8 @@ The Makefile target `sim-view-xschem` calls the Python plotters in [`testbenches
 
 ![Plotted simulation result of `inverter_top_tb_tran`.](fig/inverter_top/inverter_top_tb_tran_sim.svg){#fig-inverter-top-tb-tran-sim width=80%}
 
+Every testbench also writes its results to `testbenches/xschem/simulations/<testbench_name>.raw`, the file that **Load waves** reads. To inspect them outside Xschem, a standalone viewer for Ngspice `.raw` files such as [SPICE Station AI](https://github.com/omranh/spice-station-ai-releases) can be used. It is free to download for Linux and Windows, but closed-source and not part of the IIC-OSIC-TOOLS container.
+
 ::: {.callout-tip}
 The full simulation suite, including all four testbenches plus the CACE flow (see @sec-cace), is triggered with `make sim-all`.
 :::
