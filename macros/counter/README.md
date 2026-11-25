@@ -32,6 +32,8 @@
 │  │  └─ counter_top.nl.v
 │  ├─ 📁 pnl/
 │  │  └─ counter_top.pnl.v
+│  ├─ 📁 sdc/
+│  │  └─ counter_top.sdc
 │  ├─ 📁 sdf/
 │  │  ├─ 📁 nom_fast_1p32V_m40C/
 │  │  ├─ 📁 nom_fast_1p65V_m40C/
@@ -109,6 +111,7 @@
 │     └─ xschemrc
 ├─ 📁 scripts/
 │  ├─ check_pex_ports.py
+│  ├─ sim_gl_power.tcl
 │  ├─ spi2xspice.py
 │  └─ verilog2sym.py
 ├─ 📁 testbenches/
@@ -145,6 +148,7 @@
 │  ├─ drc.klayout.json
 │  ├─ lvs.netgen.rpt
 │  ├─ manufacturability.rpt
+│  ├─ sim_gl_power_cocotb.rpt
 │  ├─ stat.rpt
 │  ├─ yosys_post_dff.rpt
 │  ├─ yosys_pre_techmap.rpt
@@ -339,6 +343,21 @@ A clean log does not prove that the delays arrived. Open the waveform `testbench
 
 In the netlist the clock tree delays the clock at every flip-flop, and an output follows the clock edge only after its clock-to-output delay. An input that changes at the rising edge of `clock_i` can reach a flip-flop before its clock does and be captured one cycle early, and an output sampled shortly after the edge can still show its old value, which the RTL never shows. The testbench therefore changes the inputs and samples the outputs at the falling edge.
 
+#### Gate-Level Power Estimation
+
+`sim-gl-power-cocotb` estimates the power of the final netlist from the switching activity of the gate-level cocotb simulation. It runs `sim-gl-cocotb`, converts the waveform to `testbenches/cocotb/sim_build/counter_top.vcd` with `fst2vcd`, and runs OpenSTA with `scripts/sim_gl_power.tcl` on the final views of the default corner `nom_typ_1p50V_25C`: the Liberty file of the standard cells, `final/nl/counter_top.nl.v`, `final/spef/nom/counter_top.nom.spef` and the SDC that LibreLane wrote for sign-off, `final/sdc/counter_top.sdc`. The report goes to `verification/sim_gl_power_cocotb.rpt`:
+
+```sh
+make sim-gl-power-cocotb
+```
+
+The waveform holds every pin of the netlist under its instance name, so `read_vcd` gives each pin the toggle rate and duty cycle of the simulation, and the target fails if a pin gets none (a waveform of another netlist or a wrong scope). The LibreLane reports `verification/stapostpnr_<corner>_power.rpt` run the same `report_power` without a simulation: OpenSTA assumes an activity of 0.1 per clock cycle on every input and propagates it through the logic.
+
+The estimate has two limits:
+
+- It is the mean over the whole testbench run. To estimate one operating mode, run a test that stays in that mode.
+- The gate-level simulation has no delays, so glitches cost no power.
+
 #### RTL Xschem Simulation
 
 Runs the RTL in the Xschem testbench `testbenches/xschem/<CELL>_tb_tran_rtl.sch`, before any LibreLane run. Ngspice simulates the testbench, and Icarus Verilog or Verilator runs the RTL inside it as the XSPICE code model `d_cosim`:
@@ -413,7 +432,8 @@ This executes the following targets in order:
 3. `sim-rtl-xschem` (default: `counter_top`)
 4. `sim-gl-cocotb` (default: `counter_top`)
 5. `sim-gl-sdf-cocotb` (default: `counter_top`)
-6. `sim-gl-xschem` (default: `counter_top`)
+6. `sim-gl-power-cocotb` (`counter_top`)
+7. `sim-gl-xschem` (default: `counter_top`)
 
 > [!NOTE]
 > The `sim-view-verilog` and `sim-view-cocotb` targets are intentionally **not** called by `sim-all`.
@@ -468,7 +488,7 @@ This only works if at least one LibreLane run exists in `flow/librelane/runs/` a
 
 ### Copy the Final Folders
 
-To copy the latest GDS, LEF, LIB, NL, PNL, SDF, SPEF, and VH from `flow/final/` into `final/`, run:
+To copy the latest GDS, LEF, LIB, NL, PNL, SDC, SDF, SPEF, and VH from `flow/final/` into `final/`, run:
 
 ```sh
 make copy-final
@@ -756,7 +776,7 @@ Lints, builds, verifies and simulates the whole macro:
 - `magic-pex`
 - `sim-all`
 
-Linting runs first to fail fast on structural RTL issues. `lec` proves the netlist of this build equivalent to the RTL, and `lec-mutant` checks that this proof can fail. The simulations run **after** the build, so the gate-level simulations (`sim-gl-cocotb`, `sim-gl-sdf-cocotb`, `sim-gl-xschem`) run on the netlists and the XSPICE model produced by this build, not on those of a previous one. `magic-pex` sits between the two, so the post-layout netlist the Xschem testbench includes is extracted from the GDS of this build as well. `klayout-pex` is commented out in the recipe: it works (see [Parasitic Extraction (PEX)](#parasitic-extraction-pex)), but it is a second full extraction that nothing in the flow consumes. The DRC and LVS verification is done within the LibreLane flow.
+Linting runs first to fail fast on structural RTL issues. `lec` proves the netlist of this build equivalent to the RTL, and `lec-mutant` checks that this proof can fail. The simulations run **after** the build, so the gate-level simulations (`sim-gl-cocotb`, `sim-gl-sdf-cocotb`, `sim-gl-power-cocotb`, `sim-gl-xschem`) run on the netlists and the XSPICE model produced by this build, not on those of a previous one. `magic-pex` sits between the two, so the post-layout netlist the Xschem testbench includes is extracted from the GDS of this build as well. `klayout-pex` is commented out in the recipe: it works (see [Parasitic Extraction (PEX)](#parasitic-extraction-pex)), but it is a second full extraction that nothing in the flow consumes. The DRC and LVS verification is done within the LibreLane flow.
 
 ```sh
 make all

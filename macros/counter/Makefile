@@ -221,6 +221,28 @@ sim-gl-sdf-cocotb: ## Run timed gate-level simulation of CELL cell with cocotb a
 	cd $(COCOTB_DIR) && GL=1 SDF=1 SDF_CORNER=$(SDF_CORNER) SDF_TRIPLE=$(SDF_TRIPLE) python3 $(CELL)_tb.py
 .PHONY: sim-gl-sdf-cocotb
 
+# Inputs of sim-gl-power-cocotb: the final views at DEFAULT_CORNER of flow/librelane/config.yaml (nom_typ_1p50V_25C)
+POWER_LIBS        := $(PDK_ROOT)/$(PDK)/libs.ref/sg13g2_stdcell/lib/sg13g2_stdcell_typ_1p50V_25C.lib.gz
+POWER_NETLISTS    := $(FINAL_DIR)/nl/$(TOP).nl.v
+POWER_MACRO_SPEFS :=
+POWER_SPEF        := $(FINAL_DIR)/spef/nom/$(TOP).nom.spef
+POWER_SDC         := $(FINAL_DIR)/sdc/$(TOP).sdc
+POWER_RPT         := $(REPORT_DIR)/sim_gl_power_cocotb.rpt
+
+sim-gl-power-cocotb: ## Estimate the power of the final netlist with OpenSTA from the switching activity of the gate-level cocotb simulation
+	@if [ ! -f $(POWER_SDC) ]; then \
+		echo "No SDC $(POWER_SDC) found. Run 'make build-top' (or 'make copy-final') first."; \
+		exit 1; \
+	fi
+	$(MAKE) sim-gl-cocotb CELL=$(TOP)
+	fst2vcd -f $(COCOTB_DIR)/sim_build/$(TOP).fst -o $(COCOTB_DIR)/sim_build/$(TOP).vcd
+	mkdir -p $(REPORT_DIR)
+	POWER_TOP=$(TOP) POWER_LIBS="$(POWER_LIBS)" POWER_NETLISTS="$(POWER_NETLISTS)" POWER_MACRO_SPEFS="$(POWER_MACRO_SPEFS)" \
+	POWER_SPEF=$(POWER_SPEF) POWER_SDC=$(POWER_SDC) POWER_VCD=$(COCOTB_DIR)/sim_build/$(TOP).vcd POWER_RPT=$(POWER_RPT) \
+		sta -no_init -no_splash -exit $(SCRIPTS_DIR)/sim_gl_power.tcl
+	cat $(POWER_RPT)
+.PHONY: sim-gl-power-cocotb
+
 sim-view-cocotb: ## View CELL cell cocotb simulation waveforms (usage: make sim-view-cocotb [CELL=<cellname>] [WAVEFORM_VIEWER=<gtkwave|surfer>] [SIM=<icarus|verilator>])
 	@if [ "$(WAVEFORM_VIEWER)" = "gtkwave" ]; then \
 		$(WAVEFORM_VIEWER) $(_COCOTB_FST) $(COCOTB_DIR)/$(CELL)_tb.gtkw; \
@@ -275,12 +297,13 @@ sim-view-xschem: ## Plot Xschem simulation results (usage: make sim-view-xschem 
 	SHOW_PLOTS=1 python3 $(SIM_PLOT_DIR)/$(SCRIPT).py
 .PHONY: sim-view-xschem
 
-sim-all: ## Simulate the macro (RTL Verilog + RTL cocotb + RTL Xschem + GL/timed GL cocotb + GL Xschem for counter_top)
+sim-all: ## Simulate the macro (RTL Verilog + RTL cocotb + RTL Xschem + GL/timed GL cocotb + GL cocotb power + GL Xschem for counter_top)
 	$(MAKE) sim-rtl-verilog
 	$(MAKE) sim-rtl-cocotb
 	$(MAKE) sim-rtl-xschem
 	$(MAKE) sim-gl-cocotb
 	$(MAKE) sim-gl-sdf-cocotb
+	$(MAKE) sim-gl-power-cocotb
 	$(MAKE) sim-gl-xschem
 .PHONY: sim-all
 # ================================================================================================
@@ -338,7 +361,7 @@ copy-reports: ## Copy yosys, antenna, STA, power, IR-drop, DRC, LVS and manufact
 	cp $(LIBRELANE_DIR)/runs/${RUN_TAG}/*-misc-reportmanufacturability/manufacturability.rpt $(REPORT_DIR)/manufacturability.rpt
 .PHONY: copy-reports
 
-copy-final: ## Copy final output gds, lef, lib, nl, pnl, sdf, spef, and vh folders from the last LibreLane run to final/
+copy-final: ## Copy final output gds, lef, lib, nl, pnl, sdc, sdf, spef, and vh folders from the last LibreLane run to final/
 	rm -rf $(FINAL_DIR)/
 	mkdir -p $(FINAL_DIR)/
 	cp -r $(FLOW_FINAL_DIR)/gds  $(FINAL_DIR)/gds
@@ -346,6 +369,7 @@ copy-final: ## Copy final output gds, lef, lib, nl, pnl, sdf, spef, and vh folde
 	cp -r $(FLOW_FINAL_DIR)/lib  $(FINAL_DIR)/lib
 	cp -r $(FLOW_FINAL_DIR)/nl   $(FINAL_DIR)/nl
 	cp -r $(FLOW_FINAL_DIR)/pnl  $(FINAL_DIR)/pnl
+	cp -r $(FLOW_FINAL_DIR)/sdc  $(FINAL_DIR)/sdc
 	cp -r $(FLOW_FINAL_DIR)/sdf  $(FINAL_DIR)/sdf
 	cp -r $(FLOW_FINAL_DIR)/spef $(FINAL_DIR)/spef
 	cp -r $(FLOW_FINAL_DIR)/vh   $(FINAL_DIR)/vh
