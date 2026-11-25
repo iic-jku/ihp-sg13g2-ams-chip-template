@@ -2858,7 +2858,9 @@ make klayout-lvs CELL=chip_top_logo_fill  # the same on the delivery GDS with lo
 make magic-lvs CELL=chip_top_logo_fill
 ```
 
-`make all` runs both on `chip_top_logo_fill`, the GDS that goes to the foundry. On a laptop with the `2026.11` image, KLayout needs 4 min on `chip_top` and 22 min on `chip_top_logo_fill`, Magic + Netgen 12 and 16 min, all with less than 2.5 GB of memory. The two engines are independent: they extract the layout with different rule decks and compare with different algorithms, so a pass in both is stronger than a pass in one.
+`make all` runs both on `chip_top_logo_fill`, the GDS that goes to the foundry. On a laptop with the `2026.11` image, KLayout needs 4 min on `chip_top` and 22 min on `chip_top_logo_fill`, Magic + Netgen 12 and 16 min, all with less than 2.5 GB of memory. The two engines are independent: they extract the layout with different rule decks and compare with different algorithms, so a pass in both is stronger than a pass in one. @fig-lvs-top-flow shows the steps below in one picture.
+
+![The top-level LVS: `scripts/lvs_top.py` assembles the reference netlist from the netlists the GDS was made from and the fixes in `flow/lvs/config.yaml`, KLayout and Magic + Netgen compare it with the layout, and `lvs_top.py check` takes the verdict from their reports.](fig/lvs_top/lvs_top_flow.svg){#fig-lvs-top-flow}
 
 #### Step 1: The netlists that describe the chip
 
@@ -2932,7 +2934,9 @@ expected port mismatches: 29, pad nets that the wrapper chip_top_logo_fill names
 devices in the reference, counted flat: 400797
 ```
 
-Every circuit pair has to match. A cell that fails turns every cell above it `Skipped`, without a mismatch of its own, so the summary names the failing cells and why their parents were skipped. To see a mismatch in the layout, open `layout/<CELL>.gds.gz` in KLayout, then `Tools > Netlist Browser` and `File > Open` on the `.lvsdb` of the run folder. The browser shows each circuit pair, the nets and devices that do not match, and highlights them in the layout. The `.lvsdb` takes 130 to 270 MB and is not committed, `make klayout-lvs` writes it again.
+Every circuit pair has to match. A cell that fails turns every cell above it `Skipped`, without a mismatch of its own, so the summary names the failing cells and why their parents were skipped. To see a mismatch in the layout, open `layout/<CELL>.gds.gz` in KLayout, then `Tools > Netlist Browser` and `File > Open` on the `.lvsdb` of the run folder. The browser shows each circuit pair, the nets and devices that do not match, and highlights them in the layout (@fig-lvs-top-browser). The `.lvsdb` takes 130 to 270 MB and is not committed, `make klayout-lvs` writes it again.
+
+![The KLayout netlist browser on the `.lvsdb` of the planted defect of the next step (`D` and `RESET_B` of a flip-flop in `counter_top` swapped): `counter_top` and its net `NET17` carry the mismatch mark.](fig/lvs_top/lvs_top_browser.png){#fig-lvs-top-browser}
 
 Inside a matched pair KLayout also records errors, and `check` fails on every one except two kinds of port mismatch. On `chip_top` the net of the joined grounds carries both labels, `IOVSS` and `VSS`, where the reference has one port. On `chip_top_logo_fill` KLayout flattens the chip into the wrapper, which has no labels, so the nets inside the chip have no names and the pad nets are named `<instance>.<label>`. `check` accepts the unnamed nets and compares the label of each pad net with the port name of the reference. A missing pad label looks like an unnamed net there, the run on `chip_top` fails on it. Two swapped pad labels fail as a port mismatch, see the next step.
 

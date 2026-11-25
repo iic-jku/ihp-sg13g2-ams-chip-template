@@ -1,0 +1,104 @@
+<mxfile host="Electron" agent="draw.io" version="29.0.3">
+  <diagram name="lvs_top_flow" id="lvs-top-flow">
+    <mxGraphModel dx="800" dy="660" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="800" pageHeight="680" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="inVerilog" value="&lt;b&gt;Powered Verilog&lt;/b&gt;&lt;br&gt;chip and digital macros&lt;br&gt;&lt;font face=&quot;Courier New&quot; style=&quot;font-size: 12px;&quot;&gt;netlist/pnl/, macros/*/final/pnl/&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fontSize=14;fillColor=#dae8fc;strokeColor=#6c8ebf;arcSize=12;" parent="1" vertex="1">
+          <mxGeometry x="20" y="20" width="235" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="inAnalog" value="&lt;b&gt;Analog macros&lt;/b&gt;&lt;br&gt;the netlists their own LVS matched&lt;br&gt;&lt;font face=&quot;Courier New&quot; style=&quot;font-size: 12px;&quot;&gt;macros/*/netlist/schematic/&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fontSize=14;fillColor=#dae8fc;strokeColor=#6c8ebf;arcSize=12;" parent="1" vertex="1">
+          <mxGeometry x="272" y="20" width="235" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="inPdk" value="&lt;b&gt;PDK cells&lt;/b&gt;&lt;br&gt;standard cells, IO cells, SRAM&lt;br&gt;CDL for KLayout, SPICE for Netgen" style="rounded=1;whiteSpace=wrap;html=1;fontSize=14;fillColor=#dae8fc;strokeColor=#6c8ebf;arcSize=12;" parent="1" vertex="1">
+          <mxGeometry x="525" y="20" width="235" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="script" value="&lt;b&gt;&lt;font face=&quot;Courier New&quot;&gt;scripts/lvs_top.py netlist&lt;/font&gt;&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size: 12px;&quot;&gt;make klayout-lvs-netlist, make magic-lvs-netlist&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fontSize=14;fillColor=#fff2cc;strokeColor=#d6b656;arcSize=12;" parent="1" vertex="1">
+          <mxGeometry x="20" y="150" width="420" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="config" value="&lt;b&gt;&lt;font face=&quot;Courier New&quot;&gt;flow/lvs/config.yaml&lt;/font&gt;&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size: 12px;&quot;&gt;the inputs and each fix with its reason:&lt;br&gt;no_devices, taps, pin_alias, join, flatten,&lt;br&gt;rename, card_edit, black_box, magic_flatten&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fontSize=14;fillColor=#f5f5f5;strokeColor=#666666;arcSize=12;" parent="1" vertex="1">
+          <mxGeometry x="480" y="135" width="280" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="ref" value="&lt;b&gt;Reference netlist&lt;/b&gt;&lt;br&gt;&lt;font face=&quot;Courier New&quot; style=&quot;font-size: 12px;&quot;&gt;netlist/schematic/&amp;lt;CELL&amp;gt;_klayout.cdl, _magic.spice&lt;/font&gt;&lt;br&gt;&lt;font style=&quot;font-size: 12px;&quot;&gt;header: every input with its MD5, every change&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fontSize=14;fillColor=#d5e8d4;strokeColor=#82b366;arcSize=12;" parent="1" vertex="1">
+          <mxGeometry x="20" y="260" width="420" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="gds" value="&lt;b&gt;Layout&lt;/b&gt;&lt;br&gt;&lt;font face=&quot;Courier New&quot; style=&quot;font-size: 12px;&quot;&gt;layout/&amp;lt;CELL&amp;gt;.gds.gz&lt;/font&gt;&lt;br&gt;&lt;font style=&quot;font-size: 12px;&quot;&gt;chip_top or chip_top_logo_fill&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fontSize=14;fillColor=#d5e8d4;strokeColor=#82b366;arcSize=12;" parent="1" vertex="1">
+          <mxGeometry x="480" y="260" width="280" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="klayout" value="&lt;b&gt;KLayout&lt;/b&gt;: &lt;font face=&quot;Courier New&quot;&gt;make klayout-lvs&lt;/font&gt;&lt;br&gt;&lt;font style=&quot;font-size: 12px;&quot;&gt;&lt;font face=&quot;Courier New&quot;&gt;sak-lvs.sh -k&lt;/font&gt;, the PDK deck in deep mode&lt;br&gt;writes &lt;font face=&quot;Courier New&quot;&gt;&amp;lt;CELL&amp;gt;.lvsdb&lt;/font&gt;&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fontSize=14;fillColor=#e1d5e7;strokeColor=#9673a6;arcSize=12;" parent="1" vertex="1">
+          <mxGeometry x="20" y="380" width="360" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="magic" value="&lt;b&gt;Magic + Netgen&lt;/b&gt;: &lt;font face=&quot;Courier New&quot;&gt;make magic-lvs&lt;/font&gt;&lt;br&gt;&lt;font style=&quot;font-size: 12px;&quot;&gt;&lt;font face=&quot;Courier New&quot;&gt;lvs_top.py magic&lt;/font&gt;, hierarchical extraction&lt;br&gt;writes &lt;font face=&quot;Courier New&quot;&gt;&amp;lt;CELL&amp;gt;.lvs.out&lt;/font&gt;&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fontSize=14;fillColor=#e1d5e7;strokeColor=#9673a6;arcSize=12;" parent="1" vertex="1">
+          <mxGeometry x="400" y="380" width="360" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="check" value="&lt;b&gt;&lt;font face=&quot;Courier New&quot;&gt;lvs_top.py check&lt;/font&gt;&lt;/b&gt;: the verdict, not the exit code&lt;br&gt;&lt;font style=&quot;font-size: 12px;&quot;&gt;KLayout: every circuit pair matched, no error but the expected port mismatches&lt;br&gt;Netgen: Circuits match uniquely, no property errors, no failed pin matching&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fontSize=14;fillColor=#ffe6cc;strokeColor=#d79b00;arcSize=12;" parent="1" vertex="1">
+          <mxGeometry x="60" y="500" width="660" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="summary" value="&lt;b&gt;&lt;font face=&quot;Courier New&quot;&gt;verification/lvs/&amp;lt;CELL&amp;gt;.&amp;lt;engine&amp;gt;.lvs/&amp;lt;CELL&amp;gt;.lvs.summary&lt;/font&gt;&lt;/b&gt;&lt;br&gt;PASS or FAIL" style="rounded=1;whiteSpace=wrap;html=1;fontSize=14;fillColor=#f8cecc;strokeColor=#b85450;arcSize=12;" parent="1" vertex="1">
+          <mxGeometry x="150" y="610" width="480" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="e1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;strokeWidth=1.5;strokeColor=#666666;" parent="1" source="inVerilog" target="script" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;strokeWidth=1.5;strokeColor=#666666;" parent="1" source="inAnalog" target="script" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;strokeWidth=1.5;strokeColor=#666666;exitX=0.25;exitY=1;exitDx=0;exitDy=0;entryX=0.9;entryY=0;entryDx=0;entryDy=0;" parent="1" source="inPdk" target="script" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="584" y="120" />
+              <mxPoint x="398" y="120" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;strokeWidth=1.5;strokeColor=#666666;dashed=1;" parent="1" source="config" target="script" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e5" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;strokeWidth=1.5;strokeColor=#666666;" parent="1" source="script" target="ref" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e6" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;strokeWidth=1.5;strokeColor=#666666;exitX=0.25;exitY=1;exitDx=0;exitDy=0;" parent="1" source="ref" target="klayout" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e7" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;strokeWidth=1.5;strokeColor=#666666;exitX=0.75;exitY=1;exitDx=0;exitDy=0;entryX=0.25;entryY=0;entryDx=0;entryDy=0;" parent="1" source="ref" target="magic" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="335" y="343" />
+              <mxPoint x="490" y="343" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e8" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;strokeWidth=1.5;strokeColor=#666666;exitX=0.25;exitY=1;exitDx=0;exitDy=0;entryX=0.75;entryY=0;entryDx=0;entryDy=0;" parent="1" source="gds" target="klayout" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="550" y="363" />
+              <mxPoint x="290" y="363" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e9" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;strokeWidth=1.5;strokeColor=#666666;exitX=0.75;exitY=1;exitDx=0;exitDy=0;entryX=0.75;entryY=0;entryDx=0;entryDy=0;" parent="1" source="gds" target="magic" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e10" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;strokeWidth=1.5;strokeColor=#666666;" parent="1" source="klayout" target="check" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="200" y="475" />
+              <mxPoint x="200" y="475" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e11" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;strokeWidth=1.5;strokeColor=#666666;" parent="1" source="magic" target="check" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="580" y="475" />
+              <mxPoint x="580" y="475" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e12" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;strokeWidth=1.5;strokeColor=#666666;" parent="1" source="check" target="summary" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
