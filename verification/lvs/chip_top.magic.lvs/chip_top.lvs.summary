@@ -1,0 +1,4 @@
+top-level LVS of chip_top, magic: PASS
+final result: Circuits match uniquely.
+cells that did not match on the first try (Netgen then flattens them): 0
+devices in the reference, counted flat: 89709

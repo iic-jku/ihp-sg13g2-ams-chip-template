@@ -1,0 +1,143 @@
+# SPDX-FileCopyrightText: 2026 Simon Dorrer and Harald Pretl
+# SPDX-License-Identifier: Apache-2.0 WITH SHL-2.1
+
+# Inputs of the top-level LVS and the changes scripts/lvs_top.py makes to them, see "Top-Level Layout Versus Schematic (LVS)" in README.md.
+# Paths are relative to the repo, pdk_dir:: paths relative to $PDK_ROOT/$PDK.
+# Each change states why the input netlists cannot match the layout without it.
+
+# Powered gate-level netlists of the chip top and of every digital macro, as LibreLane wrote them.
+verilog:
+  - netlist/pnl/chip_top.pnl.v
+  - macros/counter/final/pnl/counter_top.pnl.v
+
+# Netlists of every other cell, one list per engine: KLayout reads CDL, Netgen reads SPICE.
+# An analog macro enters with the netlists its own klayout-lvs and magic-lvs matched.
+cells:
+  klayout:
+    - pdk_dir::libs.ref/sg13g2_stdcell/cdl/sg13g2_stdcell.cdl
+    - pdk_dir::libs.ref/sg13g2_io/cdl/sg13g2_io.cdl
+    - pdk_dir::libs.ref/sg13g2_sram/cdl/RM_IHPSG13_1P_1024x32_c2_bm_bist.cdl
+    - macros/inverter/netlist/schematic/inverter_top_klayout.cdl
+  magic:
+    - pdk_dir::libs.ref/sg13g2_stdcell/spice/sg13g2_stdcell.spice
+    - pdk_dir::libs.ref/sg13g2_io/spice/sg13g2_io.spice
+    - pdk_dir::libs.ref/sg13g2_sram/cdl/RM_IHPSG13_1P_1024x32_c2_bm_bist.cdl
+    - macros/inverter/netlist/schematic/inverter_top_magic.spice
+
+# Cells without devices, metal, passivation openings and labels only, left out by their exact name.
+no_devices:
+  - sg13g2_ip__bondpad_70x70
+  - sg13g2_ip__jku
+  - sg13g2_ip__jku_names
+  - sg13g2_ip__template_name
+
+# padbare of the analog pad is the bond pad metal of pad and is missing from the PDK netlists.
+pin_alias:
+  sg13g2_IOPadAnalog: {padbare: pad}
+
+# VSS and IOVSS are one net in the layout, joined through the substrate.
+join:
+  - [VSS, IOVSS]
+
+# Cells expanded into their callers, so that the comparer flattens their layout twins too.
+flatten:
+  klayout:
+    # The pad, gate and cathode fingers of the clamps, diodes and clamp resistor are pieces that only the pad cell joins.
+    - sg13g2_Clamp_N15N15D
+    - sg13g2_Clamp_N20N0D
+    - sg13g2_Clamp_N43N43D4R
+    - sg13g2_Clamp_P15N15D
+    - sg13g2_Clamp_P20N0D
+    - sg13g2_DCNDiode
+    - sg13g2_DCPDiode
+    - sg13g2_RCClampResistor
+    # The iovdd of these pads is two pieces that only the chip top joins.
+    - sg13g2_IOPadAnalog
+    - sg13g2_IOPadInOut30mA
+    - sg13g2_IOPadOut30mA
+    # The SRAM GDS draws these gates flat in BLDRV, DEC04 and the column and row logic, where the CDL calls them.
+    - RSC_IHPSG13_CINVX2
+    - RSC_IHPSG13_CINVX4
+    - RSC_IHPSG13_CINVX8
+    - RSC_IHPSG13_FILLCAP4
+    - RSC_IHPSG13_FILLCAP8
+    - RSC_IHPSG13_INVX2
+    - RSC_IHPSG13_NAND2X2
+    # The separators of the bit cell and of the dummy delay cell are extracted in their parent, where the cut metal is drawn.
+    - RM_IHPSG13_1P_BITKIT_CELL
+    - RSC_IHPSG13_CDLYX1_DUMMY
+    # The supply of these SRAM cells is several pieces that only the parent joins.
+    - RM_IHPSG13_1P_COLDEC2
+    - RM_IHPSG13_1P_COLDRV13X4
+    - RM_IHPSG13_1P_DLY_MUX
+    # These SRAM cells have pins without a label to tell them apart.
+    - RM_IHPSG13_1P_BITKIT_EDGE_LR
+    - RM_IHPSG13_1P_BITKIT_16x2_EDGE_LR
+    - RM_IHPSG13_1P_BLDRV
+  magic:
+    # As for KLayout.
+    - sg13g2_Clamp_N15N15D
+    - sg13g2_Clamp_N20N0D
+    - sg13g2_Clamp_N43N43D4R
+    - sg13g2_Clamp_P15N15D
+    - sg13g2_Clamp_P20N0D
+    - sg13g2_DCNDiode
+    - sg13g2_DCPDiode
+    - sg13g2_RCClampResistor
+    - sg13g2_IOPadAnalog
+    - sg13g2_IOPadInOut30mA
+    - sg13g2_IOPadOut30mA
+    # The cells Magic flattens when it reads the GDS, see magic_flatten.
+    - sg13g2_LevelUp
+    - sg13g2_io_inv_x1
+    - sg13g2_io_nand2_x1
+    - sg13g2_io_nor2_x1
+    - sg13g2_io_tie
+
+# The SRAM CDL comes from another version of IHP's generator than its GDS, so its cells are renamed to the GDS names.
+# The CDL prefixes its cells with RM_IHPSG13_1024x32_c2_1P_, the GDS with RM_IHPSG13_1P_, and four cells are numbered in the CDL and named in the GDS, identified by their children.
+# Without the GDS names the comparer flattens the 32768 bit cells into one circuit and does not finish.
+rename:
+  - from: RM_IHPSG13_1024x32_c2_1P_
+    to: RM_IHPSG13_1P_
+    cells: {MATRIX_pcell_1: MATRIX_256x64, COLUMN_pcell_0: COLUMN_256, DLY_pcell_2: DLY_2, DLY_pcell_3: DLY_4}
+
+# Single cards the reference rewrites, per engine, cell and card. An empty value deletes a token.
+# The SRAM CDL writes its LVS-only metal separators as lvsres without a layer, the KLayout deck extracts each one from its <metal>/29 marker as res_metal<N>.
+# Metal and width are read off the GDS: the bit cell draws its separators 0.20 um wide where the CDL writes 0.26 um.
+card_edit:
+  klayout:
+    RM_IHPSG13_1024x32_c2_1P_BITKIT_CELL:
+      R0: {lvsres: res_metal2, w=2.6e-07: w=2e-07}
+      R1: {lvsres: res_metal2, w=2.6e-07: w=2e-07}
+      R2: {lvsres: res_metal3, w=2.6e-07: w=2e-07}
+    RSC_IHPSG13_MET2RES:
+      R0: {lvsres: res_metal2}
+    RSC_IHPSG13_MET3RES:
+      R0: {lvsres: res_metal3}
+    RSC_IHPSG13_CDLYX1_DUMMY:
+      R0: {lvsres: res_metal1}
+
+# Cells compared by their pin names only, per engine.
+# Magic cannot extract the SRAM: it does not cut a metal line at a separator marker that sits in a child cell, and ext2spice fails on the macro's bus and ! net names.
+# KLayout compares the SRAM at device level.
+black_box:
+  magic:
+    - RM_IHPSG13_1P_1024x32_c2_bm_bist
+
+# Magic only: cells Magic flattens when it reads the GDS.
+# The small cells inside the IO cells' GateDecode get the pSD implant of a shared diffusion from a neighboring cell.
+# Magic extracts each cell on its own, reads that diffusion as an N-well tap and so shorts the input of sg13g2_io_inv_x1, the output enable of the bidir pads, to vdd.
+magic_flatten:
+  - sg13g2_LevelUp
+  - sg13g2_io_inv_x1
+  - sg13g2_io_nand2_x1
+  - sg13g2_io_nor2_x1
+  - sg13g2_io_tie
+
+# Netgen only: Magic writes w and l of a diode in the order of its orientation in the layout, so both netlists get the longer side as w.
+diode_wl: [dantenna, dpantenna]
+
+# Netgen only: setup lines after the PDK setup. The IO SPICE writes R next to w and l of a poly resistor, Magic writes w and l only.
+netgen_setup:
+  - 'foreach d {rppd rsil rhigh} { catch {property "-circuit2 $d" delete r} }'

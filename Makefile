@@ -92,10 +92,6 @@ PEX_SUB_NET ?= VSS
 # Override with: make klayout-pex KPEX_REDUCE=<none|floating|ticer>
 KPEX_REDUCE ?= ticer
 
-# Floating-point precision (significant digits) for Xschem's ev function
-# Override with: make <target> EV_PRECISION=<digits>
-EV_PRECISION ?= 5
-
 # Set the waveform viewer GTKWave or Surfer (default: gtkwave)
 # Override with: make <target> WAVEFORM_VIEWER=<gtkwave|surfer>
 WAVEFORM_VIEWER ?= gtkwave
@@ -147,12 +143,12 @@ FLOW_FINAL_DIR  		:= flow/final
 
 # Help Target
 help: ## Show this help message
-	@echo 'Usage: make <target> [CELL=<cellname>] [EXT_MODE=<1|2|3>] [CTHRESH=<fF>] [THRESHOLD=<mOhm>] [MINRES=<mOhm>] [MINDELAY=<ps>] [DRC_LEVEL=<precheck|macro|regular>] [GDSCHECK_SUITE=<suite>|GDSCHECK_DECKS=<decks>] [DRC_JOBS=<n>] [PEX_MERGED_PINS="<pin> ..."] [KPEX_REDUCE=<none|floating|ticer>] [PEX_SUB_NET=<net>] [EV_PRECISION=<digits>] [WAVEFORM_VIEWER=<gtkwave|surfer>] [TB=<testbenchname>] [SCRIPT=<scriptname>] [VERSION=<version>] [OPEN_ARGS=<options>]'
+	@echo 'Usage: make <target> [CELL=<cellname>] [EXT_MODE=<1|2|3>] [CTHRESH=<fF>] [THRESHOLD=<mOhm>] [MINRES=<mOhm>] [MINDELAY=<ps>] [DRC_LEVEL=<precheck|macro|regular>] [GDSCHECK_SUITE=<suite>|GDSCHECK_DECKS=<decks>] [DRC_JOBS=<n>] [PEX_MERGED_PINS="<pin> ..."] [KPEX_REDUCE=<none|floating|ticer>] [PEX_SUB_NET=<net>] [WAVEFORM_VIEWER=<gtkwave|surfer>] [TB=<testbenchname>] [SCRIPT=<scriptname>] [VERSION=<version>] [OPEN_ARGS=<options>]'
 	@echo ''
 	@echo 'Available targets:'
 	@grep -E '^[a-zA-Z0-9_.-]+:.*## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*## "}; {printf "  %-20s %s\n", $$1, $$2}'
 	@echo ''
-	@echo 'CELL defaults to $(TOP). Override to verify subcells.'
+	@echo 'CELL defaults to $(TOP). Override to verify subcells. klayout-lvs and magic-lvs take $(TOP) or $(TOP)_logo_fill.'
 	@echo 'EXT_MODE defaults to 1 (C-decoupled). 2=C-coupled, 3=full-RC.'
 	@echo 'CTHRESH is the capacitance threshold of magic-pex in fF in every EXT_MODE, smaller capacitors are left out of the netlist (default 0.01 = 10 aF).'
 	@echo 'THRESHOLD/MINRES/MINDELAY are full-RC (EXT_MODE=3) extresist settings for magic-pex (defaults 10000 mOhm / 1000 mOhm / 1 ps).'
@@ -163,7 +159,6 @@ help: ## Show this help message
 	@echo 'PEX_MERGED_PINS defaults to IOVSS. Lists the supply pins that the flat extraction merges, they are dropped from the generated PEX symbol.'
 	@echo 'PEX_SUB_NET defaults to VSS. The port net that klayout-pex ties the substrate port sub! of the kpex 2.5D netlist to (empty keeps sub! as a port).'
 	@echo 'KPEX_REDUCE defaults to ticer. Sets the RC network reduction of klayout-pex in EXT_MODE=3 (none|floating|ticer).'
-	@echo 'EV_PRECISION defaults to 5 significant digits for Xschem ev function.'
 	@echo 'WAVEFORM_VIEWER defaults to gtkwave. Use surfer to launch Surfer instead.'
 	@echo 'TB selects the Xschem testbench for sim-gl-xschem (default: <CELL>_tb_tran).'
 	@echo 'SCRIPT selects the plotting script for sim-view-xschem (default: plot_<CELL>).'
@@ -430,48 +425,29 @@ gdscheck-drc: ## Run gdscheck DRC of the CELL cell (usage: make gdscheck-drc [CE
 
 
 # LVS Targets
-klayout-lvs-netlist: ## Export CDL schematic netlist from Xschem for KLayout LVS (usage: make klayout-lvs-netlist [CELL=<cellname>] [EV_PRECISION=<digits>])
+# The top-level LVS compares layout/<CELL>.gds.gz, $(TOP) or $(TOP)_logo_fill, with a reference netlist that scripts/lvs_top.py builds from the netlists listed in flow/lvs/config.yaml.
+klayout-lvs-netlist: ## Build the CDL reference netlist of the top-level KLayout LVS (usage: make klayout-lvs-netlist [CELL=<cellname>])
 	mkdir -p $(NET_SCH_DIR)
-	xschem -s -r -x -q --rcfile $(XSCHEM_SCH_DIR)/xschemrc --command ' \
-		set spiceprefix 1; \
-		set lvs_netlist 1; \
-		set top_is_subckt 1; \
-		set lvs_ignore 1; \
-		set ev_precision $(EV_PRECISION); \
-		set netlist_dir $(NET_SCH_DIR); \
-		xschem set netlist_name [file tail [file rootname [xschem get current_name]]]_klayout.cdl; \
-		xschem netlist \
-	' $(XSCHEM_SCH_DIR)/$(CELL).sch
+	python3 $(SCRIPTS_DIR)/lvs_top.py netlist --engine klayout --top $(TOP) --cell $(CELL)
 .PHONY: klayout-lvs-netlist
 
-klayout-lvs: ## Run KLayout LVS of the CELL cell (usage: make klayout-lvs [CELL=<cellname>])
+klayout-lvs: ## Run the top-level KLayout LVS of the CELL cell (usage: make klayout-lvs [CELL=<cellname>])
 	$(MAKE) klayout-lvs-netlist CELL=$(CELL)
 	mkdir -p $(LVS_RPT_DIR)
-	mkdir -p $(NET_LAY_DIR)
-	sak-lvs.sh -d -k -w $(LVS_RPT_DIR) -s $(NET_SCH_DIR)/$(CELL)_klayout.cdl -l $(LAY_DIR)/$(CELL).gds.gz -c $(CELL)
-	mv $(LVS_RPT_DIR)/$(CELL).klayout.lvs/$(CELL)_extracted.cir $(NET_LAY_DIR)/$(CELL)_klayout.cir
+#	lvs_top.py check takes the verdict from the .lvsdb, per circuit, so the exit code of sak-lvs.sh is not needed.
+	sak-lvs.sh -d -k -w $(LVS_RPT_DIR) -s $(NET_SCH_DIR)/$(CELL)_klayout.cdl -l $(LAY_DIR)/$(CELL).gds.gz -c $(CELL); \
+	python3 $(SCRIPTS_DIR)/lvs_top.py check --engine klayout --cell $(CELL)
 .PHONY: klayout-lvs
 
-magic-lvs-netlist: ## Export SPICE schematic netlist from Xschem for Magic + Netgen LVS (usage: make magic-lvs-netlist [CELL=<cellname>] [EV_PRECISION=<digits>])
+magic-lvs-netlist: ## Build the SPICE reference netlist of the top-level Magic + Netgen LVS (usage: make magic-lvs-netlist [CELL=<cellname>])
 	mkdir -p $(NET_SCH_DIR)
-	xschem -s -r -x -q --rcfile $(XSCHEM_SCH_DIR)/xschemrc --command ' \
-		set spiceprefix 1; \
-		set lvs_netlist 0; \
-		set top_is_subckt 1; \
-		set lvs_ignore 1; \
-		set ev_precision $(EV_PRECISION); \
-		set netlist_dir $(NET_SCH_DIR); \
-		xschem set netlist_name [file tail [file rootname [xschem get current_name]]]_magic.spice; \
-		xschem netlist \
-	' $(XSCHEM_SCH_DIR)/$(CELL).sch
+	python3 $(SCRIPTS_DIR)/lvs_top.py netlist --engine magic --top $(TOP) --cell $(CELL)
 .PHONY: magic-lvs-netlist
 
-magic-lvs: ## Run Magic + Netgen LVS of the CELL cell (usage: make magic-lvs [CELL=<cellname>])
-	mkdir -p $(LVS_RPT_DIR)
-	mkdir -p $(NET_LAY_DIR)
+magic-lvs: ## Run the top-level Magic + Netgen LVS of the CELL cell (usage: make magic-lvs [CELL=<cellname>])
 	$(MAKE) magic-lvs-netlist CELL=$(CELL)
-	sak-lvs.sh -d -w $(LVS_RPT_DIR) -s $(NET_SCH_DIR)/$(CELL)_magic.spice -l $(LAY_DIR)/$(CELL).gds.gz -c $(CELL)
-	mv $(LVS_RPT_DIR)/$(CELL).magic.lvs/$(CELL).ext.spc $(NET_LAY_DIR)/$(CELL)_magic.ext.spc
+	mkdir -p $(LVS_RPT_DIR)
+	python3 $(SCRIPTS_DIR)/lvs_top.py magic --top $(TOP) --cell $(CELL)
 .PHONY: magic-lvs
 # ================================================================================================
 
@@ -562,8 +538,8 @@ all: ## Build, verify, simulate and package the whole chip
 #	$(MAKE) magic-drc CELL=$(TOP)_logo_fill
 	$(MAKE) klayout-drc-regular
 	$(MAKE) gdscheck-drc-regular
-#	$(MAKE) klayout-verify
-#	$(MAKE) magic-verify
+	$(MAKE) klayout-lvs CELL=$(TOP)_logo_fill
+	$(MAKE) magic-lvs CELL=$(TOP)_logo_fill
 	$(MAKE) sim-all
 	$(MAKE) bondplan
 .PHONY: all
@@ -592,6 +568,9 @@ release: ## Copy the gds, netlist files and chip renders to the release folder (
 
 # Regression Target
 regression: ## Regression test target for IIC-OSIC-TOOLS
+# 	Top-level KLayout LVS of the committed chip, before the macros below rebuild their views.
+	$(MAKE) klayout-lvs
+
 # 	Analog macro: inverter (Xschem + CACE + layout scripts + DRC/LVS/PEX + build-top)
 	$(MAKE) -C $(MACROS_DIR)/inverter sim-xschem TB=inverter_tb_dc_vout
 # 	ONE CACE run: the lightweight AC VDD sweep (no Monte-Carlo) to keep runtime short.

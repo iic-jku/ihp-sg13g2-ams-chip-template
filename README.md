@@ -120,8 +120,10 @@ A designer-oriented description of this chip can be found in [doc/](doc/):
 │  │  ├─ chip_top.sdc
 │  │  ├─ config.yaml
 │  │  └─ pdn_cfg.tcl
-│  └─ 📁 logo/
-│     └─ chip_logo_mono.png
+│  ├─ 📁 logo/
+│  │  └─ chip_logo_mono.png
+│  └─ 📁 lvs/
+│     └─ config.yaml
 ├─ 📁 ip/
 │  ├─ 📁 sg13g2_io_custom/
 │  ├─ 📁 sg13g2_ip__bondpad_70x70/
@@ -241,7 +243,8 @@ A designer-oriented description of this chip can be found in [doc/](doc/):
 ├─ 📁 scripts/
 │  ├─ add_logo_fill.sh
 │  ├─ add_rectangle.py
-│  └─ check_pex_ports.py
+│  ├─ check_pex_ports.py
+│  └─ lvs_top.py
 ├─ 📁 testbenches/
 │  ├─ 📁 cocotb/
 │  │  ├─ chip_top_tb.gtkw
@@ -375,12 +378,13 @@ Every coloured branch corresponds to one deliverable (top chip, bondpad, RF pad,
 
 Solid arrows are direct `$(MAKE) <target>` calls within a single Makefile. Dashed arrows descend into a subdirectory, either as a recursive `$(MAKE) -C <dir> all` call into a sub-Makefile or as the Python bondplan flow in `packaging/`. The numbers on the second level give the execution order of `make all`, and the vertical order inside the coloured boxes gives the execution order of each sub-Makefile.
 
-At the top level, `make all` runs four steps in this order:
+At the top level, `make all` runs five steps in this order:
 
 1. `build-all` initialises the submodules and builds every component by calling its own `all` target: bondpad, RF pad, logos, digital macro, analog macro, and finally the chip assembly with `build-top` (LibreLane, copy-back of all artifacts, logo and fill insertion, final GDS render).
 2. `klayout-drc-regular` (the sign-off deck) and `gdscheck-drc-regular` run the DRC of the final `chip_top_logo_fill` GDS. A violation stops `make all`, and gdscheck flags IHP's own cells until the fix is in the container (see [Design Rule Check (DRC)](#design-rule-check-drc)). `magic-drc` is left out until IHP's IO pads and SRAM are clean in Magic, and it takes about a day on the chip.
-3. `sim-all` runs the top-level RTL and gate-level simulations on the netlists produced by this build.
-4. `bondplan` generates the bonding diagram, the bondwires, and the pin table.
+3. `klayout-lvs` and `magic-lvs` run the top-level LVS of the final `chip_top_logo_fill` GDS at transistor level (see [Top-Level Layout Versus Schematic (LVS)](#top-level-layout-versus-schematic-lvs)). A mismatch stops `make all`.
+4. `sim-all` runs the top-level RTL and gate-level simulations on the netlists produced by this build.
+5. `bondplan` generates the bonding diagram, the bondwires, and the pin table.
 
 Every component follows the same principle. The simulations always run last, so they use the artifacts that the same invocation has just produced.
 
@@ -855,48 +859,64 @@ make gdscheck-drc CELL=chip_top_logo_fill GDSCHECK_DECKS=metal1,via1
 > A flow stops on a violation of any engine it calls, so the flows leave the Magic DRC out until the fixes are in the container: its lines are commented out in `magic-verify`, in the IP `all` and in `make all`, and `magic-drc` still runs it on its own. gdscheck stays in, so until a release with the fix is in the container it stops `make build-all` and `make all` at the inverter. To continue meanwhile, run the later steps directly (`magic-verify`, `build-top`). Upstream calls gdscheck experimental, so a clean gdscheck run is no sign-off on its own.
 
 
-### Export Schematic Netlist for LVS
+### Top-Level Layout Versus Schematic (LVS)
 
-Exports the schematic netlist for LVS from Xschem and places it in `netlist/schematic/`.
-
-The `EV_PRECISION` parameter sets the number of significant digits used by Xschem's `ev` function when calculating device properties (default: 5). Increase this to avoid LVS mismatches caused by floating-point rounding differences between Xschem and KLayout (see [xschem#465](https://github.com/StefanSchippers/xschem/issues/465)).
-
-The `ntap` and `ptap` substrate contacts are ignored during LVS in both flows. `sak-lvs.sh` runs KLayout LVS with the `--disable_tap_extraction` option so it does not extract `ntap` and `ptap` devices from the layout (matching Magic + Netgen LVS).
-
-KLayout uses CDL netlists, while Magic uses SPICE netlists. Accordingly, `klayout-lvs-netlist` uses the Xschem commands `set spiceprefix 1`, `set lvs_netlist 1`, `set top_is_subckt 1`, and `set lvs_ignore 1`, while `magic-lvs-netlist` uses `set spiceprefix 1`, `set lvs_netlist 0`, `set top_is_subckt 1`, and `set lvs_ignore 1`. Hence, switching between CDL and SPICE netlists can be done with `lvs_netlist`.
-
-To extract a CDL schematic netlist for KLayout LVS, use:
-```sh
-make klayout-lvs-netlist
-make klayout-lvs-netlist CELL=chip_top
-make klayout-lvs-netlist EV_PRECISION=5
-```
-
-To extract a SPICE schematic netlist for Magic + Netgen LVS, use:
-```sh
-make magic-lvs-netlist
-make magic-lvs-netlist CELL=chip_top
-make magic-lvs-netlist EV_PRECISION=5
-```
-
-
-### Layout Versus Schematic (LVS)
-
-Exports the schematic netlist from Xschem, then runs LVS. Compares the GDS layout in `layout/` against the schematic netlist in `netlist/schematic/`. Both flows use `sak-lvs.sh` and write their reports into per-cell run folders: `verification/lvs/<CELL>.magic.lvs/` (Magic + Netgen) and `verification/lvs/<CELL>.klayout.lvs/` (KLayout, `.lvsdb`). The run folders are wiped at the start of each run, so they always reflect the latest run only. The extracted layout netlist is moved to `netlist/layout/`.
-
-**KLayout LVS** uses `sak-lvs.sh` (KLayout mode `-k`), which wraps `run_lvs.py` from the IHP Open-PDK:
+LibreLane's own LVS ([`verification/reports/lvs.netgen.rpt`](verification/reports/lvs.netgen.rpt)) extracts the DEF with every standard cell, pad and macro as its LEF abstract and compares it with the powered Verilog. It never reads the GDS, and it compares no transistor of any macro. The top-level LVS compares the GDS itself with a transistor-level reference netlist of the whole chip, once with KLayout and once with Magic + Netgen:
 
 ```sh
-make klayout-lvs
-make klayout-lvs CELL=chip_top
+make klayout-lvs                          # KLayout LVS of layout/chip_top.gds.gz
+make magic-lvs                            # Magic + Netgen LVS of layout/chip_top.gds.gz
+make klayout-lvs CELL=chip_top_logo_fill  # the same on the delivery GDS with logos and fill
+make magic-lvs CELL=chip_top_logo_fill
 ```
 
-**Magic + Netgen LVS** uses `sak-lvs.sh` (Magic + Netgen mode `-m`, the default), which extracts the layout netlist with Magic and compares it against the schematic netlist with Netgen, using the Netgen setup from the IHP Open-PDK:
+`make all` runs both on `chip_top_logo_fill` after the DRC. On a laptop with the `2026.11` image, KLayout took 4 min at 0.9 GB on `chip_top` and 22 min at 2.0 GB on `chip_top_logo_fill`, Magic + Netgen 12 min at 1.4 GB and 16 min at 2.4 GB.
+
+**Reference netlist.** `klayout-lvs-netlist` and `magic-lvs-netlist` build it with [`scripts/lvs_top.py`](scripts/lvs_top.py) from the netlists the GDS was made from, listed in [`flow/lvs/config.yaml`](flow/lvs/config.yaml), and write it to `netlist/schematic/<CELL>_klayout.cdl` and `netlist/schematic/<CELL>_magic.spice`:
+
+| Part of the chip | Netlist (KLayout / Netgen) |
+| --- | --- |
+| Pad ring, glue logic, macro instances | [`netlist/pnl/chip_top.pnl.v`](netlist/pnl/chip_top.pnl.v), the powered netlist LibreLane wrote |
+| Digital macro `counter_top` | [`macros/counter/final/pnl/counter_top.pnl.v`](macros/counter/final/pnl/counter_top.pnl.v) |
+| Analog macro `inverter_top` | [`inverter_top_klayout.cdl`](macros/inverter/netlist/schematic/inverter_top_klayout.cdl) / [`inverter_top_magic.spice`](macros/inverter/netlist/schematic/inverter_top_magic.spice), the netlists its own LVS matched |
+| Standard cells | PDK `sg13g2_stdcell.cdl` / `sg13g2_stdcell.spice` |
+| IO cells | PDK `sg13g2_io.cdl` / `sg13g2_io.spice` |
+| SRAM | PDK `RM_IHPSG13_1P_1024x32_c2_bm_bist.cdl` |
+
+The script turns the Verilog into subcircuit calls with the pins mapped by name and applies the changes `config.yaml` lists. Each one is a fact of the input files, not of the layout:
+
+- `no_devices`: the bondpads and logos hold metal, passivation openings and labels only, so they are left out by their exact name.
+- Taps: the IO cells tie their wells with `ptap1` cards to a global `sub!`. KLayout runs with `--disable_tap_extraction` and Magic extracts no tap devices, so the script removes each tap card and merges its two nets.
+- `pin_alias`: `padbare` of `sg13g2_IOPadAnalog` is the bond pad metal of `pad` and is missing from the PDK netlists.
+- `join`: `VSS` and `IOVSS` are one net in the layout, joined through the substrate.
+- `flatten`: the IO clamps, diodes and three pad types split a net into pieces that only their parent joins, and the SRAM GDS draws small cells flat or puts their devices into the parent. These cells are expanded into their callers, so that the comparer flattens their layout twins too.
+- `rename`: the SRAM CDL comes from another version of IHP's generator than its GDS, so its cells are renamed to the GDS names. Without them the comparer flattens all 32768 bit cells into one circuit and does not finish.
+- `card_edit`: the SRAM CDL writes its LVS-only metal separators as `lvsres` without a layer, the KLayout deck extracts them as `res_metal<N>`.
+- `black_box`: Magic cannot extract the SRAM, so Netgen compares it by its pin names only. KLayout compares it at device level.
+- `magic_flatten`, Netgen only: five small cells inside the IO cells get the implant of a shared diffusion from a neighboring cell. Magic extracts each cell on its own and would short the output enable of the bidir pads to `vdd`, so it reads these cells flat.
+- `diode_wl` and `netgen_setup`, Netgen only: Magic writes W and L of a diode in the order of its orientation, and the IO SPICE writes `R` next to W and L of a poly resistor.
+- The counter macro's GDS carries its own copy of each standard cell, renamed to `sg13g2_inv_1$1` and so on when LibreLane merged the GDS. Inside `counter_top` the reference calls these names.
+- KLayout gives a layout cell a pin only for a net that leaves the cell. A port that no instance connects, such as the output of the clock tree's load inverter, is therefore left out of that cell for KLayout.
+
+The header of each reference netlist lists every change and the MD5 of every input, so the netlist can be read and checked on its own.
+
+**KLayout** runs `sak-lvs.sh -k`, the PDK's `run_lvs.py` in deep mode with `--disable_tap_extraction`. **Magic + Netgen** runs `lvs_top.py magic`: Magic extracts the GDS hierarchically, because a flat comparison of the chip does not finish, and Netgen compares it with the PDK setup plus the lines `lvs_top.py` adds (`mm_ok` deleted, layout cells without devices ignored by their exact name, `netgen_setup` from `config.yaml`).
+
+**Delivery GDS.** `chip_top_logo_fill` holds `chip_top` next to the fill cells and has no labels of its own. KLayout gives `chip_top` no pins there, because no net leaves it, so the KLayout reference writes the chip under the wrapper's name and the comparer flattens the layout `chip_top` into the wrapper. Magic gives `chip_top` its pins from its labels, so the Netgen reference calls `chip_top` from a wrapper without pins.
+
+**Verdict.** `lvs_top.py check` decides, not the exit code of the engine: every circuit pair of the `.lvsdb` has to match (a child that fails turns all its parents `Skipped` without naming a mismatch there), and the Netgen report has to end with `Circuits match uniquely.` without property errors. The result goes to `verification/lvs/<CELL>.klayout.lvs/<CELL>.lvs.summary` and `verification/lvs/<CELL>.magic.lvs/<CELL>.lvs.summary`. The KLayout database (`<CELL>.lvsdb`, 130 to 270 MB) and both extracted netlists stay in the run folders and are not committed. To see a mismatch, open the `.lvsdb` in KLayout (`Tools > Netlist Browser`, `File > Open`) together with the GDS.
+
+**Negative control.** A pass only counts if a wrong reference fails. `--plant <cell>/<instance>:<pin>,<pin>` swaps two nets in the reference, `--plant <cell>/<instance>:<param>=<value>` changes a device parameter, for example `D` and `RESET_B` of a flip-flop inside the counter macro:
 
 ```sh
-make magic-lvs
-make magic-lvs CELL=chip_top
+python3 scripts/lvs_top.py netlist --engine klayout --top chip_top --cell chip_top --plant counter_top/_66_:D,RESET_B -o /tmp/planted.cdl
+sak-lvs.sh -k -w /tmp/planted -s /tmp/planted.cdl -l layout/chip_top.gds.gz -c chip_top
+python3 scripts/lvs_top.py check --engine klayout --cell chip_top --work /tmp/planted/chip_top.klayout.lvs   # must report FAIL
 ```
+
+**Adding a macro.** Add its powered netlist (digital) or its LVS netlists (analog) to `config.yaml`. A cell the chip instantiates that no listed netlist defines stops the script with its name.
+
+**Limits.** Since `VSS` and `IOVSS` are one net here, a metal short between them is invisible to the top-level LVS. LibreLane's DEF-based LVS keeps them apart and sees it. The SRAM is compared at device level by KLayout only.
 
 
 ### Build Xschem PEX Symbol
@@ -1096,7 +1116,7 @@ The following netlist folders are exported:
 > `netlist/pex` is **not** copied by the `release` target. It holds the Magic-extracted top-level netlist (`chip_top_magic_pex_1.spice`, ~73 MB and ~566k lines even in the C-decoupled `EXT_MODE=1`). Since `release/` is committed to the repository, copying it would add those ~73 MB to every released version. The netlist stays available in `netlist/pex/`.
 
 > [!NOTE]
-> `netlist/schematic` and `netlist/layout` are still empty. The schematic netlist is written by `klayout-lvs-netlist` / `magic-lvs-netlist` and the extracted layout netlist by `klayout-lvs` / `magic-lvs`, and the top-level LVS is not finished yet. Both folders fill up once it runs through.
+> `netlist/schematic` holds the reference netlists of the top-level LVS, written by `klayout-lvs-netlist` and `magic-lvs-netlist`. `netlist/layout` stays empty: the top-level LVS keeps its extracted layout netlists next to its reports in `verification/lvs/`, rebuilds them on every run and does not commit them.
 
 The following chip renders are exported:
 
@@ -1142,8 +1162,9 @@ To keep the runtime low while still covering the full toolchain, the regression 
 - Only **one** logo (`sg13g2_ip__jku`) is regenerated. It is the only step that exercises the PNG to GDS flow. The other two logos (`sg13g2_ip__jku_names`, `sg13g2_ip__template_name`) use an identical toolchain and reuse their committed views.
 - Exactly **one** CACE parameter set is run (the AC VDD sweep `ac_params`, no Monte Carlo). Swap `ac_params` for `ac_mc_params` / `ac_mm_params` in the target to also exercise the Monte Carlo flow.
 - The vco runs only its layout scripts (`klayout-script-all`), which catch a PDK update that breaks one of them. The chip does not build the vco yet.
+- The top-level LVS runs once, with KLayout on `chip_top`, and first, so it compares the committed GDS with the committed netlists before the macros are rebuilt. Magic + Netgen and the delivery GDS `chip_top_logo_fill` are left to `make all`.
 
-The regression runs bottom-up: first the inverter macro, the layout scripts of the vco and the counter macro, then the top-level prerequisites (submodules, bondpad, RF pad, logo) and finally the chip top-level LibreLane run that integrates the freshly built macros and IP. After the counter is hardened, `copy-final` copies its fresh `flow/final/` views into `macros/counter/final/`, so that the logic equivalence check (`lec`), the gate-level simulations (`sim-gl-cocotb`, `sim-gl-sdf-cocotb`) and the chip top-level integration use the freshly built outputs rather than the committed ones.
+The regression runs bottom-up after the top-level LVS: first the inverter macro, the layout scripts of the vco and the counter macro, then the top-level prerequisites (submodules, bondpad, RF pad, logo) and finally the chip top-level LibreLane run that integrates the freshly built macros and IP. After the counter is hardened, `copy-final` copies its fresh `flow/final/` views into `macros/counter/final/`, so that the logic equivalence check (`lec`), the gate-level simulations (`sim-gl-cocotb`, `sim-gl-sdf-cocotb`) and the chip top-level integration use the freshly built outputs rather than the committed ones.
 
 The following tools and flows are checked:
 
@@ -1159,6 +1180,7 @@ The following tools and flows are checked:
 | KLayout layout scripts with the PDK PCells (`klayout -b`) | inverter and vco `klayout-script-all` |
 | KLayout DRC (`sak-drc.sh`) + KLayout LVS (`sak-lvs.sh`) + KLayout PEX (`kpex`) | inverter `klayout-verify CELL=inverter_top` |
 | Magic extract + Netgen LVS (`sak-lvs.sh`) + Magic PEX (`sak-pex.sh`) | inverter `magic-verify CELL=inverter_top` |
+| Top-level KLayout LVS (`scripts/lvs_top.py` + `sak-lvs.sh -k`) | `klayout-lvs` |
 | Magic LEF export + LIB + Verilog stub + `sak-render.py` render | inverter `build-top` |
 | Verilator lint | counter `lint-verilog-all` |
 | Icarus Verilog (`iverilog`/`vvp`) | counter `sim-rtl-verilog` |
