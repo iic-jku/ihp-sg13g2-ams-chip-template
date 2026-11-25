@@ -668,6 +668,9 @@ regression: ## Regression test target for IIC-OSIC-TOOLS
 	$(MAKE) -C $(IP_DIR)/sg13g2_ip__jku all
 # 	librelane-nodrc: full RTL-to-GDS. DRC is skipped for runtime.
 	$(MAKE) librelane-nodrc
+# 	gdscheck and KLayout DRC of the committed chip GDS, which passes both, so that a PDK or tool update that breaks a rule deck fails the regression.
+	$(MAKE) gdscheck-drc-regular
+	$(MAKE) klayout-drc-minimum
 .PHONY: regression
 # ================================================================================================
 

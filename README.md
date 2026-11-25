@@ -1148,14 +1148,14 @@ This target also runs automatically in continuous integration: the [`regression`
 To keep the runtime low while still covering the full toolchain, the regression makes the following trade-offs:
 
 - The counter macro is hardened with `librelane-magicdrc` (only **Magic DRC** enabled, the slower KLayout DRC is skipped). Netgen LVS still runs as part of the flow.
-- The chip top-level runs `librelane-nodrc`. All DRC checks are skipped to save runtime on the large top-level assembly. The macros and IP blocks are DRC-checked individually beforehand, so this only leaves the top-level routing/fill unchecked.
-- KLayout DRC (`sak-drc.sh`) is skipped inside the LibreLane runs, but is still exercised in the bondpad, RF pad and logo IP builds, and in the inverter `klayout-verify`.
-- Magic DRC (`sak-drc.sh -m`) runs once, as `magic-drc` of the bondpad, which passes it, so a broken Magic fails the regression. gdscheck DRC (`sak-drc.sh -g`) runs in the bondpad, RF pad and logo IP builds.
+- The chip top-level runs `librelane-nodrc`, so no DRC runs inside its flow, and the macros and IP blocks are DRC-checked individually beforehand. `gdscheck-drc-regular` and `klayout-drc-minimum` then check the committed `layout/chip_top_logo_fill.gds.gz`, which passes both. It is not the layout this run builds, since the regression adds no logo and filler, so a PDK or tool update that breaks a rule deck fails the regression while the new top-level routing stays unchecked. On 4 CPUs the two take about 3 and 4 min.
+- KLayout DRC (`sak-drc.sh`) is skipped inside the LibreLane runs, but is still exercised in the bondpad, RF pad and logo IP builds, in the inverter `klayout-verify` and on the chip GDS (`klayout-drc-minimum`).
+- Magic DRC (`sak-drc.sh -m`) runs once, as `magic-drc` of the bondpad, which passes it, so a broken Magic fails the regression. gdscheck DRC (`sak-drc.sh -g`) runs in the bondpad, RF pad and logo IP builds and on the chip GDS (`gdscheck-drc-regular`).
 - Only **one** logo (`sg13g2_ip__jku`) is regenerated. It is the only step that exercises the PNG to GDS flow. The other two logos (`sg13g2_ip__jku_names`, `sg13g2_ip__template_name`) use an identical toolchain and reuse their committed views.
 - Exactly **one** CACE parameter set is run (the AC VDD sweep `ac_params`, no Monte Carlo). Swap `ac_params` for `ac_mc_params` / `ac_mm_params` in the target to also exercise the Monte Carlo flow.
 - The vco runs only its layout scripts (`klayout-script-all`), which catch a PDK update that breaks one of them. The chip does not build the vco yet.
 
-The regression runs bottom-up: first the inverter macro, the layout scripts of the vco and the counter macro, then the top-level prerequisites (submodules, bondpad, RF pad, logo) and finally the chip top-level LibreLane run that integrates the freshly built macros and IP. After the counter is hardened, `copy-final` copies its fresh `flow/final/` views into `macros/counter/final/`, so that the logic equivalence check (`lec`), the gate-level simulations (`sim-gl-cocotb`, `sim-gl-sdf-cocotb`, `sim-gl-power-cocotb`) and the chip top-level integration use the freshly built outputs rather than the committed ones.
+The regression runs bottom-up: first the inverter macro, the layout scripts of the vco and the counter macro, then the top-level prerequisites (submodules, bondpad, RF pad, logo) and finally the chip top-level LibreLane run that integrates the freshly built macros and IP, followed by the DRC of the committed chip GDS. After the counter is hardened, `copy-final` copies its fresh `flow/final/` views into `macros/counter/final/`, so that the logic equivalence check (`lec`), the gate-level simulations (`sim-gl-cocotb`, `sim-gl-sdf-cocotb`, `sim-gl-power-cocotb`) and the chip top-level integration use the freshly built outputs rather than the committed ones.
 
 The following tools and flows are checked:
 
@@ -1178,6 +1178,7 @@ The following tools and flows are checked:
 | `fst2vcd` + OpenSTA power from the gate-level waveform (`read_vcd`, `report_power`) | counter `sim-gl-power-cocotb` |
 | Yosys + nextpnr-ice40 + icepack (FPGA) | counter `build-fpga` |
 | LibreLane (OpenROAD / Yosys / KLayout streamout / Netgen LVS) | counter `librelane-magicdrc`, chip `librelane-nodrc` |
+| gdscheck DRC (`main` suite) + KLayout DRC (`precheck` level) of the whole chip | `gdscheck-drc-regular`, `klayout-drc-minimum` on the committed `chip_top_logo_fill.gds.gz` |
 | Magic DRC (sign-off, run inside LibreLane) | counter `librelane-magicdrc` |
 | EQY + yosys-slang (logic equivalence check of the netlist against the RTL) | counter `lec`, `lec-mutant` |
 | `verilog2sym.py` (Xschem symbol check) + `spi2xspice.py` + `sak-pin-reorder.py` (XSPICE model) | counter `generate-xspice` |

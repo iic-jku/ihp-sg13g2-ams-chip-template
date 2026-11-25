@@ -3083,7 +3083,7 @@ The first build writes the layout, the netlists, the renders and the reports und
 
   The [macros README](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/README.md#register-the-macro-at-the-chip-top-level) lists every place where a new macro is registered at the chip top-level. Remove the example macros once your own ones replace them.
 - **Floorplan, pinout and package.** Adapt the die area, the pad ring and the macro placements in `flow/librelane/config.yaml` (see @sec-top), the `PINOUT` map in `packaging/config.yaml` (see @sec-packaging), and the chip documentation in `doc/`. @sec-exercise4 and @sec-exercise5 walk through exactly these changes.
-- **Regression.** The `regression` target, which CI runs on every push to `main`, tests the counter and inverter macros and runs the layout scripts of the vco. Point it at your own macros once the examples are gone.
+- **Regression.** The `regression` target, which CI runs on every push to `main`, tests the counter and inverter macros and runs the layout scripts of the vco. It also DRC-checks the committed chip GDS, which passes only once the layout of your first build is committed, since the renamed template GDS still holds the old top cell. Point it at your own macros once the examples are gone.
 
 ::: {.callout-important}
 The logos stay, and they put the template's identity on the die. Replace them before a tapeout, @sec-ip shows how the logo IPs are generated from PNG images:

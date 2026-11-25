@@ -40,7 +40,7 @@ NEXT_STEPS = [
     "flow/librelane/config.yaml: DIE_AREA, the pad ring and the MACROS placements",
     "packaging/config.yaml: the PINOUT map",
     "doc/specifications.md, doc/pinout.md, doc/floorplan.md and the description in README.md",
-    "the regression target in the Makefile tests the counter and inverter macros, point it at your own macros once you replace them",
+    "the regression target in the Makefile tests the counter and inverter macros, point it at your own macros once you replace them, and its chip DRC needs the committed layout of your first build",
 ]
 
 # How the new chip is built, the last of the next steps
