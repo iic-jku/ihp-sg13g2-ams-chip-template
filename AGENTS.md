@@ -38,7 +38,8 @@ make all                           # build-all, regular KLayout and gdscheck DRC
 make build-all                     # submodules, bondpad, RF pad, logos, macros, build-top
 make build-top                     # librelane-nodrc, copy reports/GDS/netlists/render, add-logo-fill, render-gds
 make sim-rtl-cocotb                # chip RTL simulation (cocotb on Icarus Verilog)
-make sim-all                       # RTL and gate-level cocotb, gate-level Xschem/ngspice
+make sim-all                       # RTL and gate-level cocotb, gate-level power, gate-level Xschem/ngspice
+make sim-gl-power-cocotb           # OpenSTA power of the chip from the gate-level cocotb waveform
 make klayout-drc-regular           # full KLayout DRC of layout/chip_top_logo_fill.gds.gz
 make klayout-verify CELL=<cell>    # KLayout DRC, LVS and PEX of layout/<cell>.gds.gz
 make magic-verify CELL=<cell>      # Magic/Netgen LVS and Magic PEX, its DRC is commented out
@@ -48,6 +49,7 @@ make -C macros/counter lint-verilog-all     # Verilator lint (template macro)
 make -C macros/counter sim-rtl-verilog      # Icarus Verilog testbench
 make -C macros/counter sim-rtl-cocotb       # cocotb testbench
 make -C macros/counter lec                  # prove the final netlist equivalent to the RTL (EQY)
+make -C macros/counter sim-gl-power-cocotb  # OpenSTA power of the final netlist from the gate-level cocotb waveform
 make -C macros/counter all                  # lint, FPGA build, LibreLane, LEC, Magic PEX, simulations
 make -C macros/inverter sim-xschem TB=<tb>  # one Xschem testbench in batch mode (template macro)
 make -C macros/inverter all                 # KLayout DRC/LVS/PEX, gdscheck DRC, Magic LVS/PEX, LEF/LIB/Verilog stub, simulations, CACE
