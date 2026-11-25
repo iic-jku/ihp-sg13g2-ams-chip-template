@@ -41,6 +41,7 @@ NEXT_STEPS = [
     "packaging/config.yaml: the PINOUT map",
     "doc/specifications.md, doc/pinout.md, doc/floorplan.md and the description in README.md",
     "the regression target in the Makefile tests the counter and inverter macros, point it at your own macros once you replace them",
+    "flow/lvs/config.yaml: the netlists of your own macros for the top-level LVS, once you replace the example macros",
 ]
 
 # How the new chip is built, the last of the next steps

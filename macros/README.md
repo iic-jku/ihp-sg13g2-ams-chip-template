@@ -119,9 +119,10 @@ There is no central macro list. A new macro is added in these places, all relati
 2. `rtl/chip_core.sv`: instantiate the macro.
 3. `flow/librelane/config.yaml`: a `MACROS` entry with the view paths (`dir::../../macros/<NAME>/final/...`) and the instance placement. The placement of an analog macro snaps to the Metal3 routing grid, see [doc/floorplan.md](../doc/floorplan.md).
 4. `flow/librelane/pdn_cfg.tcl`: a `define_pdn_grid -macro` block when the power pins of the macro are not on the layers of the default grid, see the `inverter_top` blocks at the end of the file.
-5. `schematic/xschem/xschemrc`: a `source` line for the `xschemrc` of the new macro, without it the symbols of the macro do not resolve at the chip top-level.
-6. `schematic/xschem/chip_top.sch`: place the symbol of the macro.
-7. `testbenches/cocotb/chip_top_tb.py`: the `sources` list names the netlist or RTL and the stub of every macro.
-8. The documentation: [doc/floorplan.md](../doc/floorplan.md), [doc/specifications.md](../doc/specifications.md), [doc/pinout.md](../doc/pinout.md) when pins change, and the top-level `README.md`.
+5. `flow/lvs/config.yaml`: the powered netlist of a digital macro (`macros/<NAME>/final/pnl/<TOP>.pnl.v`) under `verilog`, or the two LVS netlists of an analog macro (`macros/<NAME>/netlist/schematic/<TOP>_klayout.cdl` and `<TOP>_magic.spice`) under `cells`. Without them the top-level LVS stops with the name of the macro.
+6. `schematic/xschem/xschemrc`: a `source` line for the `xschemrc` of the new macro, without it the symbols of the macro do not resolve at the chip top-level.
+7. `schematic/xschem/chip_top.sch`: place the symbol of the macro.
+8. `testbenches/cocotb/chip_top_tb.py`: the `sources` list names the netlist or RTL and the stub of every macro.
+9. The documentation: [doc/floorplan.md](../doc/floorplan.md), [doc/specifications.md](../doc/specifications.md), [doc/pinout.md](../doc/pinout.md) when pins change, and the top-level `README.md`.
 
 `.gitignore` and `REUSE.toml` need no line: their `macros/*/` patterns already cover the build outputs and the files without a license header of every macro, so a new macro passes `reuse lint` and keeps its simulation outputs out of `git status` from the first build. Add the macro to git before running `reuse lint`: git does not report the ignored paths inside a folder it does not track yet, so the lint lists the build outputs of an untracked macro.

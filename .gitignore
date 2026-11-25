@@ -25,6 +25,10 @@ sim_build/
 # /template-only
 /flow/artistic
 /flow/final
+# Top-level LVS: the KLayout database (130 to 270 MB) and both extracted netlists, rebuilt by make klayout-lvs and magic-lvs
+/verification/lvs/*.klayout.lvs/*.lvsdb
+/verification/lvs/*.klayout.lvs/*_extracted.cir
+/verification/lvs/*.magic.lvs/*.ext.spc
 /schematic/xschem/simulations
 /testbenches/xschem/simulations
 /macros/*/verification/cace/_runs
