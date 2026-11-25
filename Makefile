@@ -244,16 +244,23 @@ sim-view-cocotb: ## View CELL cell cocotb simulation waveforms (usage: make sim-
 	fi
 .PHONY: sim-view-cocotb
 
+# xschem exits 10 when a schematic holds a net with a single connection, which a chip top level has by construction: every pad wired as an output leaves its Y unused.
+# The netlist is written in full either way, so the file is the check instead of the exit code.
+# Netlisting descends into the macro schematics, and the load_file_postprocess hook of xschemrc moves netlist_dir to the folder of each one it loads.
+# The recipe clears the hook, so the netlist stays in the simulations folder of the testbench.
 sim-gl-xschem: ## Run gate-level simulation of CELL cell with Xschem in batch mode (usage: make sim-gl-xschem [CELL=<cellname>] [TB=<testbenchname>])
 	mkdir -p $(XSCHEM_TB_DIR)/simulations
 	mkdir -p $(SIM_PLOT_DIR)/data
-	cd $(XSCHEM_TB_DIR) && xschem -r -x -q --rcfile xschemrc --command ' \
+	rm -f $(XSCHEM_TB_DIR)/simulations/$(TB).spice
+	-cd $(XSCHEM_TB_DIR) && xschem -r -x -q --rcfile xschemrc --command ' \
 		xschem set netlist_type spice; \
 		set netlist_dir $(abspath $(XSCHEM_TB_DIR)/simulations); \
+		set load_file_postprocess {}; \
 		xschem save; \
 		write_data [save_params] $(abspath $(XSCHEM_TB_DIR)/simulations)/$(TB).save; \
 		xschem netlist \
 	' $(TB).sch
+	test -s $(XSCHEM_TB_DIR)/simulations/$(TB).spice
 	cd $(XSCHEM_TB_DIR)/simulations && ngspice -b $(TB).spice
 .PHONY: sim-gl-xschem
 

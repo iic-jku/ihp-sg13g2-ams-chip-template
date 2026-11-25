@@ -355,7 +355,7 @@ C {devices/vsource.sym} 420 -1630 0 0 {name=vclk value="pulse(0 \{IOVDD\} 0 100p
 }
 C {devices/lab_wire.sym} 820 -1720 0 0 {name=p18 sig_type=std_logic lab=reset_n}
 C {devices/gnd.sym} 820 -1560 0 0 {name=l10 lab=GND}
-C {devices/vsource.sym} 820 -1630 0 0 {name=vrst value="pulse(\{IOVDD\} 0 \{2/fclk\} 100p 100p \{2/fclk\} 1 1)"
+C {devices/vsource.sym} 820 -1630 0 0 {name=vrst value="pulse(\{IOVDD\} 0 \{2.5/fclk\} 100p 100p \{2/fclk\} 1 1)"
 }
 C {devices/lab_wire.sym} 380 -940 0 0 {name=p1 sig_type=std_logic lab=reset_n}
 C {devices/lab_wire.sym} 380 -1000 0 0 {name=p2 sig_type=std_logic lab=clock}
@@ -402,7 +402,7 @@ C {devices/lab_wire.sym} 1200 -1000 0 1 {name=p24 sig_type=std_logic lab=inv1_do
 C {devices/lab_wire.sym} 380 -880 0 0 {name=p25 sig_type=std_logic lab=enable}
 C {devices/lab_wire.sym} 380 -580 0 0 {name=p27 sig_type=std_logic lab=sram_0_out}
 C {devices/lab_wire.sym} 380 -820 0 0 {name=p28 sig_type=std_logic lab=VIO}
-C {devices/vsource.sym} 420 -1890 0 0 {name=Venable value="pulse(\{IOVDD\} 0 \{100/fclk\} 100p 100p \{100/fclk\} 1 1)"}
+C {devices/vsource.sym} 420 -1890 0 0 {name=Venable value="pulse(\{IOVDD\} 0 \{100.5/fclk\} 100p 100p \{100/fclk\} 1 1)"}
 C {devices/gnd.sym} 420 -1820 0 0 {name=Venable1 lab=GND
 value=\{IOVDD\}}
 C {devices/lab_wire.sym} 420 -1960 0 0 {name=p29 sig_type=std_logic lab=enable}
