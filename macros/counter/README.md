@@ -107,6 +107,7 @@
 │  └─ 📁 xschem/
 │     ├─ counter_top.sym
 │     ├─ counter_top_pex.sym
+│     ├─ counter_top_rtl.sym
 │     └─ xschemrc
 ├─ 📁 scripts/
 │  ├─ check_pex_ports.py
@@ -130,6 +131,7 @@
 │     │  ├─ ngspice2python.py
 │     │  └─ plot_counter_top.py
 │     ├─ counter_top_tb_tran.sch
+│     ├─ counter_top_tb_tran_rtl.sch
 │     └─ xschemrc
 ├─ 📁 verification/
 │  ├─ antenna_summary.rpt
@@ -261,7 +263,7 @@ The waveform viewer can be changed with `WAVEFORM_VIEWER=<gtkwave|surfer>` (defa
 
 > [!NOTE]
 > In the current repository state, the provided Verilog, cocotb, and Xschem testbench/viewer files are for `counter_top`.
-> Running simulation/view targets with another `CELL` requires corresponding testbench files (for example, `testbenches/verilog/<CELL>_tb.*`, `testbenches/cocotb/<CELL>_tb.py`, and `testbenches/xschem/<CELL>_tb_tran.sch`).
+> Running simulation/view targets with another `CELL` requires corresponding testbench files (for example, `testbenches/verilog/<CELL>_tb.*`, `testbenches/cocotb/<CELL>_tb.py`, `testbenches/xschem/<CELL>_tb_tran.sch`, and `testbenches/xschem/<CELL>_tb_tran_rtl.sch`).
 
 #### RTL Verilog Simulation
 
@@ -356,6 +358,26 @@ The estimate has two limits:
 - It is the mean over the whole testbench run. To estimate one operating mode, run a test that stays in that mode.
 - The gate-level simulation has no delays, so glitches cost no power.
 
+#### RTL Xschem Simulation
+
+Runs the RTL in the Xschem testbench `testbenches/xschem/<CELL>_tb_tran_rtl.sch`, before any LibreLane run. Ngspice simulates the testbench, and Icarus Verilog or Verilator runs the RTL inside it as the XSPICE code model `d_cosim`:
+
+```sh
+make sim-rtl-xschem                 # run counter_top RTL Xschem simulation with Icarus Verilog
+make sim-rtl-xschem SIM=verilator   # the same with Verilator
+make sim-rtl-xschem TB_RTL=<tb>     # run another testbench (default: <CELL>_tb_tran_rtl)
+make build-rtl-xschem [SIM=...]     # only compile the RTL and write its d_cosim model
+```
+
+The target runs `build-rtl-xschem`, netlists the testbench and runs `ngspice -b` on it, like `sim-gl-xschem`. `build-rtl-xschem` compiles the RTL (`MODULES_SIM`, or `constants.sv` and the cell for another `CELL`) into `testbenches/xschem/simulations/` and writes the matching model to `simulations/<CELL>_rtl.model`, `.model <CELL>_rtl d_cosim simulation="ivlng" sim_args=["<CELL>.vvp"]` for Icarus Verilog or `.model <CELL>_rtl d_cosim simulation="./<CELL>.so"` for Verilator. The RTL has no `` `timescale ``, and without one Icarus Verilog counts in seconds, so the Icarus build passes `+timescale+1ns/1ps` in the command file `simulations/timescale.f`. The Verilator build runs `ngspice -- vlnggen` (the `--` ends the options of ngspice) and renames the library, which `vlnggen` writes as `.so` when no source ends in `.v`. Both simulators give the same results on this testbench. Icarus Verilog stays the default, because in a reduced test deck ngspice 47 dropped one output change of a Verilator counter.
+
+The DUT is the symbol `schematic/xschem/counter_top_rtl.sym`. Its `format` writes the instance as `A1 [ <inputs> ] [ <outputs> ] counter_top_rtl`, with the ports in the order of the module header and each vector MSB first, so the pin is `counter_value_o[7..0]` and the testbench bus `b[7..0]`. Nothing checks the pins against the RTL: a change of `COUNTER_MAX_DEFAULT` that changes the width of `counter_value_o` needs the pin edited by hand, as Ngspice accepts a pin count that does not match the port. Its `device_model` is `.include counter_top_rtl.model`, so the last build decides the simulator. The `d_cosim` ports are digital, so Ngspice inserts an `adc_bridge` or `dac_bridge` wherever one meets an analog net. The two `pre_set` lines at the top of the testbench's `.control` block set their models: one input threshold at 0.75 V, because a bridge sends `X` between `in_low` and `in_high` and Icarus Verilog counts 0 to `X` and `X` to 1 as two rising clock edges, and outputs from 0 to 1.5 V.
+
+Like the gate-level testbench, it switches `reset_n` and `enable` half a clock cycle after a rising edge, so that no input changes together with the clock. It reads the counter at the falling edges after cycles 10, 50, 150 and 200, expects 3, 3, 99 and 149, and ends with `quit 1` in a batch run otherwise, so the target fails on a missing timescale, a missing `.vvp`, a threshold band, swapped `reset_n` and `enable` pins or an RTL that ignores `enable`.
+
+> [!NOTE]
+> In the GUI, the launchers **Build Icarus Verilog object** and **Build Verilator object** run `make build-rtl-xschem` with `SIM=icarus` or `SIM=verilator`. Click one of them before the first **Simulate** and again after every change of the RTL. Without a build, ngspice stops with `Could not find include file counter_top_rtl.model`.
+
 #### Gate-Level Xschem Simulation
 
 Runs the mixed-signal gate-level transient simulation testbench in `testbenches/xschem/<CELL>_tb_tran.sch`:
@@ -383,7 +405,7 @@ Because the run is headless, the `plot` commands in a testbench's `.control` blo
 
 #### View Xschem Simulation Results
 
-After the gate-level Xschem simulation has completed, plot the results with the script selected by `SCRIPT`, given without the `.py` extension (default: `plot_<CELL>`):
+After an Xschem simulation has completed, plot the results with the script selected by `SCRIPT`, given without the `.py` extension (default: `plot_<CELL>`). `plot_counter_top.py` plots each of `counter_top_tb_tran` and `counter_top_tb_tran_rtl` whose data file exists:
 
 ```sh
 make sim-view-xschem                      # run the default plotting script (plot_counter_top)
@@ -407,10 +429,11 @@ This executes the following targets in order:
 
 1. `sim-rtl-verilog` (default: `counter_top`)
 2. `sim-rtl-cocotb` (default: `counter_top`)
-3. `sim-gl-cocotb` (default: `counter_top`)
-4. `sim-gl-sdf-cocotb` (default: `counter_top`)
-5. `sim-gl-power-cocotb` (`counter_top`)
-6. `sim-gl-xschem` (default: `counter_top`)
+3. `sim-rtl-xschem` (default: `counter_top`)
+4. `sim-gl-cocotb` (default: `counter_top`)
+5. `sim-gl-sdf-cocotb` (default: `counter_top`)
+6. `sim-gl-power-cocotb` (`counter_top`)
+7. `sim-gl-xschem` (default: `counter_top`)
 
 > [!NOTE]
 > The `sim-view-verilog` and `sim-view-cocotb` targets are intentionally **not** called by `sim-all`.
@@ -635,7 +658,7 @@ The generated symbol is a verbatim copy of `<CELL>.sym` with a single change: `t
 `symbol-pex` runs automatically at the start of `klayout-pex` and `magic-pex`, so the symbol is rebuilt from the current `<CELL>.sym` before every extraction and cannot go stale when a pin is added, removed or renamed. Calling it by hand is only needed to refresh the symbol without re-running an extraction. Anything added to the generated file by hand is lost at the next extraction, so make the change in `<CELL>.sym` instead.
 
 > [!NOTE]
-> Every symbol in this project also carries `spectre_format="@name ( @pinlist ) @symname"`. Xschem writes that line itself whenever a symbol is built from a schematic's pin list (key `a`, `make_sym.awk`), and it is read **only** by the Spectre netlister, which is also the one that drives VACASK (`xschem.tcl` configures `vacask "$N"` as the default simulator for `netlist_type spectre`). The SPICE netlister used for ngspice ignores it, so it has no effect on any target in this Makefile.
+> Every symbol in this project except `counter_top_rtl.sym`, whose `d_cosim` model exists only in Ngspice, also carries `spectre_format="@name ( @pinlist ) @symname"`. Xschem writes that line itself whenever a symbol is built from a schematic's pin list (key `a`, `make_sym.awk`), and it is read **only** by the Spectre netlister, which is also the one that drives VACASK (`xschem.tcl` configures `vacask "$N"` as the default simulator for `netlist_type spectre`). The SPICE netlister used for ngspice ignores it, so it has no effect on any target in this Makefile.
 > Do not strip it: without it, instances of the symbol are **silently dropped** from a Spectre/VACASK netlist and the `subckt` line of the symbol itself comes out with an empty port list, with no warning at all.
 
 

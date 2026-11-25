@@ -48,6 +48,7 @@ make regression                    # the CI smoke test
 make -C macros/counter lint-verilog-all     # Verilator lint (template macro)
 make -C macros/counter sim-rtl-verilog      # Icarus Verilog testbench
 make -C macros/counter sim-rtl-cocotb       # cocotb testbench
+make -C macros/counter sim-rtl-xschem       # the RTL in an Xschem testbench (ngspice d_cosim with Icarus Verilog, SIM=verilator for Verilator)
 make -C macros/counter lec                  # prove the final netlist equivalent to the RTL (EQY)
 make -C macros/counter sim-gl-power-cocotb  # OpenSTA power of the final netlist from the gate-level cocotb waveform
 make -C macros/counter all                  # lint, FPGA build, LibreLane, LEC, Magic PEX, simulations
