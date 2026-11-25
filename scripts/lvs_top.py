@@ -923,8 +923,8 @@ def expected_port_mismatch(msg, cell, top, joins):
         return None
     lay, ref = m.group(1).split(","), m.group(2).upper()
     if cell != top:
-        # the chip is flattened into the wrapper, which has no labels: inner nets get no name, pad nets <instance>.<label>
-        lay = [re.sub(r"^\$\d+\.", "", n) for n in lay]
+        # the chip is flattened into the wrapper, which has no labels: inner nets get no name, pad nets <instance>.<label>, one prefix per level
+        lay = [re.sub(r"^(\$\d+\.)+", "", n) for n in lay]
         named = [n for n in lay if not re.fullmatch(r"\$I?\d+", n)]
         if not named:
             return "nets inside the chip, which the wrapper %s gives no name" % cell
@@ -979,6 +979,10 @@ def check(args):
                             why = re.search(r"B\('(.*)'\)", ln)
                             bad.append("%s / %s: %s%s" % (m.group(1), m.group(2), st,
                                                           (", " + why.group(1).replace("\\n", " ")) if why else ""))
+                    elif ln.startswith(" X("):
+                        circuit = None
+                        status["unparsed"] += 1
+                        bad.append("unparsed circuit pair %s" % ln.strip())
         ok = not bad and status["Match"] + status["MatchWithWarning"] > 0
         rows.append("circuit pairs: %s" % ", ".join("%d %s" % (n, s) for s, n in sorted(status.items())))
         rows += ["expected port mismatches: %d, %s" % (n, why) for why, n in sorted(expected.items())]
