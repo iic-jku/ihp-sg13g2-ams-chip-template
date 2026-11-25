@@ -2875,14 +2875,14 @@ KLayout reads CDL and Netgen reads SPICE, so the script builds one reference net
 
 #### Step 2: Building the reference netlist
 
-`make klayout-lvs-netlist` and `make magic-lvs-netlist` run [`scripts/lvs_top.py`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/scripts/lvs_top.py). It reads the cell netlists, turns each Verilog instance into a subcircuit call with its pins mapped by name, and writes only the cells the chip uses. On the way it applies a few changes. None of them hides a layout error. Each is a property of the input files that the layout cannot have:
+`make klayout-lvs-netlist` and `make magic-lvs-netlist` run [`scripts/lvs_top.py`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/scripts/lvs_top.py). It reads the cell netlists, turns each Verilog instance into a subcircuit call with its pins mapped by name, and writes only the cells the chip uses. On the way it applies a few changes. Each is a property of the input files that the layout cannot have, and only `join` costs coverage, as the last section says:
 
 - **Cells without devices.** The bondpads and logos are metal, passivation openings and labels. They have no netlist and are left out by their exact name (`no_devices`). A rule by name prefix could hide a real cell that happens to share the prefix.
 - **Taps.** The IO cells tie their wells with `ptap1` devices to a global substrate net `sub!`. The KLayout run disables tap extraction and Magic extracts no tap devices, so in the layout a well is simply connected to its supply. The script removes each tap card and merges its two nets, which is the same thing on the reference side.
 - **Pin alias.** The template's analog pads connect the bare bond pad through a pin `padbare`, which is the same metal as `pad` and missing from the PDK netlists (`pin_alias`).
 - **One substrate.** `VSS` and `IOVSS` both tap the p-substrate, so the extracted layout has one net where the Verilog has two (`join`).
 - **Nets that only the parent joins.** IHP's ESD clamps and diodes draw their fingers so that one net, for example the pad, is several separate pieces inside the cell, joined only by the pad cell above. The cell alone can never match its netlist. The script expands these cells into their callers (`flatten`), and KLayout then flattens their layout twins too, because a layout cell without a partner is always flattened.
-- **SRAM.** IHP's SRAM CDL comes from another version of the memory generator than its GDS: other cell names (`rename`), five small cells drawn flat in the GDS (`flatten`), and the LVS-only metal separators written as `lvsres` without a layer (`card_edit`). Without the GDS names the comparer would flatten all 32768 bit cells into one circuit and not finish.
+- **SRAM.** IHP's SRAM CDL comes from another version of the memory generator than its GDS: other cell names (`rename`), seven small gates drawn flat in the GDS (`flatten`), and the LVS-only metal separators written as `lvsres` without a layer (`card_edit`). Without the GDS names the comparer would flatten all 32768 bit cells into one circuit and not finish.
 - **Copies of standard cells.** The counter's GDS carries its own copy of every standard cell it uses. When LibreLane merged it into the chip, the copies were renamed `sg13g2_inv_1$1` and so on, and inside `counter_top` the reference calls these names.
 - **Unconnected outputs.** KLayout gives a layout cell a pin only for a net that leaves the cell. The clock tree places a load inverter whose output goes nowhere, so for KLayout its cell is written without that pin.
 
@@ -2922,15 +2922,18 @@ If the chip fails after a change, the header is the first place to look: it show
 
 #### Step 4: Reading the verdict
 
-The exit code of an LVS run is not a verdict: the PDK's KLayout runner ends with 0 on a mismatch. `lvs_top.py check` therefore reads the result itself and writes `verification/lvs/<CELL>.klayout.lvs/<CELL>.lvs.summary` (and the same for Magic):
+The exit code of an LVS run is not the verdict. The KLayout deck fails the comparison on two kinds of port mismatch that the reference fixes cause (see below), and a cell that fails turns its parents `Skipped` instead of failing them. `lvs_top.py check` therefore reads the result itself and writes `verification/lvs/<CELL>.klayout.lvs/<CELL>.lvs.summary` (and the same for Magic):
 
 ```text
 top-level LVS of chip_top_logo_fill, klayout: PASS
 circuit pairs: 89 Match
+expected port mismatches: 341, the wrapper chip_top_logo_fill has no labels, so KLayout names no net of the chip flattened into it
 devices in the reference, counted flat: 400797
 ```
 
 Every circuit pair has to match. A cell that fails turns every cell above it `Skipped`, without a mismatch of its own, so the summary names the failing cells and why their parents were skipped. To see a mismatch in the layout, open `layout/<CELL>.gds.gz` in KLayout, then `Tools > Netlist Browser` and `File > Open` on the `.lvsdb` of the run folder. The browser shows each circuit pair, the nets and devices that do not match, and highlights them in the layout. The `.lvsdb` takes 130 to 270 MB and is not committed, `make klayout-lvs` writes it again.
+
+Inside a matched pair KLayout also records errors, and `check` fails on every one except two kinds of port mismatch. On `chip_top` the net of the joined grounds carries both labels, `IOVSS` and `VSS`, where the reference has one port. On `chip_top_logo_fill` no net of the chip has a name, because the wrapper has no labels and KLayout flattens the chip into it. There the pin names are checked by the run on `chip_top` and by Netgen, which keeps the labels of the chip. Two swapped pad labels fail as a port mismatch, see the next step.
 
 #### Step 5: Proving that the check can fail
 
@@ -2948,18 +2951,20 @@ One planted defect per kind of cell, with the KLayout result on `chip_top`:
 | --- | --- |
 | `D` and `RESET_B` of a flip-flop in the counter macro swapped | FAIL, `counter_top` does not match |
 | `c2p` and `c2p_en` of a bidir pad swapped | FAIL, `chip_top` does not match |
+| Names `clk_PAD` and `rst_n_PAD` exchanged in the reference, as two swapped pad labels | FAIL, port mismatch in `chip_top` |
 | W of a transistor in the inverter macro, 20 µm changed to 21 µm | FAIL, `inverter` does not match |
 | `A_CLK` and `A_ADDR<0>` of the SRAM swapped | FAIL, `chip_top` does not match |
 | `A_DIN<0>` and `A_ADDR<0>` of the SRAM swapped | PASS |
 
 The last line is no hole in the check. The chip ties every unused SRAM input with a tie cell of its own, so two tied inputs are interchangeable: the netlist with the swap is the same graph as the one without it. LVS compares connectivity, not names, and so cannot tell such pins apart. A planted defect only proves something if it swaps two nets that the chip treats differently.
 
-With Magic + Netgen (`lvs_top.py netlist --engine magic --plant ...`, then `lvs_top.py magic --ref <file> --work <dir>`), the flip-flop swap fails too. The changed W is subtler: Netgen still ends with `Circuits match uniquely.` and reports the difference only as a property error, which is why `lvs_top.py check` fails a run on property errors as well.
+With Magic + Netgen (`lvs_top.py netlist --engine magic --plant ...`, then `lvs_top.py magic --ref <file> --work <dir>`), the flip-flop swap fails too, and the swapped pad labels fail pin matching. The changed W is subtler: Netgen still ends with `Circuits match uniquely.` and reports the difference only as a property error, which is why `lvs_top.py check` fails a run on property errors as well.
 
 #### What it does not check
 
 - With `VSS` and `IOVSS` joined, a metal short between them is invisible. LibreLane's DEF-based LVS keeps them apart and catches it.
 - Netgen sees the SRAM by its pins only.
+- On `chip_top_logo_fill`, KLayout cannot check pin names, the run on `chip_top` and Netgen do.
 - LVS compares devices and their connections. A wire that is too thin for its current or a missing ESD path is a matter for other checks.
 
 ### PEX

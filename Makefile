@@ -433,10 +433,12 @@ klayout-lvs-netlist: ## Build the CDL reference netlist of the top-level KLayout
 
 klayout-lvs: ## Run the top-level KLayout LVS of the CELL cell (usage: make klayout-lvs [CELL=<cellname>])
 	$(MAKE) klayout-lvs-netlist CELL=$(CELL)
+	rm -rf $(LVS_RPT_DIR)/$(CELL).klayout.lvs
 	mkdir -p $(LVS_RPT_DIR)
-#	lvs_top.py check takes the verdict from the .lvsdb, per circuit, so the exit code of sak-lvs.sh is not needed.
+#	lvs_top.py check judges the .lvsdb, which the deck also fails on the port mismatches the reference fixes cause, so its exit code is not used.
+#	The old run folder goes first, so that a run that stops early leaves no .lvsdb behind to judge.
 	sak-lvs.sh -d -k -w $(LVS_RPT_DIR) -s $(NET_SCH_DIR)/$(CELL)_klayout.cdl -l $(LAY_DIR)/$(CELL).gds.gz -c $(CELL); \
-	python3 $(SCRIPTS_DIR)/lvs_top.py check --engine klayout --cell $(CELL)
+	python3 $(SCRIPTS_DIR)/lvs_top.py check --engine klayout --top $(TOP) --cell $(CELL)
 .PHONY: klayout-lvs
 
 magic-lvs-netlist: ## Build the SPICE reference netlist of the top-level Magic + Netgen LVS (usage: make magic-lvs-netlist [CELL=<cellname>])

@@ -1,3 +1,4 @@
 top-level LVS of chip_top_logo_fill, klayout: PASS
 circuit pairs: 89 Match
+expected port mismatches: 341, the wrapper chip_top_logo_fill has no labels, so KLayout names no net of the chip flattened into it
 devices in the reference, counted flat: 400797

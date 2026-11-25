@@ -904,7 +904,7 @@ The header of each reference netlist lists every change and the MD5 of every inp
 
 **Delivery GDS.** `chip_top_logo_fill` holds `chip_top` next to the fill cells and has no labels of its own. KLayout gives `chip_top` no pins there, because no net leaves it, so the KLayout reference writes the chip under the wrapper's name and the comparer flattens the layout `chip_top` into the wrapper. Magic gives `chip_top` its pins from its labels, so the Netgen reference calls `chip_top` from a wrapper without pins.
 
-**Verdict.** `lvs_top.py check` decides, not the exit code of the engine: every circuit pair of the `.lvsdb` has to match (a child that fails turns all its parents `Skipped` without naming a mismatch there), and the Netgen report has to end with `Circuits match uniquely.` without property errors. The result goes to `verification/lvs/<CELL>.klayout.lvs/<CELL>.lvs.summary` and `verification/lvs/<CELL>.magic.lvs/<CELL>.lvs.summary`. The KLayout database (`<CELL>.lvsdb`, 130 to 270 MB) and both extracted netlists stay in the run folders and are not committed. To see a mismatch, open the `.lvsdb` in KLayout (`Tools > Netlist Browser`, `File > Open`) together with the GDS.
+**Verdict.** `lvs_top.py check` decides, not the exit code of the engine. Every circuit pair of the `.lvsdb` has to match (a child that fails turns all its parents `Skipped` without naming a mismatch there). Every error KLayout records inside a matched pair fails the run as well, except two kinds of port mismatch that follow from the reference fixes: on `chip_top` the net of the joined `VSS` and `IOVSS` keeps both labels where the reference has one port, and on `chip_top_logo_fill` no net of the chip has a name, because the wrapper has no labels and KLayout flattens the chip into it. The KLayout deck counts these as a failed comparison, which is why its exit code is not used. The Netgen report has to end with `Circuits match uniquely.` without property errors and without failed pin matching. The result goes to `verification/lvs/<CELL>.klayout.lvs/<CELL>.lvs.summary` and `verification/lvs/<CELL>.magic.lvs/<CELL>.lvs.summary`. The KLayout database (`<CELL>.lvsdb`, 130 to 270 MB) and both extracted netlists stay in the run folders and are not committed. To see a mismatch, open the `.lvsdb` in KLayout (`Tools > Netlist Browser`, `File > Open`) together with the GDS.
 
 **Negative control.** A pass only counts if a wrong reference fails. `--plant <cell>/<instance>:<pin>,<pin>` swaps two nets in the reference, `--plant <cell>/<instance>:<param>=<value>` changes a device parameter, for example `D` and `RESET_B` of a flip-flop inside the counter macro:
 
@@ -916,7 +916,7 @@ python3 scripts/lvs_top.py check --engine klayout --cell chip_top --work /tmp/pl
 
 **Adding a macro.** Add its powered netlist (digital) or its LVS netlists (analog) to `config.yaml`. A cell the chip instantiates that no listed netlist defines stops the script with its name.
 
-**Limits.** Since `VSS` and `IOVSS` are one net here, a metal short between them is invisible to the top-level LVS. LibreLane's DEF-based LVS keeps them apart and sees it. The SRAM is compared at device level by KLayout only.
+**Limits.** Since `VSS` and `IOVSS` are one net here, a metal short between them is invisible to the top-level LVS. LibreLane's DEF-based LVS keeps them apart and sees it. On `chip_top_logo_fill`, KLayout cannot check pin names, the run on `chip_top` and Netgen do. The SRAM is compared at device level by KLayout only.
 
 
 ### Build Xschem PEX Symbol
@@ -1012,7 +1012,7 @@ make klayout-pex CELL=chip_top EXT_MODE=3
 
 On top of the extraction the target does four things:
 
-- It passes the CDL netlist of `klayout-lvs-netlist` as schematic (`sak-pex.sh -S`), so that kpex checks its own LVS netlist against the device classes and totals of the schematic. A mismatch fails the target in full-RC (`EXT_MODE=3`) and is only a warning in `EXT_MODE=1` and `2`. A cell without a schematic gets a dummy one.
+- It passes the CDL netlist of `klayout-lvs-netlist`, the reference netlist of the top-level LVS, as schematic (`sak-pex.sh -S`), so that kpex checks its own LVS netlist against the device classes and totals of the schematic. A mismatch fails the target in full-RC (`EXT_MODE=3`) and is only a warning in `EXT_MODE=1` and `2`. A cell without a schematic gets a dummy one.
 - It keeps MIM and MOM capacitors as devices with their models (`--blackbox y`), which kpex would otherwise replace by the extracted capacitance of their plates.
 - It reduces the full-RC netlist with TICER (`KPEX_REDUCE`, default `ticer`), which leaves far fewer elements and a faster simulation, and ngspice with `klu` can lose the operating point of an unreduced netlist (resistors below 1 mOhm).
 - It ties the substrate port `sub!` of the 2.5D netlist to `PEX_SUB_NET` (default `VSS`, `sak-pex.sh -g`), as Magic ties the substrate to `VSS`, so the netlist keeps the pins of `<CELL>_pex.sym`.

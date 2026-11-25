@@ -10,7 +10,7 @@
 #
 # usage: lvs_top.py netlist --engine klayout|magic --top <top> --cell <cell> [-o <file>] [--plant <spec>]
 #        lvs_top.py magic --top <top> --cell <cell> [--gds <file>] [--ref <file>] [--work <dir>]
-#        lvs_top.py check --engine klayout|magic --cell <cell> [--work <dir>]
+#        lvs_top.py check --engine klayout|magic [--top <top>] --cell <cell> [--work <dir>]
 # <cell> is the top cell of layout/<cell>.gds.gz: <top> itself, or a wrapper cell that holds <top>.
 import argparse
 import collections
@@ -143,22 +143,8 @@ def unbang(engine, name):
     return name[:-1] if engine == "magic" and name.endswith("!") else name
 
 
-def drop_placement(t):
-    """A card without the placement notes of a Calibre-extracted CDL: $T=<x> <y> <rotation> <mirror>, $X=, $Y= and $D=."""
-    out, skip = [], 0
-    for x in t:
-        if skip:
-            skip -= 1
-        elif x.startswith("$T="):
-            skip = 3
-        elif not x.startswith(("$X=", "$Y=", "$D=")):
-            out.append(x)
-    return out
-
-
-def read_netlist(path, lib, engine, model_alias):
-    """The subcircuits of a cell netlist into lib, each device model renamed by model_alias."""
-    cur, aliased = None, collections.Counter()
+def read_netlist(path, lib, engine):
+    cur = None
     for s in logical_lines(path):
         if not s or s[0] in "*$":
             continue
@@ -175,25 +161,19 @@ def read_netlist(path, lib, engine, model_alias):
             lib[cur.name] = cur
             cur = None
         elif cur is not None and s[0] != ".":
-            t = drop_placement([x for x in s.split() if x != "/"])
-            for i in range(1, len(t)):
-                if "=" not in t[i] and t[i] in model_alias:
-                    aliased[t[i]] += 1
-                    t[i] = model_alias[t[i]]
+            t = [x for x in s.split() if x != "/"]
             if engine == "magic" and t[0][0].upper() in "MDRC":
                 # a card without a Netgen form stays as it is, emit() stops if it ends up in the reference
                 t = to_x(t) or t
             for i in node_slots(t):
                 t[i] = unbang(engine, t[i])
             cur.cards.append(t)
-    for m, n in sorted(aliased.items()):
-        say("model alias: %d cards of %s in %s read as %s" % (n, m, os.path.basename(path), model_alias[m]))
 
 
 # --- reference fixes -----------------------------------------------------------------------------------------------
 def edit_cards(lib, edits):
-    """Token replacements in single cards, per cell and card name. An empty value deletes the token, a value with spaces
-    becomes several tokens."""
+    """Token replacements in single cards, per cell and card name.
+    An empty value deletes the token, a value with spaces becomes several tokens."""
     for cell, devices in edits.items():
         if cell not in lib:
             die("card_edit: no cell %s" % cell)
@@ -211,30 +191,15 @@ def edit_cards(lib, edits):
 
 
 def rename_cells(lib, rules):
-    """A cell netlist under the names its GDS uses, connections unchanged. A rule swaps the prefix from for to, renames
-    single tails (cells) and appends suffix, for every cell or, with under, for the cells below that one."""
-    scopes = []
-    for r in rules:
-        if "under" not in r:
-            scopes.append(None)
-            continue
-        if r["under"] not in lib:
-            die("rename: no cell %s" % r["under"])
-        below, todo = set(), [r["under"]]
-        while todo:
-            for t in lib[todo.pop()].cards:
-                if t[0][0].upper() == "X":
-                    cell = x_parts(t)[1]
-                    if cell in lib and cell not in below:
-                        below.add(cell)
-                        todo.append(cell)
-        scopes.append(below)
+    """A cell netlist under the names its GDS uses, connections unchanged.
+    A rule swaps the prefix from for to and renames single tails (cells), for library cells only, never for device models."""
+    cells = set(lib)
 
     def new_name(n):
-        for r, scope in zip(rules, scopes):
-            if n.startswith(r.get("from", "")) and (scope is None or n in scope):
-                tail = n[len(r.get("from", "")):]
-                return r.get("to", "") + r.get("cells", {}).get(tail, tail) + r.get("suffix", "")
+        for r in rules:
+            if n in cells and n.startswith(r["from"]):
+                tail = n[len(r["from"]):]
+                return r["to"] + r.get("cells", {}).get(tail, tail)
         return n
     n = 0
     for old in list(lib):
@@ -443,7 +408,6 @@ def module_block(m, lib, mods, cfg, engine):
         union(a, b)
     no_devices = set(cfg.get("no_devices", []))
     pin_alias = cfg.get("pin_alias", {}) or {}
-    tie = cfg.get("tie", {}) or {}
     rows, skipped = [], collections.Counter()
     for cell, inst, con in m.insts:
         if cell in no_devices:
@@ -482,9 +446,6 @@ def module_block(m, lib, mods, cfg, engine):
                 die("pin %s of instance %s is not a port of %s (%s)" % (p, inst, cell, " ".join(b.orig_ports)))
             if nets:
                 flat[p] = nets[0]
-        for p, target in tie.items():
-            if p in b.orig_ports and p not in flat:
-                flat[p] = flat[target]
         rows.append((cell, inst, b.orig_ports, flat))
     if skipped:
         say("%s: cells without devices left out: %s" % (m.name, dict(sorted(skipped.items()))))
@@ -590,19 +551,10 @@ def base(name):
     return re.sub(r"(\$\d+)+$", "", name)
 
 
-def emit(top, lib, table, no_devices, black, engine, top_label=None, device_letter=None):
-    """The subcircuits reachable from top, each library cell under the name of its copy in the GDS parent. With top_label
-    the top is written under that name and without pins. device_letter maps a model prefix to the SPICE letter a deck
-    expects after the X of a device call (XI1 of an nfet becomes XMI1)."""
+def emit(top, lib, table, no_devices, black, engine, top_label=None):
+    """The subcircuits reachable from top, each library cell under the name of its copy in the GDS parent.
+    With top_label the top is written under that name and without pins."""
     out, done, renames = [], set(), collections.Counter()
-    letters = sorted((device_letter or {}).items(), key=lambda kv: -len(kv[0]))
-
-    def device_name(t):
-        _, cell, _ = x_parts(t)
-        for prefix, letter in letters:
-            if cell.startswith(prefix) and t[0][1:2].upper() != letter:
-                return [t[0][0] + letter + t[0][1:]] + t[1:]
-        return t
 
     def calls(name, gname):
         """(card, child cell, GDS name of the child, net of each child port) for the subcircuit calls of a cell."""
@@ -652,7 +604,7 @@ def emit(top, lib, table, no_devices, black, engine, top_label=None, device_lett
             body.append(" ".join(t))
         for t in b.cards:
             if t[0][0].upper() == "X" and x_parts(t)[1] not in lib and x_parts(t)[1] not in no_devices:
-                body.append(" ".join(device_name(t)))
+                body.append(" ".join(t))
         for t, cell, gchild, pm in calls(name, gname):
             if gchild != cell:
                 renames[(gname, cell, gchild)] += 1
@@ -674,8 +626,8 @@ def emit(top, lib, table, no_devices, black, engine, top_label=None, device_lett
 
 
 def plant(lib, spec):
-    """A planted defect for a negative control: <cell>/<instance>:<pin>,<pin> swaps two nets, <cell>/<instance>:<param>=<value>
-    sets a parameter. The instance is named without its card letter (M1 for MM1 and XM1), as both engines' netlists differ in it."""
+    """A planted defect for a negative control: <cell>/<instance>:<pin>,<pin> swaps two nets, <cell>/<instance>:<param>=<value> sets a parameter.
+    The instance is named without its card letter (M1 for MM1 and XM1), as both engines' netlists differ in it."""
     m = re.match(r"([^/]+)/([^:]+):(.+)$", spec)
     if not m or m.group(1) not in lib:
         die("--plant wants <cell>/<instance>:<pin>,<pin> or <cell>/<instance>:<param>=<value>, got %s" % spec)
@@ -691,11 +643,11 @@ def plant(lib, spec):
             t[hit[0]] = what
         else:
             pa, pb = what.split(",")
-            if t[0][0].upper() == "X":
-                nodes, cell, _ = x_parts(t)
-                names = lib[cell].orig_ports if cell in lib else []
-            else:
-                names = ["d", "g", "s", "b"]
+            cell = x_parts(t)[1] if t[0][0].upper() == "X" else None
+            # a subcircuit call has the ports of its cell, a transistor (M card, or the X card Magic reads) d g s b
+            names = lib[cell].orig_ports if cell in lib else ["d", "g", "s", "b"]
+            if pa not in names or pb not in names:
+                die("--plant: %s has no pins %s and %s, only %s" % (inst, pa, pb, " ".join(names)))
             ia, ib = names.index(pa) + 1, names.index(pb) + 1
             t[ia], t[ib] = t[ib], t[ia]
         say("PLANTED DEFECT: %s in %s: %s" % (inst, b.name, what))
@@ -714,7 +666,7 @@ def build(args):
         if not os.path.isfile(path):
             die("cell netlist %s not found" % entry)
         inputs.append(path)
-        read_netlist(path, lib, engine, (cfg.get("model_alias", {}) or {}).get(engine, {}) or {})
+        read_netlist(path, lib, engine)
     edit_cards(lib, (cfg.get("card_edit", {}) or {}).get(engine, {}) or {})
     rename_cells(lib, cfg.get("rename", []) or [])
     mods = {}
@@ -779,23 +731,22 @@ def build(args):
                 n += hit
         if n:
             say("diodes: %d diode cards get the longer side as w, as lvs_top.py magic writes the layout netlist" % n)
-    gds =os.path.join(ROOT, "layout", args.cell + ".gds.gz")
+    gds = os.path.join(ROOT, "layout", args.cell + ".gds.gz")
     if not os.path.isfile(gds):
         die("layout %s not found" % rel(gds))
     table = gds_table(gds)
-    letters = (cfg.get("device_letter", {}) or {}).get(engine, {}) or {}
     if args.cell == args.top:
-        lines = emit(args.top, lib, table, no_devices, black, engine, device_letter=letters)
+        lines = emit(args.top, lib, table, no_devices, black, engine)
     elif args.top not in table.get(args.cell, set()):
         die("the GDS cell %s does not hold %s" % (args.cell, args.top))
     elif engine == "klayout":
-        # KLayout gives a cell pins only where its nets reach the parent, and the wrapper reaches none, so the reference
-        # holds the chip as the wrapper itself and the comparer flattens the layout cell of the chip into it
-        lines = emit(args.top, lib, table, no_devices, black, engine, top_label=args.cell, device_letter=letters)
+        # KLayout gives a cell pins only where its nets reach the parent, and the wrapper reaches none.
+        # So the reference holds the chip as the wrapper itself, and the comparer flattens the layout cell of the chip into it.
+        lines = emit(args.top, lib, table, no_devices, black, engine, top_label=args.cell)
         say("wrapper: %s holds %s, the reference writes the chip under the wrapper's name, without pins" % (args.cell, args.top))
     else:
         # Magic gives the chip its pins from its labels
-        lines = emit(args.top, lib, table, no_devices, black, engine, device_letter=letters)
+        lines = emit(args.top, lib, table, no_devices, black, engine)
         lines += [".SUBCKT %s" % args.cell, " ".join(["X" + args.top] + top.ports + [args.top]), ".ENDS", ""]
         say("wrapper: %s holds %s and has no pins" % (args.cell, args.top))
     out = args.o or os.path.join(ROOT, "netlist", "schematic", args.cell + SUFFIX[engine])
@@ -961,19 +912,36 @@ def run_magic(args):
         subprocess.run(["netgen", "-batch", "lvs", "%s %s" % (ext, args.cell), "%s %s" % (ref, args.cell), setup, report]
                        + (["-blackbox"] if black else []),
                        cwd=work, stdout=lg, stderr=subprocess.STDOUT, stdin=subprocess.DEVNULL, env=env, check=False)
-    sys.exit(check(argparse.Namespace(engine="magic", cell=args.cell, work=work)))
+    sys.exit(check(argparse.Namespace(engine="magic", top=args.top, cell=args.cell, work=work)))
 
 
 # --- verdict -------------------------------------------------------------------------------------------------------
+def expected_port_mismatch(msg, cell, top, joins):
+    """Why a port mismatch that KLayout reports follows from the reference fixes, or None for a real one."""
+    m = re.match(r"Port mismatch '([^']*)' vs\. '([^']*)'$", msg)
+    if not m:
+        return None
+    lay, ref = m.group(1).split(","), m.group(2).upper()
+    if cell != top and all(n.startswith("$") for n in lay):
+        return "the wrapper %s has no labels, so KLayout names no net of the chip flattened into it" % cell
+    for group in joins:
+        if {n.upper() for n in lay} == {n.upper() for n in group} and ref == group[0].upper():
+            return "the layout keeps both labels of the joined nets %s" % ", ".join(group)
+    return None
+
+
 def check(args):
     engine = args.engine
+    top = args.top or args.cell
     work = args.work or os.path.join(ROOT, "verification", "lvs", "%s.%s.lvs" % (args.cell, engine))
     rows, ok = [], True
     if engine == "klayout":
         lvsdb = os.path.join(work, args.cell + ".lvsdb")
         if not os.path.isfile(lvsdb):
             die("no %s, the KLayout run failed (see the log in %s)" % (rel(lvsdb), rel(work)))
-        status, bad = collections.Counter(), []
+        status, bad, expected = collections.Counter(), [], collections.Counter()
+        joins = load_config().get("join", []) or []
+        circuit = None
         # the circuit pairs of the cross-reference section, X(<layout> <reference> <status> ...), () for none
         names = {"1": "Match", "W": "MatchWithWarning", "0": "NoMatch", "X": "Mismatch", "S": "Skipped"}
         with open(lvsdb, encoding="utf-8", errors="replace") as fh:
@@ -982,8 +950,19 @@ def check(args):
                 if ln.startswith("Z("):
                     xref = True
                 elif xref:
+                    e = re.match(r"\s*M\(E B\('(.*)'\)\)", ln)
+                    if e:
+                        # an error inside a circuit pair, KLayout still counts the pair as matched
+                        msg = re.sub(r"\\(.)", r"\1", e.group(1))
+                        why = expected_port_mismatch(msg, args.cell, top, joins)
+                        if why:
+                            expected[why] += 1
+                        else:
+                            bad.append("%s: %s" % (circuit, msg))
+                        continue
                     m = re.match(r" X\((\(\)|\S+) (\(\)|\S+) (\S)", ln)
                     if m:
+                        circuit = m.group(1)
                         st = names.get(m.group(3), m.group(3))
                         status[st] += 1
                         if st not in ("Match", "MatchWithWarning"):
@@ -992,6 +971,7 @@ def check(args):
                                                           (", " + why.group(1).replace("\\n", " ")) if why else ""))
         ok = not bad and status["Match"] + status["MatchWithWarning"] > 0
         rows.append("circuit pairs: %s" % ", ".join("%d %s" % (n, s) for s, n in sorted(status.items())))
+        rows += ["expected port mismatches: %d, %s" % (n, why) for why, n in sorted(expected.items())]
         ref = os.path.join(ROOT, "netlist", "schematic", args.cell + SUFFIX["klayout"])
         if os.path.isfile(ref):
             # the deck simplifies the layout netlist before it writes it, so a flat count of that file is no comparison
@@ -1046,6 +1026,7 @@ def main():
     p.add_argument("--work", help="run folder (default verification/lvs/<cell>.magic.lvs)")
     p = sub.add_parser("check", help="read the result of a run and decide")
     p.add_argument("--engine", choices=SUFFIX, required=True)
+    p.add_argument("--top", help="the chip, when <cell> is a wrapper that holds it (default <cell>)")
     p.add_argument("--cell", required=True)
     p.add_argument("--work", help="run folder (default verification/lvs/<cell>.<engine>.lvs)")
     args = ap.parse_args()

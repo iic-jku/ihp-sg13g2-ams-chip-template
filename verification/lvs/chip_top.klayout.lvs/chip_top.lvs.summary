@@ -1,3 +1,4 @@
 top-level LVS of chip_top, klayout: PASS
 circuit pairs: 89 Match
+expected port mismatches: 1, the layout keeps both labels of the joined nets VSS, IOVSS
 devices in the reference, counted flat: 400797
