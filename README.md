@@ -1163,7 +1163,7 @@ The following tools and flows are checked:
 | Verilator lint | counter `lint-verilog-all` |
 | Icarus Verilog (`iverilog`/`vvp`) | counter `sim-rtl-verilog` |
 | cocotb (RTL + gate-level + timed gate-level with the SDF delays) | counter `sim-rtl-cocotb`, `sim-gl-cocotb`, `sim-gl-sdf-cocotb` |
-| Xschem + ngspice `d_cosim` with Icarus Verilog (RTL inside an analog testbench) | counter `sim-rtl-xschem` |
+| Xschem + ngspice `d_cosim` with Icarus Verilog and Verilator (`vlnggen`), the RTL inside an analog testbench | counter `sim-rtl-xschem`, `sim-rtl-xschem SIM=verilator` |
 | Yosys + nextpnr-ice40 + icepack (FPGA) | counter `build-fpga` |
 | LibreLane (OpenROAD / Yosys / KLayout streamout / Netgen LVS) | counter `librelane-magicdrc`, chip `librelane-nodrc` |
 | Magic DRC (sign-off, run inside LibreLane) | counter `librelane-magicdrc` |

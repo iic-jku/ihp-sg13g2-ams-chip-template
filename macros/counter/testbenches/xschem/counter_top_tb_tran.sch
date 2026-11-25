@@ -189,10 +189,10 @@ wrdata ../plot_simulations/data/@schname\\\\.txt clock enable reset_n b0 b1 b2 b
 .endc"}
 C {devices/lab_wire.sym} 500 -720 0 0 {name=p1 sig_type=std_logic lab=reset_n}
 C {devices/gnd.sym} 500 -580 0 0 {name=l2 lab=GND}
-C {devices/vsource.sym} 500 -650 0 0 {name=vrst value="pulse(0 1.5 \{1/fclk\} 10p 10p \{0.5/fclk*800\} \{1/fclk*600\} 1)"
+C {devices/vsource.sym} 500 -650 0 0 {name=vrst value="pulse(0 1.5 \{1.5/fclk\} 10p 10p \{0.5/fclk*800\} \{1/fclk*600\} 1)"
 }
 C {devices/gnd.sym} 500 -320 0 0 {name=l9 lab=GND}
-C {devices/vsource.sym} 500 -390 0 0 {name=ven value="pulse(1.5 0 \{4/fclk\} 10p 10p \{0.5/fclk*100\} \{1/fclk*100\} 1)"
+C {devices/vsource.sym} 500 -390 0 0 {name=ven value="pulse(1.5 0 \{4.5/fclk\} 10p 10p \{0.5/fclk*100\} \{1/fclk*100\} 1)"
 }
 C {devices/lab_wire.sym} 500 -460 0 0 {name=p11 sig_type=std_logic lab=enable}
 C {devices/launcher.sym} 1700 -1530 0 0 {name=h3

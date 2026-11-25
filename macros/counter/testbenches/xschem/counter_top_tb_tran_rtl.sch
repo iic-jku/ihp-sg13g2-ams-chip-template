@@ -127,7 +127,15 @@ C {devices/vsource.sym} 120 -390 0 0 {name=vclk value="pulse(0 1.5 0 10p 10p \{0
 C {devices/lab_wire.sym} 120 -460 0 0 {name=p2 sig_type=std_logic lab=clock}
 C {devices/gnd.sym} 120 -320 0 0 {name=l1 lab=GND}
 C {devices/title-3.sym} 0 0 0 0 {name=l3 author="Simon Dorrer" rev=1.0 lock=true}
-C {devices/launcher.sym} 1700 -1580 0 0 {name=h2
+C {devices/launcher.sym} 1700 -1630 0 0 {name=h3
+descr="Build Icarus Verilog object" 
+tclcommand="execute 1 sh -c \\"cd $netlist_dir/../../.. && make build-rtl-xschem SIM=icarus\\""
+}
+C {devices/launcher.sym} 1700 -1580 0 0 {name=h4
+descr="Build Verilator object" 
+tclcommand="execute 1 sh -c \\"cd $netlist_dir/../../.. && make build-rtl-xschem SIM=verilator\\""
+}
+C {devices/launcher.sym} 1700 -1530 0 0 {name=h2
 descr="Simulate" 
 tclcommand="xschem save; xschem netlist; file mkdir $netlist_dir; write_data [save_params] $netlist_dir/[file rootname [file tail [xschem get current_name]]].save; xschem simulate"
 }
@@ -135,25 +143,21 @@ C {devices/launcher.sym} 1700 -1480 0 0 {name=h1
 descr="Load waves" 
 tclcommand="xschem raw_read $netlist_dir/[file rootname [file tail [xschem get current_name]]].raw tran"
 }
-C {code_shown.sym} 60 -1510 0 0 {name=NGSPICE
+C {code_shown.sym} 60 -1620 0 0 {name=NGSPICE
 only_toplevel=false
 value="
-*RTL Simulation: the d_cosim instance A1 runs counter_top.vvp in Icarus Verilog
+*RTL Simulation: the d_cosim instance A1 runs the RTL that make build-rtl-xschem or a Build launcher compiled
 .param fclk=50e6
 .csparam fclk=fclk
 .options klu method=gear reltol=1e-3 abstol=1e-12 gmin=1e-12 rshunt=1e14
 .control
 
 * Bridges that ngspice inserts between the analog nets and the digital ports of A1.
-* One input threshold, since Verilog counts a clock edge that passes through X (0 to X to 1) twice.
+* One input threshold, since Icarus Verilog counts a clock edge that passes through X (0 to X to 1) twice.
 pre_set auto_bridge_d_in = ( \\".model auto_adc adc_bridge(in_low=0.75 in_high=0.75
 + rise_delay=500p fall_delay=500p)\\" \\"auto_bridge%d [ %s ] [ %s ] auto_adc\\" )
 pre_set auto_bridge_d_out = ( \\".model auto_dac dac_bridge(out_low=0 out_high=1.5)\\"
 + \\"auto_bridge%d [ %s ] [ %s ] auto_dac\\" )
-
-set num_threads=8
-
-save all
 
 * User Constants
 let tstop = 10u

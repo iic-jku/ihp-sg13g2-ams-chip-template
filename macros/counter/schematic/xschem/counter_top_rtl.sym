@@ -3,8 +3,7 @@ G {}
 K {type=primitive
 format="@name [ @@clock_i @@reset_n_i @@enable_i ] [ @@counter_value_o[7..0] ] @symname"
 template="name=A1"
-device_model=".model counter_top_rtl d_cosim
-+ simulation=\\"ivlng\\" sim_args=[\\"counter_top.vvp\\"]"}
+device_model=".include counter_top_rtl.model"}
 V {}
 S {}
 F {}

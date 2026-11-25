@@ -88,7 +88,9 @@ def plot_transient(ngspice_file, figures_dir, tb_name, sim_kind):
         ("B6", data_b6, "#7b2cbf"),
         ("B7", data_b7, "#b39f00"),
     ]
-    y_ticks = [0.0, 0.5, 1.0, 1.5]
+    # The axis follows the supply, which the clock reaches as its maximum
+    vdd = float(np.max(data_clock))
+    y_ticks = [0.0, vdd / 3, 2 * vdd / 3, vdd]
 
     fig1, axs = plt.subplots(len(signals), sharex=True)
     fig1.set_figwidth(16)
@@ -98,9 +100,9 @@ def plot_transient(ngspice_file, figures_dir, tb_name, sim_kind):
     for ax, (name, values, color) in zip(axs, signals):
         ax.plot(data_time, values, color=color, linewidth=1.3)
         ax.set_ylabel(f'{name} (V)', fontsize=11)
-        ax.set_ylim(-0.1, 1.6)
+        ax.set_ylim(-vdd / 15, vdd * 16 / 15)
         ax.set_yticks(y_ticks)
-        ax.set_yticklabels(["0", "0.5", "1.0", "1.5"], fontsize=8)
+        ax.set_yticklabels(["0"] + [f"{t:.1f}" for t in y_ticks[1:]], fontsize=8)
         ax.tick_params(axis='x', labelsize=8)
         ax.grid(True, alpha=0.4)
 

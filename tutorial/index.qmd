@@ -285,7 +285,7 @@ The [counter Makefile](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/b
 | `make sim-rtl-verilog`                            | Run the testbench with Icarus Verilog (`<CELL>_tb.sv`, falling back to `<CELL>_tb.v`). |
 | `make sim-rtl-cocotb` / `sim-gl-cocotb`           | Run the cocotb RTL / gate-level simulation.                                 |
 | `make sim-gl-sdf-cocotb`                          | Run the cocotb gate-level simulation with the SDF delays of the layout.     |
-| `make sim-rtl-xschem`                             | Run the Xschem testbench with the RTL in Icarus Verilog inside ngspice (batch mode, no LibreLane run needed). `TB_RTL` defaults to `<CELL>_tb_tran_rtl`. |
+| `make build-rtl-xschem` / `sim-rtl-xschem`        | Compile the RTL with Icarus Verilog or Verilator (`SIM`), and run the Xschem testbench with the RTL inside ngspice (batch mode, no LibreLane run needed). `TB_RTL` defaults to `<CELL>_tb_tran_rtl`. |
 | `make sim-view-verilog` / `sim-view-cocotb`       | Open the latest waveform in GTKWave or Surfer.                              |
 | `make librelane` (and `-nodrc`, `-magicdrc`, …)   | Run the LibreLane flow for the counter macro.                               |
 | `make symbol-gl` (`FORCE=1`)                      | Scaffold the Xschem symbol `<CELL>.sym` from the ports of `netlist/pnl/<CELL>.pnl.v`. For a new macro, refuses to overwrite an existing symbol. |
@@ -707,31 +707,38 @@ The LibreLane render is copied to [`render/img/counter_top_librelane.png`](https
 
 ## RTL Mixed-Signal Simulation with Xschem {#sec-rtl-xschem}
 
-The gate-level simulation in the next section simulates the netlist of the hardened macro, so it needs a LibreLane run. The RTL can run in an Xschem testbench before that: Ngspice simulates the analog part of the circuit, and [Icarus Verilog](https://github.com/steveicarus/iverilog) runs the RTL as one element of it, the XSPICE code model `d_cosim`. A digital block can thus be checked against the analog circuit around it before it is hardened, for example the logic of a SAR ADC against its comparator and capacitor array. Stefan Schippers explains the method in his video [Ngspice + Verilog Co-Simulation in Xschem](https://www.youtube.com/watch?v=PPd7jkcHOgA) with the SAR ADC of the Xschem example library [`ngspice_verilog_cosim`](https://github.com/StefanSchippers/xschem/tree/master/xschem_library/ngspice_verilog_cosim). The counter applies it to the testbench of the gate-level simulation.
+The gate-level simulation in the next section simulates the netlist of the hardened macro, so it needs a LibreLane run. The RTL can run in an Xschem testbench before that: Ngspice simulates the analog part of the circuit, and [Icarus Verilog](https://github.com/steveicarus/iverilog) or [Verilator](https://www.veripool.org/verilator/) runs the RTL as one element of it, the XSPICE code model `d_cosim`. A digital block can thus be checked against the analog circuit around it before it is hardened, for example the logic of a SAR ADC against its comparator and capacitor array. Stefan Schippers explains the method in his video [Ngspice + Verilog Co-Simulation in Xschem](https://www.youtube.com/watch?v=PPd7jkcHOgA) with the SAR ADC of the Xschem example library [`ngspice_verilog_cosim`](https://github.com/StefanSchippers/xschem/tree/master/xschem_library/ngspice_verilog_cosim). The counter applies it to the testbench of the gate-level simulation.
 
 ```sh
-make sim-rtl-xschem
+make sim-rtl-xschem                  # the RTL in Icarus Verilog
+make sim-rtl-xschem SIM=verilator    # the RTL in Verilator
 ```
 
-The target compiles the RTL with Icarus Verilog into `testbenches/xschem/simulations/counter_top.vvp`, netlists the testbench [`counter_top_tb_tran_rtl.sch`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/counter/testbenches/xschem/) and runs it with `ngspice -b`, like `sim-gl-xschem` below. The testbench is selected with `TB_RTL=<testbench_name>` (default: `<CELL>_tb_tran_rtl`). It writes its results to `testbenches/xschem/plot_simulations/data/`, and `make sim-view-xschem` plots them next to those of the gate-level run.
+The target first runs `make build-rtl-xschem`, which compiles the RTL with the simulator that `SIM` selects (default: `icarus`) into `testbenches/xschem/simulations/` and writes the matching `d_cosim` model next to it. Then it netlists the testbench [`counter_top_tb_tran_rtl.sch`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/counter/testbenches/xschem/) and runs it with `ngspice -b`, like `sim-gl-xschem` below. The testbench is selected with `TB_RTL=<testbench_name>` (default: `<CELL>_tb_tran_rtl`). It writes its results to `testbenches/xschem/plot_simulations/data/`, and `make sim-view-xschem` plots them next to those of the gate-level run.
 
 ![Xschem RTL testbench `counter_top_tb_tran_rtl`, with the d_cosim instance `A1` of `counter_top_rtl.sym` in place of the XSPICE model.](fig/counter_top/counter_top_tb_tran_rtl_schematic.svg){#fig-counter-top-tb-tran-rtl-schematic}
 
-The testbench is a copy of the gate-level testbench `counter_top_tb_tran.sch`. It drops what only the gate-level and transistor-level models need (the supply, the model libraries, the netlist includes, the operating point) and changes five things: the DUT, the bus order, the bridges, the input timing and a check of the result. With the timescale of the compiled RTL, these are the parts the method needs.
+The testbench is a copy of the gate-level testbench `counter_top_tb_tran.sch`. It drops what only the gate-level and transistor-level models need (the supply, the model libraries, the netlist includes, the operating point), changes the DUT, the bus order and the bridges, and adds two launchers that build the RTL and a check of the result. With the compiled RTL, these are the parts the method needs.
 
 ### The RTL symbol
 
-The DUT is [`schematic/xschem/counter_top_rtl.sym`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/counter/schematic/xschem/), a primitive whose instance Ngspice simulates as `d_cosim`. Its attributes carry the whole binding to the RTL:
+The DUT is [`schematic/xschem/counter_top_rtl.sym`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/tree/main/macros/counter/schematic/xschem/), a primitive whose instance Ngspice simulates as `d_cosim`. Its attributes carry the binding to the RTL:
 
 ```text
 type=primitive
 format="@name [ @@clock_i @@reset_n_i @@enable_i ] [ @@counter_value_o[7..0] ] @symname"
 template="name=A1"
-device_model=".model counter_top_rtl d_cosim
-+ simulation=\\"ivlng\\" sim_args=[\\"counter_top.vvp\\"]"
+device_model=".include counter_top_rtl.model"
 ```
 
-Xschem writes a quote inside an attribute value as `\\"` and emits the `device_model` once at the end of the netlist. `simulation="ivlng"` loads the library of Ngspice that runs a design compiled by Icarus Verilog, and `sim_args` names the compiled file, which Ngspice opens in its working directory `simulations/`. The `format` writes the netlist line of the instance:
+Xschem emits the `device_model` once at the end of the netlist. Its `.include` reads the model that `make build-rtl-xschem` writes into `simulations/`, where Ngspice runs, so the symbol works with either simulator. For Icarus Verilog and for Verilator the model is
+
+```text
+.model counter_top_rtl d_cosim simulation="ivlng" sim_args=["counter_top.vvp"]
+.model counter_top_rtl d_cosim simulation="./counter_top.so"
+```
+
+`ivlng` is the library of Ngspice that runs a design compiled by Icarus Verilog, and `sim_args` names the compiled file. For Verilator, `simulation` loads the library that was built from the RTL. Stefan's example keeps both lines in the instance instead and comments one of them out. The `format` writes the netlist line of the instance:
 
 ```text
 A1 [ clock reset_n enable ] [ b7 b6 b5 b4 b3 b2 b1 b0 ] counter_top_rtl
@@ -752,11 +759,11 @@ pre_set auto_bridge_d_out = ( ".model auto_dac dac_bridge(out_low=0 out_high=1.5
 
 A line that starts with `+` continues the line above it, also inside a quoted string.
 
-The outputs swing from 0 to 1.5 V, and the inputs see the same 500 ps delay as in the XSPICE model of the gate-level run. The input threshold, however, is a single one at half the supply, while the XSPICE model switches at 0.5 V and 1.0 V. Between `in_low` and `in_high` the bridge sends the unknown state `X`, and Verilog counts both 0 to `X` and `X` to 1 as a rising edge. With the levels of the XSPICE model, every clock edge reaches the RTL as 0 to `X` to 1 and the counter steps twice, so it reads 6 instead of 3 after the first ten clock cycles. The values of these models cannot refer to a `.param` (Ngspice stops with `Undefined parameter`), so they are numbers. A testbench for another supply needs other numbers.
+The outputs swing from 0 to 1.5 V, and the inputs see the same 500 ps delay as in the XSPICE model of the gate-level run. The input threshold, however, is a single one at half the supply, while the XSPICE model switches at 0.5 V and 1.0 V. Between `in_low` and `in_high` the bridge sends the unknown state `X`, and Verilog counts both 0 to `X` and `X` to 1 as a rising edge. With the levels of the XSPICE model, every clock edge reaches Icarus Verilog as 0 to `X` to 1 and the counter steps twice, so it reads 6 instead of 3 after the first ten clock cycles. The Verilator model ignores `X` on its inputs and counts right either way. The values of these models cannot refer to a `.param` (Ngspice stops with `Undefined parameter`), so they are numbers. A testbench for another supply needs other numbers.
 
-### The timescale of the RTL
+### Compiling the RTL
 
-The RTL has no `` `timescale `` directive, and without one Icarus Verilog counts the time in seconds. The counter then never sees a clock edge in a 10 µs run, its outputs stay at 0, and nothing reports an error. Adding the directive to the RTL would change the source files of every other flow, so the target passes the timescale of the Verilog testbench in a command file instead:
+The RTL has no `` `timescale `` directive, and without one Icarus Verilog counts the time in seconds. The counter then never sees a clock edge in a 10 µs run, its outputs stay at 0, and nothing reports an error. Adding the directive to the RTL would change the source files of every other flow, so for Icarus Verilog `make build-rtl-xschem` passes the timescale of the Verilog testbench in a command file instead:
 
 ```sh
 echo '+timescale+1ns/1ps' > testbenches/xschem/simulations/timescale.f
@@ -765,13 +772,22 @@ iverilog -g2012 -DSIM -s counter_top -c testbenches/xschem/simulations/timescale
   rtl/constants.sv rtl/counter.sv rtl/counter_top.sv
 ```
 
-`+timescale+` applies to every module that has no `` `timescale `` of its own.
+`+timescale+` applies to every module that has no `` `timescale `` of its own. For Verilator the target runs the `vlnggen` script of Ngspice in `simulations/`, which translates the RTL to C++ and compiles it into a library:
+
+```sh
+cd testbenches/xschem/simulations
+ngspice -- vlnggen -sv -DSIM --top-module counter_top \
+  ../../../rtl/constants.sv ../../../rtl/counter.sv ../../../rtl/counter_top.sv
+mv .so counter_top.so
+```
+
+The `--` keeps Ngspice from reading the Verilator options as its own, and the library comes out as `.so` because `vlnggen` names it after a source ending in `.v`. Verilator needs no timescale here, since the RTL has no delays.
 
 ### Input timing and the check
 
-The gate-level testbench switches `reset_n` and `enable` at rising clock edges, at 20 ns and 80 ns. An input that changes in the same instant as the clock is a race, which the RTL simulation would resolve by the order of its events, so the RTL testbench switches both half a clock cycle later, at a falling edge, as the cocotb testbench does (`1.5/fclk` and `4.5/fclk` in `vrst` and `ven`).
+Both testbenches switch `reset_n` and `enable` half a clock cycle after a rising edge, at a falling edge, as the cocotb testbench does (`1.5/fclk` and `4.5/fclk` in `vrst` and `ven`). An input that changed in the same instant as the clock would be a race, which the gate-level model resolves by its cell delays and the RTL model by the order of its events.
 
-The check reads the counter at the falling clock edges after cycles 10, 50, 150 and 200, away from every input change. The counter must reach 3 before `enable` falls after cycle 4, hold it while `enable` is low, and count once per cycle after cycle 54, which gives 3, 3, 99 and 149. Any other value, or a `meas` that finds none, prints `ERROR: counter_top_rtl does not count as expected`, and in a batch run the `.control` block then ends with `quit 1`, so `make` fails. A missing timescale, a missing `counter_top.vvp`, an input threshold band, swapped `reset_n` and `enable` pins and an RTL that ignores `enable` each make it fail. The check counts clock cycles, so it also holds for another `fclk`, as long as cycle 200 lies within the 10 µs of the run.
+The check reads the counter at the falling clock edges after cycles 10, 50, 150 and 200, away from every input change. The counter must reach 3 before `enable` falls after cycle 4, hold it while `enable` is low, and count once per cycle after cycle 54, which gives 3, 3, 99 and 149. The gate-level run of @fig-counter-top-tb-tran-sim reads the same four values. Any other value, or a `meas` that finds none, prints `ERROR: counter_top_rtl does not count as expected`, and in a batch run the `.control` block then ends with `quit 1`, so `make` fails. A missing timescale, a missing `counter_top.vvp`, an input threshold band, swapped `reset_n` and `enable` pins and an RTL that ignores `enable` each make it fail. The check counts clock cycles, so it also holds for another `fclk`, as long as cycle 200 lies within the 10 µs of the run.
 
 ::: {.callout-tip}
 ## See it fail
@@ -779,30 +795,19 @@ The check reads the counter at the falling clock edges after cycles 10, 50, 150 
 Set `in_low=0.5 in_high=1.0`, the levels of the XSPICE model, in the first `pre_set` line of `counter_top_tb_tran_rtl.sch` and run `make sim-rtl-xschem`. The counter reads 6 instead of 3 after cycle 10, and the target stops with `ERROR: counter_top_rtl does not count as expected`. Change the line back afterwards.
 :::
 
-![Plotted Xschem simulation results of `counter_top_tb_tran_rtl` from `testbenches/xschem/plot_simulations/plot_counter_top.py`.](fig/counter_top/counter_top_tb_tran_rtl_sim.svg){#fig-counter-top-tb-tran-rtl-sim}
+![Plotted Xschem simulation results of `counter_top_tb_tran_rtl` from `testbenches/xschem/plot_simulations/plot_counter_top.py`. Icarus Verilog and Verilator write the same data.](fig/counter_top/counter_top_tb_tran_rtl_sim.svg){#fig-counter-top-tb-tran-rtl-sim}
 
 ### Running the RTL testbench interactively
-
-The testbench also runs in the Xschem GUI with the **Simulate** and **Load waves** launchers, as described in the next section.
 
 ```sh
 cd testbenches/xschem
 xschem counter_top_tb_tran_rtl.sch
 ```
 
-The launchers do not compile the RTL. Run `make sim-rtl-xschem` once before the first simulation and again after every change of the RTL, otherwise Ngspice simulates the last compiled `counter_top.vvp` or, without one, prints `Unable to open input file` and the outputs stay at 0. In the GUI a failed check only prints the error, since the `quit 1` runs in batch mode only.
+In the Xschem GUI, hold **`Ctrl`** and click **Build Icarus Verilog object** or **Build Verilator object** first. The launchers run `make build-rtl-xschem` with `SIM=icarus` or `SIM=verilator`, and the last build decides which simulator runs. **Simulate** and **Load waves** then work as described in the next section. Build again after every change of the RTL, otherwise Ngspice simulates the last compiled object, and without any build it stops with `Could not find include file counter_top_rtl.model`. In the GUI a failed check only prints the error, since the `quit 1` runs in batch mode only.
 
 ::: {.callout-note}
-`d_cosim` also runs Verilator models, which the `vlnggen` script of Ngspice builds, and Stefan's example switches between both with a second `device_model` line. On this testbench a Verilator model gives the same values as Icarus Verilog:
-
-```sh
-cd testbenches/xschem/simulations
-ngspice -- vlnggen -sv --top-module counter_top \
-  ../../../rtl/constants.sv ../../../rtl/counter.sv ../../../rtl/counter_top.sv
-mv .so counter_top.so
-```
-
-The `--` keeps Ngspice from reading the Verilator options as its own, and the library comes out as `.so` because `vlnggen` names it after a source ending in `.v`. With `simulation=\\"./counter_top.so\\"` in the `device_model` of the symbol, the testbench loads it. The template stays with Icarus Verilog: the simulator is part of the symbol, so `make` cannot switch it without rewriting the netlist, and in a reduced test deck Ngspice 47 dropped one output change of a Verilator counter, the first carry into bit 4.
+Icarus Verilog is the default, because in a reduced test deck Ngspice 47 dropped one output change of a Verilator counter, the first carry into bit 4, while Icarus Verilog counted right. On this testbench both simulators give the same values, and `make regression` runs it with both.
 :::
 
 ## Gate-Level Mixed-Signal Simulation with Xschem

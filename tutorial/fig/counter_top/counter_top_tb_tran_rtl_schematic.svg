@@ -1674,10 +1674,12 @@ lClTpkyZMmXKlClTpkyZMuXmWhYEQXNrunBruqEsiKIoiiJlypQpU6ZMmTJlypQpU6ZMmTJlypQpU6ZM
 <path class="l4" d="M86.9121 1385.99L97.137 1385.99"/>
 <path class="l4" d="M92.0245 1391.1L97.137 1385.99"/>
 <path class="l4" d="M86.9121 1385.99L92.0245 1391.1"/>
+<path class="l4" d="M1707.57 33.7423L1676.89 20.9611L1676.89 28.6299L1646.22 28.6299L1656.44 33.7423L1646.22 38.8548L1676.89 38.8548L1676.89 46.5235L1707.57 33.7423"/>
 <path class="l4" d="M1707.57 84.8671L1676.89 72.0859L1676.89 79.7546L1646.22 79.7546L1656.44 84.8671L1646.22 89.9796L1676.89 89.9796L1676.89 97.6483L1707.57 84.8671"/>
+<path class="l4" d="M1707.57 135.992L1676.89 123.211L1676.89 130.879L1646.22 130.879L1656.44 135.992L1646.22 141.104L1676.89 141.104L1676.89 148.773L1707.57 135.992"/>
 <path class="l4" d="M1707.57 187.117L1676.89 174.335L1676.89 182.004L1646.22 182.004L1656.44 187.117L1646.22 192.229L1676.89 192.229L1676.89 199.898L1707.57 187.117"/>
-<path class="l4" d="M30.6748 146.217L102.249 146.217"/>
-<path class="l4" d="M30.6748 146.217L30.6748 166.667"/>
+<path class="l4" d="M30.6748 33.7423L102.249 33.7423"/>
+<path class="l4" d="M30.6748 33.7423L30.6748 54.1922"/>
 <path class="l4" d="M480.573 1107.36L480.573 1120.14"/>
 <path class="l4" d="M475.46 1120.14L485.685 1120.14"/>
 <path class="l4" d="M480.573 1125.26L485.685 1120.14"/>
@@ -1867,58 +1869,58 @@ lClTpkyZMmXKlClTpkyZMuXmWhYEQXNrunBruqEsiKIoiiJlypQpU6ZMmTJlypQpU6ZMmTJlypQpU6ZM
 <text fill="#222222"  xml:space="preserve" font-size="10.6339" transform="translate(112.474, 1317.68)" >pulse(0 1.5 0 10p 10p {0.5/fclk} {1/fclk})</text>
 <text fill="#0099cc"  xml:space="preserve" font-size="14.3558" transform="translate(51.4683, 1225.35)" >clock</text>
 <text fill="#0099cc"  xml:space="preserve" font-size="10.6339" transform="translate(99.6933, 1387.98)" >GND</text>
-<text fill="#222222"  xml:space="preserve" font-size="21.2679" transform="translate(1717.79, 91.6783)" >Simulate</text>
+<text fill="#222222"  xml:space="preserve" font-size="21.2679" transform="translate(1717.79, 40.5536)" >Build Icarus Verilog object</text>
+<text fill="#222222"  xml:space="preserve" font-size="21.2679" transform="translate(1717.79, 91.6783)" >Build Verilator object</text>
+<text fill="#222222"  xml:space="preserve" font-size="21.2679" transform="translate(1717.79, 142.803)" >Simulate</text>
 <text fill="#222222"  xml:space="preserve" font-size="21.2679" transform="translate(1717.79, 193.928)" >Load waves</text>
-<text fill="#222222"  xml:space="preserve" font-size="15.9509" transform="translate(35.7873, 140.25)" >NGSPICE</text>
-<text fill="#222222"  xml:space="preserve" font-size="15.9509" style="font-family:Monospace;" transform="translate(46.0123, 184.108)" >*RTL Simulation: the d_cosim instance A1 runs counter_top.vvp in Icarus Verilog</text>
-<text fill="#222222"  xml:space="preserve" font-size="15.9509" style="font-family:Monospace;" transform="translate(46.0123, 202.404)" >.param fclk=50e6</text>
-<text fill="#222222"  xml:space="preserve" font-size="15.9509" style="font-family:Monospace;" transform="translate(46.0123, 220.7)" >.csparam fclk=fclk</text>
-<text fill="#222222"  xml:space="preserve" font-size="15.9509" style="font-family:Monospace;" transform="translate(46.0123, 238.996)" >.options klu method=gear reltol=1e-3 abstol=1e-12 gmin=1e-12 rshunt=1e14</text>
-<text fill="#222222"  xml:space="preserve" font-size="15.9509" style="font-family:Monospace;" transform="translate(46.0123, 257.291)" >.control</text>
-<text fill="#222222"  xml:space="preserve" font-size="15.9509" style="font-family:Monospace;" transform="translate(46.0123, 293.883)" >* Bridges that ngspice inserts between the analog nets and the digital ports of A1.</text>
-<text fill="#222222"  xml:space="preserve" font-size="15.9509" style="font-family:Monospace;" transform="translate(46.0123, 312.178)" >* One input threshold, since Verilog counts a clock edge that passes through X (0 to X to 1) twice.</text>
-<text fill="#222222"  xml:space="preserve" font-size="15.9509" style="font-family:Monospace;" transform="translate(46.0123, 330.474)" >pre_set auto_bridge_d_in = ( ".model auto_adc adc_bridge(in_low=0.75 in_high=0.75</text>
-<text fill="#222222"  xml:space="preserve" font-size="15.9509" style="font-family:Monospace;" transform="translate(46.0123, 348.77)" >+ rise_delay=500p fall_delay=500p)" "auto_bridge%d [ %s ] [ %s ] auto_adc" )</text>
-<text fill="#222222"  xml:space="preserve" font-size="15.9509" style="font-family:Monospace;" transform="translate(46.0123, 367.065)" >pre_set auto_bridge_d_out = ( ".model auto_dac dac_bridge(out_low=0 out_high=1.5)"</text>
-<text fill="#222222"  xml:space="preserve" font-size="15.9509" style="font-family:Monospace;" transform="translate(46.0123, 385.361)" >+ "auto_bridge%d [ %s ] [ %s ] auto_dac" )</text>
-<text fill="#222222"  xml:space="preserve" font-size="15.9509" style="font-family:Monospace;" transform="translate(46.0123, 421.953)" >set num_threads=8</text>
-<text fill="#222222"  xml:space="preserve" font-size="15.9509" style="font-family:Monospace;" transform="translate(46.0123, 458.544)" >save all</text>
-<text fill="#222222"  xml:space="preserve" font-size="15.9509" style="font-family:Monospace;" transform="translate(46.0123, 495.135)" >* User Constants</text>
-<text fill="#222222"  xml:space="preserve" font-size="15.9509" style="font-family:Monospace;" transform="translate(46.0123, 513.431)" >let tstop = 10u</text>
-<text fill="#222222"  xml:space="preserve" font-size="15.9509" style="font-family:Monospace;" transform="translate(46.0123, 531.727)" >let tstep = 1/fclk</text>
-<text fill="#222222"  xml:space="preserve" font-size="15.9509" style="font-family:Monospace;" transform="translate(46.0123, 568.318)" >* Transient Analysis</text>
-<text fill="#222222"  xml:space="preserve" font-size="15.9509" style="font-family:Monospace;" transform="translate(46.0123, 586.614)" >tran $&amp;tstep $&amp;tstop</text>
-<text fill="#222222"  xml:space="preserve" font-size="15.9509" style="font-family:Monospace;" transform="translate(46.0123, 604.91)" >write counter_top_tb_tran_rtl.raw</text>
-<text fill="#222222"  xml:space="preserve" font-size="15.9509" style="font-family:Monospace;" transform="translate(46.0123, 641.501)" >plot v(clock) v(enable) v(reset_n)</text>
-<text fill="#222222"  xml:space="preserve" font-size="15.9509" style="font-family:Monospace;" transform="translate(46.0123, 659.797)" >plot v(b7) v(b6) v(b5) v(b4) v(b3) v(b2) v(b1) v(b0)</text>
-<text fill="#222222"  xml:space="preserve" font-size="15.9509" style="font-family:Monospace;" transform="translate(46.0123, 696.388)" >* Writing Data</text>
-<text fill="#222222"  xml:space="preserve" font-size="15.9509" style="font-family:Monospace;" transform="translate(46.0123, 714.684)" >set wr_vecnames</text>
-<text fill="#222222"  xml:space="preserve" font-size="15.9509" style="font-family:Monospace;" transform="translate(46.0123, 732.98)" >set wr_singlescale</text>
-<text fill="#222222"  xml:space="preserve" font-size="15.9509" style="font-family:Monospace;" transform="translate(46.0123, 751.275)" >wrdata ../plot_simulations/data/counter_top_tb_tran_rtl.txt clock enable reset_n b0 b1 b2 b3 b4 b5 b6 b7</text>
-<text fill="#222222"  xml:space="preserve" font-size="15.9509" style="font-family:Monospace;" transform="translate(46.0123, 787.867)" >* Check at falling clock edges, away from every input change.</text>
-<text fill="#222222"  xml:space="preserve" font-size="15.9509" style="font-family:Monospace;" transform="translate(46.0123, 806.162)" >* The counter reaches 3 before enable falls, holds it while enable is low, then counts once per cycle.</text>
-<text fill="#222222"  xml:space="preserve" font-size="15.9509" style="font-family:Monospace;" transform="translate(46.0123, 824.458)" >* A failed meas leaves the -1 and fails the check.</text>
-<text fill="#222222"  xml:space="preserve" font-size="15.9509" style="font-family:Monospace;" transform="translate(46.0123, 842.754)" >let count = (v(b0) + 2*v(b1) + 4*v(b2) + 8*v(b3) + 16*v(b4) + 32*v(b5) + 64*v(b6) + 128*v(b7)) / 1.5</text>
-<text fill="#222222"  xml:space="preserve" font-size="15.9509" style="font-family:Monospace;" transform="translate(46.0123, 861.049)" >let c10 = -1</text>
-<text fill="#222222"  xml:space="preserve" font-size="15.9509" style="font-family:Monospace;" transform="translate(46.0123, 879.345)" >let c50 = -1</text>
-<text fill="#222222"  xml:space="preserve" font-size="15.9509" style="font-family:Monospace;" transform="translate(46.0123, 897.641)" >let c150 = -1</text>
-<text fill="#222222"  xml:space="preserve" font-size="15.9509" style="font-family:Monospace;" transform="translate(46.0123, 915.937)" >let c200 = -1</text>
-<text fill="#222222"  xml:space="preserve" font-size="15.9509" style="font-family:Monospace;" transform="translate(46.0123, 934.232)" >let t10 = 10.5*tstep</text>
-<text fill="#222222"  xml:space="preserve" font-size="15.9509" style="font-family:Monospace;" transform="translate(46.0123, 952.528)" >let t50 = 50.5*tstep</text>
-<text fill="#222222"  xml:space="preserve" font-size="15.9509" style="font-family:Monospace;" transform="translate(46.0123, 970.824)" >let t150 = 150.5*tstep</text>
-<text fill="#222222"  xml:space="preserve" font-size="15.9509" style="font-family:Monospace;" transform="translate(46.0123, 989.119)" >let t200 = 200.5*tstep</text>
-<text fill="#222222"  xml:space="preserve" font-size="15.9509" style="font-family:Monospace;" transform="translate(46.0123, 1007.42)" >meas tran c10 find count at=$&amp;t10</text>
-<text fill="#222222"  xml:space="preserve" font-size="15.9509" style="font-family:Monospace;" transform="translate(46.0123, 1025.71)" >meas tran c50 find count at=$&amp;t50</text>
-<text fill="#222222"  xml:space="preserve" font-size="15.9509" style="font-family:Monospace;" transform="translate(46.0123, 1044.01)" >meas tran c150 find count at=$&amp;t150</text>
-<text fill="#222222"  xml:space="preserve" font-size="15.9509" style="font-family:Monospace;" transform="translate(46.0123, 1062.3)" >meas tran c200 find count at=$&amp;t200</text>
-<text fill="#222222"  xml:space="preserve" font-size="15.9509" style="font-family:Monospace;" transform="translate(46.0123, 1080.6)" >if abs(c10 - 3) &gt; 0.5 | abs(c50 - 3) &gt; 0.5 | abs(c150 - 99) &gt; 0.5 | abs(c200 - 149) &gt; 0.5</text>
-<text fill="#222222"  xml:space="preserve" font-size="15.9509" style="font-family:Monospace;" transform="translate(46.0123, 1098.89)" >  echo ERROR: counter_top_rtl does not count as expected</text>
-<text fill="#222222"  xml:space="preserve" font-size="15.9509" style="font-family:Monospace;" transform="translate(46.0123, 1117.19)" >  if $?batchmode</text>
-<text fill="#222222"  xml:space="preserve" font-size="15.9509" style="font-family:Monospace;" transform="translate(46.0123, 1135.49)" >    quit 1</text>
-<text fill="#222222"  xml:space="preserve" font-size="15.9509" style="font-family:Monospace;" transform="translate(46.0123, 1153.78)" >  end</text>
-<text fill="#222222"  xml:space="preserve" font-size="15.9509" style="font-family:Monospace;" transform="translate(46.0123, 1172.08)" >end</text>
-<text fill="#222222"  xml:space="preserve" font-size="15.9509" style="font-family:Monospace;" transform="translate(46.0123, 1208.67)" >*quit</text>
-<text fill="#222222"  xml:space="preserve" font-size="15.9509" style="font-family:Monospace;" transform="translate(46.0123, 1226.96)" >.endc</text>
+<text fill="#222222"  xml:space="preserve" font-size="15.9509" transform="translate(35.7873, 27.7759)" >NGSPICE</text>
+<text fill="#222222"  xml:space="preserve" font-size="15.9509" style="font-family:Monospace;" transform="translate(46.0123, 71.6339)" >*RTL Simulation: the d_cosim instance A1 runs the RTL that make build-rtl-xschem or a Build launcher compiled</text>
+<text fill="#222222"  xml:space="preserve" font-size="15.9509" style="font-family:Monospace;" transform="translate(46.0123, 89.9297)" >.param fclk=50e6</text>
+<text fill="#222222"  xml:space="preserve" font-size="15.9509" style="font-family:Monospace;" transform="translate(46.0123, 108.225)" >.csparam fclk=fclk</text>
+<text fill="#222222"  xml:space="preserve" font-size="15.9509" style="font-family:Monospace;" transform="translate(46.0123, 126.521)" >.options klu method=gear reltol=1e-3 abstol=1e-12 gmin=1e-12 rshunt=1e14</text>
+<text fill="#222222"  xml:space="preserve" font-size="15.9509" style="font-family:Monospace;" transform="translate(46.0123, 144.817)" >.control</text>
+<text fill="#222222"  xml:space="preserve" font-size="15.9509" style="font-family:Monospace;" transform="translate(46.0123, 181.408)" >* Bridges that ngspice inserts between the analog nets and the digital ports of A1.</text>
+<text fill="#222222"  xml:space="preserve" font-size="15.9509" style="font-family:Monospace;" transform="translate(46.0123, 199.704)" >* One input threshold, since Icarus Verilog counts a clock edge that passes through X (0 to X to 1) twice.</text>
+<text fill="#222222"  xml:space="preserve" font-size="15.9509" style="font-family:Monospace;" transform="translate(46.0123, 218)" >pre_set auto_bridge_d_in = ( ".model auto_adc adc_bridge(in_low=0.75 in_high=0.75</text>
+<text fill="#222222"  xml:space="preserve" font-size="15.9509" style="font-family:Monospace;" transform="translate(46.0123, 236.295)" >+ rise_delay=500p fall_delay=500p)" "auto_bridge%d [ %s ] [ %s ] auto_adc" )</text>
+<text fill="#222222"  xml:space="preserve" font-size="15.9509" style="font-family:Monospace;" transform="translate(46.0123, 254.591)" >pre_set auto_bridge_d_out = ( ".model auto_dac dac_bridge(out_low=0 out_high=1.5)"</text>
+<text fill="#222222"  xml:space="preserve" font-size="15.9509" style="font-family:Monospace;" transform="translate(46.0123, 272.887)" >+ "auto_bridge%d [ %s ] [ %s ] auto_dac" )</text>
+<text fill="#222222"  xml:space="preserve" font-size="15.9509" style="font-family:Monospace;" transform="translate(46.0123, 309.478)" >* User Constants</text>
+<text fill="#222222"  xml:space="preserve" font-size="15.9509" style="font-family:Monospace;" transform="translate(46.0123, 327.774)" >let tstop = 10u</text>
+<text fill="#222222"  xml:space="preserve" font-size="15.9509" style="font-family:Monospace;" transform="translate(46.0123, 346.07)" >let tstep = 1/fclk</text>
+<text fill="#222222"  xml:space="preserve" font-size="15.9509" style="font-family:Monospace;" transform="translate(46.0123, 382.661)" >* Transient Analysis</text>
+<text fill="#222222"  xml:space="preserve" font-size="15.9509" style="font-family:Monospace;" transform="translate(46.0123, 400.957)" >tran $&amp;tstep $&amp;tstop</text>
+<text fill="#222222"  xml:space="preserve" font-size="15.9509" style="font-family:Monospace;" transform="translate(46.0123, 419.252)" >write counter_top_tb_tran_rtl.raw</text>
+<text fill="#222222"  xml:space="preserve" font-size="15.9509" style="font-family:Monospace;" transform="translate(46.0123, 455.844)" >plot v(clock) v(enable) v(reset_n)</text>
+<text fill="#222222"  xml:space="preserve" font-size="15.9509" style="font-family:Monospace;" transform="translate(46.0123, 474.139)" >plot v(b7) v(b6) v(b5) v(b4) v(b3) v(b2) v(b1) v(b0)</text>
+<text fill="#222222"  xml:space="preserve" font-size="15.9509" style="font-family:Monospace;" transform="translate(46.0123, 510.731)" >* Writing Data</text>
+<text fill="#222222"  xml:space="preserve" font-size="15.9509" style="font-family:Monospace;" transform="translate(46.0123, 529.027)" >set wr_vecnames</text>
+<text fill="#222222"  xml:space="preserve" font-size="15.9509" style="font-family:Monospace;" transform="translate(46.0123, 547.322)" >set wr_singlescale</text>
+<text fill="#222222"  xml:space="preserve" font-size="15.9509" style="font-family:Monospace;" transform="translate(46.0123, 565.618)" >wrdata ../plot_simulations/data/counter_top_tb_tran_rtl.txt clock enable reset_n b0 b1 b2 b3 b4 b5 b6 b7</text>
+<text fill="#222222"  xml:space="preserve" font-size="15.9509" style="font-family:Monospace;" transform="translate(46.0123, 602.209)" >* Check at falling clock edges, away from every input change.</text>
+<text fill="#222222"  xml:space="preserve" font-size="15.9509" style="font-family:Monospace;" transform="translate(46.0123, 620.505)" >* The counter reaches 3 before enable falls, holds it while enable is low, then counts once per cycle.</text>
+<text fill="#222222"  xml:space="preserve" font-size="15.9509" style="font-family:Monospace;" transform="translate(46.0123, 638.801)" >* A failed meas leaves the -1 and fails the check.</text>
+<text fill="#222222"  xml:space="preserve" font-size="15.9509" style="font-family:Monospace;" transform="translate(46.0123, 657.097)" >let count = (v(b0) + 2*v(b1) + 4*v(b2) + 8*v(b3) + 16*v(b4) + 32*v(b5) + 64*v(b6) + 128*v(b7)) / 1.5</text>
+<text fill="#222222"  xml:space="preserve" font-size="15.9509" style="font-family:Monospace;" transform="translate(46.0123, 675.392)" >let c10 = -1</text>
+<text fill="#222222"  xml:space="preserve" font-size="15.9509" style="font-family:Monospace;" transform="translate(46.0123, 693.688)" >let c50 = -1</text>
+<text fill="#222222"  xml:space="preserve" font-size="15.9509" style="font-family:Monospace;" transform="translate(46.0123, 711.984)" >let c150 = -1</text>
+<text fill="#222222"  xml:space="preserve" font-size="15.9509" style="font-family:Monospace;" transform="translate(46.0123, 730.279)" >let c200 = -1</text>
+<text fill="#222222"  xml:space="preserve" font-size="15.9509" style="font-family:Monospace;" transform="translate(46.0123, 748.575)" >let t10 = 10.5*tstep</text>
+<text fill="#222222"  xml:space="preserve" font-size="15.9509" style="font-family:Monospace;" transform="translate(46.0123, 766.871)" >let t50 = 50.5*tstep</text>
+<text fill="#222222"  xml:space="preserve" font-size="15.9509" style="font-family:Monospace;" transform="translate(46.0123, 785.166)" >let t150 = 150.5*tstep</text>
+<text fill="#222222"  xml:space="preserve" font-size="15.9509" style="font-family:Monospace;" transform="translate(46.0123, 803.462)" >let t200 = 200.5*tstep</text>
+<text fill="#222222"  xml:space="preserve" font-size="15.9509" style="font-family:Monospace;" transform="translate(46.0123, 821.758)" >meas tran c10 find count at=$&amp;t10</text>
+<text fill="#222222"  xml:space="preserve" font-size="15.9509" style="font-family:Monospace;" transform="translate(46.0123, 840.054)" >meas tran c50 find count at=$&amp;t50</text>
+<text fill="#222222"  xml:space="preserve" font-size="15.9509" style="font-family:Monospace;" transform="translate(46.0123, 858.349)" >meas tran c150 find count at=$&amp;t150</text>
+<text fill="#222222"  xml:space="preserve" font-size="15.9509" style="font-family:Monospace;" transform="translate(46.0123, 876.645)" >meas tran c200 find count at=$&amp;t200</text>
+<text fill="#222222"  xml:space="preserve" font-size="15.9509" style="font-family:Monospace;" transform="translate(46.0123, 894.941)" >if abs(c10 - 3) &gt; 0.5 | abs(c50 - 3) &gt; 0.5 | abs(c150 - 99) &gt; 0.5 | abs(c200 - 149) &gt; 0.5</text>
+<text fill="#222222"  xml:space="preserve" font-size="15.9509" style="font-family:Monospace;" transform="translate(46.0123, 913.236)" >  echo ERROR: counter_top_rtl does not count as expected</text>
+<text fill="#222222"  xml:space="preserve" font-size="15.9509" style="font-family:Monospace;" transform="translate(46.0123, 931.532)" >  if $?batchmode</text>
+<text fill="#222222"  xml:space="preserve" font-size="15.9509" style="font-family:Monospace;" transform="translate(46.0123, 949.828)" >    quit 1</text>
+<text fill="#222222"  xml:space="preserve" font-size="15.9509" style="font-family:Monospace;" transform="translate(46.0123, 968.124)" >  end</text>
+<text fill="#222222"  xml:space="preserve" font-size="15.9509" style="font-family:Monospace;" transform="translate(46.0123, 986.419)" >end</text>
+<text fill="#222222"  xml:space="preserve" font-size="15.9509" style="font-family:Monospace;" transform="translate(46.0123, 1023.01)" >*quit</text>
+<text fill="#222222"  xml:space="preserve" font-size="15.9509" style="font-family:Monospace;" transform="translate(46.0123, 1041.31)" >.endc</text>
 <text fill="#0099cc"  xml:space="preserve" font-size="14.3558" transform="translate(425.016, 959.504)" >reset_n</text>
 <text fill="#0099cc"  xml:space="preserve" font-size="10.6339" transform="translate(488.241, 1122.13)" >GND</text>
 <text fill="#222222"  xml:space="preserve" font-size="10.6339" transform="translate(501.022, 1026.27)" >vrst</text>

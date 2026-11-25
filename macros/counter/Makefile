@@ -139,7 +139,7 @@ help: ## Show this help message
 	@echo 'PEX_SUB_NET defaults to VSS. The port net that klayout-pex ties the substrate port sub! of the kpex 2.5D netlist to (empty keeps sub! as a port).'
 	@echo 'KPEX_REDUCE defaults to ticer. Sets the RC network reduction of klayout-pex in EXT_MODE=3 (none|floating|ticer).'
 	@echo 'WAVEFORM_VIEWER defaults to gtkwave. Use surfer to launch Surfer instead.'
-	@echo 'SIM selects the simulator of sim-rtl-cocotb, icarus (default) or verilator, and the waveform that sim-view-cocotb opens. The gate-level runs need icarus.'
+	@echo 'SIM selects the simulator of sim-rtl-cocotb and sim-rtl-xschem, icarus (default) or verilator, and the waveform that sim-view-cocotb opens. The gate-level runs need icarus.'
 	@echo 'SDF_CORNER selects the LibreLane corner of the SDF file for sim-gl-sdf-cocotb (default: $(SDF_CORNER)).'
 	@echo 'SDF_TRIPLE selects the min, typ or max value of each SDF delay for sim-gl-sdf-cocotb (default: typ).'
 	@echo 'TB selects the Xschem testbench for sim-gl-xschem (default: <CELL>_tb_tran).'
@@ -189,7 +189,7 @@ SDF_CORNER ?= nom_typ_1p50V_25C
 # Value of each min:typ:max delay in the SDF file for sim-gl-sdf-cocotb (iverilog -T)
 # Override with: make sim-gl-sdf-cocotb SDF_TRIPLE=<min|typ|max>
 SDF_TRIPLE ?= typ
-# Simulator of sim-rtl-cocotb, also selects the waveform of sim-view-cocotb (default: icarus)
+# Simulator of sim-rtl-cocotb and sim-rtl-xschem, also selects the waveform of sim-view-cocotb (default: icarus)
 # Override with: make <target> SIM=<icarus|verilator>
 SIM ?= icarus
 
@@ -233,11 +233,22 @@ sim-view-cocotb: ## View CELL cell cocotb simulation waveforms (usage: make sim-
 
 # The RTL has no `timescale, and without one Icarus Verilog counts in seconds and the counter never sees a clock edge.
 # +timescale+ gives every module without a `timescale the one of the Verilog testbench.
-sim-rtl-xschem: ## Run RTL simulation of CELL cell with Xschem in batch mode, the RTL runs in Icarus Verilog inside ngspice (usage: make sim-rtl-xschem [CELL=<cellname>] [TB_RTL=<testbenchname>])
+# vlnggen reads Verilator options only after the --, and it names a library built from .sv sources only .so.
+build-rtl-xschem: ## Compile the RTL of CELL cell for sim-rtl-xschem with Icarus Verilog or Verilator and write the matching d_cosim model (usage: make build-rtl-xschem [CELL=<cellname>] [SIM=<icarus|verilator>])
 	mkdir -p $(XSCHEM_TB_DIR)/simulations
-	mkdir -p $(SIM_PLOT_DIR)/data
+ifeq ($(SIM),verilator)
+	cd $(XSCHEM_TB_DIR)/simulations && rm -f .so && ngspice -- vlnggen -sv -DSIM --top-module $(CELL) $(abspath $(_SIM_SRCS)) && mv .so $(CELL).so
+	echo '.model $(CELL)_rtl d_cosim simulation="./$(CELL).so"' > $(XSCHEM_TB_DIR)/simulations/$(CELL)_rtl.model
+else
 	echo '+timescale+1ns/1ps' > $(XSCHEM_TB_DIR)/simulations/timescale.f
 	iverilog -g2012 -DSIM -s $(CELL) -c $(XSCHEM_TB_DIR)/simulations/timescale.f -o $(XSCHEM_TB_DIR)/simulations/$(CELL).vvp $(_SIM_SRCS)
+	echo '.model $(CELL)_rtl d_cosim simulation="ivlng" sim_args=["$(CELL).vvp"]' > $(XSCHEM_TB_DIR)/simulations/$(CELL)_rtl.model
+endif
+.PHONY: build-rtl-xschem
+
+sim-rtl-xschem: ## Run RTL simulation of CELL cell with Xschem in batch mode, the RTL runs in Icarus Verilog or Verilator inside ngspice (usage: make sim-rtl-xschem [CELL=<cellname>] [TB_RTL=<testbenchname>] [SIM=<icarus|verilator>])
+	$(MAKE) build-rtl-xschem
+	mkdir -p $(SIM_PLOT_DIR)/data
 	cd $(XSCHEM_TB_DIR) && xschem -r -x -q --rcfile xschemrc --command ' \
 		xschem set netlist_type spice; \
 		set netlist_dir $(abspath $(XSCHEM_TB_DIR)/simulations); \

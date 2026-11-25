@@ -611,6 +611,7 @@ regression: ## Regression test target for IIC-OSIC-TOOLS
 	$(MAKE) -C $(MACROS_DIR)/counter sim-rtl-verilog
 	$(MAKE) -C $(MACROS_DIR)/counter sim-rtl-cocotb
 	$(MAKE) -C $(MACROS_DIR)/counter sim-rtl-xschem
+	$(MAKE) -C $(MACROS_DIR)/counter sim-rtl-xschem SIM=verilator
 	$(MAKE) -C $(MACROS_DIR)/counter build-fpga
 # 	librelane-magicdrc: full RTL-to-GDS. KLayout DRC skipped for runtime.
 	$(MAKE) -C $(MACROS_DIR)/counter librelane-magicdrc

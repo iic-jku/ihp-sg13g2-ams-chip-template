@@ -341,21 +341,23 @@ In the netlist the clock tree delays the clock at every flip-flop, and an output
 
 #### RTL Xschem Simulation
 
-Runs the RTL in the Xschem testbench `testbenches/xschem/<CELL>_tb_tran_rtl.sch`, before any LibreLane run. Ngspice simulates the testbench, and Icarus Verilog runs the RTL inside it as the XSPICE code model `d_cosim`:
+Runs the RTL in the Xschem testbench `testbenches/xschem/<CELL>_tb_tran_rtl.sch`, before any LibreLane run. Ngspice simulates the testbench, and Icarus Verilog or Verilator runs the RTL inside it as the XSPICE code model `d_cosim`:
 
 ```sh
-make sim-rtl-xschem               # run counter_top RTL Xschem simulation
-make sim-rtl-xschem TB_RTL=<tb>   # run another testbench (default: <CELL>_tb_tran_rtl)
+make sim-rtl-xschem                 # run counter_top RTL Xschem simulation with Icarus Verilog
+make sim-rtl-xschem SIM=verilator   # the same with Verilator
+make sim-rtl-xschem TB_RTL=<tb>     # run another testbench (default: <CELL>_tb_tran_rtl)
+make build-rtl-xschem [SIM=...]     # only compile the RTL and write its d_cosim model
 ```
 
-The target compiles the RTL (`MODULES_SIM`, or `constants.sv` and the cell for another `CELL`) with Icarus Verilog into `testbenches/xschem/simulations/<CELL>.vvp`, netlists the testbench and runs `ngspice -b` on it, like `sim-gl-xschem`. The RTL has no `` `timescale ``, and without one Icarus Verilog counts in seconds, so the target passes `+timescale+1ns/1ps` in the command file `simulations/timescale.f`.
+The target runs `build-rtl-xschem`, netlists the testbench and runs `ngspice -b` on it, like `sim-gl-xschem`. `build-rtl-xschem` compiles the RTL (`MODULES_SIM`, or `constants.sv` and the cell for another `CELL`) into `testbenches/xschem/simulations/` and writes the matching model to `simulations/<CELL>_rtl.model`, `.model <CELL>_rtl d_cosim simulation="ivlng" sim_args=["<CELL>.vvp"]` for Icarus Verilog or `.model <CELL>_rtl d_cosim simulation="./<CELL>.so"` for Verilator. The RTL has no `` `timescale ``, and without one Icarus Verilog counts in seconds, so the Icarus build passes `+timescale+1ns/1ps` in the command file `simulations/timescale.f`. The Verilator build runs `ngspice -- vlnggen` (the `--` ends the options of ngspice) and renames the library, which `vlnggen` writes as `.so` when no source ends in `.v`. Both simulators give the same results on this testbench. Icarus Verilog stays the default, because in a reduced test deck ngspice 47 dropped one output change of a Verilator counter.
 
-The DUT is the symbol `schematic/xschem/counter_top_rtl.sym`. Its `format` writes the instance as `A1 [ <inputs> ] [ <outputs> ] counter_top_rtl`, with the ports in the order of the module header and each vector MSB first, so the pin is `counter_value_o[7..0]` and the testbench bus `b[7..0]`. Nothing checks the pins against the RTL: a change of `COUNTER_MAX_DEFAULT` that changes the width of `counter_value_o` needs the pin edited by hand, as Ngspice accepts a pin count that does not match the port. Its `device_model` loads the compiled RTL with `.model counter_top_rtl d_cosim simulation="ivlng" sim_args=["counter_top.vvp"]`. The `d_cosim` ports are digital, so Ngspice inserts an `adc_bridge` or `dac_bridge` wherever one meets an analog net. The two `pre_set` lines at the top of the testbench's `.control` block set their models: one input threshold at 0.75 V, because a bridge sends `X` between `in_low` and `in_high` and Verilog counts 0 to `X` and `X` to 1 as two rising clock edges, and outputs from 0 to 1.5 V.
+The DUT is the symbol `schematic/xschem/counter_top_rtl.sym`. Its `format` writes the instance as `A1 [ <inputs> ] [ <outputs> ] counter_top_rtl`, with the ports in the order of the module header and each vector MSB first, so the pin is `counter_value_o[7..0]` and the testbench bus `b[7..0]`. Nothing checks the pins against the RTL: a change of `COUNTER_MAX_DEFAULT` that changes the width of `counter_value_o` needs the pin edited by hand, as Ngspice accepts a pin count that does not match the port. Its `device_model` is `.include counter_top_rtl.model`, so the last build decides the simulator. The `d_cosim` ports are digital, so Ngspice inserts an `adc_bridge` or `dac_bridge` wherever one meets an analog net. The two `pre_set` lines at the top of the testbench's `.control` block set their models: one input threshold at 0.75 V, because a bridge sends `X` between `in_low` and `in_high` and Icarus Verilog counts 0 to `X` and `X` to 1 as two rising clock edges, and outputs from 0 to 1.5 V.
 
-The testbench switches `reset_n` and `enable` half a clock cycle after a rising edge, so that no input changes together with the clock. It reads the counter at the falling edges after cycles 10, 50, 150 and 200, expects 3, 3, 99 and 149, and ends with `quit 1` in a batch run otherwise, so the target fails on a missing timescale, a missing `.vvp`, a threshold band, swapped `reset_n` and `enable` pins or an RTL that ignores `enable`.
+Like the gate-level testbench, it switches `reset_n` and `enable` half a clock cycle after a rising edge, so that no input changes together with the clock. It reads the counter at the falling edges after cycles 10, 50, 150 and 200, expects 3, 3, 99 and 149, and ends with `quit 1` in a batch run otherwise, so the target fails on a missing timescale, a missing `.vvp`, a threshold band, swapped `reset_n` and `enable` pins or an RTL that ignores `enable`.
 
 > [!NOTE]
-> The **Simulate** launcher in the schematic does not compile the RTL. Run `make sim-rtl-xschem` before the first simulation in the GUI and again after every change of the RTL.
+> In the GUI, the launchers **Build Icarus Verilog object** and **Build Verilator object** run `make build-rtl-xschem` with `SIM=icarus` or `SIM=verilator`. Click one of them before the first **Simulate** and again after every change of the RTL. Without a build, ngspice stops with `Could not find include file counter_top_rtl.model`.
 
 #### Gate-Level Xschem Simulation
 
