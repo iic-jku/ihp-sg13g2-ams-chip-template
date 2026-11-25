@@ -209,6 +209,8 @@ A designer-oriented description of this chip can be found in [doc/](doc/):
 │  ├─ 📁 pex/
 │  ├─ 📁 pnl/
 │  ├─ 📁 schematic/
+│  ├─ 📁 sdc/
+│  ├─ 📁 spef/
 │  └─ 📁 spice/
 ├─ 📁 packaging/
 │  ├─ 📁 layout/
@@ -244,7 +246,8 @@ A designer-oriented description of this chip can be found in [doc/](doc/):
 │  ├─ add_logo_fill.sh
 │  ├─ add_rectangle.py
 │  ├─ check_pex_ports.py
-│  └─ lvs_top.py
+│  ├─ lvs_top.py
+│  └─ sim_gl_power.tcl
 ├─ 📁 testbenches/
 │  ├─ 📁 cocotb/
 │  │  ├─ chip_top_tb.gtkw
@@ -273,6 +276,7 @@ A designer-oriented description of this chip can be found in [doc/](doc/):
 │     ├─ irdrop.rpt
 │     ├─ lvs.netgen.rpt
 │     ├─ manufacturability.rpt
+│     ├─ sim_gl_power_cocotb.rpt
 │     ├─ stapostpnr_*.rpt
 │     ├─ stat.rpt
 │     ├─ yosys_post_dff.rpt
@@ -509,6 +513,14 @@ To run the gate-level (GL) simulation with cocotb, use:
 make sim-gl-cocotb
 ```
 
+To estimate the power of the chip from the switching activity of the gate-level cocotb simulation, use:
+
+```sh
+make sim-gl-power-cocotb
+```
+
+It runs `sim-gl-cocotb`, converts the waveform to `testbenches/cocotb/sim_build/chip_top.vcd` with `fst2vcd`, and runs OpenSTA with `scripts/sim_gl_power.tcl` at the default corner `nom_typ_1p50V_25C`. OpenSTA reads the Liberty files of the standard cells, the IO cells and the SRAM, the chip netlist `netlist/nl/chip_top.nl.v` with the SPEF `netlist/spef/chip_top.nom.spef` and the SDC `netlist/sdc/chip_top.sdc` that `copy-netlist` copies from the LibreLane run, and the final netlist and SPEF of the `counter_top` macro for both instances. The counters thus count with their cells and wires, while the Liberty model of the macro has no power data. The report `verification/reports/sim_gl_power_cocotb.rpt` lists the power per group (`Macro` holds the SRAM, `Pad` the IO cells) and per macro instance, and the target fails if a pin gets no activity from the simulation. The inverter macros have no Liberty file and count as 0 W, and the outputs drive the 6 fF of `OUTPUT_CAP_LOAD` in the SDC instead of a board. The other limits are those of the counter macro, see [`macros/counter/README.md`](macros/counter/README.md#gate-level-power-estimation).
+
 To run the gate-level simulation with Xschem, use:
 
 ```sh
@@ -553,7 +565,7 @@ make sim-view-cocotb WAVEFORM_VIEWER=surfer                   # use Surfer inste
 Each cocotb simulation folder contains a pre-configured waveform layout file (`<CELL>_tb.gtkw` for GTKWave, `<CELL>_tb.surf.ron` for Surfer).
 The view target loads it automatically together with the current `.fst`, so signal formatting is preserved across runs.
 
-To run all non-interactive simulation targets in sequence (RTL cocotb, GL cocotb and GL Xschem), use:
+To run all non-interactive simulation targets in sequence (RTL cocotb, GL cocotb, the power estimate from GL cocotb and GL Xschem), use:
 
 ```sh
 make sim-all
@@ -630,7 +642,7 @@ make copy-gds
 
 ### Copy the Final Netlist
 
-To copy the latest SPICE, PnL, and NL netlists from `flow/final/spice/` into `netlist/spice/`, from `flow/final/pnl/` into `netlist/pnl/`, and from `flow/final/nl/` into `netlist/nl/`, run:
+To copy the latest SPICE, PnL, and NL netlists from `flow/final/spice/` into `netlist/spice/`, from `flow/final/pnl/` into `netlist/pnl/`, and from `flow/final/nl/` into `netlist/nl/`, the SPEF of the nominal corner from `flow/final/spef/nom/` into `netlist/spef/`, and the SDC from `flow/final/sdc/` into `netlist/sdc/`, run:
 
 ```sh
 make copy-netlist
@@ -1164,7 +1176,7 @@ To keep the runtime low while still covering the full toolchain, the regression 
 - The vco runs only its layout scripts (`klayout-script-all`), which catch a PDK update that breaks one of them. The chip does not build the vco yet.
 - The top-level LVS runs once, with KLayout on `chip_top`, and first, so it compares the committed GDS with the committed netlists before the macros are rebuilt. Magic + Netgen and the delivery GDS `chip_top_logo_fill` are left to `make all`.
 
-The regression runs bottom-up after the top-level LVS: first the inverter macro, the layout scripts of the vco and the counter macro, then the top-level prerequisites (submodules, bondpad, RF pad, logo) and finally the chip top-level LibreLane run that integrates the freshly built macros and IP. After the counter is hardened, `copy-final` copies its fresh `flow/final/` views into `macros/counter/final/`, so that the logic equivalence check (`lec`), the gate-level simulations (`sim-gl-cocotb`, `sim-gl-sdf-cocotb`) and the chip top-level integration use the freshly built outputs rather than the committed ones.
+The regression runs bottom-up after the top-level LVS: first the inverter macro, the layout scripts of the vco and the counter macro, then the top-level prerequisites (submodules, bondpad, RF pad, logo) and finally the chip top-level LibreLane run that integrates the freshly built macros and IP. After the counter is hardened, `copy-final` copies its fresh `flow/final/` views into `macros/counter/final/`, so that the logic equivalence check (`lec`), the gate-level simulations (`sim-gl-cocotb`, `sim-gl-sdf-cocotb`, `sim-gl-power-cocotb`) and the chip top-level integration use the freshly built outputs rather than the committed ones.
 
 The following tools and flows are checked:
 
@@ -1185,6 +1197,7 @@ The following tools and flows are checked:
 | Verilator lint | counter `lint-verilog-all` |
 | Icarus Verilog (`iverilog`/`vvp`) | counter `sim-rtl-verilog` |
 | cocotb (RTL + gate-level + timed gate-level with the SDF delays) | counter `sim-rtl-cocotb`, `sim-gl-cocotb`, `sim-gl-sdf-cocotb` |
+| `fst2vcd` + OpenSTA power from the gate-level waveform (`read_vcd`, `report_power`) | counter `sim-gl-power-cocotb` |
 | Yosys + nextpnr-ice40 + icepack (FPGA) | counter `build-fpga` |
 | LibreLane (OpenROAD / Yosys / KLayout streamout / Netgen LVS) | counter `librelane-magicdrc`, chip `librelane-nodrc` |
 | Magic DRC (sign-off, run inside LibreLane) | counter `librelane-magicdrc` |
@@ -1199,7 +1212,7 @@ The following tools and flows are checked:
 
 - `flow/librelane/runs/` and `flow/final/` (LibreLane run directories and the saved views)
 - `layout/` (`chip_top.gds.gz` and `chip_top_logo_fill.gds.gz`)
-- `netlist/` (schematic, layout, PEX, PnL, NL and SPICE netlists)
+- `netlist/` (schematic, layout, PEX, PnL, NL and SPICE netlists, SPEF and SDC)
 - `render/img/` (the chip renders)
 - `verification/drc/`, `verification/lvs/` and `verification/reports/`
 - `schematic/xschem/simulations/`, `testbenches/xschem/simulations/` and the `plot_simulations/` outputs (`data/`, `figures/`, `__pycache__/`)
