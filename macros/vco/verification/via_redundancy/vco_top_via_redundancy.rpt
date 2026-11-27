@@ -1,0 +1,56 @@
+Via redundancy of vco_top in layout/vco_top.gds (PDK ihp-sg13g2, 0.1 s)
+Nets checked: 22, cuts: 10275, black-box instances: 0
+Net-opening single cuts: 41 (1 with room for a second cut, 40 without)
+By cut layer (room / no room):
+  Cont: 0 / 22
+  Via1: 0 / 7
+  Via2: 0 / 5
+  Via3: 0 / 6
+  Via4: 1 / 0
+By cell that draws the cut (room / no room):
+  vco_bias: 0 / 36
+  vco_top: 1 / 2
+  vco_buf: 0 / 2
+Cuts that miss a conductor on one side (not checked): TopVia2 16
+Cuts (41 of 41):
+  Via4 at (1.1, 0.82) on VDD, Metal4 to Metal5, room for a second cut, drawn in vco_top
+  Cont at (34.325, 30.35) on VDD, GatPoly to Metal1, no room, drawn in vco_bias
+  Cont at (37.86, 26.35) on VDD, GatPoly to Metal1, no room, drawn in vco_bias
+  Cont at (43.41, 26.35) on VDD, GatPoly to Metal1, no room, drawn in vco_bias
+  Cont at (29.42, 22.33) on VSS, Activ to Metal1, no room, drawn in vco_bias
+  Cont at (30.97, 22.33) on VSS, Activ to Metal1, no room, drawn in vco_bias
+  Cont at (37.86, 24.91) on VSS, GatPoly to Metal1, no room, drawn in vco_bias
+  Cont at (43.41, 24.91) on VSS, GatPoly to Metal1, no room, drawn in vco_bias
+  Cont at (31.225, 22.91) on di_en, GatPoly to Metal1, no room, drawn in vco_bias
+  Cont at (31.225, 30.35) on di_en, GatPoly to Metal1, no room, drawn in vco_bias
+  Cont at (29.675, 22.91) on en_b, GatPoly to Metal1, no room, drawn in vco_bias
+  Cont at (29.675, 30.35) on en_b, GatPoly to Metal1, no room, drawn in vco_bias
+  Cont at (31.48, 22.33) on en_b, Activ to Metal1, no room, drawn in vco_bias
+  Cont at (32.775, 23.41) on en_b, GatPoly to Metal1, no room, drawn in vco_bias
+  Cont at (34.325, 23.41) on en_b, GatPoly to Metal1, no room, drawn in vco_bias
+  Cont at (35.825, 29.35) on en_b, GatPoly to Metal1, no room, drawn in vco_bias
+  Cont at (29.93, 22.33) on net@29.910,22.330, Activ to Metal1, no room, drawn in vco_bias
+  Cont at (32.775, 30.35) on net@29.910,22.330, GatPoly to Metal1, no room, drawn in vco_bias
+  Cont at (39.71, 24.91) on net@33.010,22.580, GatPoly to Metal1, no room, drawn in vco_bias
+  Cont at (41.56, 24.91) on net@33.010,22.580, GatPoly to Metal1, no room, drawn in vco_bias
+  Cont at (36.01, 24.91) on net@36.430,23.330, GatPoly to Metal1, no room, drawn in vco_bias
+  Cont at (39.71, 26.35) on net@41.980,29.180, GatPoly to Metal1, no room, drawn in vco_bias
+  Cont at (41.56, 26.35) on net@41.980,29.180, GatPoly to Metal1, no room, drawn in vco_bias
+  Via1 at (31.48, 22.33) on en_b, Metal1 to Metal2, no room, drawn in vco_bias
+  Via1 at (29.93, 22.33) on net@29.910,22.330, Metal1 to Metal2, no room, drawn in vco_bias
+  Via1 at (5.2, 33.78) on vbg_buf, Metal1 to Metal2, no room, drawn in vco_bias
+  Via1 at (5.2, 53.64) on vbg_buf, Metal1 to Metal2, no room, drawn in vco_bias
+  Via1 at (3.8, 54.84) on vbn_buf, Metal1 to Metal2, no room, drawn in vco_bias
+  Via1 at (3.8, 74.7) on vbn_buf, Metal1 to Metal2, no room, drawn in vco_bias
+  Via1 at (57.89, 11.45) on vbn_buf, Metal1 to Metal2, no room, drawn in vco_buf
+  Via2 at (5.2, 33.78) on vbg_buf, Metal2 to Metal3, no room, drawn in vco_bias
+  Via2 at (5.2, 53.64) on vbg_buf, Metal2 to Metal3, no room, drawn in vco_bias
+  Via2 at (3.8, 54.84) on vbn_buf, Metal2 to Metal3, no room, drawn in vco_bias
+  Via2 at (3.8, 74.7) on vbn_buf, Metal2 to Metal3, no room, drawn in vco_bias
+  Via2 at (57.89, 11.45) on vbn_buf, Metal2 to Metal3, no room, drawn in vco_buf
+  Via3 at (5.2, 33.78) on vbg_buf, Metal3 to Metal4, no room, drawn in vco_bias
+  Via3 at (5.2, 53.64) on vbg_buf, Metal3 to Metal4, no room, drawn in vco_bias
+  Via3 at (3.8, 54.84) on vbn_buf, Metal3 to Metal4, no room, drawn in vco_bias
+  Via3 at (3.8, 74.7) on vbn_buf, Metal3 to Metal4, no room, drawn in vco_bias
+  Via3 at (46.0, 11.45) on vbn_buf, Metal3 to Metal4, no room, drawn in vco_top
+  Via3 at (46.0, 31.2) on vbn_buf, Metal3 to Metal4, no room, drawn in vco_top

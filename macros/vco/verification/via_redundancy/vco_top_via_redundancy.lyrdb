@@ -1,0 +1,585 @@
+<?xml version="1.0" encoding="utf-8"?>
+<report-database>
+ <description/>
+ <original-file/>
+ <generator/>
+ <top-cell>vco_top</top-cell>
+ <tags>
+ </tags>
+ <categories>
+  <category>
+   <name>Via4 room for a second cut</name>
+   <description/>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>Cont no room</name>
+   <description/>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>Via1 no room</name>
+   <description/>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>Via2 no room</name>
+   <description/>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>Via3 no room</name>
+   <description/>
+   <categories>
+   </categories>
+  </category>
+ </categories>
+ <cells>
+  <cell>
+   <name>vco_top</name>
+   <variant/>
+   <layout-name/>
+   <references>
+   </references>
+  </cell>
+ </cells>
+ <items>
+  <item>
+   <tags/>
+   <category>'Via4 room for a second cut'</category>
+   <cell>vco_top</cell>
+   <visited>false</visited>
+   <multiplicity>1</multiplicity>
+   <comment/>
+   <image/>
+   <values>
+    <value>box: (1.005,0.725;1.195,0.915)</value>
+    <value>text: 'net VDD, Metal4 to Metal5, drawn in vco_top'</value>
+   </values>
+  </item>
+  <item>
+   <tags/>
+   <category>'Cont no room'</category>
+   <cell>vco_top</cell>
+   <visited>false</visited>
+   <multiplicity>1</multiplicity>
+   <comment/>
+   <image/>
+   <values>
+    <value>box: (34.245,30.27;34.405,30.43)</value>
+    <value>text: 'net VDD, GatPoly to Metal1, drawn in vco_bias'</value>
+   </values>
+  </item>
+  <item>
+   <tags/>
+   <category>'Cont no room'</category>
+   <cell>vco_top</cell>
+   <visited>false</visited>
+   <multiplicity>1</multiplicity>
+   <comment/>
+   <image/>
+   <values>
+    <value>box: (37.78,26.27;37.94,26.43)</value>
+    <value>text: 'net VDD, GatPoly to Metal1, drawn in vco_bias'</value>
+   </values>
+  </item>
+  <item>
+   <tags/>
+   <category>'Cont no room'</category>
+   <cell>vco_top</cell>
+   <visited>false</visited>
+   <multiplicity>1</multiplicity>
+   <comment/>
+   <image/>
+   <values>
+    <value>box: (43.33,26.27;43.49,26.43)</value>
+    <value>text: 'net VDD, GatPoly to Metal1, drawn in vco_bias'</value>
+   </values>
+  </item>
+  <item>
+   <tags/>
+   <category>'Cont no room'</category>
+   <cell>vco_top</cell>
+   <visited>false</visited>
+   <multiplicity>1</multiplicity>
+   <comment/>
+   <image/>
+   <values>
+    <value>box: (29.34,22.25;29.5,22.41)</value>
+    <value>text: 'net VSS, Activ to Metal1, drawn in vco_bias'</value>
+   </values>
+  </item>
+  <item>
+   <tags/>
+   <category>'Cont no room'</category>
+   <cell>vco_top</cell>
+   <visited>false</visited>
+   <multiplicity>1</multiplicity>
+   <comment/>
+   <image/>
+   <values>
+    <value>box: (30.89,22.25;31.05,22.41)</value>
+    <value>text: 'net VSS, Activ to Metal1, drawn in vco_bias'</value>
+   </values>
+  </item>
+  <item>
+   <tags/>
+   <category>'Cont no room'</category>
+   <cell>vco_top</cell>
+   <visited>false</visited>
+   <multiplicity>1</multiplicity>
+   <comment/>
+   <image/>
+   <values>
+    <value>box: (37.78,24.83;37.94,24.99)</value>
+    <value>text: 'net VSS, GatPoly to Metal1, drawn in vco_bias'</value>
+   </values>
+  </item>
+  <item>
+   <tags/>
+   <category>'Cont no room'</category>
+   <cell>vco_top</cell>
+   <visited>false</visited>
+   <multiplicity>1</multiplicity>
+   <comment/>
+   <image/>
+   <values>
+    <value>box: (43.33,24.83;43.49,24.99)</value>
+    <value>text: 'net VSS, GatPoly to Metal1, drawn in vco_bias'</value>
+   </values>
+  </item>
+  <item>
+   <tags/>
+   <category>'Cont no room'</category>
+   <cell>vco_top</cell>
+   <visited>false</visited>
+   <multiplicity>1</multiplicity>
+   <comment/>
+   <image/>
+   <values>
+    <value>box: (31.145,22.83;31.305,22.99)</value>
+    <value>text: 'net di_en, GatPoly to Metal1, drawn in vco_bias'</value>
+   </values>
+  </item>
+  <item>
+   <tags/>
+   <category>'Cont no room'</category>
+   <cell>vco_top</cell>
+   <visited>false</visited>
+   <multiplicity>1</multiplicity>
+   <comment/>
+   <image/>
+   <values>
+    <value>box: (31.145,30.27;31.305,30.43)</value>
+    <value>text: 'net di_en, GatPoly to Metal1, drawn in vco_bias'</value>
+   </values>
+  </item>
+  <item>
+   <tags/>
+   <category>'Cont no room'</category>
+   <cell>vco_top</cell>
+   <visited>false</visited>
+   <multiplicity>1</multiplicity>
+   <comment/>
+   <image/>
+   <values>
+    <value>box: (29.595,22.83;29.755,22.99)</value>
+    <value>text: 'net en_b, GatPoly to Metal1, drawn in vco_bias'</value>
+   </values>
+  </item>
+  <item>
+   <tags/>
+   <category>'Cont no room'</category>
+   <cell>vco_top</cell>
+   <visited>false</visited>
+   <multiplicity>1</multiplicity>
+   <comment/>
+   <image/>
+   <values>
+    <value>box: (29.595,30.27;29.755,30.43)</value>
+    <value>text: 'net en_b, GatPoly to Metal1, drawn in vco_bias'</value>
+   </values>
+  </item>
+  <item>
+   <tags/>
+   <category>'Cont no room'</category>
+   <cell>vco_top</cell>
+   <visited>false</visited>
+   <multiplicity>1</multiplicity>
+   <comment/>
+   <image/>
+   <values>
+    <value>box: (31.4,22.25;31.56,22.41)</value>
+    <value>text: 'net en_b, Activ to Metal1, drawn in vco_bias'</value>
+   </values>
+  </item>
+  <item>
+   <tags/>
+   <category>'Cont no room'</category>
+   <cell>vco_top</cell>
+   <visited>false</visited>
+   <multiplicity>1</multiplicity>
+   <comment/>
+   <image/>
+   <values>
+    <value>box: (32.695,23.33;32.855,23.49)</value>
+    <value>text: 'net en_b, GatPoly to Metal1, drawn in vco_bias'</value>
+   </values>
+  </item>
+  <item>
+   <tags/>
+   <category>'Cont no room'</category>
+   <cell>vco_top</cell>
+   <visited>false</visited>
+   <multiplicity>1</multiplicity>
+   <comment/>
+   <image/>
+   <values>
+    <value>box: (34.245,23.33;34.405,23.49)</value>
+    <value>text: 'net en_b, GatPoly to Metal1, drawn in vco_bias'</value>
+   </values>
+  </item>
+  <item>
+   <tags/>
+   <category>'Cont no room'</category>
+   <cell>vco_top</cell>
+   <visited>false</visited>
+   <multiplicity>1</multiplicity>
+   <comment/>
+   <image/>
+   <values>
+    <value>box: (35.745,29.27;35.905,29.43)</value>
+    <value>text: 'net en_b, GatPoly to Metal1, drawn in vco_bias'</value>
+   </values>
+  </item>
+  <item>
+   <tags/>
+   <category>'Cont no room'</category>
+   <cell>vco_top</cell>
+   <visited>false</visited>
+   <multiplicity>1</multiplicity>
+   <comment/>
+   <image/>
+   <values>
+    <value>box: (29.85,22.25;30.01,22.41)</value>
+    <value>text: 'net net@29.910,22.330, Activ to Metal1, drawn in vco_bias'</value>
+   </values>
+  </item>
+  <item>
+   <tags/>
+   <category>'Cont no room'</category>
+   <cell>vco_top</cell>
+   <visited>false</visited>
+   <multiplicity>1</multiplicity>
+   <comment/>
+   <image/>
+   <values>
+    <value>box: (32.695,30.27;32.855,30.43)</value>
+    <value>text: 'net net@29.910,22.330, GatPoly to Metal1, drawn in vco_bias'</value>
+   </values>
+  </item>
+  <item>
+   <tags/>
+   <category>'Cont no room'</category>
+   <cell>vco_top</cell>
+   <visited>false</visited>
+   <multiplicity>1</multiplicity>
+   <comment/>
+   <image/>
+   <values>
+    <value>box: (39.63,24.83;39.79,24.99)</value>
+    <value>text: 'net net@33.010,22.580, GatPoly to Metal1, drawn in vco_bias'</value>
+   </values>
+  </item>
+  <item>
+   <tags/>
+   <category>'Cont no room'</category>
+   <cell>vco_top</cell>
+   <visited>false</visited>
+   <multiplicity>1</multiplicity>
+   <comment/>
+   <image/>
+   <values>
+    <value>box: (41.48,24.83;41.64,24.99)</value>
+    <value>text: 'net net@33.010,22.580, GatPoly to Metal1, drawn in vco_bias'</value>
+   </values>
+  </item>
+  <item>
+   <tags/>
+   <category>'Cont no room'</category>
+   <cell>vco_top</cell>
+   <visited>false</visited>
+   <multiplicity>1</multiplicity>
+   <comment/>
+   <image/>
+   <values>
+    <value>box: (35.93,24.83;36.09,24.99)</value>
+    <value>text: 'net net@36.430,23.330, GatPoly to Metal1, drawn in vco_bias'</value>
+   </values>
+  </item>
+  <item>
+   <tags/>
+   <category>'Cont no room'</category>
+   <cell>vco_top</cell>
+   <visited>false</visited>
+   <multiplicity>1</multiplicity>
+   <comment/>
+   <image/>
+   <values>
+    <value>box: (39.63,26.27;39.79,26.43)</value>
+    <value>text: 'net net@41.980,29.180, GatPoly to Metal1, drawn in vco_bias'</value>
+   </values>
+  </item>
+  <item>
+   <tags/>
+   <category>'Cont no room'</category>
+   <cell>vco_top</cell>
+   <visited>false</visited>
+   <multiplicity>1</multiplicity>
+   <comment/>
+   <image/>
+   <values>
+    <value>box: (41.48,26.27;41.64,26.43)</value>
+    <value>text: 'net net@41.980,29.180, GatPoly to Metal1, drawn in vco_bias'</value>
+   </values>
+  </item>
+  <item>
+   <tags/>
+   <category>'Via1 no room'</category>
+   <cell>vco_top</cell>
+   <visited>false</visited>
+   <multiplicity>1</multiplicity>
+   <comment/>
+   <image/>
+   <values>
+    <value>box: (31.385,22.235;31.575,22.425)</value>
+    <value>text: 'net en_b, Metal1 to Metal2, drawn in vco_bias'</value>
+   </values>
+  </item>
+  <item>
+   <tags/>
+   <category>'Via1 no room'</category>
+   <cell>vco_top</cell>
+   <visited>false</visited>
+   <multiplicity>1</multiplicity>
+   <comment/>
+   <image/>
+   <values>
+    <value>box: (29.835,22.235;30.025,22.425)</value>
+    <value>text: 'net net@29.910,22.330, Metal1 to Metal2, drawn in vco_bias'</value>
+   </values>
+  </item>
+  <item>
+   <tags/>
+   <category>'Via1 no room'</category>
+   <cell>vco_top</cell>
+   <visited>false</visited>
+   <multiplicity>1</multiplicity>
+   <comment/>
+   <image/>
+   <values>
+    <value>box: (5.105,33.685;5.295,33.875)</value>
+    <value>text: 'net vbg_buf, Metal1 to Metal2, drawn in vco_bias'</value>
+   </values>
+  </item>
+  <item>
+   <tags/>
+   <category>'Via1 no room'</category>
+   <cell>vco_top</cell>
+   <visited>false</visited>
+   <multiplicity>1</multiplicity>
+   <comment/>
+   <image/>
+   <values>
+    <value>box: (5.105,53.545;5.295,53.735)</value>
+    <value>text: 'net vbg_buf, Metal1 to Metal2, drawn in vco_bias'</value>
+   </values>
+  </item>
+  <item>
+   <tags/>
+   <category>'Via1 no room'</category>
+   <cell>vco_top</cell>
+   <visited>false</visited>
+   <multiplicity>1</multiplicity>
+   <comment/>
+   <image/>
+   <values>
+    <value>box: (3.705,54.745;3.895,54.935)</value>
+    <value>text: 'net vbn_buf, Metal1 to Metal2, drawn in vco_bias'</value>
+   </values>
+  </item>
+  <item>
+   <tags/>
+   <category>'Via1 no room'</category>
+   <cell>vco_top</cell>
+   <visited>false</visited>
+   <multiplicity>1</multiplicity>
+   <comment/>
+   <image/>
+   <values>
+    <value>box: (3.705,74.605;3.895,74.795)</value>
+    <value>text: 'net vbn_buf, Metal1 to Metal2, drawn in vco_bias'</value>
+   </values>
+  </item>
+  <item>
+   <tags/>
+   <category>'Via1 no room'</category>
+   <cell>vco_top</cell>
+   <visited>false</visited>
+   <multiplicity>1</multiplicity>
+   <comment/>
+   <image/>
+   <values>
+    <value>box: (57.795,11.355;57.985,11.545)</value>
+    <value>text: 'net vbn_buf, Metal1 to Metal2, drawn in vco_buf'</value>
+   </values>
+  </item>
+  <item>
+   <tags/>
+   <category>'Via2 no room'</category>
+   <cell>vco_top</cell>
+   <visited>false</visited>
+   <multiplicity>1</multiplicity>
+   <comment/>
+   <image/>
+   <values>
+    <value>box: (5.105,33.685;5.295,33.875)</value>
+    <value>text: 'net vbg_buf, Metal2 to Metal3, drawn in vco_bias'</value>
+   </values>
+  </item>
+  <item>
+   <tags/>
+   <category>'Via2 no room'</category>
+   <cell>vco_top</cell>
+   <visited>false</visited>
+   <multiplicity>1</multiplicity>
+   <comment/>
+   <image/>
+   <values>
+    <value>box: (5.105,53.545;5.295,53.735)</value>
+    <value>text: 'net vbg_buf, Metal2 to Metal3, drawn in vco_bias'</value>
+   </values>
+  </item>
+  <item>
+   <tags/>
+   <category>'Via2 no room'</category>
+   <cell>vco_top</cell>
+   <visited>false</visited>
+   <multiplicity>1</multiplicity>
+   <comment/>
+   <image/>
+   <values>
+    <value>box: (3.705,54.745;3.895,54.935)</value>
+    <value>text: 'net vbn_buf, Metal2 to Metal3, drawn in vco_bias'</value>
+   </values>
+  </item>
+  <item>
+   <tags/>
+   <category>'Via2 no room'</category>
+   <cell>vco_top</cell>
+   <visited>false</visited>
+   <multiplicity>1</multiplicity>
+   <comment/>
+   <image/>
+   <values>
+    <value>box: (3.705,74.605;3.895,74.795)</value>
+    <value>text: 'net vbn_buf, Metal2 to Metal3, drawn in vco_bias'</value>
+   </values>
+  </item>
+  <item>
+   <tags/>
+   <category>'Via2 no room'</category>
+   <cell>vco_top</cell>
+   <visited>false</visited>
+   <multiplicity>1</multiplicity>
+   <comment/>
+   <image/>
+   <values>
+    <value>box: (57.795,11.355;57.985,11.545)</value>
+    <value>text: 'net vbn_buf, Metal2 to Metal3, drawn in vco_buf'</value>
+   </values>
+  </item>
+  <item>
+   <tags/>
+   <category>'Via3 no room'</category>
+   <cell>vco_top</cell>
+   <visited>false</visited>
+   <multiplicity>1</multiplicity>
+   <comment/>
+   <image/>
+   <values>
+    <value>box: (5.105,33.685;5.295,33.875)</value>
+    <value>text: 'net vbg_buf, Metal3 to Metal4, drawn in vco_bias'</value>
+   </values>
+  </item>
+  <item>
+   <tags/>
+   <category>'Via3 no room'</category>
+   <cell>vco_top</cell>
+   <visited>false</visited>
+   <multiplicity>1</multiplicity>
+   <comment/>
+   <image/>
+   <values>
+    <value>box: (5.105,53.545;5.295,53.735)</value>
+    <value>text: 'net vbg_buf, Metal3 to Metal4, drawn in vco_bias'</value>
+   </values>
+  </item>
+  <item>
+   <tags/>
+   <category>'Via3 no room'</category>
+   <cell>vco_top</cell>
+   <visited>false</visited>
+   <multiplicity>1</multiplicity>
+   <comment/>
+   <image/>
+   <values>
+    <value>box: (3.705,54.745;3.895,54.935)</value>
+    <value>text: 'net vbn_buf, Metal3 to Metal4, drawn in vco_bias'</value>
+   </values>
+  </item>
+  <item>
+   <tags/>
+   <category>'Via3 no room'</category>
+   <cell>vco_top</cell>
+   <visited>false</visited>
+   <multiplicity>1</multiplicity>
+   <comment/>
+   <image/>
+   <values>
+    <value>box: (3.705,74.605;3.895,74.795)</value>
+    <value>text: 'net vbn_buf, Metal3 to Metal4, drawn in vco_bias'</value>
+   </values>
+  </item>
+  <item>
+   <tags/>
+   <category>'Via3 no room'</category>
+   <cell>vco_top</cell>
+   <visited>false</visited>
+   <multiplicity>1</multiplicity>
+   <comment/>
+   <image/>
+   <values>
+    <value>box: (45.905,11.355;46.095,11.545)</value>
+    <value>text: 'net vbn_buf, Metal3 to Metal4, drawn in vco_top'</value>
+   </values>
+  </item>
+  <item>
+   <tags/>
+   <category>'Via3 no room'</category>
+   <cell>vco_top</cell>
+   <visited>false</visited>
+   <multiplicity>1</multiplicity>
+   <comment/>
+   <image/>
+   <values>
+    <value>box: (45.905,31.105;46.095,31.295)</value>
+    <value>text: 'net vbn_buf, Metal3 to Metal4, drawn in vco_top'</value>
+   </values>
+  </item>
+ </items>
+</report-database>

@@ -92,6 +92,15 @@ _DRC_JOBS_OPT = $(if $(DRC_JOBS),-j $(DRC_JOBS))
 # Override with: make <target> EV_PRECISION=<digits>
 EV_PRECISION ?= 5
 
+# Testbench that writes the pin currents of the current view, and the name of its state (current-view, check-current-density)
+# Override with: make <target> CURRENT_TB=<testbenchname> CURRENT_STATE=<state>
+CURRENT_TB ?= $(TOP)_tb_current
+CURRENT_STATE ?= amplifier
+
+# Where the currents of the view come from, written into it (the conditions of CURRENT_TB)
+# Override with: make current-view CURRENT_SOURCE="<text>"
+CURRENT_SOURCE ?= $(XSCHEM_TB_DIR)/$(CURRENT_TB).sch: operating point at mos_ff, 1.65 V and 105 C, inputs at VDD/2
+
 # Preferred GDS extension: use .gds when available for the CELL, otherwise .klay.gds
 # Resolved per CELL (CELL defaults to TOP), so cells can mix .gds and .klay.gds within one macro.
 # All DRC, LVS and PEX targets (KLayout and Magic) work with either .gds or .klay.gds.
@@ -112,6 +121,7 @@ GDS_DIR         := final/gds
 LEF_DIR         := final/lef
 LIB_DIR         := final/lib
 VH_DIR          := final/vh
+CURRENT_DIR     := final/current
 RENDER_IMG_DIR  := render/img
 NET_SCH_DIR     := netlist/schematic
 NET_LAY_DIR     := netlist/layout
@@ -119,6 +129,8 @@ NET_PEX_DIR     := netlist/pex
 CACE_DIR        := verification/cace
 LVS_RPT_DIR     := verification/lvs
 DRC_RPT_DIR     := verification/drc
+VIA_RPT_DIR     := verification/via_redundancy
+CURRENT_RPT_DIR := verification/current_density
 
 
 # Help Target
@@ -491,6 +503,27 @@ magic-verify-all: ## Verify all main subcells with Magic (LVS, PEX)
 # ================================================================================================
 
 
+# Via Redundancy and Current Density Targets
+check-via-redundancy: ## Report the single cuts whose failure opens a net of the CELL cell, a report that never fails (usage: make check-via-redundancy [CELL=<cellname>])
+	mkdir -p $(VIA_RPT_DIR)
+	sak-via-redundancy.py -w $(VIA_RPT_DIR) $(LAY_DIR)/$(CELL).$(_GDS_EXT)
+.PHONY: check-via-redundancy
+
+current-view: ## Write the current view final/current/<TOP>.yaml, the average current into each pin, from the testbench CURRENT_TB
+	$(MAKE) sim-xschem TB=$(CURRENT_TB)
+	mkdir -p $(CURRENT_DIR)
+	sak-current-density.py view -o $(CURRENT_DIR)/$(TOP).yaml --gds $(GDS_DIR)/$(TOP).gds --state $(CURRENT_STATE) \
+		--source "$(CURRENT_SOURCE)" \
+		--data $(SIM_PLOT_DIR)/data/$(CURRENT_TB).txt
+.PHONY: current-view
+
+check-current-density: ## Check the DC current of the TOP cell against the PDK limits from its current view, a net the screen cannot clear stays unresolved
+	mkdir -p $(CURRENT_RPT_DIR)
+	sak-current-density.py check -w $(CURRENT_RPT_DIR) -v $(CURRENT_DIR)/$(TOP).yaml -s $(CURRENT_STATE) $(GDS_DIR)/$(TOP).gds
+.PHONY: check-current-density
+# ================================================================================================
+
+
 # Verify, Build and Simulate All Target
 all: ## Generate the layouts (unless LAYOUT_SOURCE=manual), verify, build and simulate the TOP cell
 	$(MAKE) klayout-script-all
@@ -499,16 +532,19 @@ all: ## Generate the layouts (unless LAYOUT_SOURCE=manual), verify, build and si
 	$(MAKE) magic-verify-all
 	$(MAKE) build-top
 	$(MAKE) sim-all
+	$(MAKE) check-via-redundancy
+	$(MAKE) current-view
+	$(MAKE) check-current-density
 .PHONY: all
 # ================================================================================================
 
 
 # Clean Target
 clean: ## Delete all generated files and folders (final, netlists, render, DRC/LVS reports, simulation and CACE outputs)
-	rm -rf $(GDS_DIR) $(LEF_DIR) $(LIB_DIR) $(VH_DIR)
+	rm -rf $(GDS_DIR) $(LEF_DIR) $(LIB_DIR) $(VH_DIR) $(CURRENT_DIR)
 	rm -rf $(NET_SCH_DIR) $(NET_LAY_DIR) $(NET_PEX_DIR)
 	rm -rf $(RENDER_IMG_DIR)
-	rm -rf $(DRC_RPT_DIR) $(LVS_RPT_DIR)
+	rm -rf $(DRC_RPT_DIR) $(LVS_RPT_DIR) $(VIA_RPT_DIR) $(CURRENT_RPT_DIR)
 	rm -rf $(XSCHEM_SCH_DIR)/simulations $(XSCHEM_TB_DIR)/simulations
 	rm -rf $(SIM_PLOT_DIR)/data $(SIM_PLOT_DIR)/figures $(SIM_PLOT_DIR)/__pycache__
 	rm -rf $(CACE_DIR)/_runs $(CACE_DIR)/_docs $(CACE_DIR)/netlist $(CACE_DIR)/results

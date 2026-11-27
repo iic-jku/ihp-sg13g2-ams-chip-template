@@ -23,7 +23,7 @@ format:
 ---
 
 ::: {.callout-important}
-This tutorial and the underlying template repository require the [IIC-OSIC-TOOLS](https://github.com/iic-jku/IIC-OSIC-TOOLS) container with tag `2026.11` or later. All commands below must be executed from within the container, and the working directory must be a folder containing the corresponding `Makefile`.
+This tutorial and the underlying template repository require the [IIC-OSIC-TOOLS](https://github.com/iic-jku/IIC-OSIC-TOOLS) container with tag `2026.12` or later. All commands below must be executed from within the container, and the working directory must be a folder containing the corresponding `Makefile`.
 :::
 
 ::: {.callout-note}
@@ -267,6 +267,8 @@ The [top-level Makefile](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template
 | `make build-all`    | Init submodules, build bondpad, build RF pad, build logos, build macros, and build top-level.             |
 | `make klayout-verify` / `magic-verify` | Run DRC, LVS, and PEX with KLayout, or LVS and PEX with Magic, for a given cell.   |
 | `make gdscheck-drc` (`DRC_LEVEL=<precheck|macro|regular>`, `GDSCHECK_SUITE=<suite>` or `GDSCHECK_DECKS=<decks>`) | Run the standalone gdscheck DRC for a given cell. |
+| `make check-via-redundancy` | Report the single cuts whose failure opens a net in the chip's wiring (see @sec-top-reliability).  |
+| `make check-current-density` | Check the DC current of every wire and cut against the PDK limits, from the current budget (see @sec-top-reliability). |
 | `make bondplan`     | Generate the bondplan (die in package, bondwires, pin table) in `packaging/` (see @sec-packaging).        |
 | `make all`          | Full build, DRC verification, simulation, and bondplan generation.                        |
 | `make release VERSION=2.1.0` | Copy GDS, netlists, and renders into `release/v.<VERSION>/` for tapeout submission.          |
@@ -298,7 +300,9 @@ The [counter Makefile](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/b
 | `make lec` / `lec-mutant`                         | Prove the final netlist equivalent to the RTL with EQY (`LEC_NETLIST` selects another netlist), and check that the proof can fail. |
 | `make symbol-pex`                                 | Build the Xschem PEX symbol `<CELL>_pex.sym` from `<CELL>.sym`. Runs automatically before every extraction. |
 | `make klayout-pex` / `magic-pex` (`EXT_MODE=<1|2|3>`) | Extract the parasitics of the hardened macro from `final/gds/` into `netlist/pex/`. |
-| `make all`                                        | Run lint, the FPGA build, the full macro build flow, the equivalence check, the parasitic extraction, and all simulations. |
+| `make check-via-redundancy`                       | Report the single cuts whose failure opens a net of the final GDS, the standard cells as black boxes. |
+| `make current-view` / `check-current-density`     | Write the current view `final/current/<TOP>.yaml` from the gate-level power, and check the final GDS against the PDK limits from it. |
+| `make all`                                        | Run lint, the FPGA build, the full macro build flow, the equivalence check, the parasitic extraction, all simulations, and the via redundancy and current density checks. |
 | `make clean`                                      | Delete all generated files and folders of the macro, including the FPGA outputs. |
 
 See the [counter README](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/counter/README.md) for more details and how to use the Makefile targets.
@@ -322,7 +326,9 @@ The [inverter Makefile](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/
 | `make lef` / `make lib` / `make verilog`          | Generate the LEF, the Liberty stub, and the Verilog stub for top-level integration.   |
 | `make check-boundary`                             | Check that the top cell layout carries the PR boundary box on layer 189 that the chip flow needs. |
 | `make build-top`                                  | Build the analog macro deliverables: PR boundary check, LEF, LIB, Verilog stub, GDS and rendered layout image. |
-| `make all`                                        | Write the layouts from their scripts (unless `LAYOUT_SOURCE=manual`), then run the KLayout, gdscheck and Magic verification, the analog macro build flow, and all simulations. |
+| `make check-via-redundancy`                       | Report the single cuts whose failure opens a net of a cell, with a room test for a second cut. |
+| `make current-view` / `check-current-density`     | Write the current view `final/current/<TOP>.yaml` from the testbench `<TOP>_tb_current`, and check the macro against the PDK limits from it. |
+| `make all`                                        | Write the layouts from their scripts (unless `LAYOUT_SOURCE=manual`), then run the KLayout, gdscheck and Magic verification, the analog macro build flow, all simulations, and the via redundancy and current density checks. |
 | `make clean`                                      | Delete all generated files and folders of the macro, including the CACE outputs. |
 
 See the [inverter README](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/inverter/README.md) for more details and how to use the Makefile targets.
@@ -339,6 +345,7 @@ The [vco Makefile](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/
 | `make snp2le` (`LE_MODEL=<structure|universal>`) | Fit a lumped-element model to the Touchstone file, for ngspice and VACASK.  |
 | `make em-model`                                   | Run `sim-em`, `copy-sparam`, `snp2le` and the ACSP testbench of the coil model. |
 | `make sim-corners` (`TB=<tb>`)                    | Run a start-up transient over MOS and resistor corners, temperatures, `VDD` and `vtune`. |
+| `make current-view`                               | Write the current view `final/current/<TOP>.yaml` from the start-up transient at `mos_ff`, `res_bcs`, 105 C and 1.65 V. |
 | `make sim-tune-lpe`                               | Run the post-layout tuning curve, one ngspice transient per tuning voltage at TT and 27 C. |
 | `make klayout-pex-leads`                          | Extract `vco_top` without the coil and the varactor array for the post-layout testbench. |
 | `make klayout-drc-regular`                        | Run the KLayout DRC of `vco_top` at the regular level, where only the densities the chip's fill meets may fail. |
@@ -1651,7 +1658,7 @@ The full verification, build, and simulation chain is run with the following com
 make all
 ```
 
-This calls `klayout-script-all`, `klayout-verify-all`, `gdscheck-drc-all`, `magic-verify-all`, `build-top`, and `sim-all` (Xschem + CACE) in sequence. The layouts come first, so the verification checks what the scripts write (@sec-layout-scripts), and the build follows the verification, because the Verilog stub reads its pins from a PEX netlist. With `LAYOUT_SOURCE=manual` the first step keeps a hand-drawn layout. The simulations run last, so the `inverter_top` testbench includes the PEX netlist produced by this run. Depending on the hardware used, a full pass can take a few minutes, especially the CACE simulation step.
+This calls `klayout-script-all`, `klayout-verify-all`, `gdscheck-drc-all`, `magic-verify-all`, `build-top`, `sim-all` (Xschem + CACE), `check-via-redundancy`, `current-view` and `check-current-density` in sequence (@sec-top-reliability explains the last three). The layouts come first, so the verification checks what the scripts write (@sec-layout-scripts), and the build follows the verification, because the Verilog stub reads its pins from a PEX netlist. With `LAYOUT_SOURCE=manual` the first step keeps a hand-drawn layout. The simulations run last, so the `inverter_top` testbench includes the PEX netlist produced by this run. Depending on the hardware used, a full pass can take a few minutes, especially the CACE simulation step.
 
 
 # RF Macro Implementation {#sec-rf}
@@ -1859,6 +1866,8 @@ check_cuts("tap's stack, top", "TopVia1", n_cuts, I_CORE)
 ```
 
 The currents are the highest of the post-layout corners at that temperature, FF with the strong resistor corner and `VDD` at 1.65 V: 5.9 mA in the core and 7.6 mA in the buffer's tail. A script prints the ratio of each path and stops above 1, so a layout that would wear out does not get written. The highest ratio is 0.76, on the drain plate of the tap's switch. Two things came out of it: a source stripe at the finger pitch of a short transistor cannot be wider than 0.16 $\mu$m on Metal1, so those transistors carry a Metal2 strip over every source stripe, and the macro's `VDD` strap moved from 2 $\mu$m of Metal4, rated for 4 mA, to TopMetal1.
+
+The flow targets of @sec-top-reliability run on the VCO too. `make current-view` writes the view of its pins from the start-up transient at `mos_ff`, `res_bcs`, 105 C and 1.65 V, the chip's budget reads it once the chip builds the VCO, and `make check-current-density` runs the floor and the screen on the macro. The flow check knows only where the current enters at the pins, not where it leaves at the transistors, so the nets of the core and the tail stay unresolved there, and the checks in the layout scripts remain the check of the macro's inside.
 
 ### Parasitic Extraction at 20 GHz
 
@@ -2977,6 +2986,64 @@ As in the macros, `magic-pex` starts by running `make symbol-pex`, which rebuild
 At the top level, PEX is only run on `chip_top` (without logo and filler), and the default `EXT_MODE=1` (C-decoupled) is used to keep the runtime manageable. However, the extracted netlist [`chip_top_magic_pex_1.spice`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/netlist/pex/chip_top_magic_pex_1.spice) is still huge (~75 MB, ~566k lines), and the post-layout simulation must be run on a powerful server.
 :::
 
+### Via Redundancy and Current Density {#sec-top-reliability}
+
+A chip that passes DRC and LVS can still fail in the field, and two causes are left that no rule deck looks at.
+
+The first is electromigration. A DC current pushes the metal atoms along a wire, and above a current density the process allows, voids grow until the wire or a via opens. The foundry qualifies a limit for a lifetime: the IHP process specification gives 11 years at 105 C for 1 mA per µm of width on Metal1, 2 mA per µm on Metal2 to Metal5, 15 and 16 mA per µm on the two top metals, 0.3 mA per contact and 0.4 mA per cut of Via1 to Via4. Below 0.36 µm of Metal1 and 0.3 µm of Metal2 to Metal5 the limit stays flat at 0.36 and 0.6 mA. The KLayout, Magic and gdscheck decks hold no current, so they cannot check it. Before these targets, the check was done by hand, wire by wire, or by the layout scripts of a macro, as the VCO does (see @sec-rf-current-density).
+
+The second is a lone via. A single via or contact is legal and connected, so DRC and LVS pass it, but it is the one point of a connection without redundancy: a void, a lithography miss or an electromigration failure there opens the net, and no check says a word beforehand. The house rule is two cuts wherever there is room.
+
+Both checks read the GDS with the conductors and cuts as the KLayout LVS deck of the PDK derives them: drawing plus filler minus slits, with the resistor and inductor bodies cut out. The limits and the size, space and enclosure rules of the cuts come from the IHP process specification and layout rules, recorded in the stack table `sak_tech.py` of IIC-OSIC-TOOLS.
+
+**Via redundancy.** `make check-via-redundancy` runs `sak-via-redundancy.py`. Each merged conductor polygon is a node of a graph, each cut an edge, and a net is a connected part of it. A cut whose removal splits the net into two parts that both hold a terminal (a device, a pad, a label of the top cell or a pin of a black box) is a bridge of that graph, and it is reported. A cut in a via array or a contact column has parallel cuts, and a cut to a stub has no terminal behind it, so neither is reported. Each reported cut gets a room test: the overlap of its two conductors, shrunk by the enclosure rules and half a cut, is where a cut center may sit, and two cuts fit when that region spans one cut pitch. The check is a report and never stops a flow, since a single cut without room is often the right layout, for example on a gate at the minimum finger pitch.
+
+```sh
+make check-via-redundancy                         # the chip's wiring, every other cell as a black box
+make -C macros/inverter check-via-redundancy      # a macro, every cell of it
+```
+
+At the top level every cell but `chip_top` and its via cells is a black box, so only the wiring of the chip is checked. The macros run the check on themselves. LibreLane routes a signal net with single vias, so the reported cuts of the chip are mostly on signal nets.
+
+**Current density.** `make check-current-density` runs `sak-current-density.py check` and stops the flow when a wire or a cut carries more than its limit. Knowing the current in each wire is the hard part, and the check does as little work as it can in three stages:
+
+1. **Floor.** No wire and no cut of a resistive network carries more than the total current fed into it. A net whose total current is below what the weakest single element carries passes without looking at the geometry. On ihp-sg13g2 that element is one contact, 0.3 mA. The floor assumes one cut, not two: the two-cut rule is a house rule, and a single cut is exactly what a lone via is.
+2. **Screen.** The whole net current against the narrowest section of every wire and against every single cut. A net that passes is proven, since no element can see more than the whole current. A via array is not judged by its summed capacity here, because its outer cuts carry more than the mean.
+3. **Solve.** Every other net becomes a pixel mesh of its drawn metal, with the pads at 0 V and every load where its current enters. A static resistive solve gives the current of each pixel edge and each cut. A mesh node is the piece of a polygon inside one pixel, and two pieces conduct across the pixel edge they share with the length of metal on it, so the two arms of a hairpin that share a pixel stay apart. The current through each wire cross-section is held against the limit for its width, and the worst single cut of each via array against the limit per cut. Contacts and the diffusion and poly layers are not in the solve: the floor and the screen check the contacts, and a solved net counts the contacts its screen could not clear in a note. The static IR drop at the loads comes out of the same solve.
+
+The currents come from the budget [`flow/current_density/chip_top.yaml`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/flow/current_density/chip_top.yaml). It names the cells read only by their pin shapes (the SRAM, the standard cells and the seal ring), the current views of the macros, and the loads of the core logic and the SRAM, each with the source of its number:
+
+```yaml
+views:
+  - {view: ../../macros/counter/final/current/counter_top.yaml, state: count}
+  - {view: ../../macros/inverter/final/current/inverter_top.yaml, state: amplifier}
+nets:
+  VDD:
+    loads:
+      - cells: ["sg13g2_[a-z]*"]      # the standard cells (the IO library is uppercase after sg13g2_)
+        exclude: ["sg13g2_fill_*", "sg13g2_decap_*"]
+        pin: VDD
+        current_ma: 0.326
+        source: "stapostpnr_nom_fast_1p65V_m40C_power.rpt: sequential, combinational and clock, 537.7 uW over 1.65 V"
+```
+
+A macro owns its currents. `make current-view` in a macro writes `final/current/<macro>.yaml`, the average current into each pin per operating state. The inverter takes it from the operating point of [`inverter_top_tb_current.sch`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/macros/inverter/testbenches/xschem/inverter_top_tb_current.sch) at the worst case of the limits, fast MOS at 1.65 V and 105 C with every input at `VDD/2`, where each inverter draws its highest cross current. The counter takes it from the power of `sim-gl-power-cocotb` (@sec-gl-power) with the fast library at 1.65 V, divided by that voltage. The view records a digest of the macro's GDS, its records without the time stamps, so the chip check refuses a view that is older than the macro's layout instead of reporting stale currents. At the chip level, each macro is a black box whose pin shapes are joined into one node per pin, so the macro's inside counts as ideal, and its pin currents enter there. A LibreLane macro labels one of its supply stripes only, so a pin shape without a label takes the name of the labelled pin it connects to inside the macro.
+
+```sh
+make -C macros/inverter current-view    # final/current/inverter_top.yaml
+make -C macros/counter current-view     # final/current/counter_top.yaml
+make check-current-density              # the chip, from flow/current_density/chip_top.yaml
+make -C macros/inverter check-current-density
+```
+
+On this chip, the budget holds `VDD` and `VSS`, which carry 9.08 mA each, 8.42 mA of it for the two inverter macros biased at mid-supply, and both pass the solve: the worst element is a single TopVia2 at 2.1 mA, 0.21 of its limit, and the static IR drop at the inverters is 9.4 mV on `VDD` and 14 mV on `VSS`. The check takes about 2.5 minutes and 7 GB of memory. The via redundancy check finds 472 single cuts on the chip, all LibreLane signal vias without room for a second cut, none in the inverter, and 41 in the VCO, of which one Via4 on `VDD` has room for a second cut.
+
+Both checks write a text report and a marker database (`.lyrdb`) to `verification/via_redundancy/` and `verification/current_density/`. Open the GDS in KLayout and load the markers with **Tools > Marker Browser** to step through the cuts or the wire sections one by one. The current density report has one row per net with its current, verdict, stage, worst ratio and the source of its current, followed by the elements above the limit, the elements above half of it, the worst element per net and layer, and the static IR drop at each load.
+
+::: {.callout-note}
+The check is as good as its currents. A view taken at the typical corner, a load left out of the budget or a guessed number gives a pass that means little, which is why every load carries its source. The limits are DC averages: the PDK publishes no limit for the RMS current of a clock or an RF line, whose average is zero. A macro checked on its own knows the currents of its pins, not of its transistors. DC current flows only from higher to lower potential through a transistor or a resistor, so it never circulates, and no net carries more than the macro's whole supply current. A net that reaches a diffusion or a resistor or inductor body is therefore checked at that current, a net of gates or capacitor plates at the current of its pins, and a net the screen cannot clear stays unresolved. Loads inside the IO cells are not modelled yet, so the report lists `IOVDD`, `IOVSS` and the signal pads as pad nets without a current.
+:::
+
 ## Packaging {#sec-packaging}
 
 The die is packaged in a QFN-32 (5 × 5 mm) open-molded plastic package ([OmPP](https://www.qptechnologies.com/products/ompp/)) from the [EUROPRACTICE ASIC packaging](https://europractice-ic.com/services/packaging/asic-packaging/) offering. The package matches the padframe exactly: all 32 bondpads (8 per side, see @sec-top) face the 32 package leads (8 per side). The signal and supply pads are wired to the lead facing them. The ground is bonded only through the cavity: the `VSS` and `IOVSS` pads are downbonded to the exposed pad, the package ground, and their two leads are bonded to it as well. Bonding is done with 25 µm gold wire, the longest wire measures 1.70 mm, and the cover is glued on after bonding.
@@ -3004,7 +3071,7 @@ The comprehensive simulation, build, and DRC pass for the complete chip is run w
 make all
 ```
 
-This calls `build-all` first, then the regular KLayout and gdscheck DRC of `chip_top_logo_fill`, which stops the flow on a violation (see the DRC section above), then `sim-all` (RTL and gate-level cocotb, the gate-level power estimate and the gate-level Xschem run), and finally `bondplan`. The simulations therefore run on the netlists that this build has just produced. Depending on the hardware used, `make all` can take a while.
+This calls `build-all` first, then the regular KLayout and gdscheck DRC of `chip_top_logo_fill`, which stops the flow on a violation (see the DRC section above), then `check-via-redundancy` and `check-current-density` (@sec-top-reliability), then `sim-all` (RTL and gate-level cocotb, the gate-level power estimate and the gate-level Xschem run), and finally `bondplan`. The simulations therefore run on the netlists that this build has just produced. Depending on the hardware used, `make all` can take a while.
 
 ## Releasing for Tapeout
 

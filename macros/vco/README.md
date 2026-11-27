@@ -636,6 +636,15 @@ The currents are `I_CORE`, `I_TAIL` and `I_BIAS` in the same script: the highest
 
 A source stripe at the finger pitch of the short devices (`MPs`, `MB1`, `MB2`, `M1`, `M2`) cannot be wider than 0.16 um on Metal1, so `mos()` has `s_strap`: a 0.29 um Metal2 strip over the stripe with vias all along, which takes about 70 % of the current, and the drains on Metal3. The tail's fingers leave room for 0.8 um of Metal1 (`s_width`). The limits are DC averages: nothing here bounds the RF current in the tank's lines.
 
+The flow targets of the other macros run here too, see [Via Redundancy and Current Density](../../README.md#via-redundancy-and-current-density) in the top-level README. `make current-view` writes `final/current/vco_top.yaml` from the start-up transient of `vco_top_tb_tran` at `mos_ff`, `res_bcs`, 105 C and 1.65 V (`sim_corners.py`, both ends of the tuning range, the higher average `VDD` current). `make check-current-density` checks the macro from that view, and `make check-via-redundancy` reports the single cuts whose failure opens a net. The flow check knows only the current of each pin, not where it leaves at the transistors, so the nets that carry the core and tail current stay unresolved, and the script checks above remain the check of the macro's inside.
+
+```sh
+make current-view
+make check-current-density
+make check-via-redundancy
+make check-via-redundancy CELL=vco_buf
+```
+
 
 ### Export Schematic Netlist for LVS
 
@@ -759,12 +768,12 @@ make magic-verify-all          # LVS and PEX of the bias, the buffer and the tap
 make all
 ```
 
-Runs `klayout-script-all`, `klayout-verify-all`, `gdscheck-drc-all`, `magic-verify-all`, `build-top` and `sim-all`: the inverter's chain, which first writes the layouts from their scripts. It takes about 28 minutes on a compute host. As in the inverter, verification runs before the simulations, so the post-layout testbench reads the extraction of this run. The EM simulation of the coil, the corners, the power-up transient, the transient noise and the post-layout PSS are not part of it.
+Runs `klayout-script-all`, `klayout-verify-all`, `gdscheck-drc-all`, `magic-verify-all`, `build-top`, `sim-all`, `check-via-redundancy`, `current-view` and `check-current-density`: the inverter's chain, which first writes the layouts from their scripts. It took about 28 minutes on a compute host before `current-view` added its two start-up transients. As in the inverter, verification runs before the simulations, so the post-layout testbench reads the extraction of this run. The EM simulation of the coil, the corners, the power-up transient, the transient noise and the post-layout PSS are not part of it.
 
 
 ### Clean
 
-`make clean` deletes the generated files: `final/`, `netlist/schematic/`, `netlist/layout/`, `netlist/pex/`, `render/img/`, the DRC and LVS reports, the Xschem `simulations/` folders and the `plot_simulations/` outputs. The EM results in `verification/em/`, the lumped-element models in `netlist/spice/` and `netlist/spectre/` and `render/vco_top_annotated.png` stay, because an EM run of the coil takes hours.
+`make clean` deletes the generated files: `final/`, `netlist/schematic/`, `netlist/layout/`, `netlist/pex/`, `render/img/`, the DRC, LVS, via redundancy and current density reports, the Xschem `simulations/` folders and the `plot_simulations/` outputs. The EM results in `verification/em/`, the lumped-element models in `netlist/spice/` and `netlist/spectre/` and `render/vco_top_annotated.png` stay, because an EM run of the coil takes hours.
 
 > [!WARNING]
 > Most of these outputs are committed in this repository, so `make clean` leaves a deletion set in `git status`. Run `git restore .` to get them back if you did not mean to remove them.

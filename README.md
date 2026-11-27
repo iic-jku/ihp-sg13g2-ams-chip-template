@@ -14,7 +14,7 @@ Institute for Integrated Circuits and Quantum Computing, Johannes Kepler Univers
 
 <!-- /template-only -->
 > [!IMPORTANT]
-> This repository requires the [IIC-OSIC-TOOLS](https://github.com/iic-jku/IIC-OSIC-TOOLS) container with tag `2026.11` or later.
+> This repository requires the [IIC-OSIC-TOOLS](https://github.com/iic-jku/IIC-OSIC-TOOLS) container with tag `2026.12` or later.
 
 
 <!-- template-only -->
@@ -116,6 +116,8 @@ A designer-oriented description of this chip can be found in [doc/](doc/):
 │  └─ specifications.md
 ├─ 📁 flow/
 │  ├─ 📁 artistic/
+│  ├─ 📁 current_density/
+│  │  └─ chip_top.yaml
 │  ├─ 📁 librelane/
 │  │  ├─ chip_top.sdc
 │  │  ├─ config.yaml
@@ -265,8 +267,10 @@ A designer-oriented description of this chip can be found in [doc/](doc/):
 │  ├─ Makefile
 │  └─ requirements.txt
 ├─ 📁 verification/
+│  ├─ 📁 current_density/
 │  ├─ 📁 drc/
 │  ├─ 📁 lvs/
+│  ├─ 📁 via_redundancy/
 │  └─ 📁 reports/
 │     ├─ antenna_summary.rpt
 │     ├─ antenna_violations.rpt
@@ -379,22 +383,23 @@ Every coloured branch corresponds to one deliverable (top chip, bondpad, RF pad,
 
 Solid arrows are direct `$(MAKE) <target>` calls within a single Makefile. Dashed arrows descend into a subdirectory, either as a recursive `$(MAKE) -C <dir> all` call into a sub-Makefile or as the Python bondplan flow in `packaging/`. The numbers on the second level give the execution order of `make all`, and the vertical order inside the coloured boxes gives the execution order of each sub-Makefile.
 
-At the top level, `make all` runs four steps in this order:
+At the top level, `make all` runs five steps in this order:
 
 1. `build-all` initialises the submodules and builds every component by calling its own `all` target: bondpad, RF pad, logos, digital macro, analog macro, and finally the chip assembly with `build-top` (LibreLane, copy-back of all artifacts, logo and fill insertion, final GDS render).
 2. `klayout-drc-regular` (the sign-off deck) and `gdscheck-drc-regular` run the DRC of the final `chip_top_logo_fill` GDS. A violation stops `make all`, and gdscheck flags IHP's own cells until the fix is in the container (see [Design Rule Check (DRC)](#design-rule-check-drc)). `magic-drc` is left out until IHP's IO pads and SRAM are clean in Magic, and it takes about a day on the chip.
-3. `sim-all` runs the top-level RTL and gate-level simulations on the netlists produced by this build.
-4. `bondplan` generates the bonding diagram, the bondwires, and the pin table.
+3. `check-via-redundancy` reports the single cuts whose failure opens a net, and `check-current-density` checks the DC current of the wires and vias against the PDK limits, which stops `make all` above a limit (see [Via Redundancy and Current Density](#via-redundancy-and-current-density)).
+4. `sim-all` runs the top-level RTL and gate-level simulations on the netlists produced by this build.
+5. `bondplan` generates the bonding diagram, the bondwires, and the pin table.
 
 Every component follows the same principle. The simulations always run last, so they use the artifacts that the same invocation has just produced.
 
 | Makefile | `all` flow |
 | --- | --- |
-| [`macros/counter/`](macros/counter/) (digital) | lint -> build (FPGA and LibreLane, including the XSPICE model) -> extract (PEX of the hardened GDS) -> simulate. DRC and LVS run inside the LibreLane flow. |
-| [`macros/inverter/`](macros/inverter/) (analog) | verify (DRC, LVS, PEX) -> build (LEF, LIB, Verilog stub, GDS, render) -> simulate |
-| [`macros/vco/`](macros/vco/) (RF) | layouts (KLayout Python scripts) -> coil EM (Palace) -> lumped-element model (snp2le) -> verify (DRC, LVS, PEX) -> build (LEF, LIB, Verilog stub, GDS, render) -> simulate (ngspice and VACASK). Not part of the chip build yet. |
+| [`macros/counter/`](macros/counter/) (digital) | lint -> build (FPGA and LibreLane, including the XSPICE model) -> extract (PEX of the hardened GDS) -> simulate -> via redundancy, current view and current density. DRC and LVS run inside the LibreLane flow. |
+| [`macros/inverter/`](macros/inverter/) (analog) | verify (DRC, LVS, PEX) -> build (LEF, LIB, Verilog stub, GDS, render) -> simulate -> via redundancy, current view and current density |
+| [`macros/vco/`](macros/vco/) (RF) | layouts (KLayout Python scripts) -> coil EM (Palace) -> lumped-element model (snp2le) -> verify (DRC, LVS, PEX) -> build (LEF, LIB, Verilog stub, GDS, render) -> simulate (ngspice and VACASK) -> via redundancy, current view and current density. Not part of the chip build yet. |
 | [`ip/*`](ip/) (bondpad, RF pad, logos) | build -> verify (DRC, and LVS on the RF pad) |
-| top level | build -> verify (DRC) -> simulate -> package |
+| top level | build -> verify (DRC, via redundancy, current density) -> simulate -> package |
 
 The following sections describe the top-level targets in detail. The macro and IP targets are documented in the `README.md` of the respective subfolder.
 
@@ -1056,6 +1061,33 @@ make magic-verify
 ```
 
 
+### Via Redundancy and Current Density
+
+DRC and LVS miss two failures that wear a chip out: a lone via that opens a net when it fails, and a wire or a via that carries more current than the process allows. Two checks look for them in the GDS. Both read the conductors and cuts the way the PDK's KLayout LVS deck derives them, and take the rules and current limits from the IHP process specification and layout rules, as the stack table `sak_tech.py` of IIC-OSIC-TOOLS records them.
+
+**Via redundancy** (`sak-via-redundancy.py`) reports the cuts whose failure opens a net: a single via or contact that is the only connection between two parts of a net that both reach a device, a pad, a label of the top cell or a black-box pin. A lone via is legal and connected, so DRC and LVS pass it, but a void or an electromigration failure there opens the net. Parallel cuts (a via array, a contact column) and cuts to a stub without a terminal are not reported. Each reported cut gets a room test, whether the overlap of its two conductors holds a second cut by the size, space and enclosure rules. The check is a report and never stops a flow:
+
+```sh
+make check-via-redundancy
+```
+
+At the top level it checks the wiring of `chip_top`. Every other cell is a black box, of which only the pin shapes stay: the macros run the check on themselves, and the IO cells, the IPs and the library cells are not the chip's own wiring. LibreLane routes signal nets with single vias, so most of the reported cuts are on signal nets. The outputs are `verification/via_redundancy/chip_top_logo_fill_via_redundancy.rpt` and the marker database `chip_top_logo_fill_via_redundancy.lyrdb` for the marker browser of KLayout.
+
+**Current density** (`sak-current-density.py`) checks the time-averaged DC current of every wire and cut against the limits of the process for 11 years at 105 C, for example 2 mA per µm of width on Metal2 to Metal5 and 0.4 mA per Via1. No DRC deck checks electromigration. An element above its limit stops the flow:
+
+```sh
+make check-current-density
+```
+
+Each net is judged in three stages. A net whose total current is below what one contact carries (0.3 mA) passes without looking at the geometry. A net whose whole current fits through its narrowest wire and through every single cut passes the screen. Every other net gets a static resistive solve on a pixel mesh of its drawn metal, from its pads to its loads, and each wire cross-section and each via is held against its limit. Contacts and the diffusion and poly layers are not in the solve: the floor and the screen check the contacts, and a solved net counts the contacts its screen could not clear in a note of the report.
+
+The currents come from the budget [`flow/current_density/chip_top.yaml`](flow/current_density/chip_top.yaml). It names the cells read only by their pin shapes, the current views of the macros and the loads of the core logic and the SRAM, and each load names where its number comes from. Each macro writes its view with `make current-view` to `final/current/<macro>.yaml`: the average current into each pin per operating state, with a digest of the macro's GDS, so the check refuses a view that is older than the macro's layout. The outputs in `verification/current_density/` are the report and the marker database. The report has one row per net (current, verdict, stage, worst ratio and the source of the current), the elements above the limit and above half of it, the static IR drop at the loads, and the pad nets that carry no current in the budget.
+
+On this chip, the budget holds `VDD` and `VSS`, which carry 9.08 mA each, 8.42 mA of it for the two inverter macros biased at mid-supply. The power of the IO cells (5.17 mW in the LibreLane power report, most of it on `IOVDD`) is not in the budget yet. Both pass the solve, and the worst element is a single TopVia2 at 2.1 mA, 0.21 of its limit. The static IR drop at the inverters is 9.4 mV on `VDD` and 14 mV on `VSS`. The check takes about 2.5 minutes and 7 GB of memory, most of it to read the IO cells with their devices, and the via redundancy check about 70 seconds and 2.5 GB. The via redundancy check reports 472 single cuts on the chip, all LibreLane signal vias without room for a second cut.
+
+The check covers the DC average only. The PDK publishes no limit for RMS or peak currents. The macros check their own inside with `check-current-density` on their current view. A macro knows the currents of its pins, not of its devices, so a net that reaches a diffusion or a resistor or inductor body can carry the macro's whole supply current, and a net the screen cannot clear at that current stays unresolved. At the chip level a macro is a black box whose pin shapes are joined into one node per pin. Loads inside the IO cells are not modelled yet, so the report lists `IOVDD`, `IOVSS` and the signal pads as pad nets without a current.
+
+
 ### Packaging (Bondplan Generation)
 
 Generates the bondplan fully automatically: the die placed in the package cavity, all bondwires, a pin table, and the filled EUROPRACTICE title block. Inputs are the final chip GDS (`layout/chip_top_logo_fill.gds.gz`) and the EUROPRACTICE package library, from which the QFN32 drawing sheet is extracted:
@@ -1086,7 +1118,7 @@ See [packaging/README.md](packaging/README.md) for the full flow documentation a
 
 ### Build, Verify and Simulate All
 
-Runs `build-all` first, followed by the regular KLayout and gdscheck DRC of the final `chip_top_logo_fill`, then the chip simulations (`sim-all`) and finally generates the bondplan (`bondplan`). A violation in the DRC stops the flow, see [Design Rule Check (DRC)](#design-rule-check-drc):
+Runs `build-all` first, followed by the regular KLayout and gdscheck DRC of the final `chip_top_logo_fill`, the via redundancy and current density checks, then the chip simulations (`sim-all`) and finally generates the bondplan (`bondplan`). A violation in the DRC or a current above its limit stops the flow, see [Design Rule Check (DRC)](#design-rule-check-drc) and [Via Redundancy and Current Density](#via-redundancy-and-current-density):
 
 ```sh
 make all
@@ -1154,6 +1186,7 @@ To keep the runtime low while still covering the full toolchain, the regression 
 - Only **one** logo (`sg13g2_ip__jku`) is regenerated. It is the only step that exercises the PNG to GDS flow. The other two logos (`sg13g2_ip__jku_names`, `sg13g2_ip__template_name`) use an identical toolchain and reuse their committed views.
 - Exactly **one** CACE parameter set is run (the AC VDD sweep `ac_params`, no Monte Carlo). Swap `ac_params` for `ac_mc_params` / `ac_mm_params` in the target to also exercise the Monte Carlo flow.
 - The vco runs only its layout scripts (`klayout-script-all`), which catch a PDK update that breaks one of them. The chip does not build the vco yet.
+- The current density runs on the inverter, from a current view written by the same run. The chip runs only the via redundancy: the macros the regression rebuilds may differ from their copies in the committed chip GDS, which `check-current-density` refuses.
 
 The regression runs bottom-up: first the inverter macro, the layout scripts of the vco and the counter macro, then the top-level prerequisites (submodules, bondpad, RF pad, logo) and finally the chip top-level LibreLane run that integrates the freshly built macros and IP. After the counter is hardened, `copy-final` copies its fresh `flow/final/` views into `macros/counter/final/`, so that the logic equivalence check (`lec`), the gate-level simulations (`sim-gl-cocotb`, `sim-gl-sdf-cocotb`, `sim-gl-power-cocotb`) and the chip top-level integration use the freshly built outputs rather than the committed ones.
 
@@ -1172,6 +1205,8 @@ The following tools and flows are checked:
 | KLayout DRC (`sak-drc.sh`) + KLayout LVS (`sak-lvs.sh`) + KLayout PEX (`kpex`) | inverter `klayout-verify CELL=inverter_top` |
 | Magic extract + Netgen LVS (`sak-lvs.sh`) + Magic PEX (`sak-pex.sh`) | inverter `magic-verify CELL=inverter_top` |
 | Magic LEF export + LIB + Verilog stub + `sak-render.py` render | inverter `build-top` |
+| `sak-via-redundancy.py` | inverter and chip `check-via-redundancy` |
+| `sak-current-density.py` (current view and check of a macro) | inverter `current-view`, `check-current-density` |
 | Verilator lint | counter `lint-verilog-all` |
 | Icarus Verilog (`iverilog`/`vvp`) | counter `sim-rtl-verilog` |
 | cocotb (RTL + gate-level + timed gate-level with the SDF delays) | counter `sim-rtl-cocotb`, `sim-gl-cocotb`, `sim-gl-sdf-cocotb` |
@@ -1186,13 +1221,13 @@ The following tools and flows are checked:
 
 ### Clean
 
-`make clean` deletes everything the chip top-level targets generate. The sources stay untouched: the RTL, the schematics, symbols and testbenches, the scripts, the LibreLane and packaging configurations, the EUROPRACTICE package library `packaging/layout/EP_PACKAGES_08022018.gds`, and `render/blender/`. Deleted are:
+`make clean` deletes everything the chip top-level targets generate. The sources stay untouched: the RTL, the schematics, symbols and testbenches, the scripts, the LibreLane and packaging configurations, the current budget in `flow/current_density/`, the EUROPRACTICE package library `packaging/layout/EP_PACKAGES_08022018.gds`, and `render/blender/`. Deleted are:
 
 - `flow/librelane/runs/` and `flow/final/` (LibreLane run directories and the saved views)
 - `layout/` (`chip_top.gds.gz` and `chip_top_logo_fill.gds.gz`)
 - `netlist/` (schematic, layout, PEX, PnL, NL and SPICE netlists, SPEF and SDC)
 - `render/img/` (the chip renders)
-- `verification/drc/`, `verification/lvs/` and `verification/reports/`
+- `verification/drc/`, `verification/lvs/`, `verification/via_redundancy/`, `verification/current_density/` and `verification/reports/`
 - `schematic/xschem/simulations/`, `testbenches/xschem/simulations/` and the `plot_simulations/` outputs (`data/`, `figures/`, `__pycache__/`)
 - `testbenches/cocotb/sim_build/` and the `__pycache__` folders under `scripts/`, `packaging/scripts/` and `testbenches/cocotb/`
 - the bondplan outputs in `packaging/` (`render/`, `result.md`, and in `layout/` the generated `chip_top_bondplan.gds`, `chip_top_logo_TM2.gds.gz` and the extracted package footprint `OP_QFN32_A4_FIT.gds`)

@@ -1,0 +1,141 @@
+Current density of vco_top in final/gds/vco_top.gds (PDK ihp-sg13g2, 0.3 s)
+Limits: SG13G2 Process Specification Rev. 1.2, section 2.15 (11 years at 105 C), resistance: sg13g2_tech.lef (RPERSQ and RESISTANCE)
+Currents: final/current/vco_top.yaml state oscillate, vco_top.yaml state oscillate: testbenches/xschem/vco_top_tb_tran.sch with sim_corners.py: average VDD current of the start-up transient at mos_ff, res_bcs, 105 C and 1.65 V, the higher of vtune 0 and 1.5 V, VSS returns it
+Floor: 0.300 mA (one Cont), a net below it passes without geometry
+
+| Net | I (mA) | Verdict | Stage | Worst ratio | Source of I |
+|---|---|---|---|---|---|
+| VDD | 14.5556 | unresolved | screen | - | the macro's whole current (a DC path to its devices) |
+| VSS | 14.5556 | unresolved | screen | - | the macro's whole current (a DC path to its devices) |
+| en_b | 14.5556 | unresolved | screen | - | the macro's whole current (a DC path to its devices) |
+| net@118.220,3.230 | 14.5556 | unresolved | screen | - | the macro's whole current (a DC path to its devices) |
+| net@29.910,22.330 | 14.5556 | unresolved | screen | - | the macro's whole current (a DC path to its devices) |
+| net@33.010,22.580 | 14.5556 | unresolved | screen | - | the macro's whole current (a DC path to its devices) |
+| net@36.060,30.680 | 14.5556 | unresolved | screen | - | the macro's whole current (a DC path to its devices) |
+| net@36.430,23.330 | 14.5556 | unresolved | screen | - | the macro's whole current (a DC path to its devices) |
+| net@40.130,29.180 | 14.5556 | unresolved | screen | - | the macro's whole current (a DC path to its devices) |
+| net@41.980,29.180 | 14.5556 | unresolved | screen | - | the macro's whole current (a DC path to its devices) |
+| net@59.180,8.400 | 14.5556 | unresolved | screen | - | the macro's whole current (a DC path to its devices) |
+| net@71.580,40.895 | 14.5556 | pass | screen | - | the macro's whole current (a DC path to its devices) |
+| net@71.580,46.295 | 14.5556 | pass | screen | - | the macro's whole current (a DC path to its devices) |
+| net@71.580,49.245 | 14.5556 | pass | screen | - | the macro's whole current (a DC path to its devices) |
+| net@71.580,54.645 | 14.5556 | pass | screen | - | the macro's whole current (a DC path to its devices) |
+| net@71.580,57.595 | 14.5556 | pass | screen | - | the macro's whole current (a DC path to its devices) |
+| net@71.580,62.995 | 14.5556 | pass | screen | - | the macro's whole current (a DC path to its devices) |
+| rf_n | 14.5556 | unresolved | screen | - | the macro's whole current (a DC path to its devices) |
+| rf_out_n | 14.5556 | unresolved | screen | - | the macro's whole current (a DC path to its devices) |
+| rf_out_p | 14.5556 | unresolved | screen | - | the macro's whole current (a DC path to its devices) |
+| rf_p | 14.5556 | unresolved | screen | - | the macro's whole current (a DC path to its devices) |
+| vbn_buf | 14.5556 | unresolved | screen | - | the macro's whole current (a DC path to its devices) |
+| vdd_core | 14.5556 | unresolved | screen | - | the macro's whole current (a DC path to its devices) |
+| vtune | 14.5556 | unresolved | screen | - | the macro's whole current (a DC path to its devices) |
+
+Unresolved (the screen fails and the currents of the devices are not known):
+  net@59.180,8.400: 516 elements cannot carry the whole 14.556 mA, and solving the net needs the current of each device
+    Metal1 narrower than 14.556 um at (71.50, 10.65)
+    Metal2 narrower than 7.278 um at (71.50, 11.09)
+    one Cont at (59.18, 10.03)
+    one Cont at (60.94, 10.03)
+    one Cont at (62.70, 10.03)
+  net@118.220,3.230: 432 elements cannot carry the whole 14.556 mA, and solving the net needs the current of each device
+    Metal1 narrower than 14.556 um at (122.67, 5.89)
+    Metal2 narrower than 7.278 um at (112.61, 3.23)
+    Metal3 narrower than 7.278 um at (113.99, 3.53)
+    one Cont at (107.00, 4.58)
+    one Cont at (107.00, 4.20)
+  rf_out_n: 140 elements cannot carry the whole 14.556 mA, and solving the net needs the current of each device
+    Metal1 narrower than 14.556 um at (59.98, 15.34)
+    Metal2 narrower than 7.278 um at (60.45, 15.33)
+    Metal3 narrower than 7.278 um at (60.08, 9.55)
+    one Cont at (55.50, 17.12)
+    one Cont at (65.26, 14.91)
+  rf_out_p: 140 elements cannot carry the whole 14.556 mA, and solving the net needs the current of each device
+    Metal1 narrower than 14.556 um at (83.02, 15.34)
+    Metal2 narrower than 7.278 um at (82.55, 15.33)
+    Metal3 narrower than 7.278 um at (82.92, 9.55)
+    one Cont at (73.66, 13.55)
+    one Cont at (73.66, 13.89)
+  net@36.430,23.330: 28 elements cannot carry the whole 14.556 mA, and solving the net needs the current of each device
+    Metal1 narrower than 14.556 um at (32.13, 22.52)
+    Metal2 narrower than 7.278 um at (32.25, 22.45)
+    Metal3 narrower than 7.278 um at (32.25, 25.13)
+    one Cont at (36.45, 24.43)
+    one Cont at (36.01, 24.91)
+  net@29.910,22.330: 17 elements cannot carry the whole 14.556 mA, and solving the net needs the current of each device
+    Metal1 narrower than 14.556 um at (31.37, 26.88)
+    Metal2 narrower than 7.278 um at (31.07, 26.88)
+    Metal3 narrower than 7.278 um at (31.07, 26.66)
+    one Cont at (29.93, 31.18)
+    one Cont at (29.93, 30.83)
+  net@41.980,29.180: 55 elements cannot carry the whole 14.556 mA, and solving the net needs the current of each device
+    Metal1 narrower than 14.556 um at (37.52, 26.88)
+    Metal2 narrower than 7.278 um at (37.52, 26.84)
+    Metal3 narrower than 7.278 um at (37.52, 27.17)
+    one Cont at (42.00, 30.45)
+    one Cont at (42.00, 30.80)
+  net@36.060,30.680: 21 elements cannot carry the whole 14.556 mA, and solving the net needs the current of each device
+    Metal1 narrower than 14.556 um at (30.69, 30.18)
+    Metal2 narrower than 7.278 um at (30.82, 29.87)
+    Metal3 narrower than 7.278 um at (30.82, 28.19)
+    one Cont at (36.08, 31.53)
+    one Cont at (36.08, 29.83)
+  net@33.010,22.580: 47 elements cannot carry the whole 14.556 mA, and solving the net needs the current of each device
+    Metal1 narrower than 14.556 um at (33.65, 16.20)
+    Metal2 narrower than 7.278 um at (34.23, 16.39)
+    Metal3 narrower than 7.278 um at (34.31, 16.45)
+    Metal4 narrower than 7.278 um at (42.95, 16.42)
+    one Cont at (42.00, 23.70)
+  en_b: 88 elements cannot carry the whole 14.556 mA, and solving the net needs the current of each device
+    Metal1 narrower than 14.556 um at (74.67, 18.33)
+    Metal2 narrower than 7.278 um at (66.30, 17.09)
+    Metal3 narrower than 7.278 um at (37.04, 14.60)
+    Metal4 narrower than 7.278 um at (45.00, 14.55)
+    one Cont at (29.68, 30.35)
+  net@40.130,29.180: 39 elements cannot carry the whole 14.556 mA, and solving the net needs the current of each device
+    Metal1 narrower than 14.556 um at (33.98, 18.57)
+    Metal2 narrower than 7.278 um at (35.93, 18.16)
+    Metal3 narrower than 7.278 um at (36.10, 16.71)
+    Metal4 narrower than 7.278 um at (44.15, 16.69)
+    one Cont at (40.15, 30.45)
+  vtune: 29 elements cannot carry the whole 14.556 mA, and solving the net needs the current of each device
+    Metal1 narrower than 14.556 um at (67.52, 51.95)
+    Metal2 narrower than 7.278 um at (67.52, 51.95)
+    Metal3 narrower than 7.278 um at (69.53, 30.40)
+    Metal4 narrower than 7.278 um at (69.51, 20.25)
+    one Cont at (67.52, 60.30)
+  vbn_buf: 406 elements cannot carry the whole 14.556 mA, and solving the net needs the current of each device
+    Metal1 narrower than 14.556 um at (43.98, 40.98)
+    Metal2 narrower than 7.278 um at (30.85, 40.95)
+    Metal3 narrower than 7.278 um at (30.75, 42.23)
+    Metal4 narrower than 7.278 um at (24.82, 42.33)
+    one Cont at (56.72, 74.48)
+  VDD: 919 elements cannot carry the whole 14.556 mA, and solving the net needs the current of each device
+    Metal1 narrower than 14.556 um at (60.71, 16.79)
+    Metal2 narrower than 7.278 um at (60.83, 16.19)
+    Metal3 narrower than 7.278 um at (60.74, 16.20)
+    Metal4 narrower than 7.278 um at (60.68, 16.00)
+    Metal5 narrower than 7.278 um at (60.56, 0.82)
+  rf_p: 913 elements cannot carry the whole 14.556 mA, and solving the net needs the current of each device
+    Metal1 narrower than 14.556 um at (72.11, 55.54)
+    Metal2 narrower than 7.278 um at (72.11, 55.35)
+    Metal3 narrower than 7.278 um at (70.03, 54.16)
+    Metal4 narrower than 7.278 um at (63.17, 54.26)
+    Metal5 narrower than 7.278 um at (63.50, 73.70)
+  rf_n: 913 elements cannot carry the whole 14.556 mA, and solving the net needs the current of each device
+    Metal1 narrower than 14.556 um at (70.89, 55.89)
+    Metal2 narrower than 7.278 um at (70.89, 58.75)
+    Metal3 narrower than 7.278 um at (79.28, 54.16)
+    Metal4 narrower than 7.278 um at (79.83, 54.26)
+    Metal5 narrower than 7.278 um at (79.50, 73.70)
+  VSS: 2565 elements cannot carry the whole 14.556 mA, and solving the net needs the current of each device
+    Metal1 narrower than 14.556 um at (71.79, 38.73)
+    Metal2 narrower than 7.278 um at (71.89, 35.80)
+    Metal3 narrower than 7.278 um at (72.72, 34.60)
+    Metal4 narrower than 7.278 um at (72.72, 34.60)
+    Metal5 narrower than 7.278 um at (71.50, 35.62)
+  vdd_core: 163 elements cannot carry the whole 14.556 mA, and solving the net needs the current of each device
+    Metal1 narrower than 14.556 um at (131.85, 0.54)
+    Metal2 narrower than 7.278 um at (131.85, 0.54)
+    Metal3 narrower than 7.278 um at (131.97, 3.17)
+    Metal4 narrower than 7.278 um at (135.29, 5.45)
+    Metal5 narrower than 7.278 um at (135.29, 5.45)

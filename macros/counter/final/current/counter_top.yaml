@@ -1,0 +1,11 @@
+# Current view of counter_top: the average current into each pin (mA) per state.
+# Written by sak-current-density.py view, do not edit, write it again instead.
+cell: counter_top
+gds: ../gds/counter_top.gds
+gds_digest: 3f81f4bf269fe081f657cfc6a48bcde91e8b7eee2a78e45f573be3c7747b9b5c
+states:
+  count:
+    source: 'sim-gl-power-cocotb with sg13g2_stdcell_fast_1p65V_m40C.lib.gz: OpenSTA total power over 1.65 V, VSS returns it'
+    pins_ma:
+      VDD: 0.0828485
+      VSS: -0.0828485

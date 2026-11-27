@@ -1,0 +1,16 @@
+Power of counter_top from the switching activity of testbenches/cocotb/sim_build/counter_top.vcd
+Liberty: sg13g2_stdcell_fast_1p65V_m40C.lib.gz
+
+vcd           217
+unannotated     0
+Group                  Internal  Switching    Leakage      Total
+                          Power      Power      Power      Power (Watts)
+----------------------------------------------------------------
+Sequential            4.909e-05  1.801e-06  3.693e-08  5.093e-05  37.3%
+Combinational         1.127e-05  6.074e-06  1.231e-07  1.746e-05  12.8%
+Clock                 4.447e-05  1.300e-05  1.079e-05  6.827e-05  50.0%
+Macro                 0.000e+00  0.000e+00  0.000e+00  0.000e+00   0.0%
+Pad                   0.000e+00  0.000e+00  0.000e+00  0.000e+00   0.0%
+----------------------------------------------------------------
+Total                 1.048e-04  2.088e-05  1.095e-05  1.367e-04 100.0%
+                          76.7%      15.3%       8.0%

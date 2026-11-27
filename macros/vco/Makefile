@@ -135,6 +135,11 @@ VTUNE ?= 0 1.5
 # Override with: make sim-corners VPEAK_MAX=<V>
 VPEAK_MAX ?= $(if $(findstring _lpe,$(TB)),1.5,0)
 
+# Testbench whose start-up transient gives the pin currents of the current view, and the name of its state (current-view, check-current-density)
+# Override with: make <target> CURRENT_TB=<testbenchname> CURRENT_STATE=<state>
+CURRENT_TB ?= $(TOP)_tb_tran
+CURRENT_STATE ?= oscillate
+
 # Preferred GDS extension: use .gds when available for the CELL, otherwise .klay.gds
 # Resolved per CELL (CELL defaults to TOP), so cells can mix .gds and .klay.gds within one macro.
 # All DRC, LVS and PEX targets (KLayout and Magic) work with either .gds or .klay.gds.
@@ -155,6 +160,7 @@ GDS_DIR         := final/gds
 LEF_DIR         := final/lef
 LIB_DIR         := final/lib
 VH_DIR          := final/vh
+CURRENT_DIR     := final/current
 RENDER_IMG_DIR  := render/img
 NET_SCH_DIR     := netlist/schematic
 NET_LAY_DIR     := netlist/layout
@@ -163,6 +169,8 @@ NET_SPICE_DIR   := netlist/spice
 NET_SPECTRE_DIR := netlist/spectre
 LVS_RPT_DIR     := verification/lvs
 DRC_RPT_DIR     := verification/drc
+VIA_RPT_DIR     := verification/via_redundancy
+CURRENT_RPT_DIR := verification/current_density
 EM_DIR          := verification/em
 EM_SPARAM_DIR   := verification/em/s-parameter
 EM_MODEL_DIR    := verification/em/palace_model
@@ -695,6 +703,33 @@ magic-verify-all: ## Verify with Magic: LVS and PEX of the bias, the buffer and 
 # ================================================================================================
 
 
+# Via Redundancy and Current Density Targets
+check-via-redundancy: ## Report the single cuts whose failure opens a net of the CELL cell, a report that never fails (usage: make check-via-redundancy [CELL=<cellname>])
+	mkdir -p $(VIA_RPT_DIR)
+	sak-via-redundancy.py -w $(VIA_RPT_DIR) $(LAY_DIR)/$(CELL).$(_GDS_EXT)
+.PHONY: check-via-redundancy
+
+# sim_corners.py writes the average VDD current per run, the view takes the higher one of the two tuning ends
+current-view: ## Write the current view final/current/<TOP>.yaml from the start-up transient of CURRENT_TB at mos_ff, res_bcs, 105 C and 1.65 V
+	$(MAKE) netlist-xschem TB=$(CURRENT_TB)
+	python3 $(SCRIPTS_DIR)/sim_corners.py $(XSCHEM_TB_DIR)/simulations/$(CURRENT_TB).spice \
+		--corners mos_ff --res res_bcs --temps 105 --vdd 1.65 --vtune 0 1.5 --vpeak-max 0 \
+		--csv $(SIM_PLOT_DIR)/data/$(CURRENT_TB)_current.csv
+	mkdir -p $(CURRENT_DIR)
+	idd=$$(awk -F, 'NR == 1 {for (i = 1; i <= NF; i++) if ($$i == "idd_ma") c = i; next} c && $$c > m {m = $$c} END {print m}' \
+		$(SIM_PLOT_DIR)/data/$(CURRENT_TB)_current.csv) && \
+	sak-current-density.py view -o $(CURRENT_DIR)/$(TOP).yaml --gds $(GDS_DIR)/$(TOP).gds --state $(CURRENT_STATE) \
+		--source "$(XSCHEM_TB_DIR)/$(CURRENT_TB).sch with sim_corners.py: average VDD current of the start-up transient at mos_ff, res_bcs, 105 C and 1.65 V, the higher of vtune 0 and 1.5 V, VSS returns it" \
+		--current VDD=$$idd --current VSS=-$$idd
+.PHONY: current-view
+
+check-current-density: ## Check the DC current of the TOP cell against the PDK limits from its current view, a net the screen cannot clear stays unresolved
+	mkdir -p $(CURRENT_RPT_DIR)
+	sak-current-density.py check -w $(CURRENT_RPT_DIR) -v $(CURRENT_DIR)/$(TOP).yaml -s $(CURRENT_STATE) $(GDS_DIR)/$(TOP).gds
+.PHONY: check-current-density
+# ================================================================================================
+
+
 # Verify, Build and Simulate All Target
 all: ## Generate the layouts, verify, build and simulate the TOP cell
 	$(MAKE) klayout-script-all
@@ -703,16 +738,19 @@ all: ## Generate the layouts, verify, build and simulate the TOP cell
 	$(MAKE) magic-verify-all
 	$(MAKE) build-top
 	$(MAKE) sim-all
+	$(MAKE) check-via-redundancy
+	$(MAKE) current-view
+	$(MAKE) check-current-density
 .PHONY: all
 # ================================================================================================
 
 
 # Clean Target
 clean: ## Delete all generated files and folders (final, netlists, render, DRC/LVS reports, simulation outputs)
-	rm -rf $(GDS_DIR) $(LEF_DIR) $(LIB_DIR) $(VH_DIR)
+	rm -rf $(GDS_DIR) $(LEF_DIR) $(LIB_DIR) $(VH_DIR) $(CURRENT_DIR)
 	rm -rf $(NET_SCH_DIR) $(NET_LAY_DIR) $(NET_PEX_DIR)
 	rm -rf $(RENDER_IMG_DIR)
-	rm -rf $(DRC_RPT_DIR) $(LVS_RPT_DIR)
+	rm -rf $(DRC_RPT_DIR) $(LVS_RPT_DIR) $(VIA_RPT_DIR) $(CURRENT_RPT_DIR)
 	rm -rf $(XSCHEM_SCH_DIR)/simulations $(XSCHEM_TB_DIR)/simulations
 	rm -rf $(SIM_PLOT_DIR)/data $(SIM_PLOT_DIR)/figures $(SIM_PLOT_DIR)/__pycache__
 	rm -rf $(SCRIPTS_DIR)/__pycache__ $(LAY_SCRIPTS_DIR)/__pycache__

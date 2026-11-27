@@ -142,8 +142,11 @@ PACKAGING_RENDER_DIR	:= packaging/render
 PACKAGE_NAME    		:= $(shell sed -n 's/^PACKAGE_NAME:[[:space:]]*//p' packaging/config.yaml)
 LVS_RPT_DIR     		:= verification/lvs
 DRC_RPT_DIR     		:= verification/drc
+VIA_RPT_DIR     		:= verification/via_redundancy
+CURRENT_RPT_DIR 		:= verification/current_density
 REPORT_DIR      		:= verification/reports
 LIBRELANE_DIR   		:= flow/librelane
+CURRENT_DIR     		:= flow/current_density
 FLOW_FINAL_DIR  		:= flow/final
 
 
@@ -583,6 +586,20 @@ magic-verify: ## Verify CELL cell with Magic, LVS and PEX (usage: make magic-ver
 # ================================================================================================
 
 
+# Via Redundancy and Current Density Targets
+# Every cell but the chip's own wiring (TOP and its VIA_* cells) is a black box, the macros, IPs and library cells have checks of their own
+check-via-redundancy: ## Report the single cuts whose failure opens a net in the wiring of the TOP cell with logo and filler, a report that never fails
+	mkdir -p $(VIA_RPT_DIR)
+	sak-via-redundancy.py -w $(VIA_RPT_DIR) -b '*' -k 'VIA_*' -k '$(TOP)' $(LAY_DIR)/$(TOP)_logo_fill.gds.gz
+.PHONY: check-via-redundancy
+
+check-current-density: ## Check the DC current of every wire and cut of the TOP cell with logo and filler against the PDK limits, from the current budget flow/current_density/<TOP>.yaml
+	mkdir -p $(CURRENT_RPT_DIR)
+	sak-current-density.py check -w $(CURRENT_RPT_DIR) -b $(CURRENT_DIR)/$(TOP).yaml $(LAY_DIR)/$(TOP)_logo_fill.gds.gz
+.PHONY: check-current-density
+# ================================================================================================
+
+
 # Packaging Target
 bondplan: ## Generate the bondplan (die in package + bondwires + pin table) in packaging/ (usage: make bondplan [VERSION=<version>])
 	cd $(PACKAGING_DIR) && python3 scripts/run_bondplan.py config.yaml DESIGN_NAME=$(TOP) VERSION=$(VERSION)
@@ -598,6 +615,8 @@ all: ## Build, verify, simulate and package the whole chip
 #	$(MAKE) magic-drc CELL=$(TOP)_logo_fill
 	$(MAKE) klayout-drc-regular
 	$(MAKE) gdscheck-drc-regular
+	$(MAKE) check-via-redundancy
+	$(MAKE) check-current-density
 #	$(MAKE) klayout-verify
 #	$(MAKE) magic-verify
 	$(MAKE) sim-all
@@ -638,6 +657,10 @@ regression: ## Regression test target for IIC-OSIC-TOOLS
 	$(MAKE) -C $(MACROS_DIR)/inverter klayout-verify CELL=inverter_top
 	$(MAKE) -C $(MACROS_DIR)/inverter magic-verify CELL=inverter_top
 	$(MAKE) -C $(MACROS_DIR)/inverter build-top
+# 	Via redundancy, and the current view and current density of the GDS that build-top just copied.
+	$(MAKE) -C $(MACROS_DIR)/inverter check-via-redundancy
+	$(MAKE) -C $(MACROS_DIR)/inverter current-view
+	$(MAKE) -C $(MACROS_DIR)/inverter check-current-density
 
 # 	RF macro: vco, only its KLayout layout scripts, so that a PDK update that breaks one fails the regression.
 	$(MAKE) -C $(MACROS_DIR)/vco klayout-script-all
@@ -668,6 +691,8 @@ regression: ## Regression test target for IIC-OSIC-TOOLS
 	$(MAKE) -C $(IP_DIR)/sg13g2_ip__jku all
 # 	librelane-nodrc: full RTL-to-GDS. DRC is skipped for runtime.
 	$(MAKE) librelane-nodrc
+# 	Via redundancy of the committed chip GDS. Its current density stays out: the macros rebuilt above may differ from the copies in that GDS, which the check refuses.
+	$(MAKE) check-via-redundancy
 .PHONY: regression
 # ================================================================================================
 
@@ -678,7 +703,7 @@ clean: ## Delete all generated chip top-level files and folders (LibreLane runs,
 	rm -rf $(LAY_DIR)
 	rm -rf $(NET_SCH_DIR) $(NET_LAY_DIR) $(NET_PEX_DIR) $(NET_PNL_DIR) $(NET_NL_DIR) $(NET_SPICE_DIR) $(NET_SPEF_DIR) $(NET_SDC_DIR)
 	rm -rf $(RENDER_IMG_DIR)
-	rm -rf $(DRC_RPT_DIR) $(LVS_RPT_DIR) $(REPORT_DIR)
+	rm -rf $(DRC_RPT_DIR) $(LVS_RPT_DIR) $(VIA_RPT_DIR) $(CURRENT_RPT_DIR) $(REPORT_DIR)
 	rm -rf $(XSCHEM_SCH_DIR)/simulations $(XSCHEM_TB_DIR)/simulations
 	rm -rf $(SIM_PLOT_DIR)/data $(SIM_PLOT_DIR)/figures $(SIM_PLOT_DIR)/__pycache__
 	rm -rf $(COCOTB_DIR)/sim_build

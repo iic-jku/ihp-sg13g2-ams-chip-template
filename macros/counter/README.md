@@ -741,6 +741,17 @@ make lec-mutant                  # check that lec catches a difference
 LibreLane has an equivalence step of its own (`Yosys.EQY`, enabled with `RUN_EQY`), but it skips every PDK other than sky130A, which is why the macro runs EQY from its Makefile. `lec` was tested with IIC-OSIC-TOOLS `2026.10`.
 
 
+### Via Redundancy and Current Density
+
+The same checks as in the analog macros, see [Via Redundancy and Current Density](../../README.md#via-redundancy-and-current-density) in the top-level README. `make check-via-redundancy` reports the single cuts whose failure opens a net of the final GDS. The standard cells are black boxes, since their contacts are the library's, so the report covers the routing of LibreLane, which joins signal wires with single vias. `make current-view` runs `sim-gl-power-cocotb` with the fast library at 1.65 V (`CURRENT_LIBS`, report `verification/sim_gl_power_cocotb_fast.rpt`), the worst case of the current limits, and writes `final/current/counter_top.yaml` from the total power divided by 1.65 V, as the current into `VDD` and out of `VSS`. `make check-current-density` checks the final GDS from that view:
+
+```sh
+make check-via-redundancy
+make current-view
+make check-current-density
+```
+
+
 ### Lint, Build, Verify and Simulate All
 
 Lints, builds, verifies and simulates the whole macro:
@@ -752,6 +763,9 @@ Lints, builds, verifies and simulates the whole macro:
 - `lec-mutant`
 - `magic-pex`
 - `sim-all`
+- `check-via-redundancy`
+- `current-view`
+- `check-current-density`
 
 Linting runs first to fail fast on structural RTL issues. `lec` proves the netlist of this build equivalent to the RTL, and `lec-mutant` checks that this proof can fail. The simulations run **after** the build, so the gate-level simulations (`sim-gl-cocotb`, `sim-gl-sdf-cocotb`, `sim-gl-power-cocotb`, `sim-gl-xschem`) run on the netlists and the XSPICE model produced by this build, not on those of a previous one. `magic-pex` sits between the two, so the post-layout netlist the Xschem testbench includes is extracted from the GDS of this build as well. `klayout-pex` is commented out in the recipe: it works (see [Parasitic Extraction (PEX)](#parasitic-extraction-pex)), but it is a second full extraction that nothing in the flow consumes. The DRC and LVS verification is done within the LibreLane flow.
 

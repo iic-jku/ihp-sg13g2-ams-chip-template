@@ -1,0 +1,51 @@
+Current density of inverter_top in final/gds/inverter_top.gds (PDK ihp-sg13g2, 0.2 s)
+Limits: SG13G2 Process Specification Rev. 1.2, section 2.15 (11 years at 105 C), resistance: sg13g2_tech.lef (RPERSQ and RESISTANCE)
+Currents: final/current/inverter_top.yaml state amplifier, inverter_top.yaml state amplifier: testbenches/xschem/inverter_top_tb_current.sch: operating point at mos_ff, 1.65 V and 105 C, inputs at VDD/2
+Floor: 0.300 mA (one Cont), a net below it passes without geometry
+
+| Net | I (mA) | Verdict | Stage | Worst ratio | Source of I |
+|---|---|---|---|---|---|
+| VDD | 4.2095 | unresolved | screen | - | the macro's whole current (a DC path to its devices) |
+| VSS | 4.2095 | unresolved | screen | - | the macro's whole current (a DC path to its devices) |
+| vout1 | 4.2095 | unresolved | screen | - | the macro's whole current (a DC path to its devices) |
+| vout2 | 4.2095 | unresolved | screen | - | the macro's whole current (a DC path to its devices) |
+| vout3 | 4.2095 | unresolved | screen | - | the macro's whole current (a DC path to its devices) |
+| vout4 | 4.2095 | unresolved | screen | - | the macro's whole current (a DC path to its devices) |
+
+Unresolved (the screen fails and the currents of the devices are not known):
+  vout1: 843 elements cannot carry the whole 4.209 mA, and solving the net needs the current of each device
+    Metal1 narrower than 4.209 um at (27.09, 18.13)
+    Metal2 narrower than 2.105 um at (27.09, 18.13)
+    Metal3 narrower than 2.105 um at (34.18, 18.13)
+    one Cont at (17.43, 19.46)
+    one Cont at (17.43, 19.81)
+  vout2: 843 elements cannot carry the whole 4.209 mA, and solving the net needs the current of each device
+    Metal1 narrower than 4.209 um at (27.09, 33.23)
+    Metal2 narrower than 2.105 um at (27.09, 33.23)
+    Metal3 narrower than 2.105 um at (34.18, 33.23)
+    one Cont at (22.95, 28.34)
+    one Cont at (22.95, 28.70)
+  vout3: 843 elements cannot carry the whole 4.209 mA, and solving the net needs the current of each device
+    Metal1 narrower than 4.209 um at (27.09, 48.69)
+    Metal2 narrower than 2.105 um at (27.09, 48.69)
+    Metal3 narrower than 2.105 um at (34.18, 48.69)
+    one Cont at (31.23, 47.88)
+    one Cont at (28.47, 48.23)
+  vout4: 843 elements cannot carry the whole 4.209 mA, and solving the net needs the current of each device
+    Metal1 narrower than 4.209 um at (27.09, 63.79)
+    Metal2 narrower than 2.105 um at (27.09, 63.79)
+    Metal3 narrower than 2.105 um at (34.18, 63.79)
+    one Cont at (39.51, 62.82)
+    one Cont at (39.51, 63.18)
+  VDD: 5176 elements cannot carry the whole 4.209 mA, and solving the net needs the current of each device
+    Metal1 narrower than 4.209 um at (27.09, 40.96)
+    Metal2 narrower than 2.105 um at (27.09, 40.96)
+    Metal4 narrower than 2.105 um at (27.09, 40.96)
+    Metal5 narrower than 2.105 um at (27.09, 40.96)
+    one Cont at (27.09, 17.32)
+  VSS: 3193 elements cannot carry the whole 4.209 mA, and solving the net needs the current of each device
+    Metal1 narrower than 4.209 um at (27.09, 40.96)
+    Metal2 narrower than 2.105 um at (27.09, 40.96)
+    Metal3 narrower than 2.105 um at (27.09, 40.96)
+    Metal4 narrower than 2.105 um at (27.09, 40.96)
+    Metal5 narrower than 2.105 um at (27.09, 40.96)
