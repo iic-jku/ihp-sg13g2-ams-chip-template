@@ -9,6 +9,7 @@ This repo is the ihp-sg13g2 AMS template or a chip started from it. Items marked
 - `Makefile`: the chip flow. `make` alone runs `make help`, which lists every target from its `## ` comment and explains the variables (`CELL`, `EXT_MODE`, `DRC_LEVEL`, `TB`, `SCRIPT`, `VERSION` and more).
 - `rtl/chip_top.sv` (pad ring) and `rtl/chip_core.sv` (macro instances and glue logic).
 - `flow/librelane/`: `config.yaml`, `chip_top.sdc` and `pdn_cfg.tcl` of the chip LibreLane run. `flow/artistic` is a git submodule (ArtistIC logo tool), fetched by `make init-submodules`.
+- `flow/current_density/chip_top.yaml`: the current budget of `check-current-density` (black boxes, the macros' current views, the loads with the source of each number).
 - `macros/<name>/`: one hard macro per folder with its own `Makefile` (`help`, `all`, `clean`, PDK guard) and `README.md`. The chip reads the committed views in `macros/<name>/final/`.
 - `macros/counter/` (template, digital): `rtl/`, `flow/librelane/`, `fpga/`, `testbenches/{verilog,cocotb,xschem}/`, hardened with LibreLane.
 - `macros/inverter/` (template, analog): `schematic/xschem/`, `layout/`, `scripts/layout/` (the layout scripts), `testbenches/xschem/`, `verification/cace/`, verified with KLayout and Magic.
@@ -34,7 +35,7 @@ This repo is the ihp-sg13g2 AMS template or a chip started from it. Items marked
 
 ```sh
 make help                          # targets and variables
-make all                           # build-all, regular KLayout and gdscheck DRC of chip_top_logo_fill, sim-all, bondplan
+make all                           # build-all, regular KLayout and gdscheck DRC of chip_top_logo_fill, via redundancy, current density, sim-all, bondplan
 make build-all                     # submodules, bondpad, RF pad, logos, macros, build-top
 make build-top                     # librelane-nodrc, copy reports/GDS/netlists/render, add-logo-fill, render-gds
 make sim-rtl-cocotb                # chip RTL simulation (cocotb on Icarus Verilog)
@@ -44,6 +45,8 @@ make klayout-drc-regular           # full KLayout DRC of layout/chip_top_logo_fi
 make klayout-verify CELL=<cell>    # KLayout DRC, LVS and PEX of layout/<cell>.gds.gz
 make magic-verify CELL=<cell>      # Magic/Netgen LVS and Magic PEX, its DRC is commented out
 make gdscheck-drc CELL=<cell>      # gdscheck DRC of layout/<cell>.gds.gz
+make check-via-redundancy          # single cuts that open a net in the chip's wiring, a report that never fails
+make check-current-density         # DC current of every wire and cut against the PDK limits, from the current budget
 make regression                    # the CI smoke test
 make -C macros/counter lint-verilog-all     # Verilator lint (template macro)
 make -C macros/counter sim-rtl-verilog      # Icarus Verilog testbench
@@ -60,6 +63,7 @@ make -C macros/inverter all                 # KLayout DRC/LVS/PEX, gdscheck DRC,
 - The Xschem targets netlist in batch mode and run `ngspice -b`, so `plot` commands in a testbench `.control` block do nothing. Testbenches write results with `wrdata` to `testbenches/xschem/plot_simulations/data/`, and `sim-view-xschem` plots them.
 - The top-level `sim-gl-xschem` includes `macros/counter/netlist/xspice/counter_top.xspice` (template), which `clean-all` deletes. Run `make build-counter` before it.
 - `klayout-pex` runs the 2.5D engine of `kpex` through `sak-pex.sh -k`, which the image ships from `2026.11` on (with kpex 0.10.0). A full-RC extraction of the small `inverter_top` takes about 2 min where Magic takes seconds, so use `magic-pex` for a quick netlist. `klayout-pex-leads` of the `vco` (template) stays on the Magic engine of kpex.
+- `check-current-density` reads the current views `macros/<name>/final/current/<top>.yaml` (`make current-view` in the macro). A view records a digest of the macro's GDS, so after a layout change the chip check stops on it as stale until the macro's `current-view` runs again. A macro checked on its own runs only the floor and the screen, since the currents of its devices are not known, so a net that needs a solve stays unresolved there.
 - `build-top` runs `librelane-nodrc` on purpose until IHP fixes the `metal1_pin_offgrid` errors (see the comment in `Makefile`). Run DRC separately with `magic-drc`, `klayout-drc-minimum`, `klayout-drc-regular` or the matching `gdscheck-drc-*` targets. `DRC_JOBS=<n>` caps the KLayout processes and sets the gdscheck threads (default 4 and every CPU). More than 4 only pays off for the full chip on a server.
 - KLayout is the sign-off DRC. Magic and gdscheck flag IHP's own cells (the nBuLay ring of the `pmos` guard ring PCell, IHP-Open-PDK#954, fixed in gdscheck after 0.2.0), so until a gdscheck release with that fix is in the image `make build-all` and `make all` stop at gdscheck. Magic also flags the IO pads and the SRAM read hierarchically and takes about a day on the chip, so the flows leave the Magic DRC out: its lines are commented out in `magic-verify`, in the IP `all` and in `make all`. Fix such a report upstream, not with make's `-` prefix in a flow. Keep `-f` patterns for Magic away from the top cell: `sak-drc.sh` refuses one that matches it, because Magic would check an empty cell.
 

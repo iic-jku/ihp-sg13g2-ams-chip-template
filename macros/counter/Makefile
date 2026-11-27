@@ -79,6 +79,10 @@ LEC_NETLIST ?= final/nl/$(TOP).nl.v
 # Override with: make lec LEC_TIMEOUT=<seconds>
 LEC_TIMEOUT ?= 300
 
+# Name of the state of the current view (current-view, check-current-density)
+# Override with: make <target> CURRENT_STATE=<state>
+CURRENT_STATE ?= count
+
 # Folder structure
 COCOTB_DIR      := testbenches/cocotb
 VERILOG_TB_DIR 	:= testbenches/verilog
@@ -98,6 +102,9 @@ LIBRELANE_DIR 	:= flow/librelane
 FLOW_FINAL_DIR 	:= flow/final
 FINAL_DIR      	:= final
 LAY_DIR        	:= final/gds
+CURRENT_DIR    	:= final/current
+VIA_RPT_DIR    	:= verification/via_redundancy
+CURRENT_RPT_DIR	:= verification/current_density
 
 # Variables for simulation and linting targets
 # constants.sv defines the `COUNTER_MAX_DEFAULT / `CLK_FREQ_DEFAULT macros and must
@@ -539,6 +546,33 @@ lec-mutant: ## Check that lec catches a difference: change one cell and one cloc
 # ================================================================================================
 
 
+# Via Redundancy and Current Density Targets
+# The standard cells are black boxes: their single contacts are the library's, LibreLane's routing is what is checked
+check-via-redundancy: ## Report the single cuts whose failure opens a net of the final GDS, the standard cells as black boxes, a report that never fails
+	mkdir -p $(VIA_RPT_DIR)
+	sak-via-redundancy.py -w $(VIA_RPT_DIR) -b 'sg13g2_*' $(LAY_DIR)/$(TOP).gds
+.PHONY: check-via-redundancy
+
+# The current view takes the power at the fast corner and the highest supply of the library, the worst case of the current limits
+CURRENT_LIBS := $(PDK_ROOT)/$(PDK)/libs.ref/sg13g2_stdcell/lib/sg13g2_stdcell_fast_1p65V_m40C.lib.gz
+CURRENT_VDD  := 1.65
+CURRENT_RPT  := $(REPORT_DIR)/sim_gl_power_cocotb_fast.rpt
+
+current-view: ## Write the current view final/current/<TOP>.yaml, the supply current from the OpenSTA power of the gate-level cocotb simulation at the fast corner
+	$(MAKE) sim-gl-power-cocotb POWER_LIBS="$(CURRENT_LIBS)" POWER_RPT=$(CURRENT_RPT)
+	mkdir -p $(CURRENT_DIR)
+	sak-current-density.py view -o $(CURRENT_DIR)/$(TOP).yaml --gds $(LAY_DIR)/$(TOP).gds --state $(CURRENT_STATE) \
+		--source "sim-gl-power-cocotb with $(notdir $(CURRENT_LIBS)): OpenSTA total power over $(CURRENT_VDD) V, VSS returns it" \
+		--sta-power $(CURRENT_RPT) --supply VDD=$(CURRENT_VDD) --ground VSS
+.PHONY: current-view
+
+check-current-density: ## Check the DC current of the final GDS against the PDK limits from its current view, a net the screen cannot clear stays unresolved
+	mkdir -p $(CURRENT_RPT_DIR)
+	sak-current-density.py check -w $(CURRENT_RPT_DIR) -v $(CURRENT_DIR)/$(TOP).yaml -s $(CURRENT_STATE) $(LAY_DIR)/$(TOP).gds
+.PHONY: check-current-density
+# ================================================================================================
+
+
 # Lint, Build, Verify and Simulate All Target
 all: ## Lint, build, verify and simulate the macro
 	$(MAKE) lint-verilog-all
@@ -549,6 +583,9 @@ all: ## Lint, build, verify and simulate the macro
 	$(MAKE) magic-pex
 #	$(MAKE) klayout-pex
 	$(MAKE) sim-all
+	$(MAKE) check-via-redundancy
+	$(MAKE) current-view
+	$(MAKE) check-current-density
 .PHONY: all
 # ================================================================================================
 

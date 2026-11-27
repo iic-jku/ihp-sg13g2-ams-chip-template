@@ -88,8 +88,9 @@ The new macro still implements the copied design under its new name. What follow
 1. Replace the design: the schematics and symbols in `schematic/xschem/`, the layout sources `layout/<NAME>.gds` and `layout/<NAME>_top.klay.gds`, the export `layout/<NAME>_top.gds`, and the layout scripts `scripts/layout/<NAME>.py` and `scripts/layout/<NAME>_top.py` that write them, see [Layout Sources and the Exported Tapeout GDS](inverter/README.md#layout-sources-and-the-exported-tapeout-gds) and [Generate the Layout with KLayout Python Scripts](inverter/README.md#generate-the-layout-with-klayout-python-scripts). A new layout drawn by hand needs `LAYOUT_SOURCE ?= manual` at the top of the `Makefile`, or `make all` writes the inverter again from the copied scripts. Keep the box on the `prBoundary` layer (`189/0`) around the top cell and resize it with the macro, `make check-boundary` verifies it. List the pins of the new layout in the `lef` target of the `Makefile`, which sets their LEF directions.
 2. Rewrite the testbenches in `testbenches/xschem/` and the plot scripts in `testbenches/xschem/plot_simulations/` for the new pins and measurements. `make symbol-pex` rebuilds `<CELL>_pex.sym` from the cell symbol, so only the cell symbol needs drawing.
 3. Adapt the CACE datasheet `verification/cace/<NAME>.yaml` with its template and script, or delete the CACE folder together with the `sim-cace` line of `sim-all`.
-4. The sizing notebook `scripts/sizing/sizing_<NAME>.ipynb` and the figures next to it are specific to the inverter, adapt or delete them.
-5. Rewrite `README.md` and `render/blender/README.md`.
+4. Adapt the current-view testbench `testbenches/xschem/<NAME>_top_tb_current.sch` to the worst operating state of the new design, and let it write a `<pin> <ampere>` line for every pin that carries a DC current, so that `make current-view` writes `final/current/<NAME>_top.yaml`. Name the state with `CURRENT_STATE` in the `Makefile`.
+5. The sizing notebook `scripts/sizing/sizing_<NAME>.ipynb` and the figures next to it are specific to the inverter, adapt or delete them.
+6. Rewrite `README.md` and `render/blender/README.md`.
 
 #### From the Counter (Digital)
 
@@ -122,6 +123,7 @@ There is no central macro list. A new macro is added in these places, all relati
 5. `schematic/xschem/xschemrc`: a `source` line for the `xschemrc` of the new macro, without it the symbols of the macro do not resolve at the chip top-level.
 6. `schematic/xschem/chip_top.sch`: place the symbol of the macro.
 7. `testbenches/cocotb/chip_top_tb.py`: the `sources` list names the netlist or RTL and the stub of every macro.
-8. The documentation: [doc/floorplan.md](../doc/floorplan.md), [doc/specifications.md](../doc/specifications.md), [doc/pinout.md](../doc/pinout.md) when pins change, and the top-level `README.md`.
+8. `flow/current_density/chip_top.yaml`: a `views` entry with the current view `../../macros/<NAME>/final/current/<NAME>_top.yaml` and its state, so that `make check-current-density` counts the currents of the macro's pins.
+9. The documentation: [doc/floorplan.md](../doc/floorplan.md), [doc/specifications.md](../doc/specifications.md), [doc/pinout.md](../doc/pinout.md) when pins change, and the top-level `README.md`.
 
 `.gitignore` and `REUSE.toml` need no line: their `macros/*/` patterns already cover the build outputs and the files without a license header of every macro, so a new macro passes `reuse lint` and keeps its simulation outputs out of `git status` from the first build. Add the macro to git before running `reuse lint`: git does not report the ignored paths inside a folder it does not track yet, so the lint lists the build outputs of an untracked macro.

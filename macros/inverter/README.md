@@ -80,6 +80,7 @@
 │     ├─ inverter_tb_ac_ol.sch
 │     ├─ inverter_tb_tran.sch
 │     ├─ inverter_tb_dc_vout.sch
+│     ├─ inverter_top_tb_current.sch
 │     ├─ inverter_top_tb_tran.sch
 │     └─ xschemrc
 ├─ 📁 verification/
@@ -654,9 +655,31 @@ make magic-verify-all
 ```
 
 
+### Via Redundancy and Current Density
+
+**Via redundancy** (`sak-via-redundancy.py`) reports the single cuts whose failure opens a net of a cell, each with a room test for a second cut, see [Via Redundancy and Current Density](../../README.md#via-redundancy-and-current-density) in the top-level README. It is a report and never stops a flow. The report and the marker database go to `verification/via_redundancy/`:
+
+```sh
+make check-via-redundancy
+make check-via-redundancy CELL=inverter
+```
+
+**Current view** writes `final/current/inverter_top.yaml`, the average current into each pin, from the operating point of [`inverter_top_tb_current.sch`](testbenches/xschem/inverter_top_tb_current.sch) at the worst case of the current limits: fast MOS at 1.65 V and 105 C, with every input at `VDD/2`, where each inverter draws its highest cross current. The chip's current budget reads it. The view records a digest of `final/gds/inverter_top.gds`, so the chip check refuses it once the layout changes:
+
+```sh
+make current-view
+```
+
+**Current density** (`sak-current-density.py check -v`) checks the macro against the limits of the process from its current view. A net whose current is below what one contact carries passes, and a net whose whole current fits through its narrowest wire and through every single cut passes the screen. Any other net stays unresolved, since solving it needs the current of every transistor. The report and the marker database go to `verification/current_density/`:
+
+```sh
+make check-current-density
+```
+
+
 ### Verify, Build and Simulate All
 
-Runs the full flow in sequence: the layouts from their KLayout scripts, KLayout verification, gdscheck DRC, Magic verification, top-level build deliverables, and simulations (`klayout-script-all`, `klayout-verify-all`, `gdscheck-drc-all`, `magic-verify-all`, `build-top`, `sim-all`):
+Runs the full flow in sequence: the layouts from their KLayout scripts, KLayout verification, gdscheck DRC, Magic verification, top-level build deliverables, simulations, and the via redundancy, current view and current density (`klayout-script-all`, `klayout-verify-all`, `gdscheck-drc-all`, `magic-verify-all`, `build-top`, `sim-all`, `check-via-redundancy`, `current-view`, `check-current-density`):
 
 ```sh
 make all
@@ -669,10 +692,10 @@ The layout scripts run first, so every later step sees what they write, and they
 
 `make clean` deletes all generated files and folders. The sources stay untouched: the schematics, symbols and testbenches, the layout in `layout/`, the scripts, the CACE configuration and templates, and `render/blender/`. Deleted are:
 
-- `final/` (GDS, LEF, Liberty and Verilog stub deliverables)
+- `final/` (GDS, LEF, Liberty, Verilog stub and current view deliverables)
 - `netlist/` (schematic, layout and PEX netlists)
 - `render/img/` (the layout renders)
-- `verification/drc/` and `verification/lvs/` (DRC and LVS reports)
+- `verification/drc/`, `verification/lvs/`, `verification/via_redundancy/` and `verification/current_density/` (DRC, LVS, via redundancy and current density reports)
 - `schematic/xschem/simulations/`, `testbenches/xschem/simulations/` and the `plot_simulations/` outputs (`data/`, `figures/`, `__pycache__/`)
 - the CACE outputs under `verification/cace/` (`_runs/`, `_docs/`, `netlist/`, `results/`, `templates/simulations/`)
 
