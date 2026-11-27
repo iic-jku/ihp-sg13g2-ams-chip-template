@@ -6,21 +6,25 @@
 # The time-averaged current per load in mA, into the load positive. Paths are relative to this file.
 # Each load names where its number comes from, rerun that source when the design changes.
 
-# Read only by their pin shapes: the SRAM, the standard cells (lowercase after sg13g2_, the IO library cells are
-# uppercase) and the seal ring. The macros with a view below become black boxes too. The IO cells, the template's
-# IPs (bondpads, RF pads, logos), the fill and the wiring of the chip are read in full, so their metal is checked.
+# Read only by their pin shapes: the SRAM, the standard cells (lowercase after sg13g2_, the IO library is uppercase,
+# except the sg13g2_io_* gates inside the output pads, kept below) and the seal ring. The macros with a view below
+# become black boxes too. The IO cells, the template's IPs (bondpads, RF pads, logos), the fill and the wiring of the
+# chip are read in full, so their metal is checked.
 black_box:
   - "RM_IHPSG13_*"
   - "sg13g2_[a-z]*"
   - "sealring"
 keep:
+  - "sg13g2_io_*"
   - "sg13g2_ip__*"
 
 views:
   - {view: ../../macros/counter/final/current/counter_top.yaml, state: count}
   - {view: ../../macros/inverter/final/current/inverter_top.yaml, state: amplifier}
 
-# The core logic and the SRAM from the power report of the LibreLane run at its fast corner, over its 1.65 V
+# The core logic and the SRAM from the power report of the LibreLane run at its fast corner, over its 1.65 V. The
+# report's Pad group (5.17 mW, the IO cells, most of it on IOVDD) is not in the budget yet, so IOVDD and IOVSS are
+# listed as pad nets without a current.
 nets:
   VDD:
     loads:

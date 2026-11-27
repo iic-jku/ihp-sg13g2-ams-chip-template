@@ -14,7 +14,7 @@ Institute for Integrated Circuits and Quantum Computing, Johannes Kepler Univers
 
 <!-- /template-only -->
 > [!IMPORTANT]
-> This repository requires the [IIC-OSIC-TOOLS](https://github.com/iic-jku/IIC-OSIC-TOOLS) container with tag `2026.11` or later.
+> This repository requires the [IIC-OSIC-TOOLS](https://github.com/iic-jku/IIC-OSIC-TOOLS) container with tag `2026.12` or later.
 
 
 <!-- template-only -->
@@ -1079,11 +1079,11 @@ At the top level it checks the wiring of `chip_top`. Every other cell is a black
 make check-current-density
 ```
 
-Each net is judged in three stages. A net whose total current is below what one contact carries (0.3 mA) passes without looking at the geometry. A net whose whole current fits through its narrowest wire and through every single cut passes the screen. Every other net gets a static resistive solve on a pixel mesh of its drawn metal, from its pads to its loads, and each wire cross-section and each via is held against its limit. Contacts and the diffusion and poly layers are not in the solve, the floor and the screen cover the contacts.
+Each net is judged in three stages. A net whose total current is below what one contact carries (0.3 mA) passes without looking at the geometry. A net whose whole current fits through its narrowest wire and through every single cut passes the screen. Every other net gets a static resistive solve on a pixel mesh of its drawn metal, from its pads to its loads, and each wire cross-section and each via is held against its limit. Contacts and the diffusion and poly layers are not in the solve: the floor and the screen check the contacts, and a solved net counts the contacts its screen could not clear in a note of the report.
 
 The currents come from the budget [`flow/current_density/chip_top.yaml`](flow/current_density/chip_top.yaml). It names the cells read only by their pin shapes, the current views of the macros and the loads of the core logic and the SRAM, and each load names where its number comes from. Each macro writes its view with `make current-view` to `final/current/<macro>.yaml`: the average current into each pin per operating state, with a digest of the macro's GDS, so the check refuses a view that is older than the macro's layout. The outputs in `verification/current_density/` are the report and the marker database. The report has one row per net (current, verdict, stage, worst ratio and the source of the current), the elements above the limit and above half of it, the static IR drop at the loads, and the pad nets that carry no current in the budget.
 
-On this chip, `VDD` and `VSS` carry 9.08 mA each, 8.42 mA of it for the two inverter macros biased at mid-supply. Both pass the solve, and the worst element is a single TopVia2 at 2.1 mA, 0.21 of its limit. The static IR drop at the inverters is 9.4 mV on `VDD` and 14 mV on `VSS`. The check takes about 2.5 minutes and 7 GB of memory, most of it to read the IO cells with their devices, and the via redundancy check about 70 seconds and 2.5 GB. The via redundancy check reports 472 single cuts on the chip, all LibreLane signal vias without room for a second cut.
+On this chip, the budget holds `VDD` and `VSS`, which carry 9.08 mA each, 8.42 mA of it for the two inverter macros biased at mid-supply. The power of the IO cells (5.17 mW in the LibreLane power report, most of it on `IOVDD`) is not in the budget yet. Both pass the solve, and the worst element is a single TopVia2 at 2.1 mA, 0.21 of its limit. The static IR drop at the inverters is 9.4 mV on `VDD` and 14 mV on `VSS`. The check takes about 2.5 minutes and 7 GB of memory, most of it to read the IO cells with their devices, and the via redundancy check about 70 seconds and 2.5 GB. The via redundancy check reports 472 single cuts on the chip, all LibreLane signal vias without room for a second cut.
 
 The check covers the DC average only. The PDK publishes no limit for RMS or peak currents. The macros check their own inside with `check-current-density` on their current view. A macro knows the currents of its pins, not of its devices, so a net that reaches a diffusion or a resistor or inductor body can carry the macro's whole supply current, and a net the screen cannot clear at that current stays unresolved. At the chip level a macro is a black box whose pin shapes are joined into one node per pin. Loads inside the IO cells are not modelled yet, so the report lists `IOVDD`, `IOVSS` and the signal pads as pad nets without a current.
 

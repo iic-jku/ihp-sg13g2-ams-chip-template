@@ -5,4 +5,4 @@ Floor: 0.300 mA (one Cont), a net below it passes without geometry
 
 | Net | I (mA) | Verdict | Stage | Worst ratio | Source of I |
 |---|---|---|---|---|---|
-| 355 more nets | at most 0.0828 | pass | floor | - | |
+| 355 nets | at most 0.0828 | pass | floor | - | |

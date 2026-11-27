@@ -23,7 +23,7 @@ format:
 ---
 
 ::: {.callout-important}
-This tutorial and the underlying template repository require the [IIC-OSIC-TOOLS](https://github.com/iic-jku/IIC-OSIC-TOOLS) container with tag `2026.11` or later. All commands below must be executed from within the container, and the working directory must be a folder containing the corresponding `Makefile`.
+This tutorial and the underlying template repository require the [IIC-OSIC-TOOLS](https://github.com/iic-jku/IIC-OSIC-TOOLS) container with tag `2026.12` or later. All commands below must be executed from within the container, and the working directory must be a folder containing the corresponding `Makefile`.
 :::
 
 ::: {.callout-note}
@@ -3009,7 +3009,7 @@ At the top level every cell but `chip_top` and its via cells is a black box, so 
 
 1. **Floor.** No wire and no cut of a resistive network carries more than the total current fed into it. A net whose total current is below what the weakest single element carries passes without looking at the geometry. On ihp-sg13g2 that element is one contact, 0.3 mA. The floor assumes one cut, not two: the two-cut rule is a house rule, and a single cut is exactly what a lone via is.
 2. **Screen.** The whole net current against the narrowest section of every wire and against every single cut. A net that passes is proven, since no element can see more than the whole current. A via array is not judged by its summed capacity here, because its outer cuts carry more than the mean.
-3. **Solve.** Every other net becomes a pixel mesh of its drawn metal, with the pads at 0 V and every load where its current enters. A static resistive solve gives the current of each pixel edge and each cut. A mesh node is the piece of a polygon inside one pixel, and two pieces conduct across the pixel edge they share with the length of metal on it, so the two arms of a hairpin that share a pixel stay apart. The current through each wire cross-section is held against the limit for its width, and the worst single cut of each via array against the limit per cut. Contacts and the diffusion and poly layers are not in the solve, the floor and the screen cover the contacts. The static IR drop at the loads comes out of the same solve.
+3. **Solve.** Every other net becomes a pixel mesh of its drawn metal, with the pads at 0 V and every load where its current enters. A static resistive solve gives the current of each pixel edge and each cut. A mesh node is the piece of a polygon inside one pixel, and two pieces conduct across the pixel edge they share with the length of metal on it, so the two arms of a hairpin that share a pixel stay apart. The current through each wire cross-section is held against the limit for its width, and the worst single cut of each via array against the limit per cut. Contacts and the diffusion and poly layers are not in the solve: the floor and the screen check the contacts, and a solved net counts the contacts its screen could not clear in a note. The static IR drop at the loads comes out of the same solve.
 
 The currents come from the budget [`flow/current_density/chip_top.yaml`](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template/blob/main/flow/current_density/chip_top.yaml). It names the cells read only by their pin shapes (the SRAM, the standard cells and the seal ring), the current views of the macros, and the loads of the core logic and the SRAM, each with the source of its number:
 
@@ -3020,7 +3020,7 @@ views:
 nets:
   VDD:
     loads:
-      - cells: ["sg13g2_[a-z]*"]      # the standard cells, the IO cells are uppercase after sg13g2_
+      - cells: ["sg13g2_[a-z]*"]      # the standard cells (the IO library is uppercase after sg13g2_)
         exclude: ["sg13g2_fill_*", "sg13g2_decap_*"]
         pin: VDD
         current_ma: 0.326
@@ -3036,7 +3036,7 @@ make check-current-density              # the chip, from flow/current_density/ch
 make -C macros/inverter check-current-density
 ```
 
-On this chip, `VDD` and `VSS` carry 9.08 mA each, 8.42 mA of it for the two inverter macros biased at mid-supply, and both pass the solve: the worst element is a single TopVia2 at 2.1 mA, 0.21 of its limit, and the static IR drop at the inverters is 9.4 mV on `VDD` and 14 mV on `VSS`. The check takes about 2.5 minutes and 7 GB of memory. The via redundancy check finds 472 single cuts on the chip, all LibreLane signal vias without room for a second cut, none in the inverter, and 41 in the VCO, of which one Via4 on `VDD` has room for a second cut.
+On this chip, the budget holds `VDD` and `VSS`, which carry 9.08 mA each, 8.42 mA of it for the two inverter macros biased at mid-supply, and both pass the solve: the worst element is a single TopVia2 at 2.1 mA, 0.21 of its limit, and the static IR drop at the inverters is 9.4 mV on `VDD` and 14 mV on `VSS`. The check takes about 2.5 minutes and 7 GB of memory. The via redundancy check finds 472 single cuts on the chip, all LibreLane signal vias without room for a second cut, none in the inverter, and 41 in the VCO, of which one Via4 on `VDD` has room for a second cut.
 
 Both checks write a text report and a marker database (`.lyrdb`) to `verification/via_redundancy/` and `verification/current_density/`. Open the GDS in KLayout and load the markers with **Tools > Marker Browser** to step through the cuts or the wire sections one by one. The current density report has one row per net with its current, verdict, stage, worst ratio and the source of its current, followed by the elements above the limit, the elements above half of it, the worst element per net and layer, and the static IR drop at each load.
 
