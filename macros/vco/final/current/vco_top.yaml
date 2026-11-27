@@ -1,0 +1,11 @@
+# Current view of vco_top: the average current into each pin (mA) per state.
+# Written by sak-current-density.py view, do not edit, write it again instead.
+cell: vco_top
+gds: ../gds/vco_top.gds
+gds_digest: d33b01c4ce179441a46582d583b23f7799b91a82fda10b5e4bec1ae48d6da392
+states:
+  oscillate:
+    source: 'testbenches/xschem/vco_top_tb_tran.sch with sim_corners.py: average VDD current of the start-up transient at mos_ff, res_bcs, 105 C and 1.65 V, the higher of vtune 0 and 1.5 V, VSS returns it'
+    pins_ma:
+      VDD: 14.5556
+      VSS: -14.5556

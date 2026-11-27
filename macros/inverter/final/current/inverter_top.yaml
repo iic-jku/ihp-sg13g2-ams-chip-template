@@ -1,0 +1,11 @@
+# Current view of inverter_top: the average current into each pin (mA) per state.
+# Written by sak-current-density.py view, do not edit, write it again instead.
+cell: inverter_top
+gds: ../gds/inverter_top.gds
+gds_digest: bddca8babfbf86504fe80e8584c2aa303b3a76a81c5fc6efe0fa7d4a93c5aafd
+states:
+  amplifier:
+    source: 'testbenches/xschem/inverter_top_tb_current.sch: operating point at mos_ff, 1.65 V and 105 C, inputs at VDD/2'
+    pins_ma:
+      VDD: 4.20949
+      VSS: -4.20949

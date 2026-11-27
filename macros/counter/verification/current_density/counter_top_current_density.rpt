@@ -1,0 +1,8 @@
+Current density of counter_top in final/gds/counter_top.gds (PDK ihp-sg13g2, 0.6 s)
+Limits: SG13G2 Process Specification Rev. 1.2, section 2.15 (11 years at 105 C), resistance: sg13g2_tech.lef (RPERSQ and RESISTANCE)
+Currents: final/current/counter_top.yaml state count, counter_top.yaml state count: sim-gl-power-cocotb with sg13g2_stdcell_fast_1p65V_m40C.lib.gz: OpenSTA total power over 1.65 V, VSS returns it
+Floor: 0.300 mA (one Cont), a net below it passes without geometry
+
+| Net | I (mA) | Verdict | Stage | Worst ratio | Source of I |
+|---|---|---|---|---|---|
+| 355 more nets | at most 0.0828 | pass | floor | - | |
