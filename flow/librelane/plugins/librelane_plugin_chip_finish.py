@@ -340,21 +340,9 @@ class Fill(Step):
         errors, empty = [], []
         for spec, keepout_specs in self.config["CHIP_FINISH_FILL_LAYERS"].items():
             fill_layer = layout.layer(*_layer(spec))
-            keepouts = {k: kdb.Region(top.begin_shapes_rec(layout.layer(*_layer(k)))) for k in keepout_specs}
             keepout = kdb.Region()
-            for region in keepouts.values():
-                keepout += region
-
-            # gdsfill 0.1.11 reads neither nofill datatypes nor NoMetFiller (gdsfill#56) and writes its fill flat into the top cell, so its fill in a keep-out is removed instead of failing the step
-            if filler == "gdsfill" and not keepout.is_empty():
-                fill = kdb.Region(top.shapes(fill_layer))
-                fill.merged_semantics = False
-                kept = fill.not_overlapping(keepout)
-                if fill.count() - kept.count():
-                    hits = ", ".join(f"{fill.overlapping(region).count()} on {k}" for k, region in keepouts.items())
-                    self.warn(f"Removed {fill.count() - kept.count()} gdsfill shapes on {spec} that overlap a keep-out ({hits}).")
-                    top.shapes(fill_layer).clear()
-                    top.shapes(fill_layer).insert(kept)
+            for k in keepout_specs:
+                keepout += kdb.Region(top.begin_shapes_rec(layout.layer(*_layer(k))))
 
             fill = kdb.Region(top.begin_shapes_rec(fill_layer))
             inside = (fill & keepout).area() * dbu2

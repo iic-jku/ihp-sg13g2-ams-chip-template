@@ -770,7 +770,7 @@ This is useful if you want to rebuild the chip from scratch. Clone the repositor
 The LibreLane flow adds the chip logo and the fill structures itself, with two steps from the plugin [`flow/librelane/plugins/librelane_plugin_chip_finish.py`](flow/librelane/plugins/librelane_plugin_chip_finish.py) that run after the seal ring:
 
 - `ChipFinish.Logo` draws `flow/logo/chip_logo_mono.png` with [ArtistIC](https://github.com/pulp-platform/artistic) on TopMetal2 and adds nofill rectangles (`134/23`, `126/23`) 20 µm around it.
-- `ChipFinish.Fill` adds the fill with the tool in `FILLER`, checks it and adds the die outline on `189/0` for the density checks. The step fails when fill lies on a layer's drawing, its nofill datatype or `NoMetFiller`, or outside the seal ring, and when `klayout` or `magic` leave a fill layer empty. `gdsfill` skips a layer that already meets its density target, so for it an empty layer is a warning, and its fill in a keep-out is removed with a warning instead of failing the step (gdsfill#56).
+- `ChipFinish.Fill` adds the fill with the tool in `FILLER`, checks it and adds the die outline on `189/0` for the density checks. The step fails when fill lies on a layer's drawing, its nofill datatype or `NoMetFiller`, or outside the seal ring, and when `klayout` or `magic` leave a fill layer empty. `gdsfill` skips a layer that already meets its density target, so for it an empty layer is a warning.
 
 Both steps write `chip_top_logo_fill.gds`, whose top cell `chip_top_logo_fill` holds `chip_top`, the logo and the fill. The GDS of the flow stays `chip_top.gds` without logo and fill, and `make copy-gds` copies both into `layout/`. The `CHIP_FINISH_*` variables in `flow/librelane/config.yaml` set the logo image, its position relative to `CORE_AREA`, the fill layers with their keep-outs and the KLayout fill distances.
 
@@ -780,7 +780,7 @@ The `FILLER` parameter selects the fill tool:
 | --- | --- | --- |
 | `klayout` _(default)_ | KLayout filler macros of the PDK | Fill distances from `CHIP_FINISH_KLAYOUT_DISTANCES`, set in copies of the macros. Gives the same layout as the former `scripts/add_logo_fill.sh`, whose output passes the regular KLayout DRC on this chip. |
 | `magic` | `generate_fill.py` of the PDK | Fixed fill pattern, Metal3 to Metal5 end above the 60 % maximum density on this chip. The `ihp-sg13g2` version of the script also fills the band between the seal ring and the die edge ([IHP-Open-PDK#1381](https://github.com/IHP-GmbH/IHP-Open-PDK/issues/1381)), so the step fails on it. Runs Magic with a home folder of its own, see [IHP-Open-PDK#1380](https://github.com/IHP-GmbH/IHP-Open-PDK/issues/1380). |
-| `gdsfill` | [gdsfill](https://github.com/aesc-silicon/gdsfill) | Fills towards a density target per layer (`CHIP_FINISH_GDSFILL_CONFIG`). Version 0.1.11 ignores the nofill layers and `NoMetFiller` ([gdsfill#56](https://github.com/aesc-silicon/gdsfill/issues/56)), so the step removes its fill shapes there. |
+| `gdsfill` | [gdsfill](https://github.com/aesc-silicon/gdsfill) | Fills towards a density target per layer (`CHIP_FINISH_GDSFILL_CONFIG`). Needs a gdsfill newer than 0.1.11: version 0.1.11 fills the nofill layers and `NoMetFiller` ([gdsfill#56](https://github.com/aesc-silicon/gdsfill/issues/56)), so the step fails with it. |
 
 To redo only the logo and the fill on the last LibreLane run, for example with another fill tool, run:
 
