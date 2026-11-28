@@ -92,6 +92,10 @@ PEX_SUB_NET ?= VSS
 # Override with: make klayout-pex KPEX_REDUCE=<none|floating|ticer>
 KPEX_REDUCE ?= ticer
 
+# Fill tool of ChipFinish.Fill in the LibreLane flow (used by the librelane* targets and add-logo-fill; default: klayout): klayout or magic (the KLayout or Magic filler of the PDK) or gdsfill
+# Override with: make <target> FILLER=<klayout|magic|gdsfill>
+FILLER ?= klayout
+
 # Floating-point precision (significant digits) for Xschem's ev function
 # Override with: make <target> EV_PRECISION=<digits>
 EV_PRECISION ?= 5
@@ -146,10 +150,13 @@ REPORT_DIR      		:= verification/reports
 LIBRELANE_DIR   		:= flow/librelane
 FLOW_FINAL_DIR  		:= flow/final
 
+# LibreLane loads the chip finishing steps ChipFinish.Logo and ChipFinish.Fill as a plugin from PYTHONPATH
+LIBRELANE = PYTHONPATH="$(MAKEFILE_DIR)/$(LIBRELANE_DIR)/plugins$${PYTHONPATH:+:$$PYTHONPATH}" librelane $(LIBRELANE_DIR)/config.yaml --pdk ${PDK} --pdk-root ${PDK_ROOT} --manual-pdk
+
 
 # Help Target
 help: ## Show this help message
-	@echo 'Usage: make <target> [CELL=<cellname>] [EXT_MODE=<1|2|3>] [CTHRESH=<fF>] [THRESHOLD=<mOhm>] [MINRES=<mOhm>] [MINDELAY=<ps>] [DRC_LEVEL=<precheck|macro|regular>] [GDSCHECK_SUITE=<suite>|GDSCHECK_DECKS=<decks>] [DRC_JOBS=<n>] [PEX_MERGED_PINS="<pin> ..."] [KPEX_REDUCE=<none|floating|ticer>] [PEX_SUB_NET=<net>] [EV_PRECISION=<digits>] [WAVEFORM_VIEWER=<gtkwave|surfer>] [TB=<testbenchname>] [SCRIPT=<scriptname>] [VERSION=<version>] [OPEN_ARGS=<options>]'
+	@echo 'Usage: make <target> [CELL=<cellname>] [EXT_MODE=<1|2|3>] [CTHRESH=<fF>] [THRESHOLD=<mOhm>] [MINRES=<mOhm>] [MINDELAY=<ps>] [DRC_LEVEL=<precheck|macro|regular>] [GDSCHECK_SUITE=<suite>|GDSCHECK_DECKS=<decks>] [DRC_JOBS=<n>] [PEX_MERGED_PINS="<pin> ..."] [KPEX_REDUCE=<none|floating|ticer>] [PEX_SUB_NET=<net>] [EV_PRECISION=<digits>] [WAVEFORM_VIEWER=<gtkwave|surfer>] [FILLER=<klayout|magic|gdsfill>] [TB=<testbenchname>] [SCRIPT=<scriptname>] [VERSION=<version>] [OPEN_ARGS=<options>]'
 	@echo ''
 	@echo 'Available targets:'
 	@grep -E '^[a-zA-Z0-9_.-]+:.*## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*## "}; {printf "  %-20s %s\n", $$1, $$2}'
@@ -167,6 +174,7 @@ help: ## Show this help message
 	@echo 'KPEX_REDUCE defaults to ticer. Sets the RC network reduction of klayout-pex in EXT_MODE=3 (none|floating|ticer).'
 	@echo 'EV_PRECISION defaults to 5 significant digits for Xschem ev function.'
 	@echo 'WAVEFORM_VIEWER defaults to gtkwave. Use surfer to launch Surfer instead.'
+	@echo 'FILLER defaults to klayout. Sets the fill tool of the LibreLane flow and add-logo-fill (klayout|magic|gdsfill).'
 	@echo 'TB selects the Xschem testbench for sim-gl-xschem (default: <CELL>_tb_tran).'
 	@echo 'SCRIPT selects the plotting script for sim-view-xschem (default: plot_<CELL>).'
 	@echo 'VERSION defaults to $(VERSION). Used by the release target.'
@@ -272,35 +280,33 @@ sim-all: ## Simulate the chip (RTL/GL cocotb + GL cocotb power + GL Xschem)
 
 # LibreLane Targets
 librelane: ## Run LibreLane with Magic and KLayout DRC checks
-	librelane $(LIBRELANE_DIR)/config.yaml --pdk ${PDK} --pdk-root ${PDK_ROOT} --manual-pdk --save-views-to $(FLOW_FINAL_DIR)/
+	$(LIBRELANE) -c CHIP_FINISH_FILLER=$(FILLER) --save-views-to $(FLOW_FINAL_DIR)/
 .PHONY: librelane
 
 librelane-nodrc: ## Run LibreLane without DRC checks
-	librelane $(LIBRELANE_DIR)/config.yaml --pdk ${PDK} --pdk-root ${PDK_ROOT} --manual-pdk --save-views-to $(FLOW_FINAL_DIR)/ --skip KLayout.DRC --skip Magic.DRC --skip KLayout.Antenna --skip KLayout.Density
+	$(LIBRELANE) -c CHIP_FINISH_FILLER=$(FILLER) --save-views-to $(FLOW_FINAL_DIR)/ --skip KLayout.DRC --skip Magic.DRC --skip KLayout.Antenna
 .PHONY: librelane-nodrc
 
 librelane-magicdrc: ## Run LibreLane with only Magic DRC checks
-	librelane $(LIBRELANE_DIR)/config.yaml --pdk ${PDK} --pdk-root ${PDK_ROOT} --manual-pdk --save-views-to $(FLOW_FINAL_DIR)/ --skip KLayout.DRC
+	$(LIBRELANE) -c CHIP_FINISH_FILLER=$(FILLER) --save-views-to $(FLOW_FINAL_DIR)/ --skip KLayout.DRC
 .PHONY: librelane-magicdrc
 
 librelane-klayoutdrc: ## Run LibreLane with only KLayout DRC checks
-	librelane $(LIBRELANE_DIR)/config.yaml --pdk ${PDK} --pdk-root ${PDK_ROOT} --manual-pdk --save-views-to $(FLOW_FINAL_DIR)/ --skip Magic.DRC
+	$(LIBRELANE) -c CHIP_FINISH_FILLER=$(FILLER) --save-views-to $(FLOW_FINAL_DIR)/ --skip Magic.DRC
 .PHONY: librelane-klayoutdrc
 
 librelane-openroad: ## Open the last LibreLane run in OpenROAD GUI
-	librelane $(LIBRELANE_DIR)/config.yaml --pdk ${PDK} --pdk-root ${PDK_ROOT} --manual-pdk --last-run --flow OpenInOpenROAD
+	$(LIBRELANE) --last-run --flow OpenInOpenROAD
 .PHONY: librelane-openroad
 
 librelane-klayout: ## Open the last LibreLane run in KLayout
-	librelane $(LIBRELANE_DIR)/config.yaml --pdk ${PDK} --pdk-root ${PDK_ROOT} --manual-pdk --last-run --flow OpenInKLayout
+	$(LIBRELANE) --last-run --flow OpenInKLayout
 .PHONY: librelane-klayout
 # ================================================================================================
 
 
 # Copy Targets
-# TODO: KLayout antenna and DRC reports are temporarily commented out until
-# IHP fixes the `metal1_pin_offgrid` errors. For now, `make librelane-nodrc` must be used.
-# https://github.com/IHP-GmbH/IHP-Open-PDK/issues/683#issuecomment-4065791975
+# The two DRC reports exist only after librelane, librelane-magicdrc or librelane-klayoutdrc, so their lines stay commented out for build-top
 # Using * wildcard to ignore step numbers
 copy-reports: ## Copy yosys, antenna, STA, power, IR-drop, LVS and manufacturability reports from the last LibreLane run to verification/reports/
 	rm -rf $(REPORT_DIR)/
@@ -325,11 +331,12 @@ copy-reports: ## Copy yosys, antenna, STA, power, IR-drop, LVS and manufacturabi
 	cp $(LIBRELANE_DIR)/runs/${RUN_TAG}/*-misc-reportmanufacturability/manufacturability.rpt $(REPORT_DIR)/manufacturability.rpt
 .PHONY: copy-reports
 
-copy-gds: ## Copy and compress final GDS from the last LibreLane run to layout/ (no logo & filler)
-	rm -f $(LAY_DIR)/$(TOP).gds.gz
+copy-gds: ## Copy and compress both GDS from the last LibreLane run to layout/ (without and with logo & filler)
+	rm -f $(LAY_DIR)/$(TOP).gds.gz $(LAY_DIR)/$(TOP)_logo_fill.gds.gz
 	mkdir -p $(LAY_DIR)/
 	cp -r $(FLOW_FINAL_DIR)/gds/$(TOP).gds $(LAY_DIR)/$(TOP).gds
-	gzip $(LAY_DIR)/$(TOP).gds
+	cp -r $(FLOW_FINAL_DIR)/gds/$(TOP)_logo_fill.gds $(LAY_DIR)/$(TOP)_logo_fill.gds
+	gzip $(LAY_DIR)/$(TOP).gds $(LAY_DIR)/$(TOP)_logo_fill.gds
 .PHONY: copy-gds
 
 copy-netlist: ## Copy final spice, pnl and nl netlists, the nominal SPEF and the SDC from the last LibreLane run to netlist/
@@ -398,20 +405,21 @@ build-macros: ## Build all enabled macros (counter and inverter)
 	$(MAKE) build-inverter
 .PHONY: build-macros
 
-# Adds the chip logo and fill structures to the final GDS.
-# TODO: This step is temporary and will be replaced by a custom LibreLane step in the future.
-add-logo-fill: ## Run scripts/add_logo_fill.sh to add the chip logo and fill structures
-	cd $(SCRIPTS_DIR) && ./add_logo_fill.sh $(TOP)
+# Reruns only ChipFinish.Logo and ChipFinish.Fill on the last LibreLane run, which has to be a complete one, for example to try another FILLER without the rest of the flow
+add-logo-fill: ## Redo the chip logo and fill structures on the last LibreLane run and copy the GDS with logo & filler to layout/ (usage: make add-logo-fill [FILLER=<klayout|magic|gdsfill>])
+	$(LIBRELANE) -c CHIP_FINISH_FILLER=$(FILLER) --save-views-to $(FLOW_FINAL_DIR)/ --last-run --from ChipFinish.Logo --to ChipFinish.Fill
+	rm -f $(LAY_DIR)/$(TOP)_logo_fill.gds.gz
+	cp -r $(FLOW_FINAL_DIR)/gds/$(TOP)_logo_fill.gds $(LAY_DIR)/$(TOP)_logo_fill.gds
+	gzip $(LAY_DIR)/$(TOP)_logo_fill.gds
 .PHONY: add-logo-fill
 
-# TODO: Switch back to `make librelane` once IHP fixes the metal1_pin_offgrid errors.
-build-top: ## Build the chip (LibreLane, copy reports/GDS/netlist/render, add logo & filler, render final GDS)
+# The flow leaves out its DRC steps, the DRC targets check both GDS afterwards (klayout-drc*, gdscheck-drc* and magic-drc)
+build-top: ## Build the chip (LibreLane with logo & filler, copy reports/GDS/netlist/render, render final GDS)
 	$(MAKE) librelane-nodrc
 	$(MAKE) copy-reports
 	$(MAKE) copy-gds
 	$(MAKE) copy-netlist
 	$(MAKE) copy-render
-	$(MAKE) add-logo-fill
 	$(MAKE) render-gds
 #	$(MAKE) librelane-openroad
 .PHONY: build-top
@@ -682,7 +690,7 @@ clean: ## Delete all generated chip top-level files and folders (LibreLane runs,
 	rm -rf $(XSCHEM_SCH_DIR)/simulations $(XSCHEM_TB_DIR)/simulations
 	rm -rf $(SIM_PLOT_DIR)/data $(SIM_PLOT_DIR)/figures $(SIM_PLOT_DIR)/__pycache__
 	rm -rf $(COCOTB_DIR)/sim_build
-	rm -rf $(SCRIPTS_DIR)/__pycache__ $(COCOTB_DIR)/__pycache__ $(PACKAGING_DIR)/scripts/__pycache__
+	rm -rf $(SCRIPTS_DIR)/__pycache__ $(COCOTB_DIR)/__pycache__ $(PACKAGING_DIR)/scripts/__pycache__ $(LIBRELANE_DIR)/plugins/__pycache__
 	rm -rf $(PACKAGING_RENDER_DIR)
 	rm -f $(PACKAGING_DIR)/result.md
 	rm -f $(PACKAGING_DIR)/layout/$(TOP)_bondplan.gds $(PACKAGING_DIR)/layout/$(TOP)_logo_TM2.gds.gz

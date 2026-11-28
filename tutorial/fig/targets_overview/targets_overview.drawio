@@ -172,11 +172,8 @@
         <mxCell id="mnL5" value="&lt;font face=&quot;Courier New&quot; style=&quot;font-size: 11px;&quot;&gt;&lt;b&gt;copy-render&lt;/b&gt;&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fontSize=11;fillColor=#ffe6cc;strokeColor=#d79b00;strokeWidth=1;fontStyle=0;verticalAlign=middle;sketch=0;" parent="1" vertex="1">
           <mxGeometry x="460" y="650" width="140" height="30" as="geometry" />
         </mxCell>
-        <mxCell id="mnL6" value="&lt;font face=&quot;Courier New&quot; style=&quot;font-size: 11px;&quot;&gt;&lt;b&gt;add-logo-fill&lt;/b&gt;&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fontSize=11;fillColor=#ffe6cc;strokeColor=#d79b00;strokeWidth=1;fontStyle=0;verticalAlign=middle;sketch=0;" parent="1" vertex="1">
-          <mxGeometry x="460" y="685" width="140" height="30" as="geometry" />
-        </mxCell>
         <mxCell id="mnL7" value="&lt;font face=&quot;Courier New&quot; style=&quot;font-size: 11px;&quot;&gt;&lt;b&gt;render-gds&lt;/b&gt;&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fontSize=11;fillColor=#ffe6cc;strokeColor=#d79b00;strokeWidth=1;fontStyle=0;verticalAlign=middle;sketch=0;" parent="1" vertex="1">
-          <mxGeometry x="460" y="720" width="140" height="30" as="geometry" />
+          <mxGeometry x="460" y="685" width="140" height="30" as="geometry" />
         </mxCell>
         <mxCell id="e_all_simAll" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;strokeColor=#666666;strokeWidth=2;endArrow=classic;endFill=1;" parent="1" source="all" target="simAll" edge="1">
           <mxGeometry relative="1" as="geometry">

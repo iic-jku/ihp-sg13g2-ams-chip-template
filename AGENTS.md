@@ -8,7 +8,7 @@ This repo is the ihp-sg13g2 AMS template or a chip started from it. Items marked
 
 - `Makefile`: the chip flow. `make` alone runs `make help`, which lists every target from its `## ` comment and explains the variables (`CELL`, `EXT_MODE`, `DRC_LEVEL`, `TB`, `SCRIPT`, `VERSION` and more).
 - `rtl/chip_top.sv` (pad ring) and `rtl/chip_core.sv` (macro instances and glue logic).
-- `flow/librelane/`: `config.yaml`, `chip_top.sdc` and `pdn_cfg.tcl` of the chip LibreLane run. `flow/artistic` is a git submodule (ArtistIC logo tool), fetched by `make init-submodules`.
+- `flow/librelane/`: `config.yaml`, `chip_top.sdc` and `pdn_cfg.tcl` of the chip LibreLane run, and `plugins/librelane_plugin_chip_finish.py` with the steps `ChipFinish.Logo` and `ChipFinish.Fill`, which write `chip_top_logo_fill.gds` next to the unfilled `chip_top.gds`. `flow/artistic` is a git submodule (ArtistIC logo tool), fetched by `make init-submodules`.
 - `macros/<name>/`: one hard macro per folder with its own `Makefile` (`help`, `all`, `clean`, PDK guard) and `README.md`. The chip reads the committed views in `macros/<name>/final/`.
 - `macros/counter/` (template, digital): `rtl/`, `flow/librelane/`, `fpga/`, `testbenches/{verilog,cocotb,xschem}/`, hardened with LibreLane.
 - `macros/inverter/` (template, analog): `schematic/xschem/`, `layout/`, `scripts/layout/` (the layout scripts), `testbenches/xschem/`, `verification/cace/`, verified with KLayout and Magic.
@@ -36,7 +36,8 @@ This repo is the ihp-sg13g2 AMS template or a chip started from it. Items marked
 make help                          # targets and variables
 make all                           # build-all, regular KLayout and gdscheck DRC of chip_top_logo_fill, sim-all, bondplan
 make build-all                     # submodules, bondpad, RF pad, logos, macros, build-top
-make build-top                     # librelane-nodrc, copy reports/GDS/netlists/render, add-logo-fill, render-gds
+make build-top                     # librelane-nodrc with logo and fill, copy reports/both GDS/netlists/render, render-gds
+make add-logo-fill FILLER=gdsfill  # redo only logo and fill on the last LibreLane run (FILLER: klayout, magic or gdsfill)
 make sim-rtl-cocotb                # chip RTL simulation (cocotb on Icarus Verilog)
 make sim-all                       # RTL and gate-level cocotb, gate-level power, gate-level Xschem/ngspice
 make sim-gl-power-cocotb           # OpenSTA power of the chip from the gate-level cocotb waveform
@@ -60,7 +61,7 @@ make -C macros/inverter all                 # KLayout DRC/LVS/PEX, gdscheck DRC,
 - The Xschem targets netlist in batch mode and run `ngspice -b`, so `plot` commands in a testbench `.control` block do nothing. Testbenches write results with `wrdata` to `testbenches/xschem/plot_simulations/data/`, and `sim-view-xschem` plots them.
 - The top-level `sim-gl-xschem` includes `macros/counter/netlist/xspice/counter_top.xspice` (template), which `clean-all` deletes. Run `make build-counter` before it.
 - `klayout-pex` runs the 2.5D engine of `kpex` through `sak-pex.sh -k`, which the image ships from `2026.11` on (with kpex 0.10.0). A full-RC extraction of the small `inverter_top` takes about 2 min where Magic takes seconds, so use `magic-pex` for a quick netlist. `klayout-pex-leads` of the `vco` (template) stays on the Magic engine of kpex.
-- `build-top` runs `librelane-nodrc` on purpose until IHP fixes the `metal1_pin_offgrid` errors (see the comment in `Makefile`). Run DRC separately with `magic-drc`, `klayout-drc-minimum`, `klayout-drc-regular` or the matching `gdscheck-drc-*` targets. `DRC_JOBS=<n>` caps the KLayout processes and sets the gdscheck threads (default 4 and every CPU). More than 4 only pays off for the full chip on a server.
+- `build-top` runs `librelane-nodrc` on purpose, and the flow leaves out its density check, since its own GDS carries no fill. Run DRC separately with `magic-drc`, `klayout-drc-minimum`, `klayout-drc-regular` or the matching `gdscheck-drc-*` targets. `DRC_JOBS=<n>` caps the KLayout processes and sets the gdscheck threads (default 4 and every CPU). More than 4 only pays off for the full chip on a server.
 - KLayout is the sign-off DRC. Magic and gdscheck flag IHP's own cells (the nBuLay ring of the `pmos` guard ring PCell, IHP-Open-PDK#954, fixed in gdscheck after 0.2.0), so until a gdscheck release with that fix is in the image `make build-all` and `make all` stop at gdscheck. Magic also flags the IO pads and the SRAM read hierarchically and takes about a day on the chip, so the flows leave the Magic DRC out: its lines are commented out in `magic-verify`, in the IP `all` and in `make all`. Fix such a report upstream, not with make's `-` prefix in a flow. Keep `-f` patterns for Magic away from the top cell: `sak-drc.sh` refuses one that matches it, because Magic would check an empty cell.
 
 ## Conventions
@@ -101,7 +102,7 @@ make -C macros/inverter all                 # KLayout DRC/LVS/PEX, gdscheck DRC,
 
 - Run `make clean` or `make clean-all` only when asked. Most of what they delete is committed, and the LibreLane runs in `flow/librelane/runs/` are not tracked at all.
 - Never hand-edit generated files: the top-level `layout/`, `netlist/` and `verification/`, and per macro `final/`, `netlist/` and `*_pex.sym`. Rerun the target that writes them. Leave `release/` alone, it holds published versions.
-- Renaming `TOP` in `Makefile` also needs the `chip_top` file names in `REUSE.toml`. `make add-logo-fill` and `make bondplan` pass `TOP` to `scripts/add_logo_fill.sh` and `packaging/scripts/run_bondplan.py`, so never hard-code the name in either.
+- Renaming `TOP` in `Makefile` also needs the `chip_top` file names in `REUSE.toml` and `DESIGN_NAME` in `flow/librelane/config.yaml`, which names `<DESIGN_NAME>_logo_fill.gds`. `make bondplan` passes `TOP` to `packaging/scripts/run_bondplan.py`, so never hard-code the name there.
 - The `Makefile` reads `PACKAGE_NAME:` from `packaging/config.yaml` with `sed`, so keep it a plain `key: value` line.
 
 ## Writing style
